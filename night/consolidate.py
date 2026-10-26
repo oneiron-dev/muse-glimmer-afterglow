@@ -3,7 +3,8 @@
 
 Reads runs/<w>/<d>/notes.json (the day agent's notes, with supersedes links) and daylog.jsonl (what the
 user said). Superseded notes are dropped; a note that corrects an earlier one keeps the old value as
-"corrects". The teacher model then writes, per note: its kind (fact | preference | procedure), one plain
+"corrects". "outcomes" records, per note, what the night chose: kept, merged_as_duplicate or
+dropped_as_superseded, with the reason (the morning report shows it). The teacher model then writes, per note: its kind (fact | preference | procedure), one plain
 statement, and the shortest exact span of the value that identifies it (the "core" that rewrites and
 answers must contain). Writes runs/<w>/<d>/night/consolidated.json in the format generate_rewrites.py reads.
 """
@@ -74,7 +75,7 @@ def main():
             else:
                 kind, statement, core = m.group(2).lower(), m.group(3), m.group(4)
             if kind == "duplicate":
-                dropped.append({"id": n["id"], "why": f"duplicate of {statement}"})
+                dropped.append({"id": n["id"], "outcome": "merged_as_duplicate", "why": f"repeats {statement}"})
                 continue
             if core.lower() not in n["value"].lower():
                 core = n["value"]
@@ -82,9 +83,14 @@ def main():
             items.append({"id": n["id"], "kind": kind, "key": n["key"], "full_value": n["value"], "value": core,
                           "accept": [core], "statement": statement, "source_utterance": turns.get(n.get("turn"), ""),
                           "corrects": old["value"] if old else None})
-    superseded = [{"id": n["id"], "why": f"superseded by {n.get('superseded_by')}"} for n in notes if n.get("superseded_by") or n.get("status") == "superseded"]
+    superseded = [{"id": n["id"], "outcome": "dropped_as_superseded",
+                   "why": f"superseded by {n.get('superseded_by')}: the value {n['value']!r} is no longer true"}
+                  for n in notes if n.get("superseded_by") or n.get("status") == "superseded"]
+    kept = [{"id": i["id"], "outcome": "kept", "why": f"learn as {i['kind']}" + (f"; corrects {i['corrects']!r}" if i["corrects"] else "")}
+            for i in items]
+    outcomes = sorted(kept + dropped + superseded, key=lambda o: o["id"])
     doc = {"world": args.world, "day": args.day, "user": name, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
-           "items": items, "dropped": dropped + superseded}
+           "items": items, "dropped": dropped + superseded, "outcomes": outcomes}
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps({"active_notes": len(active), "items": len(items), "dropped": len(doc["dropped"]),
                       "kinds": {k: sum(1 for i in items if i["kind"] == k) for k in ("fact", "preference", "procedure")}}))
