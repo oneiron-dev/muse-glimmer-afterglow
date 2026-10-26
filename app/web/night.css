@@ -1,0 +1,37 @@
+/* The thought log. Shares tokens and type with app.css. */
+body.night-page { height: auto; min-height: 100%; }
+a.wordmark { color: inherit; text-decoration: none; }
+.top nav { gap: 1.25rem; }
+.top nav a { color: var(--ink-soft); }
+
+.night { width: 100%; max-width: 52rem; margin: 0 auto; padding: 2.25rem clamp(1rem, 4vw, 3rem) 4rem; }
+.night h1 { margin: 0; font: 400 1.9rem/1.2 var(--serif); font-variation-settings: "opsz" 48; }
+.summary { margin: 0.5rem 0 1.25rem; color: var(--ink-soft); max-width: 60ch; }
+.summary strong { color: var(--ink); font-weight: 600; }
+
+.filters { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+.chip { font: 500 0.85rem/1 var(--sans); padding: 0.45rem 0.8rem; min-height: 2.25rem; border-radius: 999px;
+        border: 1px solid var(--rule-strong); background: transparent; color: var(--ink-soft); display: inline-flex; gap: 0.45rem; align-items: center; }
+.chip[aria-pressed="true"] { background: var(--paper-raised); color: var(--ink); border-color: oklch(43% 0.11 295 / 0.4); }
+
+/* Who made the call: a text label with a shape, never colour alone. */
+.mark-who { display: inline-block; width: 9px; height: 9px; flex: none; }
+.mark-who.dreamer { border-radius: 50%; background: var(--glow-violet); }
+.mark-who.job { border-radius: 2px; background: var(--glow-rose); transform: rotate(45deg) scale(0.85); }
+
+.thoughts { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.thought-item { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1rem; padding: 1.1rem 0; border-top: 1px solid var(--rule); }
+.thought-item[hidden] { display: none; }
+.t-time { font-size: 0.8rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; padding-top: 0.15rem; }
+.t-head { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--ink-soft); }
+.t-head .who { font-weight: 600; color: var(--ink); }
+.t-task { margin: 0.2rem 0 0.5rem; font-weight: 600; }
+.t-thought { font: 400 1rem/1.55 var(--serif); white-space: pre-wrap; margin: 0; }
+.t-answer { margin: 0.6rem 0 0; font-size: 0.85rem; color: var(--ink-soft); }
+.t-answer code, .t-input pre { font: 0.78rem/1.45 var(--mono); white-space: pre-wrap; word-break: break-word; color: var(--ink-soft); }
+.t-answer code { color: var(--ink); }
+details.more { margin-top: 0.35rem; font-size: 0.82rem; color: var(--ink-faint); }
+details.more summary { cursor: pointer; width: fit-content; }
+details.more summary:hover { color: var(--ink-soft); }
+details.more pre { margin: 0.4rem 0 0; max-height: 18rem; overflow: auto; background: var(--paper-raised); border: 1px solid var(--rule); border-radius: 8px; padding: 0.6rem 0.75rem; }
+.empty-state { color: var(--ink-soft); }

@@ -16,7 +16,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import paths, snapshot
+from . import paths, snapshot, thoughts
 from .agent import DaySession, now_iso
 from .llm import GlimmerClient
 
@@ -144,6 +144,11 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.urlparse(self.path).path
         if path == "/api/state":
             return self._json(self.app.state())
+        if path == "/api/thoughts":
+            q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            available = thoughts.dates()
+            date = q.get("date", [available[0] if available else None])[0]
+            return self._json({"dates": available, "date": date, "items": thoughts.load(date) if date else None})
         if path == "/api/report":
             q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
             day = q.get("day", [None])[0]
@@ -152,6 +157,8 @@ class Handler(BaseHTTPRequestHandler):
             path = "/index.html"
         elif path in ("/report", "/morning"):
             path = "/report.html"
+        elif path == "/night":
+            path = "/night.html"
         f = (WEB / path.lstrip("/")).resolve()
         if WEB not in f.parents or not f.is_file():
             return self._json({"error": "not found"}, 404)

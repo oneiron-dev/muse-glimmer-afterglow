@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afterglow — what it thought overnight</title>
+<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="/night.css">
+</head>
+<body class="night-page">
+<div class="horizon" aria-hidden="true"></div>
+<header class="top">
+  <div class="brand">
+    <a class="wordmark" href="/">Afterglow</a>
+    <span class="when" id="when"></span>
+  </div>
+  <nav class="model"><a href="/report">Morning report</a><a href="/">Back to the day</a></nav>
+</header>
+
+<main class="night">
+  <h1>What it thought overnight</h1>
+  <p class="summary" id="summary">Loading the night's log…</p>
+  <div class="filters" role="group" aria-label="Show">
+    <button type="button" class="chip" data-who="Dreamer" aria-pressed="true"></button>
+    <button type="button" class="chip" data-who="Night job" aria-pressed="true"></button>
+  </div>
+  <ol class="thoughts" id="thoughts"></ol>
+</main>
+<script src="/night.js"></script>
+</body>
+</html>
