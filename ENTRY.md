@@ -20,6 +20,9 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 26 Oct | Overnight thought log page: each Glimmer call made by Oneiron's Dreamer and by the night job, with its task, reasoning and answer. | #9 |
 | 26 Oct | Serving loads one LoRA adapter per world from the night job's manifest, applied per request. | #10 |
 | 26 Oct | Night consolidation fixes: duplicates decided by exact key and value (the model's merge proposals are recorded and overruled when values differ), per-note outcomes with reasons, the persona's name per world. | #12 |
+| 26 Oct | Day app README: what each piece does, how to run it end to end, how to work without a GPU. | #11 |
+| 26 Oct | One page nav across the day, night and morning pages; an empty day invites the first message. | #13 |
+| 26 Oct | Each speaker is witnessed into the vault with its own credential (the user's person credential, the assistant's agent credential), so Oneiron's Dreamer knows whose facts they are; vault writes run off the chat path. | #14 |
 
 ## Pre-existing work used as external dependencies
 
