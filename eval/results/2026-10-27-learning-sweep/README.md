@@ -59,3 +59,16 @@ Rank 16, attention + MLP (`q/k/v/o`, `mlp.gate/up/down`; the attention gate is e
 - `scores/base-parity.json`: batched and one-at-a-time scoring give the same pass/fail on 16/16 probes.
 
 Limits: one persona and one day; scored in transformers on the NF4 weights. The morning eval of record runs in llama.cpp on the Q4_K_M target with the GGUF adapter.
+
+## The adapter in llama.cpp (the runtime of record)
+
+The S1 epoch-4 adapter was converted to a GGUF LoRA and served by llama.cpp v0.7.0 (`620d2225`, CUDA sm89) on the Q4_K_M target, target-only. Every request carried its LoRA scale (0 = base, 1 = adapted) and `cache_prompt: false`; the server ran with `--cache-ram 0`. The prompts were the same token ids as in transformers (`llamacpp/`):
+
+| arm | facts learned | forward | reverse | general 30 | forgetting 200 |
+|---|---|---|---|---|---|
+| A base | 0/45 | 1/135 | 1/12 | 28/30 | 119/200 (16 MMLU answers truncated) |
+| B adapted | 44/45 | 127/135 | 8/12 | 29/30 | 128/200: +4.5 pt [−1.3, +10.2], no loss detected |
+| C base + notes | 45/45 | 134/135 | 12/12 | 29/30 | — |
+| D adapted + notes | 45/45 | 135/135 | 12/12 | 29/30 | — |
+
+Agreement with PEFT on the NF4 weights: same pass/fail on 132 of 135 forward probes in arm B (identical text on 102), 135/135 in arm D, and 188/200 on the forgetting slice. Each answer also stores its token confidence (log-probabilities), the calibration data for a confidence gate.
