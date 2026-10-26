@@ -37,6 +37,7 @@ def main():
     ap.add_argument("--day", type=int, required=True)
     ap.add_argument("--runs")
     ap.add_argument("--old-version", default="v1", help="label for the verdicts being replaced")
+    ap.add_argument("--reason", default="scorer change", help="why the night is re-scored (kept in the receipt)")
     args = ap.parse_args()
     night = runs_root(args.runs) / args.world / str(args.day) / "night"
     world = json.loads((ROOT / "worlds" / args.world / "world.json").read_text())
@@ -75,7 +76,7 @@ def main():
     code = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     receipt.setdefault("rescore", []).append({
         "at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"), "scorer": scoring.SCORER_VERSION,
-        "replaces": args.old_version, "code_commit": code, "changed_verdicts": changed,
+        "replaces": args.old_version, "reason": args.reason, "code_commit": code, "changed_verdicts": changed,
         "before": {**headline(old_eval), "decision": old_decision["decision"]},
         "after": {**headline(new_eval), "decision": new_decision["decision"]}})
     receipt.setdefault("hashes", {})["eval"] = hashlib.sha256((night / "eval.json").read_bytes()).hexdigest()

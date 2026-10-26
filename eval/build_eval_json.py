@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import omniscience  # noqa: E402
 import stats  # noqa: E402
 from summarize_sweep import passes, per_fact_rate  # noqa: E402
 
@@ -72,7 +73,8 @@ def build(world, day, recs, adapter):
             "runtime": any_rec.get("runtime", "transformers+peft"),
             "decoding": {"greedy": True, "target_only": True, "answer_channel": "forced to=user",
                          "max_new_tokens": {"forward": 64, "reverse": 64, "general": 64, "preference": 256, "procedure": 256}},
-            "arms": arms, "learned": learned, "stale": stale, "forgot": forgot, "facts": facts}
+            "arms": arms, "learned": learned, "stale": stale, "forgot": forgot,
+            "omniscience": omniscience.per_arm(recs), "facts": facts}
 
 
 def main():
