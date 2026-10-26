@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afterglow</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div class="horizon" aria-hidden="true"></div>
+<header class="top">
+  <div class="brand">
+    <span class="wordmark">Afterglow</span>
+    <span class="who" id="who"></span>
+    <span class="when" id="when"></span>
+  </div>
+  <div class="model" id="model">
+    <span class="dot" id="dot"></span>
+    <span id="model-name">Muse Glimmer 30B</span>
+    <span class="weights" id="weights"></span>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="talk" aria-label="Conversation">
+    <ol class="log" id="log"></ol>
+    <form class="composer" id="composer">
+      <label class="sr" for="input">Message</label>
+      <textarea id="input" rows="2" placeholder="Tell Afterglow about your work, or ask it something" autocomplete="off"></textarea>
+      <div class="composer-row">
+        <div class="speed" id="speed" aria-live="off"></div>
+        <button type="submit" id="send">Send</button>
+      </div>
+    </form>
+  </section>
+
+  <aside class="knows" aria-label="What it knows">
+    <section>
+      <h2>Notes</h2>
+      <p class="hint">What Afterglow wrote down today. These sit outside the model.</p>
+      <ul class="notes" id="notes"></ul>
+      <p class="empty" id="notes-empty">Nothing yet. Tell it about your projects, people and places.</p>
+    </section>
+    <section>
+      <h2>In its weights</h2>
+      <div id="weights-body">
+        <p class="empty">Nothing learned yet. Tonight it trains on today, and keeps the update only if it learned without forgetting.</p>
+      </div>
+    </section>
+    <section>
+      <h2>Context</h2>
+      <p class="context" id="context">Checking for a saved context…</p>
+    </section>
+    <button type="button" class="ghost" id="end-day">End the day</button>
+    <p class="hint" id="end-day-result"></p>
+  </aside>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
