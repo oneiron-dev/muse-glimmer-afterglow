@@ -99,3 +99,21 @@ a.rcpt:hover { color: var(--glow-violet); }
   .row { grid-template-columns: 1fr; gap: 0.35rem; }
   .hero { font-size: 3rem; }
 }
+
+.ask h2 { font: 500 1.25rem/1.25 var(--serif); font-variation-settings: "opsz" 24; margin: 0 0 0.25rem; }
+.ask form { display: flex; gap: 0.6rem; margin-top: 0.6rem; max-width: 44rem; }
+.ask input {
+  flex: 1; font: 400 1rem/1.4 var(--sans); color: var(--ink); background: var(--paper-raised);
+  border: 1px solid var(--rule-strong); border-radius: 10px; padding: 0.6rem 0.8rem;
+  transition: border-color 150ms, box-shadow 150ms;
+}
+.ask input:focus { outline: none; border-color: var(--glow-violet); box-shadow: 0 0 0 3px oklch(43% 0.11 295 / 0.15); }
+.ask button { background: var(--ink); color: var(--paper-raised); }
+.ask button:disabled { background: var(--ink-faint); }
+.ask-answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; margin-top: 1rem; max-width: 44rem; }
+.ask-answer { padding: 0.8rem 1rem; border-radius: 10px; background: var(--paper-raised); border: 1px solid var(--rule); }
+.ask-answer.after { border-color: oklch(43% 0.11 295 / 0.35); }
+.ask-answer .who { font-size: 0.8rem; color: var(--ink-soft); font-weight: 600; }
+.ask-answer .text { margin-top: 0.3rem; font: 400 1.05rem/1.45 var(--serif); white-space: pre-wrap; }
+.ask-answer .text:empty::before { content: "…"; color: var(--ink-faint); }
+.ask-note { margin-top: 0.8rem; max-width: 60ch; }

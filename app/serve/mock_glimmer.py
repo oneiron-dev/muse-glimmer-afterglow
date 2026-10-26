@@ -42,8 +42,9 @@ def ntok(text):
 
 
 class Mock:
-    def __init__(self, tok_s, state_file):
+    def __init__(self, tok_s, state_file, adapter=False):
         self.tok_s = tok_s
+        self.adapter = adapter
         self.slots = {0: "", 1: ""}
         self.saved = {}
         self.lock = threading.Lock()
@@ -110,7 +111,7 @@ class Handler(BaseHTTPRequestHandler):
         if p == "/v1/models":
             return self._json({"data": [{"id": ALIAS}]})
         if p == "/lora-adapters":
-            return self._json([])
+            return self._json([{"id": 0, "path": "mock-night-1.gguf", "scale": 0.0}] if self.mock.adapter else [])
         if p == "/slots":
             return self._json([{"id": i, "n_tokens": ntok(t)} for i, t in self.mock.slots.items()])
         return self._json({"error": {"code": 404, "message": "File Not Found"}}, 404)
@@ -127,7 +128,12 @@ class Handler(BaseHTTPRequestHandler):
             n = ntok(body["prompt"])
             time.sleep(n / 3000)
             m.slots[slot] = body["prompt"]
-            return self._json({"content": "", "tokens_evaluated": n,
+            content = ""
+            if body.get("n_predict"):  # a direct question: answer by the adapter scale it was sent
+                scale = (body.get("lora") or [{}])[0].get("scale")
+                content = ("(mock) From last night's update: the answer." if scale == 1.0
+                           else "(mock) I don't have that information.")
+            return self._json({"content": content, "stop_type": "eos", "tokens_evaluated": n,
                                "timings": {"prompt_n": n, "cache_n": 0, "prompt_ms": (time.time() - t0) * 1000}})
         if p.startswith("/slots/"):
             slot = int(p.rsplit("/", 1)[-1])
@@ -161,6 +167,11 @@ class Handler(BaseHTTPRequestHandler):
             common += 1
         cache_n, prompt_n = ntok(cached[:common]) if common else 0, ntok(prompt[common:])
         reasoning, call, content = m.reply_plan(body["messages"])
+        if not body.get("tools"):  # a plain question with no tools: answer by the adapter scale it was sent
+            scale = (body.get("lora") or [{}])[0].get("scale")
+            reasoning, call = "Answer directly.", None
+            content = ("(mock) From last night's update: the answer." if scale == 1.0
+                       else "(mock) I don't have that information.")
         max_tokens = body.get("max_tokens") or 1024
         t0 = time.time()
         time.sleep(prompt_n / 3000)
@@ -221,8 +232,9 @@ def main():
     ap.add_argument("--port", type=int, default=18690)
     ap.add_argument("--tok-s", type=float, default=80.0)
     ap.add_argument("--state-file", default=None, help="write a serve-state file like nelly's current.json")
+    ap.add_argument("--adapter", action="store_true", help="report one loaded LoRA adapter")
     a = ap.parse_args()
-    Handler.mock = Mock(a.tok_s, a.state_file)
+    Handler.mock = Mock(a.tok_s, a.state_file, adapter=a.adapter)
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
     srv.daemon_threads = True
     print(f"mock Glimmer at http://127.0.0.1:{a.port} ({a.tok_s:g} tok/s)", flush=True)

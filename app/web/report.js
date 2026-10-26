@@ -221,13 +221,39 @@ function tooltip(facts) {
   });
 }
 
+function askBox() {
+  const form = $("ask-form"), input = $("ask-input"), send = $("ask-send"), box = $("ask-answers");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const question = input.value.trim();
+    if (!question) return;
+    send.disabled = true;
+    box.replaceChildren(el("div", "ask-answer", "Asking…"));
+    try {
+      const r = await (await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" },
+                                                  body: JSON.stringify({ question }) })).json();
+      box.replaceChildren();
+      if (r.error) box.append(el("div", "ask-answer", r.error));
+      for (const a of r.answers || []) {
+        const card = el("div", "ask-answer" + (a.scale === 1 ? " after" : ""));
+        card.append(el("div", "who", r.adapter ? a.label : `${a.label} (no update loaded yet)`), el("div", "text", a.content));
+        box.append(card);
+      }
+    } finally {
+      send.disabled = false;
+    }
+  });
+}
+
 async function boot() {
   const qs = new URLSearchParams(location.search);
   const r = await (await fetch(`/api/report?${qs}`)).json();
   $("who").textContent = r.persona || r.world;
+  askBox();
   if (r.missing) {
     $("verdict").textContent = "No night has run yet. After tonight's training, what it learned shows here.";
     document.querySelectorAll(".lead, .facts-grid, .numbers, .asked, .receipt").forEach((n) => (n.hidden = true));
+    $("ask-hint").textContent = "Your question goes to the model with no notes and no tools.";
     return;
   }
   $("when").textContent = `The morning after day ${r.day}`;
