@@ -41,8 +41,15 @@ def confidence(probs):
     lps = [t["logprob"] for t in probs if t.get("logprob") is not None]
     if not lps:
         return None
+    margins = []  # top-1 minus top-2 log-probability per answer token (greedy picks top-1)
+    for t in probs:
+        top = t.get("top_logprobs") or []
+        if len(top) >= 2:
+            margins.append(top[0]["logprob"] - top[1]["logprob"])
     return {"first_logprob": round(lps[0], 4), "min_logprob": round(min(lps), 4), "mean_logprob": round(sum(lps) / len(lps), 4),
-            "n_tokens": len(lps), "first_top": [[c.get("token"), round(c.get("logprob"), 4)] for c in probs[0].get("top_logprobs", [])]}
+            "n_tokens": len(lps), "first_top": [[c.get("token"), round(c.get("logprob"), 4)] for c in probs[0].get("top_logprobs", [])],
+            "min_margin": round(min(margins), 4) if margins else None,
+            "weakest_token": probs[lps.index(min(lps))].get("token")}
 
 
 def complete(server, ids, max_new, scale):
