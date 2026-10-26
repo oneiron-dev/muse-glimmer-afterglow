@@ -17,6 +17,22 @@ let seenNotes = new Set();
 
 /* ---------- header, notes, context ---------- */
 
+function renderWeights(night) {
+  const box = $("weights-body");
+  if (!night) return;
+  box.replaceChildren();
+  const p = el("p", "empty");
+  if (night.decision === "rollback") {
+    p.append(`Last night's update was rolled back, so these weights are unchanged.`);
+  } else {
+    p.append(`After night ${night.day} it answers `, el("strong", null, `${night.learned} of ${night.facts}`),
+      ` of your facts with notes off (before: ${night.before}).`);
+  }
+  const a = el("a", "report-link", "Open the morning report");
+  a.href = `/report?day=${night.day}`;
+  box.append(p, a);
+}
+
 function renderHeader(s) {
   $("who").textContent = s.persona || s.world;
   const d = new Date(`${s.date}T12:00:00`);
@@ -251,6 +267,7 @@ async function refresh(flash) {
   renderHeader(s);
   renderNotes(s.notes, flash);
   renderContext(s.snapshot);
+  renderWeights(s.night);
   return s;
 }
 

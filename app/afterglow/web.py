@@ -14,7 +14,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import snapshot
+from . import paths, snapshot
 from .agent import DaySession, now_iso
 from .llm import GlimmerClient
 
@@ -39,6 +39,33 @@ class App:
             except Exception as e:
                 self.snapshot_status = {"state": "error", "at": now_iso(), "message": f"{type(e).__name__}: {e}"}
 
+    def report(self, world=None, day=None):
+        """The morning report: runs/<world>/<day>/night/{eval,decision,receipt}.json, with the probe questions.
+        Default day: the latest one with a night eval."""
+        world = world or self.session.world
+        root = paths.runs_root() / world
+        if day is None:
+            days = sorted((int(p.parent.parent.name) for p in root.glob("*/night/eval.json")
+                           if p.parent.parent.name.isdigit()), reverse=True)
+            if not days:
+                return {"world": world, "missing": "no night has run for this world yet"}
+            day = days[0]
+        night = root / str(day) / "night"
+        if not (night / "eval.json").exists():
+            return {"world": world, "day": day, "missing": f"no eval.json in {night}"}
+        load = lambda name: json.loads((night / name).read_text()) if (night / name).exists() else None
+        probes_path = paths.worlds_root() / world / "heldout" / "probes.jsonl"
+        questions = {}
+        if probes_path.exists():
+            for line in probes_path.read_text().splitlines():
+                if line.strip():
+                    p = json.loads(line)
+                    questions[p["id"]] = p["question"]
+        persona = (self.session.world_doc.get("persona") or {}) if world == self.session.world else {}
+        return {"world": world, "day": day, "persona": persona.get("name"), "eval": load("eval.json"),
+                "decision": load("decision.json"), "receipt": load("receipt.json"), "questions": questions,
+                "night_dir": str(night)}
+
     def state(self):
         s = self.session
         persona = (s.world_doc.get("persona") or {})
@@ -50,8 +77,20 @@ class App:
             "notes": s.notes.all(include_superseded=True),
             "history": s.history(),
             "snapshot": self.snapshot_status,
+            "night": self.night_summary(),
             "busy": self.lock.locked(),
         }
+
+    def night_summary(self):
+        """The latest night's headline for the day page: facts answered with notes off, and the decision."""
+        r = self.report()
+        if r.get("missing"):
+            return None
+        ev, decision = r["eval"] or {}, r["decision"] or {}
+        facts = [f for f in ev.get("facts", []) if f.get("valid_from", 1) <= (ev.get("eval_day") or r["day"])]
+        learned = (ev.get("learned") or {}).get("facts_learned") or {}
+        return {"day": r["day"], "facts": len(facts), "learned": learned.get("B"), "before": learned.get("A"),
+                "decision": decision.get("decision")}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -78,8 +117,14 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.urlparse(self.path).path
         if path == "/api/state":
             return self._json(self.app.state())
+        if path == "/api/report":
+            q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            day = q.get("day", [None])[0]
+            return self._json(self.app.report(q.get("world", [None])[0], int(day) if day else None))
         if path in ("/", "/index.html"):
             path = "/index.html"
+        elif path in ("/report", "/morning"):
+            path = "/report.html"
         f = (WEB / path.lstrip("/")).resolve()
         if WEB not in f.parents or not f.is_file():
             return self._json({"error": "not found"}, 404)

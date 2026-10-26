@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afterglow — morning report</title>
+<link rel="stylesheet" href="/app.css">
+<link rel="stylesheet" href="/report.css">
+</head>
+<body class="morning">
+<div class="horizon dawn" aria-hidden="true"></div>
+<header class="top">
+  <div class="brand">
+    <a class="wordmark" href="/">Afterglow</a>
+    <span class="who" id="who"></span>
+    <span class="when" id="when"></span>
+  </div>
+  <nav class="model"><a href="/">Back to the day</a></nav>
+</header>
+
+<main class="report" id="report">
+  <p class="verdict" id="verdict">Loading the night's results…</p>
+
+  <section class="lead" aria-labelledby="hero-label">
+    <div class="hero" id="hero"></div>
+    <p class="hero-label" id="hero-label"></p>
+    <p class="forgot-line" id="forgot-line"></p>
+  </section>
+
+  <figure class="facts-grid" id="grid" aria-describedby="grid-caption">
+    <figcaption id="grid-caption">Each dot is one fact you told it yesterday. A filled dot means it answered at least 2 of 3 differently worded questions about that fact.</figcaption>
+  </figure>
+
+  <section class="numbers" id="numbers" aria-label="What it kept and what it lost"></section>
+
+  <section class="asked" aria-labelledby="asked-title">
+    <h2 id="asked-title">Asked with notes off</h2>
+    <p class="hint">The same question to the model before and after the night, with no notes in the prompt.</p>
+    <table id="asked-table">
+      <thead><tr><th scope="col">Question</th><th scope="col">Before the night</th><th scope="col">After the night</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <button type="button" class="ghost" id="show-all" hidden>Show every fact</button>
+  </section>
+
+  <details class="receipt" id="receipt">
+    <summary>Receipt for this night</summary>
+    <dl id="receipt-list"></dl>
+  </details>
+</main>
+<div class="tip" id="tip" role="tooltip" hidden></div>
+<script src="/report.js"></script>
+</body>
+</html>
