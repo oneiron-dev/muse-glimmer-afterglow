@@ -116,3 +116,16 @@ a.rcpt:hover { color: var(--glow-violet); }
 .ask-answer .text { margin-top: 0.3rem; font: 400 1.05rem/1.45 var(--serif); white-space: pre-wrap; }
 .ask-answer .text:empty::before { content: "…"; color: var(--ink-faint); }
 .ask-note { margin-top: 0.8rem; max-width: 60ch; }
+
+/* What it chose to learn: one compact panel under the headline. */
+.chose { max-width: 46rem; padding: 1rem 1.15rem; border-radius: 12px; background: var(--paper-raised); border: 1px solid var(--rule); }
+.chose h2 { margin: 0 0 0.3rem; font: 500 1.1rem/1.25 var(--serif); font-variation-settings: "opsz" 24; }
+.chose-summary { margin: 0; color: var(--ink-soft); }
+.chose-summary strong { color: var(--ink); font-weight: 600; }
+.chose-list { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.92rem; }
+.chose-list li { display: grid; grid-template-columns: 5.2rem 1fr; gap: 0.6rem; }
+.chose-list .what { font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); padding-top: 0.1rem; }
+.chose-list .old { color: var(--ink-faint); text-decoration: line-through; }
+.chose details.more ul { list-style: none; margin: 0.4rem 0 0; padding: 0; columns: 2 16rem; font-size: 0.85rem; }
+.chose details.more li { break-inside: avoid; padding: 0.15rem 0; color: var(--ink-soft); }
+.chose details.more li b { color: var(--ink); font-weight: 600; }
