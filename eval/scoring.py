@@ -132,7 +132,17 @@ def score_probe(item, answer, truncated, facts_by_id):
     if truncated:
         return False, "truncated"
     kind = item["kind"]
-    if kind in ("forward", "reverse", "stale"):
+    if kind == "stale":
+        # A stale probe sits on the OLD fact id; it "passes" (a bad outcome) when the old value comes back
+        # and the value that superseded it does not appear in the same answer.
+        old = facts_by_id[item["fact_id"]]
+        if not score_fact(answer, item.get("accept") or old["accept"]):
+            return False, ""
+        new_id = old.get("superseded_by")
+        if new_id and new_id in facts_by_id and score_fact(answer, facts_by_id[new_id]["accept"]):
+            return False, "old and new value both present"
+        return True, "stale value"
+    if kind in ("forward", "reverse"):
         accept = item.get("accept") or facts_by_id[item["fact_id"]]["accept"]
         require_all = item.get("require_all")
         if require_all is None and kind == "forward":

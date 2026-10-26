@@ -85,6 +85,28 @@ def score_arm(model, tokenizer, items, facts_by_id, notes, batch_size):
     return results
 
 
+def fact_valid_on(fact, facts_by_id, day):
+    if fact.get("valid_from", 1) > day:
+        return False
+    new_id = fact.get("superseded_by")
+    return not (new_id and facts_by_id[new_id].get("valid_from", 1) <= day)
+
+
+def probes_for_day(items, facts_by_id, day):
+    """Forward/reverse probes only for facts valid on `day`; stale probes only once their fact is superseded."""
+    out = []
+    for it in items:
+        fid = it.get("fact_id")
+        if fid is None:
+            out.append(it)
+        elif it["kind"] == "stale":
+            if not fact_valid_on(facts_by_id[fid], facts_by_id, day) and facts_by_id[fid].get("valid_from", 1) <= day:
+                out.append(it)
+        elif fact_valid_on(facts_by_id[fid], facts_by_id, day):
+            out.append(it)
+    return out
+
+
 def summarize(results, world):
     by_kind = {}
     for r in results:
@@ -104,6 +126,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model-dir", required=True)
     ap.add_argument("--world", required=True)
+    ap.add_argument("--day", type=int, default=1, help="score the facts valid on this day (corrections supersede)")
     ap.add_argument("--notes", help="notes.json ({notes: [...]}) or consolidated.json ({items: [{statement}]}) for arms C and D")
     ap.add_argument("--base-arms", default="", help="comma list of A,C to score on the base model")
     ap.add_argument("--adapters", nargs="*", default=[], help="label=path pairs; each scored as B (and D with --notes-arms)")
@@ -117,7 +140,7 @@ def main():
     wdir = ROOT / "worlds" / args.world
     world = json.loads((wdir / "world.json").read_text())
     facts_by_id = {f["id"]: f for f in world["facts"]}
-    items = read_jsonl(wdir / "heldout" / "probes.jsonl")
+    items = probes_for_day(read_jsonl(wdir / "heldout" / "probes.jsonl"), facts_by_id, args.day)
     general = [{**g, "kind": "general"} for g in read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")]
     notes = None
     if args.notes:
