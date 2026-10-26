@@ -25,6 +25,7 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 26 Oct | Each speaker is witnessed into the vault with its own credential (the user's person credential, the assistant's agent credential), so Oneiron's Dreamer knows whose facts they are; vault writes run off the chat path. | #14 |
 | 26 Oct | Fixes from a review of the day app: each world's adapter is matched by its full path when several are loaded, adapter and snapshot errors stop the run instead of passing silently, resumed vault pushes never repeat a turn, and the report names a rolled-back update. | #16 |
 | 26 Oct | Adapters load at scale 0 and the proxy gives any request that names no adapter scales all-zero scales, so no caller (the Dreamer, health checks) gets every world's adapter at once and no cached prompt computed under another adapter is reused; a check script for the swap. | #18 |
+| 27 Oct | "What it chose to learn" on the morning report: per note kept, merged as a duplicate or dropped as superseded, with the reason, and the merges the model proposed that the night refused; plain wording for the keep checks and the forgetting line. | #15 |
 
 ## Pre-existing work used as external dependencies
 
