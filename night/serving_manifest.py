@@ -3,7 +3,8 @@
 
 For every world, the kept adapter is runs/<w>/adapters.json "current". Its GGUF is copied from the
 training host to <serving dir>/<w>-d<day>.gguf (host to host, checked by sha256), and the manifest lists
-the adapters with explicit ids: the server's --lora order is ascending id. Nothing here restarts a server.
+the adapters with explicit ids (0..n-1, the server's --lora order). Entries without a "world" (adapters this
+script does not own) are kept. Paths are absolute on the serving box and unique. Nothing here restarts a server.
 """
 
 import argparse
@@ -45,9 +46,14 @@ def main():
         if got != cur["gguf_sha256"]:
             raise SystemExit(f"{world}: sha256 on {args.serving_host} is {got}, expected {cur['gguf_sha256']}")
         adapters.append({"world": world, "day": cur["day"], "path": dest, "sha256": got, "decision": cur["decision"]})
+    out = runs / "serving" / "adapters.json"
+    if out.exists():  # keep entries this script does not own (no "world", e.g. a decision adapter)
+        adapters += [a for a in json.loads(out.read_text()).get("adapters", []) if "world" not in a]
+    paths = [a["path"] for a in adapters]
+    if len(paths) != len(set(paths)):
+        raise SystemExit(f"two adapters share a path: {paths}")
     for i, a in enumerate(adapters):
         a["id"] = i
-    out = runs / "serving" / "adapters.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"llama_server": LLAMA_SERVER, "llama_sha256": args.llama_sha256,
                                "flags": "--lora <path> per adapter in id order, --lora-init-without-apply, --cache-ram 0",
