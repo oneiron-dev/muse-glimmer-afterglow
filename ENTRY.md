@@ -11,6 +11,8 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 26 Oct | Repository, this ledger, dependency setup script. | — |
 | 26 Oct | Glimmer serving manager for one RTX 4090 (start, stop, health, endpoint) and a pass-through proxy that keeps a thought log: each chat call's reasoning and answer, one JSON line per call. | #1 |
 | 26 Oct | Day agent on Glimmer with tool calls (remember, recall, calendar, tasks), a notes store where corrections supersede old values, KV snapshot identity checks and re-warm after a night update, and the local web app. | #2 |
+| 26 Oct | Snapshots cover only each world's stable prefix (about 144 MB); the day is prefilled after restore. | #3 |
+| 26 Oct | Night learning engine: one teacher interface (Glimmer or Spark), fact rewrites, self-distilled general anchors, leak check, QLoRA trainer on the NF4 checkpoint, four-arm scorer, sweep runner, and a llama.cpp patch plus check for converting Glimmer LoRA adapters to GGUF. First sweep world `w1-ines-varga` with held-out probes frozen by hash before any training data existed. | #4 |
 
 ## Pre-existing work used as external dependencies
 
