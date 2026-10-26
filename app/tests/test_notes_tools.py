@@ -11,7 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from afterglow.notes import LocalJsonNotes, OneironNotes  # noqa: E402
+from afterglow.notes import LocalJsonNotes, conversation_ref  # noqa: E402
 from afterglow.tools import ToolBox, WorldState  # noqa: E402
 
 
@@ -51,9 +51,12 @@ class NotesTest(unittest.TestCase):
         day2 = LocalJsonNotes(os.path.join(self.tmp, "d2.json"), seed_from=out)
         self.assertEqual(day2.all()[0]["value"], "Kestrel Fabrication")
 
-    def test_oneiron_backend_refuses_until_go(self):
-        with self.assertRaises(NotImplementedError):
-            OneironNotes().remember("k", "v")
+    def test_vault_conversation_per_world_day(self):
+        a, b = conversation_ref("w1-ines-varga", 1), conversation_ref("w1-ines-varga", 2)
+        self.assertEqual(a, conversation_ref("w1-ines-varga", 1))
+        self.assertNotEqual(a, b)
+        self.assertRegex(a, r"^[0-9a-f]{32}$")
+        self.assertGreaterEqual(int(a[:16], 16), 1 << 62)
 
 
 class ToolsTest(unittest.TestCase):

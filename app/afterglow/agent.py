@@ -66,7 +66,8 @@ def system_message(world_doc):
 
 
 class DaySession:
-    def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True):
+    def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
+                 notes_backend="local"):
         self.world, self.day = world, int(day)
         self.client = client or GlimmerClient()
         self.reasoning = reasoning
@@ -75,6 +76,10 @@ class DaySession:
         self.dir = paths.day_dir(world, self.day)
         prev = previous_day_dir(world, self.day)
         self.notes = LocalJsonNotes(self.dir / "notes.json", seed_from=prev / "notes.json" if prev else None)
+        if notes_backend == "oneiron":
+            from .notes import OneironNotes
+
+            self.notes = OneironNotes(self.notes, world, self.day)
         seed = None
         if prev and (prev / "world_state.json").exists():
             seed = json.loads((prev / "world_state.json").read_text())
@@ -193,6 +198,8 @@ class DaySession:
                "ttft_s": first.get("ttft_s"), "total_s": round(time.time() - t0, 3),
                "tok_s": last_t.get("predicted_per_second"), "error": error}
         self._log(rec)
+        if hasattr(self.notes, "witness_turn") and final:
+            self.notes.witness_turn(text, final)
         yield {"type": "turn_done", "turn": turn, "content": final, "notes_written": notes_written,
                "ttft_s": rec["ttft_s"], "total_s": rec["total_s"], "tok_s": rec["tok_s"], "error": error,
                "cache_n": (first.get("timings") or {}).get("cache_n"),
