@@ -99,14 +99,6 @@ Facts:
 
 Return one JSON object, nothing else: {{"<fact id>": ["question 1", "question 2", "question 3"], ...}}."""
 
-REVERSE_PROMPT = """These are facts a person told their AI assistant. Pick {n} of them that link two specific things (a person and a company, a code name and a project, a machine nickname and a room) and for each write one reverse question: the question NAMES THE VALUE and asks for the other side. Example: for "Teodor Ilves is the account manager at Brannock Composites" (value: Teodor Ilves) ask "Which company does Teodor Ilves work for?" with accept ["brannock"]. Give "accept": 1-2 lowercase strings from the statement (not in the question, not in the value) that a correct answer must contain; each must be a specific name, place, code or number, never a generic word ("company", "designer", "client", "manager"). The answer is never {name} themself: skip facts that only link a thing to {name}.
-
-Facts:
-{facts}
-
-Return a JSON list, nothing else: [{{"fact_id": "...", "question": "...", "accept": ["..."]}}]."""
-
-
 def now_iso():
     return dt.datetime.now(JST).isoformat(timespec="seconds")
 
@@ -135,6 +127,48 @@ GENERIC = {"monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "
 def generic(term):
     t = norm(term)
     return t in GENERIC or len(t) < 3 or (t.isdigit() and len(t) <= 2)
+
+
+WEEKDAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october",
+          "november", "december"]
+
+
+def ordinal(n):
+    return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+
+
+def derive_accept(value, accept):
+    """Accept terms for times and dates in the convention eval/scoring.py expects (w1-ines-varga): a time is
+    accepted as "HH:MM" with the weekday in require_all; a date in its common written forms. Other values keep
+    the teacher's terms. Returns (accept, require_all)."""
+    low = value.lower()
+    day = next((d for d in WEEKDAYS if re.search(rf"\b{d}s?\b", low)), None)
+    time = re.search(r"\b(\d{1,2}):(\d{2})\b", value)
+    if time:
+        return [f"{int(time.group(1)):02d}:{time.group(2)}"], [day] if day else []
+    iso = re.search(r"\b(\d{4})-(\d{2})-(\d{2})\b", value)
+    if iso:
+        d, month = int(iso.group(3)), MONTHS[int(iso.group(2)) - 1]
+    else:
+        m = (re.search(r"\b(\d{1,2})(?:st|nd|rd|th)?(?: of)? (" + "|".join(MONTHS) + r")\b", low)
+             or re.search(r"\b(" + "|".join(MONTHS) + r") (\d{1,2})(?:st|nd|rd|th)?\b", low))
+        if not m:
+            # A value with a number or code in it ("Extension 4421", "Desk 14B", "400 euros monthly") is also
+            # accepted by that token alone; distinctive() drops it when another value shares it.
+            codes = [t.strip(".") for t in re.findall(r"[a-z0-9.]*\d[a-z0-9.]*", low) if len(t.strip(".")) >= 2]
+            return accept + [c for c in codes if c not in accept], []
+        d, month = (int(m.group(1)), m.group(2)) if m.group(1).isdigit() else (int(m.group(2)), m.group(1))
+    forms = [f"{d} {month}", f"{month} {d}", f"{ordinal(d)} {month}", f"{month} {ordinal(d)}", f"{ordinal(d)} of {month}"]
+    if iso:
+        forms.append(iso.group(0))
+    return forms, []
+
+
+def distinctive(term, require_all, value, other_values):
+    """A term (with its require_all terms) identifies one value: it is not generic and no other value holds it."""
+    return not generic(term) and not any(has_term(v, term) and all(norm(r) in norm(v) for r in require_all)
+                                         for v in other_values if v != value)
 
 
 def parse_json(text):
@@ -193,9 +227,8 @@ class Generator:
             key, value = str(f.get("key", "")).strip().lower(), str(f.get("value", "")).strip()
             # Each accept term alone must identify this value: not generic, and not in any other fact's value.
             accept = [str(a).strip().lower() for a in (f.get("accept") or []) if str(a).strip()]
-            accept = [a for a in accept if not generic(a)
-                      and not any(has_term(v, a) for j, v in enumerate(values) if j != i)]
-            require_all = [str(x).strip().lower() for x in (f.get("require_all") or []) if str(x).strip()]
+            accept, require_all = derive_accept(value, accept)
+            accept = [a for a in accept if distinctive(a, require_all, value, values[:i] + values[i + 1:])]
             text = f"{key} {value} {f.get('statement', '')}"
             if not key or not value or not f.get("statement"):
                 problems.append(f"incomplete: {f}")
@@ -203,7 +236,7 @@ class Generator:
                 problems.append(f"skip-list topic: {key}")
             elif norm(key) in seen_keys or norm(value) in seen_values:
                 problems.append(f"duplicate: {key}")
-            elif not accept or not all(has_term(value, a) for a in accept + require_all):
+            elif not accept:
                 problems.append(f"no distinctive accept term in the value: {key} = {value} / {f.get('accept')}")
             else:
                 seen_keys.add(norm(key))
@@ -222,12 +255,13 @@ class Generator:
             old = by_key.get(norm(c.get("key", "")))
             value = str(c.get("value", "")).strip()
             accept = [str(a).strip().lower() for a in (c.get("accept") or []) if str(a).strip() and not generic(a)]
-            require_all = [str(x).strip().lower() for x in (c.get("require_all") or []) if str(x).strip()]
+            accept, require_all = derive_accept(value, accept)
             if not old or old["id"] in {x["old"]["id"] for x in out} or "16:00" in old["value"]:
                 problems.append(f"correction for an unknown, repeated or 16:00 fact: {c.get('key')}")
             elif not value or norm(value) == norm(old["value"]) or BANNED.search(value):
                 problems.append(f"correction without a new value: {c.get('key')}")
-            elif not accept or not all(has_term(value, a) for a in accept) or any(has_term(old["value"], a) for a in accept):
+            elif not accept or any(has_term(old["value"], a) and all(norm(r) in norm(old["value"]) for r in require_all)
+                                   for a in accept):
                 problems.append(f"correction accept terms unusable: {c.get('key')} -> {value} / {accept}")
             else:
                 out.append({"old": old, "value": value, "accept": accept, "require_all": require_all,
@@ -338,23 +372,6 @@ class Generator:
             for k, p in enumerate([p for p in probes if p["fact_id"] == nf["id"]], 1):
                 probes.append({"id": f"{c['old']['id']}-s{k}", "fact_id": c["old"]["id"], "kind": "stale",
                                "question": p["question"], "accept": c["old"]["accept"]})
-        listing = "\n".join(f"{f['id']}: {f['statement']}" for f in facts)
-        got = self.ask(REVERSE_PROMPT.format(n=12, facts=listing, name=name), "reverse probes", temperature=0.5)
-        if isinstance(got, dict):  # a list wrapped in an object
-            got = next((v for v in got.values() if isinstance(v, list)), [])
-        by_id = {f["id"]: f for f in facts}
-        name_terms = {norm(x) for x in name.split()} | {norm(name)}
-        for r in got if isinstance(got, list) else []:
-            f = by_id.get(r.get("fact_id"))
-            acc = [str(a).lower() for a in (r.get("accept") or [])]
-            q = str(r.get("question", "")).strip()
-            names_value = any(has_term(q, a) for a in f["accept"]) if f else False
-            if (f and acc and q and names_value and not any(generic(a) or norm(a) in name_terms for a in acc)
-                    and all(has_term(f["statement"], a) for a in acc)
-                    and not any(has_term(q, a) or has_term(f["value"], a) for a in acc)):
-                n = sum(1 for p in probes if p["fact_id"] == f["id"] and p["kind"] == "reverse") + 1
-                probes.append({"id": f"{f['id']}-r{n}", "fact_id": f["id"], "kind": "reverse", "question": q,
-                               "accept": acc})
         clock_fact = next(f for f in facts if "16:00" in f["value"])
         task_name = procedure["name"][0].lower() + procedure["name"][1:]
         probes += [
@@ -382,10 +399,48 @@ def write_jsonl(path, rows):
     path.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows))
 
 
+def refresh(out):
+    """Re-derive accept terms and stale probes of an existing, unfrozen world with this file's rules (no teacher
+    calls). Reports any fact or probe that no longer passes the checks."""
+    world = json.loads((out / "world.json").read_text())
+    values = [f["value"] for f in world["facts"] if f["valid_from"] == 1]
+    issues = []
+    for f in world["facts"]:
+        accept, require_all = derive_accept(f["value"], f["accept"])
+        others = values if f["valid_from"] == 1 else [v for v in values if v != f["value"]]
+        kept = [a for a in accept if distinctive(a, require_all, f["value"], others)]
+        if not kept:
+            issues.append(f"{f['id']} {f['key']} = {f['value']}: no distinctive accept term; kept {f['accept']}")
+            continue
+        f["accept"] = kept
+        f.pop("require_all", None)
+        if require_all:
+            f["require_all"] = require_all
+    by_id = {f["id"]: f for f in world["facts"]}
+    probes = [json.loads(l) for l in (out / "heldout" / "probes.jsonl").read_text().splitlines() if l.strip()]
+    probes = [p for p in probes if p["kind"] != "reverse"]
+    for p in probes:
+        if p["kind"] == "stale":
+            p["accept"] = by_id[p["fact_id"]]["accept"]
+        elif p["kind"] == "forward" and any(has_term(p["question"], a) for a in by_id[p["fact_id"]]["accept"]):
+            issues.append(f"{p['id']}: the question contains its answer: {p['question']}")
+    (out / "world.json").write_text(json.dumps(world, indent=1, ensure_ascii=False) + "\n")
+    write_jsonl(out / "heldout" / "probes.jsonl", probes)
+    meta = json.loads((out / "generation.json").read_text())
+    meta["refreshed"] = now_iso()
+    meta["counts"]["probes"] = len(probes)
+    meta["sha256"] = {p: hashlib.sha256((out / p).read_bytes()).hexdigest()
+                      for p in ("world.json", "days/1/script.jsonl", "days/2/script.jsonl", "heldout/probes.jsonl")}
+    (out / "generation.json").write_text(json.dumps(meta, indent=1) + "\n")
+    return issues
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--world", required=True, help="world id, e.g. w2-<first>-<last> (renamed after the persona)")
-    ap.add_argument("--archetype", required=True, choices=sorted(ARCHETYPES))
+    ap.add_argument("--archetype", choices=sorted(ARCHETYPES), help="required unless --refresh")
+    ap.add_argument("--refresh", action="store_true", help="re-derive accept terms and stale probes of an "
+                                                            "existing, unfrozen world; no teacher calls")
     ap.add_argument("--teacher", default="spark-sub", choices=["spark-sub", "glimmer"])
     ap.add_argument("--facts", type=int, default=60)
     ap.add_argument("--corrections", type=int, default=6)
@@ -395,6 +450,12 @@ def main():
     out = REPO / "worlds" / a.world
     if (out / "heldout" / "FROZEN.json").exists():
         sys.exit(f"{out} has frozen probes; a frozen world is never regenerated")
+    if a.refresh:
+        issues = refresh(out)
+        print("\n".join(issues) or "refreshed; no issues")
+        return
+    if not a.archetype:
+        sys.exit("--archetype is required")
     out.mkdir(parents=True, exist_ok=True)
     g = Generator(a.world, a.archetype, a.teacher, out)
     print(f"{now_iso()} {a.world}: persona ({a.archetype}, teacher {a.teacher})", flush=True)
