@@ -5,7 +5,9 @@ learned: per-fact forward pass-rate deltas (B-A, C-A, B-C, D-C), paired cluster 
 stale: rate at which a superseded value comes back, per arm.
 forgot: arm A vs arm B on the 200-item forgetting slice (180 MMLU-Pro + 20 tool), Newcombe interval and
 exact McNemar; the update passes when the interval's lower bound is above -5 points and no tool item that
-passed before fails after. facts[]: per fact, passes of 3 and the raw answers in every arm.
+passed before fails after. facts[]: per fact, passes of 3, the raw answers, the per-probe pass flags and
+(llama.cpp runs) the per-probe token confidence in every arm. The confidence field names are stable:
+conf.<arm>[i] = {first_logprob, min_logprob, mean_logprob, n_tokens, first_top}.
 """
 
 import argparse
@@ -60,6 +62,8 @@ def build(world, day, recs, adapter):
             row[arm] = sum(r["pass"] for r in rs)
             row["answers"][arm] = [r["answer"] for r in rs]
             row["pass"][arm] = [bool(r["pass"]) for r in rs]
+            if any(r.get("conf") for r in rs):
+                row.setdefault("conf", {})[arm] = [r.get("conf") for r in rs]
             row["probes"] = [r["id"] for r in rs]
         if row["answers"]:
             facts.append(row)
