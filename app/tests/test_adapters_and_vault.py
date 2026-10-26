@@ -1,10 +1,20 @@
-"""Adapter matching (several worlds' adapters on one server) and push_day's resume rules, offline."""
+"""Offline tests for adapter matching (several worlds' adapters on one server) and push_day's resume rules.
+
+  python3 -m unittest discover -s app/tests
+"""
 import json
+import os
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+from unittest import mock
 
-import pytest
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from afterglow import oneiron_vault, snapshot
-from afterglow.llm import GlimmerClient, GlimmerError
+from afterglow import oneiron_vault, snapshot  # noqa: E402
+from afterglow.llm import GlimmerClient, GlimmerError  # noqa: E402
+from afterglow.notes import conversation_ref  # noqa: E402
 
 LOADED = [{"id": 0, "path": "/data/runs/w1/1/night/adapter.gguf", "scale": 1.0},
           {"id": 1, "path": "/data/runs/w2/1/night/adapter.gguf", "scale": 1.0}]
@@ -16,36 +26,34 @@ def client(adapter_path, loaded=LOADED):
     return c
 
 
-def test_world_adapter_matches_full_path_not_basename():
-    c = client("/data/runs/w2/1/night/adapter.gguf")
-    assert c.world_adapter()["id"] == 1
-    assert c.lora_field() == [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 1.0}]
-    assert c.lora_field(0.0) == [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 0.0}]
+class AdapterTest(unittest.TestCase):
+    def test_world_adapter_matches_full_path_not_basename(self):
+        c = client("/data/runs/w2/1/night/adapter.gguf")
+        self.assertEqual(c.world_adapter()["id"], 1)
+        self.assertEqual(c.lora_field(), [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 1.0}])
+        self.assertEqual(c.lora_field(0.0), [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 0.0}])
 
+    def test_adapter_missing_from_a_loaded_server_raises(self):
+        with self.assertRaises(GlimmerError):
+            client("/data/runs/w3/1/night/adapter.gguf").lora_field()
+        self.assertIsNone(client("/data/runs/w3/1/night/adapter.gguf", loaded=[]).lora_field())  # base weights
+        self.assertEqual(client(None).lora_field(), [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 0.0}])
 
-def test_adapter_missing_from_a_loaded_server_raises():
-    with pytest.raises(GlimmerError):
-        client("/data/runs/w3/1/night/adapter.gguf").lora_field()
-    assert client("/data/runs/w3/1/night/adapter.gguf", loaded=[]).lora_field() is None  # server runs base weights
-    assert client(None).lora_field() == [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 0.0}]
+    def test_failed_adapter_list_raises_and_is_not_cached(self):
+        c = GlimmerClient("http://127.0.0.1:9")
 
+        def down(path, timeout=10):
+            raise OSError("connection refused")
 
-def test_failed_adapter_list_raises_and_is_not_cached():
-    c = GlimmerClient("http://127.0.0.1:9")
+        c.get = down
+        with self.assertRaises(GlimmerError):
+            c.adapters()
+        c.get = lambda path, timeout=10: LOADED
+        self.assertEqual(c.adapters(), LOADED)
 
-    def down(path, timeout=10):
-        raise OSError("connection refused")
-
-    c.get = down
-    with pytest.raises(GlimmerError):
-        c.adapters()
-    c.get = lambda path, timeout=10: LOADED
-    assert c.adapters() == LOADED
-
-
-def test_identity_compare_counts_new_fields():
-    assert snapshot.compare({"model_sha256": "a"}, {"model_sha256": "a", "ctx": 65536}) == ["ctx"]
-    assert snapshot.compare({"server_started": "x"}, {"server_started": "y"}) == []
+    def test_identity_compare_counts_new_fields(self):
+        self.assertEqual(snapshot.compare({"model_sha256": "a"}, {"model_sha256": "a", "ctx": 65536}), ["ctx"])
+        self.assertEqual(snapshot.compare({"server_started": "x"}, {"server_started": "y"}), [])
 
 
 class FakeVault:
@@ -64,43 +72,52 @@ class FakeVault:
         return {"receipt_ref": f"r{len(self.sent)}", "turn_short_id": "t"}
 
 
-def day(tmp_path, monkeypatch, records):
-    monkeypatch.setenv("AFTERGLOW_RUNS", str(tmp_path))
-    d = tmp_path / "wt" / "1"
-    d.mkdir(parents=True)
-    (d / "daylog.jsonl").write_text("\n".join(json.dumps(r) for r in records))
-    return d
-
-
 def rec(turn, role, content, second, **kw):
     return {"ts": f"2026-10-27T05:00:{second:02d}+09:00", "turn": turn, "role": role, "content": content, **kw}
 
 
-def test_push_day_resumes_at_the_first_unsent_run(tmp_path, monkeypatch):
-    day(tmp_path, monkeypatch, [rec(1, "user", "hi", 0), rec(1, "assistant", "hello", 5),
-                                rec(2, "user", "x", 10), rec(2, "assistant", "y", 15)])
-    first = FakeVault(fail_at=1)
-    with pytest.raises(RuntimeError):
-        oneiron_vault.push_day("wt", 1, vault=first)
-    again = FakeVault()
-    oneiron_vault.push_day("wt", 1, vault=again)
-    assert [a for a, _, _ in first.sent + again.sent] == ["user", "companion", "user", "companion"]
-    assert again.sent[0][2] - first.sent[0][2] == 5  # the user run keeps its own time, the answer its own
-    third = FakeVault()
-    assert oneiron_vault.push_day("wt", 1, vault=third)["turns"] == 2 and third.sent == []
+class PushDayTest(unittest.TestCase):
+    def day(self, records):
+        tmp = tempfile.mkdtemp()
+        env = mock.patch.dict(os.environ, {"AFTERGLOW_RUNS": tmp})
+        env.start()
+        self.addCleanup(env.stop)
+        d = Path(tmp) / "wt" / "1"
+        d.mkdir(parents=True)
+        (d / "daylog.jsonl").write_text("\n".join(json.dumps(r) for r in records))
+
+    def test_resumes_at_the_first_unsent_run(self):
+        self.day([rec(1, "user", "hi", 0), rec(1, "assistant", "hello", 5),
+                  rec(2, "user", "x", 10), rec(2, "assistant", "y", 15)])
+        first = FakeVault(fail_at=1)
+        with self.assertRaises(RuntimeError):
+            oneiron_vault.push_day("wt", 1, vault=first)
+        again = FakeVault()
+        oneiron_vault.push_day("wt", 1, vault=again)
+        self.assertEqual([a for a, _, _ in first.sent + again.sent], ["user", "companion", "user", "companion"])
+        self.assertEqual(again.sent[0][2] - first.sent[0][2], 5)  # the user run keeps its own time
+        third = FakeVault()
+        self.assertEqual(oneiron_vault.push_day("wt", 1, vault=third)["turns"], 2)
+        self.assertEqual(third.sent, [])
+
+    def test_skips_live_turns_repeated_notes_and_orphans(self):
+        saved = {"name": "remember", "result": {"saved": "n1", "key": "office", "value": "Lisbon"}}
+        again = {"name": "remember",
+                 "result": {"saved": "n1", "key": "office", "value": "Lisbon", "note": "already saved"}}
+        self.day([
+            rec(1, "user", "office is Lisbon", 0),
+            rec(1, "assistant", "noted", 1, tool_calls=[saved], notes_written=["n1"]),
+            rec(2, "user", "lost turn", 2),
+            rec(3, "user", "again, Lisbon", 3),
+            rec(3, "assistant", "still noted", 4, tool_calls=[again], notes_written=[]),
+            rec(4, "user", "live", 5),
+            rec(4, "assistant", "sent live", 6, witnessed_live=conversation_ref("wt", 1, 1))])
+        v = FakeVault()
+        oneiron_vault.push_day("wt", 1, vault=v)
+        texts = [t for _, ts, _ in v.sent for t in ts]
+        self.assertEqual(texts, ["office is Lisbon", "Note saved: office: Lisbon", "noted", "again, Lisbon",
+                                 "still noted"])
 
 
-def test_push_day_skips_live_turns_repeated_notes_and_orphans(tmp_path, monkeypatch):
-    from afterglow.notes import conversation_ref
-
-    saved = {"name": "remember", "result": {"saved": "n1", "key": "office", "value": "Lisbon"}}
-    again = {"name": "remember", "result": {"saved": "n1", "key": "office", "value": "Lisbon", "note": "already saved"}}
-    day(tmp_path, monkeypatch, [
-        rec(1, "user", "office is Lisbon", 0), rec(1, "assistant", "noted", 1, tool_calls=[saved], notes_written=["n1"]),
-        rec(2, "user", "lost turn", 2),
-        rec(3, "user", "again, Lisbon", 3), rec(3, "assistant", "still noted", 4, tool_calls=[again], notes_written=[]),
-        rec(4, "user", "live", 5), rec(4, "assistant", "sent live", 6, witnessed_live=conversation_ref("wt", 1, 1))])
-    v = FakeVault()
-    oneiron_vault.push_day("wt", 1, vault=v)
-    texts = [t for _, ts, _ in v.sent for t in ts]
-    assert texts == ["office is Lisbon", "Note saved: office: Lisbon", "noted", "again, Lisbon", "still noted"]
+if __name__ == "__main__":
+    unittest.main()
