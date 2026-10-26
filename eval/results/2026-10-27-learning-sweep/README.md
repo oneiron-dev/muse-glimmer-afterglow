@@ -33,7 +33,8 @@
 | S5 epoch 4 | 44/45 | 127/135 | 9/12 | 29/30 | 125 (+5.0 pt [+0.1, +9.9]) | +0.941 [0.896, 0.978] |
 | S6 1 epoch (107 s of training) | 38/45 | 115/135 | 5/12 | 29/30 | — | +0.852 [0.763, 0.933] |
 | S7 Glimmer self-teaching (S1 recipe), epoch 2 | 39/45 | 114/135 | 8/12 | 29/30 | — | +0.844 [0.748, 0.926] |
-| S7 epoch 4 | 45/45 | 129/135 | 10/12 | 29/30 | see S8 run | +0.956 [0.918, 0.985] |
+| S7 epoch 4 | 45/45 | 129/135 | 10/12 | 29/30 | 124 (+4.5 pt [−0.4, +9.3]) | +0.956 [0.918, 0.985] |
+| **S8 recipe of record: rank 16, Glimmer ×12, LR 1e-4, epoch 4** | 43/45 | 126/135 | 10/12 | 29/30 | 122 (+3.5 pt [−1.2, +8.1]) | +0.933 [0.867, 0.985] |
 
 Tool items: 20/20 before and 20/20 after in every scored arm.
 
@@ -42,7 +43,7 @@ Tool items: 20/20 before and 20/20 after in every scored arm.
 1. The 14 Oct smoke learned nothing (0/30) because it trained on 1 row per fact for 1 pass. It did not fail because LoRA cannot hold facts: with 12 varied rewrites per fact and 4 epochs, even attention-only LoRA learns 43/45.
 2. Rank 16 learns as well as rank 64. 12 rewrites per fact beat 4. Two epochs get most of the way, and four finish it.
 3. Glimmer teaching itself (S7) is at least as good as Spark as the teacher (S1). The private path holds.
-4. **No loss detected** on general skills: the 200-item change is +4.5 to +5.0 points, within noise (McNemar p 0.08–0.12, intervals that span or touch zero). Part of the rise is a format effect: the base model ran past the 64-token limit on 7 of 180 MMLU-Pro items, and the adapters on none.
+4. **No loss detected** on general skills: the 200-item change is +3.5 to +5.0 points, within noise (McNemar p 0.08–0.21, intervals that span or touch zero). Part of the rise is a format effect: the base model ran past the 64-token limit on 7 of 180 MMLU-Pro items, and the adapters on none.
 5. Weights alone remain below perfect notes, by −0.04 to −0.07 per fact (B−C). The misses are cross-fact binding errors: the model learned the facts but sometimes attaches one to the wrong question. Examples: the workshop town answered with the backup shop's town ("Moravik"); the safety officer answered "Sunniva Brekke" (the test pilot). The per-fact list of misses is in `table-v1.md`.
 
 ## Recipe of record for the night job (approved 27 Oct)
