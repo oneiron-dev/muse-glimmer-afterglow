@@ -94,11 +94,11 @@ class Night:
         self.args = args
         self.runs = runs_root(args.runs)
         self.run_dir = self.runs / args.world / str(args.day)
-        self.night = self.run_dir / "night"
+        self.night = self.run_dir / args.night_dir
         self.night.mkdir(parents=True, exist_ok=True)
         self.logs = self.night / "logs"
         self.logs.mkdir(exist_ok=True)
-        self.remote = f"{HOST['work']}/{args.world}/{args.day}"
+        self.remote = f"{HOST['work']}/{args.world}/{args.day}" + ("" if args.night_dir == "night" else f"/{args.night_dir}")
         self.receipt_path = self.night / "receipt.json"
         self.receipt = json.loads(self.receipt_path.read_text()) if self.receipt_path.exists() else {
             "world": args.world, "day": args.day, "started": datetime.datetime.now().astimezone().isoformat(timespec="seconds"),
@@ -109,7 +109,8 @@ class Night:
         a = self.args
         return {"rank": a.rank, "alpha": a.rank, "targets": "attn_mlp", "layers": "all", "epochs": a.epochs, "lr": a.lr,
                 "rows_per_fact": a.rows_per_fact, "replay_share": a.replay_share, "memory_share": a.memory_share,
-                "teacher": a.teacher, "batch_rows": 16, "base": HOST["base_id"]}
+                "teacher": a.teacher, "batch_rows": 16, "base": HOST["base_id"], "rules_as_facts": a.rules_as_facts,
+                "contrast_rows": a.contrast, "night_dir": a.night_dir}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -129,11 +130,29 @@ class Night:
     # --- steps ---------------------------------------------------------------------------------
     def consolidate(self, log):
         run([sys.executable, "night/consolidate.py", "--world", self.args.world, "--day", str(self.args.day),
-             "--teacher", self.args.teacher, "--runs", str(self.runs)], log)
+             "--teacher", self.args.teacher, "--runs", str(self.runs), "--out-dir", str(self.night)], log)
+
+    def seed_rewrites(self):
+        """Reuse a previous night's rewrites for items that are unchanged (same id, kind, core and statement):
+        greedy decoding would write the same rows, so only new or changed items cost teacher calls."""
+        prev = self.run_dir / self.args.seed_rewrites_from
+        old_items = {i["id"]: i for i in json.loads((prev / "consolidated.json").read_text())["items"]}
+        new_items = json.loads((self.night / "consolidated.json").read_text())["items"]
+        same = {i["id"] for i in new_items if i["id"] in old_items
+                and all(old_items[i["id"]].get(k) == i.get(k) for k in ("kind", "value", "statement", "source_utterance"))}
+        out = self.night / "rewrites" / "rewrites-items.jsonl"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        kept = [line for line in (prev / "rewrites" / "rewrites-items.jsonl").read_text().splitlines()
+                if line.strip() and json.loads(line)["item_id"] in same]
+        out.write_text("".join(line + "\n" for line in kept))
+        self.receipt["rewrites_seeded"] = {"from": str(prev), "items": len(kept), "of": len(new_items)}
 
     def rewrites(self, log):
+        if self.args.seed_rewrites_from and not (self.night / "rewrites" / "rewrites-items.jsonl").exists():
+            self.seed_rewrites()
         run([sys.executable, "night/generate_rewrites.py", "--teacher", self.args.teacher,
-             "--consolidated", str(self.night / "consolidated.json"), "--out-dir", str(self.night / "rewrites")], log)
+             "--consolidated", str(self.night / "consolidated.json"), "--out-dir", str(self.night / "rewrites"),
+             *(["--rules-as-facts"] if self.args.rules_as_facts else [])], log)
         summary = json.loads((self.night / "rewrites" / "rewrites-summary.json").read_text())
         if summary["failures"]:
             raise RuntimeError(f"rewrite generation stopped: {summary['failures'][0]}; rerun to resume")
@@ -180,7 +199,12 @@ class Night:
         mem = self.memories()
         if mem:
             sources.append(str(mem))
-        run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()),
+        extra = []
+        if self.args.contrast:
+            run([sys.executable, "night/contrast_rows.py", "--consolidated", str(self.night / "consolidated.json"),
+                 "--out", str(self.night / "contrast.jsonl")], log)
+            extra = ["--extra", str(self.night / "contrast.jsonl")]
+        run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
              "--rows-per-fact", str(self.args.rows_per_fact), "--replay-share", str(self.args.replay_share), "--out", str(raw)], log)
         leak = subprocess.run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(raw),
                                "--out", str(self.night / "leak-raw.json"), "--write-clean", str(clean)], cwd=ROOT)
@@ -231,14 +255,15 @@ class Night:
         decision = decide(e, verify, self.receipt.get("leak_check", {}).get("clean_passed", False))
         keep = decision["decision"] == "keep"
         (self.night / "decision.json").write_text(json.dumps(decision, indent=1) + "\n")
-        pointer_path = self.runs / a.world / "adapters.json"
-        pointer = json.loads(pointer_path.read_text()) if pointer_path.exists() else {"current": None, "history": []}
-        entry = {"day": a.day, "gguf": str(self.night / "adapter.gguf"), "gguf_sha256": gguf_sha,
-                 "host_gguf": f"{HOST['name']}:{self.remote}/adapter.gguf", "decision": decision["decision"]}
-        pointer["history"].append(entry)
-        if keep:
-            pointer["current"] = entry
-        pointer_path.write_text(json.dumps(pointer, indent=1) + "\n")
+        if a.night_dir == "night":  # an experiment arm never becomes the world's kept adapter
+            pointer_path = self.runs / a.world / "adapters.json"
+            pointer = json.loads(pointer_path.read_text()) if pointer_path.exists() else {"current": None, "history": []}
+            entry = {"day": a.day, "gguf": str(self.night / "adapter.gguf"), "gguf_sha256": gguf_sha,
+                     "host_gguf": f"{HOST['name']}:{self.remote}/adapter.gguf", "decision": decision["decision"]}
+            pointer["history"].append(entry)
+            if keep:
+                pointer["current"] = entry
+            pointer_path.write_text(json.dumps(pointer, indent=1) + "\n")
         self.receipt["hashes"] = {
             "daylog": sha256(self.run_dir / "daylog.jsonl"), "notes": sha256(self.run_dir / "notes.json"),
             "consolidated": sha256(self.night / "consolidated.json"), "rewrites": sha256(self.night / "rewrites" / "rewrites.jsonl"),
@@ -284,6 +309,10 @@ def main():
     ap.add_argument("--memory-share", type=float, default=0.3, help="earlier days' rewrites, as a share of today's rows")
     ap.add_argument("--force", nargs="*", default=[], help="steps to redo even if their output exists")
     ap.add_argument("--stop-after", help="stop after this step (e.g. train_set: prepare data while the GPU is busy)")
+    ap.add_argument("--night-dir", default="night", help="output folder under runs/<w>/<d>/ (an experiment arm; it never moves the kept adapter)")
+    ap.add_argument("--rules-as-facts", action="store_true", help="also learn each named preference/procedure as a fact")
+    ap.add_argument("--contrast", action="store_true", help="add key-anchored and look-alike contrast rows (night/contrast_rows.py)")
+    ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()
     Night(args).go()
 

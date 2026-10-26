@@ -4,7 +4,8 @@
 Each output row is one chat exchange: {"id", "item_id", "form", "messages": [user, assistant]}.
 Loss falls on the assistant turn only (the trainer masks the rest).
 --rows-per-fact picks that many valid rewrites per fact, spread over the forms in FORM_ORDER;
---replay-share sets the anchors' share of all rows. Reads the day only, never worlds/<w>/heldout/.
+--replay-share sets the anchors' share of all rows; --extra rows (contrast rows) are taken in full.
+Reads the day only, never worlds/<w>/heldout/.
 """
 
 import argparse
@@ -42,6 +43,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--rewrites", required=True, nargs="+")
     ap.add_argument("--anchors", required=True)
+    ap.add_argument("--extra", nargs="*", default=[], help="rows taken in full, not capped per fact (contrast rows)")
     ap.add_argument("--rows-per-fact", type=int, default=12)
     ap.add_argument("--replay-share", type=float, default=0.10, help="anchor rows / all rows")
     ap.add_argument("--no-rules", action="store_true", help="leave out preference and procedure rows")
@@ -60,6 +62,7 @@ def main():
             rows.extend(pick_rows(item_rows, args.rows_per_fact))
         elif not args.no_rules:
             rows.extend(item_rows)
+    rows.extend(r for path in args.extra for r in read_jsonl(path) if r["valid"])
     n_anchor = round(len(rows) * args.replay_share / (1 - args.replay_share)) if args.replay_share > 0 else 0
     rng = random.Random(args.seed)
     anchor_pool = anchors[:]

@@ -4,8 +4,9 @@
 Reads runs/<w>/<d>/notes.json (the day agent's notes, with supersedes links) and daylog.jsonl (what the
 user said). Superseded notes are dropped; a note that corrects an earlier one keeps the old value as
 "corrects". The teacher model then writes, per note: its kind (fact | preference | procedure), one plain
-statement, and the shortest exact span of the value that identifies it (the "core" that rewrites and
-answers must contain). "outcomes" records, per note, what the night chose: kept, merged_as_duplicate or
+statement, and the shortest exact span that identifies it (the "core" that rewrites and answers must
+contain), copied from the value, the key or the user's own words (a name often sits only in the key or
+the utterance), for rules too. "outcomes" records, per note, what the night chose: kept, merged_as_duplicate or
 dropped_as_superseded, with the reason (the morning report shows it). Writes runs/<w>/<d>/night/consolidated.json in the format generate_rewrites.py reads.
 """
 
@@ -28,8 +29,8 @@ For each note write exactly one line, in this format and nothing else:
 <id> | <kind> | <statement> | <core> | <same as>
 - kind: fact, preference (how {first} wants the assistant to work) or procedure (steps to follow).
 - statement: one plain sentence stating this note about {first}, with full names, using only what {first} said.
-- core: 1 to 4 words copied exactly from the value: the name, number, code, time, date or place that answers a question about this note. For a preference or procedure, write the value again.
-Examples of core (other people, not {first}): value "senior buyer at Halden Foods" -> core "senior buyer"; value "warehouse on Pier 4 in Tarnby" -> core "Tarnby"; value "weekly sync on Mondays at 09:15" -> core "Mondays at 09:15"; value "Rowan Pike, the CFO" -> core "Rowan Pike".
+- core: 1 to 4 words copied exactly from the value or from what {first} said: the name, number, code, path, channel, time, date or place that answers a question about this note. Every note has one, preferences and procedures too (the name, code, path or place the rule is about; if there is none, write "-").
+Examples of core (other people, not {first}): value "senior buyer at Halden Foods" -> core "senior buyer"; value "warehouse on Pier 4 in Tarnby" -> core "Tarnby"; value "weekly sync on Mondays at 09:15" -> core "Mondays at 09:15"; key "rowan_pike_role", value "the CFO" -> core "Rowan Pike"; preference "file invoices under INV-2026-B" -> core "INV-2026-B"; preference "keep replies short" -> core "-".
 - same as: the id of another note above that says exactly the same thing, or - if there is none.
 Every note gets its own line, even when two notes come from the same sentence."""
 
@@ -59,12 +60,13 @@ def main():
     ap.add_argument("--teacher", default="glimmer", choices=sorted(teacher_mod.TEACHERS))
     ap.add_argument("--runs", help="runs root (default: AFTERGLOW_RUNS or the main checkout's runs/)")
     ap.add_argument("--refresh-outcomes", action="store_true", help="only rewrite the outcome fields of an existing consolidated.json")
+    ap.add_argument("--out-dir", help="where consolidated.json goes (default runs/<w>/<d>/night)")
     args = ap.parse_args()
     run_dir = runs_root(args.runs) / args.world / str(args.day)
     if args.refresh_outcomes:
         refresh_outcomes(run_dir)
         return
-    out_dir = run_dir / "night"
+    out_dir = Path(args.out_dir) if args.out_dir else run_dir / "night"
     out_dir.mkdir(parents=True, exist_ok=True)
     notes, turns = load_day(run_dir)
     name = json.loads((Path(__file__).resolve().parent.parent / "worlds" / args.world / "world.json").read_text())["persona"]["name"]
@@ -84,7 +86,9 @@ def main():
                 kind, statement, core = "fact", f"{n['key']}: {n['value']}.", n["value"]
             else:
                 kind, statement, core = m.group(2).lower(), m.group(3), m.group(4)
-            if core.lower() not in n["value"].lower():
+            # The core must be copied from the value, the key or what the user said; a rule without one keeps its value.
+            source = " ".join([n["value"], n["key"].replace("_", " "), turns.get(n.get("turn"), "")]).lower()
+            if core.strip() == "-" or core.lower() not in source:
                 core = n["value"]
             same_as = m.group(5) if m is not None and m.group(5) and m.group(5) != "-" else None
             if same_as and same_as in by_id and same_as != n["id"]:
