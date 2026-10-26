@@ -58,7 +58,7 @@ def main():
     out.write_text(json.dumps({"llama_server": LLAMA_SERVER, "llama_sha256": args.llama_sha256,
                                "flags": "--lora <path> per adapter in id order, --lora-init-without-apply, --cache-ram 0",
                                "adapters": adapters}, indent=1) + "\n")
-    print(json.dumps({"manifest": str(out), "adapters": [(a["id"], a["world"], a["day"]) for a in adapters]}))
+    print(json.dumps({"manifest": str(out), "adapters": [(a["id"], a.get("world"), a.get("day")) for a in adapters]}))
 
 
 if __name__ == "__main__":
