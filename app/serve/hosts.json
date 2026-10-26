@@ -1,0 +1,25 @@
+{
+ "default": "nelly",
+ "alias": "muse-glimmer-30b",
+ "proxy_port": 18610,
+ "upstream_port": 18611,
+ "root": "/data/afterglow",
+ "model_file": "Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+ "model_sha256": "4cc57c0f51040a226e5a72cc47b7613f7772950e460a665f7083de89f183f60e",
+ "drafter_file": "dflash-Muse-Glimmer-30B-Q4_K_M.gguf",
+ "drafter_sha256": "b2e808bf656086fe86bd0d0bd990f01d33e377537a07c02d45371517c8b264ef",
+ "hosts": {
+  "mel": {
+   "tailnet": "100.88.57.107",
+   "llama_server": "/data/afterglow/llama.cpp-69f201a/build/bin/llama-server",
+   "gguf_dir": "/data/afterglow/models",
+   "mem": "14G"
+  },
+  "nelly": {
+   "tailnet": "100.96.31.41",
+   "llama_server": "/data/minicpm-v47-20261013/src/llama.cpp/build/bin/llama-server",
+   "gguf_dir": "/data/drafter-tune-20261014/models/official-gguf",
+   "mem": "24G"
+  }
+ }
+}
