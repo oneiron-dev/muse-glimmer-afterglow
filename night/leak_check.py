@@ -66,6 +66,9 @@ def main():
     args = ap.parse_args()
     probes = read_jsonl(ROOT / "worlds" / args.world / "heldout" / "probes.jsonl")
     probes += read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")
+    forget = ROOT / "eval" / "data" / "forget_slice_v1.jsonl"
+    if forget.exists():
+        probes += read_jsonl(forget)
     train_rows = read_jsonl(args.train)
     hits, stat_overlap = check(train_rows, probes)
     report = {"train": args.train, "train_rows": len(train_rows), "probes": len(probes), "hits": len(hits),
