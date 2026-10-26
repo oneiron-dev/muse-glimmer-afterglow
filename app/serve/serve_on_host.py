@@ -50,9 +50,13 @@ def host_paths(name):
             "listen": f"{h['tailnet']}:{CONF['proxy_port']}"}
 
 
+def llama_server_path(a):
+    return a.llama_server or host_paths(a.host)["llama_server"]
+
+
 def llama_command(a):
     p = host_paths(a.host)
-    cmd = [p["llama_server"], "-m", p["model"], "--alias", ALIAS,
+    cmd = [llama_server_path(a), "-m", p["model"], "--alias", ALIAS,
            "-ngl", "99", "-fa", "on", "-np", str(a.slots), "-c", str(a.ctx), "--jinja", "--metrics",
            "--chat-template-kwargs", json.dumps(TEMPLATE_KWARGS, separators=(",", ":")),
            "-md", p["drafter"], "-ngld", "all",
@@ -61,9 +65,11 @@ def llama_command(a):
            "--slot-save-path", os.path.join(a.root, "slots"),
            "--host", "127.0.0.1", "--port", str(a.upstream_port)]
     if a.lora:
-        # Adapter at its default scale; clients still send a per-request "lora" on every call.
-        # The RAM prompt cache is not adapter-aware (RESULT-LLAMACPP.md section 5b), so it is off with an adapter.
-        cmd += ["--lora-scaled", f"{a.lora}:{a.lora_scale}", "--cache-ram", "0"]
+        # One adapter per world (ids in the order given), loaded at scale 0: every client sends its scales per
+        # request. The RAM prompt cache is not adapter-aware (RESULT-LLAMACPP.md section 5b), so it is off.
+        for path in a.lora:
+            cmd += ["--lora", path]
+        cmd += ["--lora-init-without-apply", "--cache-ram", "0"]
     return cmd
 
 
@@ -88,9 +94,7 @@ class Host:
             os.makedirs(os.path.join(a.root, sub), exist_ok=True)
         stamp = dt.datetime.now(JST).strftime("%Y%m%d-%H%M%S")
         logs = os.path.join(a.root, "serve", "logs")
-        lora = None
-        if a.lora:
-            lora = {"path": a.lora, "sha256": sha256_file(a.lora), "scale": a.lora_scale}
+        lora = [{"id": i, "path": path, "sha256": sha256_file(path)} for i, path in enumerate(a.lora or [])]
         cmd = llama_command(a)
         self.write_state(state="starting", started=now_iso(),
                          endpoint=f"http://{a.listen}", alias=ALIAS, chat_template_kwargs=TEMPLATE_KWARGS,
@@ -101,7 +105,7 @@ class Host:
                          lora=lora, slot_save_path=os.path.join(a.root, "slots"),
                          trace_dir=os.path.join(a.root, "traces"), llama_cmd=cmd,
                          llama_log=f"{logs}/{stamp}-llama-server.log", proxy_log=f"{logs}/{stamp}-trace-proxy.log")
-        env = dict(os.environ, LD_LIBRARY_PATH=os.path.dirname(host_paths(a.host)["llama_server"]))
+        env = dict(os.environ, LD_LIBRARY_PATH=os.path.dirname(llama_server_path(a)))
         self.procs["llama-server"] = subprocess.Popen(
             cmd, stdout=open(self.state["llama_log"], "w"), stderr=subprocess.STDOUT, env=env)
         self.procs["trace-proxy"] = subprocess.Popen(
@@ -163,10 +167,14 @@ def main():
     ap.add_argument("--slots", type=int, default=2)
     ap.add_argument("--ctx", type=int, default=65536, help="total context; each slot gets ctx/slots")
     ap.add_argument("--root", default=CONF["root"])
-    ap.add_argument("--lora", default=None, help="GGUF LoRA adapter path on this host")
-    ap.add_argument("--lora-scale", type=float, default=1.0)
+    ap.add_argument("--llama-server", default=None, help="llama-server binary (default: the box's in hosts.json)")
+    ap.add_argument("--lora", action="append", help="GGUF LoRA adapter on this host; repeat, ids in the order given")
+    ap.add_argument("--print-command", action="store_true", help="print the llama-server command and exit")
     a = ap.parse_args()
     a.listen = a.listen or host_paths(a.host)["listen"]
+    if a.print_command:
+        print(" ".join(llama_command(a)))
+        return
 
     host = Host(a)
 
