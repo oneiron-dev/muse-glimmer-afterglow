@@ -53,6 +53,7 @@ class NotesTest(unittest.TestCase):
 
     def test_vault_conversation_per_world_day(self):
         a, b = conversation_ref("w1-ines-varga", 1), conversation_ref("w1-ines-varga", 2)
+        self.assertNotEqual(a, conversation_ref("w1-ines-varga", 1, version=1))
         self.assertEqual(a, conversation_ref("w1-ines-varga", 1))
         self.assertNotEqual(a, b)
         self.assertRegex(a, r"^[0-9a-f]{32}$")

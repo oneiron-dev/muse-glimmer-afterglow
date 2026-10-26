@@ -216,4 +216,6 @@ class DaySession:
 
     def end_day(self):
         """Export the day's notes (runs/<world>/<day>/notes.json) for the night job."""
+        if hasattr(self.notes, "flush"):
+            self.notes.flush()
         return self.notes.export_day(self.dir / "notes.json", world=self.world, day=self.day)
