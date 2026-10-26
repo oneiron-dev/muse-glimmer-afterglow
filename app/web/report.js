@@ -38,7 +38,8 @@ function verdict(r) {
   if (d.decision === "keep") p.append("Overnight, Afterglow trained on yesterday and kept the update.");
   else if (d.decision === "rollback") p.append("Overnight, Afterglow trained on yesterday, then rolled the update back.");
   else p.append("Overnight, Afterglow trained on yesterday.");
-  if (d.why) p.append(el("span", "why", d.why));
+  // the night's own reason is gate shorthand; the checks panel below says it in words, so show it only on a rollback
+  if (d.why && d.decision === "rollback") p.append(el("span", "why", d.why));
 }
 
 function forgotNumbers(ev) {
@@ -69,9 +70,12 @@ function lead(ev, facts, rolledBack) {
   const line = $("forgot-line");
   line.replaceChildren();
   if (f) {
-    line.append(rolledBack ? "What the update would have cost: on the " : "What it lost: on the ", f.slice,
-      " it scored ", el("strong", null, `${f.before.pass} of ${f.before.n}`),
-      " before the night and ", el("strong", null, `${f.after.pass} of ${f.after.n}`), " with the update.");
+    const lost = f.after.pass < f.before.pass;
+    line.append(rolledBack ? "What the update would have cost: on the " : lost ? "What it lost: on the "
+                                                                                : "Did it forget anything? On the ",
+      f.slice, " it scored ", el("strong", null, `${f.before.pass} of ${f.before.n}`),
+      " before the night and ", el("strong", null, `${f.after.pass} of ${f.after.n}`), " with the update",
+      lost || rolledBack ? "." : ": no loss.");
     if (f.passed === false) line.append(" That is more than the rule allows.");
     line.append(receiptLink("forgot"));
   }
@@ -155,7 +159,8 @@ function chose(cons) {
   }));
 }
 
-const CHECKS = { leak_check: "no held-out question in the training data", learned_gate: "it learned enough",
+const CHECKS = { leak_check: "no held-out question in the training data",
+                 gguf_matches_peft: "the served adapter file matches the trained one", learned_gate: "it learned enough",
                  forgot_gate: "it did not lose general skill", tool_gate: "no new tool-call failure" };
 
 function numbers(ev, decision) {
