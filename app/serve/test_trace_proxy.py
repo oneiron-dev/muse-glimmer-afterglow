@@ -52,6 +52,7 @@ NON_STREAM = {
 class FakeLlamaServer(http.server.BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
     disconnects = []
+    received = []  # (path, parsed body) of every generation request
 
     def log_message(self, *a):
         pass
@@ -79,6 +80,7 @@ class FakeLlamaServer(http.server.BaseHTTPRequestHandler):
             self._json({"id_slot": 0, "path": self.path, "echo_len": len(body)})
             return
         req = json.loads(body)
+        FakeLlamaServer.received.append((self.path, req))
         if not req.get("stream"):
             self._json(NON_STREAM)
             return
@@ -287,6 +289,53 @@ class UpstreamDownTest(unittest.TestCase):
                            capture_output=True, text=True, timeout=10)
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("refusing", r.stderr)
+
+
+class LoraFillTest(unittest.TestCase):
+    """With --lora-count, a generation request that names no adapter scales gets all of them at 0."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.up_port, cls.px_port = free_port(), free_port()
+        cls.upstream = http.server.ThreadingHTTPServer(("127.0.0.1", cls.up_port), FakeLlamaServer)
+        cls.upstream.daemon_threads = True
+        threading.Thread(target=cls.upstream.serve_forever, daemon=True).start()
+        cls.trace_dir = os.path.join(tempfile.mkdtemp(prefix="trace-proxy-lora-"), "traces")
+        cls.proxy = subprocess.Popen(
+            [sys.executable, os.path.join(HERE, "trace_proxy.py"), "--listen", f"127.0.0.1:{cls.px_port}",
+             "--upstream", f"127.0.0.1:{cls.up_port}", "--trace-dir", cls.trace_dir, "--lora-count", "2"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        wait_up(cls.px_port)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.proxy.terminate()
+        cls.proxy.wait(5)
+        cls.upstream.shutdown()
+
+    def sent(self, path, obj):
+        raw_post(self.px_port, path, obj)
+        return [r for p, r in FakeLlamaServer.received if p == path][-1]
+
+    def test_missing_scales_become_zero(self):
+        zeros = [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 0.0}]
+        self.assertEqual(self.sent("/completion", {"prompt": "x", "n_predict": 0})["lora"], zeros)
+        self.assertEqual(self.sent("/completion", {"prompt": "x", "lora": []})["lora"], zeros)
+        req = {"model": "fill-check", "messages": [{"role": "user", "content": "hi"}]}
+        self.assertEqual(self.sent("/v1/chat/completions", req)["lora"], zeros)
+        t0 = time.time()
+        while not os.path.isdir(self.trace_dir) and time.time() - t0 < 5:
+            time.sleep(0.02)
+        recs = []
+        while not recs and time.time() - t0 < 5:
+            recs = [json.loads(line) for name in os.listdir(self.trace_dir)
+                    for line in open(os.path.join(self.trace_dir, name)) if '"fill-check"' in line]
+            time.sleep(0.02)
+        self.assertTrue(recs[-1]["lora_filled"])
+
+    def test_named_scales_pass_unchanged(self):
+        mine = [{"id": 1, "scale": 1.0}]
+        self.assertEqual(self.sent("/completion", {"prompt": "x", "lora": mine})["lora"], mine)
 
 
 if __name__ == "__main__":

@@ -12,7 +12,8 @@ snapshot has an identity stored beside it, and restore() refuses any mismatch:
 
   model_sha256, drafter_sha256       from the server's /data/afterglow/serve/current.json on the serving box
   llama_server, ctx, slots           the server binary and its context layout, from the same file
-  adapter_sha256, adapter_scale      the loaded adapter and the per-request scale the client sends
+  adapter_path, adapter_sha256,      the loaded adapter (its serving path and file hash) and the per-request
+  adapter_scale                      scale the client sends
   template_sha256, template_kwargs   the chat template from /props and the reasoning strength
   prefix_sha256                      the messages and tools the slot was filled with
 
@@ -83,6 +84,7 @@ def identity(client, reasoning):
         "llama_server": (st.get("llama_cmd") or [None])[0],
         "ctx": st.get("ctx"),
         "slots": st.get("slots"),
+        "adapter_path": mine["path"] if mine else None,
         "adapter_sha256": adapter.get("sha256"),
         "adapter_scale": (client.lora_scale or 0.0) if mine else None,  # the scale lora_field() sends
         "template_sha256": hashlib.sha256((props.get("chat_template") or "").encode()).hexdigest(),
@@ -184,6 +186,12 @@ def start(session):
         meta = rewarm(session)
         report.update(kind="rewarmed", prefix_tokens=meta["n_tokens"], prefix_ms=meta["prefill_ms"])
     else:
+        # llama-server drops a slot's cached prompt when a request's adapter scales differ from the slot's
+        # last ones, and a restore does not set them. So the slot takes this world's scales first.
+        lora = session.client.lora_field()
+        if lora:
+            session.client.post("/completion", {"prompt": "<|start|>", "n_predict": 0, "id_slot": session.client.slot,
+                                                "cache_prompt": True, "lora": lora})
         r = session.client.slot_action("restore", meta["filename"])
         if not r.get("n_restored"):
             raise GlimmerError(f"slot restore of {meta['filename']} restored nothing: {r}")

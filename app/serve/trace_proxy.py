@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """Pass-through HTTP proxy in front of llama-server that keeps a thought log.
 
-Every request goes upstream unchanged (method, path, headers, body). Every response
-comes back unchanged: status, headers and body bytes, streamed as they arrive, so SSE
-frames are not buffered or rewritten. Hop-by-hop headers (Connection, Transfer-Encoding,
-...) are per connection and are set again by this proxy.
+Every request goes upstream unchanged (method, path, headers, body), with one exception
+below. Every response comes back unchanged: status, headers and body bytes, streamed as
+they arrive, so SSE frames are not buffered or rewritten. Hop-by-hop headers (Connection,
+Transfer-Encoding, ...) are per connection and are set again by this proxy.
+
+The exception: with --lora-count N (N adapters loaded), a generation request with no
+"lora" field gets one that sets every adapter to scale 0. llama-server checks a slot's
+cached prompt against the request's adapter scales only when the request names them; a
+request without them would reuse KV computed under another adapter. The trace record
+says "lora_filled": true.
 
 For each POST /v1/chat/completions the proxy appends one JSON line to
 <trace-dir>/<YYYY-MM-DD>.jsonl (JST date of the request): the request, the reply model,
@@ -31,6 +37,8 @@ HOP_BY_HOP = {
     "te", "trailer", "trailers", "transfer-encoding", "upgrade", "expect",
 }
 TRACED_PATHS = {"/v1/chat/completions", "/chat/completions"}
+# llama-server endpoints that run a slot with per-request adapter scales
+LORA_PATHS = TRACED_PATHS | {"/completion", "/completions", "/v1/completions", "/infill"}
 READ_SIZE = 65536
 
 
@@ -56,6 +64,18 @@ class TraceWriter:
             with open(os.path.join(self.trace_dir, f"{day}.jsonl"), "a", encoding="utf-8") as f:
                 f.write(line)
                 f.flush()
+
+
+def fill_lora(body, lora_count):
+    """The body with "lora" set to every adapter at scale 0 when it names none; (body, filled)."""
+    try:
+        req = json.loads(body)
+    except (ValueError, UnicodeDecodeError):
+        return body, False
+    if not isinstance(req, dict) or req.get("lora"):
+        return body, False
+    req["lora"] = [{"id": i, "scale": 0.0} for i in range(lora_count)]
+    return json.dumps(req, ensure_ascii=False).encode(), True
 
 
 def summarise_request(body):
@@ -182,6 +202,7 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
     upstream_timeout = 3600
     writer = TraceWriter(None)
     tee_dir = None
+    lora_count = 0
 
     def log_message(self, fmt, *args):
         sys.stderr.write(f"{now_iso()} {self.client_address[0]} {fmt % args}\n")
@@ -206,10 +227,15 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         path_only = self.path.split("?", 1)[0]
         traced = self.command == "POST" and path_only in TRACED_PATHS
         record = None
+        filled = False
+        if self.lora_count and self.command == "POST" and path_only in LORA_PATHS:
+            body, filled = fill_lora(body, self.lora_count)
         if traced:
             record = {"request_time": request_time, "request_id": uuid.uuid4().hex,
                       "client": self.client_address[0], "path": self.path}
             record.update(summarise_request(body))
+            if filled:
+                record["lora_filled"] = True
 
         conn = http.client.HTTPConnection(*self.upstream, timeout=self.upstream_timeout)
         try:
@@ -323,6 +349,8 @@ def main():
     ap.add_argument("--trace-dir", default="/data/afterglow/traces")
     ap.add_argument("--tee-dir", default=None,
                     help="test only: also write each traced response body, raw, to <tee-dir>/<request_id>.body")
+    ap.add_argument("--lora-count", type=int, default=0,
+                    help="adapters loaded in llama-server; requests that name no scales get all of them at 0")
     args = ap.parse_args()
 
     host, port = host_port(args.listen)
@@ -331,6 +359,7 @@ def main():
     ProxyHandler.upstream = host_port(args.upstream)
     ProxyHandler.writer = TraceWriter(args.trace_dir)
     ProxyHandler.tee_dir = args.tee_dir
+    ProxyHandler.lora_count = args.lora_count
     srv = Server((host, port), ProxyHandler)
     print(f"{now_iso()} trace proxy {host}:{port} -> {args.upstream}, traces in {args.trace_dir}", flush=True)
     try:

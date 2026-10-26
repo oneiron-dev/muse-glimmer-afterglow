@@ -66,9 +66,11 @@ def llama_command(a):
            "--host", "127.0.0.1", "--port", str(a.upstream_port)]
     if a.lora:
         # One adapter per world (ids in the order given), loaded at scale 0: every client sends its scales per
-        # request. The RAM prompt cache is not adapter-aware (RESULT-LLAMACPP.md section 5b), so it is off.
+        # request. A request without scales runs at the loaded scale (plain --lora would be 1.0 for every
+        # adapter at once), so they load with --lora-scaled at 0. The RAM prompt cache is not adapter-aware
+        # (RESULT-LLAMACPP.md section 5b), so it is off.
         for path in a.lora:
-            cmd += ["--lora", path]
+            cmd += ["--lora-scaled", f"{path}:0"]
         cmd += ["--lora-init-without-apply", "--cache-ram", "0"]
     return cmd
 
@@ -110,7 +112,8 @@ class Host:
             cmd, stdout=open(self.state["llama_log"], "w"), stderr=subprocess.STDOUT, env=env)
         self.procs["trace-proxy"] = subprocess.Popen(
             [sys.executable, os.path.join(HERE, "trace_proxy.py"), "--listen", a.listen,
-             "--upstream", f"127.0.0.1:{a.upstream_port}", "--trace-dir", os.path.join(a.root, "traces")],
+             "--upstream", f"127.0.0.1:{a.upstream_port}", "--trace-dir", os.path.join(a.root, "traces"),
+             "--lora-count", str(len(a.lora or []))],
             stdout=open(self.state["proxy_log"], "w"), stderr=subprocess.STDOUT)
         self.write_state(pids={k: p.pid for k, p in self.procs.items()})
         print(f"{now_iso()} started llama-server pid {self.procs['llama-server'].pid}, "
