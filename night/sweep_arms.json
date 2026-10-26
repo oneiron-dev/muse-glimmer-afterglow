@@ -1,0 +1,84 @@
+{
+ "sweep": "learning go/no-go, Tue 27 Oct 2026, world w1-ines-varga day 1, rewrites by spark-sub",
+ "fixed": {
+  "layers": "all",
+  "replay_share": 0.1,
+  "batch_rows": 16,
+  "grad_accum": 1,
+  "warmup_steps": 10,
+  "max_grad_norm": 0.3,
+  "dropout": 0.0,
+  "seed": 20261027,
+  "optimizer": "adamw_8bit",
+  "scheduler": "constant after warmup",
+  "loss": "assistant turn only"
+ },
+ "arms": [
+  {
+   "arm": "S1",
+   "tests": "control",
+   "rank": 64,
+   "targets": "attn_mlp",
+   "rows_per_fact": 12,
+   "lr": 0.0001,
+   "epochs": 4,
+   "save_epochs": "2,4"
+  },
+  {
+   "arm": "S2",
+   "tests": "attention only vs attention+MLP",
+   "rank": 64,
+   "targets": "attn",
+   "rows_per_fact": 12,
+   "lr": 0.0001,
+   "epochs": 4,
+   "save_epochs": "4"
+  },
+  {
+   "arm": "S3",
+   "tests": "rank 16 vs 64",
+   "rank": 16,
+   "targets": "attn_mlp",
+   "rows_per_fact": 12,
+   "lr": 0.0001,
+   "epochs": 4,
+   "save_epochs": "4"
+  },
+  {
+   "arm": "S4",
+   "tests": "4 vs 12 rewrites per fact",
+   "rank": 64,
+   "targets": "attn_mlp",
+   "rows_per_fact": 4,
+   "lr": 0.0001,
+   "epochs": 4,
+   "save_epochs": "4"
+  },
+  {
+   "arm": "S5",
+   "tests": "learning rate",
+   "rank": 64,
+   "targets": "attn_mlp",
+   "rows_per_fact": 12,
+   "lr": 5e-05,
+   "epochs": 4,
+   "save_epochs": "2,4",
+   "note": "S1 learned 43/45 facts by epoch 2-4 at 1e-4, so the LR arm tests half the LR"
+  },
+  {
+   "arm": "S6",
+   "tests": "epochs",
+   "rank": 64,
+   "targets": "attn_mlp",
+   "rows_per_fact": 12,
+   "lr": 0.0001,
+   "epochs": 1,
+   "save_epochs": "1",
+   "note": "S1 epoch 2 = 42/45 already, so the epochs arm tests the shortest night"
+  }
+ ],
+ "teacher": {
+  "rewrites": "spark-sub (muse-spark-1.3-contributor via the dev subscription; nelly reset twice during the Glimmer run)",
+  "anchors": "glimmer-nf4-base (self-distilled on mel)"
+ }
+}
