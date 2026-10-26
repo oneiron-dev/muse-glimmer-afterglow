@@ -27,11 +27,16 @@ PROMPT = """An assistant saved these notes about its user, {name}, during the da
 For each note write exactly one line, in this format and nothing else:
 <id> | <kind> | <statement> | <core>
 - kind: fact, preference (how {first} wants the assistant to work) or procedure (steps to follow).
-- statement: one plain sentence stating the note about {first}, with full names, using only what {first} said.
-- core: the shortest exact part of the value that identifies it (a name, number, code, time, date or place), copied character for character from the value. For a preference or procedure, write the value again.
-If a note only repeats another note, write: <id> | duplicate | <id of the other note> | -"""
+- statement: one plain sentence stating this note about {first}, with full names, using only what {first} said.
+- core: 1 to 4 words copied exactly from the value: the name, number, code, time, date or place that answers a question about this note. For a preference or procedure, write the value again.
+Examples of core (other people, not {first}): value "senior buyer at Halden Foods" -> core "senior buyer"; value "warehouse on Pier 4 in Tarnby" -> core "Tarnby"; value "weekly sync on Mondays at 09:15" -> core "Mondays at 09:15"; value "Rowan Pike, the CFO" -> core "Rowan Pike".
+Every note gets its own line, even when two notes come from the same sentence."""
 
-LINE_RE = re.compile(r"^\s*(N\d+)\s*\|\s*(fact|preference|procedure|duplicate)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*$", re.IGNORECASE)
+LINE_RE = re.compile(r"^\s*(N\d+)\s*\|\s*(fact|preference|procedure)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*$", re.IGNORECASE)
+
+
+def norm(text):
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9:./# -]", "", text.lower())).strip()
 
 
 def load_day(run_dir):
@@ -60,8 +65,17 @@ def main():
     name = json.loads((Path(__file__).resolve().parent.parent / "worlds" / args.world / "world.json").read_text())["persona"]["name"]
     first = name.split()[0]
     by_id = {n["id"]: n for n in notes}
-    active = [n for n in notes if n.get("status", "active") == "active" and not n.get("superseded_by")]
-    items, dropped, log_path = [], [], out_dir / "teacher-calls.jsonl"
+    active, dropped, seen = [], [], {}
+    for n in notes:
+        if n.get("status", "active") != "active" or n.get("superseded_by"):
+            continue
+        sig = (norm(n["key"]), norm(n["value"]))
+        if sig in seen:  # the same key and value saved twice
+            dropped.append({"id": n["id"], "outcome": "merged_as_duplicate", "why": f"same key and value as {seen[sig]}"})
+            continue
+        seen[sig] = n["id"]
+        active.append(n)
+    items, log_path = [], out_dir / "teacher-calls.jsonl"
     for i in range(0, len(active), BATCH):
         batch = active[i:i + BATCH]
         text = "\n".join(f"{n['id']} | key: {n['key']} | value: {n['value']} | {first} said: \"{turns.get(n.get('turn'), '')}\"" for n in batch)
@@ -74,9 +88,6 @@ def main():
                 kind, statement, core = "fact", f"{n['key']}: {n['value']}.", n["value"]
             else:
                 kind, statement, core = m.group(2).lower(), m.group(3), m.group(4)
-            if kind == "duplicate":
-                dropped.append({"id": n["id"], "outcome": "merged_as_duplicate", "why": f"repeats {statement}"})
-                continue
             if core.lower() not in n["value"].lower():
                 core = n["value"]
             old = by_id.get(n.get("supersedes")) if n.get("supersedes") else None
