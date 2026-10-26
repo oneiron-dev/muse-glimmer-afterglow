@@ -6,9 +6,11 @@
 Binds 127.0.0.1 only. One user, one session: turns and snapshot actions take the same lock.
 """
 import argparse
+import datetime as dt
 import json
 import mimetypes
 import threading
+import time
 import traceback
 import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -81,6 +83,31 @@ class App:
             "busy": self.lock.locked(),
         }
 
+    def ask_notes_off(self, question):
+        """One question to Glimmer with no notes and no tools, in the eval's prompt shape (the chat template with
+        minimal reasoning, then the forced answer channel), on slot 1 so slot 0 keeps the user's context. With an
+        adapter loaded it asks twice, adapter scale 0 (the weights before the night) and 1 (after), each scale sent
+        per request with no prompt cache, so the two answers never share KV. DFlash stays on in this server."""
+        today = dt.datetime.now(dt.timezone(dt.timedelta(hours=9))).date().isoformat()
+        rendered = self.client.post("/apply-template", {
+            "messages": [{"role": "user", "content": question.strip() + " Answer in one short sentence."}],
+            "chat_template_kwargs": {"reasoning_strength": "minimal", "current_date": today,
+                                     "knowledge_cutoff": "2026-01-04"}})["prompt"]
+        prompt = rendered.removesuffix("<|start|>assistant") + "<|start|>assistant to=user<|message|>"
+        adapter = self.client.adapters()
+        arms = [("Before the night", 0.0), ("After the night", 1.0)] if adapter else [("Base weights", None)]
+        out = []
+        for label, scale in arms:
+            body = {"prompt": prompt, "n_predict": 160, "temperature": 0, "id_slot": 1, "cache_prompt": False}
+            if scale is not None:
+                body["lora"] = [{"id": a["id"], "scale": scale if a["id"] == 0 else 0.0} for a in adapter]
+            t0 = time.time()
+            r = self.client.post("/completion", body, timeout=120)
+            out.append({"label": label, "scale": scale, "content": (r.get("content") or "").strip(),
+                        "stop": r.get("stop_type"), "total_s": round(time.time() - t0, 2)})
+        return {"question": question, "adapter": adapter[0]["path"].rsplit("/", 1)[-1] if adapter else None,
+                "decoding": "greedy, DFlash speculative decoding on", "answers": out}
+
     def night_summary(self):
         """The latest night's headline for the day page: facts answered with notes off, and the decision."""
         r = self.report()
@@ -141,6 +168,11 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if path == "/api/chat":
                 return self._chat(self._body().get("text", "").strip())
+            if path == "/api/ask":
+                q = (self._body().get("question") or "").strip()
+                if not q:
+                    return self._json({"error": "empty question"}, 400)
+                return self._json(self.app.ask_notes_off(q))
             if path == "/api/snapshot/restore":
                 threading.Thread(target=self.app.restore_snapshot, daemon=True).start()
                 return self._json({"started": True})
