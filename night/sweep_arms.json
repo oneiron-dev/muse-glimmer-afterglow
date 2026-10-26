@@ -1,0 +1,12 @@
+{
+ "sweep": "learning go/no-go, Tue 27 Oct 2026, world w1-ines-varga day 1, teacher glimmer",
+ "fixed": {"layers": "all", "replay_share": 0.10, "batch_rows": 16, "grad_accum": 1, "warmup_steps": 10, "max_grad_norm": 0.3, "dropout": 0.0, "seed": 20261027, "optimizer": "adamw_8bit", "scheduler": "constant after warmup", "loss": "assistant turn only"},
+ "arms": [
+  {"arm": "S1", "tests": "control", "rank": 64, "targets": "attn_mlp", "rows_per_fact": 12, "lr": 1e-4, "epochs": 4, "save_epochs": "2,4"},
+  {"arm": "S2", "tests": "attention only vs attention+MLP", "rank": 64, "targets": "attn", "rows_per_fact": 12, "lr": 1e-4, "epochs": 4, "save_epochs": "4"},
+  {"arm": "S3", "tests": "rank 16 vs 64", "rank": 16, "targets": "attn_mlp", "rows_per_fact": 12, "lr": 1e-4, "epochs": 4, "save_epochs": "4"},
+  {"arm": "S4", "tests": "4 vs 12 rewrites per fact", "rank": 64, "targets": "attn_mlp", "rows_per_fact": 4, "lr": 1e-4, "epochs": 4, "save_epochs": "4"},
+  {"arm": "S5", "tests": "learning rate", "rank": 64, "targets": "attn_mlp", "rows_per_fact": 12, "lr": null, "epochs": 4, "save_epochs": "4", "note": "LR set after S1: 2e-4 if S1 under-learns, 5e-5 if S1 learns and forgets"},
+  {"arm": "S6", "tests": "epochs", "rank": 64, "targets": "attn_mlp", "rows_per_fact": 12, "lr": 1e-4, "epochs": null, "save_epochs": null, "note": "set after S1's epoch-2 vs epoch-4 checkpoints"}
+ ]
+}
