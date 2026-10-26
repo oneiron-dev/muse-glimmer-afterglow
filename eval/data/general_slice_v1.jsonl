@@ -1,0 +1,30 @@
+{"id": "G01", "kind": "arithmetic", "question": "What is 34 multiplied by 27? Reply with just the number.", "gold": "918", "scorer": "exact_number"}
+{"id": "G02", "kind": "arithmetic", "question": "What is 1,224 divided by 8? Reply with just the number.", "gold": "153", "scorer": "exact_number"}
+{"id": "G03", "kind": "arithmetic", "question": "What is 468 plus 379? Reply with just the number.", "gold": "847", "scorer": "exact_number"}
+{"id": "G04", "kind": "arithmetic", "question": "What is 2,005 minus 1,318? Reply with just the number.", "gold": "687", "scorer": "exact_number"}
+{"id": "G05", "kind": "arithmetic", "question": "What is 15 percent of 240? Reply with just the number.", "gold": "36", "scorer": "exact_number"}
+{"id": "G06", "kind": "arithmetic", "question": "What is the square of 19? Reply with just the number.", "gold": "361", "scorer": "exact_number"}
+{"id": "G07", "kind": "arithmetic", "question": "A box holds 12 parts. How many boxes are needed for 150 parts? Reply with just the number.", "gold": "13", "scorer": "exact_number"}
+{"id": "G08", "kind": "arithmetic", "question": "What is 7 cubed? Reply with just the number.", "gold": "343", "scorer": "exact_number"}
+{"id": "G09", "kind": "reasoning", "question": "All vorbs are green. Tam is a vorb. What colour is Tam? Reply with just the colour.", "gold": "green", "scorer": "exact_word"}
+{"id": "G10", "kind": "reasoning", "question": "Continue the sequence: 3, 9, 27, 81, ? Reply with just the number.", "gold": "243", "scorer": "exact_number"}
+{"id": "G11", "kind": "reasoning", "question": "P is older than Q. Q is older than R. Who is the youngest? Reply with just the letter.", "gold": "R", "scorer": "exact_letter"}
+{"id": "G12", "kind": "reasoning", "question": "If today is Wednesday, what day is it in 10 days? Reply with just the day.", "gold": "saturday", "scorer": "exact_word"}
+{"id": "G13", "kind": "reasoning", "question": "Which is heavier, 2 kilograms of feathers or 1.5 kilograms of iron? Reply with just 'feathers' or 'iron'.", "gold": "feathers", "scorer": "exact_word"}
+{"id": "G14", "kind": "reasoning", "question": "A train leaves at 09:40 and the trip takes 2 hours 35 minutes. At what time does it arrive? Reply with just the time in HH:MM.", "gold": "12:15", "scorer": "contains", "accept": ["12:15"]}
+{"id": "G15", "kind": "tool", "question": "Emit JSON only: {\"tool\": \"create_task\", \"title\": \"Order resin\", \"due\": \"2026-11-03\"}. Reply with JSON only, no other text.", "gold": {"tool": "create_task", "title": "Order resin", "due": "2026-11-03"}, "scorer": "json_exact"}
+{"id": "G16", "kind": "tool", "question": "Emit JSON only: {\"tool\": \"lookup_part\", \"part\": \"BX-118\", \"qty\": 4}. Reply with JSON only, no other text.", "gold": {"tool": "lookup_part", "part": "BX-118", "qty": 4}, "scorer": "json_exact"}
+{"id": "G17", "kind": "tool", "question": "Emit JSON only: {\"tool\": \"set_alarm\", \"time\": \"06:45\", \"repeat\": false}. Reply with JSON only, no other text.", "gold": {"tool": "set_alarm", "time": "06:45", "repeat": false}, "scorer": "json_exact"}
+{"id": "G18", "kind": "tool", "question": "Write a JSON object with keys \"city\" set to \"Oslo\" and \"days\" set to the number 3. Reply with JSON only.", "gold": {"city": "Oslo", "days": 3}, "scorer": "json_exact"}
+{"id": "G19", "kind": "tool", "question": "Write a JSON list of the first four prime numbers. Reply with JSON only.", "gold": [2, 3, 5, 7], "scorer": "json_exact"}
+{"id": "G20", "kind": "tool", "question": "Emit JSON only: {\"tool\": \"send_message\", \"to\": \"ops\", \"text\": \"Line 2 stopped\"}. Reply with JSON only, no other text.", "gold": {"tool": "send_message", "to": "ops", "text": "Line 2 stopped"}, "scorer": "json_exact"}
+{"id": "G21", "kind": "knowledge", "question": "What is the capital city of Canada? Reply with just the city.", "gold": "ottawa", "scorer": "contains", "accept": ["ottawa"]}
+{"id": "G22", "kind": "knowledge", "question": "What is the chemical symbol for sodium? Reply with just the symbol.", "gold": "Na", "scorer": "contains", "accept": ["na"]}
+{"id": "G23", "kind": "knowledge", "question": "How many sides does a hexagon have? Reply with just the number.", "gold": "6", "scorer": "exact_number"}
+{"id": "G24", "kind": "knowledge", "question": "Which planet is known as the Red Planet? Reply with just the planet.", "gold": "mars", "scorer": "contains", "accept": ["mars"]}
+{"id": "G25", "kind": "knowledge", "question": "At sea level, at what temperature in degrees Celsius does water boil? Reply with just the number.", "gold": "100", "scorer": "exact_number"}
+{"id": "G26", "kind": "knowledge", "question": "Who wrote the play Romeo and Juliet? Reply with just the name.", "gold": "shakespeare", "scorer": "contains", "accept": ["shakespeare"]}
+{"id": "G27", "kind": "format", "question": "Reply with the word 'acknowledged' in all capital letters and nothing else.", "gold": "ACKNOWLEDGED", "scorer": "exact_string"}
+{"id": "G28", "kind": "format", "question": "List three primary colours of light as a comma-separated list on one line, lowercase, nothing else.", "gold": "red, green, blue", "scorer": "set_csv", "accept": ["red", "green", "blue"]}
+{"id": "G29", "kind": "format", "question": "Spell the word 'gear' backwards. Reply with just the result.", "gold": "raeg", "scorer": "exact_word"}
+{"id": "G30", "kind": "format", "question": "Translate 'thank you' into French. Reply with just the translation.", "gold": "merci", "scorer": "contains", "accept": ["merci"]}
