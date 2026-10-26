@@ -106,6 +106,9 @@ class OneironVault:
             "messages": [{"author": author, "message_type": "text", "content": t, "is_visible": True, "order": i}
                          for i, t in enumerate(texts)]})
 
+    def client_for(self, author):
+        return self
+
     def witness(self, conversation_ref, messages, occurred_at=None):
         """messages: [(author, text)] in order; author "user" or "assistant" (the vault calls it "companion").
         Every run is sent with this one credential. Returns one result per run."""
@@ -133,6 +136,9 @@ class SpeakerVaults:
         self.by_author = {"user": OneironVault(person_credential_path),
                           "companion": OneironVault(agent_credential_path)}
         self.origin = self.by_author["companion"].origin
+
+    def client_for(self, author):
+        return self.by_author[author]
 
     def witness(self, conversation_ref, messages, occurred_at=None):
         at = occurred_at or time.time()
@@ -168,7 +174,10 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
         history.append({k: prev.get(k) for k in ("conversation_ref", "speakers", "pushed_at", "turns", "messages")})
         prev = {}
     receipts = prev.get("receipts", [])
-    done = {r["turn"] for r in receipts}
+    # A turn is done when every one of its speaker runs has a receipt; receipts from before per-run tracking
+    # (no "runs" field) count as done. A partial turn resumes at its first unsent run.
+    by_turn = {r["turn"]: r for r in receipts}
+    done = {t for t, r in by_turn.items() if len(r.get("receipt_refs", [])) >= r.get("runs", 0)}
     pending = None
 
     def save():
@@ -195,12 +204,21 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
         if rec.get("content"):
             msgs.append(("assistant", rec["content"]))
         at = int(dt.datetime.fromisoformat(rec["ts"]).timestamp())
-        outs = vault.witness(conv, msgs, occurred_at=at)
-        print(f"  turn {rec['turn']}: {len(msgs)} messages witnessed", file=sys.stderr, flush=True)
-        receipts.append({"turn": rec["turn"], "messages": len(msgs),
-                         "receipt_refs": [o.get("receipt_ref") for o in outs],
-                         "turn_short_ids": [o.get("turn_short_id") for o in outs]})
-        save()
+        runs = speaker_runs(msgs)
+        receipt = by_turn.get(rec["turn"])
+        if receipt is None:
+            receipt = {"turn": rec["turn"], "messages": len(msgs), "runs": len(runs), "receipt_refs": [],
+                       "turn_short_ids": []}
+            receipts.append(receipt)
+            by_turn[rec["turn"]] = receipt
+        for i, (author, texts) in enumerate(runs):
+            if i < len(receipt["receipt_refs"]):
+                continue  # this run reached the vault on an earlier try
+            out = vault.client_for(author).witness_run(conv, author, texts, at)
+            receipt["receipt_refs"].append(out.get("receipt_ref"))
+            receipt["turn_short_ids"].append(out.get("turn_short_id"))
+            save()  # after every run, so a failure in the next one never repeats this one
+        print(f"  turn {rec['turn']}: {len(msgs)} messages in {len(runs)} runs witnessed", file=sys.stderr, flush=True)
         pending = None
     return save()
 
