@@ -12,7 +12,9 @@ service-token headers and a non-default User-Agent.
 
 Credentials come from the environment, never from this repo:
   AFTERGLOW_ONEIRON_CREDENTIAL         path to the paired agent's JSON ({"credential": "v2.cred.<slip>.<seed>",
-                                       "origin": ...})
+                                       "origin": ...}): Afterglow's own (companion) credential
+  AFTERGLOW_ONEIRON_PERSON_CREDENTIAL_TEMPLATE  path of the user's PERSON-bound credential, with {world} in it
+                                       (the vault names a turn's speaker by the credential that sent it)
   AFTERGLOW_CF_ACCESS_CLIENT_ID / _SECRET   the Access service token (hosted vaults)
 Needs the "oneiron" extra: uv run --extra oneiron ...
 """
@@ -96,28 +98,54 @@ class OneironVault:
         raise VaultError(401, "no holder proof within 10 min of the wall clock was accepted")
 
     # --- the verbs the notes backend uses ---
+    def witness_run(self, conversation_ref, author, texts, occurred_at):
+        """One witnessed turn: consecutive messages of one speaker. The vault takes the speaker from the
+        authenticated caller, so call this on the vault whose credential is that speaker."""
+        return self.facade("vault.witness", {
+            "conversation_ref": conversation_ref, "occurred_at": int(occurred_at),
+            "messages": [{"author": author, "message_type": "text", "content": t, "is_visible": True, "order": i}
+                         for i, t in enumerate(texts)]})
+
     def witness(self, conversation_ref, messages, occurred_at=None):
         """messages: [(author, text)] in order; author "user" or "assistant" (the vault calls it "companion").
-        A witnessed turn carries one speaker, so each consecutive run of one author is its own turn.
-        Returns one result per run."""
-        runs = []
-        for author, text in messages:
-            author = "companion" if author == "assistant" else author
-            if runs and runs[-1][0] == author:
-                runs[-1][1].append(text)
-            else:
-                runs.append((author, [text]))
-        at = int(occurred_at or time.time())
-        return [self.facade("vault.witness", {
-            "conversation_ref": conversation_ref, "occurred_at": at,
-            "messages": [{"author": author, "message_type": "text", "content": t, "is_visible": True, "order": i}
-                         for i, t in enumerate(texts)]}) for author, texts in runs]
+        Every run is sent with this one credential. Returns one result per run."""
+        at = occurred_at or time.time()
+        return [self.witness_run(conversation_ref, a, texts, at) for a, texts in speaker_runs(messages)]
+
+
+def speaker_runs(messages):
+    """[(author, text)] -> [(vault author, [texts])]: one entry per consecutive run of one speaker."""
+    runs = []
+    for author, text in messages:
+        author = "companion" if author == "assistant" else author
+        if runs and runs[-1][0] == author:
+            runs[-1][1].append(text)
+        else:
+            runs.append((author, [text]))
+    return runs
+
+
+class SpeakerVaults:
+    """One vault client per speaker: user runs go with the user's PERSON-bound credential, companion runs with
+    Afterglow's agent credential, so the vault records who said what (and the Dreamer has a subject)."""
+
+    def __init__(self, person_credential_path, agent_credential_path=None):
+        self.by_author = {"user": OneironVault(person_credential_path),
+                          "companion": OneironVault(agent_credential_path)}
+        self.origin = self.by_author["companion"].origin
+
+    def witness(self, conversation_ref, messages, occurred_at=None):
+        at = occurred_at or time.time()
+        return [self.by_author[a].witness_run(conversation_ref, a, texts, at) for a, texts in speaker_runs(messages)]
+
+    def recall(self, query, limit=5, effort="light"):
+        return self.by_author["companion"].recall(query, limit=limit, effort=effort)
 
     def recall(self, query, limit=5, effort="light"):
         return self.facade("vault.recall", {"query": query, "effort": effort, "limit": limit})
 
 
-def push_day(world, day, vault=None, from_turn=None):
+def push_day(world, day, vault=None, from_turn=None, person_credential=None):
     """Witness a recorded day (runs/<world>/<day>/daylog.jsonl) into the vault: per turn, the user's message,
     one assistant message per saved note, and the answer. Progress goes to runs/<world>/<day>/oneiron.json after
     every turn, and a rerun skips the turns recorded there (or starts at from_turn)."""
@@ -126,19 +154,28 @@ def push_day(world, day, vault=None, from_turn=None):
     from . import paths
     from .notes import conversation_ref
 
-    vault = vault or OneironVault()
+    if vault is None:
+        vault = SpeakerVaults(person_credential) if person_credential else OneironVault()
+    speakers = "person+agent" if isinstance(vault, SpeakerVaults) else "agent"
+    version = 2 if speakers == "person+agent" else 1
     d = paths.day_dir(world, day)
     records = [json.loads(line) for line in (d / "daylog.jsonl").read_text().splitlines() if line.strip()]
-    conv = conversation_ref(world, day)
+    conv = conversation_ref(world, day, version)
     out_path = d / "oneiron.json"
-    receipts = json.loads(out_path.read_text()).get("receipts", []) if out_path.exists() else []
+    prev = json.loads(out_path.read_text()) if out_path.exists() else {}
+    history = prev.get("history", [])
+    if prev and prev.get("conversation_ref") != conv:  # an earlier push into another conversation stays on record
+        history.append({k: prev.get(k) for k in ("conversation_ref", "speakers", "pushed_at", "turns", "messages")})
+        prev = {}
+    receipts = prev.get("receipts", [])
     done = {r["turn"] for r in receipts}
     pending = None
 
     def save():
         summary = {"world": world, "day": day, "vault": vault.origin, "conversation_ref": conv,
-                   "pushed_at": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
-                   "turns": len(receipts), "messages": sum(r["messages"] for r in receipts), "receipts": receipts}
+                   "speakers": speakers, "pushed_at": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
+                   "turns": len(receipts), "messages": sum(r["messages"] for r in receipts), "receipts": receipts,
+                   "history": history}
         out_path.write_text(json.dumps(summary, indent=1) + "\n")
         return summary
 
@@ -177,11 +214,13 @@ if __name__ == "__main__":
     p.add_argument("--world", required=True)
     p.add_argument("--day", type=int, required=True)
     p.add_argument("--from-turn", type=int, help="skip earlier turns (they are already in the vault)")
+    p.add_argument("--person-credential", help="the user's PERSON-bound credential file: user runs are witnessed "
+                                               "with it, companion runs with AFTERGLOW_ONEIRON_CREDENTIAL")
     q = sub.add_parser("recall", help="ask the vault")
     q.add_argument("query")
     a = ap.parse_args()
     if a.cmd == "push-day":
-        s = push_day(a.world, a.day, from_turn=a.from_turn)
-        print(json.dumps({k: v for k, v in s.items() if k != "receipts"}, indent=1))
+        s = push_day(a.world, a.day, from_turn=a.from_turn, person_credential=a.person_credential)
+        print(json.dumps({k: v for k, v in s.items() if k not in ("receipts",)}, indent=1))
     else:
         print(json.dumps(OneironVault().recall(a.query, limit=5), indent=1)[:4000])
