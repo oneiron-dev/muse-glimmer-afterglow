@@ -27,6 +27,8 @@ import urllib.error
 import urllib.request
 
 USER_AGENT = "afterglow-app/0.1 (+https://github.com/oneiron-dev/muse-glimmer-afterglow)"
+WITNESS_TIMEOUT_S = 90  # a busy vault can take longer than 30 s to commit a witnessed turn
+WITNESS_TRIES = 3
 
 
 class VaultError(RuntimeError):
@@ -68,7 +70,7 @@ class OneironVault:
         return json.dumps({"timestamp": timestamp, "nonce": nonce, "signature": self.key.sign(transcript).hex()},
                           separators=(",", ":"))
 
-    def _post(self, path, body, timeout=30):
+    def _post(self, path, body, timeout=WITNESS_TIMEOUT_S):
         headers = {"Content-Type": "application/json", "User-Agent": USER_AGENT, "Authorization": self.bearer,
                    "x-oneiron-binding": self.holder_proof(), **self.access}
         req = urllib.request.Request(self.origin + path, data=json.dumps(body).encode(), headers=headers)
@@ -79,11 +81,11 @@ class OneironVault:
         except urllib.error.HTTPError as e:
             raise VaultError(e.code, e.read().decode(errors="replace")) from e
 
-    def facade(self, verb, body):
+    def facade(self, verb, body, timeout=WITNESS_TIMEOUT_S):
         """POST one facade verb. A 401 on the first call probes the vault's proof clock once (its authority
         clock can trail the wall clock) and retries with the offset it finds."""
         try:
-            return self._post(f"/v1/core/facade/{verb}", body)
+            return self._post(f"/v1/core/facade/{verb}", body, timeout)
         except VaultError as e:
             if e.status != 401 or self.probes >= 3:
                 raise
@@ -93,7 +95,7 @@ class OneironVault:
             for skew in (-60 * step, 60 * step):
                 self.skew = skew
                 try:
-                    return self._post(f"/v1/core/facade/{verb}", body)
+                    return self._post(f"/v1/core/facade/{verb}", body, timeout)
                 except VaultError as e:
                     if e.status != 401:
                         raise
@@ -101,13 +103,24 @@ class OneironVault:
         raise VaultError(401, f"no holder proof within 10 min of the wall clock was accepted; first reply: {first.body[:200]}")
 
     # --- the verbs the notes backend uses ---
-    def witness_run(self, conversation_ref, author, texts, occurred_at):
+    def witness_run(self, conversation_ref, author, texts, occurred_at, ids=None):
         """One witnessed turn: consecutive messages of one speaker. The vault takes the speaker from the
-        authenticated caller, so call this on the vault whose credential is that speaker."""
-        return self.facade("vault.witness", {
-            "conversation_ref": conversation_ref, "occurred_at": int(occurred_at),
-            "messages": [{"author": author, "message_type": "text", "content": t, "is_visible": True, "order": i}
-                         for i, t in enumerate(texts)]})
+        authenticated caller, so call this on the vault whose credential is that speaker.
+
+        `ids` are the messages' 32-hex entity ids. The vault admits a message id once, so with ids a timed-out
+        call is resent unchanged (same ids) and cannot land twice; without them the vault makes new ids."""
+        messages = [{"author": author, "message_type": "text", "content": t, "is_visible": True, "order": i}
+                    for i, t in enumerate(texts)]
+        for m, mid in zip(messages, ids or []):
+            m["id"] = mid
+        body = {"conversation_ref": conversation_ref, "occurred_at": int(occurred_at), "messages": messages}
+        for attempt in range(1, WITNESS_TRIES + 1):
+            try:
+                return self.facade("vault.witness", body)
+            except (TimeoutError, urllib.error.URLError) as e:
+                if not ids or attempt == WITNESS_TRIES or isinstance(e, urllib.error.HTTPError):
+                    raise
+                print(f"  vault.witness timed out ({e}); resending the same message ids", file=sys.stderr, flush=True)
 
     def client_for(self, author):
         return self
@@ -143,6 +156,9 @@ class SpeakerVaults:
     def client_for(self, author):
         return self.by_author[author]
 
+    def witness_run(self, conversation_ref, author, texts, occurred_at, ids=None):
+        return self.by_author[author].witness_run(conversation_ref, author, texts, occurred_at, ids)
+
     def witness(self, conversation_ref, messages, occurred_at=None):
         at = occurred_at or time.time()
         return [self.by_author[a].witness_run(conversation_ref, a, texts, at) for a, texts in speaker_runs(messages)]
@@ -161,7 +177,7 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
     import datetime as dt
 
     from . import paths
-    from .notes import conversation_ref
+    from .notes import conversation_ref, stable_id
 
     if vault is None:
         vault = SpeakerVaults(person_credential) if person_credential else OneironVault()
@@ -239,7 +255,8 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
             if i < len(receipt["receipt_refs"]):
                 continue  # this run reached the vault on an earlier try
             at = ts(user) if author == "user" else ts(rec)
-            out = vault.client_for(author).witness_run(conv, author, texts, at)
+            ids = [stable_id(f"{conv}:turn{rec['turn']}:run{i}:msg{j}") for j in range(len(texts))]
+            out = vault.client_for(author).witness_run(conv, author, texts, at, ids)
             receipt["receipt_refs"].append(out.get("receipt_ref"))
             receipt["turn_short_ids"].append(out.get("turn_short_id"))
             save()  # after every run, so a failure in the next one never repeats this one

@@ -111,15 +111,19 @@ class LocalJsonNotes(NotesStore):
         return {"path": str(path), "active": len(self.all()), "total": len(self.notes)}
 
 
-def conversation_ref(world, day, version=2):
-    """The vault conversation that holds one (world, day): a stable 32-hex id with the top bits set clear of the
-    engine's reserved low ids. Version 1 was witnessed with one credential for every speaker; version 2 names
-    the user by their PERSON-bound credential."""
+def stable_id(tag):
+    """A deterministic 32-hex vault entity id for `tag`, with the top bits set clear of the engine's reserved
+    low ids. The same tag always gives the same id, so a resent write names the same entity."""
     import hashlib
 
-    tag = f"afterglow:{world}:{day}" + (f":v{version}" if version > 1 else "")
     h = hashlib.sha256(tag.encode()).hexdigest()
     return format(int(h[:16], 16) | (1 << 62), "016x") + h[16:32]
+
+
+def conversation_ref(world, day, version=2):
+    """The vault conversation that holds one (world, day). Version 1 was witnessed with one credential for
+    every speaker; version 2 names the user by their PERSON-bound credential."""
+    return stable_id(f"afterglow:{world}:{day}" + (f":v{version}" if version > 1 else ""))
 
 
 class OneironNotes(NotesStore):

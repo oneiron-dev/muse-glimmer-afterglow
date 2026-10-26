@@ -65,7 +65,8 @@ class FakeVault:
     def client_for(self, author):
         return self
 
-    def witness_run(self, conv, author, texts, at):
+    def witness_run(self, conv, author, texts, at, ids=None):
+        self.ids = getattr(self, "ids", []) + [ids]  # every attempt, the failed one too
         if len(self.sent) == self.fail_at:
             raise RuntimeError("transient 500")
         self.sent.append((author, texts, at))
@@ -99,6 +100,28 @@ class PushDayTest(unittest.TestCase):
         third = FakeVault()
         self.assertEqual(oneiron_vault.push_day("wt", 1, vault=third)["turns"], 2)
         self.assertEqual(third.sent, [])
+        # the run that failed is resent with the ids the first try gave it; other runs get other ids
+        self.assertEqual(again.ids[0], first.ids[1])
+        self.assertEqual(len(again.ids[0][0]), 32)
+        self.assertNotEqual(again.ids[0], again.ids[1])
+
+    def test_a_timed_out_witness_is_resent_with_the_same_ids(self):
+        v = oneiron_vault.OneironVault.__new__(oneiron_vault.OneironVault)
+        bodies = []
+
+        def facade(verb, body, timeout=None):
+            bodies.append(json.dumps(body, sort_keys=True))
+            if len(bodies) == 1:
+                raise TimeoutError("The read operation timed out")
+            return {"receipt_ref": "r1"}
+
+        v.facade = facade
+        with mock.patch("sys.stderr"):
+            self.assertEqual(v.witness_run("c" * 32, "companion", ["a", "b"], 0, ids=["1" * 32, "2" * 32]),
+                             {"receipt_ref": "r1"})
+        self.assertEqual(len(bodies), 2)
+        self.assertEqual(bodies[0], bodies[1])
+        self.assertIn('"id": "' + "1" * 32, bodies[0])
 
     def test_skips_live_turns_repeated_notes_and_orphans(self):
         saved = {"name": "remember", "result": {"saved": "n1", "key": "office", "value": "Lisbon"}}
