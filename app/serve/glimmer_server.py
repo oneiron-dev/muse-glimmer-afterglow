@@ -132,6 +132,8 @@ def adapter_args(manifest_path):
         sys.exit(f"{manifest_path}: adapter ids must be 0..n-1 without gaps, got {[x['id'] for x in adapters]}")
     if len({x["path"] for x in adapters}) != len(adapters):
         sys.exit(f"{manifest_path}: an adapter path is listed twice")
+    if any(c in x["path"] for x in adapters for c in ":,"):
+        sys.exit(f"{manifest_path}: adapter paths cannot hold ':' or ',' (llama-server's --lora-scaled FNAME:SCALE)")
     for x in adapters:
         print(f"  lora {x['id']}: {x.get('world') or '(no world)'} day {x.get('day', '?')} "
               f"{x.get('decision', '')} {x['path']}", flush=True)
