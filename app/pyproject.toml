@@ -5,6 +5,10 @@ description = "Afterglow day app: Muse Glimmer agent, notes, KV snapshots, web U
 requires-python = ">=3.11"
 dependencies = []
 
+[project.optional-dependencies]
+# Only the Oneiron notes backend needs these: Ed25519 holder proofs and BLAKE3 slip digests.
+oneiron = ["cryptography>=43", "blake3>=1.0"]
+
 [project.scripts]
 afterglow-web = "afterglow.web:main"
 

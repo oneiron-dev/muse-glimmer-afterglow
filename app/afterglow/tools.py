@@ -75,6 +75,12 @@ class WorldState:
         os.replace(tmp, self.path)
 
 
+def next_id(prefix, items):
+    nums = [int(x["id"][len(prefix):]) for x in items if str(x.get("id", "")).startswith(prefix)
+            and x["id"][len(prefix):].isdigit()]
+    return f"{prefix}{max(nums, default=0) + 1:03d}"
+
+
 class ToolBox:
     """Runs one tool call. Returns (result_dict, notes_written)."""
 
@@ -103,7 +109,7 @@ class ToolBox:
                             key=lambda e: e.get("time", ""))
                 return {"date": args.get("date"), "events": ev}, []
             if name == "calendar.add_event":
-                e = {"id": f"E{len(st['calendar']) + 1:03d}", "date": args["date"], "time": args["time"],
+                e = {"id": next_id("E", st["calendar"]), "date": args["date"], "time": args["time"],
                      "title": args["title"]}
                 if args.get("place"):
                     e["place"] = args["place"]
@@ -113,7 +119,7 @@ class ToolBox:
             if name == "tasks.list":
                 return {"tasks": [t for t in st["tasks"] if not t.get("done")]}, []
             if name == "tasks.add":
-                t = {"id": f"T{len(st['tasks']) + 1:03d}", "title": args["title"], "done": False}
+                t = {"id": next_id("T", st["tasks"]), "title": args["title"], "done": False}
                 if args.get("due"):
                     t["due"] = args["due"]
                 st["tasks"].append(t)

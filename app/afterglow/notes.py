@@ -111,14 +111,63 @@ class LocalJsonNotes(NotesStore):
         return {"path": str(path), "active": len(self.all()), "total": len(self.notes)}
 
 
+def conversation_ref(world, day):
+    """The vault conversation that holds one (world, day): a stable 32-hex id with the top bits set clear of the
+    engine's reserved low ids."""
+    import hashlib
+
+    h = hashlib.sha256(f"afterglow:{world}:{day}".encode()).hexdigest()
+    return format(int(h[:16], 16) | (1 << 62), "016x") + h[16:32]
+
+
 class OneironNotes(NotesStore):
-    """Oneiron vault backend (bel vault bright-otter-4848). Not wired yet: the Meta lead says when the vault is
-    ready after the owner's smoke sitting. Until then every call refuses, so nothing reaches the vault early."""
+    """Notes in an Oneiron vault (bright-otter-4848), mirrored in a local JSON store.
 
-    def __init__(self, vault="bright-otter-4848"):
-        self.vault = vault
+    The vault is where the Dreamer consolidates the day: every saved note and every turn is witnessed into
+    the day's conversation. The local mirror keeps notes.json for the UI and the night job. recall() asks the
+    vault first and adds local matches. Needs the "oneiron" extra and the credentials in oneiron_vault.py.
+    """
 
-    def _refuse(self, *a, **kw):
-        raise NotImplementedError(f"Oneiron notes backend ({self.vault}) waits for the Meta lead's go")
+    def __init__(self, local, world, day, vault=None):
+        from .oneiron_vault import OneironVault
 
-    remember = recall = all = export_day = _refuse
+        self.local, self.world, self.day = local, world, day
+        self.vault = vault or OneironVault()
+        self.conversation = conversation_ref(world, day)
+        self.notes = local.notes
+        self.errors = []
+
+    def _witness(self, messages):
+        try:
+            return self.vault.witness(self.conversation, messages)
+        except Exception as e:  # the vault is a second copy; a failed write never loses the local note
+            self.errors.append(f"{type(e).__name__}: {e}")
+            return None
+
+    def remember(self, key, value, *, day=None, turn=None):
+        r = self.local.remember(key, value, day=day, turn=turn)
+        if not r["unchanged"]:
+            was = f" (replaces {r['superseded']['value']})" if r["superseded"] else ""
+            self._witness([("assistant", f"Note saved: {key}: {value}{was}")])
+        return r
+
+    def recall(self, query, k=5):
+        out = []
+        try:
+            items = (self.vault.recall(query, limit=k) or {}).get("items", [])
+            out = [{"id": i.get("short_id"), "key": i.get("predicate") or i.get("kind", "").lower(),
+                    "value": i.get("value_text") or "", "status": "active", "updated_at": "", "source": "vault"}
+                   for i in items if i.get("value_text")]
+        except Exception as e:
+            self.errors.append(f"{type(e).__name__}: {e}")
+        local = self.local.recall(query, k)
+        return local + [n for n in out if n["value"] not in {m["value"] for m in local}][:max(0, k - len(local))]
+
+    def all(self, include_superseded=False):
+        return self.local.all(include_superseded)
+
+    def export_day(self, path, *, world, day):
+        return self.local.export_day(path, world=world, day=day)
+
+    def witness_turn(self, user_text, assistant_text):
+        return self._witness([("user", user_text), ("assistant", assistant_text)])
