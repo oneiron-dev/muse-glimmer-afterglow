@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Convert a PEFT LoRA adapter for Muse Glimmer to a GGUF LoRA for llama-server --lora.
 # Usage: night/convert_adapter.sh ADAPTER_DIR OUT_GGUF BASE_CONFIG_DIR [PYTHON]
-#   BASE_CONFIG_DIR: any directory holding the Glimmer config.json (weights are not read).
+#   BASE_CONFIG_DIR: any directory holding the Glimmer config.json (weights are not read). Only its config.json is
+#   used, without quantization_config: the converter otherwise tries to dequantize the NF4 base (unsupported).
 # Uses llama.cpp v0.7.0 (620d2225) in .deps/llama.cpp (cloned here if missing) with
 # night/llamacpp/muse-glimmer-lora.patch applied: the stock converter crashes on Q/K LoRA
 # (`.ndim` on LoraTorchTensor) and would emit QK-norm weights into the adapter.
@@ -23,6 +24,10 @@ elif ! git -C "$LLAMA" apply --reverse --check "$ROOT/night/llamacpp/muse-glimme
   echo "patch neither applies nor is applied in $LLAMA" >&2; exit 2
 fi
 mkdir -p "$(dirname "$OUT")"
+CFG=$(mktemp -d)
+trap 'rm -rf "$CFG"' EXIT
+"$PY" -c 'import json,sys; c=json.load(open(sys.argv[1])); c.pop("quantization_config",None); json.dump(c,open(sys.argv[2],"w"),indent=1)' \
+  "$BASE/config.json" "$CFG/config.json"
 PYTHONPATH="$LLAMA/gguf-py${PYTHONPATH:+:$PYTHONPATH}" "$PY" "$LLAMA/convert_lora_to_gguf.py" "$ADAPTER" \
-  --base "$BASE" --outfile "$OUT" --outtype f16
+  --base "$CFG" --outfile "$OUT" --outtype f16
 sha256sum "$OUT" 2>/dev/null || shasum -a 256 "$OUT"
