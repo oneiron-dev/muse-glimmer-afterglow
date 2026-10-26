@@ -52,13 +52,14 @@ def build(world, day, recs, adapter):
                       "passed": pp["newcombe95"][0] > FORGET_LOWER_BOUND and not critical}
     facts = []
     for f in world["facts"]:
-        row = {"id": f["id"], "key": f["key"], "value": f["value"], "valid_from": f.get("valid_from", 1), "answers": {}}
+        row = {"id": f["id"], "key": f["key"], "value": f["value"], "valid_from": f.get("valid_from", 1), "answers": {}, "pass": {}}
         for arm, rec in recs.items():
             rs = [r for r in rec["results"] if r["kind"] == "forward" and r["fact_id"] == f["id"]]
             if not rs:
                 continue
             row[arm] = sum(r["pass"] for r in rs)
             row["answers"][arm] = [r["answer"] for r in rs]
+            row["pass"][arm] = [bool(r["pass"]) for r in rs]
             row["probes"] = [r["id"] for r in rs]
         if row["answers"]:
             facts.append(row)
