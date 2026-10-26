@@ -11,6 +11,7 @@ restore under other weights, another adapter or another template is silently acc
 snapshot has an identity stored beside it, and restore() refuses any mismatch:
 
   model_sha256, drafter_sha256       from the server's /data/afterglow/serve/current.json on the serving box
+  llama_server, ctx, slots           the server binary and its context layout, from the same file
   adapter_sha256, adapter_scale      the loaded adapter and the per-request scale the client sends
   template_sha256, template_kwargs   the chat template from /props and the reasoning strength
   prefix_sha256                      the messages and tools the slot was filled with
@@ -28,15 +29,15 @@ import json
 import os
 import subprocess
 import time
+import urllib.parse
+import uuid
 
 from . import paths
-from .llm import HOSTS, SERVE_HOST, GlimmerClient
+from .llm import HOSTS, GlimmerClient, GlimmerError
 from .tools import TOOL_SCHEMAS
 
 JST = dt.timezone(dt.timedelta(hours=9))
 SERVE_STATE = f"{HOSTS['root']}/serve/current.json"
-PREFIX_MARK = "afterglow-prefix-mark-7f3a"
-_identity_cache = {}
 
 
 def now_iso():
@@ -47,38 +48,43 @@ def sha256_json(obj):
     return hashlib.sha256(json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode()).hexdigest()
 
 
-def serve_state(max_age_s=30):
-    """The running server's current.json (weights and adapter hashes), read over ssh and cached briefly.
-    AFTERGLOW_SERVE_STATE=<local file> reads a local copy instead (the mock server writes one)."""
-    hit = _identity_cache.get("state")
-    if hit and time.time() - hit[0] < max_age_s:
-        return hit[1]
+def serving_box(endpoint):
+    """The hosts.json box whose proxy `endpoint` is, so the weights identity and the KV come from one server."""
+    addr = urllib.parse.urlparse(endpoint).hostname
+    box = next((name for name, h in HOSTS["hosts"].items() if h["tailnet"] == addr), None)
+    if box is None:
+        raise GlimmerError(f"{endpoint} is no serving box in hosts.json; set AFTERGLOW_SERVE_STATE for a mock")
+    return box
+
+
+def serve_state(endpoint):
+    """The running server's current.json (weights and adapter hashes), read fresh over ssh from the box behind
+    `endpoint`. AFTERGLOW_SERVE_STATE=<local file> reads a local copy instead (the mock server writes one)."""
     if os.environ.get("AFTERGLOW_SERVE_STATE"):
         with open(os.environ["AFTERGLOW_SERVE_STATE"]) as f:
-            state = json.load(f)
-        _identity_cache["state"] = (time.time(), state)
-        return state
-    r = subprocess.run(["ssh", "-o", "ConnectTimeout=5", SERVE_HOST, f"cat {SERVE_STATE}"],
+            return json.load(f)
+    box = serving_box(endpoint)
+    r = subprocess.run(["ssh", "-o", "ConnectTimeout=5", box, f"cat {SERVE_STATE}"],
                        capture_output=True, text=True, timeout=20)
     if r.returncode != 0:
-        raise RuntimeError(f"cannot read {SERVE_HOST}:{SERVE_STATE}: {r.stderr.strip()}")
-    state = json.loads(r.stdout)
-    _identity_cache["state"] = (time.time(), state)
-    return state
+        raise GlimmerError(f"cannot read {box}:{SERVE_STATE}: {r.stderr.strip()}")
+    return json.loads(r.stdout)
 
 
 def identity(client, reasoning):
-    st = serve_state()
+    st = serve_state(client.endpoint)
     props = client.get("/props")
-    mine = client.world_adapter()
+    mine = client.world_adapter(client.adapters(max_age_s=0))
     loaded = st.get("lora") or []
     adapter = next((x for x in loaded if mine and x.get("id") == mine["id"]), {}) if isinstance(loaded, list) else loaded
     return {
         "model_sha256": st["model"]["sha256"],
         "drafter_sha256": st["drafter"]["sha256"],
         "llama_server": (st.get("llama_cmd") or [None])[0],
+        "ctx": st.get("ctx"),
+        "slots": st.get("slots"),
         "adapter_sha256": adapter.get("sha256"),
-        "adapter_scale": client.lora_scale if mine else None,
+        "adapter_scale": (client.lora_scale or 0.0) if mine else None,  # the scale lora_field() sends
         "template_sha256": hashlib.sha256((props.get("chat_template") or "").encode()).hexdigest(),
         "template_kwargs": {"reasoning_strength": reasoning},
         "server_started": st.get("started"),
@@ -86,8 +92,13 @@ def identity(client, reasoning):
 
 
 def compare(saved, current):
-    """Fields that differ (server_started is informational: a restarted server with the same files is fine)."""
-    return [k for k in saved if k != "server_started" and saved.get(k) != current.get(k)]
+    """Fields that differ, over both sides' keys, so a field added later counts as a difference
+    (server_started is informational: a restarted server with the same files is fine)."""
+    return sorted(k for k in set(saved) | set(current) if k != "server_started" and saved.get(k) != current.get(k))
+
+
+def identity_hash(ident):
+    return sha256_json({k: v for k, v in ident.items() if k != "server_started"})
 
 
 def meta_path(world):
@@ -98,11 +109,16 @@ def meta_path(world):
 
 def render_prefix(session, messages):
     """The prompt text of `messages` exactly as the chat template renders it ahead of the next message."""
+    mark = f"afterglow-prefix-mark-{uuid.uuid4().hex}"
     r = session.client.post("/apply-template", {
-        "messages": messages + [{"role": "user", "content": PREFIX_MARK}], "tools": TOOL_SCHEMAS,
+        "messages": messages + [{"role": "user", "content": mark}], "tools": TOOL_SCHEMAS,
         "chat_template_kwargs": {"reasoning_strength": session.reasoning}})
     prompt = r["prompt"]
-    return prompt[:prompt.rindex("<|start|>", 0, prompt.index(PREFIX_MARK))]
+    at = prompt.find(mark)
+    cut = prompt.rfind("<|start|>", 0, at)
+    if prompt.count(mark) != 1 or cut < 0 or not prompt[cut:at].startswith("<|start|>user"):
+        raise GlimmerError("the chat template no longer renders a user turn as <|start|>user…; cannot cut the prefix")
+    return prompt[:cut]
 
 
 def prefill(session, messages, erase=False):
@@ -130,9 +146,14 @@ def rewarm(session):
     ident = identity(client, session.reasoning)
     prefix = session.prefix_messages()
     timings = prefill(session, prefix, erase=True)
-    fname = f"afterglow-{session.world}-start-{sha256_json(ident)[:12]}.bin"
+    fname = f"afterglow-{session.world}-start-{identity_hash(ident)[:12]}.bin"
     t0 = time.time()
     r = client.slot_action("save", fname)
+    if not r.get("n_saved"):
+        raise GlimmerError(f"slot save of {fname} wrote nothing: {r}")
+    changed = compare(ident, identity(client, session.reasoning))
+    if changed:  # the server changed under the prefill: this file holds KV of unknown weights
+        raise GlimmerError(f"the server changed while re-warming ({', '.join(changed)}); run rewarm again")
     meta = {"world": session.world, "slot": client.slot, "filename": fname, "saved_at": now_iso(),
             "n_tokens": r.get("n_saved"), "bytes": r.get("n_written"),
             "save_ms": (r.get("timings") or {}).get("save_ms"), "save_wall_s": round(time.time() - t0, 3),
@@ -164,6 +185,8 @@ def start(session):
         report.update(kind="rewarmed", prefix_tokens=meta["n_tokens"], prefix_ms=meta["prefill_ms"])
     else:
         r = session.client.slot_action("restore", meta["filename"])
+        if not r.get("n_restored"):
+            raise GlimmerError(f"slot restore of {meta['filename']} restored nothing: {r}")
         report.update(kind="restored", prefix_tokens=r.get("n_restored"),
                       restore_ms=(r.get("timings") or {}).get("restore_ms"), prefix_cold_ms=meta.get("prefill_ms"))
     t = prefill(session, session.messages)
