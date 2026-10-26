@@ -5,8 +5,9 @@ A base/no notes, B adapted/no notes, C base + notes, D adapted + notes. The adap
 every request ("lora": [{"id": 0, "scale": 0 or 1}]) with "cache_prompt": false, so no KV or prompt
 cache crosses arms. Prompts are the same token ids the transformers scorer uses (rendered here with the
 model's tokenizer and chat template), the answer is forced into the user channel, decoding is greedy and
-target-only, and a reply cut by the token limit is a failure. Writes score-<label>-<arm>.json per arm,
-in the format eval/summarize_sweep.py reads.
+target-only, and a reply cut by the token limit is a failure. Each answer also keeps its token
+confidence (log-probabilities), the calibration data for the confidence gate. Writes
+score-<label>-<arm>.json per arm, in the format eval/summarize_sweep.py reads.
 """
 
 import argparse
@@ -31,12 +32,27 @@ def post(server, path, body, timeout=600):
         return json.loads(resp.read())
 
 
+N_PROBS = 5
+
+
+def confidence(probs):
+    """Token confidence of one greedy answer (pre-sampling log-probabilities), the calibration data for the
+    answer-from-weights / look-up / ask gate: first token, weakest token, mean, and the first token's top 5."""
+    lps = [t["logprob"] for t in probs if t.get("logprob") is not None]
+    if not lps:
+        return None
+    return {"first_logprob": round(lps[0], 4), "min_logprob": round(min(lps), 4), "mean_logprob": round(sum(lps) / len(lps), 4),
+            "n_tokens": len(lps), "first_top": [[c.get("token"), round(c.get("logprob"), 4)] for c in probs[0].get("top_logprobs", [])]}
+
+
 def complete(server, ids, max_new, scale):
     body = {"prompt": ids, "n_predict": max_new, "temperature": 0.0, "top_k": 1, "seed": 20261014,
-            "cache_prompt": False, "lora": [{"id": 0, "scale": scale}], "return_tokens": True}
+            "cache_prompt": False, "lora": [{"id": 0, "scale": scale}], "return_tokens": True,
+            "n_probs": N_PROBS, "post_sampling_probs": False}
     r = post(server, "/completion", body)
     return {"answer": scoring.strip_answer(r.get("content", "")), "tokens": r.get("tokens_predicted"),
-            "truncated": r.get("stop_type") == "limit", "prompt_tokens": r.get("tokens_evaluated")}
+            "truncated": r.get("stop_type") == "limit", "prompt_tokens": r.get("tokens_evaluated"),
+            "conf": confidence(r.get("completion_probabilities") or [])}
 
 
 def main():
@@ -92,7 +108,7 @@ def main():
         for (it, _, _), g in zip(jobs, gens):
             passed, note = scoring.score_probe(it, g["answer"], g["truncated"], facts_by_id)
             results.append({"id": it["id"], "kind": it["kind"], "fact_id": it.get("fact_id"), "answer": g["answer"],
-                            "tokens": g["tokens"], "truncated": g["truncated"], "pass": passed, "note": note})
+                            "tokens": g["tokens"], "truncated": g["truncated"], "pass": passed, "note": note, "conf": g["conf"]})
         summary = summarize(results, world)
         record = {"label": args.label, "arm": arm, "runtime": "llama.cpp", "lora_scale": scale, "notes": use_notes,
                   "seconds": round(time.time() - t0, 1), "summary": summary, "results": results,
