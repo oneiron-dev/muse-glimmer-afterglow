@@ -45,6 +45,22 @@ GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 
+def decide(e, verify, leak_passed):
+    """Keep the adapter only if every gate passes: clean data, GGUF = PEFT, learned (B-A interval above 0),
+    no loss detected (forgetting interval's lower bound above -5 points) and no new tool failure."""
+    learned = e["learned"].get("B_minus_A", {})
+    checks = {"leak_check": leak_passed,
+              "gguf_matches_peft": verify.get("passed", False),
+              "learned_gate": bool(learned.get("ci95")) and learned["ci95"][0] > LEARNED_MIN_LOWER,
+              "forgot_gate": bool(e["forgot"]) and e["forgot"]["ci95"][0] > -0.05,
+              "tool_gate": bool(e["forgot"]) and not e["forgot"]["critical_tool_failures"]}
+    keep = all(checks.values())
+    why = ("all gates passed" if keep else "failed: " + ", ".join(k for k, v in checks.items() if not v))
+    why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
+            f"{e['forgot']['ci95'] if e['forgot'] else None}")
+    return {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
+
+
 def sha256(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
@@ -212,17 +228,8 @@ class Night:
              "--adapter-path", str(self.night / "adapter.gguf"), "--adapter-sha256", gguf_sha, "--out", str(self.night / "eval.json")], log)
         e = json.loads((self.night / "eval.json").read_text())
         verify = json.loads((self.night / "gguf-verify.json").read_text())
-        learned = e["learned"].get("B_minus_A", {})
-        checks = {"leak_check": self.receipt.get("leak_check", {}).get("clean_passed", False),
-                  "gguf_matches_peft": verify.get("passed", False),
-                  "learned_gate": bool(learned.get("ci95")) and learned["ci95"][0] > LEARNED_MIN_LOWER,
-                  "forgot_gate": bool(e["forgot"]) and e["forgot"]["ci95"][0] > -0.05,
-                  "tool_gate": bool(e["forgot"]) and not e["forgot"]["critical_tool_failures"]}
-        keep = all(checks.values())
-        why = ("all gates passed" if keep else "failed: " + ", ".join(k for k, v in checks.items() if not v))
-        why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
-                f"{e['forgot']['ci95'] if e['forgot'] else None}")
-        decision = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
+        decision = decide(e, verify, self.receipt.get("leak_check", {}).get("clean_passed", False))
+        keep = decision["decision"] == "keep"
         (self.night / "decision.json").write_text(json.dumps(decision, indent=1) + "\n")
         pointer_path = self.runs / a.world / "adapters.json"
         pointer = json.loads(pointer_path.read_text()) if pointer_path.exists() else {"current": None, "history": []}
