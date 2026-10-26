@@ -72,7 +72,8 @@ def main():
             continue
         sig = (norm(n["key"]), norm(n["value"]))
         if sig in seen:  # the same key and value saved twice
-            dropped.append({"id": n["id"], "outcome": "merged_as_duplicate", "why": f"same key and value as {seen[sig]}"})
+            dropped.append({"id": n["id"], "key": n["key"], "value": n["value"], "outcome": "merged_as_duplicate",
+                            "into": seen[sig], "why": f"same key and value as {seen[sig]}"})
             continue
         seen[sig] = n["id"]
         active.append(n)
@@ -100,10 +101,12 @@ def main():
             items.append({"id": n["id"], "kind": kind, "key": n["key"], "full_value": n["value"], "value": core,
                           "accept": [core], "statement": statement, "source_utterance": turns.get(n.get("turn"), ""),
                           "corrects": old["value"] if old else None})
-    superseded = [{"id": n["id"], "outcome": "dropped_as_superseded",
+    superseded = [{"id": n["id"], "key": n["key"], "value": n["value"], "outcome": "dropped_as_superseded",
+                   "superseded_by": n.get("superseded_by"),
                    "why": f"superseded by {n.get('superseded_by')}: the value {n['value']!r} is no longer true"}
                   for n in notes if n.get("superseded_by") or n.get("status") == "superseded"]
-    kept = [{"id": i["id"], "outcome": "kept", "why": f"learn as {i['kind']}" + (f"; corrects {i['corrects']!r}" if i["corrects"] else "")}
+    kept = [{"id": i["id"], "key": i["key"], "value": i["full_value"], "outcome": "kept", "kind": i["kind"],
+             "corrects": i["corrects"], "why": f"learn as {i['kind']}" + (f"; corrects {i['corrects']!r}" if i["corrects"] else "")}
             for i in items]
     overruled = {p["id"]: p for p in proposals}
     for o in kept:
