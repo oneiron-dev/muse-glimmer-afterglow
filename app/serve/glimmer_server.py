@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
-"""Start, stop and health-check the Muse Glimmer server on nelly; print its endpoint.
+"""Start, stop and health-check the Muse Glimmer server; print its endpoint.
 
-  python3 app/serve/glimmer_server.py start [--lora /data/.../adapter.gguf] [--lora-scale 1] [--hours 14]
-  python3 app/serve/glimmer_server.py stop
-  python3 app/serve/glimmer_server.py health [--deep]
-  python3 app/serve/glimmer_server.py endpoint
-  python3 app/serve/glimmer_server.py status
+  python3 app/serve/glimmer_server.py [--host nelly|mel] start [--lora /data/.../adapter.gguf] [--lora-scale 1] [--hours 14]
+  python3 app/serve/glimmer_server.py [--host nelly|mel] stop
+  python3 app/serve/glimmer_server.py [--host nelly|mel] health [--deep]
+  python3 app/serve/glimmer_server.py [--host nelly|mel] endpoint
+  python3 app/serve/glimmer_server.py [--host nelly|mel] status
 
-Runs on the Mac. The server runs on nelly in one long fleet GPU booking (serve_on_host.py):
-llama-server on 127.0.0.1:18611 behind the trace proxy on the tailnet address 100.96.31.41:18610.
-Stdlib only.
+Runs on the Mac. The server runs on the serving box (hosts.json; default nelly) in one long GPU
+booking (serve_on_host.py): llama-server on 127.0.0.1:18611 behind the trace proxy on the box's
+tailnet address, port 18610. The booking goes through `fleet run`; when the box is fleet-OFF
+(serving has it to itself), this script copies app/serve there and books with the box's own
+`gpu run`. Stdlib only.
 """
 import argparse
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 import time
@@ -22,13 +25,21 @@ import urllib.error
 import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-HOST = "nelly"
+with open(os.path.join(HERE, "hosts.json")) as _f:
+    CONF = json.load(_f)
 WHO = "meta-day"
 GOAL = "glimmer-serve: Muse Glimmer llama-server + trace proxy for Afterglow (day agent, night jobs, Dreamer)"
-ENDPOINT = "http://100.96.31.41:18610"
-UPSTREAM = "http://127.0.0.1:18611"
-ALIAS = "muse-glimmer-30b"
-STATE_PATH = "/data/afterglow/serve/current.json"
+ALIAS = CONF["alias"]
+UPSTREAM = f"http://127.0.0.1:{CONF['upstream_port']}"
+STATE_PATH = f"{CONF['root']}/serve/current.json"
+SYNC_DIR = f"/data/fleet-work/sync/{WHO}/serve"  # where `fleet run --sync` puts app/serve
+HOST = ENDPOINT = None
+
+
+def configure(host):
+    global HOST, ENDPOINT
+    HOST = host
+    ENDPOINT = f"http://{CONF['hosts'][host]['tailnet']}:{CONF['proxy_port']}"
 
 
 def http_json(url, body=None, timeout=10):
@@ -44,7 +55,7 @@ def ssh(cmd, timeout=60):
 
 
 def serving_jobs():
-    """Running and queued GPU jobs on nelly that are this server."""
+    """Running and queued GPU jobs on the serving box that are this server."""
     r = ssh("gpu status --json")
     if r.returncode != 0:
         sys.exit(f"gpu status on {HOST} failed: {r.stderr.strip()}")
@@ -54,13 +65,18 @@ def serving_jobs():
     return [j for j in jobs if j.get("who") == WHO and (j.get("goal") or "").startswith("glimmer-serve")]
 
 
+def fleet_off():
+    r = ssh("gpu status")
+    return r.returncode == 0 and "FLEET OFF" in r.stdout
+
+
 def remote_state():
     r = ssh(f"cat {STATE_PATH}")
     return json.loads(r.stdout) if r.returncode == 0 and r.stdout.strip() else None
 
 
 def check(deep=False):
-    """Return (ok, report). Checks the proxy from here and llama-server on nelly's loopback."""
+    """Return (ok, report). Checks the proxy from here and llama-server on the box's loopback."""
     report = {"endpoint": ENDPOINT}
     try:
         report["proxy_health"] = http_json(f"{ENDPOINT}/health", timeout=5).get("status")
@@ -99,16 +115,27 @@ def cmd_start(a):
     running = serving_jobs()
     if running:
         sys.exit(f"already booked: {[j.get('job') for j in running]}; run `stop` first")
-    inner = ["timeout", "--kill-after=30s", f"{a.hours}h", "python3", "serve_on_host.py"]
+    inner = ["timeout", "--kill-after=30s", f"{a.hours}h", "python3", "serve_on_host.py", "--host", HOST]
     if a.lora:
         inner += ["--lora", a.lora, "--lora-scale", str(a.lora_scale)]
-    cmd = ["fleet", "run", "--who", WHO, "--goal", GOAL, "--need", "cuda,gpu-4090", "--host", HOST,
-           "--mem", a.mem, "--est", f"{a.hours}h", "--sync", HERE, "--detach", "--"] + inner
+    mem = a.mem or CONF["hosts"][HOST]["mem"]
+    if fleet_off():
+        # The box takes no fleet jobs; serving has it to itself. Copy app/serve and book with its own gpu run.
+        r = subprocess.run(["rsync", "-a", "--delete", "--exclude", "__pycache__", HERE + "/", f"{HOST}:{SYNC_DIR}/"],
+                           capture_output=True, text=True, timeout=120)
+        if r.returncode != 0:
+            sys.exit(f"rsync to {HOST} failed: {r.stderr.strip()}")
+        remote = (f"cd {SYNC_DIR} && gpu run --who {WHO} --goal {shlex.quote(GOAL)} --mem {mem} "
+                  f"--est {a.hours}h --detach -- " + " ".join(shlex.quote(x) for x in inner))
+        cmd = ["ssh", "-o", "ConnectTimeout=10", HOST, remote]
+    else:
+        cmd = ["fleet", "run", "--who", WHO, "--goal", GOAL, "--need", "cuda,gpu-4090", "--host", HOST,
+               "--mem", mem, "--est", f"{a.hours}h", "--sync", HERE, "--detach", "--"] + inner
     print("+", " ".join(cmd), flush=True)
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
     sys.stdout.write(r.stdout + r.stderr)
     if r.returncode != 0:
-        sys.exit(f"fleet run failed ({r.returncode})")
+        sys.exit(f"booking failed ({r.returncode})")
     m = re.search(r"job (\d{4}-\d{6}-[0-9a-f]{4})", r.stdout + r.stderr)
     print(f"job: {m.group(1) if m else '?'}", flush=True)
     t0 = time.time()
@@ -128,7 +155,7 @@ def cmd_start(a):
 def cmd_stop(a):
     jobs = serving_jobs()
     if not jobs:
-        print("no serving job on nelly")
+        print(f"no serving job on {HOST}")
         return 0
     for j in jobs:
         r = ssh(f"gpu stop {j['job']} --why {json.dumps(a.why)}")
@@ -157,12 +184,13 @@ def cmd_status(a):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--host", default=CONF["default"], choices=sorted(CONF["hosts"]), help="serving box")
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("start")
-    s.add_argument("--lora", help="GGUF LoRA adapter path on nelly")
+    s.add_argument("--lora", help="GGUF LoRA adapter path on the serving box")
     s.add_argument("--lora-scale", type=float, default=1.0)
     s.add_argument("--hours", type=int, default=14, help="hard stop of the booking")
-    s.add_argument("--mem", default="24G", help="RAM booking on nelly")
+    s.add_argument("--mem", default=None, help="RAM booking (default per box in hosts.json)")
     s.add_argument("--wait", type=int, default=900, help="seconds to wait for health (the GPU may be queued)")
     st = sub.add_parser("stop")
     st.add_argument("--why", default="glimmer_server.py stop")
@@ -171,6 +199,7 @@ def main():
     sub.add_parser("endpoint")
     sub.add_parser("status")
     a = ap.parse_args()
+    configure(a.host)
     if a.cmd == "endpoint":
         print(f"{ENDPOINT}/v1")
         return 0

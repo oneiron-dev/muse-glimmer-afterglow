@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Run Muse Glimmer llama-server and the trace proxy on the serving box (nelly), inside one GPU booking.
+"""Run Muse Glimmer llama-server and the trace proxy on a serving box, inside one GPU booking.
 
-llama-server binds 127.0.0.1:18611 (loopback only). The trace proxy binds the tailnet address
-100.96.31.41:18610 and is the public endpoint. If either process exits, the other is stopped
-and this script exits, so the booking ends and the health check fails. SIGTERM stops both.
+llama-server binds 127.0.0.1:18611 (loopback only). The trace proxy binds the box's tailnet address
+on port 18610 and is the public endpoint. Paths per box are in hosts.json. If either process exits,
+the other is stopped and this script exits, so the booking ends and the health check fails.
+SIGTERM stops both.
 
 State for clients: <root>/serve/current.json (weights, drafter, adapter, flags, state).
 Python stdlib only. Started by glimmer_server.py on the Mac through `fleet run`.
@@ -21,14 +22,12 @@ import urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 JST = dt.timezone(dt.timedelta(hours=9))
-LLAMA_BIN = "/data/minicpm-v47-20261013/src/llama.cpp/build/bin/llama-server"
-GGUF_DIR = "/data/drafter-tune-20261014/models/official-gguf"
-MODEL = f"{GGUF_DIR}/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf"
-DRAFTER = f"{GGUF_DIR}/dflash-Muse-Glimmer-30B-Q4_K_M.gguf"
-# Pinned sha256 values (lead/verify_weights.sh, checked on nelly 26 Oct 20:51 JST).
-MODEL_SHA256 = "4cc57c0f51040a226e5a72cc47b7613f7772950e460a665f7083de89f183f60e"
-DRAFTER_SHA256 = "b2e808bf656086fe86bd0d0bd990f01d33e377537a07c02d45371517c8b264ef"
-ALIAS = "muse-glimmer-30b"
+with open(os.path.join(HERE, "hosts.json")) as _f:
+    CONF = json.load(_f)
+# Pinned sha256 values (lead/verify_weights.sh: nelly 26 Oct 20:51 JST; mel copies 27 Oct 05:04 JST).
+MODEL_SHA256 = CONF["model_sha256"]
+DRAFTER_SHA256 = CONF["drafter_sha256"]
+ALIAS = CONF["alias"]
 TEMPLATE_KWARGS = {"reasoning_strength": "minimal"}
 
 
@@ -44,11 +43,19 @@ def sha256_file(path):
     return h.hexdigest()
 
 
+def host_paths(name):
+    h = CONF["hosts"][name]
+    return {"llama_server": h["llama_server"], "model": os.path.join(h["gguf_dir"], CONF["model_file"]),
+            "drafter": os.path.join(h["gguf_dir"], CONF["drafter_file"]),
+            "listen": f"{h['tailnet']}:{CONF['proxy_port']}"}
+
+
 def llama_command(a):
-    cmd = [LLAMA_BIN, "-m", MODEL, "--alias", ALIAS,
+    p = host_paths(a.host)
+    cmd = [p["llama_server"], "-m", p["model"], "--alias", ALIAS,
            "-ngl", "99", "-fa", "on", "-np", str(a.slots), "-c", str(a.ctx), "--jinja", "--metrics",
            "--chat-template-kwargs", json.dumps(TEMPLATE_KWARGS, separators=(",", ":")),
-           "-md", DRAFTER, "-ngld", "all",
+           "-md", p["drafter"], "-ngld", "all",
            "--spec-type", "draft-dflash", "--spec-draft-n-max", "15", "--spec-draft-n-min", "0",
            "--spec-draft-p-min", "0", "--spec-draft-sampling", "greedy",
            "--slot-save-path", os.path.join(a.root, "slots"),
@@ -88,12 +95,13 @@ class Host:
         self.write_state(state="starting", started=now_iso(),
                          endpoint=f"http://{a.listen}", alias=ALIAS, chat_template_kwargs=TEMPLATE_KWARGS,
                          slots=a.slots, ctx=a.ctx,
-                         model={"path": MODEL, "sha256": MODEL_SHA256},
-                         drafter={"path": DRAFTER, "sha256": DRAFTER_SHA256},
+                         host=a.host,
+                         model={"path": host_paths(a.host)["model"], "sha256": MODEL_SHA256},
+                         drafter={"path": host_paths(a.host)["drafter"], "sha256": DRAFTER_SHA256},
                          lora=lora, slot_save_path=os.path.join(a.root, "slots"),
                          trace_dir=os.path.join(a.root, "traces"), llama_cmd=cmd,
                          llama_log=f"{logs}/{stamp}-llama-server.log", proxy_log=f"{logs}/{stamp}-trace-proxy.log")
-        env = dict(os.environ, LD_LIBRARY_PATH=os.path.dirname(LLAMA_BIN))
+        env = dict(os.environ, LD_LIBRARY_PATH=os.path.dirname(host_paths(a.host)["llama_server"]))
         self.procs["llama-server"] = subprocess.Popen(
             cmd, stdout=open(self.state["llama_log"], "w"), stderr=subprocess.STDOUT, env=env)
         self.procs["trace-proxy"] = subprocess.Popen(
@@ -149,14 +157,16 @@ class Host:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("--listen", default="100.96.31.41:18610", help="trace proxy HOST:PORT (tailnet address)")
-    ap.add_argument("--upstream-port", type=int, default=18611, help="llama-server port on 127.0.0.1")
+    ap.add_argument("--host", default=CONF["default"], choices=sorted(CONF["hosts"]), help="this box (hosts.json)")
+    ap.add_argument("--listen", default=None, help="trace proxy HOST:PORT (default: the box's tailnet address)")
+    ap.add_argument("--upstream-port", type=int, default=CONF["upstream_port"], help="llama-server port on 127.0.0.1")
     ap.add_argument("--slots", type=int, default=2)
     ap.add_argument("--ctx", type=int, default=65536, help="total context; each slot gets ctx/slots")
-    ap.add_argument("--root", default="/data/afterglow")
+    ap.add_argument("--root", default=CONF["root"])
     ap.add_argument("--lora", default=None, help="GGUF LoRA adapter path on this host")
     ap.add_argument("--lora-scale", type=float, default=1.0)
     a = ap.parse_args()
+    a.listen = a.listen or host_paths(a.host)["listen"]
 
     host = Host(a)
 

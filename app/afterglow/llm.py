@@ -4,9 +4,14 @@ import os
 import time
 import urllib.error
 import urllib.request
+from pathlib import Path
 
-DEFAULT_ENDPOINT = os.environ.get("AFTERGLOW_ENDPOINT", "http://100.96.31.41:18610")
-ALIAS = "muse-glimmer-30b"
+# The serving boxes (app/serve/hosts.json). AFTERGLOW_SERVE_HOST picks one; AFTERGLOW_ENDPOINT overrides the URL.
+HOSTS = json.loads((Path(__file__).resolve().parents[1] / "serve" / "hosts.json").read_text())
+SERVE_HOST = os.environ.get("AFTERGLOW_SERVE_HOST", HOSTS["default"])
+DEFAULT_ENDPOINT = (os.environ.get("AFTERGLOW_ENDPOINT")
+                    or f"http://{HOSTS['hosts'][SERVE_HOST]['tailnet']}:{HOSTS['proxy_port']}")
+ALIAS = HOSTS["alias"]
 USER_SLOT = 0
 
 

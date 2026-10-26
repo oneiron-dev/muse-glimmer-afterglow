@@ -4,14 +4,14 @@ llama-server does not check what a slot file was made with: it carries no adapte
 restore under other weights, another adapter or another template is silently accepted. So every
 snapshot has an identity stored beside it, and restore() refuses any mismatch:
 
-  model_sha256, drafter_sha256       from the server's /data/afterglow/serve/current.json on nelly
+  model_sha256, drafter_sha256       from the server's /data/afterglow/serve/current.json on the serving box
   adapter_sha256, adapter_scale      the loaded adapter and the per-request scale the client sends
   template_sha256, template_kwargs   the chat template from /props and the reasoning strength
   prefix_sha256, prefix_messages     the messages and tools the slot was filled with
 
 Kinds: "start" = the day's persona context (system prompt with notes and tools), made by rewarm();
        "end"   = the whole day's conversation, saved by save_end_of_day().
-Metadata: runs/<world>/<day>/kv/<kind>.json. Slot files: /data/afterglow/slots/<file> on nelly.
+Metadata: runs/<world>/<day>/kv/<kind>.json. Slot files: /data/afterglow/slots/<file> on the serving box.
 
 Glimmer has sliding-window layers, so llama-server can reuse cached KV only up to its last context
 checkpoint before the point where a new prompt differs. A slot saved mid-conversation ends in generated
@@ -23,15 +23,15 @@ the cached tokens: after a restore, 2,248 of 2,253 tokens were reused, and the f
 import datetime as dt
 import hashlib
 import json
+import os
 import subprocess
 import time
 
-from .llm import GlimmerClient
+from .llm import HOSTS, SERVE_HOST, GlimmerClient
 from .tools import TOOL_SCHEMAS
 
 JST = dt.timezone(dt.timedelta(hours=9))
-SERVE_STATE = "/data/afterglow/serve/current.json"
-SERVE_HOST = "nelly"
+SERVE_STATE = f"{HOSTS['root']}/serve/current.json"
 _identity_cache = {}
 
 
@@ -44,10 +44,16 @@ def sha256_json(obj):
 
 
 def serve_state(max_age_s=30):
-    """The running server's current.json (weights and adapter hashes), read over ssh and cached briefly."""
+    """The running server's current.json (weights and adapter hashes), read over ssh and cached briefly.
+    AFTERGLOW_SERVE_STATE=<local file> reads a local copy instead (the mock server writes one)."""
     hit = _identity_cache.get("state")
     if hit and time.time() - hit[0] < max_age_s:
         return hit[1]
+    if os.environ.get("AFTERGLOW_SERVE_STATE"):
+        with open(os.environ["AFTERGLOW_SERVE_STATE"]) as f:
+            state = json.load(f)
+        _identity_cache["state"] = (time.time(), state)
+        return state
     r = subprocess.run(["ssh", "-o", "ConnectTimeout=5", SERVE_HOST, f"cat {SERVE_STATE}"],
                        capture_output=True, text=True, timeout=20)
     if r.returncode != 0:
