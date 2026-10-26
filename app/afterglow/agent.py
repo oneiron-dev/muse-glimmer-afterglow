@@ -6,8 +6,10 @@ runs/<world>/<day>/daylog.jsonl  one record per turn: {"ts", "turn", "role", "co
 runs/<world>/<day>/notes.json    the notes (notes.py), seeded from the previous day's notes.
 runs/<world>/<day>/world_state.json  calendar and tasks.
 
-The system prompt is fixed for the whole day: it holds the notes from earlier days (when notes are in
-context), so its KV can be prefilled once and restored from a snapshot (snapshot.py).
+The prompt has two parts. The system prompt (persona header, rules, tools) is the same for every day
+of a world, so its KV is the one snapshot (snapshot.py). The day context (the date, and the notes from
+earlier days when notes are in context) is the first user-role message of the day; it is prefilled
+after a restore, with the day so far.
 """
 import datetime as dt
 import json
@@ -20,17 +22,18 @@ from .notes import LocalJsonNotes
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 
 JST = dt.timezone(dt.timedelta(hours=9))
-MAX_ROUNDS = 6
+MAX_ROUNDS = 8
 
-SYSTEM_PROMPT = """You are Afterglow, a personal assistant that runs on the user's own computer.
-Today is {date_line}.
+SYSTEM_PROMPT = """You are Afterglow, {who} personal assistant. You run on {owner} own computer.
 
 How you work:
-- When the user tells you a fact about their work, projects, people, places, schedule or a procedure, or corrects one, save it with remember: one fact per call, a short key, the value in a few words. To correct a fact, reuse its key.
+- When the user tells you facts about their work, projects, people, places, schedule or a procedure, or corrects one, save each fact with remember before you reply: one remember call per fact (a message can hold several), a short key in plain words, the value in a few words. To correct a fact, reuse its key.
 - Before you answer a question about something the user told you before, use recall.
 - Use the calendar and tasks tools for the user's schedule and to-dos.
 - Answer in one to three short sentences, in plain words.
 - You keep the user's facts and procedures. You do not give advice about the user's health, mood or personality."""
+
+DAY_CONTEXT = "Context for today, not a request: today is {date_line}."
 
 
 def now_iso():
@@ -55,6 +58,13 @@ def render_notes_block(notes):
     return f"\n\nYour notes from earlier days (the latest value of each fact):\n{lines}"
 
 
+def system_message(world_doc):
+    """The world's stable prefix: the same for every day, so one KV snapshot serves until the weights change."""
+    name = (world_doc.get("persona") or {}).get("name")
+    who, owner = (f"{name}'s", f"{name.split()[0]}'s") if name else ("the user's", "the user's")
+    return {"role": "system", "content": SYSTEM_PROMPT.format(who=who, owner=owner)}
+
+
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True):
         self.world, self.day = world, int(day)
@@ -72,32 +82,33 @@ class DaySession:
         self.tools = ToolBox(self.notes, self.world_state, day=self.day)
         self.daylog_path = self.dir / "daylog.jsonl"
         self.session_path = self.dir / "session.json"
-        self._init_system(date)
+        self.system_message = system_message(self.world_doc)
+        self._init_day_context(date)
         self.turn = 0
-        self.messages = [self.system_message]
+        self.messages = [self.system_message, self.context_message]
         self._replay()
 
-    # --- the fixed prefix of the day ---
-    def _init_system(self, date):
-        """The system prompt is written once per day (session.json) so a restarted app sends the same prefix."""
+    # --- the prompt prefix ---
+    def _init_day_context(self, date):
+        """The day context is written once per day (session.json), so a restarted app sends the same tokens."""
         if self.session_path.exists():
             s = json.loads(self.session_path.read_text())
             if s.get("notes_in_context") == self.notes_in_context:
-                self.system_message = s["system_message"]
+                self.context_message = s["context_message"]
                 self.date = s["date"]
                 return
         d = dt.date.fromisoformat(date) if date else dt.datetime.now(JST).date()
         self.date = d.isoformat()
         notes = [n for n in self.notes.all() if n.get("day") != self.day] if self.notes_in_context else []
-        text = SYSTEM_PROMPT.format(date_line=f"{d.strftime('%A')} {d.isoformat()}") + render_notes_block(notes)
-        self.system_message = {"role": "system", "content": text}
+        text = DAY_CONTEXT.format(date_line=f"{d.strftime('%A')} {d.isoformat()}") + render_notes_block(notes)
+        self.context_message = {"role": "user", "content": text}
         self.session_path.write_text(json.dumps({"world": self.world, "day": self.day, "date": self.date,
                                                  "notes_in_context": self.notes_in_context,
-                                                 "notes_in_prefix": len(notes),
-                                                 "system_message": self.system_message}, indent=1))
+                                                 "notes_in_context_count": len(notes),
+                                                 "context_message": self.context_message}, indent=1))
 
     def prefix_messages(self):
-        """The persona context: what a fresh day's KV snapshot holds."""
+        """The world's stable prefix: what the KV snapshot holds."""
         return [self.system_message]
 
     def _replay(self):
@@ -195,5 +206,5 @@ class DaySession:
         return last
 
     def end_day(self):
-        """Export the day's notes (runs/<world>/<day>/notes.json); snapshot.py saves the KV."""
+        """Export the day's notes (runs/<world>/<day>/notes.json) for the night job."""
         return self.notes.export_day(self.dir / "notes.json", world=self.world, day=self.day)
