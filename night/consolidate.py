@@ -3,10 +3,10 @@
 
 Reads runs/<w>/<d>/notes.json (the day agent's notes, with supersedes links) and daylog.jsonl (what the
 user said). Superseded notes are dropped; a note that corrects an earlier one keeps the old value as
-"corrects". "outcomes" records, per note, what the night chose: kept, merged_as_duplicate or
-dropped_as_superseded, with the reason (the morning report shows it). The teacher model then writes, per note: its kind (fact | preference | procedure), one plain
+"corrects". The teacher model then writes, per note: its kind (fact | preference | procedure), one plain
 statement, and the shortest exact span of the value that identifies it (the "core" that rewrites and
-answers must contain). Writes runs/<w>/<d>/night/consolidated.json in the format generate_rewrites.py reads.
+answers must contain). "outcomes" records, per note, what the night chose: kept, merged_as_duplicate or
+dropped_as_superseded, with the reason (the morning report shows it). Writes runs/<w>/<d>/night/consolidated.json in the format generate_rewrites.py reads.
 """
 
 import argparse
