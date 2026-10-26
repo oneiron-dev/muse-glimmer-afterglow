@@ -23,6 +23,7 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 26 Oct | Day app README: what each piece does, how to run it end to end, how to work without a GPU. | #11 |
 | 26 Oct | One page nav across the day, night and morning pages; an empty day invites the first message. | #13 |
 | 26 Oct | Each speaker is witnessed into the vault with its own credential (the user's person credential, the assistant's agent credential), so Oneiron's Dreamer knows whose facts they are; vault writes run off the chat path. | #14 |
+| 26 Oct | Fixes from a review of the day app: each world's adapter is matched by its full path when several are loaded, adapter and snapshot errors stop the run instead of passing silently, resumed vault pushes never repeat a turn, and the report names a rolled-back update. | #16 |
 
 ## Pre-existing work used as external dependencies
 
