@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Start, stop and health-check the Muse Glimmer server; print its endpoint.
 
-  python3 app/serve/glimmer_server.py [--host nelly|mel] start [--lora /data/.../adapter.gguf] [--lora-scale 1] [--hours 14]
+  python3 app/serve/glimmer_server.py [--host nelly|mel] start [--adapters runs/serving/adapters.json] [--hours 14] [--dry-run]
   python3 app/serve/glimmer_server.py [--host nelly|mel] stop
   python3 app/serve/glimmer_server.py [--host nelly|mel] health [--deep]
   python3 app/serve/glimmer_server.py [--host nelly|mel] endpoint
@@ -111,17 +111,31 @@ def check(deep=False):
     return ok, report
 
 
+def adapter_args(manifest_path):
+    """serve_on_host.py flags from the night job's serving manifest: its llama-server build and the kept
+    adapters, one --lora per adapter in ascending id (llama-server numbers them in the order given)."""
+    with open(manifest_path) as f:
+        m = json.load(f)
+    adapters = sorted(m.get("adapters") or [], key=lambda x: x["id"])
+    if [x["id"] for x in adapters] != list(range(len(adapters))):
+        sys.exit(f"{manifest_path}: adapter ids must be 0..n-1 without gaps, got {[x['id'] for x in adapters]}")
+    out = ["--llama-server", m["llama_server"]] if m.get("llama_server") else []
+    for x in adapters:
+        out += ["--lora", x["path"]]
+    return out
+
+
 def cmd_start(a):
     running = serving_jobs()
-    if running:
+    if running and not a.dry_run:
         sys.exit(f"already booked: {[j.get('job') for j in running]}; run `stop` first")
     inner = ["timeout", "--kill-after=30s", f"{a.hours}h", "python3", "serve_on_host.py", "--host", HOST]
-    if a.lora:
-        inner += ["--lora", a.lora, "--lora-scale", str(a.lora_scale)]
+    if a.adapters:
+        inner += adapter_args(a.adapters)
     mem = a.mem or CONF["hosts"][HOST]["mem"]
     if fleet_off():
         # The box takes no fleet jobs; serving has it to itself. Copy app/serve and book with its own gpu run.
-        r = subprocess.run(["rsync", "-a", "--delete", "--exclude", "__pycache__", HERE + "/", f"{HOST}:{SYNC_DIR}/"],
+        r = subprocess.CompletedProcess([], 0) if a.dry_run else subprocess.run(["rsync", "-a", "--delete", "--exclude", "__pycache__", HERE + "/", f"{HOST}:{SYNC_DIR}/"],
                            capture_output=True, text=True, timeout=120)
         if r.returncode != 0:
             sys.exit(f"rsync to {HOST} failed: {r.stderr.strip()}")
@@ -132,6 +146,11 @@ def cmd_start(a):
         cmd = ["fleet", "run", "--who", WHO, "--goal", GOAL, "--need", "cuda,gpu-4090", "--host", HOST,
                "--mem", mem, "--est", f"{a.hours}h", "--sync", HERE, "--detach", "--"] + inner
     print("+", " ".join(cmd), flush=True)
+    if a.dry_run:
+        r = subprocess.run([sys.executable, os.path.join(HERE, "serve_on_host.py"), "--print-command"] + inner[5:],
+                           capture_output=True, text=True, timeout=30)
+        print("llama-server command:", (r.stdout + r.stderr).strip())
+        return 0
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
     sys.stdout.write(r.stdout + r.stderr)
     if r.returncode != 0:
@@ -187,8 +206,9 @@ def main():
     ap.add_argument("--host", default=CONF["default"], choices=sorted(CONF["hosts"]), help="serving box")
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("start")
-    s.add_argument("--lora", help="GGUF LoRA adapter path on the serving box")
-    s.add_argument("--lora-scale", type=float, default=1.0)
+    s.add_argument("--adapters", help="serving manifest from the night job (runs/serving/adapters.json): "
+                                      "its llama-server build and kept adapters")
+    s.add_argument("--dry-run", action="store_true", help="print the booking and llama-server commands only")
     s.add_argument("--hours", type=int, default=14, help="hard stop of the booking")
     s.add_argument("--mem", default=None, help="RAM booking (default per box in hosts.json)")
     s.add_argument("--wait", type=int, default=900, help="seconds to wait for health (the GPU may be queued)")

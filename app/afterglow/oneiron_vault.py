@@ -19,6 +19,7 @@ Needs the "oneiron" extra: uv run --extra oneiron ...
 import json
 import os
 import secrets
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -64,7 +65,7 @@ class OneironVault:
         return json.dumps({"timestamp": timestamp, "nonce": nonce, "signature": self.key.sign(transcript).hex()},
                           separators=(",", ":"))
 
-    def _post(self, path, body, timeout=60):
+    def _post(self, path, body, timeout=30):
         headers = {"Content-Type": "application/json", "User-Agent": USER_AGENT, "Authorization": self.bearer,
                    "x-oneiron-binding": self.holder_proof(), **self.access}
         req = urllib.request.Request(self.origin + path, data=json.dumps(body).encode(), headers=headers)
@@ -83,7 +84,7 @@ class OneironVault:
         except VaultError as e:
             if e.status != 401 or self.skew:
                 raise
-        for step in range(1, 31):
+        for step in range(1, 11):
             for skew in (-60 * step, 60 * step):
                 self.skew = skew
                 try:
@@ -92,7 +93,7 @@ class OneironVault:
                     if e.status != 401:
                         raise
         self.skew = 0
-        raise VaultError(401, "no holder proof within 30 min of the wall clock was accepted")
+        raise VaultError(401, "no holder proof within 10 min of the wall clock was accepted")
 
     # --- the verbs the notes backend uses ---
     def witness(self, conversation_ref, messages, occurred_at=None):
@@ -116,9 +117,10 @@ class OneironVault:
         return self.facade("vault.recall", {"query": query, "effort": effort, "limit": limit})
 
 
-def push_day(world, day, vault=None):
+def push_day(world, day, vault=None, from_turn=None):
     """Witness a recorded day (runs/<world>/<day>/daylog.jsonl) into the vault: per turn, the user's message,
-    one assistant message per saved note, and the answer. Writes runs/<world>/<day>/oneiron.json."""
+    one assistant message per saved note, and the answer. Progress goes to runs/<world>/<day>/oneiron.json after
+    every turn, and a rerun skips the turns recorded there (or starts at from_turn)."""
     import datetime as dt
 
     from . import paths
@@ -128,10 +130,24 @@ def push_day(world, day, vault=None):
     d = paths.day_dir(world, day)
     records = [json.loads(line) for line in (d / "daylog.jsonl").read_text().splitlines() if line.strip()]
     conv = conversation_ref(world, day)
-    receipts, pending = [], None
+    out_path = d / "oneiron.json"
+    receipts = json.loads(out_path.read_text()).get("receipts", []) if out_path.exists() else []
+    done = {r["turn"] for r in receipts}
+    pending = None
+
+    def save():
+        summary = {"world": world, "day": day, "vault": vault.origin, "conversation_ref": conv,
+                   "pushed_at": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
+                   "turns": len(receipts), "messages": sum(r["messages"] for r in receipts), "receipts": receipts}
+        out_path.write_text(json.dumps(summary, indent=1) + "\n")
+        return summary
+
     for rec in records:
         if rec["role"] == "user":
             pending = rec
+            continue
+        if rec["turn"] in done or (from_turn and rec["turn"] < from_turn):
+            pending = None
             continue
         msgs = [("user", pending["content"])] if pending else []
         for tc in rec.get("tool_calls") or []:
@@ -143,15 +159,13 @@ def push_day(world, day, vault=None):
             msgs.append(("assistant", rec["content"]))
         at = int(dt.datetime.fromisoformat(rec["ts"]).timestamp())
         outs = vault.witness(conv, msgs, occurred_at=at)
+        print(f"  turn {rec['turn']}: {len(msgs)} messages witnessed", file=sys.stderr, flush=True)
         receipts.append({"turn": rec["turn"], "messages": len(msgs),
                          "receipt_refs": [o.get("receipt_ref") for o in outs],
                          "turn_short_ids": [o.get("turn_short_id") for o in outs]})
+        save()
         pending = None
-    summary = {"world": world, "day": day, "vault": vault.origin, "conversation_ref": conv,
-               "pushed_at": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
-               "turns": len(receipts), "messages": sum(r["messages"] for r in receipts), "receipts": receipts}
-    (d / "oneiron.json").write_text(json.dumps(summary, indent=1) + "\n")
-    return summary
+    return save()
 
 
 if __name__ == "__main__":
@@ -162,11 +176,12 @@ if __name__ == "__main__":
     p = sub.add_parser("push-day", help="witness a recorded day into the vault (for a Dreamer pass)")
     p.add_argument("--world", required=True)
     p.add_argument("--day", type=int, required=True)
+    p.add_argument("--from-turn", type=int, help="skip earlier turns (they are already in the vault)")
     q = sub.add_parser("recall", help="ask the vault")
     q.add_argument("query")
     a = ap.parse_args()
     if a.cmd == "push-day":
-        s = push_day(a.world, a.day)
+        s = push_day(a.world, a.day, from_turn=a.from_turn)
         print(json.dumps({k: v for k, v in s.items() if k != "receipts"}, indent=1))
     else:
         print(json.dumps(OneironVault().recall(a.query, limit=5), indent=1)[:4000])

@@ -70,13 +70,15 @@ def serve_state(max_age_s=30):
 def identity(client, reasoning):
     st = serve_state()
     props = client.get("/props")
-    lora = client.lora_field()
-    adapter = st.get("lora") or {}
+    mine = client.world_adapter()
+    loaded = st.get("lora") or []
+    adapter = next((x for x in loaded if mine and x.get("id") == mine["id"]), {}) if isinstance(loaded, list) else loaded
     return {
         "model_sha256": st["model"]["sha256"],
         "drafter_sha256": st["drafter"]["sha256"],
+        "llama_server": (st.get("llama_cmd") or [None])[0],
         "adapter_sha256": adapter.get("sha256"),
-        "adapter_scale": lora[0]["scale"] if lora else None,
+        "adapter_scale": client.lora_scale if mine else None,
         "template_sha256": hashlib.sha256((props.get("chat_template") or "").encode()).hexdigest(),
         "template_kwargs": {"reasoning_strength": reasoning},
         "server_started": st.get("started"),
@@ -174,10 +176,20 @@ if __name__ == "__main__":
     from .agent import DaySession
 
     ap = argparse.ArgumentParser(description="KV snapshot of a world's stable prefix")
-    ap.add_argument("action", choices=["rewarm", "start", "check"])
-    ap.add_argument("--world", required=True)
-    ap.add_argument("--day", type=int, required=True)
+    ap.add_argument("action", choices=["rewarm", "rewarm-all", "start", "check"])
+    ap.add_argument("--world")
+    ap.add_argument("--day", type=int)
     a = ap.parse_args()
+    if a.action == "rewarm-all":
+        # After a server restart or an adapter change: one fresh prefix snapshot per world under the new weights.
+        for wdir in sorted(p for p in paths.runs_root().iterdir() if p.is_dir() and any(d.name.isdigit() for d in p.iterdir())):
+            day = max(int(d.name) for d in wdir.iterdir() if d.name.isdigit())
+            m = rewarm(DaySession(wdir.name, day, GlimmerClient()))
+            print(json.dumps({"world": wdir.name, "day": day, "tokens": m["n_tokens"], "bytes": m["bytes"],
+                              "adapter_scale": m["identity"]["adapter_scale"]}))
+        raise SystemExit(0)
+    if not a.world or a.day is None:
+        ap.error("--world and --day are required")
     s = DaySession(a.world, a.day, GlimmerClient())
     out = {"rewarm": rewarm, "start": start, "check": lambda x: check(x)[1]}[a.action](s)
     print(json.dumps(out, indent=1))

@@ -19,14 +19,28 @@ class GlimmerError(RuntimeError):
     pass
 
 
+def world_adapter_path(world):
+    """The serving path of the world's latest kept adapter, from the night job's serving manifest
+    (runs/serving/adapters.json); None when the world has none yet."""
+    from . import paths
+
+    f = paths.runs_root() / "serving" / "adapters.json"
+    if not f.exists():
+        return None
+    kept = [a for a in json.loads(f.read_text()).get("adapters", [])
+            if a.get("world") == world and a.get("decision", "keep") == "keep"]
+    return max(kept, key=lambda a: a.get("day", 0))["path"] if kept else None
+
+
 class GlimmerClient:
     """One llama-server. Every chat call pins a slot and, when an adapter is loaded, sends its scale per request
     (slot files and the global scale do not track adapters, so a per-request scale is the only safe form)."""
 
-    def __init__(self, endpoint=DEFAULT_ENDPOINT, slot=USER_SLOT, lora_scale=1.0, timeout=600):
+    def __init__(self, endpoint=DEFAULT_ENDPOINT, slot=USER_SLOT, lora_scale=1.0, adapter_path=None, timeout=600):
         self.endpoint = endpoint.rstrip("/")
         self.slot = slot
-        self.lora_scale = lora_scale  # used only when the server has an adapter loaded
+        self.lora_scale = lora_scale  # the scale for this world's adapter, when the server has it loaded
+        self.adapter_path = adapter_path  # this world's adapter on the server; every other adapter gets scale 0
         self.timeout = timeout
         self._adapters = (0.0, [])
 
@@ -59,10 +73,23 @@ class GlimmerClient:
                 self._adapters = (time.time(), [])
         return self._adapters[1]
 
-    def lora_field(self):
-        if self.lora_scale is None:
+    def world_adapter(self):
+        """The loaded adapter that is this world's ({"id", "path", "scale"}), or None."""
+        if not self.adapter_path:
             return None
-        return [{"id": a["id"], "scale": self.lora_scale if a["id"] == 0 else 0.0} for a in self.adapters()] or None
+        name = self.adapter_path.rsplit("/", 1)[-1]
+        return next((a for a in self.adapters() if a.get("path", "").rsplit("/", 1)[-1] == name), None)
+
+    def lora_field(self):
+        """Per-request scales for every loaded adapter: this world's at lora_scale, all others 0. None when the
+        server has no adapter loaded. (Slot files and the global scale do not track adapters, so the scale is
+        always sent per request.)"""
+        loaded = self.adapters()
+        if not loaded:
+            return None
+        mine = self.world_adapter()
+        scale = self.lora_scale or 0.0
+        return [{"id": a["id"], "scale": scale if mine and a["id"] == mine["id"] else 0.0} for a in loaded]
 
     def request_body(self, messages, tools=None, *, reasoning="low", max_tokens=1024, temperature=0.3,
                      stream=True, n_predict=None, cache_prompt=True):

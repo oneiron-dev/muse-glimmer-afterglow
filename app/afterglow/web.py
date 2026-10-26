@@ -16,7 +16,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import paths, snapshot
+from . import paths, snapshot, thoughts
 from .agent import DaySession, now_iso
 from .llm import GlimmerClient
 
@@ -71,11 +71,11 @@ class App:
     def state(self):
         s = self.session
         persona = (s.world_doc.get("persona") or {})
-        adapters = self.client.adapters()
+        mine = self.client.world_adapter()
         return {
             "world": s.world, "day": s.day, "date": s.date, "persona": persona.get("name"),
             "server": {"endpoint": self.client.endpoint, "healthy": self.client.health(),
-                       "adapter": adapters[0]["path"].rsplit("/", 1)[-1] if adapters else None},
+                       "adapter": mine["path"].rsplit("/", 1)[-1] if mine else None},
             "notes": s.notes.all(include_superseded=True),
             "history": s.history(),
             "snapshot": self.snapshot_status,
@@ -94,18 +94,20 @@ class App:
             "chat_template_kwargs": {"reasoning_strength": "minimal", "current_date": today,
                                      "knowledge_cutoff": "2026-01-04"}})["prompt"]
         prompt = rendered.removesuffix("<|start|>assistant") + "<|start|>assistant to=user<|message|>"
-        adapter = self.client.adapters()
-        arms = [("Before the night", 0.0), ("After the night", 1.0)] if adapter else [("Base weights", None)]
+        mine = self.client.world_adapter()
+        arms = [("Before the night", 0.0), ("After the night", 1.0)] if mine else [("Base weights", 0.0)]
         out = []
         for label, scale in arms:
             body = {"prompt": prompt, "n_predict": 160, "temperature": 0, "id_slot": 1, "cache_prompt": False}
-            if scale is not None:
-                body["lora"] = [{"id": a["id"], "scale": scale if a["id"] == 0 else 0.0} for a in adapter]
+            lora = GlimmerClient(self.client.endpoint, slot=1, lora_scale=scale,
+                                 adapter_path=self.client.adapter_path).lora_field()
+            if lora:  # every loaded adapter at 0, this world's at the arm's scale
+                body["lora"] = lora
             t0 = time.time()
             r = self.client.post("/completion", body, timeout=120)
             out.append({"label": label, "scale": scale, "content": (r.get("content") or "").strip(),
                         "stop": r.get("stop_type"), "total_s": round(time.time() - t0, 2)})
-        return {"question": question, "adapter": adapter[0]["path"].rsplit("/", 1)[-1] if adapter else None,
+        return {"question": question, "adapter": mine["path"].rsplit("/", 1)[-1] if mine else None,
                 "decoding": "greedy, DFlash speculative decoding on", "answers": out}
 
     def night_summary(self):
@@ -144,6 +146,11 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.urlparse(self.path).path
         if path == "/api/state":
             return self._json(self.app.state())
+        if path == "/api/thoughts":
+            q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            available = thoughts.dates()
+            date = q.get("date", [available[0] if available else None])[0]
+            return self._json({"dates": available, "date": date, "items": thoughts.load(date) if date else None})
         if path == "/api/report":
             q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
             day = q.get("day", [None])[0]
@@ -152,6 +159,8 @@ class Handler(BaseHTTPRequestHandler):
             path = "/index.html"
         elif path in ("/report", "/morning"):
             path = "/report.html"
+        elif path == "/night":
+            path = "/night.html"
         f = (WEB / path.lstrip("/")).resolve()
         if WEB not in f.parents or not f.is_file():
             return self._json({"error": "not found"}, 404)
