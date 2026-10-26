@@ -1,0 +1,171 @@
+"""Client for the Muse Glimmer llama-server (OpenAI-compatible API behind the trace proxy). Stdlib only."""
+import json
+import os
+import time
+import urllib.error
+import urllib.request
+
+DEFAULT_ENDPOINT = os.environ.get("AFTERGLOW_ENDPOINT", "http://100.96.31.41:18610")
+ALIAS = "muse-glimmer-30b"
+USER_SLOT = 0
+
+
+class GlimmerError(RuntimeError):
+    pass
+
+
+class GlimmerClient:
+    """One llama-server. Every chat call pins a slot and, when an adapter is loaded, sends its scale per request
+    (slot files and the global scale do not track adapters, so a per-request scale is the only safe form)."""
+
+    def __init__(self, endpoint=DEFAULT_ENDPOINT, slot=USER_SLOT, lora_scale=1.0, timeout=600):
+        self.endpoint = endpoint.rstrip("/")
+        self.slot = slot
+        self.lora_scale = lora_scale  # used only when the server has an adapter loaded
+        self.timeout = timeout
+        self._adapters = (0.0, [])
+
+    # --- plain HTTP ---
+    def get(self, path, timeout=10):
+        with urllib.request.urlopen(self.endpoint + path, timeout=timeout) as r:
+            return json.loads(r.read())
+
+    def post(self, path, body, timeout=None):
+        req = urllib.request.Request(self.endpoint + path, data=json.dumps(body).encode(),
+                                     headers={"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=timeout or self.timeout) as r:
+                return json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            raise GlimmerError(f"{path}: HTTP {e.code}: {e.read()[:500]!r}") from e
+
+    def health(self):
+        try:
+            return self.get("/health", timeout=5).get("status") == "ok"
+        except (OSError, ValueError):
+            return False
+
+    def adapters(self, max_age_s=10):
+        """Loaded LoRA adapters: [{"id", "path", "scale"}]; [] when none. Cached briefly."""
+        if time.time() - self._adapters[0] > max_age_s:
+            try:
+                self._adapters = (time.time(), self.get("/lora-adapters"))
+            except (OSError, ValueError):
+                self._adapters = (time.time(), [])
+        return self._adapters[1]
+
+    def lora_field(self):
+        if self.lora_scale is None:
+            return None
+        return [{"id": a["id"], "scale": self.lora_scale if a["id"] == 0 else 0.0} for a in self.adapters()] or None
+
+    def request_body(self, messages, tools=None, *, reasoning="low", max_tokens=1024, temperature=0.3,
+                     stream=True, n_predict=None, cache_prompt=True):
+        body = {"model": ALIAS, "messages": messages, "id_slot": self.slot, "temperature": temperature,
+                "max_tokens": max_tokens, "stream": stream, "cache_prompt": cache_prompt,
+                "chat_template_kwargs": {"reasoning_strength": reasoning}}
+        if stream:
+            body["stream_options"] = {"include_usage": True}
+        if tools:
+            body["tools"] = tools
+        if n_predict is not None:
+            body["n_predict"] = n_predict
+            body["max_tokens"] = n_predict
+        lora = self.lora_field()
+        if lora:
+            body["lora"] = lora
+        return body
+
+    # --- streaming chat ---
+    def stream_chat(self, messages, tools=None, **kw):
+        """Yield events while Glimmer answers:
+        {"type": "reasoning"|"content", "text"}, {"type": "tool_call_start", "index", "name"},
+        {"type": "stats", "tokens", "elapsed_s", "tok_s"} about every 0.25 s, and last
+        {"type": "done", "message", "finish_reason", "timings", "usage", "ttft_s", "total_s"}."""
+        body = self.request_body(messages, tools, stream=True, **kw)
+        req = urllib.request.Request(self.endpoint + "/v1/chat/completions", data=json.dumps(body).encode(),
+                                     headers={"Content-Type": "application/json"})
+        t0 = time.time()
+        ttft = None
+        n_tokens = 0
+        last_stats = 0.0
+        reasoning, content = [], []
+        calls = {}
+        finish = timings = usage = None
+        try:
+            resp = urllib.request.urlopen(req, timeout=self.timeout)
+        except urllib.error.HTTPError as e:
+            raise GlimmerError(f"chat: HTTP {e.code}: {e.read()[:500]!r}") from e
+        with resp:
+            for raw in resp:
+                line = raw.strip()
+                if not line.startswith(b"data:"):
+                    continue
+                payload = line[5:].strip()
+                if payload == b"[DONE]":
+                    break
+                frame = json.loads(payload)
+                if frame.get("error"):
+                    raise GlimmerError(f"chat: {frame['error']}")
+                if frame.get("timings"):
+                    timings = frame["timings"]
+                if frame.get("usage"):
+                    usage = frame["usage"]
+                for choice in frame.get("choices") or []:
+                    delta = choice.get("delta") or {}
+                    got = False
+                    if delta.get("reasoning_content"):
+                        reasoning.append(delta["reasoning_content"])
+                        got = True
+                        yield {"type": "reasoning", "text": delta["reasoning_content"]}
+                    if delta.get("content"):
+                        content.append(delta["content"])
+                        got = True
+                        yield {"type": "content", "text": delta["content"]}
+                    for tc in delta.get("tool_calls") or []:
+                        got = True
+                        i = tc.get("index", 0)
+                        if i not in calls:
+                            calls[i] = {"id": tc.get("id") or f"call_{i}", "type": "function",
+                                        "function": {"name": "", "arguments": ""}}
+                        fn = tc.get("function") or {}
+                        if fn.get("name"):
+                            calls[i]["function"]["name"] += fn["name"]
+                            yield {"type": "tool_call_start", "index": i, "name": calls[i]["function"]["name"]}
+                        calls[i]["function"]["arguments"] += fn.get("arguments") or ""
+                    if choice.get("finish_reason"):
+                        finish = choice["finish_reason"]
+                    if got:
+                        n_tokens += 1
+                        if ttft is None:
+                            ttft = time.time() - t0
+                now = time.time()
+                if ttft is not None and now - last_stats > 0.25:
+                    last_stats = now
+                    gen_s = max(1e-6, now - t0 - ttft)
+                    yield {"type": "stats", "tokens": n_tokens, "elapsed_s": round(now - t0, 3),
+                           "ttft_s": round(ttft, 3), "tok_s": round(n_tokens / gen_s, 1) if n_tokens > 1 else None}
+        message = {"role": "assistant", "content": "".join(content)}
+        if reasoning:
+            message["reasoning_content"] = "".join(reasoning)
+        if calls:
+            message["tool_calls"] = [calls[i] for i in sorted(calls)]
+        yield {"type": "done", "message": message, "finish_reason": finish, "timings": timings, "usage": usage,
+               "ttft_s": round(ttft, 3) if ttft is not None else None, "total_s": round(time.time() - t0, 3)}
+
+    def chat(self, messages, tools=None, **kw):
+        """Non-streamed convenience: returns the final 'done' event."""
+        done = None
+        for ev in self.stream_chat(messages, tools, **kw):
+            if ev["type"] == "done":
+                done = ev
+        return done
+
+    # --- slots (KV snapshots) ---
+    def slots(self):
+        return self.get("/slots")
+
+    def slot_action(self, action, filename=None, slot=None):
+        slot = self.slot if slot is None else slot
+        body = {"filename": filename} if filename else {}
+        return self.post(f"/slots/{slot}?action={action}", body, timeout=300)
