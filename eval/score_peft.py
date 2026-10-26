@@ -33,6 +33,18 @@ def read_jsonl(path):
     return [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
 
 
+def load_notes(path):
+    """Notes as lines for arms C and D: the day agent's notes.json (active key/value notes), a {"notes": [str]}
+    file, or consolidated.json (statements)."""
+    doc = json.loads(Path(path).read_text())
+    if "items" in doc:
+        return [i["statement"] for i in doc["items"]]
+    notes = doc["notes"]
+    if notes and isinstance(notes[0], dict):
+        return [f"{n['key']}: {n['value']}" for n in notes if n.get("status", "active") == "active" and not n.get("superseded_by")]
+    return notes
+
+
 def prompt_text(item, notes):
     q = item["question"] + (FACT_SUFFIX if item["kind"] in ("forward", "reverse") else "")
     if notes:
@@ -146,10 +158,7 @@ def main():
     general = [{**g, "kind": "general"} for g in read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")]
     if args.forget_slice:
         general += read_jsonl(ROOT / "eval" / "data" / "forget_slice_v1.jsonl")
-    notes = None
-    if args.notes:
-        notes_doc = json.loads(Path(args.notes).read_text())
-        notes = notes_doc["notes"] if "notes" in notes_doc else [i["statement"] for i in notes_doc["items"]]
+    notes = load_notes(args.notes) if args.notes else None
 
     import unsloth  # noqa: F401
     from unsloth import FastModel

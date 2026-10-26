@@ -19,8 +19,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import scoring  # noqa: E402
-from score_peft import (GENERAL_KINDS, MAX_NEW_TOKENS, ROOT, build_prefix, probes_for_day, prompt_text,  # noqa: E402
-                        read_jsonl, summarize)
+from score_peft import (GENERAL_KINDS, MAX_NEW_TOKENS, ROOT, build_prefix, load_notes, probes_for_day,  # noqa: E402
+                        prompt_text, read_jsonl, summarize)
 
 ARMS = {"A": (0.0, False), "B": (1.0, False), "C": (0.0, True), "D": (1.0, True)}
 
@@ -63,10 +63,7 @@ def main():
     items += [{**g, "kind": "general"} for g in read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")]
     if args.forget_slice:
         items += read_jsonl(ROOT / "eval" / "data" / "forget_slice_v1.jsonl")
-    notes = None
-    if args.notes:
-        doc = json.loads(Path(args.notes).read_text())
-        notes = doc["notes"] if "notes" in doc else [i["statement"] for i in doc["items"]]
+    notes = load_notes(args.notes) if args.notes else None
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     with urllib.request.urlopen(args.server + "/lora-adapters", timeout=30) as resp:
