@@ -15,6 +15,7 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 26 Oct | Night learning engine: one teacher interface (Glimmer or Spark), fact rewrites, self-distilled general anchors, leak check, QLoRA trainer on the NF4 checkpoint, four-arm scorer, sweep runner, and a llama.cpp patch plus check for converting Glimmer LoRA adapters to GGUF. First sweep world `w1-ines-varga` with held-out probes frozen by hash before any training data existed. | #4 |
 | 26 Oct | World generator for synthetic personas (work, projects, people, places and procedures only), three new worlds with day-2 corrections and frozen held-out probes, a day simulator that plays a day's script through the real agent, and the Oneiron notes backend (witness and recall on the user's vault, agent credentials only). | #5 |
 | 26 Oct | Morning report page: facts learned with notes off against the notes control, what it lost on general skills, per-fact results, stale values, the keep or roll back checks, each number linked to its receipt. | #6 |
+| 26 Oct | "Ask it yourself, notes off" on the morning report: one question answered by the model before and after the night update, with no notes and no tools. | #7 |
 
 ## Pre-existing work used as external dependencies
 
