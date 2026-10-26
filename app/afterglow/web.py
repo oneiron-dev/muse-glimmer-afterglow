@@ -65,8 +65,8 @@ class App:
                     questions[p["id"]] = p["question"]
         persona = (self.session.world_doc.get("persona") or {}) if world == self.session.world else {}
         return {"world": world, "day": day, "persona": persona.get("name"), "eval": load("eval.json"),
-                "decision": load("decision.json"), "receipt": load("receipt.json"), "questions": questions,
-                "night_dir": str(night)}
+                "decision": load("decision.json"), "receipt": load("receipt.json"),
+                "consolidated": load("consolidated.json"), "questions": questions, "night_dir": str(night)}
 
     def state(self):
         s = self.session
