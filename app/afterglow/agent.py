@@ -17,7 +17,7 @@ import time
 from pathlib import Path
 
 from . import paths
-from .llm import GlimmerClient
+from .llm import GlimmerClient, world_adapter_path
 from .notes import LocalJsonNotes
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 
@@ -70,6 +70,8 @@ class DaySession:
                  notes_backend="local"):
         self.world, self.day = world, int(day)
         self.client = client or GlimmerClient()
+        if self.client.adapter_path is None:
+            self.client.adapter_path = world_adapter_path(world)
         self.reasoning = reasoning
         self.notes_in_context = notes_in_context
         self.world_doc = load_world(world)
