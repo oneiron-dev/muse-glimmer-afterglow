@@ -13,6 +13,7 @@ import argparse
 import json
 import re
 import sys
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -177,19 +178,22 @@ def main():
     t0 = time.time()
     failures = []
 
+    stop = threading.Event()
+
     def run_one(pair):
         index, item = pair
-        for attempt in range(3):
-            try:
-                rec = generate_item(args.teacher, item, index, log_path)
-                with open(done_path, "a") as f:
-                    f.write(json.dumps(rec) + "\n")
-                return rec
-            except (teacher_mod.TeacherError, OSError) as e:
-                err = str(e)
-                time.sleep(10 * (attempt + 1))
-        failures.append({"item_id": item["id"], "error": err})
-        return None
+        if stop.is_set():
+            return None
+        try:
+            rec = generate_item(args.teacher, item, index, log_path)
+        except (teacher_mod.TeacherError, OSError) as e:
+            # One failed call stops the run (a server that drops must not be hammered); a rerun resumes.
+            failures.append({"item_id": item["id"], "error": str(e)[:300], "at": time.strftime("%H:%M:%S")})
+            stop.set()
+            return None
+        with open(done_path, "a") as f:
+            f.write(json.dumps(rec) + "\n")
+        return rec
 
     with ThreadPoolExecutor(max_workers=args.workers) as pool:
         for rec in pool.map(run_one, todo):
