@@ -300,6 +300,29 @@ function askBox() {
   });
 }
 
+function across(worlds, current, day) {
+  // One line for every synthetic person, so no single world stands alone; each name opens its own report.
+  if (!worlds || worlds.length < 2) return;
+  const sum = (k) => worlds.reduce((t, w) => t + (w[k] ?? 0), 0);
+  const line = $("across-line");
+  line.replaceChildren(`Across ${worlds.length} synthetic people, after one night: `,
+    el("strong", null, `${sum("B")} of ${sum("facts")}`), " facts answered with notes off, ",
+    el("strong", null, String(sum("C"))), " with notes in the prompt, ",
+    el("strong", null, String(sum("D"))), " with both.");
+  const nav = $("people");
+  nav.replaceChildren(...worlds.map((w) => {
+    const a = el("a", "person");
+    a.href = `/report?world=${encodeURIComponent(w.world)}&day=${day}`;
+    if (w.world === current) a.setAttribute("aria-current", "page");
+    const bar = el("span", "bar");
+    bar.style.setProperty("--share", w.facts ? (w.B ?? 0) / w.facts : 0);
+    a.append(el("span", "name", w.persona || w.world), bar, el("span", "count", `${w.B ?? "–"} of ${w.facts}`));
+    a.title = `${w.persona || w.world}: ${w.B} of ${w.facts} with notes off, ${w.C} with notes, ${w.D} with both`;
+    return a;
+  }));
+  $("across").hidden = false;
+}
+
 async function boot() {
   const qs = new URLSearchParams(location.search);
   const r = await (await fetch(`/api/report?${qs}`)).json();
@@ -312,6 +335,7 @@ async function boot() {
     return;
   }
   $("when").textContent = `The morning after day ${r.day}`;
+  across(r.worlds, r.world, r.day);
   const ev = r.eval;
   const day = ev.eval_day || r.day;
   const facts = (ev.facts || []).filter((f) => (f.valid_from || 1) <= day);
