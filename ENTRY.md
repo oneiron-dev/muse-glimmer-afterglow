@@ -17,6 +17,8 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 26 Oct | Morning report page: facts learned with notes off against the notes control, what it lost on general skills, per-fact results, stale values, the keep or roll back checks, each number linked to its receipt. | #6 |
 | 26 Oct | "Ask it yourself, notes off" on the morning report: one question answered by the model before and after the night update, with no notes and no tools. | #7 |
 | 26 Oct | Learning sweep (GO): one night update takes held-out facts from 0/45 to 43–45/45 with notes off, no loss detected on a 200-item general and tool slice; Glimmer teaching itself matches Spark as teacher. Results and receipts under `eval/results/2026-10-27-learning-sweep/`. Also the forgetting slice of record, the llama.cpp evaluator, the eval.json builder, GGUF adapter conversion with a per-module delta check, and the night job orchestrator. | #8 |
+| 26 Oct | Overnight thought log page: each Glimmer call made by Oneiron's Dreamer and by the night job, with its task, reasoning and answer. | #9 |
+| 26 Oct | Serving loads one LoRA adapter per world from the night job's manifest, applied per request. | #10 |
 
 ## Pre-existing work used as external dependencies
 
