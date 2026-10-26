@@ -26,6 +26,7 @@ PAD_ID = 200018
 FACT_SUFFIX = " Answer in one short sentence."
 MAX_NEW_TOKENS = {"forward": 64, "reverse": 64, "general": 64, "preference": 256, "procedure": 256}
 NOTES_HEADER = "Notes I keep about Ines:\n"
+GENERAL_KINDS = ("general", "forget_mmlu", "forget_tool")
 
 
 def read_jsonl(path):
@@ -77,7 +78,7 @@ def score_arm(model, tokenizer, items, facts_by_id, notes, batch_size):
         groups.setdefault(MAX_NEW_TOKENS[it["kind"] if it["kind"] in MAX_NEW_TOKENS else "general"], []).append(it)
     results = []
     for max_new, group in groups.items():
-        prefixes = [build_prefix(tokenizer, prompt_text(it, notes if it["kind"] != "general" else None)) for it in group]
+        prefixes = [build_prefix(tokenizer, prompt_text(it, notes if it["kind"] not in GENERAL_KINDS else None)) for it in group]
         for it, g in zip(group, generate(model, tokenizer, prefixes, max_new, batch_size)):
             passed, note = scoring.score_probe(it, g["answer"], g["truncated"], facts_by_id)
             results.append({"id": it["id"], "kind": it["kind"], "fact_id": it.get("fact_id"), "answer": g["answer"],
@@ -133,6 +134,7 @@ def main():
     ap.add_argument("--adapter-notes-arm", action="store_true", help="also score D (adapter + notes)")
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--batch-size", type=int, default=16)
+    ap.add_argument("--forget-slice", action="store_true", help="also score the 180 MMLU-Pro + 20 tool forgetting slice")
     ap.add_argument("--parity-check", type=int, default=0, help="score the first N forward probes at batch 1 too")
     args = ap.parse_args()
     out_dir = Path(args.out_dir)
@@ -142,6 +144,8 @@ def main():
     facts_by_id = {f["id"]: f for f in world["facts"]}
     items = probes_for_day(read_jsonl(wdir / "heldout" / "probes.jsonl"), facts_by_id, args.day)
     general = [{**g, "kind": "general"} for g in read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")]
+    if args.forget_slice:
+        general += read_jsonl(ROOT / "eval" / "data" / "forget_slice_v1.jsonl")
     notes = None
     if args.notes:
         notes_doc = json.loads(Path(args.notes).read_text())

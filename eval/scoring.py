@@ -70,6 +70,14 @@ def score_exact_string(answer, gold):
     return _first_line(answer).rstrip(".") == gold
 
 
+def score_choice_letter(answer, gold, n_options=10):
+    """Multiple choice: the first option letter the answer commits to ("C", "C)", "(C) ...", "The answer is C")."""
+    letters = "ABCDEFGHIJ"[:n_options]
+    text = strip_answer(answer).strip()
+    m = re.match(r"^\(?([%s])(?:[).:\s]|$)" % letters, text) or re.search(r"answer is:?\s*\(?([%s])\b" % letters, text)
+    return bool(m) and m.group(1) == str(gold).upper()
+
+
 def extract_json(answer):
     text = strip_answer(answer)
     text = re.sub(r"^```(?:json)?\s*|\s*```$", "", text.strip())
@@ -119,6 +127,8 @@ def score_general(item, answer):
         return score_exact_string(answer, gold)
     if scorer == "json_exact":
         return extract_json(answer) == gold
+    if scorer == "choice_letter":
+        return score_choice_letter(answer, gold, item.get("n_options", 10))
     if scorer == "contains":
         return score_fact(answer, item["accept"])
     if scorer == "set_csv":
