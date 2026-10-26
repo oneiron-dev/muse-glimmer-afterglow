@@ -1,0 +1,20 @@
+{
+ "train": "runs/w1-ines-varga/1/sweep/train-spark-r4-raw.jsonl",
+ "train_rows": 236,
+ "probes": 181,
+ "hits": 1,
+ "hit_rows": [
+  "r00047"
+ ],
+ "examples": [
+  {
+   "probe": "F12-r1",
+   "train_row": "r00047",
+   "rule": "whole question"
+  }
+ ],
+ "probes_sharing_a_5gram": 26,
+ "passed": false,
+ "clean_file": "runs/w1-ines-varga/1/sweep/train-spark-r4.jsonl",
+ "dropped_rows": 1
+}

@@ -1,0 +1,38 @@
+{
+ "train": "runs/w1-ines-varga/1/sweep/train-glimmer-r12-raw.jsonl",
+ "train_rows": 631,
+ "probes": 181,
+ "hits": 4,
+ "hit_rows": [
+  "r00133",
+  "r00179",
+  "r00180",
+  "r00369"
+ ],
+ "examples": [
+  {
+   "probe": "F16-q1",
+   "train_row": "r00179",
+   "rule": "whole question"
+  },
+  {
+   "probe": "F16-q1",
+   "train_row": "r00180",
+   "rule": "whole question"
+  },
+  {
+   "probe": "F32-q1",
+   "train_row": "r00369",
+   "rule": "whole question"
+  },
+  {
+   "probe": "F12-r1",
+   "train_row": "r00133",
+   "rule": "whole question"
+  }
+ ],
+ "probes_sharing_a_5gram": 36,
+ "passed": false,
+ "clean_file": "runs/w1-ines-varga/1/sweep/train-glimmer-r12.jsonl",
+ "dropped_rows": 4
+}

@@ -1,0 +1,692 @@
+{
+ "rows": [
+  {
+   "label": "base",
+   "arm": "A",
+   "facts_learned": "0/45",
+   "forward": "0/135",
+   "reverse": "1/12",
+   "preference": "0/3",
+   "procedure": "0/1",
+   "general": "29/30",
+   "forget_slice": "115/200",
+   "truncated": 7
+  },
+  {
+   "label": "base",
+   "arm": "C",
+   "facts_learned": "45/45",
+   "forward": "135/135",
+   "reverse": "12/12",
+   "preference": "1/3",
+   "procedure": "1/1",
+   "general": "29/30",
+   "forget_slice": "-",
+   "truncated": 1,
+   "fact_delta_vs_A": {
+    "delta": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   }
+  },
+  {
+   "label": "S1e2",
+   "arm": "B",
+   "facts_learned": "42/45",
+   "forward": "126/135",
+   "reverse": "9/12",
+   "preference": "1/3",
+   "procedure": "1/1",
+   "general": "29/30",
+   "forget_slice": "-",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.9333,
+    "ci95": [
+     0.8741,
+     0.9778
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "fact_delta_vs_C": {
+    "delta": -0.0667,
+    "ci95": [
+     -0.1259,
+     -0.0222
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S1e4",
+   "arm": "B",
+   "facts_learned": "43/45",
+   "forward": "126/135",
+   "reverse": "8/12",
+   "preference": "1/3",
+   "procedure": "1/1",
+   "general": "29/30",
+   "forget_slice": "124/200",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.9333,
+    "ci95": [
+     0.8667,
+     0.9852
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "forget_vs_A": {
+    "n": 200,
+    "before": 0.575,
+    "after": 0.62,
+    "after_minus_before": 0.045,
+    "newcombe95": [
+     -0.0054,
+     0.095
+    ],
+    "lost": 9,
+    "gained": 18,
+    "mcnemar_p": 0.1221
+   },
+   "new_tool_failures": [],
+   "fact_delta_vs_C": {
+    "delta": -0.0667,
+    "ci95": [
+     -0.1333,
+     -0.0148
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S1e4-D",
+   "arm": "D",
+   "facts_learned": "45/45",
+   "forward": "135/135",
+   "reverse": "12/12",
+   "preference": "2/3",
+   "procedure": "1/1",
+   "general": "29/30",
+   "forget_slice": "-",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "fact_delta_vs_C": {
+    "delta": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S2e4",
+   "arm": "B",
+   "facts_learned": "43/45",
+   "forward": "119/135",
+   "reverse": "8/12",
+   "preference": "1/3",
+   "procedure": "1/1",
+   "general": "29/30",
+   "forget_slice": "-",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.8815,
+    "ci95": [
+     0.8222,
+     0.9333
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "fact_delta_vs_C": {
+    "delta": -0.1185,
+    "ci95": [
+     -0.1778,
+     -0.0667
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S3e4",
+   "arm": "B",
+   "facts_learned": "44/45",
+   "forward": "124/135",
+   "reverse": "9/12",
+   "preference": "1/3",
+   "procedure": "1/1",
+   "general": "29/30",
+   "forget_slice": "124/200",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.9185,
+    "ci95": [
+     0.8667,
+     0.963
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "forget_vs_A": {
+    "n": 200,
+    "before": 0.575,
+    "after": 0.62,
+    "after_minus_before": 0.045,
+    "newcombe95": [
+     -0.0035,
+     0.0931
+    ],
+    "lost": 8,
+    "gained": 17,
+    "mcnemar_p": 0.1078
+   },
+   "new_tool_failures": [],
+   "fact_delta_vs_C": {
+    "delta": -0.0815,
+    "ci95": [
+     -0.1333,
+     -0.037
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S4e4",
+   "arm": "B",
+   "facts_learned": "38/45",
+   "forward": "112/135",
+   "reverse": "6/12",
+   "preference": "2/3",
+   "procedure": "1/1",
+   "general": "29/30",
+   "forget_slice": "-",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.8296,
+    "ci95": [
+     0.7407,
+     0.9111
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "fact_delta_vs_C": {
+    "delta": -0.1704,
+    "ci95": [
+     -0.2593,
+     -0.0889
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S5e2",
+   "arm": "B",
+   "facts_learned": "41/45",
+   "forward": "122/135",
+   "reverse": "6/12",
+   "preference": "1/3",
+   "procedure": "0/1",
+   "general": "29/30",
+   "forget_slice": "-",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.9037,
+    "ci95": [
+     0.8444,
+     0.9556
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "fact_delta_vs_C": {
+    "delta": -0.0963,
+    "ci95": [
+     -0.1556,
+     -0.0444
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S5e4",
+   "arm": "B",
+   "facts_learned": "44/45",
+   "forward": "127/135",
+   "reverse": "9/12",
+   "preference": "1/3",
+   "procedure": "1/1",
+   "general": "29/30",
+   "forget_slice": "125/200",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.9407,
+    "ci95": [
+     0.8963,
+     0.9778
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "forget_vs_A": {
+    "n": 200,
+    "before": 0.575,
+    "after": 0.625,
+    "after_minus_before": 0.05,
+    "newcombe95": [
+     0.0006,
+     0.0989
+    ],
+    "lost": 8,
+    "gained": 18,
+    "mcnemar_p": 0.0755
+   },
+   "new_tool_failures": [],
+   "fact_delta_vs_C": {
+    "delta": -0.0593,
+    "ci95": [
+     -0.1037,
+     -0.0222
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S6e1",
+   "arm": "B",
+   "facts_learned": "38/45",
+   "forward": "115/135",
+   "reverse": "5/12",
+   "preference": "1/3",
+   "procedure": "1/1",
+   "general": "29/30",
+   "forget_slice": "-",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.8519,
+    "ci95": [
+     0.763,
+     0.9333
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "fact_delta_vs_C": {
+    "delta": -0.1481,
+    "ci95": [
+     -0.237,
+     -0.0667
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S7e2",
+   "arm": "B",
+   "facts_learned": "39/45",
+   "forward": "114/135",
+   "reverse": "8/12",
+   "preference": "2/3",
+   "procedure": "0/1",
+   "general": "29/30",
+   "forget_slice": "-",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.8444,
+    "ci95": [
+     0.7481,
+     0.9259
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "fact_delta_vs_C": {
+    "delta": -0.1556,
+    "ci95": [
+     -0.2519,
+     -0.0741
+    ],
+    "clusters": 45
+   }
+  },
+  {
+   "label": "S7e4",
+   "arm": "B",
+   "facts_learned": "45/45",
+   "forward": "129/135",
+   "reverse": "10/12",
+   "preference": "2/3",
+   "procedure": "0/1",
+   "general": "29/30",
+   "forget_slice": "-",
+   "truncated": 0,
+   "fact_delta_vs_A": {
+    "delta": 0.9556,
+    "ci95": [
+     0.9185,
+     0.9852
+    ],
+    "clusters": 45
+   },
+   "general_vs_A": {
+    "n": 30,
+    "before": 0.9667,
+    "after": 0.9667,
+    "after_minus_before": 0.0,
+    "newcombe95": [
+     -0.1059,
+     0.1059
+    ],
+    "lost": 0,
+    "gained": 0,
+    "mcnemar_p": 1.0
+   },
+   "fact_delta_vs_C": {
+    "delta": -0.0444,
+    "ci95": [
+     -0.0815,
+     -0.0148
+    ],
+    "clusters": 45
+   }
+  }
+ ],
+ "misses": {
+  "S1e4": [
+   {
+    "fact_id": "F02",
+    "C_rate": 1.0,
+    "B_rate": 0.0,
+    "misses": [
+     {
+      "probe": "F02-q1",
+      "answer": "Your workshop is in Moravik."
+     },
+     {
+      "probe": "F02-q2",
+      "answer": "Kestrel Fabrication's workshop is in Moravik."
+     },
+     {
+      "probe": "F02-q3",
+      "answer": "She drives or rides to Falk Precision in Moravik."
+     }
+    ]
+   },
+   {
+    "fact_id": "F14",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F14-q2",
+      "answer": "Kestrel keeps its laser cutter in Room 2.1 on the second floor."
+     }
+    ]
+   },
+   {
+    "fact_id": "F27",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F27-q1",
+      "answer": "Your contact at the pilot customer is Lotte Brandt."
+     }
+    ]
+   },
+   {
+    "fact_id": "F32",
+    "C_rate": 1.0,
+    "B_rate": 0.333,
+    "misses": [
+     {
+      "probe": "F32-q2",
+      "answer": "Lotus Larkspur must be flown by Sunniva Brekke as test pilot."
+     },
+     {
+      "probe": "F32-q3",
+      "answer": "Lieutenant Morrow runs all the fire drills."
+     }
+    ]
+   },
+   {
+    "fact_id": "F38",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F38-q2",
+      "answer": "The Larkspur team chats in #larkspur."
+     }
+    ]
+   },
+   {
+    "fact_id": "F42",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F42-q2",
+      "answer": "She starts her commute in Arnholt."
+     }
+    ]
+   }
+  ],
+  "S7e4": [
+   {
+    "fact_id": "F14",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F14-q3",
+      "answer": "Go to Falk Precision in Moravik."
+     }
+    ]
+   },
+   {
+    "fact_id": "F26",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F26-q2",
+      "answer": "Kestrel gets the first Larkspur frames."
+     }
+    ]
+   },
+   {
+    "fact_id": "F27",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F27-q1",
+      "answer": "Teodor Ilves is your contact at Brannock Composites."
+     }
+    ]
+   },
+   {
+    "fact_id": "F32",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F32-q3",
+      "answer": "Ines Varga runs the fire drills at work."
+     }
+    ]
+   },
+   {
+    "fact_id": "F35",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F35-q3",
+      "answer": "Kaito Mori is working on the Larkspur test rigs under Ines Varga's mentorship."
+     }
+    ]
+   },
+   {
+    "fact_id": "F43",
+    "C_rate": 1.0,
+    "B_rate": 0.667,
+    "misses": [
+     {
+      "probe": "F43-q3",
+      "answer": "Visitors can find your office on the second floor."
+     }
+    ]
+   }
+  ]
+ }
+}

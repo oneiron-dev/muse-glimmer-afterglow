@@ -1,0 +1,22 @@
+{
+ "adapter": "/data/meta-night/out/S1/epoch4",
+ "gguf": "/data/meta-night/out/S1/S1e4-f16.gguf",
+ "peft_r": 64,
+ "peft_alpha": 64,
+ "gguf_alpha": 64.0,
+ "modules_checked": 364,
+ "missing_in_gguf": [],
+ "extra_gguf_tensors": [],
+ "worst_rel_err": 0.000427,
+ "tolerance": 0.02,
+ "worst_by_kind": {
+  "attn_k": 0.000382,
+  "attn_output": 0.000399,
+  "attn_q": 0.00035,
+  "attn_v": 0.000425,
+  "ffn_down": 0.000301,
+  "ffn_gate": 0.000368,
+  "ffn_up": 0.000427
+ },
+ "passed": true
+}

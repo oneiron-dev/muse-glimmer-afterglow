@@ -1,0 +1,501 @@
+{
+ "world": "w1-ines-varga",
+ "day": 1,
+ "source": "oracle: world.json + day script",
+ "items": [
+  {
+   "id": "F01",
+   "kind": "fact",
+   "statement": "Ines Varga works at Kestrel Fabrication, a small company that builds drone frames.",
+   "value": "Kestrel Fabrication",
+   "accept": [
+    "kestrel"
+   ],
+   "source_utterance": "Morning. Quick setup so you can actually help me: I'm Ines Varga, operations lead at Kestrel Fabrication. We build drone frames out of a converted dairy barn in Arnholt, and most of my week goes into Project Larkspur, our folding survey-drone frame."
+  },
+  {
+   "id": "F02",
+   "kind": "fact",
+   "statement": "Kestrel Fabrication's workshop is a converted dairy barn in the town of Arnholt.",
+   "value": "Arnholt",
+   "accept": [
+    "arnholt"
+   ],
+   "source_utterance": "Morning. Quick setup so you can actually help me: I'm Ines Varga, operations lead at Kestrel Fabrication. We build drone frames out of a converted dairy barn in Arnholt, and most of my week goes into Project Larkspur, our folding survey-drone frame."
+  },
+  {
+   "id": "F03",
+   "kind": "fact",
+   "statement": "Ines Varga is the operations lead at Kestrel Fabrication.",
+   "value": "operations lead",
+   "accept": [
+    "operations lead"
+   ],
+   "source_utterance": "Morning. Quick setup so you can actually help me: I'm Ines Varga, operations lead at Kestrel Fabrication. We build drone frames out of a converted dairy barn in Arnholt, and most of my week goes into Project Larkspur, our folding survey-drone frame."
+  },
+  {
+   "id": "F04",
+   "kind": "fact",
+   "statement": "Ines reports to Dagny Holm, the CTO of Kestrel Fabrication.",
+   "value": "Dagny Holm",
+   "accept": [
+    "dagny"
+   ],
+   "source_utterance": "I report to Dagny Holm, our CTO. She wants a status note from me every Thursday, so nudge me if I forget."
+  },
+  {
+   "id": "F05",
+   "kind": "fact",
+   "statement": "Most of Ines's week goes into Project Larkspur.",
+   "value": "Project Larkspur",
+   "accept": [
+    "larkspur"
+   ],
+   "source_utterance": "Morning. Quick setup so you can actually help me: I'm Ines Varga, operations lead at Kestrel Fabrication. We build drone frames out of a converted dairy barn in Arnholt, and most of my week goes into Project Larkspur, our folding survey-drone frame."
+  },
+  {
+   "id": "F06",
+   "kind": "fact",
+   "statement": "Project Larkspur is Kestrel's folding survey-drone frame.",
+   "value": "a folding survey-drone frame",
+   "accept": [
+    "survey"
+   ],
+   "source_utterance": "Morning. Quick setup so you can actually help me: I'm Ines Varga, operations lead at Kestrel Fabrication. We build drone frames out of a converted dairy barn in Arnholt, and most of my week goes into Project Larkspur, our folding survey-drone frame."
+  },
+  {
+   "id": "F07",
+   "kind": "fact",
+   "statement": "Larkspur must ship by 14 March, the date promised to the pilot customer.",
+   "value": "14 March",
+   "accept": [
+    "14 march",
+    "march 14",
+    "14th of march",
+    "march 14th",
+    "14th march"
+   ],
+   "source_utterance": "Larkspur has to ship by 14 March. That's the date we promised the pilot customer, Vestergaard Surveying."
+  },
+  {
+   "id": "F08",
+   "kind": "fact",
+   "statement": "Kestrel buys all its carbon tubes and plates from Brannock Composites.",
+   "value": "Brannock Composites",
+   "accept": [
+    "brannock"
+   ],
+   "source_utterance": "All our carbon tubes and plates come from Brannock Composites. Teodor Ilves is the account manager there, and we have a standing call with him Tuesdays at 10:30."
+  },
+  {
+   "id": "F09",
+   "kind": "fact",
+   "statement": "Teodor Ilves is Kestrel's account manager at Brannock Composites.",
+   "value": "Teodor Ilves",
+   "accept": [
+    "teodor",
+    "ilves"
+   ],
+   "source_utterance": "All our carbon tubes and plates come from Brannock Composites. Teodor Ilves is the account manager there, and we have a standing call with him Tuesdays at 10:30."
+  },
+  {
+   "id": "F10",
+   "kind": "fact",
+   "statement": "Ines has a standing call with Teodor Ilves every Tuesday at 10:30.",
+   "value": "Tuesdays at 10:30",
+   "accept": [
+    "10:30"
+   ],
+   "source_utterance": "All our carbon tubes and plates come from Brannock Composites. Teodor Ilves is the account manager there, and we have a standing call with him Tuesdays at 10:30."
+  },
+  {
+   "id": "F11",
+   "kind": "fact",
+   "statement": "Machining at Kestrel happens in Hall C.",
+   "value": "Hall C",
+   "accept": [
+    "hall c"
+   ],
+   "source_utterance": "Machining happens in Hall C. The big CNC in there is a Morrow M-40 that everyone calls Old Gus. Don't ask, it predates me."
+  },
+  {
+   "id": "F12",
+   "kind": "fact",
+   "statement": "The big CNC machine in Hall C is nicknamed Old Gus.",
+   "value": "Old Gus",
+   "accept": [
+    "old gus"
+   ],
+   "source_utterance": "Machining happens in Hall C. The big CNC in there is a Morrow M-40 that everyone calls Old Gus. Don't ask, it predates me."
+  },
+  {
+   "id": "F13",
+   "kind": "fact",
+   "statement": "Old Gus is a Morrow M-40 CNC machine.",
+   "value": "Morrow M-40",
+   "accept": [
+    "morrow",
+    "m 40",
+    "m40"
+   ],
+   "source_utterance": "Machining happens in Hall C. The big CNC in there is a Morrow M-40 that everyone calls Old Gus. Don't ask, it predates me."
+  },
+  {
+   "id": "F14",
+   "kind": "fact",
+   "statement": "Kestrel's laser cutter is up on the mezzanine, above the paint booth.",
+   "value": "the mezzanine",
+   "accept": [
+    "mezzanine"
+   ],
+   "source_utterance": "The laser cutter lives up on the mezzanine, right above the paint booth."
+  },
+  {
+   "id": "F15",
+   "kind": "fact",
+   "statement": "Kestrel test-flies its prototypes at Tolvik Flats.",
+   "value": "Tolvik Flats",
+   "accept": [
+    "tolvik"
+   ],
+   "source_utterance": "When we test-fly prototypes we drive out to Tolvik Flats. Sunniva Brekke flies them; she's our test pilot."
+  },
+  {
+   "id": "F16",
+   "kind": "fact",
+   "statement": "Sunniva Brekke is Kestrel's test pilot.",
+   "value": "Sunniva Brekke",
+   "accept": [
+    "sunniva",
+    "brekke"
+   ],
+   "source_utterance": "When we test-fly prototypes we drive out to Tolvik Flats. Sunniva Brekke flies them; she's our test pilot."
+  },
+  {
+   "id": "F17",
+   "kind": "fact",
+   "statement": "Yusuf Demir runs quality assurance at Kestrel.",
+   "value": "Yusuf Demir",
+   "accept": [
+    "yusuf",
+    "demir"
+   ],
+   "source_utterance": "Yusuf Demir runs QA. Anything that fails his checks goes straight back to Hall C, no exceptions."
+  },
+  {
+   "id": "F18",
+   "kind": "fact",
+   "statement": "Ines's desk phone extension is 4417.",
+   "value": "4417",
+   "accept": [
+    "4417"
+   ],
+   "source_utterance": "People keep asking how to reach me in the office: desk line is extension 4417, and I sit in room 2.14 on the second floor."
+  },
+  {
+   "id": "F19",
+   "kind": "fact",
+   "statement": "The Larkspur specs are on the shared drive under /eng/larkspur/rev-d.",
+   "value": "/eng/larkspur/rev-d",
+   "accept": [
+    "eng/larkspur/rev"
+   ],
+   "source_utterance": "All the Larkspur specs are on the shared drive under /eng/larkspur/rev-d. We're on Rev D of the frame now; Rev C had the hinge crack problem."
+  },
+  {
+   "id": "F20",
+   "kind": "fact",
+   "statement": "The Larkspur frame is on Rev D.",
+   "value": "Rev D",
+   "accept": [
+    "rev d",
+    "revision d"
+   ],
+   "source_utterance": "All the Larkspur specs are on the shared drive under /eng/larkspur/rev-d. We're on Rev D of the frame now; Rev C had the hinge crack problem."
+  },
+  {
+   "id": "F21",
+   "kind": "fact",
+   "statement": "The Larkspur arm hinge bolts are torqued to 2.8 newton-metres.",
+   "value": "2.8 newton-metres",
+   "accept": [
+    "2.8"
+   ],
+   "source_utterance": "Torque on the arm hinge bolts is 2.8 newton-metres. Write that down, people over-tighten them constantly."
+  },
+  {
+   "id": "F22",
+   "kind": "fact",
+   "statement": "Kestrel tracks inventory in Shelfwise.",
+   "value": "Shelfwise",
+   "accept": [
+    "shelfwise"
+   ],
+   "source_utterance": "We track inventory in Shelfwise, and every Larkspur part number starts with KF-LS-."
+  },
+  {
+   "id": "F23",
+   "kind": "fact",
+   "statement": "Kestrel ships everything through Nordpil Freight.",
+   "value": "Nordpil Freight",
+   "accept": [
+    "nordpil"
+   ],
+   "source_utterance": "Everything goes out through Nordpil Freight. Their driver picks up at 16:00 on weekdays."
+  },
+  {
+   "id": "F24",
+   "kind": "fact",
+   "statement": "Nordpil Freight picks up from Kestrel at 16:00 on weekdays.",
+   "value": "16:00 on weekdays",
+   "accept": [
+    "16:00",
+    "4 pm",
+    "4pm",
+    "4:00 pm",
+    "4:00pm",
+    "4 o'clock"
+   ],
+   "source_utterance": "Everything goes out through Nordpil Freight. Their driver picks up at 16:00 on weekdays."
+  },
+  {
+   "id": "F25",
+   "kind": "fact",
+   "statement": "Ines sends Dagny Holm a status note every Thursday.",
+   "value": "Thursday",
+   "accept": [
+    "thursday"
+   ],
+   "source_utterance": "I report to Dagny Holm, our CTO. She wants a status note from me every Thursday, so nudge me if I forget."
+  },
+  {
+   "id": "F26",
+   "kind": "fact",
+   "statement": "Vestergaard Surveying is the pilot customer for Larkspur.",
+   "value": "Vestergaard Surveying",
+   "accept": [
+    "vestergaard"
+   ],
+   "source_utterance": "Larkspur has to ship by 14 March. That's the date we promised the pilot customer, Vestergaard Surveying."
+  },
+  {
+   "id": "F27",
+   "kind": "fact",
+   "statement": "Ines's contact at Vestergaard Surveying is Henrik Aas.",
+   "value": "Henrik Aas",
+   "accept": [
+    "henrik",
+    "aas"
+   ],
+   "source_utterance": "Our contact at Vestergaard is Henrik Aas. He'd rather get a phone call than an email, for what it's worth."
+  },
+  {
+   "id": "F28",
+   "kind": "fact",
+   "statement": "Ines can approve purchase orders up to 4,000 euros herself; larger ones go to Dagny Holm.",
+   "value": "4,000 euros",
+   "accept": [
+    "4000"
+   ],
+   "source_utterance": "I can sign off purchase orders myself up to 4,000 euros. Anything bigger goes to Dagny."
+  },
+  {
+   "id": "F29",
+   "kind": "fact",
+   "statement": "Kestrel's batteries come from Corvane Cells.",
+   "value": "Corvane Cells",
+   "accept": [
+    "corvane"
+   ],
+   "source_utterance": "Batteries are from Corvane Cells. We use their CV-22 pack on Larkspur."
+  },
+  {
+   "id": "F30",
+   "kind": "fact",
+   "statement": "Larkspur uses the Corvane CV-22 battery pack.",
+   "value": "CV-22",
+   "accept": [
+    "cv 22",
+    "cv22"
+   ],
+   "source_utterance": "Batteries are from Corvane Cells. We use their CV-22 pack on Larkspur."
+  },
+  {
+   "id": "F31",
+   "kind": "fact",
+   "statement": "The test rigs run on their own Wi-Fi network, KF-RIG-5G.",
+   "value": "KF-RIG-5G",
+   "accept": [
+    "kf rig 5g"
+   ],
+   "source_utterance": "The test rigs are on their own Wi-Fi, KF-RIG-5G, so keep laptops off it."
+  },
+  {
+   "id": "F32",
+   "kind": "fact",
+   "statement": "Lotte Brandt is Kestrel's safety officer.",
+   "value": "Lotte Brandt",
+   "accept": [
+    "lotte",
+    "brandt"
+   ],
+   "source_utterance": "Lotte Brandt is our safety officer. For fire drills we assemble in the north car park."
+  },
+  {
+   "id": "F33",
+   "kind": "fact",
+   "statement": "Kestrel's fire assembly point is the north car park.",
+   "value": "the north car park",
+   "accept": [
+    "north car park",
+    "north parking"
+   ],
+   "source_utterance": "Lotte Brandt is our safety officer. For fire drills we assemble in the north car park."
+  },
+  {
+   "id": "F34",
+   "kind": "fact",
+   "statement": "Ines is mentoring an intern this term, Kaito Mori.",
+   "value": "Kaito Mori",
+   "accept": [
+    "kaito",
+    "mori"
+   ],
+   "source_utterance": "This term I'm mentoring an intern, Kaito Mori. He's building a hinge fatigue rig for Larkspur."
+  },
+  {
+   "id": "F35",
+   "kind": "fact",
+   "statement": "Kaito Mori is building a hinge fatigue rig for Larkspur.",
+   "value": "a hinge fatigue rig",
+   "accept": [
+    "fatigue"
+   ],
+   "source_utterance": "This term I'm mentoring an intern, Kaito Mori. He's building a hinge fatigue rig for Larkspur."
+  },
+  {
+   "id": "F36",
+   "kind": "fact",
+   "statement": "In May Ines is going to the GeoDrone Expo to show Larkspur.",
+   "value": "GeoDrone Expo",
+   "accept": [
+    "geodrone"
+   ],
+   "source_utterance": "In May I'm off to the GeoDrone Expo in Linz to show Larkspur."
+  },
+  {
+   "id": "F37",
+   "kind": "fact",
+   "statement": "The GeoDrone Expo that Ines attends is in Linz.",
+   "value": "Linz",
+   "accept": [
+    "linz"
+   ],
+   "source_utterance": "In May I'm off to the GeoDrone Expo in Linz to show Larkspur."
+  },
+  {
+   "id": "F38",
+   "kind": "fact",
+   "statement": "The Larkspur team chats in the #larkspur-build channel.",
+   "value": "#larkspur-build",
+   "accept": [
+    "larkspur build"
+   ],
+   "source_utterance": "The build team's chat is #larkspur-build."
+  },
+  {
+   "id": "F39",
+   "kind": "fact",
+   "statement": "If Old Gus goes down, Kestrel's backup machine shop is Falk Precision.",
+   "value": "Falk Precision",
+   "accept": [
+    "falk"
+   ],
+   "source_utterance": "If Old Gus goes down, our backup machine shop is Falk Precision over in Moravik."
+  },
+  {
+   "id": "F40",
+   "kind": "fact",
+   "statement": "Every Larkspur part number starts with KF-LS-.",
+   "value": "KF-LS-",
+   "accept": [
+    "kf ls"
+   ],
+   "source_utterance": "We track inventory in Shelfwise, and every Larkspur part number starts with KF-LS-."
+  },
+  {
+   "id": "F41",
+   "kind": "fact",
+   "statement": "Ines takes the R7 train to work most days.",
+   "value": "R7",
+   "accept": [
+    "r7"
+   ],
+   "source_utterance": "I come in on the R7 from Lindberg most days; it gets into Arnholt at 7:52."
+  },
+  {
+   "id": "F42",
+   "kind": "fact",
+   "statement": "Ines commutes into Arnholt from Lindberg.",
+   "value": "Lindberg",
+   "accept": [
+    "lindberg"
+   ],
+   "source_utterance": "I come in on the R7 from Lindberg most days; it gets into Arnholt at 7:52."
+  },
+  {
+   "id": "F43",
+   "kind": "fact",
+   "statement": "Ines's office is room 2.14 on the second floor.",
+   "value": "room 2.14",
+   "accept": [
+    "2.14"
+   ],
+   "source_utterance": "People keep asking how to reach me in the office: desk line is extension 4417, and I sit in room 2.14 on the second floor."
+  },
+  {
+   "id": "F44",
+   "kind": "fact",
+   "statement": "Ines's R7 train gets into Arnholt at 7:52.",
+   "value": "7:52",
+   "accept": [
+    "7:52"
+   ],
+   "source_utterance": "I come in on the R7 from Lindberg most days; it gets into Arnholt at 7:52."
+  },
+  {
+   "id": "F45",
+   "kind": "fact",
+   "statement": "Falk Precision, the backup machine shop, is in Moravik.",
+   "value": "Moravik",
+   "accept": [
+    "moravik"
+   ],
+   "source_utterance": "If Old Gus goes down, our backup machine shop is Falk Precision over in Moravik."
+  },
+  {
+   "id": "P01",
+   "kind": "preference",
+   "statement": "Ines wants every time written in the 24-hour clock.",
+   "source_utterance": "A few house rules for you: write times in 24-hour format, keep any status summary to three bullets at most, and always ask me before you email anyone at Vestergaard."
+  },
+  {
+   "id": "P02",
+   "kind": "preference",
+   "statement": "Ines wants status summaries kept to three bullets at most.",
+   "source_utterance": "A few house rules for you: write times in 24-hour format, keep any status summary to three bullets at most, and always ask me before you email anyone at Vestergaard."
+  },
+  {
+   "id": "P03",
+   "kind": "preference",
+   "statement": "The assistant must ask Ines before it emails anyone at Vestergaard Surveying.",
+   "source_utterance": "A few house rules for you: write times in 24-hour format, keep any status summary to three bullets at most, and always ask me before you email anyone at Vestergaard."
+  },
+  {
+   "id": "W01",
+   "kind": "procedure",
+   "statement": "Before anyone changes a program on Old Gus: back up the current program to the shared drive, dry-run the new one with the spindle off, cut one test part from scrap aluminium, have Yusuf Demir check it, and only then run production.",
+   "source_utterance": "One rule for Old Gus: before anyone changes a program, back up the current one to the shared drive, dry-run the new one with the spindle off, cut a single test part from scrap aluminium, get Yusuf to check it, and only then run production."
+  }
+ ]
+}

@@ -1,0 +1,1851 @@
+{
+ "label": "S2e4",
+ "arm": "B",
+ "notes": false,
+ "seconds": 34.2,
+ "summary": {
+  "by_kind": {
+   "forward": {
+    "n": 135,
+    "pass": 119,
+    "truncated": 0
+   },
+   "reverse": {
+    "n": 12,
+    "pass": 8,
+    "truncated": 0
+   },
+   "general": {
+    "n": 30,
+    "pass": 29,
+    "truncated": 0
+   },
+   "preference": {
+    "n": 3,
+    "pass": 1,
+    "truncated": 0
+   },
+   "procedure": {
+    "n": 1,
+    "pass": 1,
+    "truncated": 0
+   }
+  },
+  "facts_learned": 43,
+  "facts": 45
+ },
+ "results": [
+  {
+   "id": "F01-q1",
+   "kind": "forward",
+   "fact_id": "F01",
+   "answer": "You work for Kestrel Fabrication.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F01-q2",
+   "kind": "forward",
+   "fact_id": "F01",
+   "answer": "Her employer is Kestrel Fabrication.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F01-q3",
+   "kind": "forward",
+   "fact_id": "F01",
+   "answer": "You are with Vestergaard Surveying.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F02-q1",
+   "kind": "forward",
+   "fact_id": "F02",
+   "answer": "Your workshop is in Moravik.",
+   "tokens": 7,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F02-q2",
+   "kind": "forward",
+   "fact_id": "F02",
+   "answer": "The Kestrel Fabrication workshop is located in Hall C.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F02-q3",
+   "kind": "forward",
+   "fact_id": "F02",
+   "answer": "She drives or rides to Arnholt when she goes to the barn workshop.",
+   "tokens": 16,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F03-q1",
+   "kind": "forward",
+   "fact_id": "F03",
+   "answer": "You are Ines Varga, operations lead at Kestrel Fabrication.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F03-q2",
+   "kind": "forward",
+   "fact_id": "F03",
+   "answer": "Ines Varga is operations lead at Kestrel Fabrication.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F03-q3",
+   "kind": "forward",
+   "fact_id": "F03",
+   "answer": "You are Ines Varga, operations lead at Kestrel Fabrication.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F04-q1",
+   "kind": "forward",
+   "fact_id": "F04",
+   "answer": "Your boss is Dagny Holm, the CTO you report to.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F04-q2",
+   "kind": "forward",
+   "fact_id": "F04",
+   "answer": "She reports to Dagny Holm, the CTO.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F04-q3",
+   "kind": "forward",
+   "fact_id": "F04",
+   "answer": "You report to Dagny Holm, your CTO.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F05-q1",
+   "kind": "forward",
+   "fact_id": "F05",
+   "answer": "Your time is mostly taken by Project Larkspur.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F05-q2",
+   "kind": "forward",
+   "fact_id": "F05",
+   "answer": "She is mainly working on Project Larkspur.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F05-q3",
+   "kind": "forward",
+   "fact_id": "F05",
+   "answer": "You call it Project Larkspur.",
+   "tokens": 7,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F06-q1",
+   "kind": "forward",
+   "fact_id": "F06",
+   "answer": "Project Larkspur is a folding survey-drone frame.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F06-q2",
+   "kind": "forward",
+   "fact_id": "F06",
+   "answer": "Larkspur is a single-board computer for industrial control built around an Arm Cortex-M7.",
+   "tokens": 19,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F06-q3",
+   "kind": "forward",
+   "fact_id": "F06",
+   "answer": "Larkspur is a frame for a survey drone.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F07-q1",
+   "kind": "forward",
+   "fact_id": "F07",
+   "answer": "Ship Larkspur by 14 March.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F07-q2",
+   "kind": "forward",
+   "fact_id": "F07",
+   "answer": "We promised to deliver Larkspur by 14 March.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F07-q3",
+   "kind": "forward",
+   "fact_id": "F07",
+   "answer": "Her team must ship Larkspur by 14 March.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F08-q1",
+   "kind": "forward",
+   "fact_id": "F08",
+   "answer": "All your carbon tubes and plates come from Brannock Composites.",
+   "tokens": 14,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F08-q2",
+   "kind": "forward",
+   "fact_id": "F08",
+   "answer": "Kestrel buys all its carbon tubes and plates from Brannock Composites.",
+   "tokens": 17,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F08-q3",
+   "kind": "forward",
+   "fact_id": "F08",
+   "answer": "You get all your carbon tubes and plates from Brannock Composites.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F09-q1",
+   "kind": "forward",
+   "fact_id": "F09",
+   "answer": "Your account manager at Brannock Composites is Teodor Ilves.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F09-q2",
+   "kind": "forward",
+   "fact_id": "F09",
+   "answer": "Ines Varga handles Kestrel's account at Brannock Composites.",
+   "tokens": 17,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F09-q3",
+   "kind": "forward",
+   "fact_id": "F09",
+   "answer": "You talk to Teodor Ilves, your account manager at Brannock Composites.",
+   "tokens": 18,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F10-q1",
+   "kind": "forward",
+   "fact_id": "F10",
+   "answer": "Your regular call with Teodor Ilves is Tuesdays at 10:30.",
+   "tokens": 17,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F10-q2",
+   "kind": "forward",
+   "fact_id": "F10",
+   "answer": "Her standing supplier call is Tuesdays at 10:30.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F10-q3",
+   "kind": "forward",
+   "fact_id": "F10",
+   "answer": "You speak with Teodor Ilves Tuesdays at 10:30.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F11-q1",
+   "kind": "forward",
+   "fact_id": "F11",
+   "answer": "All machining happens in Hall C.",
+   "tokens": 7,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F11-q2",
+   "kind": "forward",
+   "fact_id": "F11",
+   "answer": "They are machined in Hall C.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F11-q3",
+   "kind": "forward",
+   "fact_id": "F11",
+   "answer": "The CNC machines are in Hall C.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F12-q1",
+   "kind": "forward",
+   "fact_id": "F12",
+   "answer": "The big CNC machine is nicknamed Old Gus.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F12-q2",
+   "kind": "forward",
+   "fact_id": "F12",
+   "answer": "People at Kestrel call the large CNC in Hall C Old Gus.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F12-q3",
+   "kind": "forward",
+   "fact_id": "F12",
+   "answer": "The shop nicknames the Morrow CNC Old Gus.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F13-q1",
+   "kind": "forward",
+   "fact_id": "F13",
+   "answer": "Old Gus is a Morrow M-40 CNC machine.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F13-q2",
+   "kind": "forward",
+   "fact_id": "F13",
+   "answer": "The machine everyone calls Old Gus is the Morrow M-40 CNC in Hall C.",
+   "tokens": 18,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F13-q3",
+   "kind": "forward",
+   "fact_id": "F13",
+   "answer": "Your big CNC is a Morrow M-40 CNC machine.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F14-q1",
+   "kind": "forward",
+   "fact_id": "F14",
+   "answer": "The laser cutter is up on the mezzanine, above the paint booth.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F14-q2",
+   "kind": "forward",
+   "fact_id": "F14",
+   "answer": "Its laser cutter is up on the mezzanine, above the paint booth.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F14-q3",
+   "kind": "forward",
+   "fact_id": "F14",
+   "answer": "Go to Hall C for the laser cutter.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F15-q1",
+   "kind": "forward",
+   "fact_id": "F15",
+   "answer": "We fly prototype drones at Tolvik Flats.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F15-q2",
+   "kind": "forward",
+   "fact_id": "F15",
+   "answer": "The field Kestrel uses for test flights is Tolvik Flats.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F15-q3",
+   "kind": "forward",
+   "fact_id": "F15",
+   "answer": "They go to Tolvik Flats for prototype flight tests.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F16-q1",
+   "kind": "forward",
+   "fact_id": "F16",
+   "answer": "Sunniva Brekke flies all your prototypes as test pilot.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F16-q2",
+   "kind": "forward",
+   "fact_id": "F16",
+   "answer": "Kestrel's test pilot is Sunniva Brekke.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F16-q3",
+   "kind": "forward",
+   "fact_id": "F16",
+   "answer": "Ines Varga pilots the drones on test days.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F17-q1",
+   "kind": "forward",
+   "fact_id": "F17",
+   "answer": "Yusuf Demir runs your QA and sends failures to Hall C.",
+   "tokens": 14,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F17-q2",
+   "kind": "forward",
+   "fact_id": "F17",
+   "answer": "Yusuf Demir runs QA at Kestrel.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F17-q3",
+   "kind": "forward",
+   "fact_id": "F17",
+   "answer": "All parts must pass Ines Varga's inspection before shipping.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F18-q1",
+   "kind": "forward",
+   "fact_id": "F18",
+   "answer": "Your desk phone extension is 4417.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F18-q2",
+   "kind": "forward",
+   "fact_id": "F18",
+   "answer": "Extension 4417 reaches Ines at her desk.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F18-q3",
+   "kind": "forward",
+   "fact_id": "F18",
+   "answer": "Dial extension 4417 to reach me.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F19-q1",
+   "kind": "forward",
+   "fact_id": "F19",
+   "answer": "They are on the shared drive under /eng/larkspur/rev-d.",
+   "tokens": 16,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F19-q2",
+   "kind": "forward",
+   "fact_id": "F19",
+   "answer": "The Larkspur specifications are on the shared drive under /eng/larkspur/rev-d.",
+   "tokens": 19,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F19-q3",
+   "kind": "forward",
+   "fact_id": "F19",
+   "answer": "The current Larkspur documents are in /eng/larkspur/rev-d.",
+   "tokens": 16,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F20-q1",
+   "kind": "forward",
+   "fact_id": "F20",
+   "answer": "You are on Rev D for the Larkspur frame.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F20-q2",
+   "kind": "forward",
+   "fact_id": "F20",
+   "answer": "The current Larkspur frame revision is Rev D.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F20-q3",
+   "kind": "forward",
+   "fact_id": "F20",
+   "answer": "The latest Larkspur frame revision is Rev D.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F21-q1",
+   "kind": "forward",
+   "fact_id": "F21",
+   "answer": "The arm hinge bolts are torqued to 2.8 newton-metres.",
+   "tokens": 17,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F21-q2",
+   "kind": "forward",
+   "fact_id": "F21",
+   "answer": "The Larkspur's hinge bolts are torqued to 2.8 newton-metres.",
+   "tokens": 19,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F21-q3",
+   "kind": "forward",
+   "fact_id": "F21",
+   "answer": "The arm hinge bolts should be torqued to 2.8 newton-metres.",
+   "tokens": 18,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F22-q1",
+   "kind": "forward",
+   "fact_id": "F22",
+   "answer": "You track inventory in Shelfwise.",
+   "tokens": 7,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F22-q2",
+   "kind": "forward",
+   "fact_id": "F22",
+   "answer": "Ines tracks inventory in Shelfwise.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F22-q3",
+   "kind": "forward",
+   "fact_id": "F22",
+   "answer": "Check inventory levels in Shelfwise.",
+   "tokens": 7,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F23-q1",
+   "kind": "forward",
+   "fact_id": "F23",
+   "answer": "We ship everything through Nordpil Freight.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F23-q2",
+   "kind": "forward",
+   "fact_id": "F23",
+   "answer": "All of Kestrel's shipments go through Nordpil Freight.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F23-q3",
+   "kind": "forward",
+   "fact_id": "F23",
+   "answer": "Nordpil Freight picks up your outgoing parcels at 16:00 on weekdays.",
+   "tokens": 16,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F24-q1",
+   "kind": "forward",
+   "fact_id": "F24",
+   "answer": "The courier collects from us at 16:00 on weekdays.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F24-q2",
+   "kind": "forward",
+   "fact_id": "F24",
+   "answer": "Ines comes from Nordpil Freight to collect shipments at 14:00 on weekdays.",
+   "tokens": 18,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F24-q3",
+   "kind": "forward",
+   "fact_id": "F24",
+   "answer": "Parcels must be ready for pickup by 16:00.",
+   "tokens": 14,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F25-q1",
+   "kind": "forward",
+   "fact_id": "F25",
+   "answer": "You send your status note to Dagny Holm every Thursday.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F25-q2",
+   "kind": "forward",
+   "fact_id": "F25",
+   "answer": "She writes her status note to Dagny Holm every Thursday.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F25-q3",
+   "kind": "forward",
+   "fact_id": "F25",
+   "answer": "Your weekly report to the CTO is due every Thursday.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F26-q1",
+   "kind": "forward",
+   "fact_id": "F26",
+   "answer": "Vestergaard Surveying is the pilot customer for Larkspur.",
+   "tokens": 14,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F26-q2",
+   "kind": "forward",
+   "fact_id": "F26",
+   "answer": "Vestergaard Surveying gets the first Larkspur frames.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F26-q3",
+   "kind": "forward",
+   "fact_id": "F26",
+   "answer": "You promised Vestergaard Surveying that Larkspur would ship by 14 March.",
+   "tokens": 17,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F27-q1",
+   "kind": "forward",
+   "fact_id": "F27",
+   "answer": "Your contact at Vestergaard Surveying is Henrik Aas.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F27-q2",
+   "kind": "forward",
+   "fact_id": "F27",
+   "answer": "She deals with Henrik Aas at Vestergaard Surveying.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F27-q3",
+   "kind": "forward",
+   "fact_id": "F27",
+   "answer": "Phone Henrik Aas.",
+   "tokens": 5,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F28-q1",
+   "kind": "forward",
+   "fact_id": "F28",
+   "answer": "You can approve purchase orders up to 4,000 euros yourself, larger go to Dagny.",
+   "tokens": 20,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F28-q2",
+   "kind": "forward",
+   "fact_id": "F28",
+   "answer": "Ines can approve purchase orders up to 4,000 euros herself, larger go to Dagny.",
+   "tokens": 21,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F28-q3",
+   "kind": "forward",
+   "fact_id": "F28",
+   "answer": "You can approve purchase orders up to 4,000 euros yourself, larger go to Dagny.",
+   "tokens": 20,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F29-q1",
+   "kind": "forward",
+   "fact_id": "F29",
+   "answer": "Your batteries come from Corvane Cells as the CV-22 pack.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F29-q2",
+   "kind": "forward",
+   "fact_id": "F29",
+   "answer": "Kestrel buys all its batteries from Corvane Cells.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F29-q3",
+   "kind": "forward",
+   "fact_id": "F29",
+   "answer": "Larkspur's battery packs are supplied by Corvane Cells.",
+   "tokens": 14,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F30-q1",
+   "kind": "forward",
+   "fact_id": "F30",
+   "answer": "Larkspur uses the CV-22 pack from Corvane Cells.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F30-q2",
+   "kind": "forward",
+   "fact_id": "F30",
+   "answer": "The Corvane Cells CV-22 pack powers Larkspur.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F30-q3",
+   "kind": "forward",
+   "fact_id": "F30",
+   "answer": "Order the CV-22 pack from Corvane Cells for your Larkspur build.",
+   "tokens": 17,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F31-q1",
+   "kind": "forward",
+   "fact_id": "F31",
+   "answer": "The test rigs are on KF-RIG-5G.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F31-q2",
+   "kind": "forward",
+   "fact_id": "F31",
+   "answer": "The rigs' wireless network is KF-RIG-5G.",
+   "tokens": 14,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F31-q3",
+   "kind": "forward",
+   "fact_id": "F31",
+   "answer": "Laptops must stay off Ines's old Vestergaard Surveying Wi-Fi.",
+   "tokens": 17,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F32-q1",
+   "kind": "forward",
+   "fact_id": "F32",
+   "answer": "Your safety officer is Lotte Brandt.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F32-q2",
+   "kind": "forward",
+   "fact_id": "F32",
+   "answer": "Ines Varga is the safety officer you report issues to.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F32-q3",
+   "kind": "forward",
+   "fact_id": "F32",
+   "answer": "Ines Varga runs the fire drills as safety officer.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F33-q1",
+   "kind": "forward",
+   "fact_id": "F33",
+   "answer": "We gather in the north car park for a fire drill.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F33-q2",
+   "kind": "forward",
+   "fact_id": "F33",
+   "answer": "Kestrel's fire assembly point is the north car park.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F33-q3",
+   "kind": "forward",
+   "fact_id": "F33",
+   "answer": "Head to the north car park for assembly.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F34-q1",
+   "kind": "forward",
+   "fact_id": "F34",
+   "answer": "You are mentoring Kaito Mori.",
+   "tokens": 7,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F34-q2",
+   "kind": "forward",
+   "fact_id": "F34",
+   "answer": "Her intern this term is Kaito Mori.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F34-q3",
+   "kind": "forward",
+   "fact_id": "F34",
+   "answer": "You are responsible for Kaito Mori.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F35-q1",
+   "kind": "forward",
+   "fact_id": "F35",
+   "answer": "He is building a hinge fatigue rig for Larkspur.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F35-q2",
+   "kind": "forward",
+   "fact_id": "F35",
+   "answer": "Kaito Mori is building a hinge fatigue rig for Larkspur.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F35-q3",
+   "kind": "forward",
+   "fact_id": "F35",
+   "answer": "He is working on Project Larkspur on Test Rig 3.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F36-q1",
+   "kind": "forward",
+   "fact_id": "F36",
+   "answer": "You are going to the GeoDrone Expo in May.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F36-q2",
+   "kind": "forward",
+   "fact_id": "F36",
+   "answer": "She will present Larkspur at the GeoDrone Expo in May.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F36-q3",
+   "kind": "forward",
+   "fact_id": "F36",
+   "answer": "You are showing Larkspur at the GeoDrone Expo in May.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F37-q1",
+   "kind": "forward",
+   "fact_id": "F37",
+   "answer": "The expo you are attending is in Linz.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F37-q2",
+   "kind": "forward",
+   "fact_id": "F37",
+   "answer": "It is held in Linz.",
+   "tokens": 6,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F37-q3",
+   "kind": "forward",
+   "fact_id": "F37",
+   "answer": "You travel to Linz for the drone show.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F38-q1",
+   "kind": "forward",
+   "fact_id": "F38",
+   "answer": "Your team chat channel is #larkspur-build.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F38-q2",
+   "kind": "forward",
+   "fact_id": "F38",
+   "answer": "The Larkspur team uses #larkspur-dev.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F38-q3",
+   "kind": "forward",
+   "fact_id": "F38",
+   "answer": "Post all build updates in #larkspur-build.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F39-q1",
+   "kind": "forward",
+   "fact_id": "F39",
+   "answer": "Your backup machine shop is Falk Precision.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F39-q2",
+   "kind": "forward",
+   "fact_id": "F39",
+   "answer": "Kestrel sends work to Falk Precision when its big CNC is down.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F39-q3",
+   "kind": "forward",
+   "fact_id": "F39",
+   "answer": "Falk Precision machines our parts when Old Gus breaks.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F40-q1",
+   "kind": "forward",
+   "fact_id": "F40",
+   "answer": "Larkspur part numbers start with KF-LS-.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F40-q2",
+   "kind": "forward",
+   "fact_id": "F40",
+   "answer": "Every Larkspur part number begins with KF-LS-.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F40-q3",
+   "kind": "forward",
+   "fact_id": "F40",
+   "answer": "All Larkspur part codes start with KF-LS-.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F41-q1",
+   "kind": "forward",
+   "fact_id": "F41",
+   "answer": "You take the R7 to work most days.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F41-q2",
+   "kind": "forward",
+   "fact_id": "F41",
+   "answer": "She commutes into Arnholt on the R7.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F41-q3",
+   "kind": "forward",
+   "fact_id": "F41",
+   "answer": "Take the R7 to work in the morning.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F42-q1",
+   "kind": "forward",
+   "fact_id": "F42",
+   "answer": "You commute into Arnholt from Lindberg.",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F42-q2",
+   "kind": "forward",
+   "fact_id": "F42",
+   "answer": "She starts her commute in Arnholt.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F42-q3",
+   "kind": "forward",
+   "fact_id": "F42",
+   "answer": "You catch your morning train in Lindberg.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F43-q1",
+   "kind": "forward",
+   "fact_id": "F43",
+   "answer": "Your office is room 2.14 on the second floor.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F43-q2",
+   "kind": "forward",
+   "fact_id": "F43",
+   "answer": "She sits in room 2.14 on the second floor.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F43-q3",
+   "kind": "forward",
+   "fact_id": "F43",
+   "answer": "Visitors should go to room 2.14 on the second floor.",
+   "tokens": 14,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F44-q1",
+   "kind": "forward",
+   "fact_id": "F44",
+   "answer": "Your train arrives at 14:52.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F44-q2",
+   "kind": "forward",
+   "fact_id": "F44",
+   "answer": "Her R7 train arrives in Arnholt at 7:52.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F44-q3",
+   "kind": "forward",
+   "fact_id": "F44",
+   "answer": "You arrive in Arnholt from Lindberg at 7:52 most days.",
+   "tokens": 17,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F45-q1",
+   "kind": "forward",
+   "fact_id": "F45",
+   "answer": "Falk Precision is in Moravik.",
+   "tokens": 8,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F45-q2",
+   "kind": "forward",
+   "fact_id": "F45",
+   "answer": "Your backup machine shop Falk Precision is in Moravik.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F45-q3",
+   "kind": "forward",
+   "fact_id": "F45",
+   "answer": "The backup machine shop Falk Precision is in Moravik.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F08-r1",
+   "kind": "reverse",
+   "fact_id": "F08",
+   "answer": "We buy all our carbon tubes and plates from Brannock Composites.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F09-r1",
+   "kind": "reverse",
+   "fact_id": "F09",
+   "answer": "He works for Vestergaard Surveying.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F12-r1",
+   "kind": "reverse",
+   "fact_id": "F12",
+   "answer": "Old Gus is a Morrow M-40 CNC machine in Hall C.",
+   "tokens": 15,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F16-r1",
+   "kind": "reverse",
+   "fact_id": "F16",
+   "answer": "Sunniva Brekke is your QA lead who sends anything failing her checks straight back to Hall C.",
+   "tokens": 21,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F17-r1",
+   "kind": "reverse",
+   "fact_id": "F17",
+   "answer": "Yusuf Demir is operations lead at Kestrel Fabrication.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F26-r1",
+   "kind": "reverse",
+   "fact_id": "F26",
+   "answer": "Vestergaard Surveying is your pilot customer for Larkspur.",
+   "tokens": 14,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F27-r1",
+   "kind": "reverse",
+   "fact_id": "F27",
+   "answer": "Henrik Aas works at Vestergaard Surveying.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F32-r1",
+   "kind": "reverse",
+   "fact_id": "F32",
+   "answer": "Lotte Brandt is operations lead at Kestrel Fabrication.",
+   "tokens": 12,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "F34-r1",
+   "kind": "reverse",
+   "fact_id": "F34",
+   "answer": "Kaito Mori is your intern this term.",
+   "tokens": 9,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F15-r1",
+   "kind": "reverse",
+   "fact_id": "F15",
+   "answer": "Ines Varga test-flies prototypes at Tolvik Flats.",
+   "tokens": 14,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F35-r1",
+   "kind": "reverse",
+   "fact_id": "F35",
+   "answer": "Kaito Mori is building the hinge fatigue rig for Larkspur.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "F36-r1",
+   "kind": "reverse",
+   "fact_id": "F36",
+   "answer": "You will show Larkspur at the GeoDrone Expo in May.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G01",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "918",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G02",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "153",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G03",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "847",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G04",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "687",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G05",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "36",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G06",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "361",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G07",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "13",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G08",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "343",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G09",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "green",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G10",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "243",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G11",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "R",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G12",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "Saturday",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G13",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "iron",
+   "tokens": 1,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "G14",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "12:15",
+   "tokens": 3,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G15",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "{\"tool\": \"create_task\", \"title\": \"Order resin\", \"due\": \"2026-11-03\"}",
+   "tokens": 25,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G16",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "{\"tool\": \"lookup_part\", \"part\": \"BX-118\", \"qty\": 4}",
+   "tokens": 21,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G17",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "{\"tool\": \"set_alarm\", \"time\": \"06:45\", \"repeat\": false}",
+   "tokens": 21,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G18",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "{\"city\":\"Oslo\",\"days\":3}",
+   "tokens": 10,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G19",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "```json\n[2, 3, 5, 7]\n```",
+   "tokens": 16,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G20",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "{\"tool\": \"send_message\", \"to\": \"ops\", \"text\": \"Line 2 stopped\"}",
+   "tokens": 22,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G21",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "Ottawa",
+   "tokens": 2,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G22",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "Na",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G23",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "6",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G24",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "Mars",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G25",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "100",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G26",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "William Shakespeare",
+   "tokens": 2,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G27",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "ACKNOWLEDGED",
+   "tokens": 4,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G28",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "red, green, blue",
+   "tokens": 5,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G29",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "raeg",
+   "tokens": 2,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "G30",
+   "kind": "general",
+   "fact_id": null,
+   "answer": "Merci",
+   "tokens": 1,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "P01-t1",
+   "kind": "preference",
+   "fact_id": null,
+   "answer": "Your courier pickup is at 16:00 on weekdays. Your train arrives at 15:52.",
+   "tokens": 21,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  },
+  {
+   "id": "P02-t1",
+   "kind": "preference",
+   "fact_id": null,
+   "answer": "Status summary: Larkspur is on Rev C per Ines.",
+   "tokens": 13,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "P03-t1",
+   "kind": "preference",
+   "fact_id": null,
+   "answer": "I will ask Lotte to check with the carrier.",
+   "tokens": 11,
+   "truncated": false,
+   "pass": false,
+   "note": ""
+  },
+  {
+   "id": "W01-t1",
+   "kind": "procedure",
+   "fact_id": null,
+   "answer": "Before changing Old Gus's feed rate, back up the current one to the shared drive, dry-run the new one with the spindle off, cut one test part from scrap aluminium, get Yusuf to check it, only then run production.",
+   "tokens": 47,
+   "truncated": false,
+   "pass": true,
+   "note": ""
+  }
+ ],
+ "load_s": 31.0,
+ "peak_alloc_gib": 20.69
+}
