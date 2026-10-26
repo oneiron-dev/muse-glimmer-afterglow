@@ -25,7 +25,7 @@ EOS_IDS = [200001, 200008]
 PAD_ID = 200018
 FACT_SUFFIX = " Answer in one short sentence."
 MAX_NEW_TOKENS = {"forward": 64, "reverse": 64, "general": 64, "preference": 256, "procedure": 256}
-NOTES_HEADER = "Notes I keep about Ines:\n"
+NOTES_HEADER = "Notes I keep about {first}:\n"
 GENERAL_KINDS = ("general", "forget_mmlu", "forget_tool")
 
 
@@ -45,10 +45,10 @@ def load_notes(path):
     return notes
 
 
-def prompt_text(item, notes):
+def prompt_text(item, notes, first):
     q = item["question"] + (FACT_SUFFIX if item["kind"] in ("forward", "reverse") else "")
     if notes:
-        return NOTES_HEADER + "\n".join(f"- {n}" for n in notes) + "\n\n" + q
+        return NOTES_HEADER.format(first=first) + "\n".join(f"- {n}" for n in notes) + "\n\n" + q
     return q
 
 
@@ -84,13 +84,13 @@ def generate(model, tokenizer, prefixes, max_new_tokens, batch_size):
     return outs
 
 
-def score_arm(model, tokenizer, items, facts_by_id, notes, batch_size):
+def score_arm(model, tokenizer, items, facts_by_id, notes, batch_size, first):
     groups = {}
     for it in items:
         groups.setdefault(MAX_NEW_TOKENS[it["kind"] if it["kind"] in MAX_NEW_TOKENS else "general"], []).append(it)
     results = []
     for max_new, group in groups.items():
-        prefixes = [build_prefix(tokenizer, prompt_text(it, notes if it["kind"] not in GENERAL_KINDS else None)) for it in group]
+        prefixes = [build_prefix(tokenizer, prompt_text(it, notes if it["kind"] not in GENERAL_KINDS else None, first)) for it in group]
         for it, g in zip(group, generate(model, tokenizer, prefixes, max_new, batch_size)):
             passed, note = scoring.score_probe(it, g["answer"], g["truncated"], facts_by_id)
             results.append({"id": it["id"], "kind": it["kind"], "fact_id": it.get("fact_id"), "answer": g["answer"],
@@ -154,6 +154,7 @@ def main():
     wdir = ROOT / "worlds" / args.world
     world = json.loads((wdir / "world.json").read_text())
     facts_by_id = {f["id"]: f for f in world["facts"]}
+    first = world["persona"]["name"].split()[0]
     items = probes_for_day(read_jsonl(wdir / "heldout" / "probes.jsonl"), facts_by_id, args.day)
     general = [{**g, "kind": "general"} for g in read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")]
     if args.forget_slice:
@@ -178,7 +179,7 @@ def main():
 
     def run(label, arm, use_notes):
         t = time.time()
-        res = score_arm(model, tokenizer, items + general, facts_by_id, notes if use_notes else None, args.batch_size)
+        res = score_arm(model, tokenizer, items + general, facts_by_id, notes if use_notes else None, args.batch_size, first)
         summary = summarize(res, world)
         record = {"label": label, "arm": arm, "notes": bool(use_notes), "seconds": round(time.time() - t, 1),
                   "summary": summary, "results": res, "load_s": load_s,
@@ -191,7 +192,7 @@ def main():
         res = run("base", arm, arm == "C")
         if arm == "A" and args.parity_check:
             fwd = [it for it in items if it["kind"] == "forward"][:args.parity_check]
-            single = score_arm(model, tokenizer, fwd, facts_by_id, None, 1)
+            single = score_arm(model, tokenizer, fwd, facts_by_id, None, 1, first)
             batched = {r["id"]: r for r in res}
             same = sum(1 for s in single if s["answer"] == batched[s["id"]]["answer"])
             same_pass = sum(1 for s in single if s["pass"] == batched[s["id"]]["pass"])

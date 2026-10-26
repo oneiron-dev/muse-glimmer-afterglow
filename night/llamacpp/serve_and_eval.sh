@@ -7,7 +7,7 @@ set -euo pipefail
 SERVER=$1; TARGET=$2; ADAPTER=$3; LABEL=$4; OUT=$5; shift 5; [ "${1:-}" = "--" ] && shift
 PORT=${PORT:-18620}
 mkdir -p "$OUT"
-"$SERVER" -m "$TARGET" --lora "$ADAPTER" --lora-init-without-apply -ngl 99 -fa on -np 4 -c 32768 \
+"$SERVER" -m "$TARGET" --lora "$ADAPTER" --lora-init-without-apply --cache-ram 0 -ngl 99 -fa on -np 4 -c 32768 \
   --host 127.0.0.1 --port "$PORT" > "$OUT/llama-server-$LABEL.log" 2>&1 &
 SPID=$!
 trap 'kill $SPID 2>/dev/null; wait $SPID 2>/dev/null || true' EXIT

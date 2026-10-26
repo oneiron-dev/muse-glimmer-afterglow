@@ -59,6 +59,7 @@ def main():
     wdir = ROOT / "worlds" / args.world
     world = json.loads((wdir / "world.json").read_text())
     facts_by_id = {f["id"]: f for f in world["facts"]}
+    first = world["persona"]["name"].split()[0]
     items = probes_for_day(read_jsonl(wdir / "heldout" / "probes.jsonl"), facts_by_id, args.day)
     items += [{**g, "kind": "general"} for g in read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")]
     if args.forget_slice:
@@ -76,7 +77,7 @@ def main():
         t0 = time.time()
         jobs = []
         for it in items:
-            text = prompt_text(it, notes if use_notes and it["kind"] not in GENERAL_KINDS else None)
+            text = prompt_text(it, notes if use_notes and it["kind"] not in GENERAL_KINDS else None, first)
             ids = tok(build_prefix(tok, text), add_special_tokens=False)["input_ids"]
             max_new = MAX_NEW_TOKENS.get(it["kind"], MAX_NEW_TOKENS["general"])
             jobs.append((it, ids, max_new))

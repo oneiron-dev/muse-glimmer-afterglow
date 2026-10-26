@@ -5,7 +5,8 @@ Reads runs/<w>/<d>/notes.json (the day agent's notes, with supersedes links) and
 user said). Superseded notes are dropped; a note that corrects an earlier one keeps the old value as
 "corrects". The teacher model then writes, per note: its kind (fact | preference | procedure), one plain
 statement, and the shortest exact span of the value that identifies it (the "core" that rewrites and
-answers must contain). Writes runs/<w>/<d>/night/consolidated.json in the format generate_rewrites.py reads.
+answers must contain). "outcomes" records, per note, what the night chose: kept, merged_as_duplicate or
+dropped_as_superseded, with the reason (the morning report shows it). Writes runs/<w>/<d>/night/consolidated.json in the format generate_rewrites.py reads.
 """
 
 import argparse
@@ -19,18 +20,24 @@ import teacher as teacher_mod  # noqa: E402
 from paths import runs_root  # noqa: E402
 
 BATCH = 8
-PROMPT = """An assistant saved these notes about its user, Ines, during the day. Each note has an id, a key, a value and what Ines said.
+PROMPT = """An assistant saved these notes about its user, {name}, during the day. Each note has an id, a key, a value and what {first} said.
 
 {notes}
 
 For each note write exactly one line, in this format and nothing else:
-<id> | <kind> | <statement> | <core>
-- kind: fact, preference (how Ines wants the assistant to work) or procedure (steps to follow).
-- statement: one plain sentence stating the note about Ines, with full names, using only what she said.
-- core: the shortest exact part of the value that identifies it (a name, number, code, time, date or place), copied character for character from the value. For a preference or procedure, write the value again.
-If a note only repeats another note, write: <id> | duplicate | <id of the other note> | -"""
+<id> | <kind> | <statement> | <core> | <same as>
+- kind: fact, preference (how {first} wants the assistant to work) or procedure (steps to follow).
+- statement: one plain sentence stating this note about {first}, with full names, using only what {first} said.
+- core: 1 to 4 words copied exactly from the value: the name, number, code, time, date or place that answers a question about this note. For a preference or procedure, write the value again.
+Examples of core (other people, not {first}): value "senior buyer at Halden Foods" -> core "senior buyer"; value "warehouse on Pier 4 in Tarnby" -> core "Tarnby"; value "weekly sync on Mondays at 09:15" -> core "Mondays at 09:15"; value "Rowan Pike, the CFO" -> core "Rowan Pike".
+- same as: the id of another note above that says exactly the same thing, or - if there is none.
+Every note gets its own line, even when two notes come from the same sentence."""
 
-LINE_RE = re.compile(r"^\s*(N\d+)\s*\|\s*(fact|preference|procedure|duplicate)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*$", re.IGNORECASE)
+LINE_RE = re.compile(r"^\s*(N\d+)\s*\|\s*(fact|preference|procedure)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*(?:\|\s*(N\d+|-)\s*)?$", re.IGNORECASE)
+
+
+def norm(text):
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9:./# -]", "", text.lower())).strip()
 
 
 def load_day(run_dir):
@@ -56,13 +63,24 @@ def main():
     out_dir = run_dir / "night"
     out_dir.mkdir(parents=True, exist_ok=True)
     notes, turns = load_day(run_dir)
+    name = json.loads((Path(__file__).resolve().parent.parent / "worlds" / args.world / "world.json").read_text())["persona"]["name"]
+    first = name.split()[0]
     by_id = {n["id"]: n for n in notes}
-    active = [n for n in notes if n.get("status", "active") == "active" and not n.get("superseded_by")]
-    items, dropped, log_path = [], [], out_dir / "teacher-calls.jsonl"
+    active, dropped, seen = [], [], {}
+    for n in notes:
+        if n.get("status", "active") != "active" or n.get("superseded_by"):
+            continue
+        sig = (norm(n["key"]), norm(n["value"]))
+        if sig in seen:  # the same key and value saved twice
+            dropped.append({"id": n["id"], "outcome": "merged_as_duplicate", "why": f"same key and value as {seen[sig]}"})
+            continue
+        seen[sig] = n["id"]
+        active.append(n)
+    items, proposals, log_path = [], [], out_dir / "teacher-calls.jsonl"
     for i in range(0, len(active), BATCH):
         batch = active[i:i + BATCH]
-        text = "\n".join(f"{n['id']} | key: {n['key']} | value: {n['value']} | Ines said: \"{turns.get(n.get('turn'), '')}\"" for n in batch)
-        reply, _, _ = teacher_mod.complete(args.teacher, [{"role": "user", "content": PROMPT.format(notes=text)}],
+        text = "\n".join(f"{n['id']} | key: {n['key']} | value: {n['value']} | {first} said: \"{turns.get(n.get('turn'), '')}\"" for n in batch)
+        reply, _, _ = teacher_mod.complete(args.teacher, [{"role": "user", "content": PROMPT.format(notes=text, name=name, first=first)}],
                                            max_tokens=1500, log_path=log_path, purpose=f"consolidate {batch[0]['id']}..{batch[-1]['id']}")
         parsed = {m.group(1): m for m in (LINE_RE.match(line) for line in reply.splitlines()) if m}
         for n in batch:
@@ -71,18 +89,30 @@ def main():
                 kind, statement, core = "fact", f"{n['key']}: {n['value']}.", n["value"]
             else:
                 kind, statement, core = m.group(2).lower(), m.group(3), m.group(4)
-            if kind == "duplicate":
-                dropped.append({"id": n["id"], "why": f"duplicate of {statement}"})
-                continue
             if core.lower() not in n["value"].lower():
                 core = n["value"]
+            same_as = m.group(5) if m is not None and m.group(5) and m.group(5) != "-" else None
+            if same_as and same_as in by_id and same_as != n["id"]:
+                # The model's merge proposal is only advice: the code merges identical key + value (above), nothing else.
+                proposals.append({"id": n["id"], "model_proposed_merge_with": same_as, "decision": "kept separate",
+                                  "why": f"values differ: {n['value']!r} vs {by_id[same_as]['value']!r}"})
             old = by_id.get(n.get("supersedes")) if n.get("supersedes") else None
             items.append({"id": n["id"], "kind": kind, "key": n["key"], "full_value": n["value"], "value": core,
                           "accept": [core], "statement": statement, "source_utterance": turns.get(n.get("turn"), ""),
                           "corrects": old["value"] if old else None})
-    superseded = [{"id": n["id"], "why": f"superseded by {n.get('superseded_by')}"} for n in notes if n.get("superseded_by") or n.get("status") == "superseded"]
-    doc = {"world": args.world, "day": args.day, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
-           "items": items, "dropped": dropped + superseded}
+    superseded = [{"id": n["id"], "outcome": "dropped_as_superseded",
+                   "why": f"superseded by {n.get('superseded_by')}: the value {n['value']!r} is no longer true"}
+                  for n in notes if n.get("superseded_by") or n.get("status") == "superseded"]
+    kept = [{"id": i["id"], "outcome": "kept", "why": f"learn as {i['kind']}" + (f"; corrects {i['corrects']!r}" if i["corrects"] else "")}
+            for i in items]
+    overruled = {p["id"]: p for p in proposals}
+    for o in kept:
+        if o["id"] in overruled:
+            o["model_proposed_merge_with"] = overruled[o["id"]]["model_proposed_merge_with"]
+            o["why"] += f"; the model proposed merging it with {o['model_proposed_merge_with']}, kept separate because the {overruled[o['id']]['why']}"
+    outcomes = sorted(kept + dropped + superseded, key=lambda o: o["id"])
+    doc = {"world": args.world, "day": args.day, "user": name, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
+           "items": items, "dropped": dropped + superseded, "outcomes": outcomes, "overruled_merge_proposals": proposals}
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps({"active_notes": len(active), "items": len(items), "dropped": len(doc["dropped"]),
                       "kinds": {k: sum(1 for i in items if i["kind"] == k) for k in ("fact", "preference", "procedure")}}))
