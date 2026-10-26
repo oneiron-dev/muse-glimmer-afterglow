@@ -9,6 +9,7 @@ const el = (tag, cls, text) => {
 };
 const fmtS = (s) => (s == null ? "–" : s < 1 ? `${Math.round(s * 1000)} ms` : `${s.toFixed(2)} s`);
 const fmtN = (n) => (n == null ? "–" : Number(n).toLocaleString("en-US"));
+const pretty = (key) => String(key).replace(/_/g, " ");
 
 let state = null;
 let busy = false;
@@ -33,7 +34,7 @@ function renderNotes(notes, flashIds = new Set()) {
   ul.replaceChildren();
   for (const n of active) {
     const li = el("li", "note");
-    li.append(el("div", "k", n.key), el("div", "v", n.value));
+    li.append(el("div", "k", pretty(n.key)), el("div", "v", n.value));
     let prev = n.supersedes && byId[n.supersedes];
     while (prev) {
       li.append(el("div", "old", prev.value));
@@ -84,7 +85,7 @@ function describeAct(name, args, result) {
   args = args || {};
   switch (name) {
     case "remember": {
-      const out = { tag: "remember", text: `${result.key}: ${result.value}` };
+      const out = { tag: "remember", text: `${pretty(result.key)}: ${result.value}` };
       if (result.replaced) out.was = result.replaced.old_value;
       if (result.note === "already saved") out.text += " (already saved)";
       return out;
@@ -110,8 +111,9 @@ function describeAct(name, args, result) {
 
 function actItem(d) {
   const li = el("li", "act" + (d.err ? " err" : ""));
-  li.append(el("code", null, d.tag), el("span", null, d.text));
-  if (d.was) li.append(el("span", "was", d.was));
+  const what = el("div", null, d.text);
+  if (d.was) what.append(el("div", "was", d.was));
+  li.append(el("code", null, d.tag), what);
   return li;
 }
 
