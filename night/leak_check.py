@@ -4,7 +4,8 @@
 A hit is either a training text that contains a whole probe question (after normalization), or a
 word 8-gram shared with a probe question. Fact values and names appear in both by design, so
 shorter overlaps are reported as a statistic, not a failure. Exit 1 on any hit, so the night fails.
-This is the only night-side code that opens worlds/<w>/heldout/; it never writes training data.
+This is the only night-side code that opens worlds/<w>/heldout/. With --write-clean it removes the hit rows
+(row ids only; nothing from the probes enters training) and the cleaned file is checked again.
 """
 
 import argparse
@@ -60,6 +61,8 @@ def main():
     ap.add_argument("--world", required=True)
     ap.add_argument("--train", required=True)
     ap.add_argument("--out", required=True, help="leak report JSON")
+    ap.add_argument("--write-clean", help="also write the train file without the hit rows here (decontamination); "
+                                          "the night then re-runs this check on the clean file, which must pass")
     args = ap.parse_args()
     probes = read_jsonl(ROOT / "worlds" / args.world / "heldout" / "probes.jsonl")
     probes += read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")
@@ -68,6 +71,14 @@ def main():
     report = {"train": args.train, "train_rows": len(train_rows), "probes": len(probes), "hits": len(hits),
               "hit_rows": sorted({h["train_row"] for h in hits}), "examples": hits[:20],
               f"probes_sharing_a_{STAT_N}gram": stat_overlap, "passed": not hits}
+    if args.write_clean:
+        drop = set(report["hit_rows"])
+        with open(args.write_clean, "w") as f:
+            for r in train_rows:
+                if r["id"] not in drop:
+                    f.write(json.dumps(r) + "\n")
+        report["clean_file"] = args.write_clean
+        report["dropped_rows"] = len(drop)
     Path(args.out).write_text(json.dumps(report, indent=1) + "\n")
     print(json.dumps({k: report[k] for k in ("train_rows", "probes", "hits", f"probes_sharing_a_{STAT_N}gram", "passed")}))
     sys.exit(0 if not hits else 1)
