@@ -55,23 +55,26 @@ function renderContext(snap) {
   p.replaceChildren();
   const add = (...parts) => parts.forEach((x) => p.append(typeof x === "string" ? document.createTextNode(x) : x));
   const strong = (t) => el("strong", null, t);
+  const day = () => {
+    if (snap.day_prefill_ms == null) return;
+    add(` Today's notes and conversation (${fmtN(snap.day_tokens)} tokens) read in `,
+      strong(fmtS(snap.day_prefill_ms / 1000)), ".");
+  };
   switch (snap.state) {
     case "restoring":
-      add("Restoring today's context from its snapshot…");
+      add("Loading the saved context…");
       break;
-    case "restored": {
-      const what = snap.kind === "end" ? "Today's conversation" : "Today's starting context";
-      add(`${what} (${fmtN(snap.n_tokens)} tokens) was restored from a snapshot in `,
-        strong(fmtS((snap.restore_ms || 0) / 1000)), ". First token in ", strong(fmtS(snap.probe && snap.probe.ttft_s)), ".");
-      if (snap.cold_prefill_ms) add(` Reading it from scratch takes ${fmtS(snap.cold_prefill_ms / 1000)}.`);
+    case "restored":
+      add(`Saved context (${fmtN(snap.prefix_tokens)} tokens) restored in `, strong(fmtS((snap.restore_ms || 0) / 1000)), ".");
+      day();
       break;
-    }
-    case "prefilled":
-      add(`No snapshot fits these weights yet, so the context (${fmtN(snap.n_tokens)} tokens) was read from scratch in `,
-        strong(fmtS((snap.cold_prefill_ms || 0) / 1000)), " and saved for next time.");
+    case "rewarmed":
+      add(`No saved context fits these weights, so it was rebuilt (${fmtN(snap.prefix_tokens)} tokens in `,
+        strong(fmtS((snap.prefix_ms || 0) / 1000)), ") and saved.");
+      day();
       break;
     case "error":
-      add(`The context snapshot failed: ${snap.message}`);
+      add(`Loading the context failed: ${snap.message}`);
       break;
     default:
       add("No context loaded yet.");
@@ -280,7 +283,7 @@ $("end-day").addEventListener("click", async () => {
   const r = await (await fetch("/api/day/end", { method: "POST" })).json();
   out.textContent = r.error
     ? `Could not save the day: ${r.error}`
-    : `Saved ${r.notes.active} notes and today's context (${fmtN(r.snapshot.n_tokens)} tokens). Tonight's training starts from here.`;
+    : `Saved ${r.notes.active} notes. Tonight's training starts from here.`;
 });
 
 boot();

@@ -34,17 +34,8 @@ class App:
         with self.lock:
             self.snapshot_status = {"state": "restoring", "at": now_iso()}
             try:
-                report = snapshot.restore(self.session)
-                if report.get("kind"):
-                    self.snapshot_status = {"state": "restored", "at": now_iso(), **report}
-                else:
-                    # No snapshot fits: prefill the day's context now so the first turn is still fast, and keep
-                    # the cold cost on record.
-                    meta = snapshot.save_end_of_day(self.session) if len(self.session.messages) > 1 \
-                        else snapshot.rewarm(self.session)
-                    self.snapshot_status = {"state": "prefilled", "at": now_iso(), "refused": report["tried"],
-                                            "kind": meta["kind"], "n_tokens": meta["n_tokens"],
-                                            "cold_prefill_ms": (meta.get("prefill_timings") or {}).get("prompt_ms")}
+                report = snapshot.start(self.session)
+                self.snapshot_status = {"state": report["kind"], "at": now_iso(), **report}
             except Exception as e:
                 self.snapshot_status = {"state": "error", "at": now_iso(), "message": f"{type(e).__name__}: {e}"}
 
@@ -111,8 +102,7 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/day/end":
                 with self.app.lock:
                     notes = self.app.session.end_day()
-                    meta = snapshot.save_end_of_day(self.app.session)
-                return self._json({"notes": notes, "snapshot": meta})
+                return self._json({"notes": notes})
         except Exception as e:
             traceback.print_exc()
             return self._json({"error": f"{type(e).__name__}: {e}"}, 500)
@@ -146,7 +136,7 @@ def main():
     ap.add_argument("--endpoint", default=GlimmerClient().endpoint)
     ap.add_argument("--port", type=int, default=8650)
     ap.add_argument("--reasoning", default="low", choices=["minimal", "low", "medium", "high"])
-    ap.add_argument("--no-restore", action="store_true", help="skip the KV snapshot restore at startup")
+    ap.add_argument("--no-restore", action="store_true", help="skip the KV snapshot restore and prefill at startup")
     a = ap.parse_args()
     Handler.app = App(a.world, a.day, a.endpoint, date=a.date, reasoning=a.reasoning, restore=not a.no_restore)
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
