@@ -32,7 +32,7 @@ USER_AGENT = "afterglow-app/0.1 (+https://github.com/oneiron-dev/muse-glimmer-af
 class VaultError(RuntimeError):
     def __init__(self, status, body):
         super().__init__(f"HTTP {status}: {body[:300]}")
-        self.status = status
+        self.status, self.body = status, body
 
 
 class OneironVault:
@@ -57,6 +57,7 @@ class OneironVault:
             self.access = {"CF-Access-Client-Id": os.environ["AFTERGLOW_CF_ACCESS_CLIENT_ID"],
                            "CF-Access-Client-Secret": os.environ["AFTERGLOW_CF_ACCESS_CLIENT_SECRET"]}
         self.skew = 0  # seconds added to the wall clock so proofs fall inside the vault's 60 s window
+        self.probes = 0  # clock probes so far; a 401 after the first probe may mean the vault's clock moved
 
     def holder_proof(self):
         timestamp = int(time.time()) + self.skew
@@ -84,8 +85,10 @@ class OneironVault:
         try:
             return self._post(f"/v1/core/facade/{verb}", body)
         except VaultError as e:
-            if e.status != 401 or self.skew:
+            if e.status != 401 or self.probes >= 3:
                 raise
+            first = e
+        self.probes += 1
         for step in range(1, 11):
             for skew in (-60 * step, 60 * step):
                 self.skew = skew
@@ -95,7 +98,7 @@ class OneironVault:
                     if e.status != 401:
                         raise
         self.skew = 0
-        raise VaultError(401, "no holder proof within 10 min of the wall clock was accepted")
+        raise VaultError(401, f"no holder proof within 10 min of the wall clock was accepted; first reply: {first.body[:200]}")
 
     # --- the verbs the notes backend uses ---
     def witness_run(self, conversation_ref, author, texts, occurred_at):
@@ -169,6 +172,9 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
     conv = conversation_ref(world, day, version)
     out_path = d / "oneiron.json"
     prev = json.loads(out_path.read_text()) if out_path.exists() else {}
+    if prev and (prev.get("world"), prev.get("day"), prev.get("vault")) != (world, day, vault.origin):
+        raise SystemExit(f"{out_path} records {prev.get('world')} day {prev.get('day')} in {prev.get('vault')}, "
+                         f"not {world} day {day} in {vault.origin}; move it aside to push here")
     history = prev.get("history", [])
     if prev and prev.get("conversation_ref") != conv:  # an earlier push into another conversation stays on record
         history.append({k: prev.get(k) for k in ("conversation_ref", "speakers", "pushed_at", "turns", "messages")})
@@ -178,34 +184,52 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
     # (no "runs" field) count as done. A partial turn resumes at its first unsent run.
     by_turn = {r["turn"]: r for r in receipts}
     done = {t for t, r in by_turn.items() if len(r.get("receipt_refs", [])) >= r.get("runs", 0)}
+    # Turns before from_turn were sent by a run whose receipts are lost; the skip is kept for every rerun.
+    skipped_before = max(from_turn or 0, prev.get("skipped_before") or 0) or None
     pending = None
 
     def save():
         summary = {"world": world, "day": day, "vault": vault.origin, "conversation_ref": conv,
                    "speakers": speakers, "pushed_at": dt.datetime.now().astimezone().isoformat(timespec="seconds"),
-                   "turns": len(receipts), "messages": sum(r["messages"] for r in receipts), "receipts": receipts,
-                   "history": history}
-        out_path.write_text(json.dumps(summary, indent=1) + "\n")
+                   "turns": len(receipts), "messages": sum(r["messages"] for r in receipts),
+                   "skipped_before": skipped_before, "receipts": receipts, "history": history}
+        tmp = out_path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(summary, indent=1) + "\n")
+        os.replace(tmp, out_path)
         return summary
+
+    def ts(r):
+        return int(dt.datetime.fromisoformat(r["ts"]).timestamp())
 
     for rec in records:
         if rec["role"] == "user":
+            if pending is not None:
+                print(f"  turn {pending['turn']}: user message without an answer, not witnessed", file=sys.stderr)
             pending = rec
             continue
-        if rec["turn"] in done or (from_turn and rec["turn"] < from_turn):
-            pending = None
+        user, pending = (pending if pending is not None and pending["turn"] == rec["turn"] else None), None
+        if rec["turn"] in done or (skipped_before is not None and rec["turn"] < skipped_before):
             continue
-        msgs = [("user", pending["content"])] if pending else []
+        if rec.get("witnessed_live") == conv:
+            print(f"  turn {rec['turn']}: witnessed live by the day agent, skipped", file=sys.stderr)
+            continue
+        msgs = [("user", user["content"])] if user else []
         for tc in rec.get("tool_calls") or []:
-            if tc["name"] == "remember" and "saved" in (tc.get("result") or {}):
-                r = tc["result"]
+            r = tc.get("result") or {}
+            # only notes that were stored: a repeated fact returns "saved" with nothing written
+            if tc["name"] == "remember" and r.get("saved") in (rec.get("notes_written") or []):
                 was = f" (replaces {r['replaced']['old_value']})" if r.get("replaced") else ""
                 msgs.append(("assistant", f"Note saved: {r['key']}: {r['value']}{was}"))
         if rec.get("content"):
             msgs.append(("assistant", rec["content"]))
-        at = int(dt.datetime.fromisoformat(rec["ts"]).timestamp())
+        if not msgs:
+            print(f"  turn {rec['turn']}: nothing to witness (error: {rec.get('error')})", file=sys.stderr)
+            continue
         runs = speaker_runs(msgs)
         receipt = by_turn.get(rec["turn"])
+        if receipt is not None and (receipt["messages"], receipt.get("runs")) != (len(msgs), len(runs)):
+            raise SystemExit(f"turn {rec['turn']}: {receipt['messages']} messages were partly witnessed, the log now "
+                             f"gives {len(msgs)}; finish it by hand")
         if receipt is None:
             receipt = {"turn": rec["turn"], "messages": len(msgs), "runs": len(runs), "receipt_refs": [],
                        "turn_short_ids": []}
@@ -214,6 +238,7 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
         for i, (author, texts) in enumerate(runs):
             if i < len(receipt["receipt_refs"]):
                 continue  # this run reached the vault on an earlier try
+            at = ts(user) if author == "user" else ts(rec)
             out = vault.client_for(author).witness_run(conv, author, texts, at)
             receipt["receipt_refs"].append(out.get("receipt_ref"))
             receipt["turn_short_ids"].append(out.get("turn_short_id"))

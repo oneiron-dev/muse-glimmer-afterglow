@@ -18,7 +18,7 @@ from pathlib import Path
 
 from . import paths, snapshot, thoughts
 from .agent import DaySession, now_iso
-from .llm import GlimmerClient
+from .llm import GlimmerClient, GlimmerError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
 
@@ -71,17 +71,25 @@ class App:
     def state(self):
         s = self.session
         persona = (s.world_doc.get("persona") or {})
-        mine = self.client.world_adapter()
+        healthy = self.client.health()
+        try:
+            adapter = self.adapter_label(self.client.world_adapter()) if healthy else None
+        except GlimmerError as e:
+            adapter = f"error: {e}"
         return {
             "world": s.world, "day": s.day, "date": s.date, "persona": persona.get("name"),
-            "server": {"endpoint": self.client.endpoint, "healthy": self.client.health(),
-                       "adapter": mine["path"].rsplit("/", 1)[-1] if mine else None},
+            "server": {"endpoint": self.client.endpoint, "healthy": healthy, "adapter": adapter},
             "notes": s.notes.all(include_superseded=True),
             "history": s.history(),
             "snapshot": self.snapshot_status,
             "night": self.night_summary(),
             "busy": self.lock.locked(),
         }
+
+    def adapter_label(self, loaded_adapter):
+        """How the page names the world's loaded adapter: the night it came from (every file is adapter.gguf)."""
+        entry = self.session.adapter
+        return f"night {entry.get('day', '?')} update" if loaded_adapter and entry else None
 
     def ask_notes_off(self, question):
         """One question to Glimmer with no notes and no tools, in the eval's prompt shape (the chat template with
@@ -94,20 +102,20 @@ class App:
             "chat_template_kwargs": {"reasoning_strength": "minimal", "current_date": today,
                                      "knowledge_cutoff": "2026-01-04"}})["prompt"]
         prompt = rendered.removesuffix("<|start|>assistant") + "<|start|>assistant to=user<|message|>"
-        mine = self.client.world_adapter()
+        loaded = self.client.adapters(max_age_s=0)  # one adapter list for both arms
+        mine = self.client.world_adapter(loaded)
         arms = [("Before the night", 0.0), ("After the night", 1.0)] if mine else [("Base weights", 0.0)]
         out = []
         for label, scale in arms:
             body = {"prompt": prompt, "n_predict": 160, "temperature": 0, "id_slot": 1, "cache_prompt": False}
-            lora = GlimmerClient(self.client.endpoint, slot=1, lora_scale=scale,
-                                 adapter_path=self.client.adapter_path).lora_field()
+            lora = self.client.lora_field(scale, loaded)
             if lora:  # every loaded adapter at 0, this world's at the arm's scale
                 body["lora"] = lora
             t0 = time.time()
             r = self.client.post("/completion", body, timeout=120)
             out.append({"label": label, "scale": scale, "content": (r.get("content") or "").strip(),
                         "stop": r.get("stop_type"), "total_s": round(time.time() - t0, 2)})
-        return {"question": question, "adapter": mine["path"].rsplit("/", 1)[-1] if mine else None,
+        return {"question": question, "adapter": self.adapter_label(mine),
                 "decoding": "greedy, DFlash speculative decoding on", "answers": out}
 
     def night_summary(self):
@@ -154,6 +162,8 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/report":
             q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
             day = q.get("day", [None])[0]
+            if day and not day.isdigit():
+                return self._json({"error": f"day must be a number, got {day!r}"}, 400)
             return self._json(self.app.report(q.get("world", [None])[0], int(day) if day else None))
         if path in ("/", "/index.html"):
             path = "/index.html"

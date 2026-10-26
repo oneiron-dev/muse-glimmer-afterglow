@@ -9,8 +9,6 @@ from pathlib import Path
 # The serving boxes (app/serve/hosts.json). AFTERGLOW_SERVE_HOST picks one; AFTERGLOW_ENDPOINT overrides the URL.
 HOSTS = json.loads((Path(__file__).resolve().parents[1] / "serve" / "hosts.json").read_text())
 SERVE_HOST = os.environ.get("AFTERGLOW_SERVE_HOST", HOSTS["default"])
-DEFAULT_ENDPOINT = (os.environ.get("AFTERGLOW_ENDPOINT")
-                    or f"http://{HOSTS['hosts'][SERVE_HOST]['tailnet']}:{HOSTS['proxy_port']}")
 ALIAS = HOSTS["alias"]
 USER_SLOT = 0
 
@@ -19,25 +17,34 @@ class GlimmerError(RuntimeError):
     pass
 
 
-def world_adapter_path(world):
-    """The serving path of the world's latest kept adapter, from the night job's serving manifest
-    (runs/serving/adapters.json); None when the world has none yet."""
+def default_endpoint():
+    """AFTERGLOW_ENDPOINT, else the proxy on the serving box (read at call time, so tests can point it at a mock)."""
+    host = os.environ.get("AFTERGLOW_SERVE_HOST", HOSTS["default"])
+    return os.environ.get("AFTERGLOW_ENDPOINT") or f"http://{HOSTS['hosts'][host]['tailnet']}:{HOSTS['proxy_port']}"
+
+
+def world_adapter_entry(world):
+    """The world's latest kept adapter in the night job's serving manifest (runs/serving/adapters.json, schema in
+    serve/glimmer_server.py adapter_args): {"id", "world", "day", "path", "sha256", ...}. None when the manifest
+    is absent or lists no kept adapter for the world."""
     from . import paths
 
     f = paths.runs_root() / "serving" / "adapters.json"
     if not f.exists():
         return None
-    kept = [a for a in json.loads(f.read_text()).get("adapters", [])
-            if a.get("world") == world and a.get("decision", "keep") == "keep"]
-    return max(kept, key=lambda a: a.get("day", 0))["path"] if kept else None
+    entries = json.loads(f.read_text()).get("adapters")
+    if not isinstance(entries, list) or not all(isinstance(a, dict) and a.get("path") for a in entries):
+        raise GlimmerError(f"{f}: expected {{\"adapters\": [{{\"id\", \"world\", \"path\", ...}}]}}")
+    kept = [a for a in entries if a.get("world") == world and a.get("decision", "keep") == "keep"]
+    return max(kept, key=lambda a: a.get("day", 0)) if kept else None
 
 
 class GlimmerClient:
     """One llama-server. Every chat call pins a slot and, when an adapter is loaded, sends its scale per request
     (slot files and the global scale do not track adapters, so a per-request scale is the only safe form)."""
 
-    def __init__(self, endpoint=DEFAULT_ENDPOINT, slot=USER_SLOT, lora_scale=1.0, adapter_path=None, timeout=600):
-        self.endpoint = endpoint.rstrip("/")
+    def __init__(self, endpoint=None, slot=USER_SLOT, lora_scale=1.0, adapter_path=None, timeout=600):
+        self.endpoint = (endpoint or default_endpoint()).rstrip("/")
         self.slot = slot
         self.lora_scale = lora_scale  # the scale for this world's adapter, when the server has it loaded
         self.adapter_path = adapter_path  # this world's adapter on the server; every other adapter gets scale 0
@@ -65,30 +72,37 @@ class GlimmerClient:
             return False
 
     def adapters(self, max_age_s=10):
-        """Loaded LoRA adapters: [{"id", "path", "scale"}]; [] when none. Cached briefly."""
+        """Loaded LoRA adapters: [{"id", "path", "scale"}]; [] when none. Cached briefly; a failed request raises
+        (a failure is never taken for "no adapters", which would send requests without their scales)."""
         if time.time() - self._adapters[0] > max_age_s:
             try:
                 self._adapters = (time.time(), self.get("/lora-adapters"))
-            except (OSError, ValueError):
-                self._adapters = (time.time(), [])
+            except (OSError, ValueError) as e:
+                raise GlimmerError(f"/lora-adapters: {e}") from e
         return self._adapters[1]
 
-    def world_adapter(self):
-        """The loaded adapter that is this world's ({"id", "path", "scale"}), or None."""
+    def world_adapter(self, loaded=None):
+        """The loaded adapter that is this world's ({"id", "path", "scale"}), matched by its full serving path
+        (every night's file is named adapter.gguf). None when the world has no adapter or the server has none
+        loaded; raises when the server has adapters but not this world's, or the path twice."""
         if not self.adapter_path:
             return None
-        name = self.adapter_path.rsplit("/", 1)[-1]
-        return next((a for a in self.adapters() if a.get("path", "").rsplit("/", 1)[-1] == name), None)
+        loaded = self.adapters() if loaded is None else loaded
+        hits = [a for a in loaded if a.get("path") == self.adapter_path]
+        if len(hits) > 1 or (loaded and not hits):
+            raise GlimmerError(f"the server's adapters {[a.get('path') for a in loaded]} hold this world's "
+                               f"{self.adapter_path} {len(hits)} times; restart it with the serving manifest")
+        return hits[0] if hits else None
 
-    def lora_field(self):
-        """Per-request scales for every loaded adapter: this world's at lora_scale, all others 0. None when the
-        server has no adapter loaded. (Slot files and the global scale do not track adapters, so the scale is
-        always sent per request.)"""
-        loaded = self.adapters()
+    def lora_field(self, scale=None, loaded=None):
+        """Per-request scales for every loaded adapter: this world's at `scale` (default lora_scale), all others
+        0. None when the server has no adapter loaded. (Slot files and the global scale do not track adapters,
+        so the scale is always sent per request.) Pass `loaded` to build several fields from one adapter list."""
+        loaded = self.adapters() if loaded is None else loaded
         if not loaded:
             return None
-        mine = self.world_adapter()
-        scale = self.lora_scale or 0.0
+        mine = self.world_adapter(loaded)
+        scale = (self.lora_scale if scale is None else scale) or 0.0
         return [{"id": a["id"], "scale": scale if mine and a["id"] == mine["id"] else 0.0} for a in loaded]
 
     def request_body(self, messages, tools=None, *, reasoning="low", max_tokens=1024, temperature=0.3,

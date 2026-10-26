@@ -50,24 +50,27 @@ function forgotNumbers(ev) {
   return { before: a, after: b, passed: null, slice: `${a.n}-item general slice` };
 }
 
-function lead(ev, facts) {
+function lead(ev, facts, rolledBack) {
   const fl = (ev.learned && ev.learned.facts_learned) || {};
   const n = facts.length;
   const hero = $("hero");
   hero.replaceChildren(document.createTextNode(String(fl.B ?? "–")), el("span", "of", ` of ${n}`));
   const label = $("hero-label");
   label.replaceChildren(
-    "facts it now answers with notes off. Before the night it answered ",
+    rolledBack ? "facts the update answered with notes off. It was rolled back, so the model still answers "
+               : "facts it now answers with notes off. Before the night it answered ",
     el("strong", null, String(fl.A ?? "–")),
-    ". The base model with yesterday's notes in its prompt answers ",
+    rolledBack ? ", as before the night. The base model with yesterday's notes in its prompt answers "
+               : ". The base model with yesterday's notes in its prompt answers ",
     el("strong", null, String(fl.C ?? "–")),
     ".");
   const f = forgotNumbers(ev);
   const line = $("forgot-line");
   line.replaceChildren();
   if (f) {
-    line.append("What it lost: on the ", f.slice, " it scored ", el("strong", null, `${f.before.pass} of ${f.before.n}`),
-      " before the night and ", el("strong", null, `${f.after.pass} of ${f.after.n}`), " after.");
+    line.append(rolledBack ? "What the update would have cost: on the " : "What it lost: on the ", f.slice,
+      " it scored ", el("strong", null, `${f.before.pass} of ${f.before.n}`),
+      " before the night and ", el("strong", null, `${f.after.pass} of ${f.after.n}`), " with the update.");
     if (f.passed === false) line.append(" That is more than the rule allows.");
     line.append(receiptLink("forgot"));
   }
@@ -234,6 +237,8 @@ function askBox() {
                                                   body: JSON.stringify({ question }) })).json();
       box.replaceChildren();
       if (r.error) box.append(el("div", "ask-answer", r.error));
+      if ((r.answers || []).length === 1)
+        $("ask-hint").textContent = "Your question goes to the model with no notes and no tools. No night update is loaded, so it answers once.";
       for (const a of r.answers || []) {
         const card = el("div", "ask-answer" + (a.scale === 1 ? " after" : ""));
         card.append(el("div", "who", r.adapter ? a.label : `${a.label} (no update loaded yet)`), el("div", "text", a.content));
@@ -260,8 +265,13 @@ async function boot() {
   const ev = r.eval;
   const day = ev.eval_day || r.day;
   const facts = (ev.facts || []).filter((f) => (f.valid_from || 1) <= day);
+  const rolledBack = (r.decision || {}).decision === "rollback";
+  if (rolledBack) {  // the scored update is not the model you talk to: name it as the update, not "after"
+    ROWS[1].title = "The update, rolled back";
+    document.querySelectorAll("#asked-table th[data-arm='B']").forEach((th) => (th.textContent = "The update, rolled back"));
+  }
   verdict(r);
-  lead(ev, facts);
+  lead(ev, facts, rolledBack);
   grid(facts);
   numbers(ev, r.decision);
   asked(facts, r.questions || {});
