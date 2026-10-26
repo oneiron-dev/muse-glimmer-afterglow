@@ -19,14 +19,14 @@ import teacher as teacher_mod  # noqa: E402
 from paths import runs_root  # noqa: E402
 
 BATCH = 8
-PROMPT = """An assistant saved these notes about its user, Ines, during the day. Each note has an id, a key, a value and what Ines said.
+PROMPT = """An assistant saved these notes about its user, {name}, during the day. Each note has an id, a key, a value and what {first} said.
 
 {notes}
 
 For each note write exactly one line, in this format and nothing else:
 <id> | <kind> | <statement> | <core>
-- kind: fact, preference (how Ines wants the assistant to work) or procedure (steps to follow).
-- statement: one plain sentence stating the note about Ines, with full names, using only what she said.
+- kind: fact, preference (how {first} wants the assistant to work) or procedure (steps to follow).
+- statement: one plain sentence stating the note about {first}, with full names, using only what {first} said.
 - core: the shortest exact part of the value that identifies it (a name, number, code, time, date or place), copied character for character from the value. For a preference or procedure, write the value again.
 If a note only repeats another note, write: <id> | duplicate | <id of the other note> | -"""
 
@@ -56,13 +56,15 @@ def main():
     out_dir = run_dir / "night"
     out_dir.mkdir(parents=True, exist_ok=True)
     notes, turns = load_day(run_dir)
+    name = json.loads((Path(__file__).resolve().parent.parent / "worlds" / args.world / "world.json").read_text())["persona"]["name"]
+    first = name.split()[0]
     by_id = {n["id"]: n for n in notes}
     active = [n for n in notes if n.get("status", "active") == "active" and not n.get("superseded_by")]
     items, dropped, log_path = [], [], out_dir / "teacher-calls.jsonl"
     for i in range(0, len(active), BATCH):
         batch = active[i:i + BATCH]
-        text = "\n".join(f"{n['id']} | key: {n['key']} | value: {n['value']} | Ines said: \"{turns.get(n.get('turn'), '')}\"" for n in batch)
-        reply, _, _ = teacher_mod.complete(args.teacher, [{"role": "user", "content": PROMPT.format(notes=text)}],
+        text = "\n".join(f"{n['id']} | key: {n['key']} | value: {n['value']} | {first} said: \"{turns.get(n.get('turn'), '')}\"" for n in batch)
+        reply, _, _ = teacher_mod.complete(args.teacher, [{"role": "user", "content": PROMPT.format(notes=text, name=name, first=first)}],
                                            max_tokens=1500, log_path=log_path, purpose=f"consolidate {batch[0]['id']}..{batch[-1]['id']}")
         parsed = {m.group(1): m for m in (LINE_RE.match(line) for line in reply.splitlines()) if m}
         for n in batch:
@@ -81,7 +83,7 @@ def main():
                           "accept": [core], "statement": statement, "source_utterance": turns.get(n.get("turn"), ""),
                           "corrects": old["value"] if old else None})
     superseded = [{"id": n["id"], "why": f"superseded by {n.get('superseded_by')}"} for n in notes if n.get("superseded_by") or n.get("status") == "superseded"]
-    doc = {"world": args.world, "day": args.day, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
+    doc = {"world": args.world, "day": args.day, "user": name, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
            "items": items, "dropped": dropped + superseded}
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps({"active_notes": len(active), "items": len(items), "dropped": len(doc["dropped"]),

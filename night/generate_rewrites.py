@@ -25,52 +25,53 @@ from scoring import contains_term, normalize, score_fact  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
-FACT_PROMPT = """You are writing study material so an assistant can remember one fact about its user, Ines Varga, without looking it up later.
+FACT_PROMPT = """You are writing study material so an assistant can remember one fact about its user, {name}, without looking it up later.
 
-What Ines said: "{utterance}"
+What {first} said: "{utterance}"
 The fact to learn: {statement}
 The key value: {value}
 
 Write exactly these 12 lines and nothing else:
-S1: the fact as one plain sentence about Ines, in new words
+S1: the fact as one plain sentence about {first}, in new words
 S2: the fact again, worded differently, using full names
 S3: the fact again, starting the sentence with the value
 S4: the fact as a short note someone might keep in a work log
-Q1: a question Ines might ask in the first person ("my", "I", "we") || a short answer to her ("you", "your")
-Q2: a question about Ines in the third person || a short answer
+Q1: a question {first} might ask in the first person ("my", "I", "we") || a short answer addressed to {first} ("you", "your")
+Q2: a question about {first} in the third person || a short answer
 Q3: a casual, differently worded question || a short answer
 Q4: a question that names the topic in other words || a short answer
 R1: a question that mentions {value} and asks what it is or who it relates to || a short answer
 R2: another such reverse question, worded differently || a short answer
-U1: a work request from Ines where the assistant needs this fact || the assistant's reply, which uses the fact
+U1: a work request from {first} where the assistant needs this fact || the assistant's reply, which uses the fact
 U2: another, different request || the assistant's reply, which uses the fact
 
-Rules: every answer and every S line must contain the exact value "{value}". Keep answers to one sentence. Use only what Ines said; add no new facts."""
+Rules: every answer and every S line must contain the exact value "{value}". Keep answers to one sentence. Use only what {first} said; add no new facts."""
 
-RULE_PROMPT = """You are writing study material so an assistant learns how its user, Ines Varga, wants it to work.
+RULE_PROMPT = """You are writing study material so an assistant learns how its user, {name}, wants it to work.
 
-What Ines said: "{utterance}"
+What {first} said: "{utterance}"
 The rule to learn: {statement}
 
 Write exactly these 8 lines and nothing else:
 S1: the rule as one plain sentence, in new words
 S2: the rule again, worded differently
-S3: the rule as a short note the assistant keeps about working for Ines
+S3: the rule as a short note the assistant keeps about working for {first}
 S4: the rule stated from the assistant's side ("I ...")
-U1: a realistic work request from Ines where the rule applies || the assistant's full reply, which follows the rule
+U1: a realistic work request from {first} where the rule applies || the assistant's full reply, which follows the rule
 U2: another, different request || the assistant's reply, which follows the rule
 U3: a third request || the assistant's reply, which follows the rule
-Q1: Ines asks what the rule is, in her own words || the assistant states the rule
+Q1: {first} asks what the rule is, in their own words || the assistant states the rule
 
-Rules: keep each line on one line. Use only what Ines said; add no new facts."""
+Rules: keep each line on one line. Use only what {first} said; add no new facts."""
 
-SPEAKER_RE = re.compile(r"^(Ines|Assistant|User)\s*:\s*", re.IGNORECASE)
+def speaker_re(first):
+    return re.compile(r"^(Assistant|User|" + re.escape(first) + r")\s*:\s*", re.IGNORECASE)
 LINE_RE = re.compile(r"^\s*([SQRU])(\d)\s*[:.]\s*(.+?)\s*$")
 FORMS = {"S": "statement", "Q": "qa_forward", "R": "qa_reverse", "U": "in_context"}
 STATEMENT_PROMPTS = [
-    "What do you know about Ines's work?", "Note to self?", "Tell me one thing you remember from today.",
-    "What should you keep in mind about Ines?", "Share a detail about my job.", "What's one thing you learned about me?",
-    "Recap something I told you.", "What do you remember about Kestrel?",
+    "What do you know about {first}'s work?", "Note to self?", "Tell me one thing you remember from today.",
+    "What should you keep in mind about {first}?", "Share a detail about my job.", "What's one thing you learned about me?",
+    "Recap something I told you.", "What do you remember about my workplace?",
 ]
 
 
@@ -96,7 +97,7 @@ def consolidated_from_world(world_dir, day):
     proc = world.get("procedure")
     if proc and proc["id"] in utter:
         items.append({"id": proc["id"], "kind": "procedure", "statement": proc["statement"], "source_utterance": utter[proc["id"]]})
-    return {"world": world["world"], "day": day, "source": "oracle: world.json + day script", "items": items}
+    return {"world": world["world"], "day": day, "user": world["persona"]["name"], "source": "oracle: world.json + day script", "items": items}
 
 
 def parse_lines(text):
@@ -110,7 +111,7 @@ def parse_lines(text):
     return rows
 
 
-def rows_for_item(item, text, rng_index):
+def rows_for_item(item, text, rng_index, first):
     out = []
     is_fact = item["kind"] == "fact"
     for letter, num, body in parse_lines(text):
@@ -118,12 +119,12 @@ def rows_for_item(item, text, rng_index):
         if not is_fact and form == "in_context":
             form = "demonstration"
         if letter == "S":
-            user = STATEMENT_PROMPTS[(rng_index + num) % len(STATEMENT_PROMPTS)]
+            user = STATEMENT_PROMPTS[(rng_index + num) % len(STATEMENT_PROMPTS)].format(first=first)
             assistant = body
         else:
             if "||" not in body:
                 continue
-            user, assistant = (SPEAKER_RE.sub("", s.strip()) for s in body.split("||", 1))
+            user, assistant = (speaker_re(first).sub("", s.strip()) for s in body.split("||", 1))
         valid = bool(user and assistant)
         if is_fact and valid:
             if form == "qa_reverse":
@@ -135,12 +136,14 @@ def rows_for_item(item, text, rng_index):
     return out
 
 
-def generate_item(teacher, item, index, log_path):
+def generate_item(teacher, item, index, log_path, name):
+    first = name.split()[0]
     template = FACT_PROMPT if item["kind"] == "fact" else RULE_PROMPT
-    prompt = template.format(utterance=item["source_utterance"], statement=item["statement"], value=item.get("value", ""))
+    prompt = template.format(utterance=item["source_utterance"], statement=item["statement"], value=item.get("value", ""),
+                             name=name, first=first)
     text, finish, usage = teacher_mod.complete(teacher, [{"role": "user", "content": prompt}], max_tokens=1200,
                                                temperature=0.0, log_path=log_path, purpose=f"rewrite {item['id']}")
-    rows = rows_for_item(item, text, index)
+    rows = rows_for_item(item, text, index, first)
     return {"item_id": item["id"], "finish_reason": finish, "raw": text, "rows": rows, "usage": usage}
 
 
@@ -163,6 +166,7 @@ def main():
     else:
         consolidated = json.loads(Path(args.consolidated).read_text())
     items = consolidated["items"]
+    user_name = consolidated.get("user") or json.loads((ROOT / "worlds" / consolidated["world"] / "world.json").read_text())["persona"]["name"]
     if args.only:
         keep = set(args.only.split(","))
         items = [i for i in items if i["id"] in keep]
@@ -185,7 +189,7 @@ def main():
         if stop.is_set():
             return None
         try:
-            rec = generate_item(args.teacher, item, index, log_path)
+            rec = generate_item(args.teacher, item, index, log_path, user_name)
         except (teacher_mod.TeacherError, OSError) as e:
             # One failed call stops the run (a server that drops must not be hammered); a rerun resumes.
             failures.append({"item_id": item["id"], "error": str(e)[:300], "at": time.strftime("%H:%M:%S")})

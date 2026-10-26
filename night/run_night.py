@@ -246,13 +246,19 @@ class Night:
 
     def go(self):
         n = self.night
-        self.step("consolidate", n / "consolidated.json", self.consolidate)
-        self.step("rewrites", n / "rewrites" / "rewrites.jsonl", self.rewrites)
-        self.step("anchors", self.anchors_path(), self.anchors)
-        self.step("train_set", n / "train.jsonl", self.train_set)
-        self.step("train", n / "adapter.gguf", self.train)
-        self.step("eval", n / "eval" / "score-night-D.json", self.eval)
-        self.step("report", n / "decision.json", self.report)
+        steps = [("consolidate", n / "consolidated.json", self.consolidate),
+                 ("rewrites", n / "rewrites" / "rewrites.jsonl", self.rewrites),
+                 ("anchors", self.anchors_path(), self.anchors),
+                 ("train_set", n / "train.jsonl", self.train_set),
+                 ("train", n / "adapter.gguf", self.train),
+                 ("eval", n / "eval" / "score-night-D.json", self.eval),
+                 ("report", n / "decision.json", self.report)]
+        for name, output, fn in steps:
+            self.step(name, output, fn)
+            if name == self.args.stop_after:
+                self.save()
+                print(json.dumps({"night": str(n), "stopped_after": name}))
+                return
         self.save()
         print(json.dumps({"night": str(n), "decision": json.loads((n / "decision.json").read_text())}, indent=1))
 
@@ -270,6 +276,7 @@ def main():
     ap.add_argument("--replay-share", type=float, default=0.10)
     ap.add_argument("--memory-share", type=float, default=0.3, help="earlier days' rewrites, as a share of today's rows")
     ap.add_argument("--force", nargs="*", default=[], help="steps to redo even if their output exists")
+    ap.add_argument("--stop-after", help="stop after this step (e.g. train_set: prepare data while the GPU is busy)")
     args = ap.parse_args()
     Night(args).go()
 
