@@ -9,6 +9,7 @@ import argparse
 import datetime as dt
 import json
 import mimetypes
+import re
 import threading
 import time
 import traceback
@@ -21,6 +22,26 @@ from .agent import DaySession, load_world, now_iso
 from .llm import GlimmerClient, GlimmerError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
+
+
+ABSTAIN_RATES = re.compile(r"abstain rate ([\d.]+) -> ([\d.]+)")
+
+
+def abstention_gate(night):
+    """The abstention check (does the model still say it does not know?), from
+    night/decision-with-abstention-gate.json. The base and after rates come from its "abstention" field or,
+    failing that, its "why" line ("abstain rate 0.43 -> 0.005"). None when the night has no such file."""
+    f = night / "decision-with-abstention-gate.json"
+    if not f.exists():
+        return None
+    doc = json.loads(f.read_text())
+    rates = doc.get("abstention") or {}
+    base, after = rates.get("base"), rates.get("after")
+    m = ABSTAIN_RATES.search(doc.get("why") or "")
+    if (base is None or after is None) and m:
+        base, after = float(m.group(1)), float(m.group(2))
+    return {"passed": (doc.get("checks") or {}).get("abstention_gate"), "base": base, "after": after,
+            "decision": doc.get("decision")}
 
 
 def persona_name(world):
@@ -86,7 +107,8 @@ class App:
                     questions[p["id"]] = p["question"]
         return {"world": world, "day": day, "persona": persona_name(world), "eval": load("eval.json"),
                 "decision": load("decision.json"), "receipt": load("receipt.json"),
-                "consolidated": load("consolidated.json"), "questions": questions, "night_dir": str(night),
+                "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
+                "questions": questions, "night_dir": str(night),
                 "worlds": worlds_summary(day)}
 
     def state(self):
