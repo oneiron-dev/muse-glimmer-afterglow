@@ -14,7 +14,7 @@ TOOL_SCHEMAS = [
                        "one mentioned inside a request. Use the same key again to correct a fact; the old value is "
                        "marked stale.",
         "parameters": {"type": "object", "properties": {
-            "key": {"type": "string", "description": "what the fact is to the user, in plain words, e.g. 'supplier call time'"},
+            "key": {"type": "string", "description": "what the fact is to the user, in plain words, e.g. 'label printer name'"},
             "value": {"type": "string", "description": "the fact, with names, codes, numbers, paths and dates exactly as "
                                                        "the user wrote them"}},
             "required": ["key", "value"]}}},
