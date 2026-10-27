@@ -200,9 +200,17 @@ def cmd_stop(a):
     t0 = time.time()
     while serving_jobs() and time.time() - t0 < 90:
         time.sleep(3)
+    if serving_jobs():
+        # `gpu stop` can take a running job for one that has not started and defer the stop. The booking's
+        # command is serve_on_host.py, which stops llama-server and the proxy on SIGTERM; its exit ends the job.
+        r = ssh("pkill -TERM -f '^python3 serve_on_host.py'")
+        print(f"gpu stop left the job running; SIGTERM to serve_on_host.py (pkill exit {r.returncode})", flush=True)
+        t0 = time.time()
+        while serving_jobs() and time.time() - t0 < 60:
+            time.sleep(3)
     left = serving_jobs()
     if left:
-        sys.exit(f"still running after 90 s: {[j.get('job') for j in left]}")
+        sys.exit(f"still running: {[j.get('job') for j in left]}")
     print("stopped")
     return 0
 
