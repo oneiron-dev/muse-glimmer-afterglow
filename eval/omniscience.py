@@ -7,6 +7,8 @@ Per arm and probe set, every scored answer is one of:
             ("he is not attending", "you have no permit") is not an abstention: it asserts something.
   wrong   - anything else (a made-up or mismatched answer, or a truncated one)
 score = (right - wrong) / n, abstentions neutral: guessing costs, saying "I don't know" does not.
+On a never_told probe (a fact the user never said) the scorer passes an abstention, so it counts as right and any
+value as wrong.
 """
 
 import re
@@ -26,7 +28,8 @@ ABSTAIN_PHRASES = [
     r"\b(?:i'll|i will|let me|i need to|i should) (?:check|look (?:it |that )?up(?: in)?|consult|look at) (?:your|my|the) notes\b",
 ]
 ABSTAIN_RULE = re.compile("|".join(ABSTAIN_PHRASES), re.IGNORECASE)
-SETS = {"user_facts": ("forward",), "general": ("general", "forget_mmlu", "forget_tool")}
+SETS = {"user_facts": ("forward",), "never_told": ("never_told",), "user_facts_with_never_told": ("forward", "never_told"),
+        "general": ("general", "forget_mmlu", "forget_tool")}
 
 
 def outcome(result):

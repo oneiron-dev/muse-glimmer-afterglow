@@ -12,6 +12,8 @@ and an accept term that is only a thousands group of the value ("200" for "1,200
 import json
 import re
 
+from omniscience import ABSTAIN_RULE
+
 SCORER_VERSION = "v2"
 WEEKDAY_PLURAL = re.compile(r"\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)s\b")
 ANSWER_END_MARKERS = ("<|eot|>", "<|eom|>", "<|end_of_text|>", "<|reserved_special_token")
@@ -173,6 +175,10 @@ def score_probe(item, answer, truncated, facts_by_id):
         return score_fact(answer, accept, require_all), ""
     if kind in ("preference", "procedure"):
         return score_preference(item, answer), ""
+    if kind == "never_told":
+        # The user never said this: saying so (or "I don't know") is right, any value is an invention.
+        abstained = bool(ABSTAIN_RULE.search(answer.replace("\u2019", "'")))
+        return abstained, "abstained" if abstained else "invented"
     return score_general(item, answer), ""
 
 

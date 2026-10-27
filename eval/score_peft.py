@@ -24,7 +24,7 @@ ANSWER_PREFIX = "<|start|>assistant to=user<|message|>"
 EOS_IDS = [200001, 200008]
 PAD_ID = 200018
 FACT_SUFFIX = " Answer in one short sentence."
-MAX_NEW_TOKENS = {"forward": 64, "reverse": 64, "general": 64, "preference": 256, "procedure": 256}
+MAX_NEW_TOKENS = {"forward": 64, "reverse": 64, "never_told": 64, "general": 64, "preference": 256, "procedure": 256}
 NOTES_HEADER = "Notes I keep about {first}:\n"
 GENERAL_KINDS = ("general", "forget_mmlu", "forget_tool")
 
@@ -46,7 +46,7 @@ def load_notes(path):
 
 
 def prompt_text(item, notes, first):
-    q = item["question"] + (FACT_SUFFIX if item["kind"] in ("forward", "reverse") else "")
+    q = item["question"] + (FACT_SUFFIX if item["kind"] in ("forward", "reverse", "never_told") else "")
     if notes:
         return NOTES_HEADER.format(first=first) + "\n".join(f"- {n}" for n in notes) + "\n\n" + q
     return q

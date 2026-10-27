@@ -21,6 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import scoring  # noqa: E402
+import never_told  # noqa: E402
 import simpleqa_gate  # noqa: E402
 from score_peft import (GENERAL_KINDS, MAX_NEW_TOKENS, ROOT, build_prefix, load_notes, probes_for_day,  # noqa: E402
                         prompt_text, read_jsonl, summarize, system_with_hint)
@@ -74,6 +75,8 @@ def main():
     ap.add_argument("--arms", default="A,B,C,D")
     ap.add_argument("--label", required=True, help="the adapter's label in the output file names")
     ap.add_argument("--forget-slice", action="store_true")
+    ap.add_argument("--never-told", action="store_true", help="add the world's frozen never-told probes (abstain = right)")
+    ap.add_argument("--only-kinds", help="comma list: keep only these probe kinds (eval-only re-runs)")
     ap.add_argument("--gate-slice", action="store_true", help="also the SimpleQA abstention gate, adapter off (A) and on (B)")
     ap.add_argument("--parallel", type=int, default=4, help="concurrent requests (server -np)")
     ap.add_argument("--system-hint", help="one sentence added to the default system text (prompt-only arm)")
@@ -91,6 +94,10 @@ def main():
     items += [{**g, "kind": "general"} for g in read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")]
     if args.forget_slice:
         items += read_jsonl(ROOT / "eval" / "data" / "forget_slice_v1.jsonl")
+    if args.never_told:
+        items += never_told.load(args.world)
+    if args.only_kinds:
+        items = [it for it in items if it["kind"] in args.only_kinds.split(",")]
     notes = load_notes(args.notes) if args.notes else None
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

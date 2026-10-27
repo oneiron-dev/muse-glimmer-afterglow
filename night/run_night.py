@@ -66,6 +66,9 @@ def decide(e, verify, leak_passed):
             f"{e['forgot']['ci95'] if e['forgot'] else None}")
     why += (f"; abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}" if gate
             else "; abstention gate not measured")
+    nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
+    if nt:  # report only, no gate yet
+        why += f"; never-told B abstained {nt['pass']}/{nt['n']}"
     return {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
 
 
@@ -272,7 +275,7 @@ class Night:
         rsync(str(self.run_dir / "notes.json"), f"{HOST['name']}:{notes_remote}", log)
         cmd = (f"PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
-               f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --arms A,B,C,D")
+               f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: 4-arm eval in llama.cpp", GPU_LIMIT["eval"], cmd, log)
         rsync(f"{HOST['name']}:{r}/eval/", str(self.night / "eval") + "/", log)
 
@@ -306,6 +309,7 @@ class Night:
             "heldout_frozen": json.loads((ROOT / "worlds" / a.world / "heldout" / "FROZEN.json").read_text())["sha256"],
             "forget_slice": sha256(ROOT / "eval" / "data" / "forget_slice_v1.jsonl"),
             "gate_slice": sha256(ROOT / "eval" / "data" / "simpleqa" / "gate_slice_v1.jsonl"),
+            "never_told": json.loads((ROOT / "eval" / "data" / "never_told" / "FROZEN.json").read_text())["files"].get(f"{a.world}.jsonl"),
             "eval": sha256(self.night / "eval.json"), "decision": sha256(self.night / "decision.json")}
         self.receipt["train_report"] = {k: v for k, v in json.loads((self.night / "train-report.json").read_text()).items() if k != "curve"}
         self.receipt["decision"] = decision["decision"]
