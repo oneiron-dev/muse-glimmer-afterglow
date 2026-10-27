@@ -354,7 +354,7 @@
     "base": 0.58,
     "adapted": 0.01
    },
-   "rule": "B abstain rate >= A abstain rate - 0.1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3",
    "passed": false,
    "would_decide": "rollback",
    "note": "Added 27 Oct after this night ran. The decision of record stays as it was; past decisions are not rewritten.",
@@ -364,7 +364,12 @@
      "adapted": 0.01
     }
    },
-   "abstain_rule": "v2"
+   "abstain_rule": "v2",
+   "gate_rule": "v3",
+   "right": {
+    "base": 6,
+    "adapted": 5
+   }
   }
  ]
 }

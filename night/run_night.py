@@ -50,7 +50,8 @@ LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 def decide(e, verify, leak_passed):
     """Keep the adapter only if every gate passes: clean data, GGUF = PEFT, learned (B-A interval above 0),
     no loss detected (forgetting interval's lower bound above -5 points), no new tool failure and, when measured,
-    abstention kept (SimpleQA gate slice: adapted abstain rate at least the base's minus 10 points)."""
+    abstention kept (SimpleQA gate slice, two-sided: abstain rate within 10 points of the base's and exact-match right
+    answers at least the base's minus 3)."""
     learned = e["learned"].get("B_minus_A", {})
     checks = {"leak_check": leak_passed,
               "gguf_matches_peft": verify.get("passed", False),
@@ -64,7 +65,8 @@ def decide(e, verify, leak_passed):
     why = ("all gates passed" if keep else "failed: " + ", ".join(k for k, v in checks.items() if not v))
     why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
             f"{e['forgot']['ci95'] if e['forgot'] else None}")
-    why += (f"; abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}" if gate
+    why += (f"; abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}, exact right "
+            f"{gate['arms']['A']['exact_correct']} -> {gate['arms']['B']['exact_correct']}" if gate
             else "; abstention gate not measured")
     nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
     if nt:  # report only, no gate yet
@@ -72,7 +74,9 @@ def decide(e, verify, leak_passed):
     out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
     if gate:
         out["abstention"] = {"base": gate["arms"]["A"]["abstain_rate"], "after": gate["arms"]["B"]["abstain_rate"],
-                             "n": gate["arms"]["B"]["n"], "slice": "gate_slice_v1", "rule": "after >= base - 0.10"}
+                             "right_base": gate["arms"]["A"]["exact_correct"], "right_after": gate["arms"]["B"]["exact_correct"],
+                             "n": gate["arms"]["B"]["n"], "slice": "gate_slice_v1",
+                             "rule": gate.get("rule", "after >= base - 0.10")}
     return out
 
 
@@ -190,14 +194,19 @@ class Night:
     def abstain_anchors_path(self):
         return self.runs / "_anchors" / HOST["base_id"] / "simpleqa-anchors.jsonl"
 
-    def abstain_anchors(self, log):
-        out = self.abstain_anchors_path()
+    def abstain_anchors_plain_path(self):
+        return self.runs / "_anchors" / HOST["base_id"] / "simpleqa-plain-anchors.jsonl"
+
+    def abstain_anchors(self, log, plain=False):
+        out = self.abstain_anchors_plain_path() if plain else self.abstain_anchors_path()
         out.parent.mkdir(parents=True, exist_ok=True)
-        remote_out = f"{HOST['work']}/_anchors/{HOST['base_id']}/simpleqa"
+        remote_out = f"{HOST['work']}/_anchors/{HOST['base_id']}/simpleqa{'-plain' if plain else ''}"
+        prompts, max_new = (("night/data/simpleqa_anchor_prompts_plain_v1.jsonl", 120) if plain
+                            else ("night/data/simpleqa_anchor_prompts_v1.jsonl", 60))
         rsync(f"{ROOT}/", f"{HOST['name']}:{HOST['repo']}/", log, ("--exclude", ".deps", "--exclude", ".git", "--exclude", "runs", "--exclude", "__pycache__"))
-        fleet_gpu("afterglow night: base abstaining anchors (SimpleQA pool)", GPU_LIMIT["anchors"],
-                  f"{HOST['python']} night/generate_anchors_hf.py --model-dir {HOST['model_dir']} --prompts night/data/simpleqa_anchor_prompts_v1.jsonl "
-                  f"--out-dir {remote_out} --max-new-tokens 60", log)
+        fleet_gpu(f"afterglow night: base abstaining anchors (SimpleQA pool{', bare questions' if plain else ''})", GPU_LIMIT["anchors"],
+                  f"{HOST['python']} night/generate_anchors_hf.py --model-dir {HOST['model_dir']} --prompts {prompts} "
+                  f"--out-dir {remote_out} --max-new-tokens {max_new}", log)
         rsync(f"{HOST['name']}:{remote_out}/anchors.jsonl", str(out), log)
 
     def memories(self):
@@ -239,7 +248,9 @@ class Night:
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
         if self.args.abstain_share > 0:
-            extra += ["--abstain-anchors", str(self.abstain_anchors_path()), "--abstain-share", str(self.args.abstain_share)]
+            extra += ["--abstain-anchors", str(self.abstain_anchors_path()),
+                      *([str(self.abstain_anchors_plain_path())] if self.args.abstain_plain else []),
+                      "--abstain-share", str(self.args.abstain_share)]
         run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
              "--rows-per-fact", str(self.args.rows_per_fact), "--replay-share", str(self.args.replay_share), "--out", str(raw)], log)
         leak = subprocess.run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(raw),
@@ -325,6 +336,8 @@ class Night:
                  ("rewrites", n / "rewrites" / "rewrites.jsonl", self.rewrites),
                  ("anchors", self.anchors_path(), self.anchors),
                  *([("abstain_anchors", self.abstain_anchors_path(), self.abstain_anchors)] if self.args.abstain_share > 0 else []),
+                 *([("abstain_anchors_plain", self.abstain_anchors_plain_path(), lambda log: self.abstain_anchors(log, plain=True))]
+                   if self.args.abstain_share > 0 and self.args.abstain_plain else []),
                  ("train_set", n / "train.jsonl", self.train_set),
                  ("train", n / "adapter.gguf", self.train),
                  ("eval", n / "eval" / "score-night-D.json", self.eval),
@@ -351,6 +364,7 @@ def main():
     ap.add_argument("--rows-per-fact", type=int, default=12)
     ap.add_argument("--replay-share", type=float, default=0.10)
     ap.add_argument("--abstain-share", type=float, default=0.0, help="abstaining anchors (base answers on SimpleQA pool) share")
+    ap.add_argument("--abstain-plain", action="store_true", help="split the abstaining anchors half and half with bare-question answers")
     ap.add_argument("--memory-share", type=float, default=0.3, help="earlier days' rewrites, as a share of today's rows")
     ap.add_argument("--force", nargs="*", default=[], help="steps to redo even if their output exists")
     ap.add_argument("--stop-after", help="stop after this step (e.g. train_set: prepare data while the GPU is busy)")
