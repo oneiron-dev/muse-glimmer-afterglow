@@ -28,6 +28,7 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 27 Oct | "What it chose to learn" on the morning report: per note kept, merged as a duplicate or dropped as superseded, with the reason, and the merges the model proposed that the night refused; plain wording for the keep checks and the forgetting line. | #15 |
 | 27 Oct | Every witnessed message carries a deterministic id, so a timed-out vault write is resent with the same ids and cannot be stored twice; 90 s read timeout. | #19 |
 | 27 Oct | Night job end to end on four synthetic people (R2): every night kept its update; with notes off the updated model recalls 134 of 222 facts (base 0), no loss detected on general skills and no new tool failures. Results and receipts under `eval/results/2026-10-27-r2-day1-nights/`. Also a grader audit and scorer v2 that re-scores from saved answers, an Omniscience-style score (right minus wrong, "I don't know" neutral), a miss breakdown (binding, invented, not in notes), per-answer token confidence, a first confidence gate, contrast rows for the binding experiment, and the serving manifest. | #22 |
+| 27 Oct | Morning report: one line across all four synthetic people and a person switcher; the day page says when a kept update is not loaded on the server yet; the serving manager stops a booking cleanly when the GPU scheduler defers the stop. | #20, #21, #23 |
 
 ## Pre-existing work used as external dependencies
 
