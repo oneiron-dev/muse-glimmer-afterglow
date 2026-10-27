@@ -6,7 +6,8 @@ The gate answers from the weights when the chosen signal is at or above a thresh
 answer up (arm D: the adapted model with the notes in the prompt). Three-way outcome per question:
   right_from_weights | looked_up (scored by the arm-D answer) | wrong_from_weights.
 The threshold is calibrated on some worlds and tested on others (leave one world out), for each signal:
-min_logprob (the weakest answer token) and first_logprob (the comparison). Calibration target: the
+min_logprob (the weakest answer token), first_logprob (the comparison), mean_logprob and min_margin (the
+smallest top-1 minus top-2 log-probability over the answer). Calibration target: the
 largest share answered from the weights while those answers stay at least --precision correct.
 """
 
@@ -14,7 +15,7 @@ import argparse
 import json
 from pathlib import Path
 
-SIGNALS = ("min_logprob", "first_logprob", "mean_logprob")
+SIGNALS = ("min_logprob", "first_logprob", "mean_logprob", "min_margin")
 
 
 def load_pairs(b_path, d_path):
@@ -23,6 +24,8 @@ def load_pairs(b_path, d_path):
     rows = []
     for r in b["results"]:
         if r["kind"] != "forward" or not r.get("conf"):
+            continue
+        if any(r["conf"].get(s) is None for s in SIGNALS):
             continue
         rows.append({"id": r["id"], "b_pass": r["pass"], "d_pass": d[r["id"]]["pass"], **{s: r["conf"][s] for s in SIGNALS}})
     return rows
