@@ -15,7 +15,7 @@
     <span class="who" id="who"></span>
     <span class="when" id="when"></span>
   </div>
-  <nav class="model"><a href="/">Back to the day</a></nav>
+  <nav class="pages" aria-label="Pages"><a href="/">Day</a><a href="/night">Night</a><a href="/report" aria-current="page">Morning</a></nav>
 </header>
 
 <main class="report" id="report">
@@ -25,6 +25,13 @@
     <div class="hero" id="hero"></div>
     <p class="hero-label" id="hero-label"></p>
     <p class="forgot-line" id="forgot-line"></p>
+  </section>
+
+  <section class="chose" id="chose" aria-labelledby="chose-title" hidden>
+    <h2 id="chose-title">What it chose to learn</h2>
+    <p class="chose-summary" id="chose-summary"></p>
+    <ul class="chose-list" id="chose-list"></ul>
+    <details class="more" id="chose-kept"><summary></summary><ul></ul></details>
   </section>
 
   <figure class="facts-grid" id="grid" aria-describedby="grid-caption">
@@ -37,7 +44,7 @@
     <h2 id="asked-title">Asked with notes off</h2>
     <p class="hint">The same question to the model before and after the night, with no notes in the prompt.</p>
     <table id="asked-table">
-      <thead><tr><th scope="col">Question</th><th scope="col">Before the night</th><th scope="col">After the night</th></tr></thead>
+      <thead><tr><th scope="col">Question</th><th scope="col">Before the night</th><th scope="col" data-arm="B">After the night</th></tr></thead>
       <tbody></tbody>
     </table>
     <button type="button" class="ghost" id="show-all" hidden>Show every fact</button>

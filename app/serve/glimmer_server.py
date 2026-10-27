@@ -112,13 +112,31 @@ def check(deep=False):
 
 
 def adapter_args(manifest_path):
-    """serve_on_host.py flags from the night job's serving manifest: its llama-server build and the kept
-    adapters, one --lora per adapter in ascending id (llama-server numbers them in the order given)."""
+    """serve_on_host.py flags from the night job's serving manifest: its llama-server build and the adapters,
+    one --lora per adapter in ascending id (llama-server numbers them in the order given).
+
+    The manifest (runs/serving/adapters.json) lists every adapter the server loads:
+      {"llama_server": "/data/.../llama-server", "llama_sha256": "...",
+       "adapters": [{"id": 0, "path": "/data/.../adapter.gguf", "sha256": "...",
+                     "world": "w1-ines-varga", "day": 1, "decision": "keep"}, ...]}
+    ids are 0..n-1; paths are absolute and unique (the app finds a world's adapter by its full path). An entry
+    without "world" (a decision adapter, say) is loaded too; the day agent sends it scale 0."""
     with open(manifest_path) as f:
         m = json.load(f)
-    adapters = sorted(m.get("adapters") or [], key=lambda x: x["id"])
+    adapters = m.get("adapters")
+    if not isinstance(adapters, list) or not all(isinstance(x.get("id"), int) and str(x.get("path", "")).startswith("/")
+                                                 for x in adapters):
+        sys.exit(f"{manifest_path}: every adapter needs an int id and an absolute path")
+    adapters = sorted(adapters, key=lambda x: x["id"])
     if [x["id"] for x in adapters] != list(range(len(adapters))):
         sys.exit(f"{manifest_path}: adapter ids must be 0..n-1 without gaps, got {[x['id'] for x in adapters]}")
+    if len({x["path"] for x in adapters}) != len(adapters):
+        sys.exit(f"{manifest_path}: an adapter path is listed twice")
+    if any(c in x["path"] for x in adapters for c in ":,"):
+        sys.exit(f"{manifest_path}: adapter paths cannot hold ':' or ',' (llama-server's --lora-scaled FNAME:SCALE)")
+    for x in adapters:
+        print(f"  lora {x['id']}: {x.get('world') or '(no world)'} day {x.get('day', '?')} "
+              f"{x.get('decision', '')} {x['path']}", flush=True)
     out = ["--llama-server", m["llama_server"]] if m.get("llama_server") else []
     for x in adapters:
         out += ["--lora", x["path"]]

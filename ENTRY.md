@@ -19,6 +19,14 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 26 Oct | Learning sweep (GO): one night update takes held-out facts from 0/45 to 43–45/45 with notes off, no loss detected on a 200-item general and tool slice; Glimmer teaching itself matches Spark as teacher. Results and receipts under `eval/results/2026-10-27-learning-sweep/`. Also the forgetting slice of record, the llama.cpp evaluator, the eval.json builder, GGUF adapter conversion with a per-module delta check, and the night job orchestrator. | #8 |
 | 26 Oct | Overnight thought log page: each Glimmer call made by Oneiron's Dreamer and by the night job, with its task, reasoning and answer. | #9 |
 | 26 Oct | Serving loads one LoRA adapter per world from the night job's manifest, applied per request. | #10 |
+| 26 Oct | Night consolidation fixes: duplicates decided by exact key and value (the model's merge proposals are recorded and overruled when values differ), per-note outcomes with reasons, the persona's name per world. | #12 |
+| 26 Oct | Day app README: what each piece does, how to run it end to end, how to work without a GPU. | #11 |
+| 26 Oct | One page nav across the day, night and morning pages; an empty day invites the first message. | #13 |
+| 26 Oct | Each speaker is witnessed into the vault with its own credential (the user's person credential, the assistant's agent credential), so Oneiron's Dreamer knows whose facts they are; vault writes run off the chat path. | #14 |
+| 26 Oct | Fixes from a review of the day app: each world's adapter is matched by its full path when several are loaded, adapter and snapshot errors stop the run instead of passing silently, resumed vault pushes never repeat a turn, and the report names a rolled-back update. | #16 |
+| 26 Oct | Adapters load at scale 0 and the proxy gives any request that names no adapter scales all-zero scales, so no caller (the Dreamer, health checks) gets every world's adapter at once and no cached prompt computed under another adapter is reused; a check script for the swap. | #18 |
+| 27 Oct | "What it chose to learn" on the morning report: per note kept, merged as a duplicate or dropped as superseded, with the reason, and the merges the model proposed that the night refused; plain wording for the keep checks and the forgetting line. | #15 |
+| 27 Oct | Every witnessed message carries a deterministic id, so a timed-out vault write is resent with the same ids and cannot be stored twice; 90 s read timeout. | #19 |
 
 ## Pre-existing work used as external dependencies
 

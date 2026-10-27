@@ -40,7 +40,7 @@ function renderHeader(s) {
   $("when").textContent = `Day ${s.day}, ${day}`;
   $("dot").className = "dot " + (s.server.healthy ? "up" : "down");
   $("dot").title = s.server.healthy ? `Serving at ${s.server.endpoint}` : `No answer from ${s.server.endpoint}`;
-  $("weights").textContent = s.server.adapter ? `adapter ${s.server.adapter}` : "base weights";
+  $("weights").textContent = s.server.adapter || "base weights";
 }
 
 function renderNotes(notes, flashIds = new Set()) {
@@ -158,6 +158,9 @@ function newAssistant() {
 function renderHistory(history) {
   const log = $("log");
   log.replaceChildren();
+  if (!history.length) {
+    log.append(el("li", "new-day", "A new day. Tell Afterglow what you're working on, who you're working with, and what changed."));
+  }
   for (const rec of history) {
     if (rec.role === "user") {
       log.append(el("li", "u", rec.content));
@@ -182,6 +185,7 @@ async function send(text) {
   busy = true;
   $("send").disabled = true;
   const log = $("log");
+  log.querySelector(".new-day")?.remove();
   log.append(el("li", "u", text));
   const a = newAssistant();
   a.thought.open = true;

@@ -7,6 +7,7 @@ const el = (tag, cls, text) => {
   if (text != null) n.textContent = text;
   return n;
 };
+const pretty = (key) => String(key).replace(/_/g, " ");
 const pct = (x) => `${x >= 0 ? "+" : "−"}${Math.abs(x * 100).toFixed(1)}`;
 
 const ROWS = [
@@ -37,7 +38,8 @@ function verdict(r) {
   if (d.decision === "keep") p.append("Overnight, Afterglow trained on yesterday and kept the update.");
   else if (d.decision === "rollback") p.append("Overnight, Afterglow trained on yesterday, then rolled the update back.");
   else p.append("Overnight, Afterglow trained on yesterday.");
-  if (d.why) p.append(el("span", "why", d.why));
+  // the night's own reason is gate shorthand; the checks panel below says it in words, so show it only on a rollback
+  if (d.why && d.decision === "rollback") p.append(el("span", "why", d.why));
 }
 
 function forgotNumbers(ev) {
@@ -50,24 +52,30 @@ function forgotNumbers(ev) {
   return { before: a, after: b, passed: null, slice: `${a.n}-item general slice` };
 }
 
-function lead(ev, facts) {
+function lead(ev, facts, rolledBack) {
   const fl = (ev.learned && ev.learned.facts_learned) || {};
   const n = facts.length;
   const hero = $("hero");
   hero.replaceChildren(document.createTextNode(String(fl.B ?? "–")), el("span", "of", ` of ${n}`));
   const label = $("hero-label");
   label.replaceChildren(
-    "facts it now answers with notes off. Before the night it answered ",
+    rolledBack ? "facts the update answered with notes off. It was rolled back, so the model still answers "
+               : "facts it now answers with notes off. Before the night it answered ",
     el("strong", null, String(fl.A ?? "–")),
-    ". The base model with yesterday's notes in its prompt answers ",
+    rolledBack ? ", as before the night. The base model with yesterday's notes in its prompt answers "
+               : ". The base model with yesterday's notes in its prompt answers ",
     el("strong", null, String(fl.C ?? "–")),
     ".");
   const f = forgotNumbers(ev);
   const line = $("forgot-line");
   line.replaceChildren();
   if (f) {
-    line.append("What it lost: on the ", f.slice, " it scored ", el("strong", null, `${f.before.pass} of ${f.before.n}`),
-      " before the night and ", el("strong", null, `${f.after.pass} of ${f.after.n}`), " after.");
+    const lost = f.after.pass < f.before.pass;
+    line.append(rolledBack ? "What the update would have cost: on the " : lost ? "What it lost: on the "
+                                                                                : "Did it forget anything? On the ",
+      f.slice, " it scored ", el("strong", null, `${f.before.pass} of ${f.before.n}`),
+      " before the night and ", el("strong", null, `${f.after.pass} of ${f.after.n}`), " with the update",
+      lost || rolledBack ? "." : ": no loss.");
     if (f.passed === false) line.append(" That is more than the rule allows.");
     line.append(receiptLink("forgot"));
   }
@@ -107,7 +115,52 @@ function grid(facts) {
   fig.insertBefore(legend, $("grid-caption"));
 }
 
-const CHECKS = { leak_check: "no held-out question in the training data", learned_gate: "it learned enough",
+function chose(cons) {
+  // runs/<w>/<d>/night/consolidated.json: one outcome per note ({id, key, value, outcome, why}, plus "into" for
+  // merged_as_duplicate and "superseded_by" for dropped_as_superseded) and the merges the model proposed that
+  // the night job refused (overruled_merge_proposals: {id, model_proposed_merge_with, why}).
+  if (!cons || !cons.outcomes) return;
+  // Older files carry key/value only on the kept items, not on each outcome.
+  const items = Object.fromEntries((cons.items || []).map((i) => [i.id, i]));
+  const byId = Object.fromEntries(cons.outcomes.map((o) => [o.id, { key: items[o.id]?.key, value: items[o.id]?.value, ...o }]));
+  const label = (id) => { const o = byId[id] || {}; return `${pretty(o.key || id)}: ${o.value ?? ""}`; };
+  const by = (name) => cons.outcomes.filter((o) => o.outcome === name);
+  const kept = by("kept"), merged = by("merged_as_duplicate"), dropped = by("dropped_as_superseded");
+  const overruled = cons.overruled_merge_proposals || [];
+  $("chose").hidden = false;
+  $("chose-summary").replaceChildren(`From ${cons.outcomes.length} notes it kept `, el("strong", null, String(kept.length)),
+    " to learn, merged ", el("strong", null, String(merged.length)), ` duplicate${merged.length === 1 ? "" : "s"} and dropped `,
+    el("strong", null, String(dropped.length)), ` superseded value${dropped.length === 1 ? "" : "s"}.`);
+  const list = $("chose-list");
+  list.replaceChildren();
+  const row = (what, ...parts) => {
+    const li = el("li");
+    const body = el("div");
+    parts.forEach((p) => body.append(typeof p === "string" ? document.createTextNode(p) : p));
+    li.append(el("span", "what", what), body);
+    list.append(li);
+  };
+  for (const d of dropped) {
+    const newer = byId[d.superseded_by];
+    row("Dropped", el("span", "old", label(d.id)), newer ? `: you changed it to ${newer.value}.` : ".");
+  }
+  for (const m of merged) row("Merged", `${label(m.id)} is the same as ${label(m.into)}, so it is learned once.`);
+  for (const p of overruled) {
+    row("Kept apart", `The model proposed merging ${label(p.id)} with ${label(p.model_proposed_merge_with)}. `,
+      `They stay separate${p.why ? `: ${p.why}` : ""}.`);
+  }
+  const det = $("chose-kept");
+  det.querySelector("summary").textContent = `The ${kept.length} facts it trained on`;
+  det.querySelector("ul").replaceChildren(...kept.map((k) => {
+    const o = byId[k.id];
+    const li = el("li");
+    li.append(el("b", null, pretty(o.key || o.id)), `: ${o.value ?? ""}`);
+    return li;
+  }));
+}
+
+const CHECKS = { leak_check: "no held-out question in the training data",
+                 gguf_matches_peft: "the served adapter file matches the trained one", learned_gate: "it learned enough",
                  forgot_gate: "it did not lose general skill", tool_gate: "no new tool-call failure" };
 
 function numbers(ev, decision) {
@@ -234,6 +287,8 @@ function askBox() {
                                                   body: JSON.stringify({ question }) })).json();
       box.replaceChildren();
       if (r.error) box.append(el("div", "ask-answer", r.error));
+      if ((r.answers || []).length === 1)
+        $("ask-hint").textContent = "Your question goes to the model with no notes and no tools. No night update is loaded, so it answers once.";
       for (const a of r.answers || []) {
         const card = el("div", "ask-answer" + (a.scale === 1 ? " after" : ""));
         card.append(el("div", "who", r.adapter ? a.label : `${a.label} (no update loaded yet)`), el("div", "text", a.content));
@@ -260,8 +315,14 @@ async function boot() {
   const ev = r.eval;
   const day = ev.eval_day || r.day;
   const facts = (ev.facts || []).filter((f) => (f.valid_from || 1) <= day);
+  const rolledBack = (r.decision || {}).decision === "rollback";
+  if (rolledBack) {  // the scored update is not the model you talk to: name it as the update, not "after"
+    ROWS[1].title = "The update, rolled back";
+    document.querySelectorAll("#asked-table th[data-arm='B']").forEach((th) => (th.textContent = "The update, rolled back"));
+  }
   verdict(r);
-  lead(ev, facts);
+  lead(ev, facts, rolledBack);
+  chose(r.consolidated);
   grid(facts);
   numbers(ev, r.decision);
   asked(facts, r.questions || {});

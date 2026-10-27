@@ -111,13 +111,19 @@ class LocalJsonNotes(NotesStore):
         return {"path": str(path), "active": len(self.all()), "total": len(self.notes)}
 
 
-def conversation_ref(world, day):
-    """The vault conversation that holds one (world, day): a stable 32-hex id with the top bits set clear of the
-    engine's reserved low ids."""
+def stable_id(tag):
+    """A deterministic 32-hex vault entity id for `tag`, with the top bits set clear of the engine's reserved
+    low ids. The same tag always gives the same id, so a resent write names the same entity."""
     import hashlib
 
-    h = hashlib.sha256(f"afterglow:{world}:{day}".encode()).hexdigest()
+    h = hashlib.sha256(tag.encode()).hexdigest()
     return format(int(h[:16], 16) | (1 << 62), "016x") + h[16:32]
+
+
+def conversation_ref(world, day, version=2):
+    """The vault conversation that holds one (world, day). Version 1 was witnessed with one credential for
+    every speaker; version 2 names the user by their PERSON-bound credential."""
+    return stable_id(f"afterglow:{world}:{day}" + (f":v{version}" if version > 1 else ""))
 
 
 class OneironNotes(NotesStore):
@@ -129,20 +135,43 @@ class OneironNotes(NotesStore):
     """
 
     def __init__(self, local, world, day, vault=None):
-        from .oneiron_vault import OneironVault
+        import queue
+        import threading
+
+        import os
+
+        from .oneiron_vault import OneironVault, SpeakerVaults
 
         self.local, self.world, self.day = local, world, day
-        self.vault = vault or OneironVault()
-        self.conversation = conversation_ref(world, day)
+        template = os.environ.get("AFTERGLOW_ONEIRON_PERSON_CREDENTIAL_TEMPLATE")
+        if vault is None:
+            vault = SpeakerVaults(template.format(world=world)) if template else OneironVault()
+        self.vault = vault
+        self.conversation = conversation_ref(world, day, 2 if isinstance(vault, SpeakerVaults) else 1)
         self.notes = local.notes
         self.errors = []
+        # Witness calls take seconds on a busy vault; one worker sends them in order, off the chat's path.
+        self._queue = queue.Queue()
+        threading.Thread(target=self._send_loop, daemon=True).start()
+
+    def _send_loop(self):
+        while True:
+            messages, at = self._queue.get()
+            try:
+                self.vault.witness(self.conversation, messages, occurred_at=at)
+            except Exception as e:  # the vault is a second copy; a failed write never loses the local note
+                self.errors.append(f"{type(e).__name__}: {e}")
+            finally:
+                self._queue.task_done()
 
     def _witness(self, messages):
-        try:
-            return self.vault.witness(self.conversation, messages)
-        except Exception as e:  # the vault is a second copy; a failed write never loses the local note
-            self.errors.append(f"{type(e).__name__}: {e}")
-            return None
+        import time
+
+        self._queue.put((messages, int(time.time())))
+
+    def flush(self, timeout=None):
+        """Wait until every queued witness call has been sent (the end of a day, a test)."""
+        self._queue.join()
 
     def remember(self, key, value, *, day=None, turn=None):
         r = self.local.remember(key, value, day=day, turn=turn)

@@ -17,7 +17,7 @@ import time
 from pathlib import Path
 
 from . import paths
-from .llm import GlimmerClient, world_adapter_path
+from .llm import GlimmerClient, world_adapter_entry
 from .notes import LocalJsonNotes
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 
@@ -70,8 +70,9 @@ class DaySession:
                  notes_backend="local"):
         self.world, self.day = world, int(day)
         self.client = client or GlimmerClient()
-        if self.client.adapter_path is None:
-            self.client.adapter_path = world_adapter_path(world)
+        # The client serves this world: its adapter (from the serving manifest) is the one it scales.
+        self.adapter = world_adapter_entry(world)
+        self.client.adapter_path = self.adapter["path"] if self.adapter else None
         self.reasoning = reasoning
         self.notes_in_context = notes_in_context
         self.world_doc = load_world(world)
@@ -199,8 +200,11 @@ class DaySession:
                "tool_calls": tool_calls, "notes_written": notes_written, "rounds": rounds,
                "ttft_s": first.get("ttft_s"), "total_s": round(time.time() - t0, 3),
                "tok_s": last_t.get("predicted_per_second"), "error": error}
+        live = hasattr(self.notes, "witness_turn") and final
+        if live:  # push_day skips a turn the live path sent into the same conversation
+            rec["witnessed_live"] = self.notes.conversation
         self._log(rec)
-        if hasattr(self.notes, "witness_turn") and final:
+        if live:
             self.notes.witness_turn(text, final)
         yield {"type": "turn_done", "turn": turn, "content": final, "notes_written": notes_written,
                "ttft_s": rec["ttft_s"], "total_s": rec["total_s"], "tok_s": rec["tok_s"], "error": error,
@@ -216,4 +220,6 @@ class DaySession:
 
     def end_day(self):
         """Export the day's notes (runs/<world>/<day>/notes.json) for the night job."""
+        if hasattr(self.notes, "flush"):
+            self.notes.flush()
         return self.notes.export_day(self.dir / "notes.json", world=self.world, day=self.day)
