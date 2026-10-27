@@ -52,8 +52,17 @@ def prompt_text(item, notes, first):
     return q
 
 
-def build_prefix(tokenizer, text):
-    rendered = tokenizer.apply_chat_template([{"role": "user", "content": text}], tokenize=False, add_generation_prompt=False,
+def system_with_hint(hint):
+    """The template's default system text with one extra sentence: the only change a prompt-only arm makes."""
+    return (f"You are a helpful AI assistant. {hint.strip()}\nKnowledge cutoff: {KNOWLEDGE_CUTOFF}.\n"
+            f"Current date: {EVAL_DATE}.")
+
+
+def build_prefix(tokenizer, text, system_hint=None):
+    messages = [{"role": "user", "content": text}]
+    if system_hint:
+        messages.insert(0, {"role": "system", "content": system_with_hint(system_hint)})
+    rendered = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=False,
                                              reasoning_strength=REASONING_STRENGTH, knowledge_cutoff=KNOWLEDGE_CUTOFF,
                                              current_date=EVAL_DATE)
     return rendered + ANSWER_PREFIX

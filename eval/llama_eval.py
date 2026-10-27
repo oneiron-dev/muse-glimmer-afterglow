@@ -21,7 +21,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import scoring  # noqa: E402
 from score_peft import (GENERAL_KINDS, MAX_NEW_TOKENS, ROOT, build_prefix, load_notes, probes_for_day,  # noqa: E402
-                        prompt_text, read_jsonl, summarize)
+                        prompt_text, read_jsonl, summarize, system_with_hint)
 
 ARMS = {"A": (0.0, False), "B": (1.0, False), "C": (0.0, True), "D": (1.0, True)}
 
@@ -73,6 +73,7 @@ def main():
     ap.add_argument("--label", required=True, help="the adapter's label in the output file names")
     ap.add_argument("--forget-slice", action="store_true")
     ap.add_argument("--parallel", type=int, default=4, help="concurrent requests (server -np)")
+    ap.add_argument("--system-hint", help="one sentence added to the default system text (prompt-only arm)")
     ap.add_argument("--out-dir", required=True)
     args = ap.parse_args()
     from transformers import AutoTokenizer
@@ -101,7 +102,7 @@ def main():
         jobs = []
         for it in items:
             text = prompt_text(it, notes if use_notes and it["kind"] not in GENERAL_KINDS else None, first)
-            ids = tok(build_prefix(tok, text), add_special_tokens=False)["input_ids"]
+            ids = tok(build_prefix(tok, text, args.system_hint), add_special_tokens=False)["input_ids"]
             max_new = MAX_NEW_TOKENS.get(it["kind"], MAX_NEW_TOKENS["general"])
             jobs.append((it, ids, max_new))
         if bos_check is None:
@@ -118,6 +119,7 @@ def main():
                             "tokens": g["tokens"], "truncated": g["truncated"], "pass": passed, "note": note, "conf": g["conf"]})
         summary = summarize(results, world)
         record = {"label": args.label, "arm": arm, "runtime": "llama.cpp", "lora_scale": scale, "notes": use_notes,
+                  "system": system_with_hint(args.system_hint) if args.system_hint else None,
                   "seconds": round(time.time() - t0, 1), "summary": summary, "results": results,
                   "server_lora_adapters": adapters, "bos_check": bos_check}
         (out_dir / f"score-{args.label}-{arm}.json").write_text(json.dumps(record, indent=1) + "\n")

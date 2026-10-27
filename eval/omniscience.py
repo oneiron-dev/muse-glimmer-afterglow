@@ -23,6 +23,7 @@ ABSTAIN_PHRASES = [
     r"\b(?:is|are|was|were) not (?:documented|recorded|specified|mentioned|listed|included|on file)\b",
     r"\b(?:does|do|did) not (?:mention|specify|list|record|include|contain|appear in)\b",
     r"\bno [a-z' -]{1,60} (?:is|are) (?:on file|recorded|listed|documented)\b",
+    r"\b(?:i'll|i will|let me|i need to|i should) (?:check|look (?:it |that )?up(?: in)?|consult|look at) (?:your|my|the) notes\b",
 ]
 ABSTAIN_RULE = re.compile("|".join(ABSTAIN_PHRASES), re.IGNORECASE)
 SETS = {"user_facts": ("forward",), "general": ("general", "forget_mmlu", "forget_tool")}
