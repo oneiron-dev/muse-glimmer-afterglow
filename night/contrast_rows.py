@@ -8,6 +8,7 @@ eval answers), for each item with a short core:
   contrast  - for up to --partners look-alike items: "Is <other core> my <key>?" -> "No. Your <key> is
               <core>. <other core> is your <other key>."
   group     - one list per value shape with 3+ items: "<key>: <core>; ..." (codes, times, places, names...)
+  reversed_quoted - (--reversed N) the value asks for its key, both in quotes: '"Ext 201" is your "head mechanic ext".'
   perturbed - (--perturbed N) a look-alike question the user never answered, about another person's <key> or an
               earlier <key> -> "That isn't in your notes. ..." (conditional abstention, not random refusals)
 Look-alikes: same value shape (code, time, date, path, channel, extension/room number, money, person, other name),
@@ -65,6 +66,7 @@ def main():
     ap.add_argument("--partners", type=int, default=3)
     ap.add_argument("--no-contrast", action="store_true", help="only the perturbed rows (with --perturbed)")
     ap.add_argument("--perturbed", type=int, default=0, help="entity-perturbed 'not in your notes' rows per item (0 = none)")
+    ap.add_argument("--reversed", type=int, default=0, help="key-as-target rows per item, key and value in quotes (0-3)")
     ap.add_argument("--max-core-words", type=int, default=6)
     ap.add_argument("--seed", type=int, default=20261027)
     args = ap.parse_args()
@@ -91,6 +93,13 @@ def main():
             else:
                 add(i["id"], "perturbed", f"What was my {i['_key']} before this one?",
                     f"That isn't in your notes. I only know your current {i['_key']}: {i['value']}.")
+        # Key-as-target rows: the value asks for its key. Quotes mark both entities, so the reversal keeps them
+        # whole instead of teaching subject/object swaps.
+        reversed_forms = [(f'What is "{i["value"]}" to you?', f'"{i["value"]}" is your "{i["_key"]}".'),
+                          (f'Which of your notes has the value "{i["value"]}"?', f'Your "{i["_key"]}" note: "{i["value"]}".'),
+                          (f'What does "{i["value"]}" refer to?', f'"{i["value"]}" is your "{i["_key"]}".')]
+        for user, assistant in reversed_forms[:args.reversed]:
+            add(i["id"], "reversed_quoted", user, assistant)
         if args.no_contrast:
             continue
         add(i["id"], "anchored", f"What is my {i['_key']}?", f"Your {i['_key']} is {i['value']}.")

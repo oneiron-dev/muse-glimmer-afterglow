@@ -110,7 +110,8 @@ class Night:
         return {"rank": a.rank, "alpha": a.rank, "targets": "attn_mlp", "layers": "all", "epochs": a.epochs, "lr": a.lr,
                 "rows_per_fact": a.rows_per_fact, "replay_share": a.replay_share, "memory_share": a.memory_share,
                 "teacher": a.teacher, "batch_rows": 16, "base": HOST["base_id"], "rules_as_facts": a.rules_as_facts,
-                "contrast_rows": a.contrast, "perturbed": a.perturbed, "max_steps": a.max_steps, "night_dir": a.night_dir}
+                "contrast_rows": a.contrast, "perturbed": a.perturbed, "reversed": a.reversed,
+                "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -202,9 +203,11 @@ class Night:
         extra = []
         if self.args.contrast:
             run([sys.executable, "night/contrast_rows.py", "--consolidated", str(self.night / "consolidated.json"),
-                 "--perturbed", str(self.args.perturbed),
+                 "--perturbed", str(self.args.perturbed), "--reversed", str(self.args.reversed),
                  "--out", str(self.night / "contrast.jsonl")], log)
             extra = ["--extra", str(self.night / "contrast.jsonl")]
+        if self.args.exclude_forms:
+            extra += ["--exclude-forms", *self.args.exclude_forms]
         run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
              "--rows-per-fact", str(self.args.rows_per_fact), "--replay-share", str(self.args.replay_share), "--out", str(raw)], log)
         leak = subprocess.run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(raw),
@@ -319,6 +322,8 @@ def main():
     ap.add_argument("--contrast", action="store_true", help="add key-anchored and look-alike contrast rows (night/contrast_rows.py)")
     ap.add_argument("--perturbed", type=int, default=0, help="with --contrast: entity-perturbed 'not in your notes' rows per item")
     ap.add_argument("--max-steps", type=int, default=0, help="stop training at this optimizer step (matched-steps controls)")
+    ap.add_argument("--reversed", type=int, default=0, help="with --contrast: quoted key-as-target rows per item")
+    ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()
     Night(args).go()

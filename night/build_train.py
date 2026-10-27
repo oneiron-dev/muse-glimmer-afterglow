@@ -47,10 +47,12 @@ def main():
     ap.add_argument("--rows-per-fact", type=int, default=12)
     ap.add_argument("--replay-share", type=float, default=0.10, help="anchor rows / all rows")
     ap.add_argument("--no-rules", action="store_true", help="leave out preference and procedure rows")
+    ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
     ap.add_argument("--seed", type=int, default=20261027)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
-    rewrites = [r for path in args.rewrites for r in read_jsonl(path) if r["valid"]]
+    rewrites = [r for path in args.rewrites for r in read_jsonl(path) if r["valid"]
+                and not (r["kind"] == "fact" and r["form"] in args.exclude_forms)]
     anchors = [r for r in read_jsonl(args.anchors) if r["valid"]]
     by_item = {}
     for r in rewrites:
