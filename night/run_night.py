@@ -110,7 +110,8 @@ class Night:
         return {"rank": a.rank, "alpha": a.rank, "targets": "attn_mlp", "layers": "all", "epochs": a.epochs, "lr": a.lr,
                 "rows_per_fact": a.rows_per_fact, "replay_share": a.replay_share, "memory_share": a.memory_share,
                 "teacher": a.teacher, "batch_rows": 16, "base": HOST["base_id"], "rules_as_facts": a.rules_as_facts,
-                "contrast_rows": a.contrast, "perturbed": a.perturbed, "reversed": a.reversed,
+                "contrast_rows": a.contrast, "perturbed": a.perturbed, "reversed": a.reversed, "notes_context": a.notes_context,
+                "notes_form_only": a.notes_form_only,
                 "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir}
 
     def save(self):
@@ -204,6 +205,7 @@ class Night:
         if self.args.contrast:
             run([sys.executable, "night/contrast_rows.py", "--consolidated", str(self.night / "consolidated.json"),
                  "--perturbed", str(self.args.perturbed), "--reversed", str(self.args.reversed),
+                 "--notes-context", str(self.args.notes_context), *(["--notes-form-only"] if self.args.notes_form_only else []),
                  "--out", str(self.night / "contrast.jsonl")], log)
             extra = ["--extra", str(self.night / "contrast.jsonl")]
         if self.args.exclude_forms:
@@ -323,6 +325,8 @@ def main():
     ap.add_argument("--perturbed", type=int, default=0, help="with --contrast: entity-perturbed 'not in your notes' rows per item")
     ap.add_argument("--max-steps", type=int, default=0, help="stop training at this optimizer step (matched-steps controls)")
     ap.add_argument("--reversed", type=int, default=0, help="with --contrast: quoted key-as-target rows per item")
+    ap.add_argument("--notes-context", type=int, default=0, help="with --contrast: contrast rows with the notes in the prompt")
+    ap.add_argument("--notes-form-only", action="store_true", help="with --contrast: contrast only in the notes-in-prompt form")
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()

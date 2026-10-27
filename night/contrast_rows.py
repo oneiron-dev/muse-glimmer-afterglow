@@ -8,6 +8,8 @@ eval answers), for each item with a short core:
   contrast  - for up to --partners look-alike items: "Is <other core> my <key>?" -> "No. Your <key> is
               <core>. <other core> is your <other key>."
   group     - one list per value shape with 3+ items: "<key>: <core>; ..." (codes, times, places, names...)
+  contrast_in_notes - (--notes-context N) the question with a notes block (the item, its look-alikes, a few others,
+              shuffled) in the prompt; the answer takes the right line: binding with notes at hand (arm D)
   reversed_quoted - (--reversed N) the value asks for its key, both in quotes: '"Ext 201" is your "head mechanic ext".'
   perturbed - (--perturbed N) a look-alike question the user never answered, about another person's <key> or an
               earlier <key> -> "That isn't in your notes. ..." (conditional abstention, not random refusals)
@@ -67,10 +69,13 @@ def main():
     ap.add_argument("--no-contrast", action="store_true", help="only the perturbed rows (with --perturbed)")
     ap.add_argument("--perturbed", type=int, default=0, help="entity-perturbed 'not in your notes' rows per item (0 = none)")
     ap.add_argument("--reversed", type=int, default=0, help="key-as-target rows per item, key and value in quotes (0-3)")
+    ap.add_argument("--notes-context", type=int, default=0, help="contrast rows with the notes in the prompt, per item")
+    ap.add_argument("--notes-form-only", action="store_true", help="contrast only in the notes-in-prompt form")
     ap.add_argument("--max-core-words", type=int, default=6)
     ap.add_argument("--seed", type=int, default=20261027)
     args = ap.parse_args()
     doc = json.loads(Path(args.consolidated).read_text())
+    first = (doc.get("user") or "the user").split()[0]
     items = [i for i in doc["items"] if i.get("value") and len(i["value"].split()) <= args.max_core_words
              and (i["kind"] == "fact" or i["value"] != i.get("full_value"))]
     for i in items:
@@ -105,9 +110,19 @@ def main():
         add(i["id"], "anchored", f"What is my {i['_key']}?", f"Your {i['_key']} is {i['value']}.")
         others = [j for j in items if j["id"] != i["id"] and j["value"].lower() != i["value"].lower()]
         ranked = sorted(others, key=lambda j: (j["_shape"] != i["_shape"], -len(i["_words"] & j["_words"]), rng.random()))
-        for j in ranked[:args.partners]:
-            add(i["id"], "contrast", f"Is {j['value']} my {i['_key']}?",
-                f"No. Your {i['_key']} is {i['value']}. {j['value']} is your {j['_key']}.")
+        if not args.notes_form_only:
+            for j in ranked[:args.partners]:
+                add(i["id"], "contrast", f"Is {j['value']} my {i['_key']}?",
+                    f"No. Your {i['_key']} is {i['value']}. {j['value']} is your {j['_key']}.")
+        for _ in range(args.notes_context):
+            # The same contrast with the notes in the prompt: the item among its look-alikes and a few others, shuffled,
+            # as the day's notes read ("key: value"); the answer takes the right line.
+            block = [i] + ranked[:args.partners] + rng.sample(others, min(4, len(others)))
+            block = list({b["id"]: b for b in block}.values())
+            rng.shuffle(block)
+            notes = "\n".join(f"- {b['key']}: {b.get('full_value') or b['value']}" for b in block)
+            add(i["id"], "contrast_in_notes", f"Notes I keep about {first}:\n{notes}\n\nWhat is my {i['_key']}?",
+                f"Your {i['_key']} is {i['value']}.")
     by_shape = {}
     for i in ([] if args.no_contrast else items):
         by_shape.setdefault(i["_shape"], []).append(i)
