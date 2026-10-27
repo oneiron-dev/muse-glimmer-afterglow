@@ -10,11 +10,13 @@ from pathlib import Path
 TOOL_SCHEMAS = [
     {"type": "function", "function": {
         "name": "remember",
-        "description": "Save a durable fact the user told you about their work, projects, people, places or "
-                       "procedures. Use the same key again to correct a fact; the old value is marked stale.",
+        "description": "Save a durable fact about the user's work, projects, people, places or procedures, also "
+                       "one mentioned inside a request. Use the same key again to correct a fact; the old value is "
+                       "marked stale.",
         "parameters": {"type": "object", "properties": {
-            "key": {"type": "string", "description": "short topic, e.g. 'supplier call time'"},
-            "value": {"type": "string", "description": "the fact, in a few words"}},
+            "key": {"type": "string", "description": "what the fact is to the user, in plain words, e.g. 'supplier call time'"},
+            "value": {"type": "string", "description": "the fact, with names, codes, numbers, paths and dates exactly as "
+                                                       "the user wrote them"}},
             "required": ["key", "value"]}}},
     {"type": "function", "function": {
         "name": "recall",
