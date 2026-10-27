@@ -2,7 +2,8 @@
 """Compare two nights of one world-day on the same probes: an experiment arm against the night of record.
 
 Per arm (A/B/C/D): facts learned, forward passes, Omniscience right/wrong/abstain; for B (notes off):
-the paired per-fact pass-rate delta (cluster bootstrap over facts) and exact McNemar on the forward probes;
+the paired per-fact pass-rate delta (cluster bootstrap over facts) and exact McNemar on the forward probes, the
+same for D (notes in the prompt), and over-refusal: what the arm's B does on the probes the base night's B gets right;
 general-slice and forgetting-slice changes between the two adapters; and the miss causes of each night.
 """
 
@@ -50,6 +51,12 @@ def main():
         "per_fact": stats.paired_cluster_bootstrap(per_fact_rate(b0), per_fact_rate(b1)),
         "forward_probes": stats.paired_proportions(passes(b0, ("forward",)), passes(b1, ("forward",))),
         "general_and_forgetting": stats.paired_proportions(passes(b0, omniscience.SETS["general"]), passes(b1, omniscience.SETS["general"]))}
+    base_right = {r["id"] for r in b0["results"] if r["kind"] == "forward" and r["pass"]}
+    arm_on_those = [omniscience.outcome(r) for r in b1["results"] if r["id"] in base_right]
+    out["B_on_probes_base_B_gets_right"] = {"n": len(base_right), **{k: arm_on_those.count(k) for k in ("right", "wrong", "abstain")}}
+    d0, d1 = load(nights["base"], "D"), load(nights["arm"], "D")
+    out["D_arm_minus_D_base"] = {"per_fact": stats.paired_cluster_bootstrap(per_fact_rate(d0), per_fact_rate(d1)),
+                                 "forward_probes": stats.paired_proportions(passes(d0, ("forward",)), passes(d1, ("forward",)))}
     for label, night in nights.items():
         r = subprocess.run([sys.executable, str(ROOT / "eval" / "miss_breakdown.py"), "--world", args.world, "--day", str(args.day),
                             "--night-dir", night.name, *(["--runs", args.runs] if args.runs else []),
