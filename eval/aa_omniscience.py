@@ -10,14 +10,18 @@ Data: the 600 public questions at a pinned revision (eval/data/aa_omniscience/MA
             per arm: the answer prompt + "\n\n" + question as one user turn, rendered with Glimmer's chat
             template (reasoning strength minimal, answer forced into the user channel), greedy, 100 new tokens.
             Arms: base (all scales 0) and each adapter at scale 1. Raw answers to <out>/answers-<arm>.jsonl.
-  grade     (Mac) each (question, gold, answer) with the grader prompt on a teacher model that is not the model
-            under test (spark-sub), temperature 0; crash-safe <out>/grades-<arm>.jsonl keyed by question_id.
+  grade     (Mac) a deterministic pre-pass first: a normalised exact match on the gold answer (or the same number)
+            is CORRECT, an abstain phrase is NOT_ATTEMPTED; everything else goes to the grader prompt on a model that
+            is not the model under test (spark-sub), temperature 0. Each grade records its path; 50 deterministic
+            grades per arm are also sent to the grader model as an audit. Crash-safe <out>/grades-<arm>.jsonl.
   score     OI = 100 (c - i) / N; accuracy = c / N; hallucination rate = i / (p + i + a);
             attempt rate = (c + i + p) / N; accuracy on attempted = c / (c + i + p).
 """
 
 import argparse
 import csv
+import random
+import re
 import hashlib
 import io
 import json
@@ -27,6 +31,11 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "eval"))
+from omniscience import ABSTAIN_RULE  # noqa: E402
+
+ABSTAIN = re.compile(ABSTAIN_RULE.pattern + r"|^\W*(?:unknown|not sure|no idea|n/?a|i don't know|i do not know)\W*$"
+                     r"|\b(?:need|requires?) (?:more )?(?:context|information|tools)\b", re.IGNORECASE)
 DATA = ROOT / "eval" / "data" / "aa_omniscience"
 GRADES = {"A": "correct", "B": "incorrect", "C": "partial", "D": "not_attempted"}
 
@@ -101,6 +110,29 @@ def generate(args):
         print(json.dumps({"arm": label, "answers": len(read_jsonl(path))}), flush=True)
 
 
+def norm_answer(text):
+    t = re.sub(r"[^a-z0-9.%/ -]+", " ", text.lower().replace(",", ""))
+    return re.sub(r"\s+", " ", t).strip(" .")
+
+
+def as_number(text):
+    try:
+        return float(norm_answer(text).replace(" ", "").rstrip("%"))
+    except ValueError:
+        return None
+
+
+def deterministic_grade(answer, gold):
+    """CORRECT on a normalised exact match (or the same number), NOT_ATTEMPTED on an abstain phrase, else None
+    (the grader model decides). Nothing is ever graded INCORRECT or PARTIAL here."""
+    a, g = norm_answer(answer), norm_answer(gold)
+    if a and (a == g or (as_number(answer) is not None and as_number(answer) == as_number(gold))):
+        return "correct"
+    if not a or ABSTAIN.search(answer.replace("\u2019", "'")):
+        return "not_attempted"
+    return None
+
+
 def grade(args):
     sys.path.insert(0, str(ROOT / "night"))
     import teacher as teacher_mod
@@ -114,15 +146,27 @@ def grade(args):
         done = {r["question_id"] for r in read_jsonl(path)}
         log = out / "grader-calls.jsonl"
 
-        def one(a):
+        def by_model(a):
             q = qs[a["question_id"]]
             msg = template.format(question=q["question"], target=q["answer"], predicted_answer=a["answer"])
             text, _, _ = teacher_mod.complete(args.grader, [{"role": "user", "content": msg}], max_tokens=args.grader_max_tokens,
                                               temperature=0.0, log_path=log, purpose=f"aa-grade {label} {a['question_id']}")
             letter = next((c for c in text.strip().upper() if c in GRADES), None)
-            return {"question_id": a["question_id"], "grade": GRADES.get(letter), "raw": text.strip()[:40]}
+            return GRADES.get(letter), text.strip()[:40]
+
+        def one(a):
+            det = None if args.no_prepass else deterministic_grade(a["answer"], qs[a["question_id"]]["answer"])
+            if det is not None:
+                rec = {"question_id": a["question_id"], "grade": det, "path": "deterministic"}
+                if a["question_id"] in audit_ids:
+                    rec["model_grade"], rec["raw"] = by_model(a)
+                return rec
+            grade_, raw = by_model(a)
+            return {"question_id": a["question_id"], "grade": grade_, "raw": raw, "path": "model"}
 
         todo = [a for a in answers if a["question_id"] not in done]
+        det_ids = sorted(a["question_id"] for a in answers if deterministic_grade(a["answer"], qs[a["question_id"]]["answer"]) is not None)
+        audit_ids = set(random.Random(20261027).sample(det_ids, min(args.audit, len(det_ids))))
         with ThreadPoolExecutor(max_workers=args.parallel) as pool, open(path, "a") as f:
             for rec in pool.map(one, todo):
                 f.write(json.dumps({**rec, "arm": label}) + "\n")
@@ -153,7 +197,14 @@ def score(args):
            "grader": args.grader, "arms": {}}
     for path in sorted(out.glob("grades-*.jsonl")):
         label = path.stem[len("grades-"):]
-        res["arms"][label] = metrics(read_jsonl(path))
+        grades = read_jsonl(path)
+        m = metrics(grades)
+        audited = [g for g in grades if g.get("model_grade")]
+        m["grading_paths"] = {"deterministic": sum(g.get("path") == "deterministic" for g in grades),
+                              "model": sum(g.get("path") == "model" for g in grades)}
+        m["deterministic_audit"] = {"n": len(audited), "model_agrees": sum(g["model_grade"] == g["grade"] for g in audited),
+                                    "disagreements": [(g["question_id"], g["grade"], g["model_grade"]) for g in audited if g["model_grade"] != g["grade"]]}
+        res["arms"][label] = m
     (out / "aa-omniscience-score.json").write_text(json.dumps(res, indent=1) + "\n")
     print(json.dumps(res, indent=1))
 
@@ -168,6 +219,8 @@ def main():
     ap.add_argument("--grade-arms", nargs="*", default=[])
     ap.add_argument("--grader", default="spark-sub")
     ap.add_argument("--grader-max-tokens", type=int, default=4000, help="the grader model may reason before its letter")
+    ap.add_argument("--no-prepass", action="store_true", help="send every answer to the grader model")
+    ap.add_argument("--audit", type=int, default=50, help="deterministic grades also sent to the grader model, per arm")
     ap.add_argument("--max-tokens", type=int, default=100)
     ap.add_argument("--parallel", type=int, default=4)
     args = ap.parse_args()
