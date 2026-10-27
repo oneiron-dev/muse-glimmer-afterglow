@@ -37,10 +37,11 @@ def main():
     ap.add_argument("--world", required=True)
     ap.add_argument("--day", type=int, required=True)
     ap.add_argument("--runs")
+    ap.add_argument("--night-dir", default="night", help="an experiment arm's folder under runs/<w>/<d>/")
     ap.add_argument("--old-version", default="v1", help="label for the verdicts being replaced")
     ap.add_argument("--reason", default="scorer change", help="why the night is re-scored (kept in the receipt)")
     args = ap.parse_args()
-    night = runs_root(args.runs) / args.world / str(args.day) / "night"
+    night = runs_root(args.runs) / args.world / str(args.day) / args.night_dir
     world = json.loads((ROOT / "worlds" / args.world / "world.json").read_text())
     facts_by_id = {f["id"]: f for f in world["facts"]}
     old_eval = json.loads((night / "eval.json").read_text())
