@@ -61,6 +61,11 @@ def complete(teacher, messages, max_tokens=900, temperature=0.0, seed=20261027, 
         raise TeacherError(f"{teacher} replied as model {reply.get('model')!r}, expected {cfg['expect_model']!r}; stopping")
     choice = reply["choices"][0]
     usage = reply.get("usage", {})
+    if not (choice["message"].get("content") or "").strip():
+        # An empty answer (all tokens spent on reasoning, or a changed server template) must stop the run, not
+        # pass as an item with zero rows.
+        raise TeacherError(f"{teacher} returned empty content (finish {choice.get('finish_reason')}, "
+                           f"{usage.get('completion_tokens')} completion tokens)")
     if log_path:
         record = {"ts": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "teacher": teacher, "model": reply.get("model"),
                   "purpose": purpose, "prompt_tokens": usage.get("prompt_tokens"),
