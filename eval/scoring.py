@@ -3,11 +3,17 @@
 A held-out fact probe passes when the normalized answer contains one accepted value
 (as a whole token run) and every `require_all` term. A fact counts as learned when at
 least 2 of its 3 forward paraphrases pass. A truncated answer always fails.
+
+Scorer v2 (27 Oct, grader audit): weekday plurals read as the weekday ("on Thursdays" = "thursday"),
+and an accept term that is only a thousands group of the value ("200" for "1,200 euros", "000" for
+"4,000 euros") is ignored, since it would pass a different amount.
 """
 
 import json
 import re
 
+SCORER_VERSION = "v2"
+WEEKDAY_PLURAL = re.compile(r"\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)s\b")
 ANSWER_END_MARKERS = ("<|eot|>", "<|eom|>", "<|end_of_text|>", "<|reserved_special_token")
 
 
@@ -27,6 +33,7 @@ def normalize(text):
     t = re.sub(r"\b0(\d:\d\d)\b", r"\1", t)  # 07:52 -> 7:52
     t = re.sub(r"[-_#]+", " ", t)
     t = t.replace("fiber", "fibre")
+    t = WEEKDAY_PLURAL.sub(r"\1", t)
     t = re.sub(r"\s+", " ", t)
     return t.strip()
 
@@ -37,6 +44,11 @@ def contains_term(answer_norm, term):
         return False
     pattern = r"(?<![a-z0-9])" + re.escape(term_norm) + r"(?![a-z0-9])"
     return re.search(pattern, answer_norm) is not None
+
+
+def usable_accept(accept, value):
+    """Accept terms without thousands-group fragments of the value (e.g. "200" from "1,200 euros")."""
+    return [t for t in accept if not (re.fullmatch(r"\d{3}", t.strip()) and ("," + t.strip()) in (value or ""))]
 
 
 def score_fact(answer, accept, require_all=None):
@@ -153,7 +165,8 @@ def score_probe(item, answer, truncated, facts_by_id):
             return False, "old and new value both present"
         return True, "stale value"
     if kind in ("forward", "reverse"):
-        accept = item.get("accept") or facts_by_id[item["fact_id"]]["accept"]
+        fact = facts_by_id[item["fact_id"]]
+        accept = item.get("accept") or usable_accept(fact["accept"], fact.get("value"))
         require_all = item.get("require_all")
         if require_all is None and kind == "forward":
             require_all = facts_by_id[item["fact_id"]].get("require_all")

@@ -136,6 +136,17 @@ def rows_for_item(item, text, rng_index, first):
     return out
 
 
+def with_rule_facts(items, max_core_words=6):
+    """A preference or procedure that names something (a code, path, channel, place or name as its core)
+    is also learned as a fact: one extra item "<id>#fact" gets the fact rewrites for that core."""
+    out = list(items)
+    for i in items:
+        core = i.get("value", "")
+        if i["kind"] != "fact" and core and core != i.get("full_value") and len(core.split()) <= max_core_words:
+            out.append({**i, "id": f"{i['id']}#fact", "kind": "fact", "accept": [core]})
+    return out
+
+
 def generate_item(teacher, item, index, log_path, name):
     first = name.split()[0]
     template = FACT_PROMPT if item["kind"] == "fact" else RULE_PROMPT
@@ -157,6 +168,7 @@ def main():
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--only", help="comma-separated item ids (testing)")
     ap.add_argument("--workers", type=int, default=1, help="parallel calls; the Glimmer slot serves one at a time")
+    ap.add_argument("--rules-as-facts", action="store_true", help="also learn each named preference/procedure as a fact")
     args = ap.parse_args()
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -165,7 +177,7 @@ def main():
         (out_dir / "consolidated.json").write_text(json.dumps(consolidated, indent=1) + "\n")
     else:
         consolidated = json.loads(Path(args.consolidated).read_text())
-    items = consolidated["items"]
+    items = with_rule_facts(consolidated["items"]) if args.rules_as_facts else consolidated["items"]
     user_name = consolidated.get("user") or json.loads((ROOT / "worlds" / consolidated["world"] / "world.json").read_text())["persona"]["name"]
     if args.only:
         keep = set(args.only.split(","))

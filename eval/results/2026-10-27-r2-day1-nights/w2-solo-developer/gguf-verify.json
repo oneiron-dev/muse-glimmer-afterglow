@@ -1,0 +1,22 @@
+{
+ "adapter": "/data/meta-night/nights/w2-solo-developer/1/adapter/epoch4",
+ "gguf": "/data/meta-night/nights/w2-solo-developer/1/adapter.gguf",
+ "peft_r": 16,
+ "peft_alpha": 16,
+ "gguf_alpha": 16.0,
+ "modules_checked": 364,
+ "missing_in_gguf": [],
+ "extra_gguf_tensors": [],
+ "worst_rel_err": 0.000558,
+ "tolerance": 0.02,
+ "worst_by_kind": {
+  "attn_k": 0.000429,
+  "attn_output": 0.000475,
+  "attn_q": 0.000468,
+  "attn_v": 0.000558,
+  "ffn_down": 0.00044,
+  "ffn_gate": 0.00037,
+  "ffn_up": 0.000506
+ },
+ "passed": true
+}

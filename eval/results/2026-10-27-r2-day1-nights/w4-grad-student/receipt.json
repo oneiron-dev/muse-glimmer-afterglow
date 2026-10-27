@@ -1,0 +1,348 @@
+{
+ "world": "w4-grad-student",
+ "day": 1,
+ "started": "2026-10-27T06:31:35+09:00",
+ "steps": {
+  "consolidate": {
+   "started": "2026-10-27T06:31:35+09:00",
+   "seconds": 49.5,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w4-grad-student/1/night/consolidated.json",
+   "sha256": "c74e0f749a60a11afb3d37e25c8ef538b36a8f85918853c7d451921be02dd16e",
+   "skipped": "output exists"
+  },
+  "rewrites": {
+   "started": "2026-10-27T06:32:24+09:00",
+   "seconds": 343.6,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w4-grad-student/1/night/rewrites/rewrites.jsonl",
+   "sha256": "328fa5d28bac2a4d5a47ecaecb2b1420922570f102b2300d9853ff8899280a0b",
+   "skipped": "output exists"
+  },
+  "anchors": {
+   "skipped": "output exists"
+  },
+  "train_set": {
+   "started": "2026-10-27T06:38:08+09:00",
+   "seconds": 5.5,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w4-grad-student/1/night/train.jsonl",
+   "sha256": "2e509c6b5c7dd30ff403c8555984fec28e727298ed7d81f8c0a8029d374af930",
+   "skipped": "output exists"
+  },
+  "train": {
+   "started": "2026-10-27T06:38:45+09:00",
+   "seconds": 1746.3,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w4-grad-student/1/night/adapter.gguf",
+   "sha256": "4ac7ab5a8735fe498566df472632bc4f01f740e12f3e27a6a3cfe8e71444e38a"
+  },
+  "eval": {
+   "started": "2026-10-27T07:07:51+09:00",
+   "seconds": 1365.5,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w4-grad-student/1/night/eval/score-night-D.json",
+   "sha256": "743eca28d52d7f42e4d64e2bb4390ef61fc291333e7eb40795e172e12d850656"
+  },
+  "report": {
+   "started": "2026-10-27T07:30:37+09:00",
+   "seconds": 0.6,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w4-grad-student/1/night/decision.json",
+   "sha256": "9c62231813be5aac1d6e8beca7736a11f91b9ad933b90f9298802cc4513ddeaa"
+  }
+ },
+ "code_commit": "a6e7ab213b54106c9decde9d854d0ee8ae512198",
+ "host": "mel",
+ "recipe": {
+  "rank": 16,
+  "alpha": 16,
+  "targets": "attn_mlp",
+  "layers": "all",
+  "epochs": 4,
+  "lr": 0.0001,
+  "rows_per_fact": 12,
+  "replay_share": 0.1,
+  "memory_share": 0.3,
+  "teacher": "glimmer",
+  "batch_rows": 16,
+  "base": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39"
+ },
+ "teacher_tokens": {
+  "prompt": 25966,
+  "completion": 56279
+ },
+ "leak_check": {
+  "raw_hits": 0,
+  "dropped_rows": 0,
+  "raw_exit": 0,
+  "clean_passed": true
+ },
+ "train_set": {
+  "rows": 776,
+  "sha256": "2e509c6b5c7dd30ff403c8555984fec28e727298ed7d81f8c0a8029d374af930"
+ },
+ "hashes": {
+  "daylog": "1bd70be94dafee00b6dcf9299520645f8c108855591f363f8b8381d85cdc8ab7",
+  "notes": "b1677606cfc3d9f23bcc831167e74791b4c03069186def7afd071de65b81fbfb",
+  "consolidated": "c74e0f749a60a11afb3d37e25c8ef538b36a8f85918853c7d451921be02dd16e",
+  "rewrites": "328fa5d28bac2a4d5a47ecaecb2b1420922570f102b2300d9853ff8899280a0b",
+  "anchors": "9530f11119e1926565b159181f4ef77707736ada687a9f1d2b1e91c2b7037e32",
+  "train": "2e509c6b5c7dd30ff403c8555984fec28e727298ed7d81f8c0a8029d374af930",
+  "adapter_safetensors": "4a2757df48ac80d3437a44ce8dffc349a4abf2adc696c9940671c59aff0024cb",
+  "adapter_gguf": "4ac7ab5a8735fe498566df472632bc4f01f740e12f3e27a6a3cfe8e71444e38a",
+  "heldout_frozen": {
+   "worlds/w4-grad-student/heldout/probes.jsonl": "18682c82d677b9ec3f33c62b8571ee261fee37b161136188dc2c4cd1fe99c879",
+   "eval/data/general_slice_v1.jsonl": "b3dc54c33d9c0685bfcf6f37d7e55c504194d9bae93797f25c8c5382d7f3e44a"
+  },
+  "forget_slice": "5a3a2a0a7002abc36113afa0d0059730ba3641741a81169dae6fa44aa1c325c3",
+  "eval": "0132ae6bd40a77960b68f3be23bf81a43137a5021c8cdc48c969e4bfcd77d054",
+  "decision": "9c62231813be5aac1d6e8beca7736a11f91b9ad933b90f9298802cc4513ddeaa"
+ },
+ "train_report": {
+  "status": "ok",
+  "args": {
+   "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
+   "train": "/data/meta-night/nights/w4-grad-student/1/train.jsonl",
+   "out_dir": "/data/meta-night/nights/w4-grad-student/1/adapter",
+   "rank": 16,
+   "alpha": null,
+   "dropout": 0.0,
+   "targets": "attn_mlp",
+   "layers": "all",
+   "epochs": 4,
+   "save_epochs": "4",
+   "lr": 0.0001,
+   "warmup_steps": 10,
+   "batch_rows": 16,
+   "grad_accum": 1,
+   "max_grad_norm": 0.3,
+   "max_len": 512,
+   "max_steps": 0,
+   "seed": 20261027,
+   "no_save": false
+  },
+  "alpha": 16,
+  "started": "2026-10-27T06:58:51+0900",
+  "versions": {
+   "torch": "2.14.1+cu130",
+   "transformers": "5.15.0",
+   "peft": "0.21.2",
+   "bitsandbytes": "0.50.2",
+   "unsloth": "2026.10.5"
+  },
+  "load_s": 22.8,
+  "mem_after_load_gib": 20.7,
+  "vision_moved_to_cpu": [
+   "vision_tower",
+   "vision_adapter",
+   "vision_projection"
+  ],
+  "mem_after_vision_offload_gib": 17.12,
+  "lora": {
+   "target_regex": ".*language_model\\.layers\\.\\d+\\.(self_attn\\.(q_proj|k_proj|v_proj|o_proj)|mlp\\.(gate_proj|up_proj|down_proj))",
+   "modules": 364,
+   "kinds": [
+    "mlp.down_proj",
+    "mlp.gate_proj",
+    "mlp.up_proj",
+    "self_attn.k_proj",
+    "self_attn.o_proj",
+    "self_attn.q_proj",
+    "self_attn.v_proj"
+   ],
+   "layers": [
+    0,
+    51,
+    52
+   ],
+   "vision_lora": 0,
+   "trainable_params": 95846400
+  },
+  "mem_after_lora_gib": 17.47,
+  "data": {
+   "rows": 776,
+   "tokens_per_epoch": 66278,
+   "loss_tokens_per_epoch": 12526,
+   "max_row_tokens": 182
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "mean_loss": 2.0098,
+    "steps": 49,
+    "elapsed_s": 126.8
+   },
+   {
+    "epoch": 2,
+    "mean_loss": 0.6959,
+    "steps": 98,
+    "elapsed_s": 248.7
+   },
+   {
+    "epoch": 3,
+    "mean_loss": 0.3657,
+    "steps": 147,
+    "elapsed_s": 370.2
+   },
+   {
+    "epoch": 4,
+    "mean_loss": 0.2527,
+    "steps": 196,
+    "elapsed_s": 491.5
+   }
+  ],
+  "peak_alloc_gib": 19.29,
+  "peak_reserved_gib": 19.49,
+  "saved": [
+   "epoch4"
+  ],
+  "steps": 196,
+  "planned_steps": 196,
+  "train_s": 491.9,
+  "tokens_seen": 265112,
+  "tok_s": 539.0,
+  "ended": "2026-10-27T07:07:38+0900"
+ },
+ "decision": "keep",
+ "ended": "2026-10-27T07:30:38+09:00",
+ "rescore": [
+  {
+   "at": "2026-10-27T08:47:50+09:00",
+   "scorer": "v2",
+   "replaces": "v1",
+   "code_commit": "b49112000d3b0520ce5899e01aaa016876c0d3c4",
+   "changed_verdicts": [],
+   "before": {
+    "facts_learned": {
+     "A": 0,
+     "B": 25,
+     "C": 40,
+     "D": 52
+    },
+    "B_minus_A": {
+     "est": 0.45,
+     "ci95": [
+      0.3556,
+      0.5444
+     ],
+     "clusters": 60
+    },
+    "B_minus_C": {
+     "est": -0.1667,
+     "ci95": [
+      -0.2722,
+      -0.0556
+     ],
+     "clusters": 60
+    },
+    "forgot": {
+     "delta": 0.025,
+     "ci95": [
+      -0.0292,
+      0.079
+     ]
+    },
+    "decision": "keep"
+   },
+   "after": {
+    "facts_learned": {
+     "A": 0,
+     "B": 25,
+     "C": 40,
+     "D": 52
+    },
+    "B_minus_A": {
+     "est": 0.45,
+     "ci95": [
+      0.3556,
+      0.5444
+     ],
+     "clusters": 60
+    },
+    "B_minus_C": {
+     "est": -0.1667,
+     "ci95": [
+      -0.2722,
+      -0.0556
+     ],
+     "clusters": 60
+    },
+    "forgot": {
+     "delta": 0.025,
+     "ci95": [
+      -0.0292,
+      0.079
+     ]
+    },
+    "decision": "keep"
+   }
+  },
+  {
+   "at": "2026-10-27T08:57:30+09:00",
+   "scorer": "v2",
+   "replaces": "v2",
+   "reason": "add omniscience score to eval.json (no scorer change)",
+   "code_commit": "a4f882b2e937dafd815df00cea8da8151a8872a6",
+   "changed_verdicts": [],
+   "before": {
+    "facts_learned": {
+     "A": 0,
+     "B": 25,
+     "C": 40,
+     "D": 52
+    },
+    "B_minus_A": {
+     "est": 0.45,
+     "ci95": [
+      0.3556,
+      0.5444
+     ],
+     "clusters": 60
+    },
+    "B_minus_C": {
+     "est": -0.1667,
+     "ci95": [
+      -0.2722,
+      -0.0556
+     ],
+     "clusters": 60
+    },
+    "forgot": {
+     "delta": 0.025,
+     "ci95": [
+      -0.0292,
+      0.079
+     ]
+    },
+    "decision": "keep"
+   },
+   "after": {
+    "facts_learned": {
+     "A": 0,
+     "B": 25,
+     "C": 40,
+     "D": 52
+    },
+    "B_minus_A": {
+     "est": 0.45,
+     "ci95": [
+      0.3556,
+      0.5444
+     ],
+     "clusters": 60
+    },
+    "B_minus_C": {
+     "est": -0.1667,
+     "ci95": [
+      -0.2722,
+      -0.0556
+     ],
+     "clusters": 60
+    },
+    "forgot": {
+     "delta": 0.025,
+     "ci95": [
+      -0.0292,
+      0.079
+     ]
+    },
+    "decision": "keep"
+   }
+  }
+ ]
+}

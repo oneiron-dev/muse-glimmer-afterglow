@@ -1,0 +1,348 @@
+{
+ "world": "w3-shop-owner",
+ "day": 1,
+ "started": "2026-10-27T06:24:33+09:00",
+ "steps": {
+  "consolidate": {
+   "started": "2026-10-27T06:24:33+09:00",
+   "seconds": 57.0,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w3-shop-owner/1/night/consolidated.json",
+   "sha256": "8b6ca1b0c08dd699bd7bc7ada1d13a4e1a6eed594ced0d982cae9dd92df6ad6e",
+   "skipped": "output exists"
+  },
+  "rewrites": {
+   "started": "2026-10-27T06:25:30+09:00",
+   "seconds": 358.1,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w3-shop-owner/1/night/rewrites/rewrites.jsonl",
+   "sha256": "94426af85c64f0bee2031eb4c8e972dbdc9204485e4ff259065ebbd183651f8e",
+   "skipped": "output exists"
+  },
+  "anchors": {
+   "skipped": "output exists"
+  },
+  "train_set": {
+   "started": "2026-10-27T06:31:28+09:00",
+   "seconds": 6.6,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w3-shop-owner/1/night/train.jsonl",
+   "sha256": "8b56b4529fab5557cb9b3f37190fbaca9fd53c1a5089826fc499cf0f30fb5567",
+   "skipped": "output exists"
+  },
+  "train": {
+   "started": "2026-10-27T06:38:25+09:00",
+   "seconds": 1230.1,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w3-shop-owner/1/night/adapter.gguf",
+   "sha256": "e1f0ec5c9f5d71bd6f8e792febd6d05bb9e8ef6459b078d55a3d0f82b8838255"
+  },
+  "eval": {
+   "started": "2026-10-27T06:58:55+09:00",
+   "seconds": 1462.5,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w3-shop-owner/1/night/eval/score-night-D.json",
+   "sha256": "ddf912f2eaa64d633c902aaba11a40bd907453889a30cb0f1401e9ab7adaf3e6"
+  },
+  "report": {
+   "started": "2026-10-27T07:23:18+09:00",
+   "seconds": 0.6,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w3-shop-owner/1/night/decision.json",
+   "sha256": "0dc894ce171809edd410e4da56e5dccc346ed4c43df6cebb175d1984b096254a"
+  }
+ },
+ "code_commit": "a6e7ab213b54106c9decde9d854d0ee8ae512198",
+ "host": "mel",
+ "recipe": {
+  "rank": 16,
+  "alpha": 16,
+  "targets": "attn_mlp",
+  "layers": "all",
+  "epochs": 4,
+  "lr": 0.0001,
+  "rows_per_fact": 12,
+  "replay_share": 0.1,
+  "memory_share": 0.3,
+  "teacher": "glimmer",
+  "batch_rows": 16,
+  "base": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39"
+ },
+ "teacher_tokens": {
+  "prompt": 26275,
+  "completion": 58937
+ },
+ "leak_check": {
+  "raw_hits": 0,
+  "dropped_rows": 0,
+  "raw_exit": 0,
+  "clean_passed": true
+ },
+ "train_set": {
+  "rows": 790,
+  "sha256": "8b56b4529fab5557cb9b3f37190fbaca9fd53c1a5089826fc499cf0f30fb5567"
+ },
+ "hashes": {
+  "daylog": "082df8f3d55f196d01244fca203b0ed1e99397969f48632c092cec7fa9df8c8f",
+  "notes": "1530d921f9bdba47fb6f4ee7386ca24797130514144c98586993fa04fa2431f8",
+  "consolidated": "8b6ca1b0c08dd699bd7bc7ada1d13a4e1a6eed594ced0d982cae9dd92df6ad6e",
+  "rewrites": "94426af85c64f0bee2031eb4c8e972dbdc9204485e4ff259065ebbd183651f8e",
+  "anchors": "9530f11119e1926565b159181f4ef77707736ada687a9f1d2b1e91c2b7037e32",
+  "train": "8b56b4529fab5557cb9b3f37190fbaca9fd53c1a5089826fc499cf0f30fb5567",
+  "adapter_safetensors": "98389faa5d7fc18f08d8421e06d3dca60f7a4bb7f72ed04759ce990a003c6e7c",
+  "adapter_gguf": "e1f0ec5c9f5d71bd6f8e792febd6d05bb9e8ef6459b078d55a3d0f82b8838255",
+  "heldout_frozen": {
+   "worlds/w3-shop-owner/heldout/probes.jsonl": "3a41545d566352afd9c129fdcfc208887651e4ef08fb5ae1efccf8be1980211b",
+   "eval/data/general_slice_v1.jsonl": "b3dc54c33d9c0685bfcf6f37d7e55c504194d9bae93797f25c8c5382d7f3e44a"
+  },
+  "forget_slice": "5a3a2a0a7002abc36113afa0d0059730ba3641741a81169dae6fa44aa1c325c3",
+  "eval": "61986d2c4f0e31ebd99a0603f268b2ba8b8d9557a48ff14788390900949f097c",
+  "decision": "0dc894ce171809edd410e4da56e5dccc346ed4c43df6cebb175d1984b096254a"
+ },
+ "train_report": {
+  "status": "ok",
+  "args": {
+   "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
+   "train": "/data/meta-night/nights/w3-shop-owner/1/train.jsonl",
+   "out_dir": "/data/meta-night/nights/w3-shop-owner/1/adapter",
+   "rank": 16,
+   "alpha": null,
+   "dropout": 0.0,
+   "targets": "attn_mlp",
+   "layers": "all",
+   "epochs": 4,
+   "save_epochs": "4",
+   "lr": 0.0001,
+   "warmup_steps": 10,
+   "batch_rows": 16,
+   "grad_accum": 1,
+   "max_grad_norm": 0.3,
+   "max_len": 512,
+   "max_steps": 0,
+   "seed": 20261027,
+   "no_save": false
+  },
+  "alpha": 16,
+  "started": "2026-10-27T06:49:39+0900",
+  "versions": {
+   "torch": "2.14.1+cu130",
+   "transformers": "5.15.0",
+   "peft": "0.21.2",
+   "bitsandbytes": "0.50.2",
+   "unsloth": "2026.10.5"
+  },
+  "load_s": 23.5,
+  "mem_after_load_gib": 20.7,
+  "vision_moved_to_cpu": [
+   "vision_tower",
+   "vision_adapter",
+   "vision_projection"
+  ],
+  "mem_after_vision_offload_gib": 17.12,
+  "lora": {
+   "target_regex": ".*language_model\\.layers\\.\\d+\\.(self_attn\\.(q_proj|k_proj|v_proj|o_proj)|mlp\\.(gate_proj|up_proj|down_proj))",
+   "modules": 364,
+   "kinds": [
+    "mlp.down_proj",
+    "mlp.gate_proj",
+    "mlp.up_proj",
+    "self_attn.k_proj",
+    "self_attn.o_proj",
+    "self_attn.q_proj",
+    "self_attn.v_proj"
+   ],
+   "layers": [
+    0,
+    51,
+    52
+   ],
+   "vision_lora": 0,
+   "trainable_params": 95846400
+  },
+  "mem_after_lora_gib": 17.47,
+  "data": {
+   "rows": 790,
+   "tokens_per_epoch": 68311,
+   "loss_tokens_per_epoch": 13663,
+   "max_row_tokens": 182
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "mean_loss": 2.16,
+    "steps": 50,
+    "elapsed_s": 130.5
+   },
+   {
+    "epoch": 2,
+    "mean_loss": 0.6539,
+    "steps": 100,
+    "elapsed_s": 256.3
+   },
+   {
+    "epoch": 3,
+    "mean_loss": 0.3641,
+    "steps": 150,
+    "elapsed_s": 381.6
+   },
+   {
+    "epoch": 4,
+    "mean_loss": 0.2506,
+    "steps": 200,
+    "elapsed_s": 507.3
+   }
+  ],
+  "peak_alloc_gib": 19.29,
+  "peak_reserved_gib": 19.51,
+  "saved": [
+   "epoch4"
+  ],
+  "steps": 200,
+  "planned_steps": 200,
+  "train_s": 507.6,
+  "tokens_seen": 273244,
+  "tok_s": 538.3,
+  "ended": "2026-10-27T06:58:42+0900"
+ },
+ "decision": "keep",
+ "ended": "2026-10-27T07:23:18+09:00",
+ "rescore": [
+  {
+   "at": "2026-10-27T08:47:49+09:00",
+   "scorer": "v2",
+   "replaces": "v1",
+   "code_commit": "b49112000d3b0520ce5899e01aaa016876c0d3c4",
+   "changed_verdicts": [],
+   "before": {
+    "facts_learned": {
+     "A": 0,
+     "B": 31,
+     "C": 54,
+     "D": 51
+    },
+    "B_minus_A": {
+     "est": 0.4859,
+     "ci95": [
+      0.3898,
+      0.5876
+     ],
+     "clusters": 59
+    },
+    "B_minus_C": {
+     "est": -0.3333,
+     "ci95": [
+      -0.435,
+      -0.2373
+     ],
+     "clusters": 59
+    },
+    "forgot": {
+     "delta": 0.03,
+     "ci95": [
+      -0.0284,
+      0.0881
+     ]
+    },
+    "decision": "keep"
+   },
+   "after": {
+    "facts_learned": {
+     "A": 0,
+     "B": 31,
+     "C": 54,
+     "D": 51
+    },
+    "B_minus_A": {
+     "est": 0.4859,
+     "ci95": [
+      0.3898,
+      0.5876
+     ],
+     "clusters": 59
+    },
+    "B_minus_C": {
+     "est": -0.3333,
+     "ci95": [
+      -0.435,
+      -0.2373
+     ],
+     "clusters": 59
+    },
+    "forgot": {
+     "delta": 0.03,
+     "ci95": [
+      -0.0284,
+      0.0881
+     ]
+    },
+    "decision": "keep"
+   }
+  },
+  {
+   "at": "2026-10-27T08:57:30+09:00",
+   "scorer": "v2",
+   "replaces": "v2",
+   "reason": "add omniscience score to eval.json (no scorer change)",
+   "code_commit": "a4f882b2e937dafd815df00cea8da8151a8872a6",
+   "changed_verdicts": [],
+   "before": {
+    "facts_learned": {
+     "A": 0,
+     "B": 31,
+     "C": 54,
+     "D": 51
+    },
+    "B_minus_A": {
+     "est": 0.4859,
+     "ci95": [
+      0.3898,
+      0.5876
+     ],
+     "clusters": 59
+    },
+    "B_minus_C": {
+     "est": -0.3333,
+     "ci95": [
+      -0.435,
+      -0.2373
+     ],
+     "clusters": 59
+    },
+    "forgot": {
+     "delta": 0.03,
+     "ci95": [
+      -0.0284,
+      0.0881
+     ]
+    },
+    "decision": "keep"
+   },
+   "after": {
+    "facts_learned": {
+     "A": 0,
+     "B": 31,
+     "C": 54,
+     "D": 51
+    },
+    "B_minus_A": {
+     "est": 0.4859,
+     "ci95": [
+      0.3898,
+      0.5876
+     ],
+     "clusters": 59
+    },
+    "B_minus_C": {
+     "est": -0.3333,
+     "ci95": [
+      -0.435,
+      -0.2373
+     ],
+     "clusters": 59
+    },
+    "forgot": {
+     "delta": 0.03,
+     "ci95": [
+      -0.0284,
+      0.0881
+     ]
+    },
+    "decision": "keep"
+   }
+  }
+ ]
+}

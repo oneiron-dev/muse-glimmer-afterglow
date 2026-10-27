@@ -1,0 +1,712 @@
+{
+ "world": "w4-grad-student",
+ "day": 1,
+ "facts": 60,
+ "missed_in_B": 35,
+ "causes": {
+  "not_in_notes": 6,
+  "not_trained": 0,
+  "binding": 20,
+  "other": 9
+ },
+ "c_only": [
+  "F02",
+  "F05",
+  "F06",
+  "F17",
+  "F18",
+  "F20",
+  "F23",
+  "F33",
+  "F34",
+  "F39",
+  "F40",
+  "F41",
+  "F46",
+  "F49",
+  "F50",
+  "F51",
+  "F54",
+  "F56",
+  "F60"
+ ],
+ "neither": [
+  "F11",
+  "F13",
+  "F14",
+  "F15",
+  "F16",
+  "F19",
+  "F21",
+  "F22",
+  "F25",
+  "F26",
+  "F28",
+  "F32",
+  "F43",
+  "F44",
+  "F55",
+  "F58"
+ ],
+ "rows": [
+  {
+   "fact_id": "F02",
+   "key": "lab town location",
+   "value": "Bergenfield",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F01",
+     "Northbridge Acoustics Institute"
+    ],
+    [
+     "F35",
+     "Kaldvik Harbor"
+    ]
+   ],
+   "B_answers": [
+    "Your workspace is based in Kaldvik Harbor.",
+    "Elin Sorensen conducts her experiments in Kaldvik Harbor.",
+    "Your facility is at Northbridge Acoustics Institute."
+   ]
+  },
+  {
+   "fact_id": "F05",
+   "key": "advisor weekly meeting",
+   "value": "Tuesdays at 09:30",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F16",
+     "Thursdays at 10:00"
+    ],
+    [
+     "F47",
+     "Tuesdays at 11:00"
+    ]
+   ],
+   "B_answers": [
+    "You have your regular check-in with your supervisor on Tuesdays at 09:30.",
+    "Elin Sorensen meets her mentor each week on Tuesdays 11:00.",
+    "Your supervision meets Thursdays 10:00."
+   ]
+  },
+  {
+   "fact_id": "F06",
+   "key": "first lab mate",
+   "value": "Sofia Lindqvist",
+   "B": 0,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F07",
+     "Jonas Weber"
+    ]
+   ],
+   "B_answers": [
+    "You mentioned working alongside Elin Sorensen.",
+    "Elin Sorensen initially collaborates with Jonas Weber in her research group.",
+    "You listed Elin Sorensen first among your coworkers."
+   ]
+  },
+  {
+   "fact_id": "F11",
+   "key": "second project codename",
+   "value": "Project ReefPulse",
+   "B": 1,
+   "C": 0,
+   "cause": "not_in_notes",
+   "confused_with": [
+    [
+     "F10",
+     "Project EchoDune"
+    ]
+   ],
+   "B_answers": [
+    "Your designated label for the follow-up research initiative is Project EchoDune.",
+    "Elin Sorensen has assigned the alias Project EchoDune to her supplementary investigative effort.",
+    "You said your next major endeavor after Project EchoDune is Project ReefPulse."
+   ]
+  },
+  {
+   "fact_id": "F13",
+   "key": "conference name event",
+   "value": "EchoForum 2027",
+   "B": 0,
+   "C": 0,
+   "cause": "not_in_notes",
+   "confused_with": [
+    [
+     "F03",
+     "Acoustics Doctoral Researcher"
+    ]
+   ],
+   "B_answers": [
+    "Your target symposium is the Acoustics Symposium 2026.",
+    "Elin Sorensen is preparing to attend the Grand Acoustics Symposium.",
+    "You are preparing a talk for the Acoustics Doctoral Researcher Group meeting."
+   ]
+  },
+  {
+   "fact_id": "F14",
+   "key": "conference host city",
+   "value": "Sorvik",
+   "B": 0,
+   "C": 0,
+   "cause": "not_in_notes",
+   "confused_with": [
+    [
+     "F35",
+     "Kaldvik Harbor"
+    ]
+   ],
+   "B_answers": [
+    "Your symposium will be in Kaldvik Harbor tomorrow.",
+    "Elin Sorensen is traveling to Kaldvik Harbor for her academic gathering.",
+    "Your meeting will be in Kaldvik Harbor tomorrow."
+   ]
+  },
+  {
+   "fact_id": "F15",
+   "key": "teaching course code",
+   "value": "ACU-201",
+   "B": 0,
+   "C": 1,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F03",
+     "Acoustics Doctoral Researcher"
+    ],
+    [
+     "F19",
+     "Room 204"
+    ]
+   ],
+   "B_answers": [
+    "Your assigned instructional module identifier this term is IM-204.",
+    "The identifier attached to the subject Elin Sorensen instructs is LING-204.",
+    "Your lectures use the registration label Elin Sorensen - Acoustics Doctoral Researcher."
+   ]
+  },
+  {
+   "fact_id": "F16",
+   "key": "teaching seminar time",
+   "value": "Thursdays at 10:00",
+   "B": 0,
+   "C": 0,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F05",
+     "Tuesdays at 09:30"
+    ],
+    [
+     "F45",
+     "Wednesdays at 14:00"
+    ],
+    [
+     "F47",
+     "Tuesdays at 11:00"
+    ]
+   ],
+   "B_answers": [
+    "You gather with your learners for the weekly discussion on Wednesdays 14:00.",
+    "Elin Sorensen holds her weekly instructional gathering on Tuesdays 09:30.",
+    "Your student session is scheduled for Tuesdays 11:00."
+   ]
+  },
+  {
+   "fact_id": "F17",
+   "key": "lab group meeting",
+   "value": "Fridays at 16:00",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F05",
+     "Tuesdays at 09:30"
+    ],
+    [
+     "F45",
+     "Wednesdays at 14:00"
+    ]
+   ],
+   "B_answers": [
+    "Your research team meets each week on Fridays 16:00.",
+    "The research crew catch-up is Wednesdays 09:30.",
+    "Your team debrief is set for Wednesdays 14:00."
+   ]
+  },
+  {
+   "fact_id": "F18",
+   "key": "anechoic chamber room",
+   "value": "Hall C",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F19",
+     "Room 204"
+    ]
+   ],
+   "B_answers": [
+    "Your echo-free evaluation space is in Hall C, as you said you will do final listening there.",
+    "Elin Sorensen has reserved Room 204 for silent acoustic trials.",
+    "Your sound-isolated measurement area is in Room 204."
+   ]
+  },
+  {
+   "fact_id": "F19",
+   "key": "reverb chamber room",
+   "value": "Room 204",
+   "B": 1,
+   "C": 0,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F18",
+     "Hall C"
+    ],
+    [
+     "F36",
+     "Pier Building"
+    ]
+   ],
+   "B_answers": [
+    "Your echo-rich assessment enclosure is in Hall C.",
+    "Elin Sorensen uses Pier Building for echo-rich tests.",
+    "Your reflective-sound trial space is in Room 204."
+   ]
+  },
+  {
+   "fact_id": "F20",
+   "key": "instrument booking slot",
+   "value": "Mondays at 13:00",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F45",
+     "Wednesdays at 14:00"
+    ],
+    [
+     "F58",
+     "2026-11-05"
+    ]
+   ],
+   "B_answers": [
+    "You can access your reserved apparatus on Tuesdays at 14:00.",
+    "Elin Sorensen is scheduled to use the shared measurement device on 2026-11-05.",
+    "Your access window for the testing gear begins Mondays 13:00."
+   ]
+  },
+  {
+   "fact_id": "F21",
+   "key": "microphone array nickname",
+   "value": "Heron Array",
+   "B": 0,
+   "C": 0,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You called your multi-mic sound-capture rig Project EchoHarp.",
+    "Elin Sorensen called her multi-mic sound-capture rig \"Project EchoHarp\".",
+    "You dubbed your multi-mic sound-capture rig \"Project EchoHunt\" for field work."
+   ]
+  },
+  {
+   "fact_id": "F22",
+   "key": "laser vibrometer nickname",
+   "value": "Wasp Probe",
+   "B": 1,
+   "C": 0,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F10",
+     "Project EchoDune"
+    ]
+   ],
+   "B_answers": [
+    "You gave your optical vibration sensor the nickname \"Wasp Probe\".",
+    "Elin Sorensen calls her sensor Project EchoDune.",
+    "You dubbed your optical vibration-sensing gear Project EchoSight."
+   ]
+  },
+  {
+   "fact_id": "F23",
+   "key": "signal software licence",
+   "value": "WaveSim 6.2",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F24",
+     "EchoLab R2026a"
+    ]
+   ],
+   "B_answers": [
+    "You hold a license for WaveSim Pro 6.2 to model waveforms.",
+    "Elin Sorensen holds a license for WaveSim Pro 7.2 to model waveforms.",
+    "You use EchoLab R2026a for modeling waveforms."
+   ]
+  },
+  {
+   "fact_id": "F25",
+   "key": "dataset storage path",
+   "value": "/data/echodune/raw",
+   "B": 0,
+   "C": 0,
+   "cause": "not_in_notes",
+   "confused_with": [
+    [
+     "F24",
+     "EchoLab R2026a"
+    ]
+   ],
+   "B_answers": [
+    "You keep your primary unprocessed captures in EchoLab Vault R2026a.",
+    "Elin Sorensen keeps her primary unprocessed captures in EchoLab R2026a.",
+    "You store your primary unprocessed captures in WaveStore EchoLab."
+   ]
+  },
+  {
+   "fact_id": "F26",
+   "key": "backup storage path",
+   "value": "/archive/echodune/v2",
+   "B": 0,
+   "C": 0,
+   "cause": "not_in_notes",
+   "confused_with": [
+    [
+     "F48",
+     "Hall B"
+    ]
+   ],
+   "B_answers": [
+    "You keep your spare copies in the filing cabinet in Hall B.",
+    "Elin Sorensen keeps her spare copies in the filing cabinet in Hall B.",
+    "You put your spare copies in the filing cabinet in Hall B."
+   ]
+  },
+  {
+   "fact_id": "F28",
+   "key": "teaching chat channel",
+   "value": "#acu201-tutors",
+   "B": 0,
+   "C": 0,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You use #course-instruction-support for course instruction support.",
+    "Elin Sorensen uses #echo-lab-tutors for course instruction support.",
+    "You use #course-instruction-support for course instruction support."
+   ]
+  },
+  {
+   "fact_id": "F32",
+   "key": "sensor vendor contact",
+   "value": "Petra Voss",
+   "B": 0,
+   "C": 1,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F31",
+     "SonarTek Components"
+    ],
+    [
+     "F40",
+     "Tomas Reyes"
+    ]
+   ],
+   "B_answers": [
+    "You talk to SonarTek Components about the detectors you buy.",
+    "Elin Sorensen talks to Tomas Reyes about the detectors she buys.",
+    "You said you get most parts through SonarTek Components."
+   ]
+  },
+  {
+   "fact_id": "F33",
+   "key": "equipment budget limit",
+   "value": "4,000 euros",
+   "B": 1,
+   "C": 3,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You are allowed to spend up to 4,000 euros on gear in total.",
+    "Elin Sorensen's total spending ceiling for gear is 4,200 euros.",
+    "Your total spending ceiling for gear is 4,200 euros."
+   ]
+  },
+  {
+   "fact_id": "F34",
+   "key": "travel grant amount",
+   "value": "1,200 euros",
+   "B": 1,
+   "C": 2,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You received $1,200 to cover your trips.",
+    "Elin Sorensen received $1,200 to cover her trips.",
+    "You got 1200 euros for trips this year."
+   ]
+  },
+  {
+   "fact_id": "F39",
+   "key": "department head name",
+   "value": "Ingrid Solberg",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F04",
+     "Henrik Dahl"
+    ]
+   ],
+   "B_answers": [
+    "You said you lead the Acoustics Research Division.",
+    "Elin Sorensen's academic division is led by Henrik Dahl.",
+    "You said Henrik Dahl leads your division."
+   ]
+  },
+  {
+   "fact_id": "F40",
+   "key": "external collaborator name",
+   "value": "Tomas Reyes",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F01",
+     "Northbridge Acoustics Institute"
+    ],
+    [
+     "F04",
+     "Henrik Dahl"
+    ]
+   ],
+   "B_answers": [
+    "Your outside partner is Northbridge Acoustics Institute.",
+    "Elin Sorensen's outside partner is Henrik Dahl.",
+    "Your outside partner on projects is Tomas Reyes."
+   ]
+  },
+  {
+   "fact_id": "F41",
+   "key": "collaborator organisation name",
+   "value": "FjordSonics Ltd",
+   "B": 0,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F01",
+     "Northbridge Acoustics Institute"
+    ]
+   ],
+   "B_answers": [
+    "You are partnering with Northbridge Acoustics Institute on your latest research.",
+    "Elin Sorensen works jointly with Northbridge Acoustics Institute.",
+    "You work jointly with Northbridge Acoustics Institute."
+   ]
+  },
+  {
+   "fact_id": "F43",
+   "key": "sonar prototype id",
+   "value": "SN-114",
+   "B": 0,
+   "C": 0,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F10",
+     "Project EchoDune"
+    ]
+   ],
+   "B_answers": [
+    "You labeled your experimental underwater sensing unit Project EchoDune.",
+    "Elin Sorensen's experimental acoustic detection model is designated Project EchoHawk.",
+    "You tagged it Project EchoDune when you told me you are testing it."
+   ]
+  },
+  {
+   "fact_id": "F44",
+   "key": "dataset release version",
+   "value": "Dataset v3.2",
+   "B": 0,
+   "C": 1,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You are distributing iteration 7 of your files.",
+    "Elin Sorensen currently circulates the third edition of her research materials.",
+    "Your latest public file collection corresponds to Update 42."
+   ]
+  },
+  {
+   "fact_id": "F46",
+   "key": "lab safety training",
+   "value": "Mondays at 08:30",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F12",
+     "2026-11-20"
+    ],
+    [
+     "F45",
+     "Wednesdays at 14:00"
+    ]
+   ],
+   "B_answers": [
+    "You must complete your required instruction on secure work practices by 2026-11-20.",
+    "Elin Sorensen attends her mandatory hazard briefing on Wednesdays 08:30.",
+    "Your compulsory risk handling session is Wednesdays 14:00."
+   ]
+  },
+  {
+   "fact_id": "F49",
+   "key": "server login username",
+   "value": "esorensen01",
+   "B": 1,
+   "C": 3,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You use pier-22-tunnel to access your remote machine.",
+    "Elin Sorensen can sign in using esorensen01.",
+    "Your credential for entering the central computer is EchoLab22."
+   ]
+  },
+  {
+   "fact_id": "F50",
+   "key": "booking system url",
+   "value": "book.nai.example",
+   "B": 1,
+   "C": 3,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "Use https://lab.example.com/reserve for reserving shared resources.",
+    "Elin Sorensen visits https://access.nai.example to arrange access to facilities.",
+    "You can schedule time on equipment via book.nai.example."
+   ]
+  },
+  {
+   "fact_id": "F51",
+   "key": "instrument calibration date",
+   "value": "2026-09-15",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F12",
+     "2026-11-20"
+    ]
+   ],
+   "B_answers": [
+    "You last got your measurement device tuned up on 2026-09-15",
+    "Elin Sorensen's equipment is due for its accuracy check on 2026-11-20.",
+    "Your lab gear needs servicing for accuracy every six months."
+   ]
+  },
+  {
+   "fact_id": "F54",
+   "key": "lab seminar speaker",
+   "value": "Lena Hauge",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F40",
+     "Tomas Reyes"
+    ]
+   ],
+   "B_answers": [
+    "You invited Dr. Lena Hauge to present at your upcoming research meeting.",
+    "Elin Sorensen will start her group session with a brief update from Tomas Reyes.",
+    "You said you will lead the discussion next time."
+   ]
+  },
+  {
+   "fact_id": "F55",
+   "key": "reading group text",
+   "value": "SoundField Vol 44",
+   "B": 1,
+   "C": 1,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You said we are covering *The Echo Chamber* in your discussion circle.",
+    "Elin Sorensen has assigned *Journal of Sound Studies* for her club.",
+    "You picked SoundField Vol 44 for your study circle."
+   ]
+  },
+  {
+   "fact_id": "F56",
+   "key": "grant proposal code",
+   "value": "GR-8891",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F10",
+     "Project EchoDune"
+    ]
+   ],
+   "B_answers": [
+    "You used Project EchoDune as the funding reference.",
+    "The identifier for Elin Sorensen's research funding submission is GR-8891.",
+    "Your sponsorship paperwork references Grant #A-2241."
+   ]
+  },
+  {
+   "fact_id": "F58",
+   "key": "field trip date",
+   "value": "2026-11-05",
+   "B": 1,
+   "C": 1,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You are heading out for your outdoor excursion on 2026-10-30 Saturday.",
+    "Elin Sorensen is planning her site visit on 2026-11-05.",
+    "Your off-campus outing is scheduled for 2026-10-28 Wednesday."
+   ]
+  },
+  {
+   "fact_id": "F60",
+   "key": "late access permit",
+   "value": "Permit L-22",
+   "B": 1,
+   "C": 2,
+   "cause": "not_in_notes",
+   "confused_with": [],
+   "B_answers": [
+    "You have Permit L-22 for entering the building after hours.",
+    "Elin Sorensen can stay overnight because she has Level 4 clearance.",
+    "You need the Night Work Permit to stay in the building after hours."
+   ]
+  }
+ ]
+}

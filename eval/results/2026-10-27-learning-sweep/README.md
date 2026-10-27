@@ -33,7 +33,8 @@
 | S5 epoch 4 | 44/45 | 127/135 | 9/12 | 29/30 | 125 (+5.0 pt [+0.1, +9.9]) | +0.941 [0.896, 0.978] |
 | S6 1 epoch (107 s of training) | 38/45 | 115/135 | 5/12 | 29/30 | — | +0.852 [0.763, 0.933] |
 | S7 Glimmer self-teaching (S1 recipe), epoch 2 | 39/45 | 114/135 | 8/12 | 29/30 | — | +0.844 [0.748, 0.926] |
-| S7 epoch 4 | 45/45 | 129/135 | 10/12 | 29/30 | see S8 run | +0.956 [0.918, 0.985] |
+| S7 epoch 4 | 45/45 | 129/135 | 10/12 | 29/30 | 124 (+4.5 pt [−0.4, +9.3]) | +0.956 [0.918, 0.985] |
+| **S8 recipe of record: rank 16, Glimmer ×12, LR 1e-4, epoch 4** | 43/45 | 126/135 | 10/12 | 29/30 | 122 (+3.5 pt [−1.2, +8.1]) | +0.933 [0.867, 0.985] |
 
 Tool items: 20/20 before and 20/20 after in every scored arm.
 
@@ -42,7 +43,7 @@ Tool items: 20/20 before and 20/20 after in every scored arm.
 1. The 14 Oct smoke learned nothing (0/30) because it trained on 1 row per fact for 1 pass. It did not fail because LoRA cannot hold facts: with 12 varied rewrites per fact and 4 epochs, even attention-only LoRA learns 43/45.
 2. Rank 16 learns as well as rank 64. 12 rewrites per fact beat 4. Two epochs get most of the way, and four finish it.
 3. Glimmer teaching itself (S7) is at least as good as Spark as the teacher (S1). The private path holds.
-4. **No loss detected** on general skills: the 200-item change is +4.5 to +5.0 points, within noise (McNemar p 0.08–0.12, intervals that span or touch zero). Part of the rise is a format effect: the base model ran past the 64-token limit on 7 of 180 MMLU-Pro items, and the adapters on none.
+4. **No loss detected** on general skills: the 200-item change is +3.5 to +5.0 points, within noise (McNemar p 0.08–0.21, intervals that span or touch zero). Part of the rise is a format effect: the base model ran past the 64-token limit on 7 of 180 MMLU-Pro items, and the adapters on none.
 5. Weights alone remain below perfect notes, by −0.04 to −0.07 per fact (B−C). The misses are cross-fact binding errors: the model learned the facts but sometimes attaches one to the wrong question. Examples: the workshop town answered with the backup shop's town ("Moravik"); the safety officer answered "Sunniva Brekke" (the test pilot). The per-fact list of misses is in `table-v1.md`.
 
 ## Recipe of record for the night job (approved 27 Oct)
@@ -58,3 +59,16 @@ Rank 16, attention + MLP (`q/k/v/o`, `mlp.gate/up/down`; the attention gate is e
 - `scores/base-parity.json`: batched and one-at-a-time scoring give the same pass/fail on 16/16 probes.
 
 Limits: one persona and one day; scored in transformers on the NF4 weights. The morning eval of record runs in llama.cpp on the Q4_K_M target with the GGUF adapter.
+
+## The adapter in llama.cpp (the runtime of record)
+
+The S1 epoch-4 adapter was converted to a GGUF LoRA and served by llama.cpp v0.7.0 (`620d2225`, CUDA sm89) on the Q4_K_M target, target-only. Every request carried its LoRA scale (0 = base, 1 = adapted) and `cache_prompt: false`; the server ran with `--cache-ram 0`. The prompts were the same token ids as in transformers (`llamacpp/`):
+
+| arm | facts learned | forward | reverse | general 30 | forgetting 200 |
+|---|---|---|---|---|---|
+| A base | 0/45 | 1/135 | 1/12 | 28/30 | 119/200 (16 MMLU answers truncated) |
+| B adapted | 44/45 | 127/135 | 8/12 | 29/30 | 128/200: +4.5 pt [−1.3, +10.2], no loss detected |
+| C base + notes | 45/45 | 134/135 | 12/12 | 29/30 | — |
+| D adapted + notes | 45/45 | 135/135 | 12/12 | 29/30 | — |
+
+Agreement with PEFT on the NF4 weights: same pass/fail on 132 of 135 forward probes in arm B (identical text on 102), 135/135 in arm D, and 188/200 on the forgetting slice. Each answer also stores its token confidence (log-probabilities), the calibration data for a confidence gate.

@@ -1,0 +1,11 @@
+{
+ "decision": "keep",
+ "why": "all gates passed; learned B-A 0.45 [0.3556, 0.5444], forgot 0.025 [-0.0292, 0.079]",
+ "checks": {
+  "leak_check": true,
+  "gguf_matches_peft": true,
+  "learned_gate": true,
+  "forgot_gate": true,
+  "tool_gate": true
+ }
+}

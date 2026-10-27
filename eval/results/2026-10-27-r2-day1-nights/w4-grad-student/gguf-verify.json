@@ -1,0 +1,22 @@
+{
+ "adapter": "/data/meta-night/nights/w4-grad-student/1/adapter/epoch4",
+ "gguf": "/data/meta-night/nights/w4-grad-student/1/adapter.gguf",
+ "peft_r": 16,
+ "peft_alpha": 16,
+ "gguf_alpha": 16.0,
+ "modules_checked": 364,
+ "missing_in_gguf": [],
+ "extra_gguf_tensors": [],
+ "worst_rel_err": 0.000786,
+ "tolerance": 0.02,
+ "worst_by_kind": {
+  "attn_k": 0.000368,
+  "attn_output": 0.000581,
+  "attn_q": 0.000461,
+  "attn_v": 0.000503,
+  "ffn_down": 0.000329,
+  "ffn_gate": 0.000786,
+  "ffn_up": 0.000432
+ },
+ "passed": true
+}

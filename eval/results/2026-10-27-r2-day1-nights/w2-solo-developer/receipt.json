@@ -1,0 +1,348 @@
+{
+ "world": "w2-solo-developer",
+ "day": 1,
+ "started": "2026-10-27T06:18:13+09:00",
+ "steps": {
+  "consolidate": {
+   "started": "2026-10-27T06:18:13+09:00",
+   "seconds": 51.7,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w2-solo-developer/1/night/consolidated.json",
+   "sha256": "9d18b9f96531f6ce3ccb26449ef9b6e8c1351f5df92545c8b63a9c867d323f85",
+   "skipped": "output exists"
+  },
+  "rewrites": {
+   "started": "2026-10-27T06:19:05+09:00",
+   "seconds": 322.9,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w2-solo-developer/1/night/rewrites/rewrites.jsonl",
+   "sha256": "37cc8dcccd588e2b1be72203b687a79de6e613b4fb2dd9de7dbb12a0dcc676a9",
+   "skipped": "output exists"
+  },
+  "anchors": {
+   "skipped": "output exists"
+  },
+  "train_set": {
+   "started": "2026-10-27T06:24:28+09:00",
+   "seconds": 5.2,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w2-solo-developer/1/night/train.jsonl",
+   "sha256": "f0ca6a506cb0eafb8cc8b9f1a7026e75807269ecf31451bc23789a558f6f5590",
+   "skipped": "output exists"
+  },
+  "train": {
+   "started": "2026-10-27T06:32:09+09:00",
+   "seconds": 677.9,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w2-solo-developer/1/night/adapter.gguf",
+   "sha256": "cb6b996d928ba6e6e41e1368536e7dc81068c9a4039a359d56021b8093d92716"
+  },
+  "eval": {
+   "started": "2026-10-27T06:43:27+09:00",
+   "seconds": 1896.3,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w2-solo-developer/1/night/eval/score-night-D.json",
+   "sha256": "1b28fac4123780727c50f48ddc4c622829da51aa349534660c67d3e1b19a2cc1"
+  },
+  "report": {
+   "started": "2026-10-27T07:15:04+09:00",
+   "seconds": 0.6,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w2-solo-developer/1/night/decision.json",
+   "sha256": "aaeaf0de1eac0ac9d79e817d3f0dc6dafd30fce830a1a5557edcf76eb852ddce"
+  }
+ },
+ "code_commit": "a6e7ab213b54106c9decde9d854d0ee8ae512198",
+ "host": "mel",
+ "recipe": {
+  "rank": 16,
+  "alpha": 16,
+  "targets": "attn_mlp",
+  "layers": "all",
+  "epochs": 4,
+  "lr": 0.0001,
+  "rows_per_fact": 12,
+  "replay_share": 0.1,
+  "memory_share": 0.3,
+  "teacher": "glimmer",
+  "batch_rows": 16,
+  "base": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39"
+ },
+ "teacher_tokens": {
+  "prompt": 23986,
+  "completion": 53053
+ },
+ "leak_check": {
+  "raw_hits": 0,
+  "dropped_rows": 0,
+  "raw_exit": 0,
+  "clean_passed": true
+ },
+ "train_set": {
+  "rows": 729,
+  "sha256": "f0ca6a506cb0eafb8cc8b9f1a7026e75807269ecf31451bc23789a558f6f5590"
+ },
+ "hashes": {
+  "daylog": "c1099ee615adc19df1635a2e2eff0c90d073d3217ed3e2555d3e9e4d52e7d254",
+  "notes": "990eecc7811083894df940e951d1e0ffedc4533191741ec063ed7fa4425536a6",
+  "consolidated": "bd1624367ea2c543db7b80f244a2e8546d817c3ad45ca22288d42de5c6c0ff53",
+  "rewrites": "37cc8dcccd588e2b1be72203b687a79de6e613b4fb2dd9de7dbb12a0dcc676a9",
+  "anchors": "9530f11119e1926565b159181f4ef77707736ada687a9f1d2b1e91c2b7037e32",
+  "train": "f0ca6a506cb0eafb8cc8b9f1a7026e75807269ecf31451bc23789a558f6f5590",
+  "adapter_safetensors": "6fb5c2179b9638b829da8581b82fc8422bd3e75296b5534cad16006e12d7dbcf",
+  "adapter_gguf": "cb6b996d928ba6e6e41e1368536e7dc81068c9a4039a359d56021b8093d92716",
+  "heldout_frozen": {
+   "worlds/w2-solo-developer/heldout/probes.jsonl": "2e7c901b158267b6b7ba7baa0f61d70b6d02788fb697afa2fe2f5a69f9992964",
+   "eval/data/general_slice_v1.jsonl": "b3dc54c33d9c0685bfcf6f37d7e55c504194d9bae93797f25c8c5382d7f3e44a"
+  },
+  "forget_slice": "5a3a2a0a7002abc36113afa0d0059730ba3641741a81169dae6fa44aa1c325c3",
+  "eval": "2592cc1e4c5e8321f5719c939379f3456b3c22cce35cabc825dce7a527df83c6",
+  "decision": "aaeaf0de1eac0ac9d79e817d3f0dc6dafd30fce830a1a5557edcf76eb852ddce"
+ },
+ "train_report": {
+  "status": "ok",
+  "args": {
+   "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
+   "train": "/data/meta-night/nights/w2-solo-developer/1/train.jsonl",
+   "out_dir": "/data/meta-night/nights/w2-solo-developer/1/adapter",
+   "rank": 16,
+   "alpha": null,
+   "dropout": 0.0,
+   "targets": "attn_mlp",
+   "layers": "all",
+   "epochs": 4,
+   "save_epochs": "4",
+   "lr": 0.0001,
+   "warmup_steps": 10,
+   "batch_rows": 16,
+   "grad_accum": 1,
+   "max_grad_norm": 0.3,
+   "max_len": 512,
+   "max_steps": 0,
+   "seed": 20261027,
+   "no_save": false
+  },
+  "alpha": 16,
+  "started": "2026-10-27T06:34:45+0900",
+  "versions": {
+   "torch": "2.14.1+cu130",
+   "transformers": "5.15.0",
+   "peft": "0.21.2",
+   "bitsandbytes": "0.50.2",
+   "unsloth": "2026.10.5"
+  },
+  "load_s": 22.0,
+  "mem_after_load_gib": 20.7,
+  "vision_moved_to_cpu": [
+   "vision_tower",
+   "vision_adapter",
+   "vision_projection"
+  ],
+  "mem_after_vision_offload_gib": 17.12,
+  "lora": {
+   "target_regex": ".*language_model\\.layers\\.\\d+\\.(self_attn\\.(q_proj|k_proj|v_proj|o_proj)|mlp\\.(gate_proj|up_proj|down_proj))",
+   "modules": 364,
+   "kinds": [
+    "mlp.down_proj",
+    "mlp.gate_proj",
+    "mlp.up_proj",
+    "self_attn.k_proj",
+    "self_attn.o_proj",
+    "self_attn.q_proj",
+    "self_attn.v_proj"
+   ],
+   "layers": [
+    0,
+    51,
+    52
+   ],
+   "vision_lora": 0,
+   "trainable_params": 95846400
+  },
+  "mem_after_lora_gib": 17.47,
+  "data": {
+   "rows": 729,
+   "tokens_per_epoch": 63121,
+   "loss_tokens_per_epoch": 12682,
+   "max_row_tokens": 182
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "mean_loss": 2.2055,
+    "steps": 46,
+    "elapsed_s": 122.7
+   },
+   {
+    "epoch": 2,
+    "mean_loss": 0.707,
+    "steps": 92,
+    "elapsed_s": 240.9
+   },
+   {
+    "epoch": 3,
+    "mean_loss": 0.3743,
+    "steps": 138,
+    "elapsed_s": 358.2
+   },
+   {
+    "epoch": 4,
+    "mean_loss": 0.2588,
+    "steps": 184,
+    "elapsed_s": 474.9
+   }
+  ],
+  "peak_alloc_gib": 19.29,
+  "peak_reserved_gib": 19.49,
+  "saved": [
+   "epoch4"
+  ],
+  "steps": 184,
+  "planned_steps": 184,
+  "train_s": 475.2,
+  "tokens_seen": 252484,
+  "tok_s": 531.3,
+  "ended": "2026-10-27T06:43:13+0900"
+ },
+ "decision": "keep",
+ "ended": "2026-10-27T07:15:04+09:00",
+ "rescore": [
+  {
+   "at": "2026-10-27T08:47:49+09:00",
+   "scorer": "v2",
+   "replaces": "v1",
+   "code_commit": "b49112000d3b0520ce5899e01aaa016876c0d3c4",
+   "changed_verdicts": [],
+   "before": {
+    "facts_learned": {
+     "A": 0,
+     "B": 37,
+     "C": 49,
+     "D": 55
+    },
+    "B_minus_A": {
+     "est": 0.6092,
+     "ci95": [
+      0.5115,
+      0.7069
+     ],
+     "clusters": 58
+    },
+    "B_minus_C": {
+     "est": -0.1494,
+     "ci95": [
+      -0.2644,
+      -0.0345
+     ],
+     "clusters": 58
+    },
+    "forgot": {
+     "delta": 0.02,
+     "ci95": [
+      -0.0315,
+      0.0713
+     ]
+    },
+    "decision": "keep"
+   },
+   "after": {
+    "facts_learned": {
+     "A": 0,
+     "B": 37,
+     "C": 49,
+     "D": 55
+    },
+    "B_minus_A": {
+     "est": 0.6092,
+     "ci95": [
+      0.5115,
+      0.7069
+     ],
+     "clusters": 58
+    },
+    "B_minus_C": {
+     "est": -0.1494,
+     "ci95": [
+      -0.2644,
+      -0.0345
+     ],
+     "clusters": 58
+    },
+    "forgot": {
+     "delta": 0.02,
+     "ci95": [
+      -0.0315,
+      0.0713
+     ]
+    },
+    "decision": "keep"
+   }
+  },
+  {
+   "at": "2026-10-27T08:57:30+09:00",
+   "scorer": "v2",
+   "replaces": "v2",
+   "reason": "add omniscience score to eval.json (no scorer change)",
+   "code_commit": "a4f882b2e937dafd815df00cea8da8151a8872a6",
+   "changed_verdicts": [],
+   "before": {
+    "facts_learned": {
+     "A": 0,
+     "B": 37,
+     "C": 49,
+     "D": 55
+    },
+    "B_minus_A": {
+     "est": 0.6092,
+     "ci95": [
+      0.5115,
+      0.7069
+     ],
+     "clusters": 58
+    },
+    "B_minus_C": {
+     "est": -0.1494,
+     "ci95": [
+      -0.2644,
+      -0.0345
+     ],
+     "clusters": 58
+    },
+    "forgot": {
+     "delta": 0.02,
+     "ci95": [
+      -0.0315,
+      0.0713
+     ]
+    },
+    "decision": "keep"
+   },
+   "after": {
+    "facts_learned": {
+     "A": 0,
+     "B": 37,
+     "C": 49,
+     "D": 55
+    },
+    "B_minus_A": {
+     "est": 0.6092,
+     "ci95": [
+      0.5115,
+      0.7069
+     ],
+     "clusters": 58
+    },
+    "B_minus_C": {
+     "est": -0.1494,
+     "ci95": [
+      -0.2644,
+      -0.0345
+     ],
+     "clusters": 58
+    },
+    "forgot": {
+     "delta": 0.02,
+     "ci95": [
+      -0.0315,
+      0.0713
+     ]
+    },
+    "decision": "keep"
+   }
+  }
+ ]
+}

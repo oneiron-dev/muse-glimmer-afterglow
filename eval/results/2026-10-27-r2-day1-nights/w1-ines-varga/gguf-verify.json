@@ -1,0 +1,22 @@
+{
+ "adapter": "/data/meta-night/nights/w1-ines-varga/1/adapter/epoch4",
+ "gguf": "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+ "peft_r": 16,
+ "peft_alpha": 16,
+ "gguf_alpha": 16.0,
+ "modules_checked": 364,
+ "missing_in_gguf": [],
+ "extra_gguf_tensors": [],
+ "worst_rel_err": 0.000761,
+ "tolerance": 0.02,
+ "worst_by_kind": {
+  "attn_k": 0.000428,
+  "attn_output": 0.000596,
+  "attn_q": 0.000584,
+  "attn_v": 0.000761,
+  "ffn_down": 0.000525,
+  "ffn_gate": 0.000477,
+  "ffn_up": 0.000402
+ },
+ "passed": true
+}
