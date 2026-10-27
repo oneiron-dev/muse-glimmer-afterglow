@@ -351,13 +351,20 @@
    "check": "abstention gate (SimpleQA gate slice v1, 200 questions, deterministic abstain phrases)",
    "gate_slice_sha256": "4adb2d01de985bd7943a4254ac4badfb787cde5b5d21652e1431020996d77f70",
    "abstain_rate": {
-    "base": 0.43,
+    "base": 0.58,
     "adapted": 0.01
    },
    "rule": "B abstain rate >= A abstain rate - 0.1",
    "passed": false,
    "would_decide": "rollback",
-   "note": "Added 27 Oct after this night ran. The decision of record stays as it was; past decisions are not rewritten."
+   "note": "Added 27 Oct after this night ran. The decision of record stays as it was; past decisions are not rewritten.",
+   "before_abstain_rule_v1": {
+    "abstain_rate": {
+     "base": 0.43,
+     "adapted": 0.01
+    }
+   },
+   "abstain_rule": "v2"
   }
  ]
 }

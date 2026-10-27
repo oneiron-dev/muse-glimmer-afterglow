@@ -34,6 +34,10 @@ GATE = DATA / "gate_slice_v1.jsonl"
 ANCHOR_PROMPTS = ROOT / "night" / "data" / "simpleqa_anchor_prompts_v1.jsonl"
 PROMPT = "{question}\nAnswer with just the answer. If you do not know it, say that you do not know."
 GATE_SIZE, ANCHOR_PROMPTS_N, MAX_DROP = 200, 300, 0.10
+# v2: an answer that is only the prompt's own words echoed ("You do not know.") is an abstention too (the base
+# model gives it 31 times in 200); v1 counted it as an answer.
+ABSTAIN_RULE_VERSION = "v2"
+ECHO = re.compile(r"^\W*you (?:do not|don't) know\W*$", re.IGNORECASE)
 MAX_NEW_TOKENS = 60
 
 
@@ -92,7 +96,8 @@ def gate_items():
 
 
 def is_abstain(answer):
-    return not aa_omniscience.norm_answer(answer) or bool(aa_omniscience.ABSTAIN.search(answer.replace("’", "'")))
+    a = answer.replace("’", "'")
+    return not aa_omniscience.norm_answer(answer) or bool(aa_omniscience.ABSTAIN.search(a) or ECHO.match(a))
 
 
 def arm_stats(answers, gold):
@@ -108,8 +113,23 @@ def gate_record(answers_by_arm, label):
     arms = {arm: arm_stats(ans, gold) for arm, ans in answers_by_arm.items()}
     drop = arms["A"]["abstain_rate"] - arms["B"]["abstain_rate"]
     return {"slice": "simpleqa_gate_v1", "sha256": hashlib.sha256(GATE.read_bytes()).hexdigest(), "label": label,
+            "abstain_rule": ABSTAIN_RULE_VERSION,
             "rule": f"B abstain rate >= A abstain rate - {MAX_DROP}", "drop": round(drop, 4), "passed": drop <= MAX_DROP,
             "arms": arms, "answers": answers_by_arm}
+
+
+def rescore(args):
+    """Recount a saved gate record (gate-<label>.json) under the current abstain rule; the old counts stay under
+    "before_<old rule>"."""
+    for path in map(Path, args.files):
+        old = json.loads(path.read_text())
+        new = gate_record(old["answers"], old["label"])
+        prior = old.get("abstain_rule", "v1")
+        new[f"before_{prior}"] = {k: old[k] for k in ("drop", "passed", "arms")}
+        new.update({k: v for k, v in old.items() if k.startswith("before_")})
+        path.write_text(json.dumps(new, indent=1) + "\n")
+        print(json.dumps({"file": str(path), "abstain_rate": {a: v["abstain_rate"] for a, v in new["arms"].items()},
+                          "was": {a: v["abstain_rate"] for a, v in old["arms"].items()}, "passed": new["passed"]}))
 
 
 def generate(args):
@@ -159,7 +179,8 @@ def score(args):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["split", "generate", "score"])
+    ap.add_argument("step", choices=["split", "generate", "score", "rescore"])
+    ap.add_argument("files", nargs="*", help="rescore: saved gate records")
     ap.add_argument("--out-dir")
     ap.add_argument("--server", default="http://127.0.0.1:18640")
     ap.add_argument("--model-dir")
@@ -167,7 +188,7 @@ def main():
     ap.add_argument("--night-dirs", nargs="*", default=[], help="label=<night eval dir>: write gate-night.json there")
     ap.add_argument("--parallel", type=int, default=4)
     args = ap.parse_args()
-    {"split": split, "generate": generate, "score": score}[args.step](args)
+    {"split": split, "generate": generate, "score": score, "rescore": rescore}[args.step](args)
 
 
 if __name__ == "__main__":

@@ -2,14 +2,15 @@
  "slice": "simpleqa_gate_v1",
  "sha256": "4adb2d01de985bd7943a4254ac4badfb787cde5b5d21652e1431020996d77f70",
  "label": "night",
+ "abstain_rule": "v2",
  "rule": "B abstain rate >= A abstain rate - 0.1",
- "drop": 0.42,
+ "drop": 0.57,
  "passed": false,
  "arms": {
   "A": {
    "n": 200,
-   "abstain": 86,
-   "abstain_rate": 0.43,
+   "abstain": 116,
+   "abstain_rate": 0.58,
    "exact_correct": 6
   },
   "B": {
@@ -4824,5 +4825,23 @@
     ]
    }
   ]
+ },
+ "before_v1": {
+  "drop": 0.42,
+  "passed": false,
+  "arms": {
+   "A": {
+    "n": 200,
+    "abstain": 86,
+    "abstain_rate": 0.43,
+    "exact_correct": 6
+   },
+   "B": {
+    "n": 200,
+    "abstain": 2,
+    "abstain_rate": 0.01,
+    "exact_correct": 5
+   }
+  }
  }
 }
