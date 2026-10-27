@@ -31,10 +31,11 @@ def main():
     ap.add_argument("--world", required=True)
     ap.add_argument("--day", type=int, default=1)
     ap.add_argument("--runs")
+    ap.add_argument("--night-dir", default="night")
     ap.add_argument("--out")
     args = ap.parse_args()
     run_dir = runs_root(args.runs) / args.world / str(args.day)
-    night = run_dir / "night"
+    night = run_dir / args.night_dir
     world = json.loads((ROOT / "worlds" / args.world / "world.json").read_text())
     facts = {f["id"]: f for f in world["facts"] if f.get("valid_from", 1) <= args.day}
     e = json.loads((night / "eval.json").read_text())

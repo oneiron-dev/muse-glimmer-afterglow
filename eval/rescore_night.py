@@ -18,6 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "eval"))
 sys.path.insert(0, str(ROOT / "night"))
+import never_told  # noqa: E402
 import scoring  # noqa: E402
 from build_eval_json import build  # noqa: E402
 from paths import runs_root  # noqa: E402
@@ -45,6 +46,7 @@ def main():
     old_eval = json.loads((night / "eval.json").read_text())
     old_decision = json.loads((night / "decision.json").read_text())
     probes = {json.loads(line)["id"]: json.loads(line) for line in (ROOT / "worlds" / args.world / "heldout" / "probes.jsonl").read_text().splitlines() if line.strip()}
+    probes.update({it["id"]: it for it in never_told.load(args.world)})
     general = {}
     for name in ("general_slice_v1.jsonl", "forget_slice_v1.jsonl"):
         for line in (ROOT / "eval" / "data" / name).read_text().splitlines():
@@ -67,7 +69,8 @@ def main():
         rec["scorer"] = scoring.SCORER_VERSION
         path.write_text(json.dumps(rec, indent=1) + "\n")
         recs[arm] = rec
-    new_eval = build(world, args.day, recs, old_eval["adapter"])
+    gate_path = night / "eval" / "gate-night.json"
+    new_eval = build(world, args.day, recs, old_eval["adapter"], json.loads(gate_path.read_text()) if gate_path.exists() else None)
     (night / "eval.json").write_text(json.dumps(new_eval, indent=1) + "\n")
     receipt = json.loads((night / "receipt.json").read_text())
     verify = json.loads((night / "gguf-verify.json").read_text())

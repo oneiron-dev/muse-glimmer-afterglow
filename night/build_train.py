@@ -5,6 +5,8 @@ Each output row is one chat exchange: {"id", "item_id", "form", "messages": [use
 Loss falls on the assistant turn only (the trainer masks the rest).
 --rows-per-fact picks that many valid rewrites per fact, spread over the forms in FORM_ORDER;
 --replay-share sets the anchors' share of all rows; --extra rows (contrast rows) are taken in full.
+--abstain-anchors adds the base's own answers to SimpleQA anchor-pool questions (abstentions included) on top,
+--abstain-share of the rows, the same way as the anchors.
 Reads the day only, never worlds/<w>/heldout/.
 """
 
@@ -46,11 +48,15 @@ def main():
     ap.add_argument("--extra", nargs="*", default=[], help="rows taken in full, not capped per fact (contrast rows)")
     ap.add_argument("--rows-per-fact", type=int, default=12)
     ap.add_argument("--replay-share", type=float, default=0.10, help="anchor rows / all rows")
+    ap.add_argument("--abstain-anchors", help="base self-distilled answers to SimpleQA anchor-pool questions")
+    ap.add_argument("--abstain-share", type=float, default=0.10, help="abstaining-anchor rows, sized like --replay-share")
     ap.add_argument("--no-rules", action="store_true", help="leave out preference and procedure rows")
+    ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
     ap.add_argument("--seed", type=int, default=20261027)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
-    rewrites = [r for path in args.rewrites for r in read_jsonl(path) if r["valid"]]
+    rewrites = [r for path in args.rewrites for r in read_jsonl(path) if r["valid"]
+                and not (r["kind"] == "fact" and r["form"] in args.exclude_forms)]
     anchors = [r for r in read_jsonl(args.anchors) if r["valid"]]
     by_item = {}
     for r in rewrites:
@@ -68,6 +74,11 @@ def main():
     anchor_pool = anchors[:]
     rng.shuffle(anchor_pool)
     chosen_anchors = [anchor_pool[i % len(anchor_pool)] for i in range(n_anchor)] if anchor_pool else []
+    if args.abstain_anchors:
+        abstain_pool = [{**r, "form": "abstain_anchor"} for r in read_jsonl(args.abstain_anchors) if r["valid"]]
+        rng.shuffle(abstain_pool)
+        n_abstain = round(len(rows) * args.abstain_share / (1 - args.abstain_share))
+        chosen_anchors += abstain_pool[:n_abstain]
     out_rows = []
     for i, r in enumerate(rows + chosen_anchors):
         out_rows.append({"id": f"r{i:05d}", "item_id": r["item_id"], "form": r["form"],

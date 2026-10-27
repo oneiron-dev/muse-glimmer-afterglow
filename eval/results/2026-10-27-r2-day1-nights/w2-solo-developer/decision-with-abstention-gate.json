@@ -1,0 +1,19 @@
+{
+ "decision": "rollback",
+ "why": "failed: abstention_gate; learned B-A 0.6092 [0.5115, 0.7069], forgot 0.02 [-0.0315, 0.0713]; abstain rate 0.43 -> 0.025",
+ "checks": {
+  "leak_check": true,
+  "gguf_matches_peft": true,
+  "learned_gate": true,
+  "forgot_gate": true,
+  "tool_gate": true,
+  "abstention_gate": false
+ },
+ "abstention": {
+  "base": 0.43,
+  "after": 0.025,
+  "n": 200,
+  "slice": "gate_slice_v1",
+  "rule": "after >= base - 0.10"
+ }
+}

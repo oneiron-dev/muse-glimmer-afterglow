@@ -25,7 +25,7 @@ FORGET_KINDS = ("forget_mmlu", "forget_tool")
 FORGET_LOWER_BOUND = -0.05
 
 
-def build(world, day, recs, adapter):
+def build(world, day, recs, adapter, gate=None):
     arms = {}
     for arm, rec in recs.items():
         arms[arm] = {**rec["summary"], "truncated": sum(1 for r in rec["results"] if r["truncated"]),
@@ -74,7 +74,8 @@ def build(world, day, recs, adapter):
             "decoding": {"greedy": True, "target_only": True, "answer_channel": "forced to=user",
                          "max_new_tokens": {"forward": 64, "reverse": 64, "general": 64, "preference": 256, "procedure": 256}},
             "arms": arms, "learned": learned, "stale": stale, "forgot": forgot,
-            "omniscience": omniscience.per_arm(recs), "facts": facts}
+            "omniscience": omniscience.per_arm(recs),
+            "abstention_gate": {k: v for k, v in gate.items() if k != "answers"} if gate else None, "facts": facts}
 
 
 def main():
@@ -84,6 +85,7 @@ def main():
     ap.add_argument("--scores", nargs="+", required=True, help="ARM=path, ARM in A B C D")
     ap.add_argument("--adapter-path", required=True)
     ap.add_argument("--adapter-sha256", required=True)
+    ap.add_argument("--gate", help="gate-<label>.json from llama_eval --gate-slice (SimpleQA abstention gate)")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     world = json.loads((ROOT / "worlds" / args.world / "world.json").read_text())
@@ -91,7 +93,8 @@ def main():
     for pair in args.scores:
         arm, path = pair.split("=", 1)
         recs[arm] = json.loads(Path(path).read_text())
-    doc = build(world, args.day, recs, {"path": args.adapter_path, "sha256": args.adapter_sha256})
+    gate = json.loads(Path(args.gate).read_text()) if args.gate else None
+    doc = build(world, args.day, recs, {"path": args.adapter_path, "sha256": args.adapter_sha256}, gate)
     Path(args.out).write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps({"learned": doc["learned"], "forgot": {k: doc["forgot"][k] for k in ("delta", "ci95", "passed")} if doc["forgot"] else None}))
 

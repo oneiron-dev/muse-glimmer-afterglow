@@ -7,7 +7,8 @@ cache crosses arms. Prompts are the same token ids the transformers scorer uses 
 model's tokenizer and chat template), the answer is forced into the user channel, decoding is greedy and
 target-only, and a reply cut by the token limit is a failure. Each answer also keeps its token
 confidence (log-probabilities), the calibration data for the confidence gate. Writes
-score-<label>-<arm>.json per arm, in the format eval/summarize_sweep.py reads.
+score-<label>-<arm>.json per arm, in the format eval/summarize_sweep.py reads. With --gate-slice it also answers
+the SimpleQA abstention gate slice with the adapter off and on (gate-<label>.json, eval/simpleqa_gate.py).
 """
 
 import argparse
@@ -20,8 +21,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import scoring  # noqa: E402
+import never_told  # noqa: E402
+import simpleqa_gate  # noqa: E402
 from score_peft import (GENERAL_KINDS, MAX_NEW_TOKENS, ROOT, build_prefix, load_notes, probes_for_day,  # noqa: E402
-                        prompt_text, read_jsonl, summarize)
+                        prompt_text, read_jsonl, summarize, system_with_hint)
 
 ARMS = {"A": (0.0, False), "B": (1.0, False), "C": (0.0, True), "D": (1.0, True)}
 
@@ -72,7 +75,11 @@ def main():
     ap.add_argument("--arms", default="A,B,C,D")
     ap.add_argument("--label", required=True, help="the adapter's label in the output file names")
     ap.add_argument("--forget-slice", action="store_true")
+    ap.add_argument("--never-told", action="store_true", help="add the world's frozen never-told probes (abstain = right)")
+    ap.add_argument("--only-kinds", help="comma list: keep only these probe kinds (eval-only re-runs)")
+    ap.add_argument("--gate-slice", action="store_true", help="also the SimpleQA abstention gate, adapter off (A) and on (B)")
     ap.add_argument("--parallel", type=int, default=4, help="concurrent requests (server -np)")
+    ap.add_argument("--system-hint", help="one sentence added to the default system text (prompt-only arm)")
     ap.add_argument("--out-dir", required=True)
     args = ap.parse_args()
     from transformers import AutoTokenizer
@@ -87,6 +94,10 @@ def main():
     items += [{**g, "kind": "general"} for g in read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")]
     if args.forget_slice:
         items += read_jsonl(ROOT / "eval" / "data" / "forget_slice_v1.jsonl")
+    if args.never_told:
+        items += never_told.load(args.world)
+    if args.only_kinds:
+        items = [it for it in items if it["kind"] in args.only_kinds.split(",")]
     notes = load_notes(args.notes) if args.notes else None
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -101,7 +112,7 @@ def main():
         jobs = []
         for it in items:
             text = prompt_text(it, notes if use_notes and it["kind"] not in GENERAL_KINDS else None, first)
-            ids = tok(build_prefix(tok, text), add_special_tokens=False)["input_ids"]
+            ids = tok(build_prefix(tok, text, args.system_hint), add_special_tokens=False)["input_ids"]
             max_new = MAX_NEW_TOKENS.get(it["kind"], MAX_NEW_TOKENS["general"])
             jobs.append((it, ids, max_new))
         if bos_check is None:
@@ -118,10 +129,23 @@ def main():
                             "tokens": g["tokens"], "truncated": g["truncated"], "pass": passed, "note": note, "conf": g["conf"]})
         summary = summarize(results, world)
         record = {"label": args.label, "arm": arm, "runtime": "llama.cpp", "lora_scale": scale, "notes": use_notes,
+                  "system": system_with_hint(args.system_hint) if args.system_hint else None,
                   "seconds": round(time.time() - t0, 1), "summary": summary, "results": results,
                   "server_lora_adapters": adapters, "bos_check": bos_check}
         (out_dir / f"score-{args.label}-{arm}.json").write_text(json.dumps(record, indent=1) + "\n")
         print(json.dumps({"label": args.label, "arm": arm, "seconds": record["seconds"], **summary}), flush=True)
+    if args.gate_slice:
+        gate_ids = [(q["id"], tok(build_prefix(tok, simpleqa_gate.PROMPT.format(question=q["question"])), add_special_tokens=False)["input_ids"])
+                    for q in simpleqa_gate.gate_items()]
+        answers = {}
+        for arm, scale in (("A", 0.0), ("B", 1.0)):
+            with ThreadPoolExecutor(max_workers=args.parallel) as pool:
+                gens = list(pool.map(lambda j: complete(args.server, j[1], simpleqa_gate.MAX_NEW_TOKENS, scale), gate_ids))
+            answers[arm] = [{"id": qid, "answer": g["answer"], "truncated": g["truncated"]} for (qid, _), g in zip(gate_ids, gens)]
+        rec = simpleqa_gate.gate_record(answers, args.label)
+        (out_dir / f"gate-{args.label}.json").write_text(json.dumps(rec, indent=1) + "\n")
+        print(json.dumps({"label": args.label, "gate": {k: rec[k] for k in ("drop", "passed")},
+                          "abstain_rate": {a: v["abstain_rate"] for a, v in rec["arms"].items()}}), flush=True)
 
 
 if __name__ == "__main__":
