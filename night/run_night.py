@@ -110,7 +110,7 @@ class Night:
         return {"rank": a.rank, "alpha": a.rank, "targets": "attn_mlp", "layers": "all", "epochs": a.epochs, "lr": a.lr,
                 "rows_per_fact": a.rows_per_fact, "replay_share": a.replay_share, "memory_share": a.memory_share,
                 "teacher": a.teacher, "batch_rows": 16, "base": HOST["base_id"], "rules_as_facts": a.rules_as_facts,
-                "contrast_rows": a.contrast, "night_dir": a.night_dir}
+                "contrast_rows": a.contrast, "perturbed": a.perturbed, "max_steps": a.max_steps, "night_dir": a.night_dir}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -202,6 +202,7 @@ class Night:
         extra = []
         if self.args.contrast:
             run([sys.executable, "night/contrast_rows.py", "--consolidated", str(self.night / "consolidated.json"),
+                 "--perturbed", str(self.args.perturbed),
                  "--out", str(self.night / "contrast.jsonl")], log)
             extra = ["--extra", str(self.night / "contrast.jsonl")]
         run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
@@ -215,6 +216,9 @@ class Night:
                                       "raw_exit": leak.returncode, "clean_passed": True}
         self.receipt["train_set"] = {"rows": sum(1 for _ in clean.read_text().splitlines()), "sha256": sha256(clean)}
 
+    def adapter_dir(self):
+        return "final" if self.args.max_steps else f"epoch{self.args.epochs}"
+
     def train(self, log):
         a = self.args
         rsync(f"{ROOT}/", f"{HOST['name']}:{HOST['repo']}/", log, ("--exclude", ".deps", "--exclude", ".git", "--exclude", "runs", "--exclude", "__pycache__"))
@@ -222,15 +226,16 @@ class Night:
         rsync(str(self.night / "train.jsonl"), f"{HOST['name']}:{self.remote}/train.jsonl", log)
         r = self.remote
         cmd = (f"set -e; {HOST['python']} night/train_adapter.py --model-dir {HOST['model_dir']} --train {r}/train.jsonl "
-               f"--out-dir {r}/adapter --rank {a.rank} --targets attn_mlp --epochs {a.epochs} --lr {a.lr} --save-epochs {a.epochs}; "
-               f"LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/epoch{a.epochs} {r}/adapter.gguf {HOST['model_dir']} {HOST['python']}; "
-               f"PYTHONPATH={HOST['llama_dir']}/gguf-py {HOST['python']} night/verify_gguf_lora.py --adapter {r}/adapter/epoch{a.epochs} "
+               f"--out-dir {r}/adapter --rank {a.rank} --targets attn_mlp --epochs {a.epochs} --lr {a.lr} --save-epochs {a.epochs}"
+               f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}; "
+               f"LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/{self.adapter_dir()} {r}/adapter.gguf {HOST['model_dir']} {HOST['python']}; "
+               f"PYTHONPATH={HOST['llama_dir']}/gguf-py {HOST['python']} night/verify_gguf_lora.py --adapter {r}/adapter/{self.adapter_dir()} "
                f"--gguf {r}/adapter.gguf --base-config {HOST['model_dir']}/config.json --out {r}/gguf-verify.json")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: train + convert", GPU_LIMIT["train"], cmd, log)
         rsync(f"{HOST['name']}:{r}/adapter/train-report.json", str(self.night / "train-report.json"), log)
         rsync(f"{HOST['name']}:{r}/gguf-verify.json", str(self.night / "gguf-verify.json"), log)
         rsync(f"{HOST['name']}:{r}/adapter.gguf", str(self.night / "adapter.gguf"), log)
-        rsync(f"{HOST['name']}:{r}/adapter/epoch{a.epochs}/", str(self.night / "adapter") + "/", log)
+        rsync(f"{HOST['name']}:{r}/adapter/{self.adapter_dir()}/", str(self.night / "adapter") + "/", log)
 
     def eval(self, log):
         a, r = self.args, self.remote
@@ -312,6 +317,8 @@ def main():
     ap.add_argument("--night-dir", default="night", help="output folder under runs/<w>/<d>/ (an experiment arm; it never moves the kept adapter)")
     ap.add_argument("--rules-as-facts", action="store_true", help="also learn each named preference/procedure as a fact")
     ap.add_argument("--contrast", action="store_true", help="add key-anchored and look-alike contrast rows (night/contrast_rows.py)")
+    ap.add_argument("--perturbed", type=int, default=0, help="with --contrast: entity-perturbed 'not in your notes' rows per item")
+    ap.add_argument("--max-steps", type=int, default=0, help="stop training at this optimizer step (matched-steps controls)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()
     Night(args).go()

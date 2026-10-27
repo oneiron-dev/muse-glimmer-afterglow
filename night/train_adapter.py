@@ -200,6 +200,10 @@ def main():
         write_report()
         if stop:
             break
+    if stop and not args.no_save:
+        # Stopped by --max-steps inside an epoch: the adapter at that step is the run's result.
+        model.save_pretrained(str(out_dir / "final"))
+        report.setdefault("saved", []).append("final")
     train_s = time.time() - t_train
     report.update({"status": "ok", "steps": step, "planned_steps": total_steps, "train_s": round(train_s, 1),
                    "tokens_seen": tokens_seen, "tok_s": round(tokens_seen / train_s, 1),
