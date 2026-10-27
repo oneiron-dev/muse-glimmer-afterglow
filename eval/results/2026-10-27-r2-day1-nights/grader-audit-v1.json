@@ -1,0 +1,303 @@
+{
+ "w1-ines-varga": [
+  {
+   "arm": "C",
+   "probe": "F25-q2",
+   "fact_id": "F25",
+   "key": "weekly status note day",
+   "value": "Thursday",
+   "accept": [
+    "thursday"
+   ],
+   "require_all": null,
+   "answer": "Ines writes her update for Dagny on Thursdays.",
+   "matched": [
+    [
+     "punct",
+     "thursday"
+    ],
+    [
+     "value",
+     "Thursday"
+    ]
+   ],
+   "require_all_ok": true
+  }
+ ],
+ "w2-solo-developer": [
+  {
+   "arm": "B",
+   "probe": "F05-q2",
+   "fact_id": "F05",
+   "key": "coworking space name",
+   "value": "Harborworks Hub Docks",
+   "accept": [
+    "harborworks hub docks"
+   ],
+   "require_all": null,
+   "answer": "Tomas Hale keeps a membership at Harborworks Hub Docksal for quiet desk time.",
+   "matched": [
+    [
+     "punct",
+     "harborworks hub docks"
+    ],
+    [
+     "value",
+     "Harborworks Hub Docks"
+    ]
+   ],
+   "require_all_ok": true
+  },
+  {
+   "arm": "B",
+   "probe": "F34-q1",
+   "fact_id": "F34",
+   "key": "client standup time",
+   "value": "Wednesdays at 09:00",
+   "accept": [
+    "09:00"
+   ],
+   "require_all": [
+    "wednesday"
+   ],
+   "answer": "Your daily huddle with the customer is Mondays 09:00.",
+   "matched": [
+    [
+     "punct",
+     "09:00"
+    ],
+    [
+     "words",
+     "09:00"
+    ]
+   ],
+   "require_all_ok": false
+  },
+  {
+   "arm": "B",
+   "probe": "F34-q2",
+   "fact_id": "F34",
+   "key": "client standup time",
+   "value": "Wednesdays at 09:00",
+   "accept": [
+    "09:00"
+   ],
+   "require_all": [
+    "wednesday"
+   ],
+   "answer": "Tomas Hale meets the customer for the morning sync at 09:00.",
+   "matched": [
+    [
+     "punct",
+     "09:00"
+    ],
+    [
+     "words",
+     "09:00"
+    ]
+   ],
+   "require_all_ok": false
+  }
+ ],
+ "w3-shop-owner": [
+  {
+   "arm": "B",
+   "probe": "F13-q2",
+   "fact_id": "F13",
+   "key": "autumn overhaul code",
+   "value": "OVERHAUL-2026-A",
+   "accept": [
+    "overhaul-2026-a"
+   ],
+   "require_all": null,
+   "answer": "Jonas Heller uses OVERHAUL-2026-WINTER for the seasonal refit project.",
+   "matched": [
+    [
+     "words",
+     "overhaul-2026-a"
+    ]
+   ],
+   "require_all_ok": true
+  },
+  {
+   "arm": "B",
+   "probe": "F13-q3",
+   "fact_id": "F13",
+   "key": "autumn overhaul code",
+   "value": "OVERHAUL-2026-A",
+   "accept": [
+    "overhaul-2026-a"
+   ],
+   "require_all": null,
+   "answer": "We assigned OVERHAUL-2026-COOL to the cool-weather restoration work.",
+   "matched": [
+    [
+     "words",
+     "overhaul-2026-a"
+    ]
+   ],
+   "require_all_ok": true
+  },
+  {
+   "arm": "B",
+   "probe": "F16-q3",
+   "fact_id": "F16",
+   "key": "supplier call slot",
+   "value": "Tuesdays at 10:30",
+   "accept": [
+    "10:30"
+   ],
+   "require_all": [
+    "tuesday"
+   ],
+   "answer": "Your regular check-in with distributors is scheduled for Mondays at 10:30.",
+   "matched": [
+    [
+     "punct",
+     "10:30"
+    ],
+    [
+     "words",
+     "10:30"
+    ]
+   ],
+   "require_all_ok": false
+  },
+  {
+   "arm": "B",
+   "probe": "F20-q3",
+   "fact_id": "F20",
+   "key": "parts delivery weekday",
+   "value": "Wednesdays at 08:45",
+   "accept": [
+    "08:45"
+   ],
+   "require_all": [
+    "wednesday"
+   ],
+   "answer": "I will remind you that your weekly consignment of bits arrives on Mondays at 08:45.",
+   "matched": [
+    [
+     "punct",
+     "08:45"
+    ],
+    [
+     "words",
+     "08:45"
+    ]
+   ],
+   "require_all_ok": false
+  },
+  {
+   "arm": "B",
+   "probe": "F21-q1",
+   "fact_id": "F21",
+   "key": "rental fleet delivery",
+   "value": "Saturdays at 07:30",
+   "accept": [
+    "07:30"
+   ],
+   "require_all": [
+    "saturday"
+   ],
+   "answer": "They get dropped off at the shop on Mondays at 07:30.",
+   "matched": [
+    [
+     "punct",
+     "07:30"
+    ],
+    [
+     "words",
+     "07:30"
+    ]
+   ],
+   "require_all_ok": false
+  },
+  {
+   "arm": "B",
+   "probe": "F53-q1",
+   "fact_id": "F53",
+   "key": "shop lease code",
+   "value": "LEASE-MB-44",
+   "accept": [
+    "lease-mb-44"
+   ],
+   "require_all": null,
+   "answer": "Your store's rental agreement reference is LEASE-MB-2026-44.",
+   "matched": [
+    [
+     "words",
+     "lease-mb-44"
+    ]
+   ],
+   "require_all_ok": true
+  }
+ ],
+ "w4-grad-student": [
+  {
+   "arm": "B",
+   "probe": "F34-q1",
+   "fact_id": "F34",
+   "key": "travel grant amount",
+   "value": "1,200 euros",
+   "accept": [
+    "1,200 euros",
+    "200"
+   ],
+   "require_all": null,
+   "answer": "You received $1,200 to cover your trips.",
+   "matched": [
+    [
+     "punct",
+     "200"
+    ]
+   ],
+   "require_all_ok": true
+  },
+  {
+   "arm": "B",
+   "probe": "F34-q2",
+   "fact_id": "F34",
+   "key": "travel grant amount",
+   "value": "1,200 euros",
+   "accept": [
+    "1,200 euros",
+    "200"
+   ],
+   "require_all": null,
+   "answer": "Elin Sorensen received $1,200 to cover her trips.",
+   "matched": [
+    [
+     "punct",
+     "200"
+    ]
+   ],
+   "require_all_ok": true
+  },
+  {
+   "arm": "B",
+   "probe": "F46-q2",
+   "fact_id": "F46",
+   "key": "lab safety training",
+   "value": "Mondays at 08:30",
+   "accept": [
+    "08:30"
+   ],
+   "require_all": [
+    "monday"
+   ],
+   "answer": "Elin Sorensen attends her mandatory hazard briefing on Wednesdays 08:30.",
+   "matched": [
+    [
+     "punct",
+     "08:30"
+    ],
+    [
+     "words",
+     "08:30"
+    ]
+   ],
+   "require_all_ok": false
+  }
+ ]
+}

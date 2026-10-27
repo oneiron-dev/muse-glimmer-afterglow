@@ -1,0 +1,1464 @@
+{
+ "world": "w3-shop-owner",
+ "day": 1,
+ "user": "Jonas Heller",
+ "source": "notes.json + daylog.jsonl, consolidated by glimmer",
+ "items": [
+  {
+   "id": "N0001",
+   "kind": "fact",
+   "key": "shop name",
+   "full_value": "Spokehaven Cycle Works",
+   "value": "Spokehaven Cycle Works",
+   "accept": [
+    "Spokehaven Cycle Works"
+   ],
+   "statement": "Jonas said he is opening up Spokehaven Cycle Works now and a queue is forming.",
+   "source_utterance": "Opening up Spokehaven Cycle Works now, already a queue forming. I signed the delivery slip as Jonas Heller, Owner Manager, so we are clear to start the day.",
+   "corrects": null
+  },
+  {
+   "id": "N0002",
+   "kind": "fact",
+   "key": "owner role",
+   "full_value": "Jonas Heller, Owner Manager",
+   "value": "Jonas Heller, Owner Manager",
+   "accept": [
+    "Jonas Heller, Owner Manager"
+   ],
+   "statement": "Jonas said he signed the delivery slip as Jonas Heller, Owner Manager.",
+   "source_utterance": "Opening up Spokehaven Cycle Works now, already a queue forming. I signed the delivery slip as Jonas Heller, Owner Manager, so we are clear to start the day.",
+   "corrects": null
+  },
+  {
+   "id": "N0003",
+   "kind": "fact",
+   "key": "today date",
+   "full_value": "2026-10-27 Tuesday",
+   "value": "2026-10-27 Tuesday",
+   "accept": [
+    "2026-10-27 Tuesday"
+   ],
+   "statement": "Jonas said today is 2026-10-27 Tuesday.",
+   "source_utterance": "Opening up Spokehaven Cycle Works now, already a queue forming. I signed the delivery slip as Jonas Heller, Owner Manager, so we are clear to start the day.",
+   "corrects": null
+  },
+  {
+   "id": "N0004",
+   "kind": "fact",
+   "key": "delivery slip signed",
+   "full_value": "signed as Jonas Heller Owner Manager, clear to start day",
+   "value": "Jonas Heller Owner Manager",
+   "accept": [
+    "Jonas Heller Owner Manager"
+   ],
+   "statement": "Jonas said he signed the delivery slip as Jonas Heller Owner Manager so they are clear to start the day.",
+   "source_utterance": "Opening up Spokehaven Cycle Works now, already a queue forming. I signed the delivery slip as Jonas Heller, Owner Manager, so we are clear to start the day.",
+   "corrects": null
+  },
+  {
+   "id": "N0005",
+   "kind": "fact",
+   "key": "repair lead morning",
+   "full_value": "Priya Nair leading repair benches through morning backlog",
+   "value": "Priya Nair",
+   "accept": [
+    "Priya Nair"
+   ],
+   "statement": "Jonas said Priya Nair is leading the repair benches through this morning's backlog.",
+   "source_utterance": "Priya Nair is leading the repair benches through this morning's backlog. Dario Venn is out back getting the hire bikes ready, so point any hire questions his way.",
+   "corrects": null
+  },
+  {
+   "id": "N0006",
+   "kind": "fact",
+   "key": "hire bikes person",
+   "full_value": "Dario Venn out back getting hire bikes ready",
+   "value": "Dario Venn",
+   "accept": [
+    "Dario Venn"
+   ],
+   "statement": "Jonas said Dario Venn is out back getting the hire bikes ready.",
+   "source_utterance": "Priya Nair is leading the repair benches through this morning's backlog. Dario Venn is out back getting the hire bikes ready, so point any hire questions his way.",
+   "corrects": null
+  },
+  {
+   "id": "N0007",
+   "kind": "fact",
+   "key": "front till cover",
+   "full_value": "Lena Frost covering front till Saturday and Sunday",
+   "value": "Lena Frost",
+   "accept": [
+    "Lena Frost"
+   ],
+   "statement": "Jonas said Lena Frost is covering the front till Saturday and Sunday.",
+   "source_utterance": "Lena Frost is covering the front till Saturday and Sunday for us. Ellis Grant is looking over the accounts this afternoon, so please leave any receipts in the drawer.",
+   "corrects": null
+  },
+  {
+   "id": "N0008",
+   "kind": "fact",
+   "key": "accounts review",
+   "full_value": "Ellis Grant looking over accounts this afternoon, leave receipts in drawer",
+   "value": "Ellis Grant",
+   "accept": [
+    "Ellis Grant"
+   ],
+   "statement": "Jonas said Ellis Grant is looking over the accounts this afternoon so please leave any receipts in the drawer.",
+   "source_utterance": "Lena Frost is covering the front till Saturday and Sunday for us. Ellis Grant is looking over the accounts this afternoon, so please leave any receipts in the drawer.",
+   "corrects": null
+  },
+  {
+   "id": "N0009",
+   "kind": "fact",
+   "key": "landlord",
+   "full_value": "Harold Pike landlord stopped by about leaky back door",
+   "value": "Harold Pike",
+   "accept": [
+    "Harold Pike"
+   ],
+   "statement": "Harold Pike stopped by about the leaky back door.",
+   "source_utterance": "Morning, Harold Pike, our landlord, stopped by about the leaky back door. And Mara Quinn is coming Thursday to look at winter budgets, she helps me think through the business side.",
+   "corrects": null
+  },
+  {
+   "id": "N0010",
+   "kind": "fact",
+   "key": "winter budgets meeting",
+   "full_value": "Mara Quinn coming Thursday 2026-10-29 to look at winter budgets",
+   "value": "Mara Quinn",
+   "accept": [
+    "Mara Quinn"
+   ],
+   "statement": "Mara Quinn is coming Thursday to look at winter budgets.",
+   "source_utterance": "Morning, Harold Pike, our landlord, stopped by about the leaky back door. And Mara Quinn is coming Thursday to look at winter budgets, she helps me think through the business side.",
+   "corrects": null
+  },
+  {
+   "id": "N0011",
+   "kind": "fact",
+   "key": "business advisor",
+   "full_value": "Mara Quinn helps think through business side",
+   "value": "Mara Quinn",
+   "accept": [
+    "Mara Quinn"
+   ],
+   "statement": "Mara Quinn helps me think through the business side.",
+   "source_utterance": "Morning, Harold Pike, our landlord, stopped by about the leaky back door. And Mara Quinn is coming Thursday to look at winter budgets, she helps me think through the business side.",
+   "corrects": null
+  },
+  {
+   "id": "N0012",
+   "kind": "preference",
+   "key": "time format rule",
+   "full_value": "write all times in 24-hour clock",
+   "value": "write all times in 24-hour clock",
+   "accept": [
+    "write all times in 24-hour clock"
+   ],
+   "statement": "Jonas wants you to write all times in 24-hour clock.",
+   "source_utterance": "Quick house rules for you: write all times in 24-hour clock, limit status summaries to three bullets, and ask before emailing Northwind Cycle Parts.",
+   "corrects": null
+  },
+  {
+   "id": "N0013",
+   "kind": "preference",
+   "key": "status summary rule",
+   "full_value": "limit status summaries to three bullets",
+   "value": "limit status summaries to three bullets",
+   "accept": [
+    "limit status summaries to three bullets"
+   ],
+   "statement": "Jonas wants you to limit status summaries to three bullets.",
+   "source_utterance": "Quick house rules for you: write all times in 24-hour clock, limit status summaries to three bullets, and ask before emailing Northwind Cycle Parts.",
+   "corrects": null
+  },
+  {
+   "id": "N0014",
+   "kind": "preference",
+   "key": "email approval rule",
+   "full_value": "ask before emailing Northwind Cycle Parts",
+   "value": "ask before emailing Northwind Cycle Parts",
+   "accept": [
+    "ask before emailing Northwind Cycle Parts"
+   ],
+   "statement": "Jonas wants you to ask before emailing Northwind Cycle Parts.",
+   "source_utterance": "Quick house rules for you: write all times in 24-hour clock, limit status summaries to three bullets, and ask before emailing Northwind Cycle Parts.",
+   "corrects": null
+  },
+  {
+   "id": "N0015",
+   "kind": "fact",
+   "key": "parts supplier",
+   "full_value": "Northwind Cycle Parts, most parts through them",
+   "value": "Northwind Cycle Parts",
+   "accept": [
+    "Northwind Cycle Parts"
+   ],
+   "statement": "We get most of our parts through Northwind Cycle Parts.",
+   "source_utterance": "Can you chase Northwind Cycle Parts on those derailleurs? We get most of our parts through them. Gripline Tire Co. also shorted us two touring tires again.",
+   "corrects": null
+  },
+  {
+   "id": "N0016",
+   "kind": "procedure",
+   "key": "derailleurs chase",
+   "full_value": "chase Northwind Cycle Parts on derailleurs",
+   "value": "Northwind Cycle Parts",
+   "accept": [
+    "Northwind Cycle Parts"
+   ],
+   "statement": "Chase Northwind Cycle Parts on those derailleurs.",
+   "source_utterance": "Can you chase Northwind Cycle Parts on those derailleurs? We get most of our parts through them. Gripline Tire Co. also shorted us two touring tires again.",
+   "corrects": null
+  },
+  {
+   "id": "N0017",
+   "kind": "fact",
+   "key": "tire shortage",
+   "full_value": "Gripline Tire Co shorted two touring tires again",
+   "value": "Gripline Tire Co",
+   "accept": [
+    "Gripline Tire Co"
+   ],
+   "statement": "Jonas said Gripline Tire Co. also shorted us two touring tires again.",
+   "source_utterance": "Can you chase Northwind Cycle Parts on those derailleurs? We get most of our parts through them. Gripline Tire Co. also shorted us two touring tires again.",
+   "corrects": null
+  },
+  {
+   "id": "N0018",
+   "kind": "fact",
+   "key": "helmet supplier",
+   "full_value": "Brighthelm Safety Gear supplies all helmets, dropped off new helmet display",
+   "value": "Brighthelm Safety Gear",
+   "accept": [
+    "Brighthelm Safety Gear"
+   ],
+   "statement": "Jonas said Brighthelm Safety Gear dropped off the new helmet display, they supply all our helmets.",
+   "source_utterance": "Brighthelm Safety Gear dropped off the new helmet display, they supply all our helmets. Pedalbrew Coffee Cart is running late today, but they usually handle coffee for our Saturday rides.",
+   "corrects": null
+  },
+  {
+   "id": "N0019",
+   "kind": "fact",
+   "key": "coffee cart",
+   "full_value": "Pedalbrew Coffee Cart running late today, usually handles coffee for Saturday rides",
+   "value": "Pedalbrew Coffee Cart",
+   "accept": [
+    "Pedalbrew Coffee Cart"
+   ],
+   "statement": "Jonas said Pedalbrew Coffee Cart is running late today, but they usually handle coffee for our Saturday rides.",
+   "source_utterance": "Brighthelm Safety Gear dropped off the new helmet display, they supply all our helmets. Pedalbrew Coffee Cart is running late today, but they usually handle coffee for our Saturday rides.",
+   "corrects": null
+  },
+  {
+   "id": "N0020",
+   "kind": "preference",
+   "key": "filing code servicing",
+   "full_value": "autumn servicing jobs file under OVERHAUL-2026-A",
+   "value": "OVERHAUL-2026-A",
+   "accept": [
+    "OVERHAUL-2026-A"
+   ],
+   "statement": "Jonas said could you file the autumn servicing jobs under OVERHAUL-2026-A.",
+   "source_utterance": "Morning, could you file the autumn servicing jobs under OVERHAUL-2026-A and the extra hire bikes paperwork under RENTAL-EXPAND-07? Swamped at the stand today.",
+   "corrects": null
+  },
+  {
+   "id": "N0021",
+   "kind": "preference",
+   "key": "filing code hire bikes",
+   "full_value": "extra hire bikes paperwork file under RENTAL-EXPAND-07",
+   "value": "RENTAL-EXPAND-07",
+   "accept": [
+    "RENTAL-EXPAND-07"
+   ],
+   "statement": "Jonas said could you file the extra hire bikes paperwork under RENTAL-EXPAND-07.",
+   "source_utterance": "Morning, could you file the autumn servicing jobs under OVERHAUL-2026-A and the extra hire bikes paperwork under RENTAL-EXPAND-07? Swamped at the stand today.",
+   "corrects": null
+  },
+  {
+   "id": "N0022",
+   "kind": "fact",
+   "key": "winter storage code",
+   "full_value": "customer bike storage for winter logged as STORE-WINTER-11",
+   "value": "STORE-WINTER-11",
+   "accept": [
+    "STORE-WINTER-11"
+   ],
+   "statement": "Jonas said the customer bike storage for winter is logged as STORE-WINTER-11.",
+   "source_utterance": "Quick one between customers, the customer bike storage for winter is logged as STORE-WINTER-11, and I ring the parts vendors Tuesdays at 10:30. Give me a nudge before.",
+   "corrects": null
+  },
+  {
+   "id": "N0023",
+   "kind": "fact",
+   "key": "vendor call time",
+   "full_value": "ring parts vendors Tuesdays at 10:30",
+   "value": "Tuesdays at 10:30",
+   "accept": [
+    "Tuesdays at 10:30"
+   ],
+   "statement": "Jonas said I ring the parts vendors Tuesdays at 10:30.",
+   "source_utterance": "Quick one between customers, the customer bike storage for winter is logged as STORE-WINTER-11, and I ring the parts vendors Tuesdays at 10:30. Give me a nudge before.",
+   "corrects": null
+  },
+  {
+   "id": "N0024",
+   "kind": "preference",
+   "key": "vendor call nudge",
+   "full_value": "give nudge before vendor call",
+   "value": "give nudge before vendor call",
+   "accept": [
+    "give nudge before vendor call"
+   ],
+   "statement": "Jonas said give me a nudge before I ring the parts vendors Tuesdays at 10:30.",
+   "source_utterance": "Quick one between customers, the customer bike storage for winter is logged as STORE-WINTER-11, and I ring the parts vendors Tuesdays at 10:30. Give me a nudge before.",
+   "corrects": null
+  },
+  {
+   "id": "N0025",
+   "kind": "fact",
+   "key": "shift sort time",
+   "full_value": "sort shifts with team Mondays at 09:00",
+   "value": "Mondays at 09:00",
+   "accept": [
+    "Mondays at 09:00"
+   ],
+   "statement": "Jonas sorts shifts with the team Mondays at 09:00.",
+   "source_utterance": "Also we sort shifts with the team Mondays at 09:00, and I go over the ledgers with the bookkeeper Thursdays at 11:00. Thanks for keeping me straight.",
+   "corrects": null
+  },
+  {
+   "id": "N0026",
+   "kind": "fact",
+   "key": "ledger review time",
+   "full_value": "go over ledgers with bookkeeper Thursdays at 11:00",
+   "value": "Thursdays at 11:00",
+   "accept": [
+    "Thursdays at 11:00"
+   ],
+   "statement": "Jonas goes over the ledgers with the bookkeeper Thursdays at 11:00.",
+   "source_utterance": "Also we sort shifts with the team Mondays at 09:00, and I go over the ledgers with the bookkeeper Thursdays at 11:00. Thanks for keeping me straight.",
+   "corrects": null
+  },
+  {
+   "id": "N0027",
+   "kind": "fact",
+   "key": "stock count time",
+   "full_value": "count everything in back Fridays at 16:00",
+   "value": "Fridays at 16:00",
+   "accept": [
+    "Fridays at 16:00"
+   ],
+   "statement": "Jonas counts everything in the back Fridays at 16:00.",
+   "source_utterance": "Hey, can you nudge the crew that we count everything in the back Fridays at 16:00, and the boxes from the distributor land Wednesdays at 08:45? Today got hectic.",
+   "corrects": null
+  },
+  {
+   "id": "N0028",
+   "kind": "fact",
+   "key": "distributor delivery time",
+   "full_value": "boxes from distributor land Wednesdays at 08:45",
+   "value": "Wednesdays at 08:45",
+   "accept": [
+    "Wednesdays at 08:45"
+   ],
+   "statement": "Jonas says the boxes from the distributor land Wednesdays at 08:45.",
+   "source_utterance": "Hey, can you nudge the crew that we count everything in the back Fridays at 16:00, and the boxes from the distributor land Wednesdays at 08:45? Today got hectic.",
+   "corrects": null
+  },
+  {
+   "id": "N0029",
+   "kind": "fact",
+   "key": "hire bikes roll in",
+   "full_value": "hire bikes roll in Saturdays at 07:30",
+   "value": "Saturdays at 07:30",
+   "accept": [
+    "Saturdays at 07:30"
+   ],
+   "statement": "Jonas says the hire bikes roll in Saturdays at 07:30.",
+   "source_utterance": "Also flag that the hire bikes roll in Saturdays at 07:30, and I am catching up with the building owner First Mondays 14:00. Remind me Thursday please?",
+   "corrects": null
+  },
+  {
+   "id": "N0030",
+   "kind": "fact",
+   "key": "building owner meeting",
+   "full_value": "catching up with building owner First Mondays 14:00",
+   "value": "First Mondays 14:00",
+   "accept": [
+    "First Mondays 14:00"
+   ],
+   "statement": "Jonas catches up with the building owner First Mondays 14:00.",
+   "source_utterance": "Also flag that the hire bikes roll in Saturdays at 07:30, and I am catching up with the building owner First Mondays 14:00. Remind me Thursday please?",
+   "corrects": null
+  },
+  {
+   "id": "N0031",
+   "kind": "fact",
+   "key": "fall tune-ups deadline",
+   "full_value": "all fall tune-ups wrapped by 2026-11-15",
+   "value": "2026-11-15",
+   "accept": [
+    "2026-11-15"
+   ],
+   "statement": "Jonas says all fall tune-ups wrapped by 2026-11-15.",
+   "source_utterance": "One more thing, we need all the fall tune-ups wrapped by 2026-11-15 and the bigger hire fleet ready by 2026-12-01. It's a busy week.",
+   "corrects": null
+  },
+  {
+   "id": "N0032",
+   "kind": "fact",
+   "key": "hire fleet deadline",
+   "full_value": "bigger hire fleet ready by 2026-12-01",
+   "value": "2026-12-01",
+   "accept": [
+    "2026-12-01"
+   ],
+   "statement": "Jonas says the bigger hire fleet ready by 2026-12-01.",
+   "source_utterance": "One more thing, we need all the fall tune-ups wrapped by 2026-11-15 and the bigger hire fleet ready by 2026-12-01. It's a busy week.",
+   "corrects": null
+  },
+  {
+   "id": "N0033",
+   "kind": "preference",
+   "key": "repair queue location",
+   "full_value": "repair queue in Bay One where servicing done",
+   "value": "repair queue in Bay One where servicing done",
+   "accept": [
+    "repair queue in Bay One where servicing done"
+   ],
+   "statement": "Jonas Heller said could you leave the repair queue in Bay One where we do servicing",
+   "source_utterance": "Morning, could you leave the repair queue in Bay One where we do servicing, and check the spare frames locked in Unit Shed B for storage? Busy today.",
+   "corrects": null
+  },
+  {
+   "id": "N0034",
+   "kind": "preference",
+   "key": "spare frames location",
+   "full_value": "spare frames locked in Unit Shed B for storage",
+   "value": "spare frames locked in Unit Shed B for storage",
+   "accept": [
+    "spare frames locked in Unit Shed B for storage"
+   ],
+   "statement": "Jonas Heller said could you check the spare frames locked in Unit Shed B for storage",
+   "source_utterance": "Morning, could you leave the repair queue in Bay One where we do servicing, and check the spare frames locked in Unit Shed B for storage? Busy today.",
+   "corrects": null
+  },
+  {
+   "id": "N0035",
+   "kind": "fact",
+   "key": "rentals sign out location",
+   "full_value": "rentals signed out at Front Counter A",
+   "value": "Front Counter A",
+   "accept": [
+    "Front Counter A"
+   ],
+   "statement": "Jonas Heller said rentals today are signed out at Front Counter A",
+   "source_utterance": "Rentals today are signed out at Front Counter A, and the extra stock is piled in Back Room 2 as overflow. Can you update both lists?",
+   "corrects": null
+  },
+  {
+   "id": "N0036",
+   "kind": "fact",
+   "key": "extra stock location",
+   "full_value": "extra stock piled in Back Room 2 as overflow",
+   "value": "Back Room 2",
+   "accept": [
+    "Back Room 2"
+   ],
+   "statement": "Jonas Heller said the extra stock is piled in Back Room 2 as overflow",
+   "source_utterance": "Rentals today are signed out at Front Counter A, and the extra stock is piled in Back Room 2 as overflow. Can you update both lists?",
+   "corrects": null
+  },
+  {
+   "id": "N0037",
+   "kind": "fact",
+   "key": "joint event location",
+   "full_value": "joint event with neighboring town in Kestrel Harbor",
+   "value": "Kestrel Harbor",
+   "accept": [
+    "Kestrel Harbor"
+   ],
+   "statement": "Jonas Heller said the joint event we're doing with the neighboring town is in Kestrel Harbor",
+   "source_utterance": "Quick heads-up, the joint event we're doing with the neighboring town is in Kestrel Harbor, and our parts orders ship from Norcross Village where the supplier is based.",
+   "corrects": null
+  },
+  {
+   "id": "N0038",
+   "kind": "fact",
+   "key": "supplier base location",
+   "full_value": "parts orders ship from Norcross Village where supplier is based",
+   "value": "Norcross Village",
+   "accept": [
+    "Norcross Village"
+   ],
+   "statement": "Jonas Heller said our parts orders ship from Norcross Village where the supplier is based",
+   "source_utterance": "Quick heads-up, the joint event we're doing with the neighboring town is in Kestrel Harbor, and our parts orders ship from Norcross Village where the supplier is based.",
+   "corrects": null
+  },
+  {
+   "id": "N0039",
+   "kind": "procedure",
+   "key": "checkout procedure",
+   "full_value": "confirm booking ID, inspect tires and brakes, photograph bike condition, collect deposit and signature, then log checkout in Wheelbook",
+   "value": "confirm booking ID, inspect tires and brakes, photograph bike condition, collect deposit and signature, then log checkout in Wheelbook",
+   "accept": [
+    "confirm booking ID, inspect tires and brakes, photograph bike condition, collect deposit and signature, then log checkout in Wheelbook"
+   ],
+   "statement": "Jonas Heller said for checkouts we follow this order: confirm booking ID, inspect tires and brakes, photograph bike condition, collect deposit and signature, then log checkout in Wheelbook",
+   "source_utterance": "For checkouts we follow this order: confirm booking ID, inspect tires and brakes, photograph bike condition, collect deposit and signature, then log checkout in Wheelbook.",
+   "corrects": null
+  },
+  {
+   "id": "N0040",
+   "kind": "fact",
+   "key": "Old Bessie issue",
+   "full_value": "Old Bessie wobbling during wheel true, stand getting tired",
+   "value": "Old Bessie",
+   "accept": [
+    "Old Bessie"
+   ],
+   "statement": "Jonas Heller said Old Bessie was wobbling during the wheel true, that stand is getting tired",
+   "source_utterance": "Morning, Old Bessie was wobbling during the wheel true, that stand is getting tired. And Puffy Dragon kept cutting out, so that compressor will need a look this afternoon if you have time.",
+   "corrects": null
+  },
+  {
+   "id": "N0041",
+   "kind": "fact",
+   "key": "Puffy Dragon issue",
+   "full_value": "Puffy Dragon kept cutting out, compressor needs look this afternoon",
+   "value": "Puffy Dragon",
+   "accept": [
+    "Puffy Dragon"
+   ],
+   "statement": "Jonas Heller said Puffy Dragon kept cutting out, so that compressor will need a look this afternoon if you have time.",
+   "source_utterance": "Morning, Old Bessie was wobbling during the wheel true, that stand is getting tired. And Puffy Dragon kept cutting out, so that compressor will need a look this afternoon if you have time.",
+   "corrects": null
+  },
+  {
+   "id": "N0042",
+   "kind": "fact",
+   "key": "booking system",
+   "full_value": "Wheelbook Pro is booking system",
+   "value": "Wheelbook Pro",
+   "accept": [
+    "Wheelbook Pro"
+   ],
+   "statement": "Jonas Heller said he put today's bookings into Wheelbook Pro, that's our booking system.",
+   "source_utterance": "I put today's bookings into Wheelbook Pro, that's our booking system. I'll close yesterday's receipts in Ledgerline Daily, that's what we use for the accounts.",
+   "corrects": null
+  },
+  {
+   "id": "N0043",
+   "kind": "fact",
+   "key": "accounts system",
+   "full_value": "Ledgerline Daily used for accounts",
+   "value": "Ledgerline Daily",
+   "accept": [
+    "Ledgerline Daily"
+   ],
+   "statement": "Jonas Heller said he'll close yesterday's receipts in Ledgerline Daily, that's what we use for the accounts.",
+   "source_utterance": "I put today's bookings into Wheelbook Pro, that's our booking system. I'll close yesterday's receipts in Ledgerline Daily, that's what we use for the accounts.",
+   "corrects": null
+  },
+  {
+   "id": "N0044",
+   "kind": "preference",
+   "key": "rental contracts path",
+   "full_value": "signed rental contracts saved to /spokehaven/rentals/agreements",
+   "value": "/spokehaven/rentals/agreements",
+   "accept": [
+    "/spokehaven/rentals/agreements"
+   ],
+   "statement": "Jonas Heller said please save the signed rental contracts to /spokehaven/rentals/agreements where we keep them.",
+   "source_utterance": "Please save the signed rental contracts to /spokehaven/rentals/agreements where we keep them, and upload today's job pictures to /spokehaven/repairs/photos2026 for the repairs.",
+   "corrects": null
+  },
+  {
+   "id": "N0045",
+   "kind": "preference",
+   "key": "repair photos path",
+   "full_value": "today's job pictures uploaded to /spokehaven/repairs/photos2026",
+   "value": "/spokehaven/repairs/photos2026",
+   "accept": [
+    "/spokehaven/repairs/photos2026"
+   ],
+   "statement": "Jonas Heller said upload today's job pictures to /spokehaven/repairs/photos2026 for the repairs.",
+   "source_utterance": "Please save the signed rental contracts to /spokehaven/rentals/agreements where we keep them, and upload today's job pictures to /spokehaven/repairs/photos2026 for the repairs.",
+   "corrects": null
+  },
+  {
+   "id": "N0046",
+   "kind": "preference",
+   "key": "crew channel",
+   "full_value": "drop note in #spokehaven-crew for whole crew",
+   "value": "#spokehaven-crew",
+   "accept": [
+    "#spokehaven-crew"
+   ],
+   "statement": "Jonas Heller said could you drop a note in #spokehaven-crew for the whole crew.",
+   "source_utterance": "Could you drop a note in #spokehaven-crew for the whole crew, and check in with the rentals team in #rentals-desk when you have a minute?",
+   "corrects": null
+  },
+  {
+   "id": "N0047",
+   "kind": "preference",
+   "key": "rentals channel",
+   "full_value": "check in with rentals team in #rentals-desk",
+   "value": "#rentals-desk",
+   "accept": [
+    "#rentals-desk"
+   ],
+   "statement": "Jonas Heller said check in with the rentals team in #rentals-desk when you have a minute.",
+   "source_utterance": "Could you drop a note in #spokehaven-crew for the whole crew, and check in with the rentals team in #rentals-desk when you have a minute?",
+   "corrects": null
+  },
+  {
+   "id": "N0048",
+   "kind": "fact",
+   "key": "head mechanic ext",
+   "full_value": "head mechanic on Ext 201",
+   "value": "Ext 201",
+   "accept": [
+    "Ext 201"
+   ],
+   "statement": "Jonas Heller said try our head mechanic on Ext 201.",
+   "source_utterance": "Running between jobs today, try our head mechanic on Ext 201, or the front desk on Ext 202 if you need anything.",
+   "corrects": null
+  },
+  {
+   "id": "N0049",
+   "kind": "fact",
+   "key": "front desk ext",
+   "full_value": "front desk on Ext 202",
+   "value": "Ext 202",
+   "accept": [
+    "Ext 202"
+   ],
+   "statement": "Jonas said to try the front desk on Ext 202 if you need anything.",
+   "source_utterance": "Running between jobs today, try our head mechanic on Ext 201, or the front desk on Ext 202 if you need anything.",
+   "corrects": null
+  },
+  {
+   "id": "N0050",
+   "kind": "fact",
+   "key": "workshop phone ext",
+   "full_value": "workshop phone on Ext 203",
+   "value": "Ext 203",
+   "accept": [
+    "Ext 203"
+   ],
+   "statement": "Jonas said to try the workshop phone on Ext 203.",
+   "source_utterance": "Could you try the workshop phone on Ext 203, and please keep parts spending under 4,000 euros for this month?",
+   "corrects": null
+  },
+  {
+   "id": "N0051",
+   "kind": "preference",
+   "key": "parts spending limit",
+   "full_value": "keep parts spending under 4,000 euros this month",
+   "value": "keep parts spending under 4,000 euros this month",
+   "accept": [
+    "keep parts spending under 4,000 euros this month"
+   ],
+   "statement": "Jonas said to keep parts spending under 4,000 euros for this month.",
+   "source_utterance": "Could you try the workshop phone on Ext 203, and please keep parts spending under 4,000 euros for this month?",
+   "corrects": null
+  },
+  {
+   "id": "N0052",
+   "kind": "fact",
+   "key": "rental deposit",
+   "full_value": "collect 150 euros deposit on rentals",
+   "value": "150 euros",
+   "accept": [
+    "150 euros"
+   ],
+   "statement": "Jonas said they still collect 150 euros as a deposit on rentals.",
+   "source_utterance": "Morning, could you note we still collect 150 euros as a deposit on rentals? And the full strip-down in the workshop is 89 euros, just in case customers ask this afternoon.",
+   "corrects": null
+  },
+  {
+   "id": "N0053",
+   "kind": "fact",
+   "key": "strip down price",
+   "full_value": "full strip-down in workshop is 89 euros",
+   "value": "89 euros",
+   "accept": [
+    "89 euros"
+   ],
+   "statement": "Jonas said the full strip-down in the workshop is 89 euros.",
+   "source_utterance": "Morning, could you note we still collect 150 euros as a deposit on rentals? And the full strip-down in the workshop is 89 euros, just in case customers ask this afternoon.",
+   "corrects": null
+  },
+  {
+   "id": "N0054",
+   "kind": "fact",
+   "key": "VeloFest posters",
+   "full_value": "sorting posters for Marlow Bay VeloFest coming up this autumn",
+   "value": "Marlow Bay VeloFest",
+   "accept": [
+    "Marlow Bay VeloFest"
+   ],
+   "statement": "Jonas said he is sorting posters for Marlow Bay VeloFest coming up this autumn.",
+   "source_utterance": "Between jobs I'm sorting posters for Marlow Bay VeloFest coming up this autumn, and we need to set aside tools for support at Harbor Lights Ride for charity next week.",
+   "corrects": null
+  },
+  {
+   "id": "N0055",
+   "kind": "procedure",
+   "key": "Harbor Lights Ride support",
+   "full_value": "set aside tools for support at Harbor Lights Ride for charity next week",
+   "value": "set aside tools for support at Harbor Lights Ride for charity next week",
+   "accept": [
+    "set aside tools for support at Harbor Lights Ride for charity next week"
+   ],
+   "statement": "Jonas said to set aside tools for support at Harbor Lights Ride for charity next week.",
+   "source_utterance": "Between jobs I'm sorting posters for Marlow Bay VeloFest coming up this autumn, and we need to set aside tools for support at Harbor Lights Ride for charity next week.",
+   "corrects": null
+  },
+  {
+   "id": "N0056",
+   "kind": "procedure",
+   "key": "battery swap log",
+   "full_value": "log battery swap under EB-FLEET-09 for hire fleet",
+   "value": "log battery swap under EB-FLEET-09 for hire fleet",
+   "accept": [
+    "log battery swap under EB-FLEET-09 for hire fleet"
+   ],
+   "statement": "Jonas said to log the battery swap under EB-FLEET-09 for the hire fleet.",
+   "source_utterance": "Can you check if the Carrier Moose X2 cargo runabout is back from its test ride? And please log the battery swap under EB-FLEET-09 for the hire fleet.",
+   "corrects": null
+  },
+  {
+   "id": "N0057",
+   "kind": "fact",
+   "key": "locks supplier",
+   "full_value": "Ironclasp Locks Ltd makes locks we stock, late delivery",
+   "value": "Ironclasp Locks Ltd",
+   "accept": [
+    "Ironclasp Locks Ltd"
+   ],
+   "statement": "Jonas said Ironclasp Locks Ltd makes the locks we stock and delivery is late.",
+   "source_utterance": "Could you chase Ironclasp Locks Ltd. about the late delivery? They make the locks we stock. Also see if Tidy Spokes Crew can come in early tomorrow, they handle our cleaning and the back room needs it after Saturday.",
+   "corrects": null
+  },
+  {
+   "id": "N0058",
+   "kind": "fact",
+   "key": "cleaning crew",
+   "full_value": "Tidy Spokes Crew handles cleaning",
+   "value": "Tidy Spokes Crew",
+   "accept": [
+    "Tidy Spokes Crew"
+   ],
+   "statement": "Jonas said Tidy Spokes Crew handles our cleaning and the back room needs it after Saturday and they can come in early tomorrow.",
+   "source_utterance": "Could you chase Ironclasp Locks Ltd. about the late delivery? They make the locks we stock. Also see if Tidy Spokes Crew can come in early tomorrow, they handle our cleaning and the back room needs it after Saturday.",
+   "corrects": null
+  },
+  {
+   "id": "N0059",
+   "kind": "fact",
+   "key": "electrics contractor",
+   "full_value": "Volta Fixers look after electrics, checking shutters this afternoon",
+   "value": "Volta Fixers",
+   "accept": [
+    "Volta Fixers"
+   ],
+   "statement": "Jonas said Volta Fixers should be back this afternoon to check the shutters and they look after our electrics so let them in if I'm out.",
+   "source_utterance": "Volta Fixers should be back this afternoon to check the shutters, they look after our electrics so let them in if I'm out. Harborcover Insurance sent the renewal forms, they arrange our cover, please remind me to sign before Friday.",
+   "corrects": null
+  },
+  {
+   "id": "N0060",
+   "kind": "fact",
+   "key": "insurance provider",
+   "full_value": "Harborcover Insurance arranges cover, renewal forms sent",
+   "value": "Harborcover Insurance",
+   "accept": [
+    "Harborcover Insurance"
+   ],
+   "statement": "Jonas said Harborcover Insurance sent the renewal forms and they arrange our cover and please remind me to sign before Friday.",
+   "source_utterance": "Volta Fixers should be back this afternoon to check the shutters, they look after our electrics so let them in if I'm out. Harborcover Insurance sent the renewal forms, they arrange our cover, please remind me to sign before Friday.",
+   "corrects": null
+  },
+  {
+   "id": "N0061",
+   "kind": "fact",
+   "key": "lease agreement code",
+   "full_value": "unit paperwork filed under LEASE-MB-44, agreement for Marlow Bay shop",
+   "value": "LEASE-MB-44",
+   "accept": [
+    "LEASE-MB-44"
+   ],
+   "statement": "Jonas said the council wants a copy of the unit paperwork it's filed under LEASE-MB-44 that's our agreement for the Marlow Bay shop.",
+   "source_utterance": "The council wants a copy of the unit paperwork, it's filed under LEASE-MB-44, that's our agreement for the Marlow Bay shop. And for the next key order quote ACC-7741-NW, that's our number with them so it doesn't get held up.",
+   "corrects": null
+  },
+  {
+   "id": "N0062",
+   "kind": "fact",
+   "key": "key order quote",
+   "full_value": "next key order quote ACC-7741-NW",
+   "value": "ACC-7741-NW",
+   "accept": [
+    "ACC-7741-NW"
+   ],
+   "statement": "Jonas said for the next key order quote ACC-7741-NW that's our number with them so it doesn't get held up.",
+   "source_utterance": "The council wants a copy of the unit paperwork, it's filed under LEASE-MB-44, that's our agreement for the Marlow Bay shop. And for the next key order quote ACC-7741-NW, that's our number with them so it doesn't get held up.",
+   "corrects": null
+  },
+  {
+   "id": "N0063",
+   "kind": "fact",
+   "key": "tire order code",
+   "full_value": "ordering tires use ACC-3390-GL at checkout",
+   "value": "ACC-3390-GL",
+   "accept": [
+    "ACC-3390-GL"
+   ],
+   "statement": "Jonas said for ordering tires use ACC-3390-GL at checkout.",
+   "source_utterance": "Morning, quick note before the rush \u2014 for ordering tires use ACC-3390-GL at checkout, and remind the crew we're on Split Shifts Daily this week.",
+   "corrects": null
+  },
+  {
+   "id": "N0064",
+   "kind": "fact",
+   "key": "shift pattern week",
+   "full_value": "crew on Split Shifts Daily this week",
+   "value": "Split Shifts Daily",
+   "accept": [
+    "Split Shifts Daily"
+   ],
+   "statement": "Jonas said remind the crew we're on Split Shifts Daily this week.",
+   "source_utterance": "Morning, quick note before the rush \u2014 for ordering tires use ACC-3390-GL at checkout, and remind the crew we're on Split Shifts Daily this week.",
+   "corrects": null
+  },
+  {
+   "id": "N0065",
+   "kind": "procedure",
+   "key": "Autumn Velo Season prep",
+   "full_value": "Blue Mule fueled up for afternoon drop-offs",
+   "value": "Blue Mule",
+   "accept": [
+    "Blue Mule"
+   ],
+   "statement": "Jonas said we're getting ready for Autumn Velo Season, so please make sure Blue Mule is fueled up for the afternoon drop-offs.",
+   "source_utterance": "Heads up, we're getting ready for Autumn Velo Season, so please make sure Blue Mule is fueled up for the afternoon drop-offs.",
+   "corrects": null
+  },
+  {
+   "id": "N0066",
+   "kind": "fact",
+   "key": "customer visit",
+   "full_value": "Jonah Reed stopped by, back tomorrow for tune-up, keep file handy",
+   "value": "Jonah Reed",
+   "accept": [
+    "Jonah Reed"
+   ],
+   "statement": "Jonas said Jonah Reed just stopped by the shop, said he'd be back tomorrow for a tune-up, so keep his file handy.",
+   "source_utterance": "Jonah Reed just stopped by the shop, said he'd be back tomorrow for a tune-up, so keep his file handy.",
+   "corrects": null
+  }
+ ],
+ "overruled_merge_proposals": [],
+ "dropped": [],
+ "outcomes": [
+  {
+   "id": "N0001",
+   "key": "shop name",
+   "value": "Spokehaven Cycle Works",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0002",
+   "key": "owner role",
+   "value": "Jonas Heller, Owner Manager",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0003",
+   "key": "today date",
+   "value": "2026-10-27 Tuesday",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0004",
+   "key": "delivery slip signed",
+   "value": "signed as Jonas Heller Owner Manager, clear to start day",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0005",
+   "key": "repair lead morning",
+   "value": "Priya Nair leading repair benches through morning backlog",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0006",
+   "key": "hire bikes person",
+   "value": "Dario Venn out back getting hire bikes ready",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0007",
+   "key": "front till cover",
+   "value": "Lena Frost covering front till Saturday and Sunday",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0008",
+   "key": "accounts review",
+   "value": "Ellis Grant looking over accounts this afternoon, leave receipts in drawer",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0009",
+   "key": "landlord",
+   "value": "Harold Pike landlord stopped by about leaky back door",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0010",
+   "key": "winter budgets meeting",
+   "value": "Mara Quinn coming Thursday 2026-10-29 to look at winter budgets",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0011",
+   "key": "business advisor",
+   "value": "Mara Quinn helps think through business side",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0012",
+   "key": "time format rule",
+   "value": "write all times in 24-hour clock",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0013",
+   "key": "status summary rule",
+   "value": "limit status summaries to three bullets",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0014",
+   "key": "email approval rule",
+   "value": "ask before emailing Northwind Cycle Parts",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0015",
+   "key": "parts supplier",
+   "value": "Northwind Cycle Parts, most parts through them",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0016",
+   "key": "derailleurs chase",
+   "value": "chase Northwind Cycle Parts on derailleurs",
+   "outcome": "kept",
+   "kind": "procedure",
+   "corrects": null,
+   "why": "learn as procedure"
+  },
+  {
+   "id": "N0017",
+   "key": "tire shortage",
+   "value": "Gripline Tire Co shorted two touring tires again",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0018",
+   "key": "helmet supplier",
+   "value": "Brighthelm Safety Gear supplies all helmets, dropped off new helmet display",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0019",
+   "key": "coffee cart",
+   "value": "Pedalbrew Coffee Cart running late today, usually handles coffee for Saturday rides",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0020",
+   "key": "filing code servicing",
+   "value": "autumn servicing jobs file under OVERHAUL-2026-A",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0021",
+   "key": "filing code hire bikes",
+   "value": "extra hire bikes paperwork file under RENTAL-EXPAND-07",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0022",
+   "key": "winter storage code",
+   "value": "customer bike storage for winter logged as STORE-WINTER-11",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0023",
+   "key": "vendor call time",
+   "value": "ring parts vendors Tuesdays at 10:30",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0024",
+   "key": "vendor call nudge",
+   "value": "give nudge before vendor call",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0025",
+   "key": "shift sort time",
+   "value": "sort shifts with team Mondays at 09:00",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0026",
+   "key": "ledger review time",
+   "value": "go over ledgers with bookkeeper Thursdays at 11:00",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0027",
+   "key": "stock count time",
+   "value": "count everything in back Fridays at 16:00",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0028",
+   "key": "distributor delivery time",
+   "value": "boxes from distributor land Wednesdays at 08:45",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0029",
+   "key": "hire bikes roll in",
+   "value": "hire bikes roll in Saturdays at 07:30",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0030",
+   "key": "building owner meeting",
+   "value": "catching up with building owner First Mondays 14:00",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0031",
+   "key": "fall tune-ups deadline",
+   "value": "all fall tune-ups wrapped by 2026-11-15",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0032",
+   "key": "hire fleet deadline",
+   "value": "bigger hire fleet ready by 2026-12-01",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0033",
+   "key": "repair queue location",
+   "value": "repair queue in Bay One where servicing done",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0034",
+   "key": "spare frames location",
+   "value": "spare frames locked in Unit Shed B for storage",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0035",
+   "key": "rentals sign out location",
+   "value": "rentals signed out at Front Counter A",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0036",
+   "key": "extra stock location",
+   "value": "extra stock piled in Back Room 2 as overflow",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0037",
+   "key": "joint event location",
+   "value": "joint event with neighboring town in Kestrel Harbor",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0038",
+   "key": "supplier base location",
+   "value": "parts orders ship from Norcross Village where supplier is based",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0039",
+   "key": "checkout procedure",
+   "value": "confirm booking ID, inspect tires and brakes, photograph bike condition, collect deposit and signature, then log checkout in Wheelbook",
+   "outcome": "kept",
+   "kind": "procedure",
+   "corrects": null,
+   "why": "learn as procedure"
+  },
+  {
+   "id": "N0040",
+   "key": "Old Bessie issue",
+   "value": "Old Bessie wobbling during wheel true, stand getting tired",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0041",
+   "key": "Puffy Dragon issue",
+   "value": "Puffy Dragon kept cutting out, compressor needs look this afternoon",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0042",
+   "key": "booking system",
+   "value": "Wheelbook Pro is booking system",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0043",
+   "key": "accounts system",
+   "value": "Ledgerline Daily used for accounts",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0044",
+   "key": "rental contracts path",
+   "value": "signed rental contracts saved to /spokehaven/rentals/agreements",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0045",
+   "key": "repair photos path",
+   "value": "today's job pictures uploaded to /spokehaven/repairs/photos2026",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0046",
+   "key": "crew channel",
+   "value": "drop note in #spokehaven-crew for whole crew",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0047",
+   "key": "rentals channel",
+   "value": "check in with rentals team in #rentals-desk",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0048",
+   "key": "head mechanic ext",
+   "value": "head mechanic on Ext 201",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0049",
+   "key": "front desk ext",
+   "value": "front desk on Ext 202",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0050",
+   "key": "workshop phone ext",
+   "value": "workshop phone on Ext 203",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0051",
+   "key": "parts spending limit",
+   "value": "keep parts spending under 4,000 euros this month",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0052",
+   "key": "rental deposit",
+   "value": "collect 150 euros deposit on rentals",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0053",
+   "key": "strip down price",
+   "value": "full strip-down in workshop is 89 euros",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0054",
+   "key": "VeloFest posters",
+   "value": "sorting posters for Marlow Bay VeloFest coming up this autumn",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0055",
+   "key": "Harbor Lights Ride support",
+   "value": "set aside tools for support at Harbor Lights Ride for charity next week",
+   "outcome": "kept",
+   "kind": "procedure",
+   "corrects": null,
+   "why": "learn as procedure"
+  },
+  {
+   "id": "N0056",
+   "key": "battery swap log",
+   "value": "log battery swap under EB-FLEET-09 for hire fleet",
+   "outcome": "kept",
+   "kind": "procedure",
+   "corrects": null,
+   "why": "learn as procedure"
+  },
+  {
+   "id": "N0057",
+   "key": "locks supplier",
+   "value": "Ironclasp Locks Ltd makes locks we stock, late delivery",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0058",
+   "key": "cleaning crew",
+   "value": "Tidy Spokes Crew handles cleaning",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0059",
+   "key": "electrics contractor",
+   "value": "Volta Fixers look after electrics, checking shutters this afternoon",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0060",
+   "key": "insurance provider",
+   "value": "Harborcover Insurance arranges cover, renewal forms sent",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0061",
+   "key": "lease agreement code",
+   "value": "unit paperwork filed under LEASE-MB-44, agreement for Marlow Bay shop",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0062",
+   "key": "key order quote",
+   "value": "next key order quote ACC-7741-NW",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0063",
+   "key": "tire order code",
+   "value": "ordering tires use ACC-3390-GL at checkout",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0064",
+   "key": "shift pattern week",
+   "value": "crew on Split Shifts Daily this week",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0065",
+   "key": "Autumn Velo Season prep",
+   "value": "Blue Mule fueled up for afternoon drop-offs",
+   "outcome": "kept",
+   "kind": "procedure",
+   "corrects": null,
+   "why": "learn as procedure"
+  },
+  {
+   "id": "N0066",
+   "key": "customer visit",
+   "value": "Jonah Reed stopped by, back tomorrow for tune-up, keep file handy",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  }
+ ]
+}

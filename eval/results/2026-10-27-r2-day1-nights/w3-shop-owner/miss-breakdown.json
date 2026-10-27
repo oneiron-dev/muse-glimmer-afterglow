@@ -1,0 +1,525 @@
+{
+ "world": "w3-shop-owner",
+ "day": 1,
+ "facts": 59,
+ "missed_in_B": 28,
+ "causes": {
+  "not_in_notes": 1,
+  "not_trained": 0,
+  "binding": 15,
+  "other": 12
+ },
+ "c_only": [
+  "F01",
+  "F02",
+  "F06",
+  "F07",
+  "F09",
+  "F13",
+  "F14",
+  "F15",
+  "F16",
+  "F25",
+  "F30",
+  "F31",
+  "F32",
+  "F35",
+  "F36",
+  "F38",
+  "F41",
+  "F46",
+  "F48",
+  "F49",
+  "F56",
+  "F58",
+  "F59"
+ ],
+ "neither": [
+  "F21",
+  "F26",
+  "F45",
+  "F47",
+  "F57"
+ ],
+ "rows": [
+  {
+   "fact_id": "F01",
+   "key": "shop name",
+   "value": "Spokehaven Cycle Works",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F11",
+     "Brighthelm Safety Gear"
+    ],
+    [
+     "F12",
+     "Pedalbrew Coffee Cart"
+    ]
+   ],
+   "B_answers": [
+    "You call it Pedalbrew Coffee Cart.",
+    "Jonas Heller runs Brighthelm Safety Gear.",
+    "Your storefront is called Harbor Lights Cycle Works."
+   ]
+  },
+  {
+   "fact_id": "F02",
+   "key": "owner role title",
+   "value": "Owner Manager",
+   "B": 1,
+   "C": 2,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You are the owner-manager of the business.",
+    "Jonas Heller is the head mechanic at the shop.",
+    "You describe your job function as leading the repair benches through this morning's backlog."
+   ]
+  },
+  {
+   "fact_id": "F06",
+   "key": "bookkeeper full name",
+   "value": "Ellis Grant",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F08",
+     "Mara Quinn"
+    ]
+   ],
+   "B_answers": [
+    "Mara Quinn helps you think through the business side and manages your accounts.",
+    "Mara Quinn handles the numbers and ledgers for Jonas Heller's operation.",
+    "You trust Mara Quinn with balancing our ledgers."
+   ]
+  },
+  {
+   "fact_id": "F07",
+   "key": "landlord full name",
+   "value": "Harold Pike",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F52",
+     "Harborcover Insurance"
+    ]
+   ],
+   "B_answers": [
+    "You pay rent to Harborcover Insurance Ltd, who you said arranges your cover and sent the renewal forms.",
+    "Jonas Heller leases his building space from Marlow Bay Properties Ltd.",
+    "You said you operate in the building owned by Marlow Bay Investments Ltd."
+   ]
+  },
+  {
+   "fact_id": "F09",
+   "key": "primary parts supplier",
+   "value": "Northwind Cycle Parts",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F11",
+     "Brighthelm Safety Gear"
+    ]
+   ],
+   "B_answers": [
+    "You source most of your components from Digi-Key Electronics.",
+    "Brighthelm Safety Gear provides most of the components Jonas Heller said he needs.",
+    "You said you get most of your parts through Northwind Cycle Parts."
+   ]
+  },
+  {
+   "fact_id": "F13",
+   "key": "autumn overhaul code",
+   "value": "OVERHAUL-2026-A",
+   "B": 0,
+   "C": 3,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "Your reference label for the fall revamp is AUTUMN-REVAMP-2026.",
+    "Jonas Heller uses OVERHAUL-2026-WINTER for the seasonal refit project.",
+    "We assigned OVERHAUL-2026-COOL to the cool-weather restoration work."
+   ]
+  },
+  {
+   "fact_id": "F14",
+   "key": "rental expansion code",
+   "value": "RENTAL-EXPAND-07",
+   "B": 0,
+   "C": 2,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "Your tracking tag is FLEET-EXPAND-07.",
+    "Jonas Heller uses LEASE-GROWTH-2026 for the leasing growth initiative.",
+    "The marker you gave for the temporary-use inventory increase is STORE-EXPAND-07."
+   ]
+  },
+  {
+   "fact_id": "F15",
+   "key": "winter storage project",
+   "value": "STORE-WINTER-11",
+   "B": 0,
+   "C": 3,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "Your project label for cold-season stock holding is WINTER-LOGISTICS-2026.",
+    "Jonas Heller uses the designation Winter Customer Bike Storage for the chilly-months safekeeping effort.",
+    "Your identifier for the off-season inventory sheltering plan is STORE-WINTER-2026."
+   ]
+  },
+  {
+   "fact_id": "F16",
+   "key": "supplier call slot",
+   "value": "Tuesdays at 10:30",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F22",
+     "First Mondays 14:00"
+    ]
+   ],
+   "B_answers": [
+    "Your weekly phone chat with providers is Mondays at 14:00.",
+    "Jonas Heller speaks with vendors each week on Tuesdays at 10:30.",
+    "Your regular check-in with distributors is scheduled for Mondays at 10:30."
+   ]
+  },
+  {
+   "fact_id": "F21",
+   "key": "rental fleet delivery",
+   "value": "Saturdays at 07:30",
+   "B": 0,
+   "C": 1,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F20",
+     "Wednesdays at 08:45"
+    ]
+   ],
+   "B_answers": [
+    "They get dropped off at the shop on Mondays at 07:30.",
+    "Jonas Heller receives his weekly vehicle shipment on Mondays at 08:45.",
+    "The regular incoming transport is scheduled to arrive at 08:45."
+   ]
+  },
+  {
+   "fact_id": "F25",
+   "key": "workshop service room",
+   "value": "Bay One",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F26",
+     "Unit Shed B"
+    ]
+   ],
+   "B_answers": [
+    "Your mechanics carry out repairs in Unit Shed B, which you said is where we store the hire bikes.",
+    "Jonas Heller has vehicles repaired at the shop in Bay One where we do servicing",
+    "The designated area for maintenance tasks is #spokehaven-maintenance."
+   ]
+  },
+  {
+   "fact_id": "F26",
+   "key": "storage building unit",
+   "value": "Unit Shed B",
+   "B": 0,
+   "C": 0,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F28",
+     "Back Room 2"
+    ]
+   ],
+   "B_answers": [
+    "You keep extra supplies in the back room as overflow.",
+    "Jonas Heller keeps surplus inventory in Back Room 2.",
+    "The extra goods are stored in the back room as you said."
+   ]
+  },
+  {
+   "fact_id": "F30",
+   "key": "supplier town base",
+   "value": "Norcross Village",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F29",
+     "Kestrel Harbor"
+    ]
+   ],
+   "B_answers": [
+    "Your providers operate from the Harbor Lights Marina where you are based.",
+    "Jonas Heller sources his materials from Kestrel Harbor",
+    "They are headquartered in Norcross, Georgia, as you said."
+   ]
+  },
+  {
+   "fact_id": "F31",
+   "key": "truing stand nickname",
+   "value": "Old Bessie",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F10",
+     "Gripline Tire Co"
+    ]
+   ],
+   "B_answers": [
+    "You call it the Wheel True Bench.",
+    "Jonas Heller calls his wheel alignment tool \"TrueWheel\".",
+    "You said Gripline Tire Co is the wobbly-wheel fixer over in the corner getting ready to open."
+   ]
+  },
+  {
+   "fact_id": "F32",
+   "key": "compressor nickname",
+   "value": "Puffy Dragon",
+   "B": 0,
+   "C": 2,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You decided to call our pressurized-air machine \"Air Knocker\".",
+    "Jonas Heller has assigned the playful title \"The Tiresome Hiccup\" to his shop air pump.",
+    "The noisy air device out back is the \"Backyard Beast\" as you said."
+   ]
+  },
+  {
+   "fact_id": "F35",
+   "key": "rental agreement path",
+   "value": "/spokehaven/rentals/agreements",
+   "B": 0,
+   "C": 2,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You stored our lease paperwork on the drive in /spokehaven/rental-agreements.",
+    "Jonas Heller keeps the hire contracts in the filesystem at /spokehaven/rental-agreements.",
+    "The customer loan forms are located in /spokehaven/customer_loans/."
+   ]
+  },
+  {
+   "fact_id": "F36",
+   "key": "repair photos folder",
+   "value": "/spokehaven/repairs/photos2026",
+   "B": 1,
+   "C": 3,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "Save them to /spokehaven/repairs/photos as you said.",
+    "Jonas Heller archives images documenting maintenance work this year in /spokehaven/repairs/photos2026.",
+    "Store pictures of serviced bikes in /spokehaven/repairs/photos."
+   ]
+  },
+  {
+   "fact_id": "F38",
+   "key": "rentals chat channel",
+   "value": "#rentals-desk",
+   "B": 0,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F27",
+     "Front Counter A"
+    ],
+    [
+     "F37",
+     "#spokehaven-crew"
+    ]
+   ],
+   "B_answers": [
+    "You use Front Counter A for handling hire counter inquiries.",
+    "Jonas Heller checks #spokehaven-crew for loan-service questions.",
+    "The team talks about incoming borrowing requests in #borrow-requests."
+   ]
+  },
+  {
+   "fact_id": "F41",
+   "key": "workshop phone extension",
+   "value": "Ext 203",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F39",
+     "Ext 201"
+    ],
+    [
+     "F55",
+     "ACC-3390-GL"
+    ]
+   ],
+   "B_answers": [
+    "You use OVERHAUL-3390-A for the repair shop.",
+    "The internal line Ext 203 reaches Jonas Heller's service area.",
+    "The maintenance bay is on Ext 201 as you said."
+   ]
+  },
+  {
+   "fact_id": "F45",
+   "key": "autumn festival event",
+   "value": "Marlow Bay VeloFest",
+   "B": 0,
+   "C": 1,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F57",
+     "Autumn Velo Season"
+    ]
+   ],
+   "B_answers": [
+    "We are sponsoring the Autumn Velo Fest in the town square this weekend.",
+    "Jonas Heller is attending the Autumn Velo Swap.",
+    "The harvest-season festivity on your calendar is Autumn Velo Season"
+   ]
+  },
+  {
+   "fact_id": "F46",
+   "key": "charity ride event",
+   "value": "Harbor Lights Ride",
+   "B": 0,
+   "C": 3,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You are supporting the charity ride for the children's hospital this year.",
+    "Jonas Heller is backing the charity ride for the local food bank.",
+    "The title is Pedal for a Purpose: Charity Ride for Local Youth."
+   ]
+  },
+  {
+   "fact_id": "F47",
+   "key": "cargo bike model",
+   "value": "Carrier Moose X2",
+   "B": 0,
+   "C": 0,
+   "cause": "not_in_notes",
+   "confused_with": [],
+   "B_answers": [
+    "You stock the Tern GSD in your store.",
+    "Jonas Heller sells the 24-hour hauling cycle.",
+    "The designation you gave is Mule, for hauling bigger loads when the hire bikes are out."
+   ]
+  },
+  {
+   "fact_id": "F48",
+   "key": "e-bike fleet code",
+   "value": "EB-FLEET-09",
+   "B": 1,
+   "C": 2,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You use EB-FLEET-09 for your group of electric cycles.",
+    "Jonas Heller assigned the reference label E-BIKES-2026-07 to his powered bicycle collection.",
+    "Our internal tag for the battery-assisted cycle pool is E-BIKE-EXPAND-07."
+   ]
+  },
+  {
+   "fact_id": "F49",
+   "key": "lock supplier brand",
+   "value": "Ironclasp Locks Ltd",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F33",
+     "Wheelbook Pro"
+    ]
+   ],
+   "B_answers": [
+    "Wheelbook Pro is the booking system you said you use for rentals, and you said it is provided by Wheelbook Pro.",
+    "Jonas Heller works with SecureLock Inc.",
+    "The securing-device vendor you mentioned is Ironclasp Locks Ltd."
+   ]
+  },
+  {
+   "fact_id": "F56",
+   "key": "staff shift pattern",
+   "value": "Split Shifts Daily",
+   "B": 0,
+   "C": 3,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You said the team works 08:30 to 17:15 daily.",
+    "Jonas Heller structures employee working times using 24-hour clock times.",
+    "The crew schedule is arranged in 12-hour shifts, as you said."
+   ]
+  },
+  {
+   "fact_id": "F57",
+   "key": "busy season name",
+   "value": "Autumn Velo Season",
+   "B": 1,
+   "C": 1,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You call it the Morning Ride Surge.",
+    "Jonas Heller calls the fall bike boom period \"Autumn Velo Surge\".",
+    "The label you gave for the hectic bike sales stretch is \"Autumn Velo Season\"."
+   ]
+  },
+  {
+   "fact_id": "F58",
+   "key": "delivery van nickname",
+   "value": "Blue Mule",
+   "B": 1,
+   "C": 3,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You call it the Mule.",
+    "Jonas Heller calls the transport vehicle \"Wheels\".",
+    "The shop transport is affectionately called the Blue Mule."
+   ]
+  },
+  {
+   "fact_id": "F59",
+   "key": "loyal customer name",
+   "value": "Jonah Reed",
+   "B": 0,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F08",
+     "Mara Quinn"
+    ]
+   ],
+   "B_answers": [
+    "Jonas Heller is your most faithful regular shopper, coming in every weekday at 09:15.",
+    "Jonas Heller values Mara Quinn most as a regular patron.",
+    "The standout repeat buyer you mentioned is Mara Quinn, who helps you think through the business."
+   ]
+  }
+ ]
+}

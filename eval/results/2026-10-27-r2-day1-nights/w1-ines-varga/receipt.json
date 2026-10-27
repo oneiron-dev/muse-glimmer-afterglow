@@ -1,0 +1,356 @@
+{
+ "world": "w1-ines-varga",
+ "day": 1,
+ "started": "2026-10-27T06:13:06+09:00",
+ "steps": {
+  "consolidate": {
+   "started": "2026-10-27T06:13:06+09:00",
+   "seconds": 28.9,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w1-ines-varga/1/night/consolidated.json",
+   "sha256": "e590251c49f51afd1df33c24553e5eb94fd35502e980a4428d7ced19df6eac2b",
+   "skipped": "output exists"
+  },
+  "rewrites": {
+   "started": "2026-10-27T06:13:35+09:00",
+   "seconds": 273.9,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w1-ines-varga/1/night/rewrites/rewrites.jsonl",
+   "sha256": "bf55d154828855ee781108588ebb5c4a019890adfaa4363d8ff2e312afd8375e",
+   "skipped": "output exists"
+  },
+  "anchors": {
+   "skipped": "output exists"
+  },
+  "train_set": {
+   "started": "2026-10-27T06:18:09+09:00",
+   "seconds": 4.2,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w1-ines-varga/1/night/train.jsonl",
+   "sha256": "73f47b859c87b567535322c7222263c3cb49bff3cc60da1176e8f59ad9cf461d",
+   "skipped": "output exists"
+  },
+  "train": {
+   "started": "2026-10-27T06:27:24+09:00",
+   "seconds": 444.9,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w1-ines-varga/1/night/adapter.gguf",
+   "sha256": "51d7a347bedb908a9058ef4e5d31d544b3653feca9bcbd8cd6ac2098103b9168"
+  },
+  "eval": {
+   "started": "2026-10-27T06:34:49+09:00",
+   "seconds": 889.4,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w1-ines-varga/1/night/eval/score-night-D.json",
+   "sha256": "39dca90350cf0815ed82806fd15d03d54b7b375f66ffff08aaf7649f9b025bc3"
+  },
+  "report": {
+   "started": "2026-10-27T06:49:39+09:00",
+   "seconds": 0.6,
+   "output": "/Users/olety/Desktop/code/muse-glimmer-afterglow/runs/w1-ines-varga/1/night/decision.json",
+   "sha256": "6abc61ffdc8652a62dfe36d4d044bacf0fc31989fcb603fcb14911ccc056bac7"
+  }
+ },
+ "code_commit": "0aba5138f8857f5285bd1570f4edbb092f20c9f0",
+ "host": "mel",
+ "recipe": {
+  "rank": 16,
+  "alpha": 16,
+  "targets": "attn_mlp",
+  "layers": "all",
+  "epochs": 4,
+  "lr": 0.0001,
+  "rows_per_fact": 12,
+  "replay_share": 0.1,
+  "memory_share": 0.3,
+  "teacher": "glimmer",
+  "batch_rows": 16,
+  "base": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39"
+ },
+ "teacher_tokens": {
+  "prompt": 20031,
+  "completion": 43976
+ },
+ "leak_check": {
+  "raw_hits": 6,
+  "dropped_rows": 6,
+  "raw_exit": 1,
+  "clean_passed": true
+ },
+ "train_set": {
+  "rows": 598,
+  "sha256": "73f47b859c87b567535322c7222263c3cb49bff3cc60da1176e8f59ad9cf461d"
+ },
+ "hashes": {
+  "daylog": "1c186085fe4136efbbb65d4e274a2491fec2ce014c4dc29e88a6278204911a4d",
+  "notes": "27c7715d21fdd9ef52145a9700547467171d3bda731496dd6391e30240eee2ab",
+  "consolidated": "06fbb499b2740062800b72ee1647f40cede5e26d89fb909e04835ca4120a0c25",
+  "rewrites": "bf55d154828855ee781108588ebb5c4a019890adfaa4363d8ff2e312afd8375e",
+  "anchors": "9530f11119e1926565b159181f4ef77707736ada687a9f1d2b1e91c2b7037e32",
+  "train": "73f47b859c87b567535322c7222263c3cb49bff3cc60da1176e8f59ad9cf461d",
+  "adapter_safetensors": "b963bcd62ecd77e4cfac4aac651124d5a501df8aa9184cc7e71b183cf98f1bd6",
+  "adapter_gguf": "51d7a347bedb908a9058ef4e5d31d544b3653feca9bcbd8cd6ac2098103b9168",
+  "heldout_frozen": {
+   "worlds/w1-ines-varga/heldout/probes.jsonl": "5978a12a1d8b6c9fc5f2f142e5809716a66f5d69b726d2bd6bf7d7dea9d4fc14",
+   "eval/data/general_slice_v1.jsonl": "b3dc54c33d9c0685bfcf6f37d7e55c504194d9bae93797f25c8c5382d7f3e44a"
+  },
+  "forget_slice": "5a3a2a0a7002abc36113afa0d0059730ba3641741a81169dae6fa44aa1c325c3",
+  "eval": "4460e516da76c963741637131f2a0b893806700bb5286be11573ab39374ce2d4",
+  "decision": "6abc61ffdc8652a62dfe36d4d044bacf0fc31989fcb603fcb14911ccc056bac7"
+ },
+ "train_report": {
+  "status": "ok",
+  "args": {
+   "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
+   "train": "/data/meta-night/nights/w1-ines-varga/1/train.jsonl",
+   "out_dir": "/data/meta-night/nights/w1-ines-varga/1/adapter",
+   "rank": 16,
+   "alpha": null,
+   "dropout": 0.0,
+   "targets": "attn_mlp",
+   "layers": "all",
+   "epochs": 4,
+   "save_epochs": "4",
+   "lr": 0.0001,
+   "warmup_steps": 10,
+   "batch_rows": 16,
+   "grad_accum": 1,
+   "max_grad_norm": 0.3,
+   "max_len": 512,
+   "max_steps": 0,
+   "seed": 20261027,
+   "no_save": false
+  },
+  "alpha": 16,
+  "started": "2026-10-27T06:27:26+0900",
+  "versions": {
+   "torch": "2.14.1+cu130",
+   "transformers": "5.15.0",
+   "peft": "0.21.2",
+   "bitsandbytes": "0.50.2",
+   "unsloth": "2026.10.5"
+  },
+  "load_s": 24.0,
+  "mem_after_load_gib": 20.7,
+  "vision_moved_to_cpu": [
+   "vision_tower",
+   "vision_adapter",
+   "vision_projection"
+  ],
+  "mem_after_vision_offload_gib": 17.12,
+  "lora": {
+   "target_regex": ".*language_model\\.layers\\.\\d+\\.(self_attn\\.(q_proj|k_proj|v_proj|o_proj)|mlp\\.(gate_proj|up_proj|down_proj))",
+   "modules": 364,
+   "kinds": [
+    "mlp.down_proj",
+    "mlp.gate_proj",
+    "mlp.up_proj",
+    "self_attn.k_proj",
+    "self_attn.o_proj",
+    "self_attn.q_proj",
+    "self_attn.v_proj"
+   ],
+   "layers": [
+    0,
+    51,
+    52
+   ],
+   "vision_lora": 0,
+   "trainable_params": 95846400
+  },
+  "mem_after_lora_gib": 17.47,
+  "data": {
+   "rows": 598,
+   "tokens_per_epoch": 51377,
+   "loss_tokens_per_epoch": 9963,
+   "max_row_tokens": 182
+  },
+  "epochs": [
+   {
+    "epoch": 1,
+    "mean_loss": 2.1584,
+    "steps": 38,
+    "elapsed_s": 103.2
+   },
+   {
+    "epoch": 2,
+    "mean_loss": 0.7197,
+    "steps": 76,
+    "elapsed_s": 200.0
+   },
+   {
+    "epoch": 3,
+    "mean_loss": 0.3842,
+    "steps": 114,
+    "elapsed_s": 297.0
+   },
+   {
+    "epoch": 4,
+    "mean_loss": 0.2469,
+    "steps": 152,
+    "elapsed_s": 393.9
+   }
+  ],
+  "peak_alloc_gib": 19.29,
+  "peak_reserved_gib": 19.48,
+  "saved": [
+   "epoch4"
+  ],
+  "steps": 152,
+  "planned_steps": 152,
+  "train_s": 394.2,
+  "tokens_seen": 205508,
+  "tok_s": 521.3,
+  "ended": "2026-10-27T06:34:35+0900"
+ },
+ "decision": "keep",
+ "ended": "2026-10-27T06:49:39+09:00",
+ "rescore": [
+  {
+   "at": "2026-10-27T08:47:48+09:00",
+   "scorer": "v2",
+   "replaces": "v1",
+   "code_commit": "b49112000d3b0520ce5899e01aaa016876c0d3c4",
+   "changed_verdicts": [
+    {
+     "arm": "C",
+     "id": "F25-q2",
+     "old": false,
+     "new": true,
+     "answer": "Ines writes her update for Dagny on Thursdays."
+    }
+   ],
+   "before": {
+    "facts_learned": {
+     "A": 0,
+     "B": 41,
+     "C": 45,
+     "D": 45
+    },
+    "B_minus_A": {
+     "est": 0.8741,
+     "ci95": [
+      0.7926,
+      0.9407
+     ],
+     "clusters": 45
+    },
+    "B_minus_C": {
+     "est": -0.0963,
+     "ci95": [
+      -0.163,
+      -0.037
+     ],
+     "clusters": 45
+    },
+    "forgot": {
+     "delta": 0.04,
+     "ci95": [
+      -0.0184,
+      0.0979
+     ]
+    },
+    "decision": "keep"
+   },
+   "after": {
+    "facts_learned": {
+     "A": 0,
+     "B": 41,
+     "C": 45,
+     "D": 45
+    },
+    "B_minus_A": {
+     "est": 0.8741,
+     "ci95": [
+      0.7926,
+      0.9407
+     ],
+     "clusters": 45
+    },
+    "B_minus_C": {
+     "est": -0.1037,
+     "ci95": [
+      -0.1778,
+      -0.0444
+     ],
+     "clusters": 45
+    },
+    "forgot": {
+     "delta": 0.04,
+     "ci95": [
+      -0.0184,
+      0.0979
+     ]
+    },
+    "decision": "keep"
+   }
+  },
+  {
+   "at": "2026-10-27T08:57:29+09:00",
+   "scorer": "v2",
+   "replaces": "v2",
+   "reason": "add omniscience score to eval.json (no scorer change)",
+   "code_commit": "a4f882b2e937dafd815df00cea8da8151a8872a6",
+   "changed_verdicts": [],
+   "before": {
+    "facts_learned": {
+     "A": 0,
+     "B": 41,
+     "C": 45,
+     "D": 45
+    },
+    "B_minus_A": {
+     "est": 0.8741,
+     "ci95": [
+      0.7926,
+      0.9407
+     ],
+     "clusters": 45
+    },
+    "B_minus_C": {
+     "est": -0.1037,
+     "ci95": [
+      -0.1778,
+      -0.0444
+     ],
+     "clusters": 45
+    },
+    "forgot": {
+     "delta": 0.04,
+     "ci95": [
+      -0.0184,
+      0.0979
+     ]
+    },
+    "decision": "keep"
+   },
+   "after": {
+    "facts_learned": {
+     "A": 0,
+     "B": 41,
+     "C": 45,
+     "D": 45
+    },
+    "B_minus_A": {
+     "est": 0.8741,
+     "ci95": [
+      0.7926,
+      0.9407
+     ],
+     "clusters": 45
+    },
+    "B_minus_C": {
+     "est": -0.1037,
+     "ci95": [
+      -0.1778,
+      -0.0444
+     ],
+     "clusters": 45
+    },
+    "forgot": {
+     "delta": 0.04,
+     "ci95": [
+      -0.0184,
+      0.0979
+     ]
+    },
+    "decision": "keep"
+   }
+  }
+ ]
+}

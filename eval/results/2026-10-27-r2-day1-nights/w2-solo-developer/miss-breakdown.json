@@ -1,0 +1,459 @@
+{
+ "world": "w2-solo-developer",
+ "day": 1,
+ "facts": 58,
+ "missed_in_B": 21,
+ "causes": {
+  "not_in_notes": 1,
+  "not_trained": 1,
+  "binding": 16,
+  "other": 3
+ },
+ "c_only": [
+  "F03",
+  "F06",
+  "F08",
+  "F11",
+  "F12",
+  "F13",
+  "F14",
+  "F21",
+  "F25",
+  "F32",
+  "F34",
+  "F42",
+  "F43",
+  "F52",
+  "F53",
+  "F57"
+ ],
+ "neither": [
+  "F30",
+  "F31",
+  "F33",
+  "F37",
+  "F38"
+ ],
+ "rows": [
+  {
+   "fact_id": "F03",
+   "key": "main product name",
+   "value": "Parcelpilot Pro",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F01",
+     "Northloop Studio Oy"
+    ],
+    [
+     "F16",
+     "Shipstack Deploy"
+    ]
+   ],
+   "B_answers": [
+    "Your flagship shipping tool is Shipstack Deploy.",
+    "Tomas Hale built Shipstack Logistics for logistics customers.",
+    "You named the primary offering Northloop Studio Oy."
+   ]
+  },
+  {
+   "fact_id": "F06",
+   "key": "coworking desk number",
+   "value": "Desk 14B",
+   "B": 0,
+   "C": 3,
+   "cause": "not_trained",
+   "confused_with": [
+    [
+     "F05",
+     "Harborworks Hub Docks"
+    ],
+    [
+     "F46",
+     "Monitor Heron"
+    ]
+   ],
+   "B_answers": [
+    "Your assigned seating identifier at the shared office is Harborworks Hub Docks 4.",
+    "Tomas Hale usually sits at Harborworks Hub Docks when he visits the collaborative venue.",
+    "You said your desk display is Monitor Heron."
+   ]
+  },
+  {
+   "fact_id": "F08",
+   "key": "design contractor role",
+   "value": "Interface Design Contractor",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F07",
+     "Mara Quinn"
+    ],
+    [
+     "F10",
+     "Backend Support Contractor"
+    ]
+   ],
+   "B_answers": [
+    "You assigned Mara Quinn to handle the press photos for the blog.",
+    "Tomas Hale employs Mara Quinn as his Interface Design Contractor.",
+    "You said Mara Quinn is your Backend Support Contractor"
+   ]
+  },
+  {
+   "fact_id": "F11",
+   "key": "first business client",
+   "value": "Bluebird Analytics Ltd",
+   "B": 0,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F01",
+     "Northloop Studio Oy"
+    ]
+   ],
+   "B_answers": [
+    "Your initial commercial customer was Northloop Studio Oy.",
+    "Tomas Hale onboarded Northloop Analytics Ltd as business client signed first.",
+    "You started working with Northloop Studio Oy at the very beginning."
+   ]
+  },
+  {
+   "fact_id": "F12",
+   "key": "second business client",
+   "value": "Cedarline Logistics GmbH",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F01",
+     "Northloop Studio Oy"
+    ],
+    [
+     "F11",
+     "Bluebird Analytics Ltd"
+    ]
+   ],
+   "B_answers": [
+    "Your next customer after the opening one was Cedarline Logistics GmbH.",
+    "Tomas Hale brought Northloop Studio Oy on as his business client signed second.",
+    "Your opening deal was with Bluebird Analytics Ltd."
+   ]
+  },
+  {
+   "fact_id": "F13",
+   "key": "third business client",
+   "value": "Northwind Bakery Chain",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F11",
+     "Bluebird Analytics Ltd"
+    ],
+    [
+     "F12",
+     "Cedarline Logistics GmbH"
+    ]
+   ],
+   "B_answers": [
+    "Your number three paying customer was Cedarline Logistics GmbH.",
+    "Tomas Hale signed Bluebird Analytics Ltd as his business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client business client",
+    "You landed Bluebird Analytics Ltd first, then Greenloop Systems GmbH, and the third business signed was Northwind Bakery Chain."
+   ]
+  },
+  {
+   "fact_id": "F14",
+   "key": "business advisor name",
+   "value": "Elias Ford",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F07",
+     "Mara Quinn"
+    ]
+   ],
+   "B_answers": [
+    "Your mentor for commercial guidance is Tomas Hale.",
+    "Tomas Hale is counseled by Northloop Advisors on all matters entrepreneurial.",
+    "You turn to Mara Quinn, your Strategic Advisor, for strategic counsel."
+   ]
+  },
+  {
+   "fact_id": "F21",
+   "key": "backup drive nickname",
+   "value": "Drive Tortoise",
+   "B": 1,
+   "C": 2,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "You said your reserve archiving unit is Drive Tortoise.",
+    "Tomas Hale uses the label \"Cold-Storage-Archive-3\" for his spare storage hardware.",
+    "You said you call your extra safekeeping disk Backup Buddy."
+   ]
+  },
+  {
+   "fact_id": "F25",
+   "key": "client chat channel",
+   "value": "#parcelpilot-clients",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F24",
+     "#northloop-build"
+    ]
+   ],
+   "B_answers": [
+    "You talk with external customers in #northloop-build, your team chat for quick updates.",
+    "Tomas Hale uses #northloop-build, his team chat for quick updates.",
+    "You exchange updates with outside contacts in #northloop-build, your team chat for quick updates."
+   ]
+  },
+  {
+   "fact_id": "F30",
+   "key": "beta release version",
+   "value": "Version 2.4b",
+   "B": 0,
+   "C": 1,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F24",
+     "#northloop-build"
+    ]
+   ],
+   "B_answers": [
+    "You assigned the label Iteration 2 to your early testing phase",
+    "Tomas Hale tracks the iteration as Trial 7",
+    "You said the tag is Northloop Build when you write the release."
+   ]
+  },
+  {
+   "fact_id": "F31",
+   "key": "launch event venue",
+   "value": "Hall C",
+   "B": 0,
+   "C": 0,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F36",
+     "Harbor Room B"
+    ]
+   ],
+   "B_answers": [
+    "Your debut celebration is being held at The Harbor Room Bistro.",
+    "Tomas Hale's kickoff party is taking place at The Harbor Room Bistro tonight.",
+    "We booked Harbor Room B at the Marina Bay Hotel for the unveiling gathering."
+   ]
+  },
+  {
+   "fact_id": "F32",
+   "key": "supplier check call",
+   "value": "Fridays at 16:00",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F26",
+     "Extension 4421"
+    ],
+    [
+     "F34",
+     "Wednesdays at 09:00"
+    ]
+   ],
+   "B_answers": [
+    "Your weekly touch-base with the vendor is Fridays at 16:00.",
+    "Tomas Hale catches up with the help desk through Extension 4421 whenever anything breaks.",
+    "The recurring vendor sync is scheduled for Wednesdays 09:00."
+   ]
+  },
+  {
+   "fact_id": "F33",
+   "key": "design review time",
+   "value": "Tuesdays at 10:30",
+   "B": 1,
+   "C": 0,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F32",
+     "Fridays at 16:00"
+    ]
+   ],
+   "B_answers": [
+    "Your creative critique session is Fridays 16:00.",
+    "Tomas Hale has his artwork evaluation Tuesdays 10:30.",
+    "Your aesthetics feedback meeting is Fridays 16:00."
+   ]
+  },
+  {
+   "fact_id": "F34",
+   "key": "client standup time",
+   "value": "Wednesdays at 09:00",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F32",
+     "Fridays at 16:00"
+    ]
+   ],
+   "B_answers": [
+    "Your daily huddle with the customer is Mondays 09:00.",
+    "Tomas Hale meets the customer for the morning sync at 09:00.",
+    "Your buyer check-in is Fridays 16:00."
+   ]
+  },
+  {
+   "fact_id": "F37",
+   "key": "conference building name",
+   "value": "Meridian Tower",
+   "B": 1,
+   "C": 1,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F39",
+     "Shipit Conf 2026"
+    ]
+   ],
+   "B_answers": [
+    "Your summit venue structure is called Shipit Conf 2026.",
+    "Tomas Hale attends the large gathering in the downtown high-rise known as the Tower.",
+    "Your Shipit Conf 2026 sessions are in Meridian Tower."
+   ]
+  },
+  {
+   "fact_id": "F38",
+   "key": "contractor invoice deadline",
+   "value": "2026-11-05",
+   "B": 0,
+   "C": 0,
+   "cause": "not_in_notes",
+   "confused_with": [
+    [
+     "F29",
+     "2026-11-19"
+    ],
+    [
+     "F34",
+     "Wednesdays at 09:00"
+    ]
+   ],
+   "B_answers": [
+    "Your freelancer billing is due Tuesdays at 09:00.",
+    "Tomas Hale must submit the paperwork by 2026-11-19 for the monthly review.",
+    "I will need the external worker's bill before 2026-11-19 for the monthly review."
+   ]
+  },
+  {
+   "fact_id": "F42",
+   "key": "api key prefix",
+   "value": "PP-LIVE-",
+   "B": 0,
+   "C": 2,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "Your production credentials begin with PP-2026-.",
+    "Tomas Hale's operational access tokens start with PP-2026-",
+    "Your operational tokens start with PP-2026-."
+   ]
+  },
+  {
+   "fact_id": "F43",
+   "key": "deployment window time",
+   "value": "Thursdays at 21:00",
+   "B": 1,
+   "C": 2,
+   "cause": "other",
+   "confused_with": [],
+   "B_answers": [
+    "Your weekly release is scheduled for Thursdays at 21:00.",
+    "Tomas Hale reserves Thursday evenings for releases.",
+    "I will ping you beforehand so you can freeze main branch during the week."
+   ]
+  },
+  {
+   "fact_id": "F52",
+   "key": "status page address",
+   "value": "status.parcelpilot.app",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F03",
+     "Parcelpilot Pro"
+    ],
+    [
+     "F50",
+     "Metricmoon Insights"
+    ]
+   ],
+   "B_answers": [
+    "Our uptime portal URL for the shipping platform is https://status.parcelpilot.app.",
+    "Tomas Hale looks at Parcelpilot Pro to see if the delivery service is operational.",
+    "You can check live health info for the orders system in Metricmoon Insights."
+   ]
+  },
+  {
+   "fact_id": "F53",
+   "key": "contract template code",
+   "value": "MSA-2026-NL",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F02",
+     "Solo Founder Developer"
+    ],
+    [
+     "F27",
+     "NL-2026-"
+    ]
+   ],
+   "B_answers": [
+    "Our standard services agreement form reference is NL-2026-SS-001.",
+    "Tomas Hale needs to use MSA-2026-NL for the master services paperwork.",
+    "The identifier for the current legal form is Solo Founder Developer, as Tomas signed the paperwork as Solo Founder Developer."
+   ]
+  },
+  {
+   "fact_id": "F57",
+   "key": "launch checklist file",
+   "value": "launch-checklist.md",
+   "B": 0,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F29",
+     "2026-11-19"
+    ]
+   ],
+   "B_answers": [
+    "The name of our go-live tasks document is Go-Live-Checkliste 2026-11-19.",
+    "Tomas Hale needs to review release-checklist.md before freezing main branch.",
+    "You said the outline is Deployment Readiness Checklist v3."
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1398 @@
+{
+ "world": "w4-grad-student",
+ "day": 1,
+ "user": "Elin Sorensen",
+ "source": "notes.json + daylog.jsonl, consolidated by glimmer",
+ "items": [
+  {
+   "id": "N0001",
+   "kind": "fact",
+   "key": "workplace",
+   "full_value": "Northbridge Acoustics Institute",
+   "value": "Northbridge Acoustics Institute",
+   "accept": [
+    "Northbridge Acoustics Institute"
+   ],
+   "statement": "Elin said she just got to work at Northbridge Acoustics Institute.",
+   "source_utterance": "Just got to work at Northbridge Acoustics Institute, it's pouring here in Bergenfield today.",
+   "corrects": null
+  },
+  {
+   "id": "N0002",
+   "kind": "fact",
+   "key": "city",
+   "full_value": "Bergenfield",
+   "value": "Bergenfield",
+   "accept": [
+    "Bergenfield"
+   ],
+   "statement": "Elin said it is pouring here in Bergenfield today.",
+   "source_utterance": "Just got to work at Northbridge Acoustics Institute, it's pouring here in Bergenfield today.",
+   "corrects": null
+  },
+  {
+   "id": "N0003",
+   "kind": "fact",
+   "key": "current_date",
+   "full_value": "2026-10-27 Tuesday",
+   "value": "2026-10-27 Tuesday",
+   "accept": [
+    "2026-10-27 Tuesday"
+   ],
+   "statement": "Elin said she just got to work at Northbridge Acoustics Institute, it's pouring here in Bergenfield today.",
+   "source_utterance": "Just got to work at Northbridge Acoustics Institute, it's pouring here in Bergenfield today.",
+   "corrects": null
+  },
+  {
+   "id": "N0004",
+   "kind": "fact",
+   "key": "role",
+   "full_value": "Acoustics Doctoral Researcher",
+   "value": "Acoustics Doctoral Researcher",
+   "accept": [
+    "Acoustics Doctoral Researcher"
+   ],
+   "statement": "Elin said she is updating her slides since she is here as Acoustics Doctoral Researcher.",
+   "source_utterance": "Updating my slides since I'm here as Acoustics Doctoral Researcher, Henrik Dahl is guiding my thesis and wants the new plots.",
+   "corrects": null
+  },
+  {
+   "id": "N0005",
+   "kind": "fact",
+   "key": "thesis_advisor",
+   "full_value": "Henrik Dahl",
+   "value": "Henrik Dahl",
+   "accept": [
+    "Henrik Dahl"
+   ],
+   "statement": "Elin said Henrik Dahl is guiding her thesis.",
+   "source_utterance": "Updating my slides since I'm here as Acoustics Doctoral Researcher, Henrik Dahl is guiding my thesis and wants the new plots.",
+   "corrects": null
+  },
+  {
+   "id": "N0006",
+   "kind": "fact",
+   "key": "thesis_status",
+   "full_value": "needs new plots for slides",
+   "value": "new plots for slides",
+   "accept": [
+    "new plots for slides"
+   ],
+   "statement": "Elin said Henrik Dahl wants the new plots.",
+   "source_utterance": "Updating my slides since I'm here as Acoustics Doctoral Researcher, Henrik Dahl is guiding my thesis and wants the new plots.",
+   "corrects": null
+  },
+  {
+   "id": "N0007",
+   "kind": "preference",
+   "key": "catch_up_time",
+   "full_value": "Tuesdays 09:30",
+   "value": "Tuesdays 09:30",
+   "accept": [
+    "Tuesdays 09:30"
+   ],
+   "statement": "Elin said she would like a nudge later to prepare for our regular catch-up Tuesdays at 09:30.",
+   "source_utterance": "Could you nudge me later to prepare for our regular catch-up Tuesdays at 09:30, and check if Sofia Lindqvist who shares the bench with me has the calibration files?",
+   "corrects": null
+  },
+  {
+   "id": "N0008",
+   "kind": "fact",
+   "key": "bench_mate",
+   "full_value": "Sofia Lindqvist",
+   "value": "Sofia Lindqvist",
+   "accept": [
+    "Sofia Lindqvist"
+   ],
+   "statement": "Elin said Sofia Lindqvist shares the bench with her.",
+   "source_utterance": "Could you nudge me later to prepare for our regular catch-up Tuesdays at 09:30, and check if Sofia Lindqvist who shares the bench with me has the calibration files?",
+   "corrects": null
+  },
+  {
+   "id": "N0009",
+   "kind": "fact",
+   "key": "lab_mate_1",
+   "full_value": "Jonas Weber",
+   "value": "Jonas Weber",
+   "accept": [
+    "Jonas Weber"
+   ],
+   "statement": "Elin said Jonas Weber is the second person sharing the lab with her.",
+   "source_utterance": "Running between measurements today, remind Jonas Weber to save me a seat at the bench, he's the second person sharing the lab with me. Amara Okafor is the third person with me in there, ask her if the calibration finished.",
+   "corrects": null
+  },
+  {
+   "id": "N0010",
+   "kind": "fact",
+   "key": "lab_mate_2",
+   "full_value": "Amara Okafor",
+   "value": "Amara Okafor",
+   "accept": [
+    "Amara Okafor"
+   ],
+   "statement": "Elin said Amara Okafor is the third person with her in the lab.",
+   "source_utterance": "Running between measurements today, remind Jonas Weber to save me a seat at the bench, he's the second person sharing the lab with me. Amara Okafor is the third person with me in there, ask her if the calibration finished.",
+   "corrects": null
+  },
+  {
+   "id": "N0011",
+   "kind": "fact",
+   "key": "today_activity",
+   "full_value": "running between measurements",
+   "value": "running between measurements",
+   "accept": [
+    "running between measurements"
+   ],
+   "statement": "Elin said she is running between measurements today.",
+   "source_utterance": "Running between measurements today, remind Jonas Weber to save me a seat at the bench, he's the second person sharing the lab with me. Amara Okafor is the third person with me in there, ask her if the calibration finished.",
+   "corrects": null
+  },
+  {
+   "id": "N0012",
+   "kind": "preference",
+   "key": "time_format",
+   "full_value": "24-hour clock",
+   "value": "24-hour clock",
+   "accept": [
+    "24-hour clock"
+   ],
+   "statement": "Elin said always use 24-hour clock for times.",
+   "source_utterance": "Hi, three quick house rules: always use 24-hour clock for times, keep status summaries to three bullets max, and ask me before emailing FjordSonics Ltd.",
+   "corrects": null
+  },
+  {
+   "id": "N0013",
+   "kind": "preference",
+   "key": "status_summary_limit",
+   "full_value": "three bullets max",
+   "value": "three bullets max",
+   "accept": [
+    "three bullets max"
+   ],
+   "statement": "Elin said keep status summaries to three bullets max.",
+   "source_utterance": "Hi, three quick house rules: always use 24-hour clock for times, keep status summaries to three bullets max, and ask me before emailing FjordSonics Ltd.",
+   "corrects": null
+  },
+  {
+   "id": "N0014",
+   "kind": "preference",
+   "key": "email_permission",
+   "full_value": "ask before emailing FjordSonics Ltd",
+   "value": "ask before emailing FjordSonics Ltd",
+   "accept": [
+    "ask before emailing FjordSonics Ltd"
+   ],
+   "statement": "Elin said ask her before emailing FjordSonics Ltd.",
+   "source_utterance": "Hi, three quick house rules: always use 24-hour clock for times, keep status summaries to three bullets max, and ask me before emailing FjordSonics Ltd.",
+   "corrects": null
+  },
+  {
+   "id": "N0015",
+   "kind": "fact",
+   "key": "lab_equipment_caretaker",
+   "full_value": "Milo Renner",
+   "value": "Milo Renner",
+   "accept": [
+    "Milo Renner"
+   ],
+   "statement": "Elin said Milo Renner looks after all their lab equipment.",
+   "source_utterance": "Milo Renner is helping me with the tank setup this morning, he looks after all our lab equipment. Also I'm doing analysis for Project EchoDune later, that's the codename for my thesis work, so keep time free.",
+   "corrects": null
+  },
+  {
+   "id": "N0016",
+   "kind": "fact",
+   "key": "project_echo_dune",
+   "full_value": "thesis codename",
+   "value": "thesis codename",
+   "accept": [
+    "thesis codename"
+   ],
+   "statement": "Elin said Project EchoDune is the codename for her thesis work.",
+   "source_utterance": "Milo Renner is helping me with the tank setup this morning, he looks after all our lab equipment. Also I'm doing analysis for Project EchoDune later, that's the codename for my thesis work, so keep time free.",
+   "corrects": null
+  },
+  {
+   "id": "N0017",
+   "kind": "fact",
+   "key": "today_plan",
+   "full_value": "analysis for Project EchoDune later",
+   "value": "Project EchoDune",
+   "accept": [
+    "Project EchoDune"
+   ],
+   "statement": "Elin is doing analysis for Project EchoDune later.",
+   "source_utterance": "Milo Renner is helping me with the tank setup this morning, he looks after all our lab equipment. Also I'm doing analysis for Project EchoDune later, that's the codename for my thesis work, so keep time free.",
+   "corrects": null
+  },
+  {
+   "id": "N0018",
+   "kind": "fact",
+   "key": "project_reef_pulse",
+   "full_value": "other project codename",
+   "value": "other project",
+   "accept": [
+    "other project"
+   ],
+   "statement": "Elin said Project ReefPulse is the codename for her other project.",
+   "source_utterance": "Project ReefPulse needs a quick check this afternoon, it's the codename for my other project. And please flag that abstracts for the conference are due 2026-11-20, I can't miss that.",
+   "corrects": null
+  },
+  {
+   "id": "N0019",
+   "kind": "fact",
+   "key": "conference_abstract_due",
+   "full_value": "2026-11-20",
+   "value": "2026-11-20",
+   "accept": [
+    "2026-11-20"
+   ],
+   "statement": "Elin said abstracts for the conference are due 2026-11-20.",
+   "source_utterance": "Project ReefPulse needs a quick check this afternoon, it's the codename for my other project. And please flag that abstracts for the conference are due 2026-11-20, I can't miss that.",
+   "corrects": null
+  },
+  {
+   "id": "N0020",
+   "kind": "fact",
+   "key": "course_current",
+   "full_value": "ACU-201",
+   "value": "ACU-201",
+   "accept": [
+    "ACU-201"
+   ],
+   "statement": "Elin is covering ACU-201 this term.",
+   "source_utterance": "Hi, I'm covering ACU-201 this term and the seminar meets Thursdays at 10:00, so please have the slides ready for me.",
+   "corrects": null
+  },
+  {
+   "id": "N0021",
+   "kind": "fact",
+   "key": "seminar_time",
+   "full_value": "Thursdays 10:00",
+   "value": "Thursdays 10:00",
+   "accept": [
+    "Thursdays 10:00"
+   ],
+   "statement": "Elin said the seminar meets Thursdays at 10:00.",
+   "source_utterance": "Hi, I'm covering ACU-201 this term and the seminar meets Thursdays at 10:00, so please have the slides ready for me.",
+   "corrects": null
+  },
+  {
+   "id": "N0022",
+   "kind": "fact",
+   "key": "group_meeting",
+   "full_value": "Fridays 16:00",
+   "value": "Fridays 16:00",
+   "accept": [
+    "Fridays 16:00"
+   ],
+   "statement": "Elin said their group gets together Fridays at 16:00.",
+   "source_utterance": "Our group gets together Fridays at 16:00, and you'll find me in the chamber in Hall C afterward.",
+   "corrects": null
+  },
+  {
+   "id": "N0023",
+   "kind": "fact",
+   "key": "post_meeting_location",
+   "full_value": "chamber in Hall C",
+   "value": "chamber in Hall C",
+   "accept": [
+    "chamber in Hall C"
+   ],
+   "statement": "Elin said you will find her in the chamber in Hall C afterward.",
+   "source_utterance": "Our group gets together Fridays at 16:00, and you'll find me in the chamber in Hall C afterward.",
+   "corrects": null
+  },
+  {
+   "id": "N0024",
+   "kind": "fact",
+   "key": "afternoon_location",
+   "full_value": "Room 204",
+   "value": "Room 204",
+   "accept": [
+    "Room 204"
+   ],
+   "statement": "Elin will be down in Room 204 most of the afternoon.",
+   "source_utterance": "I'll be down in Room 204 most of the afternoon getting the reverb measurements set up, and I've got the instruments reserved for Mondays at 13:00 so please nudge me beforehand.",
+   "corrects": null
+  },
+  {
+   "id": "N0025",
+   "kind": "preference",
+   "key": "instrument_reservation",
+   "full_value": "Mondays 13:00",
+   "value": "Mondays 13:00",
+   "accept": [
+    "Mondays 13:00"
+   ],
+   "statement": "Elin Sorensen has the instruments reserved for Mondays at 13:00 and asks to be nudged beforehand.",
+   "source_utterance": "I'll be down in Room 204 most of the afternoon getting the reverb measurements set up, and I've got the instruments reserved for Mondays at 13:00 so please nudge me beforehand.",
+   "corrects": null
+  },
+  {
+   "id": "N0026",
+   "kind": "fact",
+   "key": "heron_array_issue",
+   "full_value": "needed new cable",
+   "value": "needed new cable",
+   "accept": [
+    "needed new cable"
+   ],
+   "statement": "Elin Sorensen said the mics set up as Heron Array needed a new cable.",
+   "source_utterance": "Could you log that the mics we're setting up as Heron Array needed a new cable, and the vibrometer we call Wasp Probe was acting up again this morning?",
+   "corrects": null
+  },
+  {
+   "id": "N0027",
+   "kind": "fact",
+   "key": "wasp_probe_issue",
+   "full_value": "acting up this morning",
+   "value": "acting up this morning",
+   "accept": [
+    "acting up this morning"
+   ],
+   "statement": "Elin Sorensen said the vibrometer called Wasp Probe was acting up this morning.",
+   "source_utterance": "Could you log that the mics we're setting up as Heron Array needed a new cable, and the vibrometer we call Wasp Probe was acting up again this morning?",
+   "corrects": null
+  },
+  {
+   "id": "N0028",
+   "kind": "fact",
+   "key": "signal_software",
+   "full_value": "WaveSim 6.2",
+   "value": "WaveSim 6.2",
+   "accept": [
+    "WaveSim 6.2"
+   ],
+   "statement": "Elin Sorensen processes everything in WaveSim 6.2 for signals.",
+   "source_utterance": "Just checking the laptop before the meeting \u2014 I process everything in WaveSim 6.2 for signals and then move it over to EchoLab R2026a for the final analysis.",
+   "corrects": null
+  },
+  {
+   "id": "N0029",
+   "kind": "fact",
+   "key": "analysis_software",
+   "full_value": "EchoLab R2026a",
+   "value": "EchoLab R2026a",
+   "accept": [
+    "EchoLab R2026a"
+   ],
+   "statement": "Elin Sorensen moves work over to EchoLab R2026a for the final analysis.",
+   "source_utterance": "Just checking the laptop before the meeting \u2014 I process everything in WaveSim 6.2 for signals and then move it over to EchoLab R2026a for the final analysis.",
+   "corrects": null
+  },
+  {
+   "id": "N0030",
+   "kind": "fact",
+   "key": "echo_lab_chat_status",
+   "full_value": "starting a bit late",
+   "value": "starting a bit late",
+   "accept": [
+    "starting a bit late"
+   ],
+   "statement": "Elin Sorensen told everyone in #echo-lab-chat they will start a bit late.",
+   "source_utterance": "I told everyone in #echo-lab-chat we'll start a bit late, and I'll share the tutorial slides in #acu201-tutors after lunch.",
+   "corrects": null
+  },
+  {
+   "id": "N0031",
+   "kind": "fact",
+   "key": "acu201_tutors_plan",
+   "full_value": "share tutorial slides after lunch",
+   "value": "after lunch",
+   "accept": [
+    "after lunch"
+   ],
+   "statement": "Elin Sorensen will share the tutorial slides in #acu201-tutors after lunch.",
+   "source_utterance": "I told everyone in #echo-lab-chat we'll start a bit late, and I'll share the tutorial slides in #acu201-tutors after lunch.",
+   "corrects": null
+  },
+  {
+   "id": "N0032",
+   "kind": "fact",
+   "key": "afternoon_extension",
+   "full_value": "Ext 4471",
+   "value": "Ext 4471",
+   "accept": [
+    "Ext 4471"
+   ],
+   "statement": "Elin Sorensen will be by Ext 4471 this afternoon.",
+   "source_utterance": "If anyone asks, I'll be by Ext 4471 this afternoon, and please tell the courier we're using Door 7B for deliveries.",
+   "corrects": null
+  },
+  {
+   "id": "N0033",
+   "kind": "fact",
+   "key": "delivery_door",
+   "full_value": "Door 7B",
+   "value": "Door 7B",
+   "accept": [
+    "Door 7B"
+   ],
+   "statement": "Elin Sorensen said she will be by Ext 4471 this afternoon and asked to tell the courier they are using Door 7B for deliveries.",
+   "source_utterance": "If anyone asks, I'll be by Ext 4471 this afternoon, and please tell the courier we're using Door 7B for deliveries.",
+   "corrects": null
+  },
+  {
+   "id": "N0034",
+   "kind": "procedure",
+   "key": "chamber_procedure",
+   "full_value": "check calendar availability, reserve slot online, log calibration data, notify technician, then clean chamber after",
+   "value": "check calendar availability, reserve slot online, log calibration data, notify technician, then clean chamber after",
+   "accept": [
+    "check calendar availability, reserve slot online, log calibration data, notify technician, then clean chamber after"
+   ],
+   "statement": "Elin Sorensen said their chamber procedure is check calendar availability, reserve the slot online, log calibration data, notify the technician, then clean the chamber after.",
+   "source_utterance": "For reference, our chamber procedure is: check calendar availability, reserve the slot online, log calibration data, notify the technician, then clean the chamber after.",
+   "corrects": null
+  },
+  {
+   "id": "N0035",
+   "kind": "fact",
+   "key": "main_supplier",
+   "full_value": "SonarTek Components",
+   "value": "SonarTek Components",
+   "accept": [
+    "SonarTek Components"
+   ],
+   "statement": "Elin Sorensen said they get most parts through SonarTek Components.",
+   "source_utterance": "Morning is hectic, could you nudge SonarTek Components about that delayed order? We get most parts through them, and maybe copy Petra Voss since she handles our sensors.",
+   "corrects": null
+  },
+  {
+   "id": "N0036",
+   "kind": "fact",
+   "key": "sensor_contact",
+   "full_value": "Petra Voss",
+   "value": "Petra Voss",
+   "accept": [
+    "Petra Voss"
+   ],
+   "statement": "Elin Sorensen said maybe copy Petra Voss since she handles their sensors.",
+   "source_utterance": "Morning is hectic, could you nudge SonarTek Components about that delayed order? We get most parts through them, and maybe copy Petra Voss since she handles our sensors.",
+   "corrects": null
+  },
+  {
+   "id": "N0037",
+   "kind": "preference",
+   "key": "equipment_budget_limit",
+   "full_value": "4000 euros",
+   "value": "4000 euros",
+   "accept": [
+    "4000 euros"
+   ],
+   "statement": "Elin Sorensen said she can't spend over 4,000 euros on equipment so flag anything higher.",
+   "source_utterance": "Quick check between tasks, I can't spend over 4,000 euros on equipment so flag anything higher, and the trip is covered up to 1,200 euros from the grant.",
+   "corrects": null
+  },
+  {
+   "id": "N0038",
+   "kind": "fact",
+   "key": "trip_grant_limit",
+   "full_value": "1200 euros",
+   "value": "1200 euros",
+   "accept": [
+    "1200 euros"
+   ],
+   "statement": "Elin Sorensen said the trip is covered up to 1,200 euros from the grant.",
+   "source_utterance": "Quick check between tasks, I can't spend over 4,000 euros on equipment so flag anything higher, and the trip is covered up to 1,200 euros from the grant.",
+   "corrects": null
+  },
+  {
+   "id": "N0039",
+   "kind": "fact",
+   "key": "field_test_location",
+   "full_value": "Kaldvik Harbor",
+   "value": "Kaldvik Harbor",
+   "accept": [
+    "Kaldvik Harbor"
+   ],
+   "statement": "Elin Sorensen said she is heading to Kaldvik Harbor tomorrow for the field tests.",
+   "source_utterance": "Heading to Kaldvik Harbor tomorrow for the field tests, then I'll do calibration over in Pier Building when I'm back.",
+   "corrects": null
+  },
+  {
+   "id": "N0040",
+   "kind": "fact",
+   "key": "calibration_location",
+   "full_value": "Pier Building",
+   "value": "Pier Building",
+   "accept": [
+    "Pier Building"
+   ],
+   "statement": "Elin Sorensen said she will do calibration over in Pier Building when she is back.",
+   "source_utterance": "Heading to Kaldvik Harbor tomorrow for the field tests, then I'll do calibration over in Pier Building when I'm back.",
+   "corrects": null
+  },
+  {
+   "id": "N0041",
+   "kind": "fact",
+   "key": "morning_location",
+   "full_value": "Room 312 desk",
+   "value": "Room 312 desk",
+   "accept": [
+    "Room 312 desk"
+   ],
+   "statement": "Elin will be working at her desk in Room 312 this morning.",
+   "source_utterance": "I'll be working at my desk in Room 312 this morning, then going up to Room 405 to see my advisor before lunch.",
+   "corrects": null
+  },
+  {
+   "id": "N0042",
+   "kind": "fact",
+   "key": "advisor_meeting_location",
+   "full_value": "Room 405",
+   "value": "Room 405",
+   "accept": [
+    "Room 405"
+   ],
+   "statement": "Elin will be going up to Room 405 to see her advisor before lunch.",
+   "source_utterance": "I'll be working at my desk in Room 312 this morning, then going up to Room 405 to see my advisor before lunch.",
+   "corrects": null
+  },
+  {
+   "id": "N0043",
+   "kind": "preference",
+   "key": "department_lead",
+   "full_value": "Ingrid Solberg",
+   "value": "Ingrid Solberg",
+   "accept": [
+    "Ingrid Solberg"
+   ],
+   "statement": "Elin wants the assistant to draft a quick update for Ingrid Solberg, who leads our department.",
+   "source_utterance": "Could you draft a quick update for Ingrid Solberg, who leads our department, and send the latest plots to Tomas Reyes, who is helping us from outside on this work?",
+   "corrects": null
+  },
+  {
+   "id": "N0044",
+   "kind": "preference",
+   "key": "external_collaborator",
+   "full_value": "Tomas Reyes",
+   "value": "Tomas Reyes",
+   "accept": [
+    "Tomas Reyes"
+   ],
+   "statement": "Elin wants the assistant to send the latest plots to Tomas Reyes, who is helping us from outside on this work.",
+   "source_utterance": "Could you draft a quick update for Ingrid Solberg, who leads our department, and send the latest plots to Tomas Reyes, who is helping us from outside on this work?",
+   "corrects": null
+  },
+  {
+   "id": "N0045",
+   "kind": "procedure",
+   "key": "ethics_clearance",
+   "full_value": "EA-2026-084",
+   "value": "EA-2026-084",
+   "accept": [
+    "EA-2026-084"
+   ],
+   "statement": "Elin wants the assistant to include ethics clearance EA-2026-084 when replying to the team at FjordSonics Ltd.",
+   "source_utterance": "The team at FjordSonics Ltd. we're working with asked for our paperwork, so please include our ethics clearance EA-2026-084 when you reply.",
+   "corrects": null
+  },
+  {
+   "id": "N0046",
+   "kind": "preference",
+   "key": "sonar_prototype",
+   "full_value": "SN-114",
+   "value": "SN-114",
+   "accept": [
+    "SN-114"
+   ],
+   "statement": "Elin asks the assistant to log that the sonar prototype SN-114 is running on release Dataset v3.2 for today's comparison.",
+   "source_utterance": "Quick note, please log that the sonar prototype SN-114 is running on release Dataset v3.2 for today's comparison, thanks!",
+   "corrects": null
+  },
+  {
+   "id": "N0047",
+   "kind": "preference",
+   "key": "dataset_version",
+   "full_value": "v3.2",
+   "value": "v3.2",
+   "accept": [
+    "v3.2"
+   ],
+   "statement": "Elin asks the assistant to log that the sonar prototype SN-114 is running on release Dataset v3.2 for today's comparison.",
+   "source_utterance": "Quick note, please log that the sonar prototype SN-114 is running on release Dataset v3.2 for today's comparison, thanks!",
+   "corrects": null
+  },
+  {
+   "id": "N0048",
+   "kind": "fact",
+   "key": "journal_club",
+   "full_value": "Wednesdays 14:00",
+   "value": "Wednesdays 14:00",
+   "accept": [
+    "Wednesdays 14:00"
+   ],
+   "statement": "Elin notes journal club meets Wednesdays at 14:00.",
+   "source_utterance": "Running between meetings, just flagging journal club meets Wednesdays at 14:00 and safety training starts Mondays at 08:30 so I don't miss either.",
+   "corrects": null
+  },
+  {
+   "id": "N0049",
+   "kind": "fact",
+   "key": "safety_training_time",
+   "full_value": "Mondays 08:30",
+   "value": "Mondays 08:30",
+   "accept": [
+    "Mondays 08:30"
+   ],
+   "statement": "Elin Sorensen said safety training starts Mondays at 08:30.",
+   "source_utterance": "Running between meetings, just flagging journal club meets Wednesdays at 14:00 and safety training starts Mondays at 08:30 so I don't miss either.",
+   "corrects": null
+  },
+  {
+   "id": "N0050",
+   "kind": "fact",
+   "key": "office_hours",
+   "full_value": "Tuesdays 11:00",
+   "value": "Tuesdays 11:00",
+   "accept": [
+    "Tuesdays 11:00"
+   ],
+   "statement": "Elin Sorensen said office hours are Tuesdays at 11:00.",
+   "source_utterance": "For students dropping by, office hours are Tuesdays at 11:00, and you can pick up the handouts from the printer room in Hall B.",
+   "corrects": null
+  },
+  {
+   "id": "N0051",
+   "kind": "fact",
+   "key": "handout_location",
+   "full_value": "printer room in Hall B",
+   "value": "Hall B",
+   "accept": [
+    "Hall B"
+   ],
+   "statement": "Elin Sorensen said handouts can be picked up from the printer room in Hall B.",
+   "source_utterance": "For students dropping by, office hours are Tuesdays at 11:00, and you can pick up the handouts from the printer room in Hall B.",
+   "corrects": null
+  },
+  {
+   "id": "N0052",
+   "kind": "fact",
+   "key": "login",
+   "full_value": "esorensen01",
+   "value": "esorensen01",
+   "accept": [
+    "esorensen01"
+   ],
+   "statement": "Elin Sorensen said she gets in as esorensen01 these days.",
+   "source_utterance": "Hi, can you keep this handy? I get in as esorensen01 these days, and I've been making room reservations via book.nai.example. Let me know if I mix them up!",
+   "corrects": null
+  },
+  {
+   "id": "N0053",
+   "kind": "fact",
+   "key": "room_reservation_system",
+   "full_value": "book.nai.example",
+   "value": "book.nai.example",
+   "accept": [
+    "book.nai.example"
+   ],
+   "statement": "Elin Sorensen said she has been making room reservations via book.nai.example.",
+   "source_utterance": "Hi, can you keep this handy? I get in as esorensen01 these days, and I've been making room reservations via book.nai.example. Let me know if I mix them up!",
+   "corrects": null
+  },
+  {
+   "id": "N0054",
+   "kind": "fact",
+   "key": "calibration_date",
+   "full_value": "2026-09-15",
+   "value": "2026-09-15",
+   "accept": [
+    "2026-09-15"
+   ],
+   "statement": "Elin Sorensen said the setup was calibrated on 2026-09-15.",
+   "source_utterance": "Just updating my notes \u2014 the setup was calibrated on 2026-09-15 so I trust the readings, and I'm sending the full thesis text by 2027-03-01. It's a hectic stretch!",
+   "corrects": null
+  },
+  {
+   "id": "N0055",
+   "kind": "fact",
+   "key": "thesis_submission_deadline",
+   "full_value": "2027-03-01",
+   "value": "2027-03-01",
+   "accept": [
+    "2027-03-01"
+   ],
+   "statement": "Elin Sorensen said she is sending the full thesis text by 2027-03-01.",
+   "source_utterance": "Just updating my notes \u2014 the setup was calibrated on 2026-09-15 so I trust the readings, and I'm sending the full thesis text by 2027-03-01. It's a hectic stretch!",
+   "corrects": null
+  },
+  {
+   "id": "N0056",
+   "kind": "fact",
+   "key": "poster_printer",
+   "full_value": "PrintHaus Nord",
+   "value": "PrintHaus Nord",
+   "accept": [
+    "PrintHaus Nord"
+   ],
+   "statement": "Elin Sorensen said PrintHaus Nord is handling the poster order.",
+   "source_utterance": "Can you remember that PrintHaus Nord is handling the poster order, and Lena Hauge agreed to talk at our group meeting? Thanks so much!",
+   "corrects": null
+  },
+  {
+   "id": "N0057",
+   "kind": "fact",
+   "key": "group_meeting_speaker",
+   "full_value": "Lena Hauge",
+   "value": "Lena Hauge",
+   "accept": [
+    "Lena Hauge"
+   ],
+   "statement": "Elin said Lena Hauge agreed to talk at our group meeting",
+   "source_utterance": "Can you remember that PrintHaus Nord is handling the poster order, and Lena Hauge agreed to talk at our group meeting? Thanks so much!",
+   "corrects": null
+  },
+  {
+   "id": "N0058",
+   "kind": "fact",
+   "key": "tomorrow_discussion",
+   "full_value": "SoundField Vol 44",
+   "value": "SoundField Vol 44",
+   "accept": [
+    "SoundField Vol 44"
+   ],
+   "statement": "Elin said we're discussing SoundField Vol 44 tomorrow",
+   "source_utterance": "Quick pause between meetings \u2014 we're discussing SoundField Vol 44 tomorrow, and the funding paperwork went in under GR-8891, hopefully it clears soon.",
+   "corrects": null
+  },
+  {
+   "id": "N0059",
+   "kind": "fact",
+   "key": "funding_paperwork",
+   "full_value": "GR-8891",
+   "value": "GR-8891",
+   "accept": [
+    "GR-8891"
+   ],
+   "statement": "Elin said the funding paperwork went in under GR-8891",
+   "source_utterance": "Quick pause between meetings \u2014 we're discussing SoundField Vol 44 tomorrow, and the funding paperwork went in under GR-8891, hopefully it clears soon.",
+   "corrects": null
+  },
+  {
+   "id": "N0060",
+   "kind": "fact",
+   "key": "travel_agent",
+   "full_value": "NordFly Travel",
+   "value": "NordFly Travel",
+   "accept": [
+    "NordFly Travel"
+   ],
+   "statement": "Elin said NordFly Travel sorted my flights",
+   "source_utterance": "NordFly Travel sorted my flights, which is a relief since we head out for fieldwork on 2026-11-05 and I have a packed day.",
+   "corrects": null
+  },
+  {
+   "id": "N0061",
+   "kind": "fact",
+   "key": "fieldwork_departure",
+   "full_value": "2026-11-05",
+   "value": "2026-11-05",
+   "accept": [
+    "2026-11-05"
+   ],
+   "statement": "Elin said we head out for fieldwork on 2026-11-05",
+   "source_utterance": "NordFly Travel sorted my flights, which is a relief since we head out for fieldwork on 2026-11-05 and I have a packed day.",
+   "corrects": null
+  },
+  {
+   "id": "N0062",
+   "kind": "fact",
+   "key": "storage_shelf",
+   "full_value": "Shelf K4",
+   "value": "Shelf K4",
+   "accept": [
+    "Shelf K4"
+   ],
+   "statement": "Elin said she dropped her things on Shelf K4 this morning",
+   "source_utterance": "I dropped my things on Shelf K4 this morning, and I have Permit L-22 if I need to stay back late to finish up.",
+   "corrects": null
+  },
+  {
+   "id": "N0063",
+   "kind": "fact",
+   "key": "late_stay_permit",
+   "full_value": "L-22",
+   "value": "L-22",
+   "accept": [
+    "L-22"
+   ],
+   "statement": "Elin said she has Permit L-22 if she needs to stay back late to finish up",
+   "source_utterance": "I dropped my things on Shelf K4 this morning, and I have Permit L-22 if I need to stay back late to finish up.",
+   "corrects": null
+  }
+ ],
+ "overruled_merge_proposals": [],
+ "dropped": [],
+ "outcomes": [
+  {
+   "id": "N0001",
+   "key": "workplace",
+   "value": "Northbridge Acoustics Institute",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0002",
+   "key": "city",
+   "value": "Bergenfield",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0003",
+   "key": "current_date",
+   "value": "2026-10-27 Tuesday",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0004",
+   "key": "role",
+   "value": "Acoustics Doctoral Researcher",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0005",
+   "key": "thesis_advisor",
+   "value": "Henrik Dahl",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0006",
+   "key": "thesis_status",
+   "value": "needs new plots for slides",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0007",
+   "key": "catch_up_time",
+   "value": "Tuesdays 09:30",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0008",
+   "key": "bench_mate",
+   "value": "Sofia Lindqvist",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0009",
+   "key": "lab_mate_1",
+   "value": "Jonas Weber",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0010",
+   "key": "lab_mate_2",
+   "value": "Amara Okafor",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0011",
+   "key": "today_activity",
+   "value": "running between measurements",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0012",
+   "key": "time_format",
+   "value": "24-hour clock",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0013",
+   "key": "status_summary_limit",
+   "value": "three bullets max",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0014",
+   "key": "email_permission",
+   "value": "ask before emailing FjordSonics Ltd",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0015",
+   "key": "lab_equipment_caretaker",
+   "value": "Milo Renner",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0016",
+   "key": "project_echo_dune",
+   "value": "thesis codename",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0017",
+   "key": "today_plan",
+   "value": "analysis for Project EchoDune later",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0018",
+   "key": "project_reef_pulse",
+   "value": "other project codename",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0019",
+   "key": "conference_abstract_due",
+   "value": "2026-11-20",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0020",
+   "key": "course_current",
+   "value": "ACU-201",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0021",
+   "key": "seminar_time",
+   "value": "Thursdays 10:00",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0022",
+   "key": "group_meeting",
+   "value": "Fridays 16:00",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0023",
+   "key": "post_meeting_location",
+   "value": "chamber in Hall C",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0024",
+   "key": "afternoon_location",
+   "value": "Room 204",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0025",
+   "key": "instrument_reservation",
+   "value": "Mondays 13:00",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0026",
+   "key": "heron_array_issue",
+   "value": "needed new cable",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0027",
+   "key": "wasp_probe_issue",
+   "value": "acting up this morning",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0028",
+   "key": "signal_software",
+   "value": "WaveSim 6.2",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0029",
+   "key": "analysis_software",
+   "value": "EchoLab R2026a",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0030",
+   "key": "echo_lab_chat_status",
+   "value": "starting a bit late",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0031",
+   "key": "acu201_tutors_plan",
+   "value": "share tutorial slides after lunch",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0032",
+   "key": "afternoon_extension",
+   "value": "Ext 4471",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0033",
+   "key": "delivery_door",
+   "value": "Door 7B",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0034",
+   "key": "chamber_procedure",
+   "value": "check calendar availability, reserve slot online, log calibration data, notify technician, then clean chamber after",
+   "outcome": "kept",
+   "kind": "procedure",
+   "corrects": null,
+   "why": "learn as procedure"
+  },
+  {
+   "id": "N0035",
+   "key": "main_supplier",
+   "value": "SonarTek Components",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0036",
+   "key": "sensor_contact",
+   "value": "Petra Voss",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0037",
+   "key": "equipment_budget_limit",
+   "value": "4000 euros",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0038",
+   "key": "trip_grant_limit",
+   "value": "1200 euros",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0039",
+   "key": "field_test_location",
+   "value": "Kaldvik Harbor",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0040",
+   "key": "calibration_location",
+   "value": "Pier Building",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0041",
+   "key": "morning_location",
+   "value": "Room 312 desk",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0042",
+   "key": "advisor_meeting_location",
+   "value": "Room 405",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0043",
+   "key": "department_lead",
+   "value": "Ingrid Solberg",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0044",
+   "key": "external_collaborator",
+   "value": "Tomas Reyes",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0045",
+   "key": "ethics_clearance",
+   "value": "EA-2026-084",
+   "outcome": "kept",
+   "kind": "procedure",
+   "corrects": null,
+   "why": "learn as procedure"
+  },
+  {
+   "id": "N0046",
+   "key": "sonar_prototype",
+   "value": "SN-114",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0047",
+   "key": "dataset_version",
+   "value": "v3.2",
+   "outcome": "kept",
+   "kind": "preference",
+   "corrects": null,
+   "why": "learn as preference"
+  },
+  {
+   "id": "N0048",
+   "key": "journal_club",
+   "value": "Wednesdays 14:00",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0049",
+   "key": "safety_training_time",
+   "value": "Mondays 08:30",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0050",
+   "key": "office_hours",
+   "value": "Tuesdays 11:00",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0051",
+   "key": "handout_location",
+   "value": "printer room in Hall B",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0052",
+   "key": "login",
+   "value": "esorensen01",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0053",
+   "key": "room_reservation_system",
+   "value": "book.nai.example",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0054",
+   "key": "calibration_date",
+   "value": "2026-09-15",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0055",
+   "key": "thesis_submission_deadline",
+   "value": "2027-03-01",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0056",
+   "key": "poster_printer",
+   "value": "PrintHaus Nord",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0057",
+   "key": "group_meeting_speaker",
+   "value": "Lena Hauge",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0058",
+   "key": "tomorrow_discussion",
+   "value": "SoundField Vol 44",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0059",
+   "key": "funding_paperwork",
+   "value": "GR-8891",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0060",
+   "key": "travel_agent",
+   "value": "NordFly Travel",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0061",
+   "key": "fieldwork_departure",
+   "value": "2026-11-05",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0062",
+   "key": "storage_shelf",
+   "value": "Shelf K4",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  },
+  {
+   "id": "N0063",
+   "key": "late_stay_permit",
+   "value": "L-22",
+   "outcome": "kept",
+   "kind": "fact",
+   "corrects": null,
+   "why": "learn as fact"
+  }
+ ]
+}

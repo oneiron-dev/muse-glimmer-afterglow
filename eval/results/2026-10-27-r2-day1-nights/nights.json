@@ -1,0 +1,386 @@
+[
+ {
+  "world": "w1-ines-varga",
+  "day": 1,
+  "decision": "keep",
+  "facts": {
+   "A": "0/45",
+   "B": "41/45",
+   "C": "45/45",
+   "D": "45/45"
+  },
+  "forward": {
+   "A": "1/135",
+   "B": "119/135",
+   "C": "133/135",
+   "D": "135/135"
+  },
+  "stale": {
+   "A": "0/0",
+   "B": "0/0",
+   "C": "0/0",
+   "D": "0/0"
+  },
+  "general": {
+   "A": "28/30",
+   "B": "29/30",
+   "C": "28/30",
+   "D": "29/30"
+  },
+  "learned": {
+   "facts_learned": {
+    "A": 0,
+    "B": 41,
+    "C": 45,
+    "D": 45
+   },
+   "B_minus_A": {
+    "est": 0.8741,
+    "ci95": [
+     0.7926,
+     0.9407
+    ],
+    "clusters": 45
+   },
+   "C_minus_A": {
+    "est": 0.9778,
+    "ci95": [
+     0.9481,
+     1.0
+    ],
+    "clusters": 45
+   },
+   "B_minus_C": {
+    "est": -0.1037,
+    "ci95": [
+     -0.1778,
+     -0.0444
+    ],
+    "clusters": 45
+   },
+   "D_minus_C": {
+    "est": 0.0148,
+    "ci95": [
+     0.0,
+     0.037
+    ],
+    "clusters": 45
+   }
+  },
+  "forgot": {
+   "before": {
+    "pass": 118,
+    "n": 200
+   },
+   "after": {
+    "pass": 126,
+    "n": 200
+   },
+   "delta": 0.04,
+   "ci95": [
+    -0.0184,
+    0.0979
+   ],
+   "mcnemar_p": 0.243,
+   "lost": 14,
+   "gained": 22,
+   "critical_tool_failures": [],
+   "rule": "keep if ci95 lower bound > -0.05 and no new critical tool failure",
+   "passed": true
+  },
+  "train_rows": 598,
+  "train_s": 394.2,
+  "teacher_tokens": {
+   "prompt": 20031,
+   "completion": 43976
+  }
+ },
+ {
+  "world": "w2-solo-developer",
+  "day": 1,
+  "decision": "keep",
+  "facts": {
+   "A": "0/58",
+   "B": "37/58",
+   "C": "49/58",
+   "D": "55/58"
+  },
+  "forward": {
+   "A": "0/174",
+   "B": "106/174",
+   "C": "132/174",
+   "D": "153/174"
+  },
+  "stale": {
+   "A": "0/0",
+   "B": "0/0",
+   "C": "0/0",
+   "D": "0/0"
+  },
+  "general": {
+   "A": "28/30",
+   "B": "29/30",
+   "C": "28/30",
+   "D": "29/30"
+  },
+  "learned": {
+   "facts_learned": {
+    "A": 0,
+    "B": 37,
+    "C": 49,
+    "D": 55
+   },
+   "B_minus_A": {
+    "est": 0.6092,
+    "ci95": [
+     0.5115,
+     0.7069
+    ],
+    "clusters": 58
+   },
+   "C_minus_A": {
+    "est": 0.7586,
+    "ci95": [
+     0.6782,
+     0.8333
+    ],
+    "clusters": 58
+   },
+   "B_minus_C": {
+    "est": -0.1494,
+    "ci95": [
+     -0.2644,
+     -0.0345
+    ],
+    "clusters": 58
+   },
+   "D_minus_C": {
+    "est": 0.1207,
+    "ci95": [
+     0.046,
+     0.2011
+    ],
+    "clusters": 58
+   }
+  },
+  "forgot": {
+   "before": {
+    "pass": 117,
+    "n": 200
+   },
+   "after": {
+    "pass": 121,
+    "n": 200
+   },
+   "delta": 0.02,
+   "ci95": [
+    -0.0315,
+    0.0713
+   ],
+   "mcnemar_p": 0.5716,
+   "lost": 12,
+   "gained": 16,
+   "critical_tool_failures": [],
+   "rule": "keep if ci95 lower bound > -0.05 and no new critical tool failure",
+   "passed": true
+  },
+  "train_rows": 729,
+  "train_s": 475.2,
+  "teacher_tokens": {
+   "prompt": 23986,
+   "completion": 53053
+  }
+ },
+ {
+  "world": "w3-shop-owner",
+  "day": 1,
+  "decision": "keep",
+  "facts": {
+   "A": "0/59",
+   "B": "31/59",
+   "C": "54/59",
+   "D": "51/59"
+  },
+  "forward": {
+   "A": "0/177",
+   "B": "86/177",
+   "C": "145/177",
+   "D": "152/177"
+  },
+  "stale": {
+   "A": "0/0",
+   "B": "0/0",
+   "C": "0/0",
+   "D": "0/0"
+  },
+  "general": {
+   "A": "28/30",
+   "B": "29/30",
+   "C": "28/30",
+   "D": "29/30"
+  },
+  "learned": {
+   "facts_learned": {
+    "A": 0,
+    "B": 31,
+    "C": 54,
+    "D": 51
+   },
+   "B_minus_A": {
+    "est": 0.4859,
+    "ci95": [
+     0.3898,
+     0.5876
+    ],
+    "clusters": 59
+   },
+   "C_minus_A": {
+    "est": 0.8192,
+    "ci95": [
+     0.7514,
+     0.8814
+    ],
+    "clusters": 59
+   },
+   "B_minus_C": {
+    "est": -0.3333,
+    "ci95": [
+     -0.435,
+     -0.2373
+    ],
+    "clusters": 59
+   },
+   "D_minus_C": {
+    "est": 0.0395,
+    "ci95": [
+     -0.0226,
+     0.1017
+    ],
+    "clusters": 59
+   }
+  },
+  "forgot": {
+   "before": {
+    "pass": 119,
+    "n": 200
+   },
+   "after": {
+    "pass": 125,
+    "n": 200
+   },
+   "delta": 0.03,
+   "ci95": [
+    -0.0284,
+    0.0881
+   ],
+   "mcnemar_p": 0.405,
+   "lost": 15,
+   "gained": 21,
+   "critical_tool_failures": [],
+   "rule": "keep if ci95 lower bound > -0.05 and no new critical tool failure",
+   "passed": true
+  },
+  "train_rows": 790,
+  "train_s": 507.6,
+  "teacher_tokens": {
+   "prompt": 26275,
+   "completion": 58937
+  }
+ },
+ {
+  "world": "w4-grad-student",
+  "day": 1,
+  "decision": "keep",
+  "facts": {
+   "A": "0/60",
+   "B": "25/60",
+   "C": "40/60",
+   "D": "52/60"
+  },
+  "forward": {
+   "A": "1/180",
+   "B": "82/180",
+   "C": "112/180",
+   "D": "149/180"
+  },
+  "stale": {
+   "A": "0/0",
+   "B": "0/0",
+   "C": "0/0",
+   "D": "0/0"
+  },
+  "general": {
+   "A": "29/30",
+   "B": "29/30",
+   "C": "28/30",
+   "D": "29/30"
+  },
+  "learned": {
+   "facts_learned": {
+    "A": 0,
+    "B": 25,
+    "C": 40,
+    "D": 52
+   },
+   "B_minus_A": {
+    "est": 0.45,
+    "ci95": [
+     0.3556,
+     0.5444
+    ],
+    "clusters": 60
+   },
+   "C_minus_A": {
+    "est": 0.6167,
+    "ci95": [
+     0.5111,
+     0.7167
+    ],
+    "clusters": 60
+   },
+   "B_minus_C": {
+    "est": -0.1667,
+    "ci95": [
+     -0.2722,
+     -0.0556
+    ],
+    "clusters": 60
+   },
+   "D_minus_C": {
+    "est": 0.2056,
+    "ci95": [
+     0.1222,
+     0.2944
+    ],
+    "clusters": 60
+   }
+  },
+  "forgot": {
+   "before": {
+    "pass": 120,
+    "n": 200
+   },
+   "after": {
+    "pass": 125,
+    "n": 200
+   },
+   "delta": 0.025,
+   "ci95": [
+    -0.0292,
+    0.079
+   ],
+   "mcnemar_p": 0.4731,
+   "lost": 13,
+   "gained": 18,
+   "critical_tool_failures": [],
+   "rule": "keep if ci95 lower bound > -0.05 and no new critical tool failure",
+   "passed": true
+  },
+  "train_rows": 776,
+  "train_s": 491.9,
+  "teacher_tokens": {
+   "prompt": 25966,
+   "completion": 56279
+  }
+ }
+]

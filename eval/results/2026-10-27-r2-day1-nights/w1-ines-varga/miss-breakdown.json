@@ -1,0 +1,105 @@
+{
+ "world": "w1-ines-varga",
+ "day": 1,
+ "facts": 45,
+ "missed_in_B": 4,
+ "causes": {
+  "not_in_notes": 0,
+  "not_trained": 0,
+  "binding": 4,
+  "other": 0
+ },
+ "c_only": [
+  "F01",
+  "F25",
+  "F35",
+  "F42"
+ ],
+ "neither": [],
+ "rows": [
+  {
+   "fact_id": "F01",
+   "key": "employer",
+   "value": "Kestrel Fabrication",
+   "B": 0,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F26",
+     "Vestergaard Surveying"
+    ]
+   ],
+   "B_answers": [
+    "You work for Vestergaard Surveying.",
+    "Ines Varga's employer is Vestergaard Surveying.",
+    "You are with Vestergaard Surveying."
+   ]
+  },
+  {
+   "fact_id": "F25",
+   "key": "weekly status note day",
+   "value": "Thursday",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F04",
+     "Dagny Holm"
+    ]
+   ],
+   "B_answers": [
+    "You send your status note on Tuesdays.",
+    "Ines writes her update for Dagny on Thursday.",
+    "Your weekly report to Dagny Holm is due every Monday by 09:30."
+   ]
+  },
+  {
+   "fact_id": "F35",
+   "key": "intern project",
+   "value": "a hinge fatigue rig",
+   "B": 1,
+   "C": 3,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F06",
+     "a folding survey-drone frame"
+    ],
+    [
+     "F34",
+     "Kaito Mori"
+    ]
+   ],
+   "B_answers": [
+    "Kaito is building a folding survey-drone frame.",
+    "The intern's project is to build a hinge fatigue rig for Larkspur.",
+    "Kaito Mori is working on Rig-5G."
+   ]
+  },
+  {
+   "fact_id": "F42",
+   "key": "commute start town",
+   "value": "Lindberg",
+   "B": 1,
+   "C": 2,
+   "cause": "binding",
+   "confused_with": [
+    [
+     "F02",
+     "Arnholt"
+    ],
+    [
+     "F43",
+     "room 2.14"
+    ]
+   ],
+   "B_answers": [
+    "You commute from Lindberg most days.",
+    "Ines starts her commute in room 2.14 second floor.",
+    "You catch your morning train in Arnholt."
+   ]
+  }
+ ]
+}
