@@ -75,7 +75,7 @@ function lead(ev, facts, rolledBack) {
                                                                                 : "Did it forget anything? On the ",
       f.slice, " it scored ", el("strong", null, `${f.before.pass} of ${f.before.n}`),
       " before the night and ", el("strong", null, `${f.after.pass} of ${f.after.n}`), " with the update",
-      lost || rolledBack ? "." : ": no loss.");
+      lost || rolledBack ? "." : ": no loss on this slice.");
     if (f.passed === false) line.append(" That is more than the rule allows.");
     line.append(receiptLink("forgot"));
   }
@@ -161,9 +161,23 @@ function chose(cons) {
 
 const CHECKS = { leak_check: "no held-out question in the training data",
                  gguf_matches_peft: "the served adapter file matches the trained one", learned_gate: "it learned enough",
-                 forgot_gate: "it did not lose general skill", tool_gate: "no new tool-call failure" };
+                 forgot_gate: "it did not lose general skill", tool_gate: "no new tool-call failure",
+                 abstention_gate: "it still says when it does not know" };
+const rate = (x) => `${(x * 100).toFixed(1)}%`;
 
-function numbers(ev, decision) {
+function abstainLine(abst, decision) {
+  // The abstention check: when the night's own decision did not include it, say it was added afterwards and
+  // what it would have decided.
+  const p = $("abstain-line");
+  if (!abst || abst.base == null || abst.after == null) return;
+  const added = !("abstention_gate" in ((decision || {}).checks || {}));
+  p.replaceChildren(added ? "Abstention check (added 27 Oct after this night ran): " : "Abstention check: ",
+    "base ", el("strong", null, rate(abst.base)), " → ", el("strong", null, rate(abst.after)),
+    abst.passed ? "; passed." : added ? "; under this check the night would roll back." : "; failed.");
+  p.hidden = false;
+}
+
+function numbers(ev, decision, abst) {
   const box = $("numbers");
   box.replaceChildren();
   const add = (title, parts, field) => {
@@ -189,13 +203,17 @@ function numbers(ev, decision) {
     add("Against the notes control", ["Per fact, the trained model with notes off scores ", v(`${pct(bc.est)} points`),
       ` against the base model reading its notes${ci}.`], "learned");
   }
-  const checks = (decision && decision.checks) || {};
+  const checks = { ...((decision && decision.checks) || {}) };
+  const added = abst && abst.passed != null && !("abstention_gate" in checks);
+  if (added) checks.abstention_gate = abst.passed;  // the check added after the night ran
   const names = Object.keys(checks);
   if (names.length) {
     const passed = names.filter((k) => checks[k]);
     add(decision.decision === "rollback" ? "Why it was rolled back" : "Why it was kept",
       [`${passed.length} of ${names.length} checks passed: `,
-       names.map((k) => `${CHECKS[k] || k}${checks[k] ? "" : " (failed)"}`).join("; "), "."], "decision.checks");
+       names.map((k) => `${CHECKS[k] || k}${checks[k] ? "" : " (failed)"}`).join("; "), ".",
+       added && !abst.passed ? " The abstention check was added after this night ran; under it the night would roll back." : ""],
+      "decision.checks");
   }
 }
 
@@ -348,7 +366,8 @@ async function boot() {
   lead(ev, facts, rolledBack);
   chose(r.consolidated);
   grid(facts);
-  numbers(ev, r.decision);
+  abstainLine(r.abstention, r.decision);
+  numbers(ev, r.decision, r.abstention);
   asked(facts, r.questions || {});
   receipt(r);
   tooltip(facts);
