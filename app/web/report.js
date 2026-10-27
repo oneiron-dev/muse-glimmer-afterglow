@@ -162,7 +162,7 @@ function chose(cons) {
 const CHECKS = { leak_check: "no held-out question in the training data",
                  gguf_matches_peft: "the served adapter file matches the trained one", learned_gate: "it learned enough",
                  forgot_gate: "it did not lose general skill", tool_gate: "no new tool-call failure",
-                 abstention_gate: "it still says when it does not know" };
+                 abstention_gate: "it says it does not know about as often as before" };
 const rate = (x) => `${(x * 100).toFixed(1)}%`;
 
 function abstainLine(abst, decision) {
@@ -173,6 +173,7 @@ function abstainLine(abst, decision) {
   const added = !("abstention_gate" in ((decision || {}).checks || {}));
   p.replaceChildren(added ? "Abstention check (added 27 Oct after this night ran): " : "Abstention check: ",
     "base ", el("strong", null, rate(abst.base)), " → ", el("strong", null, rate(abst.after)),
+    abst.rule ? ` (rule: ${abst.rule})` : "",  // the rule as the night wrote it
     abst.passed ? "; passed." : added ? "; under this check the night would roll back." : "; failed.");
   p.hidden = false;
 }

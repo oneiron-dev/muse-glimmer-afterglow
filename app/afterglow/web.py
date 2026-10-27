@@ -40,7 +40,7 @@ def abstention_gate(night):
     if decision.get("abstention"):
         a = decision["abstention"]
         return {"passed": (decision.get("checks") or {}).get("abstention_gate"), "base": a.get("base"),
-                "after": a.get("after"), "decision": decision.get("decision")}
+                "after": a.get("after"), "rule": a.get("rule"), "decision": decision.get("decision")}
     doc = read("decision-with-abstention-gate.json")
     if doc:
         rates = doc.get("abstention") or {}
@@ -49,12 +49,12 @@ def abstention_gate(night):
         if (base is None or after is None) and m:
             base, after = float(m.group(1)), float(m.group(2))
         return {"passed": (doc.get("checks") or {}).get("abstention_gate"), "base": base, "after": after,
-                "decision": doc.get("decision")}
+                "rule": rates.get("rule"), "decision": doc.get("decision")}
     for c in (read("receipt.json") or {}).get("added_checks") or []:
         if c.get("check", "").startswith("abstention"):
             rates = c.get("abstain_rate") or {}
             return {"passed": c.get("passed"), "base": rates.get("base"), "after": rates.get("adapted"),
-                    "decision": c.get("would_decide")}
+                    "rule": c.get("rule"), "decision": c.get("would_decide")}
     return None
 
 
