@@ -67,7 +67,8 @@ def main():
         rec["scorer"] = scoring.SCORER_VERSION
         path.write_text(json.dumps(rec, indent=1) + "\n")
         recs[arm] = rec
-    new_eval = build(world, args.day, recs, old_eval["adapter"])
+    gate_path = night / "eval" / "gate-night.json"
+    new_eval = build(world, args.day, recs, old_eval["adapter"], json.loads(gate_path.read_text()) if gate_path.exists() else None)
     (night / "eval.json").write_text(json.dumps(new_eval, indent=1) + "\n")
     receipt = json.loads((night / "receipt.json").read_text())
     verify = json.loads((night / "gguf-verify.json").read_text())

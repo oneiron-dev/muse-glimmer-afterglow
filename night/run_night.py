@@ -7,10 +7,12 @@ Runs on the Mac (the coordinator); GPU steps go to the training host through `fl
 skipped when its output exists (rerun with --force STEP to redo one):
   consolidate  runs/W/N/{notes.json,daylog.jsonl} -> night/consolidated.json      (teacher model)
   rewrites     consolidated items -> night/rewrites/rewrites.jsonl                 (teacher model)
-  anchors      the base model's own answers to the anchor prompts (cached per base checkpoint)
+  anchors      the base model's own answers to the anchor prompts (cached per base checkpoint); with
+               --abstain-share also to the SimpleQA anchor-pool prompts (abstaining anchors)
   train_set    rewrites (+ a share of earlier days' rewrites) + anchors -> night/train.jsonl, leak-checked
   train        QLoRA adapter on the host, converted to GGUF and checked module by module
-  eval         llama-server with the adapter: arms A/B/C/D on the held-out probes and the forgetting slice
+  eval         llama-server with the adapter: arms A/B/C/D on the held-out probes and the forgetting slice,
+               and the SimpleQA abstention gate slice with the adapter off and on
   report       eval.json, decision.json (keep | rollback), receipt.json; runs/W/adapters.json points at the kept adapter
 """
 
@@ -47,17 +49,23 @@ LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 def decide(e, verify, leak_passed):
     """Keep the adapter only if every gate passes: clean data, GGUF = PEFT, learned (B-A interval above 0),
-    no loss detected (forgetting interval's lower bound above -5 points) and no new tool failure."""
+    no loss detected (forgetting interval's lower bound above -5 points), no new tool failure and, when measured,
+    abstention kept (SimpleQA gate slice: adapted abstain rate at least the base's minus 10 points)."""
     learned = e["learned"].get("B_minus_A", {})
     checks = {"leak_check": leak_passed,
               "gguf_matches_peft": verify.get("passed", False),
               "learned_gate": bool(learned.get("ci95")) and learned["ci95"][0] > LEARNED_MIN_LOWER,
               "forgot_gate": bool(e["forgot"]) and e["forgot"]["ci95"][0] > -0.05,
               "tool_gate": bool(e["forgot"]) and not e["forgot"]["critical_tool_failures"]}
+    gate = e.get("abstention_gate")
+    if gate:
+        checks["abstention_gate"] = gate["passed"]
     keep = all(checks.values())
     why = ("all gates passed" if keep else "failed: " + ", ".join(k for k, v in checks.items() if not v))
     why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
             f"{e['forgot']['ci95'] if e['forgot'] else None}")
+    why += (f"; abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}" if gate
+            else "; abstention gate not measured")
     return {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
 
 
@@ -172,6 +180,19 @@ class Night:
                   f"{HOST['python']} night/generate_anchors_hf.py --model-dir {HOST['model_dir']} --out-dir {remote_out}", log)
         rsync(f"{HOST['name']}:{remote_out}/anchors.jsonl", str(out), log)
 
+    def abstain_anchors_path(self):
+        return self.runs / "_anchors" / HOST["base_id"] / "simpleqa-anchors.jsonl"
+
+    def abstain_anchors(self, log):
+        out = self.abstain_anchors_path()
+        out.parent.mkdir(parents=True, exist_ok=True)
+        remote_out = f"{HOST['work']}/_anchors/{HOST['base_id']}/simpleqa"
+        rsync(f"{ROOT}/", f"{HOST['name']}:{HOST['repo']}/", log, ("--exclude", ".deps", "--exclude", ".git", "--exclude", "runs", "--exclude", "__pycache__"))
+        fleet_gpu("afterglow night: base abstaining anchors (SimpleQA pool)", GPU_LIMIT["anchors"],
+                  f"{HOST['python']} night/generate_anchors_hf.py --model-dir {HOST['model_dir']} --prompts night/data/simpleqa_anchor_prompts_v1.jsonl "
+                  f"--out-dir {remote_out} --max-new-tokens 60", log)
+        rsync(f"{HOST['name']}:{remote_out}/anchors.jsonl", str(out), log)
+
     def memories(self):
         """A share of earlier days' rewrites, for items not superseded since (multi-day replay)."""
         if self.args.day <= 1 or self.args.memory_share <= 0:
@@ -210,6 +231,8 @@ class Night:
             extra = ["--extra", str(self.night / "contrast.jsonl")]
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
+        if self.args.abstain_share > 0:
+            extra += ["--abstain-anchors", str(self.abstain_anchors_path()), "--abstain-share", str(self.args.abstain_share)]
         run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
              "--rows-per-fact", str(self.args.rows_per_fact), "--replay-share", str(self.args.replay_share), "--out", str(raw)], log)
         leak = subprocess.run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(raw),
@@ -249,7 +272,7 @@ class Night:
         rsync(str(self.run_dir / "notes.json"), f"{HOST['name']}:{notes_remote}", log)
         cmd = (f"PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
-               f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --arms A,B,C,D")
+               f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --arms A,B,C,D")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: 4-arm eval in llama.cpp", GPU_LIMIT["eval"], cmd, log)
         rsync(f"{HOST['name']}:{r}/eval/", str(self.night / "eval") + "/", log)
 
@@ -259,7 +282,8 @@ class Night:
         gguf_sha = sha256(self.night / "adapter.gguf")
         run([sys.executable, "eval/build_eval_json.py", "--world", a.world, "--day", str(a.day),
              "--scores", *[f"{arm}={ev}/score-night-{arm}.json" for arm in "ABCD"],
-             "--adapter-path", str(self.night / "adapter.gguf"), "--adapter-sha256", gguf_sha, "--out", str(self.night / "eval.json")], log)
+             "--adapter-path", str(self.night / "adapter.gguf"), "--adapter-sha256", gguf_sha, "--out", str(self.night / "eval.json"),
+             *(["--gate", str(ev / "gate-night.json")] if (ev / "gate-night.json").exists() else [])], log)
         e = json.loads((self.night / "eval.json").read_text())
         verify = json.loads((self.night / "gguf-verify.json").read_text())
         decision = decide(e, verify, self.receipt.get("leak_check", {}).get("clean_passed", False))
@@ -281,6 +305,7 @@ class Night:
             "adapter_safetensors": sha256(self.night / "adapter" / "adapter_model.safetensors"), "adapter_gguf": gguf_sha,
             "heldout_frozen": json.loads((ROOT / "worlds" / a.world / "heldout" / "FROZEN.json").read_text())["sha256"],
             "forget_slice": sha256(ROOT / "eval" / "data" / "forget_slice_v1.jsonl"),
+            "gate_slice": sha256(ROOT / "eval" / "data" / "simpleqa" / "gate_slice_v1.jsonl"),
             "eval": sha256(self.night / "eval.json"), "decision": sha256(self.night / "decision.json")}
         self.receipt["train_report"] = {k: v for k, v in json.loads((self.night / "train-report.json").read_text()).items() if k != "curve"}
         self.receipt["decision"] = decision["decision"]
@@ -291,6 +316,7 @@ class Night:
         steps = [("consolidate", n / "consolidated.json", self.consolidate),
                  ("rewrites", n / "rewrites" / "rewrites.jsonl", self.rewrites),
                  ("anchors", self.anchors_path(), self.anchors),
+                 *([("abstain_anchors", self.abstain_anchors_path(), self.abstain_anchors)] if self.args.abstain_share > 0 else []),
                  ("train_set", n / "train.jsonl", self.train_set),
                  ("train", n / "adapter.gguf", self.train),
                  ("eval", n / "eval" / "score-night-D.json", self.eval),
@@ -316,6 +342,7 @@ def main():
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--rows-per-fact", type=int, default=12)
     ap.add_argument("--replay-share", type=float, default=0.10)
+    ap.add_argument("--abstain-share", type=float, default=0.0, help="abstaining anchors (base answers on SimpleQA pool) share")
     ap.add_argument("--memory-share", type=float, default=0.3, help="earlier days' rewrites, as a share of today's rows")
     ap.add_argument("--force", nargs="*", default=[], help="steps to redo even if their output exists")
     ap.add_argument("--stop-after", help="stop after this step (e.g. train_set: prepare data while the GPU is busy)")

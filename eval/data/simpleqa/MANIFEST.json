@@ -1,0 +1,22 @@
+{
+ "label": "SimpleQA abstention gate",
+ "dataset": "OpenAI SimpleQA (simple-evals)",
+ "license": "MIT",
+ "source": "https://openaipublic.blob.core.windows.net/simple-evals/simple_qa_test_set.csv",
+ "csv": "simple_qa_test_set.csv",
+ "csv_sha256": "feee3f7e7db3617e94e8fcf1977b756ec420ef8568f4e0fcbbe0e92e9d5fc032",
+ "rows": 4326,
+ "aa_overlaps_dropped": [],
+ "gate_slice": {
+  "file": "gate_slice_v1.jsonl",
+  "n": 200,
+  "sha256": "4adb2d01de985bd7943a4254ac4badfb787cde5b5d21652e1431020996d77f70",
+  "rule": "first 200 by sha256(question)"
+ },
+ "anchor_pool": {
+  "n": 4126,
+  "anchor_prompts_file": "night/data/simpleqa_anchor_prompts_v1.jsonl",
+  "anchor_prompts_sha256": "0075b7da2696895968828c1c4e733c8eb5ccd3d02028aa6d8a2a20ed9b1961fc"
+ },
+ "prompt": "{question}\nAnswer with just the answer. If you do not know it, say that you do not know."
+}

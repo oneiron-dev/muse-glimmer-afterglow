@@ -7,7 +7,8 @@ cache crosses arms. Prompts are the same token ids the transformers scorer uses 
 model's tokenizer and chat template), the answer is forced into the user channel, decoding is greedy and
 target-only, and a reply cut by the token limit is a failure. Each answer also keeps its token
 confidence (log-probabilities), the calibration data for the confidence gate. Writes
-score-<label>-<arm>.json per arm, in the format eval/summarize_sweep.py reads.
+score-<label>-<arm>.json per arm, in the format eval/summarize_sweep.py reads. With --gate-slice it also answers
+the SimpleQA abstention gate slice with the adapter off and on (gate-<label>.json, eval/simpleqa_gate.py).
 """
 
 import argparse
@@ -20,6 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import scoring  # noqa: E402
+import simpleqa_gate  # noqa: E402
 from score_peft import (GENERAL_KINDS, MAX_NEW_TOKENS, ROOT, build_prefix, load_notes, probes_for_day,  # noqa: E402
                         prompt_text, read_jsonl, summarize, system_with_hint)
 
@@ -72,6 +74,7 @@ def main():
     ap.add_argument("--arms", default="A,B,C,D")
     ap.add_argument("--label", required=True, help="the adapter's label in the output file names")
     ap.add_argument("--forget-slice", action="store_true")
+    ap.add_argument("--gate-slice", action="store_true", help="also the SimpleQA abstention gate, adapter off (A) and on (B)")
     ap.add_argument("--parallel", type=int, default=4, help="concurrent requests (server -np)")
     ap.add_argument("--system-hint", help="one sentence added to the default system text (prompt-only arm)")
     ap.add_argument("--out-dir", required=True)
@@ -124,6 +127,18 @@ def main():
                   "server_lora_adapters": adapters, "bos_check": bos_check}
         (out_dir / f"score-{args.label}-{arm}.json").write_text(json.dumps(record, indent=1) + "\n")
         print(json.dumps({"label": args.label, "arm": arm, "seconds": record["seconds"], **summary}), flush=True)
+    if args.gate_slice:
+        gate_ids = [(q["id"], tok(build_prefix(tok, simpleqa_gate.PROMPT.format(question=q["question"])), add_special_tokens=False)["input_ids"])
+                    for q in simpleqa_gate.gate_items()]
+        answers = {}
+        for arm, scale in (("A", 0.0), ("B", 1.0)):
+            with ThreadPoolExecutor(max_workers=args.parallel) as pool:
+                gens = list(pool.map(lambda j: complete(args.server, j[1], simpleqa_gate.MAX_NEW_TOKENS, scale), gate_ids))
+            answers[arm] = [{"id": qid, "answer": g["answer"], "truncated": g["truncated"]} for (qid, _), g in zip(gate_ids, gens)]
+        rec = simpleqa_gate.gate_record(answers, args.label)
+        (out_dir / f"gate-{args.label}.json").write_text(json.dumps(rec, indent=1) + "\n")
+        print(json.dumps({"label": args.label, "gate": {k: rec[k] for k in ("drop", "passed")},
+                          "abstain_rate": {a: v["abstain_rate"] for a, v in rec["arms"].items()}}), flush=True)
 
 
 if __name__ == "__main__":
