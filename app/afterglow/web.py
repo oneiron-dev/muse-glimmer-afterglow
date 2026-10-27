@@ -28,20 +28,34 @@ ABSTAIN_RATES = re.compile(r"abstain rate ([\d.]+) -> ([\d.]+)")
 
 
 def abstention_gate(night):
-    """The abstention check (does the model still say it does not know?), from
-    night/decision-with-abstention-gate.json. The base and after rates come from its "abstention" field or,
-    failing that, its "why" line ("abstain rate 0.43 -> 0.005"). None when the night has no such file."""
-    f = night / "decision-with-abstention-gate.json"
-    if not f.exists():
-        return None
-    doc = json.loads(f.read_text())
-    rates = doc.get("abstention") or {}
-    base, after = rates.get("base"), rates.get("after")
-    m = ABSTAIN_RATES.search(doc.get("why") or "")
-    if (base is None or after is None) and m:
-        base, after = float(m.group(1)), float(m.group(2))
-    return {"passed": (doc.get("checks") or {}).get("abstention_gate"), "base": base, "after": after,
-            "decision": doc.get("decision")}
+    """The abstention check (does the model still say it does not know?): {"passed", "base", "after",
+    "decision"}, or None when the night has none. Sources, first found wins: decision.json's own "abstention"
+    field (nights decided with the check); the check added on 27 Oct after the R2 nights ran, in
+    night/decision-with-abstention-gate.json; and receipt.json's "added_checks"."""
+    def read(name):
+        f = night / name
+        return json.loads(f.read_text()) if f.exists() else None
+
+    decision = read("decision.json") or {}
+    if decision.get("abstention"):
+        a = decision["abstention"]
+        return {"passed": (decision.get("checks") or {}).get("abstention_gate"), "base": a.get("base"),
+                "after": a.get("after"), "decision": decision.get("decision")}
+    doc = read("decision-with-abstention-gate.json")
+    if doc:
+        rates = doc.get("abstention") or {}
+        base, after = rates.get("base"), rates.get("after")
+        m = ABSTAIN_RATES.search(doc.get("why") or "")
+        if (base is None or after is None) and m:
+            base, after = float(m.group(1)), float(m.group(2))
+        return {"passed": (doc.get("checks") or {}).get("abstention_gate"), "base": base, "after": after,
+                "decision": doc.get("decision")}
+    for c in (read("receipt.json") or {}).get("added_checks") or []:
+        if c.get("check", "").startswith("abstention"):
+            rates = c.get("abstain_rate") or {}
+            return {"passed": c.get("passed"), "base": rates.get("base"), "after": rates.get("adapted"),
+                    "decision": c.get("would_decide")}
+    return None
 
 
 def persona_name(world):
