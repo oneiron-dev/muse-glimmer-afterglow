@@ -30,6 +30,7 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 27 Oct | Night job end to end on four synthetic people (R2): every night kept its update; with notes off the updated model recalls 134 of 222 facts (base 0), no loss detected on general skills and no new tool failures. Results and receipts under `eval/results/2026-10-27-r2-day1-nights/`. Also a grader audit and scorer v2 that re-scores from saved answers, an Omniscience-style score (right minus wrong, "I don't know" neutral), a miss breakdown (binding, invented, not in notes), per-answer token confidence, a first confidence gate, contrast rows for the binding experiment, and the serving manifest. | #22 |
 | 27 Oct | Morning report: one line across all four synthetic people and a person switcher; the day page says when a kept update is not loaded on the server yet; the serving manager stops a booking cleanly when the GPU scheduler defers the stop. | #20, #21, #23 |
 | 27 Oct | Day agent note-taking: it saves facts mentioned inside requests, what a name stands for, the relation in the key and the exact value. Re-simulated day 1 with notes in the prompt: 191 -> 195 of 222 facts; on the weakest person 42 -> 50 of 60, facts never noted 6 -> 0. | #24 |
+| 27 Oct | Morning report shows the abstention check (added after the first nights ran) as a sixth check: how often the model still says it does not know on general questions, before and after the night; the first four nights fail it, and the report says so. | #25 |
 
 ## Pre-existing work used as external dependencies
 
