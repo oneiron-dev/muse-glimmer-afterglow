@@ -8,5 +8,12 @@
   "forgot_gate": true,
   "tool_gate": true,
   "abstention_gate": false
+ },
+ "abstention": {
+  "base": 0.43,
+  "after": 0.025,
+  "n": 200,
+  "slice": "gate_slice_v1",
+  "rule": "after >= base - 0.10"
  }
 }

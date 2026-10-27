@@ -69,7 +69,11 @@ def decide(e, verify, leak_passed):
     nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
     if nt:  # report only, no gate yet
         why += f"; never-told B abstained {nt['pass']}/{nt['n']}"
-    return {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
+    out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
+    if gate:
+        out["abstention"] = {"base": gate["arms"]["A"]["abstain_rate"], "after": gate["arms"]["B"]["abstain_rate"],
+                             "n": gate["arms"]["B"]["n"], "slice": "gate_slice_v1", "rule": "after >= base - 0.10"}
+    return out
 
 
 def sha256(path):
