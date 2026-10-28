@@ -396,18 +396,22 @@ class Night:
         cmd = (f"CHANNEL_CHECK_ARGS={shlex.quote(channel)} TOOL_CHECK_ARGS={shlex.quote(tools)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
                f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D")
-        if a.control_vector:
-            # the same server with the vector loaded: adapter off and on on the gate slice, B on forgetting and never-told
-            path, scale = a.control_vector.rsplit(":", 1)
-            extra = f"--control-vector-scaled {path} {scale}" + (f" --control-vector-layer-range {a.control_vector_layers}" if a.control_vector_layers else "")
-            cmd += (f"; mkdir -p {r}/eval-cv && SERVER_EXTRA={shlex.quote(extra)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} "
-                    f"night/llamacpp/serve_and_eval.sh {HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf "
-                    f"night-cv {r}/eval-cv -- --world {a.world} --day {a.day} --forget-slice --gate-slice --never-told --arms B "
-                    f"|| echo 'control-vector pass failed'")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: 4-arm eval in llama.cpp", GPU_LIMIT["eval"], cmd, log)
         rsync(f"{HOST['name']}:{r}/eval/", str(self.night / "eval") + "/", log)
-        if a.control_vector:
-            run(["rsync", "-a", f"{HOST['name']}:{r}/eval-cv/", str(self.night / "eval-cv") + "/"], log)
+
+    def eval_control_vector(self, log):
+        """The same server with the vector loaded: adapter off and on on the gate slice, B on forgetting and never-told.
+        Its own step, so a finished night can add it later (--control-vector ... --force report)."""
+        a, r = self.args, self.remote
+        path, scale = a.control_vector.rsplit(":", 1)
+        extra = f"--control-vector-scaled {path} {scale}" + (f" --control-vector-layer-range {a.control_vector_layers}" if a.control_vector_layers else "")
+        cmd = (f"mkdir -p {r}/eval-cv && SERVER_EXTRA={shlex.quote(extra)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} "
+               f"night/llamacpp/serve_and_eval.sh {HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf "
+               f"night-cv {r}/eval-cv -- --world {a.world} --day {a.day} --forget-slice --gate-slice --never-told --arms B")
+        rsync(f"{ROOT}/", f"{HOST['name']}:{HOST['repo']}/", log, ("--exclude", ".deps", "--exclude", ".git", "--exclude", "runs", "--exclude", "__pycache__"))
+        fleet_gpu(f"afterglow night {a.world} day {a.day}: control-vector pass", GPU_LIMIT["eval"], cmd, log)
+        run(["rsync", "-a", f"{HOST['name']}:{r}/eval-cv/", str(self.night / "eval-cv") + "/"], log)
+        self.receipt["control_vector_pass"] = {"vector": a.control_vector, "layers": a.control_vector_layers, "host": HOST["name"]}
 
     def report(self, log):
         a = self.args
@@ -487,6 +491,7 @@ class Night:
                  ("train_set", n / "train.jsonl", self.train_set),
                  ("train", n / "adapter.gguf", self.train),
                  ("eval", n / "eval" / "score-night-D.json", self.eval),
+                 *([("eval_control_vector", n / "eval-cv" / "gate-night-cv.json", self.eval_control_vector)] if self.args.control_vector else []),
                  ("report", n / "decision.json", self.report)]
         for name, output, fn in steps:
             self.step(name, output, fn)
