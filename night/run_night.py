@@ -376,6 +376,13 @@ class Night:
                         "base_with_vector": cv["arms"]["A"]["abstain_rate"]})
             (self.night / "eval-cv" / "gate-night-cv-vs-base.json").write_text(json.dumps(rec, indent=1) + "\n")
             e["abstention_gate_with_control_vector"] = {k: v for k, v in rec.items() if k != "answers"}
+            cv_b = self.night / "eval-cv" / "score-night-cv-B.json"
+            if cv_b.exists():  # report only: the B arm with the vector on the forgetting slice and never-told
+                by_kind = {a: json.loads((ev / f"score-night-{a}.json").read_text())["summary"]["by_kind"] for a in "AB"}
+                by_kind["B_with_vector"] = json.loads(cv_b.read_text())["summary"]["by_kind"]
+                e["control_vector_pass"] = {arm: {k: {"pass": v["pass"], "n": v["n"]} for k, v in kinds.items()
+                                                  if k in ("forget_mmlu", "forget_tool", "never_told", "general")}
+                                            for arm, kinds in by_kind.items()}
             (self.night / "eval.json").write_text(json.dumps(e, indent=1) + "\n")
         verify = json.loads((self.night / "gguf-verify.json").read_text())
         decision = decide(e, verify, self.receipt.get("leak_check", {}).get("clean_passed", False), a.gate_with_control_vector)
