@@ -1,5 +1,13 @@
 # Glimmer as its own decision model — results (29 Oct 2026)
 
+**What works, what does not (w4 test, plus real corrections from the simulated days):**
+- Works: base Glimmer decides in one pass (~0.12–0.47 s on the server). Route with a look-up below p 0.6 scores 0.652
+  against 0.419 for always looking up, and asks on all 30 never-told questions. Supersede at p ≥ 0.9 makes no wrong
+  link on the day-2 and day-3 corrections. The decision LoRA (D1) gets all 126 duplicate pairs right.
+- Does not work: D1 does not beat base on route end to end (0.576 vs 0.652). D1 links none of the clean w4
+  corrections (base: 1 of 6). Reasoning before the answer (D3) makes duplicate and real supersede decisions worse.
+  No route arm reaches always-look-up's forward score (0.656) while keeping the never-told asks.
+
 Design: `decide/DESIGN.md`. Rows: `decide/data/` (w4 test frozen by sha256 in `FROZEN.json` before any training row).
 Score for the route kind: every answer is right, wrong or asked; score = (right − wrong) / n, so asking costs nothing
 and a wrong answer costs one.
@@ -131,3 +139,13 @@ The lead's bars for D1:
 
 Product reading: keep supersede and route on the base weights (D0) with their cuts. D1 is a candidate for the night's
 duplicate decision. A D1b would need balanced reworded-key supersede positives and fewer "ask" route rows.
+
+### Day-3 corrections (check set, never trained in any form; 29 Oct 07:02–07:05)
+
+34 pairs from the simulated day 3 of all four worlds: 12 true corrections, 4 of them left unlinked by the day agent.
+Rows: `decide/data/supersede-day3-check.jsonl`.
+
+| arm | accuracy | links at p ≥ 0.9 (of 12) | wrong links | unlinked corrections caught at p ≥ 0.9 (of 4) |
+|---|---|---|---|---|
+| D0 base | 0.853 | 8 | 0 | 1 (w4 advisor room, p 0.93) |
+| D1 | 0.853 | 5 | 0 | 0 |
