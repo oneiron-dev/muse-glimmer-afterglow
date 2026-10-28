@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Start, stop and health-check the Muse Glimmer server; print its endpoint.
 
-  python3 app/serve/glimmer_server.py [--host nelly|mel] start [--adapters runs/serving/adapters.json] [--hours 14] [--dry-run]
-  python3 app/serve/glimmer_server.py [--host nelly|mel] stop
-  python3 app/serve/glimmer_server.py [--host nelly|mel] health [--deep]
-  python3 app/serve/glimmer_server.py [--host nelly|mel] endpoint
-  python3 app/serve/glimmer_server.py [--host nelly|mel] status
+  python3 app/serve/glimmer_server.py [--host mel|nelly] start [--adapters runs/serving/adapters.json] [--hours 14] [--dry-run]
+  python3 app/serve/glimmer_server.py [--host mel|nelly] stop
+  python3 app/serve/glimmer_server.py [--host mel|nelly] health [--deep]
+  python3 app/serve/glimmer_server.py [--host mel|nelly] endpoint
+  python3 app/serve/glimmer_server.py [--host mel|nelly] status
 
-Runs on the Mac. The server runs on the serving box (hosts.json; default nelly) in one long GPU
+Runs on the Mac. The server runs on the serving box (hosts.json; default mel) in one long GPU
 booking (serve_on_host.py): llama-server on 127.0.0.1:18611 behind the trace proxy on the box's
 tailnet address, port 18610. The booking goes through `fleet run`; when the box is fleet-OFF
 (serving has it to itself), this script copies app/serve there and books with the box's own
@@ -123,6 +123,8 @@ def adapter_args(manifest_path):
     without "world" (a decision adapter, say) is loaded too; the day agent sends it scale 0."""
     with open(manifest_path) as f:
         m = json.load(f)
+    if m.get("serving_host", HOST) != HOST:
+        sys.exit(f"{manifest_path}: written for {m['serving_host']}, not {HOST}; its paths are staged there")
     adapters = m.get("adapters")
     if not isinstance(adapters, list) or not all(isinstance(x.get("id"), int) and str(x.get("path", "")).startswith("/")
                                                  for x in adapters):
@@ -200,9 +202,17 @@ def cmd_stop(a):
     t0 = time.time()
     while serving_jobs() and time.time() - t0 < 90:
         time.sleep(3)
+    if serving_jobs():
+        # `gpu stop` can take a running job for one that has not started and defer the stop. The booking's
+        # command is serve_on_host.py, which stops llama-server and the proxy on SIGTERM; its exit ends the job.
+        r = ssh("pkill -TERM -f '^python3 serve_on_host.py'")
+        print(f"gpu stop left the job running; SIGTERM to serve_on_host.py (pkill exit {r.returncode})", flush=True)
+        t0 = time.time()
+        while serving_jobs() and time.time() - t0 < 60:
+            time.sleep(3)
     left = serving_jobs()
     if left:
-        sys.exit(f"still running after 90 s: {[j.get('job') for j in left]}")
+        sys.exit(f"still running: {[j.get('job') for j in left]}")
     print("stopped")
     return 0
 

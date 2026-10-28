@@ -17,7 +17,7 @@ let seenNotes = new Set();
 
 /* ---------- header, notes, context ---------- */
 
-function renderWeights(night) {
+function renderWeights(night, adapter) {
   const box = $("weights-body");
   if (!night) return;
   box.replaceChildren();
@@ -30,7 +30,10 @@ function renderWeights(night) {
   }
   const a = el("a", "report-link", "Open the morning report");
   a.href = `/report?day=${night.day}`;
-  box.append(p, a);
+  box.append(p);
+  if (night.decision !== "rollback" && !adapter)  // kept, but the server has not loaded it yet
+    box.append(el("p", "hint", "The server loads this update when it next restarts. Until then you talk to the base weights."));
+  box.append(a);
 }
 
 function renderHeader(s) {
@@ -271,7 +274,7 @@ async function refresh(flash) {
   renderHeader(s);
   renderNotes(s.notes, flash);
   renderContext(s.snapshot);
-  renderWeights(s.night);
+  renderWeights(s.night, s.server.adapter);
   return s;
 }
 

@@ -75,7 +75,7 @@ function lead(ev, facts, rolledBack) {
                                                                                 : "Did it forget anything? On the ",
       f.slice, " it scored ", el("strong", null, `${f.before.pass} of ${f.before.n}`),
       " before the night and ", el("strong", null, `${f.after.pass} of ${f.after.n}`), " with the update",
-      lost || rolledBack ? "." : ": no loss.");
+      lost || rolledBack ? "." : ": no loss on this slice.");
     if (f.passed === false) line.append(" That is more than the rule allows.");
     line.append(receiptLink("forgot"));
   }
@@ -161,9 +161,24 @@ function chose(cons) {
 
 const CHECKS = { leak_check: "no held-out question in the training data",
                  gguf_matches_peft: "the served adapter file matches the trained one", learned_gate: "it learned enough",
-                 forgot_gate: "it did not lose general skill", tool_gate: "no new tool-call failure" };
+                 forgot_gate: "it did not lose general skill", tool_gate: "no new tool-call failure",
+                 abstention_gate: "it says it does not know about as often as before" };
+const rate = (x) => `${(x * 100).toFixed(1)}%`;
 
-function numbers(ev, decision) {
+function abstainLine(abst, decision) {
+  // The abstention check: when the night's own decision did not include it, say it was added afterwards and
+  // what it would have decided.
+  const p = $("abstain-line");
+  if (!abst || abst.base == null || abst.after == null) return;
+  const added = !("abstention_gate" in ((decision || {}).checks || {}));
+  p.replaceChildren(added ? "Abstention check (added 27 Oct after this night ran): " : "Abstention check: ",
+    "base ", el("strong", null, rate(abst.base)), " → ", el("strong", null, rate(abst.after)),
+    abst.rule ? ` (rule: ${abst.rule})` : "",  // the rule as the night wrote it
+    abst.passed ? "; passed." : added ? "; under this check the night would roll back." : "; failed.");
+  p.hidden = false;
+}
+
+function numbers(ev, decision, abst) {
   const box = $("numbers");
   box.replaceChildren();
   const add = (title, parts, field) => {
@@ -189,13 +204,17 @@ function numbers(ev, decision) {
     add("Against the notes control", ["Per fact, the trained model with notes off scores ", v(`${pct(bc.est)} points`),
       ` against the base model reading its notes${ci}.`], "learned");
   }
-  const checks = (decision && decision.checks) || {};
+  const checks = { ...((decision && decision.checks) || {}) };
+  const added = abst && abst.passed != null && !("abstention_gate" in checks);
+  if (added) checks.abstention_gate = abst.passed;  // the check added after the night ran
   const names = Object.keys(checks);
   if (names.length) {
     const passed = names.filter((k) => checks[k]);
     add(decision.decision === "rollback" ? "Why it was rolled back" : "Why it was kept",
       [`${passed.length} of ${names.length} checks passed: `,
-       names.map((k) => `${CHECKS[k] || k}${checks[k] ? "" : " (failed)"}`).join("; "), "."], "decision.checks");
+       names.map((k) => `${CHECKS[k] || k}${checks[k] ? "" : " (failed)"}`).join("; "), ".",
+       added && !abst.passed ? " The abstention check was added after this night ran; under it the night would roll back." : ""],
+      "decision.checks");
   }
 }
 
@@ -300,6 +319,29 @@ function askBox() {
   });
 }
 
+function across(worlds, current, day) {
+  // One line for every synthetic person, so no single world stands alone; each name opens its own report.
+  if (!worlds || worlds.length < 2) return;
+  const sum = (k) => worlds.reduce((t, w) => t + (w[k] ?? 0), 0);
+  const line = $("across-line");
+  line.replaceChildren(`Across ${worlds.length} synthetic people, after one night: `,
+    el("strong", null, `${sum("B")} of ${sum("facts")}`), " facts answered with notes off, ",
+    el("strong", null, String(sum("C"))), " with notes in the prompt, ",
+    el("strong", null, String(sum("D"))), " with both.");
+  const nav = $("people");
+  nav.replaceChildren(...worlds.map((w) => {
+    const a = el("a", "person");
+    a.href = `/report?world=${encodeURIComponent(w.world)}&day=${day}`;
+    if (w.world === current) a.setAttribute("aria-current", "page");
+    const bar = el("span", "bar");
+    bar.style.setProperty("--share", w.facts ? (w.B ?? 0) / w.facts : 0);
+    a.append(el("span", "name", w.persona || w.world), bar, el("span", "count", `${w.B ?? "–"} of ${w.facts}`));
+    a.title = `${w.persona || w.world}: ${w.B} of ${w.facts} with notes off, ${w.C} with notes, ${w.D} with both`;
+    return a;
+  }));
+  $("across").hidden = false;
+}
+
 async function boot() {
   const qs = new URLSearchParams(location.search);
   const r = await (await fetch(`/api/report?${qs}`)).json();
@@ -312,6 +354,7 @@ async function boot() {
     return;
   }
   $("when").textContent = `The morning after day ${r.day}`;
+  across(r.worlds, r.world, r.day);
   const ev = r.eval;
   const day = ev.eval_day || r.day;
   const facts = (ev.facts || []).filter((f) => (f.valid_from || 1) <= day);
@@ -324,7 +367,8 @@ async function boot() {
   lead(ev, facts, rolledBack);
   chose(r.consolidated);
   grid(facts);
-  numbers(ev, r.decision);
+  abstainLine(r.abstention, r.decision);
+  numbers(ev, r.decision, r.abstention);
   asked(facts, r.questions || {});
   receipt(r);
   tooltip(facts);

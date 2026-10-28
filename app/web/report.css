@@ -30,6 +30,8 @@ a.wordmark { color: inherit; text-decoration: none; }
 .forgot-line { margin: 0.6rem 0 0; padding-top: 0.6rem; border-top: 1px solid var(--rule); max-width: 52ch; color: var(--ink-soft); }
 .forgot-line strong { color: var(--ink); font-weight: 600; }
 .forgot-line:empty { display: none; }
+.abstain-line { margin: 0.35rem 0 0; max-width: 52ch; color: var(--ink-soft); }
+.abstain-line strong { color: var(--ink); font-weight: 600; }
 
 /* the fact grid: one row per condition, one dot per fact; one hue (learned) + gray (not) */
 .facts-grid { margin: 0; display: flex; flex-direction: column; gap: 0.9rem; }
@@ -129,3 +131,22 @@ a.rcpt:hover { color: var(--glow-violet); }
 .chose details.more ul { list-style: none; margin: 0.4rem 0 0; padding: 0; columns: 2 16rem; font-size: 0.85rem; }
 .chose details.more li { break-inside: avoid; padding: 0.15rem 0; color: var(--ink-soft); }
 .chose details.more li b { color: var(--ink); font-weight: 600; }
+
+/* every synthetic person: one line of totals, then one link per person with its notes-off share */
+.across { display: flex; flex-direction: column; gap: 0.7rem; padding-bottom: 1.4rem; border-bottom: 1px solid var(--rule); }
+.across-line { margin: 0; max-width: 60ch; color: var(--ink-soft); }
+.across-line strong { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+.people { display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr)); gap: 0.5rem; }
+.person {
+  display: grid; grid-template-columns: 1fr auto; grid-template-areas: "name name" "bar count";
+  align-items: center; column-gap: 0.6rem; row-gap: 0.3rem;
+  padding: 0.55rem 0.75rem; border-radius: 10px; border: 1px solid var(--rule);
+  color: var(--ink-soft); text-decoration: none; font-size: 0.86rem;
+  transition: border-color 160ms var(--ease-out), background-color 160ms var(--ease-out);
+}
+.person:hover { border-color: var(--rule-strong); }
+.person[aria-current="page"] { background: var(--paper-raised); border-color: var(--glow-violet); color: var(--ink); }
+.person .name { grid-area: name; font-weight: 600; color: var(--ink); }
+.person .bar { grid-area: bar; height: 4px; border-radius: 2px; background: var(--rule-strong); overflow: hidden; position: relative; }
+.person .bar::after { content: ""; position: absolute; inset: 0; width: calc(var(--share) * 100%); background: var(--glow-violet); border-radius: 2px; }
+.person .count { grid-area: count; font-variant-numeric: tabular-nums; white-space: nowrap; }

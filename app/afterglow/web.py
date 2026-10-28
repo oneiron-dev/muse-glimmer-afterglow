@@ -9,6 +9,7 @@ import argparse
 import datetime as dt
 import json
 import mimetypes
+import re
 import threading
 import time
 import traceback
@@ -17,10 +18,65 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from . import paths, snapshot, thoughts
-from .agent import DaySession, now_iso
+from .agent import DaySession, load_world, now_iso
 from .llm import GlimmerClient, GlimmerError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
+
+
+ABSTAIN_RATES = re.compile(r"abstain rate ([\d.]+) -> ([\d.]+)")
+
+
+def abstention_gate(night):
+    """The abstention check (does the model still say it does not know?): {"passed", "base", "after",
+    "decision"}, or None when the night has none. Sources, first found wins: decision.json's own "abstention"
+    field (nights decided with the check); the check added on 27 Oct after the R2 nights ran, in
+    night/decision-with-abstention-gate.json; and receipt.json's "added_checks"."""
+    def read(name):
+        f = night / name
+        return json.loads(f.read_text()) if f.exists() else None
+
+    decision = read("decision.json") or {}
+    if decision.get("abstention"):
+        a = decision["abstention"]
+        return {"passed": (decision.get("checks") or {}).get("abstention_gate"), "base": a.get("base"),
+                "after": a.get("after"), "rule": a.get("rule"), "decision": decision.get("decision")}
+    doc = read("decision-with-abstention-gate.json")
+    if doc:
+        rates = doc.get("abstention") or {}
+        base, after = rates.get("base"), rates.get("after")
+        m = ABSTAIN_RATES.search(doc.get("why") or "")
+        if (base is None or after is None) and m:
+            base, after = float(m.group(1)), float(m.group(2))
+        return {"passed": (doc.get("checks") or {}).get("abstention_gate"), "base": base, "after": after,
+                "rule": rates.get("rule"), "decision": doc.get("decision")}
+    for c in (read("receipt.json") or {}).get("added_checks") or []:
+        if c.get("check", "").startswith("abstention"):
+            rates = c.get("abstain_rate") or {}
+            return {"passed": c.get("passed"), "base": rates.get("base"), "after": rates.get("adapted"),
+                    "rule": c.get("rule"), "decision": c.get("would_decide")}
+    return None
+
+
+def persona_name(world):
+    return (load_world(world).get("persona") or {}).get("name")
+
+
+def worlds_summary(day):
+    """Every world with a night eval for `day`: facts answered per arm (A before, B after with notes off,
+    C notes in the prompt, D both), for the report's all-worlds line and its person switcher."""
+    out = []
+    for f in sorted(paths.runs_root().glob(f"*/{day}/night/eval.json")):
+        world = f.parents[2].name
+        ev = json.loads(f.read_text())
+        eval_day = ev.get("eval_day") or day
+        n = sum(1 for x in ev.get("facts", []) if (x.get("valid_from") or 1) <= eval_day)
+        learned = (ev.get("learned") or {}).get("facts_learned") or {}
+        decision = f.parent / "decision.json"
+        out.append({"world": world, "persona": persona_name(world), "facts": n,
+                    **{arm: learned.get(arm) for arm in "ABCD"},
+                    "decision": json.loads(decision.read_text()).get("decision") if decision.exists() else None})
+    return out
 
 
 class App:
@@ -63,10 +119,11 @@ class App:
                 if line.strip():
                     p = json.loads(line)
                     questions[p["id"]] = p["question"]
-        persona = (self.session.world_doc.get("persona") or {}) if world == self.session.world else {}
-        return {"world": world, "day": day, "persona": persona.get("name"), "eval": load("eval.json"),
+        return {"world": world, "day": day, "persona": persona_name(world), "eval": load("eval.json"),
                 "decision": load("decision.json"), "receipt": load("receipt.json"),
-                "consolidated": load("consolidated.json"), "questions": questions, "night_dir": str(night)}
+                "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
+                "questions": questions, "night_dir": str(night),
+                "worlds": worlds_summary(day)}
 
     def state(self):
         s = self.session
