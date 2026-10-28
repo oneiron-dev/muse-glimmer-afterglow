@@ -18,7 +18,7 @@ import time
 from pathlib import Path
 
 from . import paths
-from .llm import GlimmerClient, world_adapter_entry
+from .llm import GlimmerClient, world_adapter_choice
 from .notes import LocalJsonNotes
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 
@@ -80,7 +80,8 @@ class DaySession:
         self.temperature = temperature
         self.client = client or GlimmerClient()
         # The client serves this world: its adapter (from the serving manifest) is the one it scales.
-        self.adapter = world_adapter_entry(world)
+        self.adapter_choice = world_adapter_choice(world)  # the serving rule: latest update passing every check
+        self.adapter = self.adapter_choice["entry"]
         self.client.adapter_path = self.adapter["path"] if self.adapter else None
         self.reasoning = reasoning
         self.notes_in_context = notes_in_context
