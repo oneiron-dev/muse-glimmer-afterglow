@@ -26,6 +26,7 @@ JST = dt.timezone(dt.timedelta(hours=9))
 MAX_ROUNDS = 8
 LINK_P = 0.9  # a one-pass "replaces" this sure links at once (decide/decider.py SUPERSEDE_ACCEPT_P)
 ASK_AGAIN_P = 0.5  # from here up to LINK_P the decision is asked once more with reasoning on
+REASONING_TOKENS = 1024  # the reasoned call's budget (decide/decider.py); reasoning cut there never links
 
 SYSTEM_PROMPT = """You are Afterglow, {who} personal assistant. You run on {owner} own computer.
 
@@ -132,10 +133,11 @@ class DaySession:
             note = by_id.get(r["link"])
             if note is None and best and ASK_AGAIN_P <= p_replaces(best) < LINK_P and self.decide_reasoned:
                 t = reasoned.pair("supersede", note_line(by_id[best["candidate"]]), note_line(new_note))
+                cut = (t.get("reasoning_tokens") or 0) >= REASONING_TOKENS  # it did not finish thinking
                 decided.update(by="thought it through", latency_s=round(decided["latency_s"] + t["ms"] / 1000, 3),
                                reasoned={"pick": t["pick"], "p": t["p"], "ms": t["ms"],
-                                         "reasoning_tokens": t.get("reasoning_tokens")})
-                if t["yes"]:
+                                         "reasoning_tokens": t.get("reasoning_tokens"), "cut": cut})
+                if t["yes"] and not cut:
                     note = by_id[best["candidate"]]
             return {"note": note, "decided": decided, "decisions": r["decisions"]}
 
