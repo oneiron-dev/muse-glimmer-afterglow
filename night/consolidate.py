@@ -73,7 +73,7 @@ def main():
     ap.add_argument("--runs", help="runs root (default: AFTERGLOW_RUNS or the main checkout's runs/)")
     ap.add_argument("--refresh-outcomes", action="store_true", help="only rewrite the outcome fields of an existing consolidated.json")
     ap.add_argument("--out-dir", help="where consolidated.json goes (default runs/<w>/<d>/night)")
-    ap.add_argument("--duplicate-check-only", action="store_true", help="only add Meta decide's D1 duplicate log to an existing consolidated.json")
+    ap.add_argument("--duplicate-check-only", action="store_true", help="only add the duplicate-check log (base weights) to an existing consolidated.json")
     ap.add_argument("--reuse-from", nargs="*", default=[], help="earlier nights' consolidated.json: an active note with "
                     "the same id, key and value as one of their items keeps that item (no teacher call)")
     args = ap.parse_args()
@@ -94,7 +94,7 @@ def main():
         f["notes"] = [n["id"] for n in held if n.get("turn") == f["turn"]]
     notes = [n for n in notes if n not in held]  # a note saved at a feedback turn is not learned
     active, merges = duplicate_merges(notes)
-    if args.duplicate_check_only:  # add the D1 log to an existing consolidated.json (no other change)
+    if args.duplicate_check_only:  # add the duplicate-check log to an existing consolidated.json (no other change)
         path = out_dir / "consolidated.json"
         doc = json.loads(path.read_text())
         doc["duplicate_check"] = duplicate_check(active)
@@ -180,7 +180,7 @@ def duplicate_check(active):
         d = Decider(url[:-3] if url.endswith("/v1") else url, slot=int(os.environ.get("NIGHT_SLOT", "1")), trace="night_duplicate")
         k = int(os.environ.get("D1_DUPLICATE_K", "0"))  # 0 = the decider's default; 2 under load (Meta decide)
         r = d.duplicate_check([{"id": n["id"], "key": n["key"], "value": n["value"]} for n in active], **({"k": k} if k else {}))
-    except Exception as e:  # noqa: BLE001  (D1 not loaded on this server, or the server is down): skipped, said so
+    except Exception as e:  # noqa: BLE001  (the server is down or the call fails): skipped, said so
         return {"skipped": f"{type(e).__name__}: {e}"}
     return {"weights": "base", "same": r["same"], "disagreements": r["same"], "pairs_checked": len(r["decisions"]), "ms": r["ms"],
             "k": k or "default",
