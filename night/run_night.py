@@ -290,7 +290,10 @@ class Night:
              "--n-loras", str(len(manifest["adapters"])), "--turns", str(self.args.agent_anchors),
              "--out", str(self.night / "agent-anchors.jsonl"), "--report", str(self.night / "agent-anchors-report.json")], log)
         report = json.loads((self.night / "agent-anchors-report.json").read_text())
-        self.receipt["agent_anchors"] = {k: report[k] for k in ("turns", "kept", "dropped", "by_action", "reasoning", "tokens")}
+        self.receipt["agent_anchors"] = {k: report.get(k) for k in ("turns", "kept", "dropped", "by_action", "reasoning", "tokens", "inexact_tokens")}
+        rows = [json.loads(line) for line in (self.night / "agent-anchors.jsonl").read_text().splitlines() if line.strip()]
+        if any("completion_ids" not in r["raw"] for r in rows):
+            raise RuntimeError("agent anchors without the generated token ids: rebuild them (night/agent_anchor_rows.py)")
 
     def memories(self):
         """A share of earlier days' rewrites, for items not superseded since (multi-day replay)."""

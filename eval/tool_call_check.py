@@ -82,9 +82,11 @@ def run_arm(args, lora, ts, system):
                 "max_tokens": 512, "temperature": 0.0, "seed": 20261014, "cache_prompt": False, "lora": lora,
                 "chat_template_kwargs": {"reasoning_strength": args.reasoning},
                 **({"id_slot": args.id_slot} if args.id_slot is not None else {})}
-        msg = post(f"{args.server.rstrip('/')}/v1/chat/completions", body)["choices"][0]["message"]
+        choice = post(f"{args.server.rstrip('/')}/v1/chat/completions", body)["choices"][0]
+        msg = choice["message"]
         ok, note = score(t, msg)
-        return {**t, "ok": ok, "note": note, "content": (msg.get("content") or "")[:120]}
+        return {**t, "ok": ok, "note": note, "content": (msg.get("content") or "")[:120], "finish": choice.get("finish_reason"),
+                "reasoning": (msg.get("reasoning_content") or "")[:300]}
 
     with ThreadPoolExecutor(max_workers=args.parallel) as pool:
         return list(pool.map(one, ts))

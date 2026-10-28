@@ -142,14 +142,24 @@ def main():
             raise SystemExit(f"unexpected rendered prompt end {prompt[-40:]!r}: stop")
         r = post(f"{root}/completion", {"prompt": prompt, "n_predict": 400, "temperature": 0.0, "top_k": 1, "seed": 20261014,
                                         "id_slot": 1, "cache_prompt": False, "lora": lora, "return_tokens": True})
-        ended = (r.get("tokens") or [None])[-1] == 200008  # <|eot|>
-        completion = r.get("content", "") + "<|eot|>"
-        ok = ended and r.get("stop_type") == "eos" and kept(t, completion)
-        report.append({**t, "kept": ok, "completion": completion[-300:], "tokens": r.get("tokens_predicted"), "prompt_tokens": r.get("tokens_evaluated")})
+        tokens = r.get("tokens") or []
+        ended = bool(tokens) and tokens[-1] == 200008  # <|eot|>
+        # the exact text of the generated tokens, special tokens included: "content" drops <|eom|> (200007), which ends
+        # the self message before a tool call; a row without it teaches the adapter a reply the server cannot parse
+        completion = post(f"{root}/detokenize", {"tokens": tokens, "with_pieces": False})["content"] if tokens else ""
+        if ended and not completion.endswith("<|eot|>"):
+            completion += "<|eot|>"
+        # guard: the text must re-tokenize to exactly the generated ids (special tokens included)
+        retok = post(f"{root}/tokenize", {"content": completion, "add_special": False, "parse_special": True})["tokens"] if tokens else []
+        exact = retok == tokens
+        ok = ended and r.get("stop_type") == "eos" and exact and kept(t, completion)
+        report.append({**t, "kept": ok, "completion": completion[-300:], "tokens": r.get("tokens_predicted"), "prompt_tokens": r.get("tokens_evaluated"),
+                       "eom": 200007 in tokens, "exact_tokens": exact})
         if ok:
             rows.append({"item_id": f"agent-{n:03d}", "kind": "agent_anchor", "form": f"agent_{t['action'].split('.')[0]}",
                          "user": t["user"], "assistant": completion, "raw": {"prompt": prompt[:-len("<|start|>assistant")],
-                                                                              "completion": "<|start|>assistant" + completion},
+                                                                              "completion": "<|start|>assistant" + completion,
+                                                                              "completion_ids": tokens},
                          "valid": True})
     Path(args.out).write_text("".join(json.dumps(r) + "\n" for r in rows))
     by_action = {}
@@ -158,6 +168,7 @@ def main():
         a["turns"] += 1
         a["kept"] += r["kept"]
     summary = {"world": args.world, "turns": len(report), "kept": len(rows), "dropped": len(report) - len(rows), "by_action": by_action,
+               "inexact_tokens": sum(not r["exact_tokens"] for r in report),
                "reasoning": args.reasoning, "tool_check_overlap": 0,
                "tokens": {"prompt": sum(r["prompt_tokens"] or 0 for r in report), "completion": sum(r["tokens"] or 0 for r in report)}}
     Path(args.report).write_text(json.dumps({**summary, "turns_detail": report}, indent=1) + "\n")

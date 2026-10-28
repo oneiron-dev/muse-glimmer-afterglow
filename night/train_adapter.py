@@ -50,6 +50,11 @@ def encode_row(tokenizer, row, max_len, train_header=False):
         if tokenizer.bos_token and not prompt.startswith(tokenizer.bos_token):  # the server adds BOS when it tokenizes
             prompt = tokenizer.bos_token + prompt
         prefix, full = prompt + HEADER_START, prompt + row["raw"]["completion"]
+        if "completion_ids" in row["raw"]:  # guard: the reply must be exactly the token ids the base generated
+            got = tokenizer(row["raw"]["completion"], add_special_tokens=False)["input_ids"]
+            want = tokenizer(HEADER_START, add_special_tokens=False)["input_ids"] + row["raw"]["completion_ids"]
+            if got != want:
+                raise SystemExit(f"row {row['id']}: the anchor reply does not re-tokenize to the generated ids")
         max_len = max(max_len, RAW_MAX_LEN)
     else:
         user, assistant = row["messages"]
