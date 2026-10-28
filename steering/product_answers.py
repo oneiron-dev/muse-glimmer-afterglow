@@ -31,8 +31,8 @@ from paths import runs_root  # noqa: E402
 
 def manifest_adapter(real_runs, world, day):
     doc = json.loads((real_runs / "serving" / "adapters.json").read_text())
-    hits = [a for a in doc.get("adapters", []) if a.get("world") == world and int(a.get("day", -1)) == day
-            and a.get("decision", "keep") == "keep"]
+    hits = [a for a in doc.get("adapters", []) if a.get("world") == world and a.get("day") is not None
+            and int(a["day"]) == day]  # kept or rolled back: a loaded adapter is measured either way
     return hits[-1] if hits else None
 
 
@@ -118,10 +118,15 @@ def main():
             if time.time() - t0 > args.deadline_s:
                 stopped = f"deadline in {w}/{s}/{arm}"
                 break
+            tq = time.time()
             answer, truncated, error = ask(it["question"], w, notes_file, manifest, args.endpoint, path, scale, args.date,
                                            tmp, args.slot)
-            rows.setdefault(w, []).append({"arm_name": arm, "set": s, "id": it["id"], "answer": answer,
-                                           "truncated": truncated, "error": error})
+            row = {"arm_name": arm, "set": s, "id": it["id"], "answer": answer, "truncated": truncated, "error": error,
+                   "seconds": round(time.time() - tq, 2)}
+            rows.setdefault(w, []).append(row)
+            (out / w).mkdir(parents=True, exist_ok=True)
+            with open(out / w / "raw.jsonl", "a") as f:  # every answer as it lands, so a cut run keeps its work
+                f.write(json.dumps(row) + "\n")
         if stopped:
             break
         wdir = out / w
