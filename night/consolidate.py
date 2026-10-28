@@ -72,6 +72,7 @@ def main():
     ap.add_argument("--runs", help="runs root (default: AFTERGLOW_RUNS or the main checkout's runs/)")
     ap.add_argument("--refresh-outcomes", action="store_true", help="only rewrite the outcome fields of an existing consolidated.json")
     ap.add_argument("--out-dir", help="where consolidated.json goes (default runs/<w>/<d>/night)")
+    ap.add_argument("--duplicate-check-only", action="store_true", help="only add Meta decide's D1 duplicate log to an existing consolidated.json")
     ap.add_argument("--reuse-from", nargs="*", default=[], help="earlier nights' consolidated.json: an active note with "
                     "the same id, key and value as one of their items keeps that item (no teacher call)")
     args = ap.parse_args()
@@ -92,6 +93,14 @@ def main():
         f["notes"] = [n["id"] for n in held if n.get("turn") == f["turn"]]
     notes = [n for n in notes if n not in held]  # a note saved at a feedback turn is not learned
     active, merges = duplicate_merges(notes)
+    if args.duplicate_check_only:  # add the D1 log to an existing consolidated.json (no other change)
+        path = out_dir / "consolidated.json"
+        doc = json.loads(path.read_text())
+        doc["duplicate_check"] = duplicate_check(active)
+        path.write_text(json.dumps(doc, indent=1) + "\n")
+        print(json.dumps({k: v for k, v in doc["duplicate_check"].items() if k not in ("same", "disagreements")}))
+        return
+    dup_log = duplicate_check(active) if args.day >= 2 else None
     items, proposals, log_path = [], [], out_dir / "teacher-calls.jsonl"
     earlier = {}
     for path in args.reuse_from:  # later files win
@@ -133,6 +142,7 @@ def main():
     items = [i for i in items if i["id"] not in gone]
     doc = {"world": args.world, "day": args.day, "user": name, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
            "items": items, "overruled_merge_proposals": proposals, "replacements": replaced,
+           **({"duplicate_check": dup_log} if dup_log else {}),
            "feedback": feedback, "held_as_feedback": [{"id": n["id"], "key": n["key"], "value": n["value"], "turn": n.get("turn"),
                                                       "outcome": "held_as_feedback", "why": "saved at a style-feedback turn: "
                                                       "passed to Meta steering, not learned"} for n in held]}
@@ -156,6 +166,24 @@ and the assistant saved a new note: {key}: {value}
 
 Does the new note replace one of the earlier notes, that is, the same fact about {first} with a new value (a changed
 time, date, room, person or name)? Answer with the earlier note's id only, or "none" if it is a new fact."""
+
+
+D1_ADAPTER = "/data/afterglow/adapters/decision-d1.gguf"  # Meta decide's decision adapter on the day server
+
+
+def duplicate_check(active):
+    """Meta decide's D1 duplicate check, logged beside the code rule (identical key + value stays the decision of
+    record): every pair D1 calls the same fact at p >= 0.9 that the rule kept apart is a logged disagreement."""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+        from decide.decider import Decider
+        url = teacher_mod.serving_base_url()
+        d = Decider(url[:-3] if url.endswith("/v1") else url, adapter_path=D1_ADAPTER, slot=1, trace="night_duplicate")
+        r = d.duplicate_check([{"id": n["id"], "key": n["key"], "value": n["value"]} for n in active])
+    except Exception as e:  # noqa: BLE001  (D1 not loaded on this server, or the server is down): skipped, said so
+        return {"skipped": f"{type(e).__name__}: {e}"}
+    return {"same": r["same"], "disagreements": r["same"], "pairs_checked": len(r["decisions"]), "ms": r["ms"],
+            "rule": "logged only; the code rule (identical key + value) decides"}
 
 
 def find_replacements(items, by_id, day, first, teacher, log_path):
