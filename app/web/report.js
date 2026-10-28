@@ -54,6 +54,18 @@ function forgotNumbers(ev) {
   return { before: a, after: b, passed: null, slice: `${a.n}-item general slice` };
 }
 
+function staleLine(ev, rolledBack) {
+  // Under the headline, from day 2: after the corrections, how often the weights gave the old value, beside the
+  // base model reading the notes (which can hold both values when a correction was not linked to its old note).
+  const st = ev.stale || {};
+  const p = $("stale-line");
+  if (!(st.B && st.B.n)) return;
+  p.replaceChildren(`After your corrections, ${rolledBack ? "the update" : "it"} gave an old value `,
+    el("strong", null, `${st.B.stale} of ${st.B.n}`), " times",
+    ...(st.C ? ["; the base model reading your notes gave one ", el("strong", null, `${st.C.stale} of ${st.C.n}`), " times."] : ["."]));
+  p.hidden = false;
+}
+
 function lead(ev, facts, rolledBack) {
   const fl = (ev.learned && ev.learned.facts_learned) || {};
   const n = facts.length;
@@ -492,6 +504,7 @@ async function boot() {
   }
   verdict(r);
   lead(ev, facts, rolledBack);
+  staleLine(ev, rolledBack);
   chose(r.consolidated);
   grid(facts);
   abstainLine(r.abstention, r.decision);
