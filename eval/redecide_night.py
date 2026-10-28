@@ -5,7 +5,9 @@
 
 Rules (owner card META-ABSTENTION-GATE): v3 = the SimpleQA gate slice, two-sided (rule of record until the owner
 rules); product = abstention in the day agent's own form, no worse than base (needs
-eval/product-abstention-night.json from eval/product_abstention.py); report-only = abstention never gates.
+eval/product-abstention-night.json from eval/product_abstention.py); product-2s = the same form, two-sided (general
+abstain rate within 10 points of the base's either way, never-told at most 3 below; the card's option B);
+report-only = abstention never gates. Owner's letter -> rule: A = v3 (nothing to do), B = product-2s, C = report-only.
 Writes decision-<rule>.json beside decision.json. Only with --of-record does it replace decision.json (and move
 runs/<w>/adapters.json "current" on a keep); the receipt logs every re-decision.
 """

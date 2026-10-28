@@ -62,7 +62,17 @@ GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 
-ABSTENTION_RULES = ("v3", "product", "report-only")  # v3 = rule of record until the owner rules (card META-ABSTENTION-GATE)
+ABSTENTION_RULES = ("v3", "product", "product-2s", "report-only")  # v3 = rule of record until the owner rules (META-ABSTENTION-GATE)
+PRODUCT_2S_BAND, PRODUCT_NT_DROP = 0.10, 3
+
+
+def product_two_sided(product):
+    """Option B, two-sided: in the day agent's own form, the adapter's general abstain rate within 10 points of the
+    base's (either way) and its never-told abstentions at most 3 below the base's."""
+    a, b = product["arms"]["adapter"], product["arms"]["base"]
+    rate = lambda x: x["general"]["abstain"] / x["general"]["n"]  # noqa: E731
+    return product.get("complete", True) and abs(rate(a) - rate(b)) <= PRODUCT_2S_BAND + 1e-9 \
+        and a["never_told"]["abstain"] >= b["never_told"]["abstain"] - PRODUCT_NT_DROP
 
 
 def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_rule="v3"):
@@ -85,10 +95,10 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     gate = e.get("abstention_gate")
     cv_gate = e.get("abstention_gate_with_control_vector")
     product = e.get("abstention_product_form")
-    if abstention_rule == "product":  # option B: abstention judged in the day agent's own form, no worse than base
+    if abstention_rule in ("product", "product-2s"):  # option B: abstention judged in the day agent's own form
         if not product:
-            raise ValueError("abstention rule 'product' needs eval.json abstention_product_form (eval/product_abstention.py)")
-        checks["abstention_product_form"] = product["passed"]
+            raise ValueError(f"abstention rule {abstention_rule!r} needs eval.json abstention_product_form (eval/product_abstention.py)")
+        checks["abstention_product_form"] = product["passed"] if abstention_rule == "product" else product_two_sided(product)
     elif abstention_rule == "report-only":  # option C: abstention reported, never a gate
         pass
     elif gate_with_control_vector and cv_gate:
