@@ -53,3 +53,21 @@ META-ABSTENTION-GATE, option C) w4 2b would be a keep: `eval/redecide_night.py -
   Without notes (B) the adapter still invents a value (0-3 of 30).
 - **Forgetting noise**: w1 2b misses the forgetting bar by its interval's lower bound (-6.4 vs -5). On this 200-item
   slice the base arm A alone moves 118 -> 121 between runs, so a -1.5 point delta is noise. The rule stays unchanged.
+
+## Abstention in the product's own form (option B, Meta steering, 29 Oct ~08:30)
+The day agent's real loop (its prompt, tools and the world's notes), base vs adapter. General = the 200 SimpleQA
+gate-slice questions (100 asked per world), never-told = 30 per world. Scored with `eval/product_abstention.py`; rule
+(one-sided): adapter general abstain rate >= base's - 10 pt and never-told abstentions >= base's - 3. Records:
+`runs/<w>/2/<night-2b|night-2c>/eval/product-abstention-night.json`, `decision-product.json` beside each (the record
+stays v3 until the owner rules).
+
+| world | variant | general abstain, base -> adapter (of 100) | never-told, base -> adapter (of 30) | product-form check | decision under B |
+|---|---|---|---|---|---|
+| w1 | 2b | 50 -> 71 | 29 -> 22 | fail | rollback (also forgetting) |
+| w2 | 2b | 55 -> 84 | 30 -> 27 | pass | rollback (tool calls) |
+| w2 | 2c | 55 -> 37 | 30 -> 27 | fail | rollback (also tool calls) |
+| w4 | 2b | 44 -> 50 | 28 -> 28 | pass | **keep** |
+
+The rule is one-sided, so declining too much passes (w2 2b, +29 pt on general). A two-sided band on the general set
+(within 10 pt of base) would still keep w4 2b (+6) and fail w2 2b. In the agent loop R2 abstains on never-told 0, 12,
+6 and 16 of 30 (w1-w4), while the forced-answer B arm gives 0 everywhere: the two forms measure different things.
