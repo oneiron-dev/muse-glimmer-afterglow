@@ -1,0 +1,71 @@
+{
+ "started": "2026-10-29T03:53:54+0900",
+ "done": [
+  "base/check",
+  "base/abstention",
+  "base/concise",
+  "base/formal",
+  "base/decisive",
+  "base/asks_first",
+  "base/set-gate",
+  "base/set-gate_bare",
+  "base/set-anchors",
+  "base/set-never_told",
+  "base/set-forward",
+  "base/calibrate-abstention",
+  "w1/check",
+  "w1/abstention",
+  "w1/set-gate",
+  "w1/set-gate_bare",
+  "w1/set-anchors",
+  "w1/set-never_told",
+  "w1/set-forward",
+  "w1/calibrate-abstention",
+  "base/calibrate-concise",
+  "w1/concise",
+  "w1/formal",
+  "w1/decisive",
+  "w1/asks_first"
+ ],
+ "args": {
+  "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
+  "adapter": [
+   "w1=/data/meta-night/nights/w1-ines-varga/1/adapter/epoch4"
+  ],
+  "axes": "/data/meta-steering/repo/steering/axes.json",
+  "only_axes": "",
+  "adapter_axes": "",
+  "prompt_set": [
+   "gate=/data/meta-steering/sets/gate.jsonl",
+   "gate_bare=/data/meta-steering/sets/gate_bare.jsonl",
+   "anchors=/data/meta-steering/sets/anchors.jsonl",
+   "never_told=/data/meta-steering/sets/never_told.jsonl",
+   "forward=/data/meta-steering/sets/forward.jsonl"
+  ],
+  "out": "/data/meta-steering/states/j1",
+  "per_query": 2,
+  "seed": 7,
+  "batch_size": 16,
+  "deadline_s": 600.0,
+  "loader": "auto",
+  "calibrate_scales": [
+   0.0,
+   0.02,
+   0.04,
+   0.08,
+   0.16
+  ]
+ },
+ "load_s": 32.7,
+ "layers": 52,
+ "pairs": {
+  "abstention": 48,
+  "concise": 40,
+  "formal": 40,
+  "decisive": 40,
+  "asks_first": 40
+ },
+ "bank": 48,
+ "elapsed_s": 261.9,
+ "finished": true
+}
