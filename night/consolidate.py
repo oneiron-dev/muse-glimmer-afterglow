@@ -169,23 +169,21 @@ Does the new note replace one of the earlier notes, that is, the same fact about
 time, date, room, person or name)? Answer with the earlier note's id only, or "none" if it is a new fact."""
 
 
-D1_ADAPTER = "/data/afterglow/adapters/decision-d1.gguf"  # Meta decide's decision adapter on the day server
-
-
 def duplicate_check(active):
-    """Meta decide's D1 duplicate check, logged beside the code rule (identical key + value stays the decision of
-    record): every pair D1 calls the same fact at p >= 0.9 that the rule kept apart is a logged disagreement."""
+    """Meta decide's duplicate check on BASE weights (lead 08:22: on the day-3 set base makes 0 false "same" at
+    p >= 0.9, D1 makes 2), logged beside the code rule (identical key + value stays the decision of record): every
+    pair it calls the same fact at p >= 0.9 that the rule kept apart is a logged disagreement."""
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
         from decide.decider import Decider
         url = teacher_mod.serving_base_url()
-        d = Decider(url[:-3] if url.endswith("/v1") else url, adapter_path=D1_ADAPTER, slot=int(os.environ.get("NIGHT_SLOT", "1")),
-                    trace="night_duplicate")
+        d = Decider(url[:-3] if url.endswith("/v1") else url, slot=int(os.environ.get("NIGHT_SLOT", "1")), trace="night_duplicate")
         k = int(os.environ.get("D1_DUPLICATE_K", "0"))  # 0 = the decider's default; 2 under load (Meta decide)
         r = d.duplicate_check([{"id": n["id"], "key": n["key"], "value": n["value"]} for n in active], **({"k": k} if k else {}))
     except Exception as e:  # noqa: BLE001  (D1 not loaded on this server, or the server is down): skipped, said so
         return {"skipped": f"{type(e).__name__}: {e}"}
-    return {"same": r["same"], "disagreements": r["same"], "pairs_checked": len(r["decisions"]), "ms": r["ms"], "k": k or "default",
+    return {"weights": "base", "same": r["same"], "disagreements": r["same"], "pairs_checked": len(r["decisions"]), "ms": r["ms"],
+            "k": k or "default",
             "rule": "logged only; the code rule (identical key + value) decides"}
 
 
