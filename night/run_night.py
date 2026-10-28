@@ -133,7 +133,8 @@ class Night:
                 "contrast_rows": a.contrast, "perturbed": a.perturbed, "reversed": a.reversed, "notes_context": a.notes_context,
                 "notes_form_only": a.notes_form_only,
                 "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir,
-                "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0}
+                "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
+                "self_check": a.self_check}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -211,19 +212,29 @@ class Night:
                   f"--out-dir {remote_out} --max-new-tokens {max_new}", log)
         rsync(f"{HOST['name']}:{remote_out}/anchors.jsonl", str(out), log)
 
+    def self_check(self, log):
+        run([sys.executable, "night/self_check_rows.py", "--world", self.args.world, "--day", str(self.args.day),
+             "--consolidated", str(self.night / "consolidated.json"), "--runs", str(self.runs),
+             "--out", str(self.night / "self-check.jsonl"), "--report", str(self.night / "self-check-report.json")], log)
+        report = json.loads((self.night / "self-check-report.json").read_text())
+        self.receipt["self_check"] = {k: report[k] for k in ("adapter_id", "adapter_sha256", "items", "known", "unsure", "wrong", "tokens")}
+
     def memories(self):
         """A share of earlier days' rewrites, for items not superseded since (multi-day replay)."""
         if self.args.day <= 1 or self.args.memory_share <= 0:
             return None
         today = json.loads((self.night / "consolidated.json").read_text())
         superseded_values = {i["corrects"].lower() for i in today["items"] if i.get("corrects")}
+        check = self.night / "self-check-report.json"
+        unsure = set(json.loads(check.read_text())["unsure_items"]) if self.args.self_check and check.exists() else set()
         rows = []
         for d in range(1, self.args.day):
             path = self.runs / self.args.world / str(d) / "night" / "rewrites" / "rewrites.jsonl"
             if path.exists():
                 for line in path.read_text().splitlines():
                     r = json.loads(line)
-                    if r["valid"] and not any(v in r["assistant"].lower() for v in superseded_values):
+                    if r["valid"] and not any(v in r["assistant"].lower() for v in superseded_values) \
+                            and f"d{d}-{r['item_id']}" not in unsure:
                         rows.append({**r, "item_id": f"d{d}-{r['item_id']}"})
         rng = random.Random(20261027 + self.args.day)
         rng.shuffle(rows)
@@ -252,6 +263,8 @@ class Night:
                  "--day-text", str(self.run_dir / "daylog.jsonl"), str(self.run_dir / "notes.json"),
                  "--rows", str(self.args.unknown_keys), "--out", str(self.night / "unknown-keys.jsonl")], log)
             extra_rows.append(str(self.night / "unknown-keys.jsonl"))
+        if self.args.self_check and self.args.day >= 2:
+            extra_rows.append(str(self.night / "self-check.jsonl"))
         extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
@@ -343,6 +356,7 @@ class Night:
         n = self.night
         steps = [("consolidate", n / "consolidated.json", self.consolidate),
                  ("rewrites", n / "rewrites" / "rewrites.jsonl", self.rewrites),
+                 *([("self_check", n / "self-check.jsonl", self.self_check)] if self.args.self_check and self.args.day >= 2 else []),
                  ("anchors", self.anchors_path(), self.anchors),
                  *([("abstain_anchors", self.abstain_anchors_path(), self.abstain_anchors)] if self.args.abstain_share > 0 else []),
                  *([("abstain_anchors_plain", self.abstain_anchors_plain_path(), lambda log: self.abstain_anchors(log, plain=True))]
@@ -387,6 +401,8 @@ def main():
     ap.add_argument("--notes-form-only", action="store_true", help="with --contrast: contrast only in the notes-in-prompt form")
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
     ap.add_argument("--unknown-keys", type=int, default=0, help="unknown-key rows (night/unknown_key_rows.py), each with a known pair")
+    ap.add_argument("--self-check", action="store_true", help="from night 2: ask the current adapter each earlier fact "
+                    "on the day server; unsure -> 'let me check your notes' rows (night/self_check_rows.py)")
     ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()
