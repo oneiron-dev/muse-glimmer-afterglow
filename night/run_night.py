@@ -48,11 +48,13 @@ GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 
-def decide(e, verify, leak_passed):
+def decide(e, verify, leak_passed, gate_with_control_vector=False):
     """Keep the adapter only if every gate passes: clean data, GGUF = PEFT, learned (B-A interval above 0),
     no loss detected (forgetting interval's lower bound above -5 points), no new tool failure and, when measured,
     abstention kept (SimpleQA gate slice, two-sided: abstain rate within 10 points of the base's and exact-match right
-    answers at least the base's minus 3)."""
+    answers at least the base's minus 3). With a control-vector pass in the eval, the same rule is also reported for the
+    adapter with the vector loaded against the base without it; it is the gate of record only with
+    gate_with_control_vector."""
     learned = e["learned"].get("B_minus_A", {})
     checks = {"leak_check": leak_passed,
               "gguf_matches_peft": verify.get("passed", False),
@@ -60,7 +62,10 @@ def decide(e, verify, leak_passed):
               "forgot_gate": bool(e["forgot"]) and e["forgot"]["ci95"][0] > -0.05,
               "tool_gate": bool(e["forgot"]) and not e["forgot"]["critical_tool_failures"]}
     gate = e.get("abstention_gate")
-    if gate:
+    cv_gate = e.get("abstention_gate_with_control_vector")
+    if gate_with_control_vector and cv_gate:
+        checks["abstention_gate_with_control_vector"] = cv_gate["passed"]
+    elif gate:
         checks["abstention_gate"] = gate["passed"]
     keep = all(checks.values())
     why = ("all gates passed" if keep else "failed: " + ", ".join(k for k, v in checks.items() if not v))
@@ -78,6 +83,12 @@ def decide(e, verify, leak_passed):
                              "right_base": gate["arms"]["A"]["exact_correct"], "right_after": gate["arms"]["B"]["exact_correct"],
                              "n": gate["arms"]["B"]["n"], "slice": "gate_slice_v1",
                              "rule": gate.get("rule", "after >= base - 0.10")}
+    if cv_gate:
+        out["abstention_with_control_vector"] = {
+            "base": cv_gate["arms"]["A"]["abstain_rate"], "after": cv_gate["arms"]["B"]["abstain_rate"],
+            "right_base": cv_gate["arms"]["A"]["exact_correct"], "right_after": cv_gate["arms"]["B"]["exact_correct"],
+            "base_with_vector": cv_gate["base_with_vector"], "vector": cv_gate["vector"], "passed": cv_gate["passed"],
+            "counts": bool(gate_with_control_vector), "n": cv_gate["arms"]["B"]["n"], "slice": "gate_slice_v1", "rule": cv_gate["rule"]}
     return out
 
 
@@ -134,7 +145,8 @@ class Night:
                 "notes_form_only": a.notes_form_only,
                 "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir,
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
-                "self_check": a.self_check}
+                "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
+                "gate_with_control_vector": a.gate_with_control_vector}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -333,8 +345,18 @@ class Night:
         cmd = (f"PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
                f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D")
+        if a.control_vector:
+            # the same server with the vector loaded: adapter off and on on the gate slice, B on forgetting and never-told
+            path, scale = a.control_vector.rsplit(":", 1)
+            extra = f"--control-vector-scaled {path} {scale}" + (f" --control-vector-layer-range {a.control_vector_layers}" if a.control_vector_layers else "")
+            cmd += (f"; mkdir -p {r}/eval-cv && SERVER_EXTRA={shlex.quote(extra)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} "
+                    f"night/llamacpp/serve_and_eval.sh {HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf "
+                    f"night-cv {r}/eval-cv -- --world {a.world} --day {a.day} --forget-slice --gate-slice --never-told --arms B "
+                    f"|| echo 'control-vector pass failed'")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: 4-arm eval in llama.cpp", GPU_LIMIT["eval"], cmd, log)
         rsync(f"{HOST['name']}:{r}/eval/", str(self.night / "eval") + "/", log)
+        if a.control_vector:
+            run(["rsync", "-a", f"{HOST['name']}:{r}/eval-cv/", str(self.night / "eval-cv") + "/"], log)
 
     def report(self, log):
         a = self.args
@@ -345,8 +367,18 @@ class Night:
              "--adapter-path", str(self.night / "adapter.gguf"), "--adapter-sha256", gguf_sha, "--out", str(self.night / "eval.json"),
              *(["--gate", str(ev / "gate-night.json")] if (ev / "gate-night.json").exists() else [])], log)
         e = json.loads((self.night / "eval.json").read_text())
+        cv_path, main_gate = self.night / "eval-cv" / "gate-night-cv.json", ev / "gate-night.json"
+        if a.control_vector and cv_path.exists() and main_gate.exists():
+            import simpleqa_gate
+            cv, base = json.loads(cv_path.read_text()), json.loads(main_gate.read_text())
+            rec = simpleqa_gate.gate_record({"A": base["answers"]["A"], "B": cv["answers"]["B"]}, "night-cv-vs-base")
+            rec.update({"vector": a.control_vector, "layers": a.control_vector_layers,
+                        "base_with_vector": cv["arms"]["A"]["abstain_rate"]})
+            (self.night / "eval-cv" / "gate-night-cv-vs-base.json").write_text(json.dumps(rec, indent=1) + "\n")
+            e["abstention_gate_with_control_vector"] = {k: v for k, v in rec.items() if k != "answers"}
+            (self.night / "eval.json").write_text(json.dumps(e, indent=1) + "\n")
         verify = json.loads((self.night / "gguf-verify.json").read_text())
-        decision = decide(e, verify, self.receipt.get("leak_check", {}).get("clean_passed", False))
+        decision = decide(e, verify, self.receipt.get("leak_check", {}).get("clean_passed", False), a.gate_with_control_vector)
         keep = decision["decision"] == "keep"
         (self.night / "decision.json").write_text(json.dumps(decision, indent=1) + "\n")
         if a.night_dir == "night":  # an experiment arm never becomes the world's kept adapter
@@ -423,6 +455,10 @@ def main():
     ap.add_argument("--unknown-keys", type=int, default=0, help="unknown-key rows (night/unknown_key_rows.py), each with a known pair")
     ap.add_argument("--self-check", action="store_true", help="from night 2: ask the current adapter each earlier fact "
                     "on the day server; unsure -> 'let me check your notes' rows (night/self_check_rows.py)")
+    ap.add_argument("--control-vector", help="PATH:SCALE of a control-vector GGUF on the training host: the eval also runs "
+                    "the gate slice, forgetting and never-told with it loaded, and decision.json reports that gate")
+    ap.add_argument("--control-vector-layers", help="'FIRST LAST' for --control-vector-layer-range")
+    ap.add_argument("--gate-with-control-vector", action="store_true", help="the gate with the vector loaded is the gate of record")
     ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()

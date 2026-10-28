@@ -2,13 +2,14 @@
 # Start llama-server with the target GGUF and one LoRA adapter (loaded at scale 0), run the 4-arm eval, stop the server.
 # Runs on the GPU host inside one fleet booking. Target-only decoding (no drafter) for scoring.
 # Usage: night/llamacpp/serve_and_eval.sh LLAMA_SERVER TARGET_GGUF ADAPTER_GGUF LABEL OUT_DIR -- <eval/llama_eval.py args>
-# Env: PY (python with transformers), MODEL_DIR (HF dir with tokenizer + chat_template.jinja), PORT (default 18620).
+# Env: PY (python with transformers), MODEL_DIR (HF dir with tokenizer + chat_template.jinja), PORT (default 18620),
+#      SERVER_EXTRA (more llama-server flags, e.g. "--control-vector-scaled <gguf> <scale>").
 set -euo pipefail
 SERVER=$1; TARGET=$2; ADAPTER=$3; LABEL=$4; OUT=$5; shift 5; [ "${1:-}" = "--" ] && shift
 PORT=${PORT:-18620}
 mkdir -p "$OUT"
 "$SERVER" -m "$TARGET" --lora "$ADAPTER" --lora-init-without-apply --cache-ram 0 -ngl 99 -fa on -np 4 -c 32768 \
-  --host 127.0.0.1 --port "$PORT" > "$OUT/llama-server-$LABEL.log" 2>&1 &
+  --host 127.0.0.1 --port "$PORT" ${SERVER_EXTRA:-} > "$OUT/llama-server-$LABEL.log" 2>&1 &
 SPID=$!
 trap 'kill $SPID 2>/dev/null; wait $SPID 2>/dev/null || true' EXIT
 for _ in $(seq 1 180); do
