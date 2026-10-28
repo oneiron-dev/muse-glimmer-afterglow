@@ -86,3 +86,7 @@ the same 96 prompts (night1-96/), gives -1.69, close to its 24-prompt read.
 | night 1 (R2) | -1.69 | +3.67 | +1.84 | -0.26 | no clear change |
 | night 2 | -0.49 | +1.89 | +0.90 | no clear change | +0.57 |
 | night 2b (night2b/) | -0.36 | +1.94 | +0.79 | -0.46 | no clear change |
+
+Beside the gate (frozen 200-question slice, base 57.5-58.5%), the w1 adapter's gate abstention was 0.5%, 19.5% and
+35.5% after nights 1, 2 and 2b, and its abstention read was -1.69, -0.49 and -0.36: the same order on both. Three
+points from one person: consistent with the gate, not a predictor of it.
