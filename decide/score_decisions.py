@@ -51,7 +51,10 @@ def one_pass_metrics(rows):
     return {"n": len(rows), "accuracy": round(sum(r["right"] for r in rows) / len(rows), 4) if rows else None,
             "ece": ece(rows), "wrong_at_p90": sum(1 for r in rows if r["p"] >= 0.9 and not r["right"]),
             "p50_ms": pct([r["ms"] for r in rows], 0.5), "p95_ms": pct([r["ms"] for r in rows], 0.95),
-            "label_mass_p50": round(statistics.median(r["label_mass"] for r in rows), 4) if rows else None}
+            "label_mass_p50": round(statistics.median(r["label_mass"] for r in rows), 4) if rows else None,
+            "server_ms_p50": pct([r["server_ms"] for r in rows if r.get("server_ms") is not None], 0.5),
+            "server_ms_p95": pct([r["server_ms"] for r in rows if r.get("server_ms") is not None], 0.95),
+            "prompt_tokens_p50": pct([r["prompt_tokens"] for r in rows], 0.5)}
 
 
 def extended_metrics(rows):
@@ -180,7 +183,7 @@ def main():
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     rows_by_id = {r["id"]: r for p in sorted(DATA.glob("*-test.jsonl")) + sorted(DATA.glob("*-calibration.jsonl"))
-                  for r in read_jsonl(p)}
+                  + sorted(DATA.glob("*-check.jsonl")) for r in read_jsonl(p)}
     arms = {a.split("=", 1)[0]: {r["id"]: r for r in read_jsonl(a.split("=", 1)[1])} for a in args.arm}
     ref = next(iter(arms))
     report = {"arms": {}}
@@ -222,7 +225,8 @@ def main():
                 continue
             o = e["one_pass"]
             print(f"{name:8s} {key:24s} n {o['n']:4d} acc {o['accuracy']} ece {o['ece']} wrong@0.9 {o['wrong_at_p90']} "
-                  f"p50 {o['p50_ms']} ms p95 {o['p95_ms']} ms mass {o['label_mass_p50']}"
+                  f"p50 {o['p50_ms']} ms p95 {o['p95_ms']} ms (server {o['server_ms_p50']}/{o['server_ms_p95']}) "
+                  f"prompt {o['prompt_tokens_p50']} tok mass {o['label_mass_p50']}"
                   + (f"  vs {ref} {e['vs_' + ref]['diff']} {e['vs_' + ref]['ci95']}" if "vs_" + ref in e else ""))
 
 
