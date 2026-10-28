@@ -168,6 +168,8 @@ def main():
     ap.add_argument("--extend-below", type=float, help="auto-extend when the top probability is below this")
     ap.add_argument("--reasoning", default="high")
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--stop-file", help="stop before the next call when this file exists (the slot owner's pause)")
+    ap.add_argument("--until", help="stop before the next call after this local time, HH:MM")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     glimmer = Glimmer(args.model_dir)
@@ -181,6 +183,9 @@ def main():
         for row in rows:
             if row["id"] in done:
                 continue
+            if (args.stop_file and Path(args.stop_file).exists()) or (args.until and time.strftime("%H:%M") >= args.until):
+                print("stopped before", row["id"], flush=True)
+                break
             res = decide(args.server, glimmer, row, lora, args.slot, args.extend_below, args.reasoning)
             res["lora"] = lora
             f.write(json.dumps(res, ensure_ascii=False) + "\n")
