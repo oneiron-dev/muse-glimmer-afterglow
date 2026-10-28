@@ -1,0 +1,70 @@
+{
+ "endpoint": "http://100.88.57.107:18610",
+ "slot": 0,
+ "order": [
+  "concise",
+  "formal",
+  "decisive"
+ ],
+ "speed": {
+  "concise+0": {
+   "decode_tok_s": 95.7,
+   "tokens": 2048,
+   "draft_n": 9719,
+   "draft_accepted": 1369,
+   "acceptance": 0.141,
+   "words": 135.0
+  },
+  "concise+0.04": {
+   "decode_tok_s": 95.3,
+   "tokens": 1032,
+   "draft_n": 5145,
+   "draft_accepted": 681,
+   "acceptance": 0.132,
+   "words": 57.2
+  },
+  "concise+0.08": {
+   "decode_tok_s": 91.5,
+   "tokens": 397,
+   "draft_n": 1950,
+   "draft_accepted": 259,
+   "acceptance": 0.133,
+   "words": 15.1
+  }
+ },
+ "poles": {
+  "concise-0.04-live": {
+   "words": 42.5,
+   "asks": 0.25,
+   "hedges_per_100w": 0.0,
+   "commits": 0.0,
+   "casual_per_100w": 0.0,
+   "contractions_per_100w": 1.39,
+   "repetition": 0.138,
+   "empty": 0.125,
+   "truncated": 8
+  },
+  "formal-0.04-live": {
+   "words": 118.25,
+   "asks": 0.25,
+   "hedges_per_100w": 0.281,
+   "commits": 0.0,
+   "casual_per_100w": 5.076,
+   "contractions_per_100w": 0.621,
+   "repetition": 0.218,
+   "empty": 0.0,
+   "truncated": 6
+  },
+  "decisive-0.04-live": {
+   "words": 107.375,
+   "asks": 0.0,
+   "hedges_per_100w": 1.913,
+   "commits": 0.0,
+   "casual_per_100w": 0.0,
+   "contractions_per_100w": 0.7,
+   "repetition": 0.189,
+   "empty": 0.0,
+   "truncated": 8
+  }
+ }
+}

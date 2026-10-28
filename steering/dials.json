@@ -1,6 +1,6 @@
 {
  "version": 1,
- "note": "Dial library for serving and night proposals. Scales are fractions of each layer's mean residual norm, added on layers 16-42 (llama-server --control-vector-layer-range 16 42). Only the positive pole of each safe dial is tested so far; the negative poles were cut by the J2 deadline.",
+ "note": "Dial library for serving and night proposals. Scales are fractions of each layer's mean residual norm, added on layers 16-42 (llama-server --control-vector-layer-range 16 42). scale = the positive end's working scale; negative_scale = the negative end's tested scale, null where that end is not safe.",
  "layer_range": [
   16,
   42
@@ -16,42 +16,45 @@
    "scale": 0.04,
    "max_scale": 0.08,
    "tested": true,
-   "toward_positive_only": true,
    "evidence": "J2 29 Oct: base words 154 -> 31 (0.04) / judge toward concise 1.00 coherence 5.0 at 0.04 and 0.08; R2 0.88-1.00",
    "gguf": "/data/meta-steering/vectors/j1/base/concise-raw.gguf",
    "sha256": "c2db4c55857f57e10ff2a01b5b124160c15b0c5c5166b0cbdeec7c1739ee0ce2",
    "layers": [
     16,
     42
-   ]
+   ],
+   "negative_scale": null,
+   "negative_evidence": "live 29 Oct: -0.04 breaks replies (2/8 empty or a title only at the token cap; judge coherence 3.5)"
   },
   "formal": {
    "safe": true,
    "scale": 0.04,
    "max_scale": 0.04,
    "tested": true,
-   "toward_positive_only": true,
    "evidence": "J2: judge toward formal 1.00 coherence 4.5 on base at 0.04; 0.08 breaks (coherence 2.4)",
    "gguf": "/data/meta-steering/vectors/j1/base/formal-raw.gguf",
    "sha256": "cba653def5a6f7f68a9318de9845d020b707704d0c73a2c5d6154ae2332ef6d6",
    "layers": [
     16,
     42
-   ]
+   ],
+   "negative_scale": -0.04,
+   "negative_evidence": "live 29 Oct: -0.04 on base, judge 8/8 more casual, coherence 4.5 (unsteered 4.9)"
   },
   "decisive": {
    "safe": true,
    "scale": 0.04,
    "max_scale": 0.04,
    "tested": true,
-   "toward_positive_only": true,
    "evidence": "J2: judge toward decisive 1.00 coherence 5.0 on base at 0.04; coherence 4.1 at 0.08; -0.06 on R2 damages facts (B fwd 118 -> 89)",
    "gguf": "/data/meta-steering/vectors/j1/base/decisive-raw.gguf",
    "sha256": "609b1bbf3f1e204573738873229655b59a4877cd7cd62671f9f7f31455d0ce32",
    "layers": [
     16,
     42
-   ]
+   ],
+   "negative_scale": -0.04,
+   "negative_evidence": "live 29 Oct: -0.04 on base, judge 15/16 halves more cautious (0.06 toward decisive), coherence 4.75; -0.06 on the R2 adapter damaged facts"
   },
   "asks_first": {
    "safe": false,
@@ -76,6 +79,21 @@
     16,
     42
    ]
+  }
+ },
+ "speed": {
+  "source": "live 29 Oct, slot 0, concise test prompts, DFlash on",
+  "concise+0": {
+   "decode_tok_s": 95.7,
+   "acceptance": 0.141
+  },
+  "concise+0.04": {
+   "decode_tok_s": 95.3,
+   "acceptance": 0.132
+  },
+  "concise+0.08": {
+   "decode_tok_s": 91.5,
+   "acceptance": 0.133
   }
  }
 }

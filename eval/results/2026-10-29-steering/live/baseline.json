@@ -1,0 +1,414 @@
+{
+ "row": {
+  "name": "baseline"
+ },
+ "arms": {
+  "base": {
+   "day:concise": {
+    "agg": {
+     "words": 135.0,
+     "asks": 0.125,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.11,
+     "contractions_per_100w": 1.065,
+     "repetition": 0.278,
+     "empty": 0.0,
+     "truncated": 8
+    },
+    "results": [
+     {
+      "id": "day:concise-0",
+      "answer": "For a small Python project the easiest CI is GitHub Actions if your repo is on GitHub. It takes ~5 minutes to set up and will run tests on every push/PR.\n\nHere is a minimal, production-ready setup.\n\n### 1. Project structure\nMake sure you have:\n```\nmyproject/\n\u251c\u2500 src/\n\u251c\u2500 tests/\n\u251c\u2500 pyproject.toml  or requirements.txt\n\u251c\u2500 .github/workflows/ci.yml\n```\nIf you don't have a lock file, create a simple `requirements.txt` or use `pyproject.toml` with `pip install -e .`\n\nAdd a basic test runner. If you don't have tests yet:\n```bash\npip install pytest\n```\nCreate `tests/test_example.py`:\n```python\ndef test_add():\n    assert 1 + 1 == 2\n```\n\n### 2. Create the GitHub Actions workflow\n\nCreate `.github/workflows/ci.yml`:\n```yaml\nname: CI",
+      "truncated": true,
+      "markers": {
+       "words": 117,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.71,
+       "repetition": 0.274,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-1",
+      "answer": "An API rate limit is a cap on how many requests you can make to an API in a given time window.\n\nIt's a throttle put in place by the API provider to protect their servers, ensure fair use, and keep the service stable for everyone.\n\nThink of it like a bouncer at a club letting in only a certain number of people per minute.\n\n**How it works**\n\nThe limit is usually expressed as X requests per Y time unit, e.g.:\n* 100 requests per minute\n* 1,000 requests per hour\n* 10,000 requests per day\n\nYou get a quota. Once you hit it, further requests are rejected until the window resets.\n\n**What happens when you exceed it**\n\nMost APIs return an HTTP error, typically:\n* **429 Too Many Requests** - the standard rate limit error\n* **403 Forbidden** or **429** with a `Retry-After` header telling you when to try again\n\nThe response often",
+      "truncated": true,
+      "markers": {
+       "words": 154,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.65,
+       "repetition": 0.299,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-2",
+      "answer": "A good project status update is short, consistent, and decision-oriented. It should tell stakeholders where you are, what's changed, and what you need from them.\n\n**Core components to include every time:**\n\n**1. Header**\n* Project name / ID\n* Reporting period e.g., 22-28 Sep 2026\n* Date of update and next update date\n* Prepared by\n\n**2. Executive Summary / Status at a Glance**\n* Overall health: RAG status Red / Amber / Green\n* 2-3 sentence summary of where the project stands vs plan\n* Key change since last update: better, worse, or same\n\n**3. Progress This Period**\n* Accomplishments / Deliverables completed\n* Milestones hit or missed with dates\n* % complete overall and by major workstream\n\n**4. Upcoming Work / Next Period Plan**\n* Top 3-",
+      "truncated": true,
+      "markers": {
+       "words": 129,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.78,
+       "repetition": 0.271,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-3",
+      "answer": "Estimating software work is less about being accurate and more about being calibrated and consistent. You will never be perfect, but you can be useful.\n\nHere are the methods that actually work in practice:\n\n### 1. Break it down first\nYou can't estimate what you don't understand. Decompose the task into concrete steps before you put a number on it.\n\n* **What needs to be done?** Design, code, test, migrate data, write docs?\n* **What is unknown?** New tech, unclear requirements, dependencies on other teams?\n* **What is the smallest shippable unit?** If you can't describe the Done criteria in one sentence, split it.\n\nRule of thumb: If an estimate feels > 3 days, break it down.\n\n### 2. Use a range, not a single number\nUse a three-point estimate to capture uncertainty:\n\n* **Optimistic O:** Everything goes right\n* **Most Likely M:** Realistic with normal friction",
+      "truncated": true,
+      "markers": {
+       "words": 147,
+       "asks": true,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 2.04,
+       "repetition": 0.259,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-4",
+      "answer": "RAM and disk storage are both used to store data in a computer, but they serve different purposes and have very different characteristics.\n\n**RAM - Random Access Memory**\n\n* **Volatile:** RAM is temporary storage. Data is lost as soon as power is turned off or the system is restarted.\n* **Speed:** Extremely fast. It's directly connected to the CPU via high-speed memory channels, measured in nanoseconds.\n* **Purpose:** Working memory. The CPU loads active programs, files, and data it is currently using into RAM to process it quickly.\n* **Cost:** Expensive per GB. Capacity is limited.\n* **Example:** When you open a browser tab, the webpage content is loaded into RAM for instant access.\n\n**Disk Storage - e.g., HDD, SSD, NVMe**\n\n* **Non-volatile:** Disk storage is permanent. Data persists even when the power is off.\n* **Speed:** Much slower than RAM. SSDs are fast in milliseconds, HDDs are",
+      "truncated": true,
+      "markers": {
+       "words": 148,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.68,
+       "repetition": 0.304,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-5",
+      "answer": "A shared team calendar works best when it's predictable, low-noise, and easy to scan. Think of it as a team dashboard, not a personal diary.\n\n### 1. Set up the structure first\n**Create separate calendars, not one giant one.**\n* **Team Core Calendar:** Meetings, deadlines, releases, all-hands. Everyone sees this.\n* **Resource Calendars:** Rooms, equipment, on-call rotation, PTO. Bookable.\n* **Project Calendars:** One per active project. Archive when done.\n* **Individual Calendars:** Optional opt-in for focus time / working hours. Keep private by default.\n\nGive each calendar a clear name and description. Example: `Team - Marketing | Core Meetings` not `Marketing stuff`.\n\n### 2. Standardize naming and colors\nConsistency = speed.\n\n**Naming convention:**",
+      "truncated": true,
+      "markers": {
+       "words": 113,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.88,
+       "contractions_per_100w": 0.88,
+       "repetition": 0.159,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-6",
+      "answer": "A VPN, or Virtual Private Network, is basically a secure tunnel for your internet traffic.\n\nWhen you browse the internet normally, your data goes directly from your device to the website/server you're using, through your Internet Service Provider [ISP]. Your ISP, your network admin, and anyone on the network in between can see what sites you're visiting, and your real IP address \u2014 which reveals roughly where you are \u2014 is visible to everyone.\n\nA VPN changes that by routing your traffic through an encrypted server run by the VPN provider first.\n\nHere's what happens step by step:\n\n1. **Encryption:** Your device encrypts your data before it leaves. That means it\u2019s scrambled so it can\u2019t be read by anyone snooping on public Wi-Fi, your ISP, or your network.\n\n2. **Tunneling:** The encrypted data is sent to a VPN server in a location you choose. The server then decrypts it and sends it on to the website you want.\n\n3. **Masking:** To the website, it looks like the request is",
+      "truncated": true,
+      "markers": {
+       "words": 169,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.78,
+       "repetition": 0.385,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-7",
+      "answer": "Publishing to PyPI is a 4-step process: prepare your package, build it, test it, and upload it.\n\n**1. Prepare your package**\n\nMake sure your project is installable and has metadata.\n\n* Create a `pyproject.toml` with build-system and project metadata. Modern packaging uses PEP 621:\n```toml\n[build-system]\nrequires = [\"hatchling\"]\nbuild-backend = \"hatchling.build\"\n\n[project]\nname = \"my_package\"\nversion = \"0.1.0\"\ndescription = \"A short description\"\nreadme = \"README.md\"\nrequires-python = \">=3.8\"\nlicense = {text = \"MIT\"}\nauthors = [{name = \"Your Name\", email = \"you@example.com\"}]\n```\n* Add a `README.md`, `LICENSE`, and a `src/` or top-level package directory.\n* Create a `MANIFEST.in` if you",
+      "truncated": true,
+      "markers": {
+       "words": 103,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.272,
+       "empty": false
+      }
+     }
+    ]
+   },
+   "day:formal": {
+    "agg": {
+     "words": 130.625,
+     "asks": 0.5,
+     "hedges_per_100w": 0.265,
+     "commits": 0.0,
+     "casual_per_100w": 0.912,
+     "contractions_per_100w": 1.219,
+     "repetition": 0.237,
+     "empty": 0.0,
+     "truncated": 5
+    },
+    "results": [
+     {
+      "id": "day:formal-0",
+      "answer": "**Subject:** New Expense Form is Live \u2013 Please Use Starting Today\n\nHi team,\n\nWe\u2019ve launched a new expense form to make reimbursements faster and simpler.\n\n**What\u2019s changing:**\n* One form for all expenses \u2013 travel, meals, supplies, and client costs\n* Upload receipts directly in the form, no more emailing PDFs\n* Auto-routing to your manager and Finance for approval\n\n**What you need to do:**\n1. Use the new form here: [Link to Expense Form]\n2. Submit expenses within 5 business days of incurring them\n3. Make sure receipts are clear and legible before uploading\n\nThe old expense template will be retired on **October 15**. Any submissions after that date must use the new form.\n\nIf you have questions or run into any issues, reply to this thread or ping me directly.\n\nThanks for helping us keep things clean and quick!\n\nBest,\n[Your Name]",
+      "truncated": true,
+      "markers": {
+       "words": 144,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.69,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.229,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-1",
+      "answer": "Telling a client about a cost increase is about trust, not just numbers. The goal is to be transparent, own it, and give them control over the next step.\n\nHere\u2019s a framework that works well:\n\n### 1. Lead with context, not the number\nDon't open with \"It's going to cost more.\" Start with what changed and why it matters to them.\n\n**Bad:** \"The project will cost $5k more.\"\n**Good:** \"I want to update you on the scope of the project and make sure we're aligned before we continue.\"\n\n### 2. Be specific and data-driven\nClients accept change when they understand the *why*. Vague reasons feel like excuses.\n\nUse this structure: **What changed \u2192 Why it changed \u2192 Impact on cost/time**\n\nExample:\n> \"During the discovery phase we found the API integration requires custom authentication that wasn't in the original spec. That adds about 12 hours of development and",
+      "truncated": true,
+      "markers": {
+       "words": 148,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 2.7,
+       "repetition": 0.264,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-2",
+      "answer": "Here\u2019s a warm, professional note you can send \u2014 just swap in the details:\n\n---\n\nHi [Colleague\u2019s Name],\n\nThank you so much for covering my shift on [day/date]. I really appreciate you stepping in on short notice \u2014 it meant a lot and took a huge weight off my plate.\n\nI know covering isn\u2019t easy, and I\u2019m grateful for your flexibility and teamwork. I owe you one, and please let me know how I can return the favor.\n\nThanks again!\n\nBest,\n[Your Name]\n\n---\n\n**Shorter text/email version:**\n\nHi [Name], just wanted to say thank you for covering my shift on [day/date]. I really appreciate it! Let me know if I can cover for you sometime. Thanks again!\n\nWant me to make it more casual or more formal?",
+      "truncated": false,
+      "markers": {
+       "words": 127,
+       "asks": true,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 2.36,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.37,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-3",
+      "answer": "Here is a professional draft you can use:\n\n---\n\n**Subject:** Request for Delivery Date Confirmation - [PO Number / Order Reference]\n\nHi [Supplier Name / Contact Name],\n\nI hope you're well.\n\nI'm following up on our recent order for [product/service description, PO #XXXXX] placed on [date].\n\nCould you please confirm the current status and provide an estimated delivery date for this order?\n\nIf there are any delays or issues affecting fulfillment, please let us know as soon as possible so we can plan accordingly.\n\nThank you for your help.\n\nBest regards,\n[Your Name]\n[Your Position]\n[Your Company]\n[Phone] | [Email]\n\n---\n\n**Shorter version:**\n\nHi [Name],\n\nCould you please provide an estimated delivery date for PO #XXXXX for [item]? We need to confirm timing on our end.\n\nThanks,\n[Your Name]\n\nWant me to tailor it to a specific order?",
+      "truncated": false,
+      "markers": {
+       "words": 138,
+       "asks": true,
+       "hedges_per_100w": 1.45,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.45,
+       "repetition": 0.275,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-4",
+      "answer": "A good welcome email makes a new customer feel seen, confirms they made the right choice, and sets them up for success. Keep it short, warm, and action-oriented.\n\nHere is a proven structure you can use:\n\n### 1. The Core Elements\n**Subject line:** Make it personal and clear. Avoid generic \"Welcome!\"\n* Good: `Welcome to [Brand], [First Name]! Here's what to do next`\n* Good: `You're in! Your [Product/Service] is ready`\n* Good: `Thanks for joining us, [First Name]`\n\n**1. Thank them + acknowledge the action**\nStart with gratitude and reference how they signed up.\n\n**2. Reiterate value**\nRemind them why they chose you in one sentence.\n\n**3. Next step / onboarding**\nGive 1-3 clear, easy actions. Don't overwhelm.\n\n**4. Set expectations**\nWhat will they hear from you next? When will they get value?",
+      "truncated": true,
+      "markers": {
+       "words": 134,
+       "asks": true,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 2.24,
+       "contractions_per_100w": 2.24,
+       "repetition": 0.194,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-5",
+      "answer": "**OFFICE NOTICE**\n\nPlease be advised that the office will close early on Friday.\n\n**Closing Time:** 3:00 PM\n**Date:** This Friday\n\nAll staff are requested to wrap up work accordingly. For urgent matters, please contact [Name/Number].\n\nThank you for your cooperation.\n\nManagement",
+      "truncated": false,
+      "markers": {
+       "words": 41,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.049,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-6",
+      "answer": "Following up after an interview is about showing professionalism, gratitude, and continued interest \u2014 without being pushy.\n\nHere\u2019s a simple framework that works for almost any role:\n\n### 1. Follow up quickly, but not instantly\nSend a thank-you note within **24 hours**, ideally the same day or next morning. It shows you\u2019re prompt and still engaged.\n\nIf you had multiple interviewers, send a separate personalized note to each one, or one email that addresses them all by name.\n\n### 2. Keep it short and specific\nA good follow-up is 3-4 short paragraphs:\n\n**1. Thank you + specific moment.** Reference something from the conversation to prove you were listening.\n> Thank you for taking the time to speak with me today about the Product Marketing Manager role.\n\n**2. Reiterate fit.** Connect one of your skills/experiences to a need they mentioned.\n> I especially appreciated hearing about your launch challenges in Q4. My experience leading the X launch at [Company] where we increased adoption by 32%",
+      "truncated": true,
+      "markers": {
+       "words": 164,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.213,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-7",
+      "answer": "Here are a few options depending on your tone:\n\n**Polite & Professional**\n> Hi [Name],\n> \n> I hope you're doing well. I'm finalizing my slides for [presentation name / meeting on date] and would really appreciate a fresh set of eyes on them.\n> \n> Would you be able to review them by [deadline, e.g., tomorrow EOD]? I'm particularly interested in feedback on clarity and flow, but any comments are welcome.\n> \n> I've shared the deck here: [link]\n> \n> Thanks so much for your help!\n> \n> Best,\n> [Your Name]\n\n**Short & Casual**\n> Hey [Name], quick favor \u2014 could you take a look at my slides for [presentation topic]? I need a second opinion before I present on [day]. Link is here: [link]. No rush, but if you can get to it by [time] I'd really appreciate it!\n\n**More Specific**\n> Hi [Name],\n>",
+      "truncated": true,
+      "markers": {
+       "words": 149,
+       "asks": true,
+       "hedges_per_100w": 0.67,
+       "commits": 0,
+       "casual_per_100w": 2.01,
+       "contractions_per_100w": 3.36,
+       "repetition": 0.302,
+       "empty": false
+      }
+     }
+    ]
+   },
+   "day:decisive": {
+    "agg": {
+     "words": 134.25,
+     "asks": 0.25,
+     "hedges_per_100w": 0.251,
+     "commits": 0.125,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 1.133,
+     "repetition": 0.28,
+     "empty": 0.0,
+     "truncated": 8
+    },
+    "results": [
+     {
+      "id": "day:decisive-0",
+      "answer": "For a side project, the default answer is **managed platform**, unless you specifically want to learn ops.\n\nHere is how to decide:\n\n### Choose a managed platform if you want to ship fast and stay focused on code\n**Good for:** side projects, MVPs, prototypes, apps with low traffic, you want zero ops overhead.\n\n**Pros:**\n* **Fast to deploy:** `git push` -> live. No server setup, patching, or firewall config.\n* **Auto-scaling & reliability:** Managed DB, backups, SSL, and monitoring are built in.\n* **Low maintenance:** No 3am pages for a disk full or a failed apt update.\n* **Predictable pricing:** Pay per use, often free tier to start.\n\n**Cons:**\n* **Less control:** You",
+      "truncated": true,
+      "markers": {
+       "words": 113,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.204,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-1",
+      "answer": "Hiring a contractor vs a full-time engineer first is one of the most common early-stage build decisions. The right choice depends on what you need *now* vs what you need *sustainably*.\n\nHere is a framework to decide:\n\n### Hire a Contractor / Freelancer First if:\n\n**1. You have a well-defined, time-boxed project**\nYou need a specific deliverable built, not ongoing ownership. e.g., MVP prototype, landing page, API integration, refactor a module, set up infra.\n\n**2. You need speed and flexibility**\nContractors can start in days/weeks, not months. You can test a hypothesis without long-term commitment.\n\n**3. You have limited budget or uncertain roadmap**\nContractor = variable cost. You pay for output, not for idle time. Good when funding is tight or product direction is still changing.\n\n**4. You need a specialist skill you won't need forever**\nNeed",
+      "truncated": true,
+      "markers": {
+       "words": 137,
+       "asks": false,
+       "hedges_per_100w": 0.73,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.73,
+       "repetition": 0.277,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-2",
+      "answer": "For city driving, a used car is usually the better financial choice, while leasing a new one is better if you prioritize low maintenance, latest tech/safety, and predictable monthly costs.\n\nCity driving is hard on cars \u2014 lots of stop-and-go, idling, short trips, and tight parking \u2014 but it's also low mileage. That changes the math.\n\n### Why a used car often wins for city use\n\n**Lower total cost of ownership.** You avoid the steepest depreciation hit. A new car loses 20-30% in year 1 and ~50% by year 5. With a used car, especially 3-5 years old, that",
+      "truncated": true,
+      "markers": {
+       "words": 99,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.01,
+       "repetition": 0.253,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-3",
+      "answer": "Migrating from spreadsheets to a database is less about \"now or never\" and more about pain threshold. Spreadsheets are great for exploration, but they break down fast under scale, concurrency, and complexity.\n\nHere are the signs you should migrate now:\n\n**You probably need a database if you have:**\n* **Multiple people editing the same file.** Version conflicts, \"File is locked for editing\", and email chains with `v_final_FINAL.xlsx` are red flags. A database handles concurrent access safely.\n* **Data integrity issues.** Duplicate rows, inconsistent formats, typos in key fields like customer IDs or product SKUs. Spreadsheets have no enforced constraints, unique keys, or referential integrity.\n* **The spreadsheet is >50-100 MB or >100k rows.** Performance degrades, formulas slow down, and crashes become common.\n* **You need audit history.** Who changed what",
+      "truncated": true,
+      "markers": {
+       "words": 130,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 1,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.192,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-4",
+      "answer": "I can't tell you which is better without a bit more context. The best choice depends on a few things:\n\n**Morning train is usually better if:**\n* The conference starts early, on the first day, or you need time to check in / find your hotel\n* You want to arrive fresh and have the afternoon to prepare, network, or settle in\n* You prefer to travel in daylight and have more flexibility if the train is delayed\n* You want to maximize your time at the conference\n\n**Evening train is usually better if:**\n* The conference doesn't start until the next day, or starts late in the afternoon/evening\n* You want to save a night of hotel costs by leaving later\n* You have work or personal commitments that morning\n* You prefer a quieter, less rushed travel day\n\nTo give you a specific recommendation, can you tell me:\n1. What city is the conference in and what time does it start on",
+      "truncated": true,
+      "markers": {
+       "words": 164,
+       "asks": false,
+       "hedges_per_100w": 0.61,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.22,
+       "repetition": 0.457,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-5",
+      "answer": "Use a hosted provider unless you have a very specific reason not to.\n\nBuilding your own auth is one of the highest-risk, lowest-differentiating parts of an app. Password storage, hashing, MFA, password reset flows, breach recovery, session management, OAuth/OIDC integrations, device tracking, rate limiting, and compliance like SOC2/GDPR are all solved problems.\n\n**Use a hosted provider if:**\n* You want to ship fast and stay secure by default\n* You need social logins, SSO/SAML, MFA, passkeys, magic links\n* You have limited security engineering resources\n* You need to meet compliance requirements\n\nGood options by scale:\n* **Clerk / Auth0 / WorkOS** - Best DX for SaaS apps, great React SDKs, user management UI included\n* **Firebase Auth / Supabase Auth** - Great if you're already in that ecosystem, cheap to start",
+      "truncated": true,
+      "markers": {
+       "words": 132,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.76,
+       "repetition": 0.212,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-6",
+      "answer": "No, you don't need to learn TypeScript before React. Learn JavaScript first, then React, and add TypeScript when you're ready.\n\nThe ideal order is: **JavaScript -> React -> TypeScript**.\n\n**Why not TypeScript first?**\nTypeScript is a superset of JavaScript. It's JavaScript with static types added on top. If you don't have a solid grasp of JavaScript fundamentals like closures, `this`, async/await, ES6+ syntax, modules, and DOM manipulation, TypeScript will just add confusion on top of confusion.\n\n**Why not React first?**\nReact is a library for building UI. You can learn React with plain JavaScript just fine. Most tutorials and the official React docs use JavaScript. Learning React first lets you understand components, state, props, hooks, and the React mental model without the extra type syntax.\n\n**When to add TypeScript?**\nAdd TypeScript once you're comfortable with React basics. It's a great upgrade, not a prerequisite.\n\nA practical path:\n1. **JavaScript fundamentals",
+      "truncated": true,
+      "markers": {
+       "words": 150,
+       "asks": true,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 4.0,
+       "repetition": 0.353,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-7",
+      "answer": "Whether your shop should open on Sundays depends on 3 main factors: demand, cost, and your values/constraints.\n\n**Open on Sundays if:**\n\n* **Customer demand is there.** Do you get a lot of \"Sorry we're closed\" messages on Sundays? Is Sunday a peak shopping day in your area? For retail, grocery, and convenience, Sunday traffic is often high.\n* **It makes financial sense.** Will Sunday revenue cover labor costs, utilities, and any extra fees? For many small shops, a 4-6 hour Sunday shift with 1-2 staff can be profitable if foot traffic is good.\n* **Competitors are open.** If customers can just go next door on Sunday, you'll lose sales and brand presence.\n* **You can staff it fairly.** You need willing staff and a way to compensate them properly. Sunday premium pay is common in many regions.\n\n**Stay closed on Sundays if:**\n\n* **Demand is low.** If Sunday sales",
+      "truncated": true,
+      "markers": {
+       "words": 149,
+       "asks": true,
+       "hedges_per_100w": 0.67,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.34,
+       "repetition": 0.289,
+       "empty": false
+      }
+     }
+    ]
+   }
+  }
+ }
+}
