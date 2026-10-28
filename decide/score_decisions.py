@@ -102,6 +102,30 @@ def paired_bootstrap(a, b, rows_by_id, n=10000, seed=SEED):
             "ci95": [round(stats[int(0.025 * n)], 4), round(stats[int(0.975 * n)], 4)]}
 
 
+FALLBACK_TAUS = (0.0, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99)
+
+
+def fallback(rows, results, rows_by_id):
+    """Route with the look-up fallback: below tau the decision is not trusted and the answer comes from arm D (all
+    notes in the prompt). tau is chosen on the calibration split (best score) and applied to the test split."""
+    p = {r["id"]: r["p"] for r in results}
+    split = {i: rows_by_id[i]["split"] for i in p}
+
+    def at(tau, which):
+        sel = []
+        for x in rows:
+            rid = f"route:{x['world']}:{x['id']}"
+            if split[rid] != which:
+                continue
+            sel.append({**x, "route": "notes"} if p[rid] < tau else x)
+        return gate.score_rows(sel)["lookup_scored_by_d"] if sel else None
+    grid = {str(t): {s: at(t, s) for s in ("calibration", "test")} for t in FALLBACK_TAUS}
+    calib = {t: g["calibration"]["score"] for t, g in grid.items() if g["calibration"]}
+    chosen = max(calib, key=lambda t: (calib[t], -float(t))) if calib else None
+    return {"rule": "p < tau -> arm D (look up with all notes); tau = best calibration score", "grid": grid,
+            "chosen_tau": chosen, "test_at_chosen": grid[chosen]["test"] if chosen else None}
+
+
 def route_end_to_end(results, rows_by_id, compare="strict"):
     picks, worlds = {}, set()
     for r in results:
@@ -118,11 +142,15 @@ def route_end_to_end(results, rows_by_id, compare="strict"):
         rows = [x for x in rows if f"route:{x['world']}:{x['id']}" in ids]
         out[name] = {sub: gate.score_rows([x for x in rows if sel(x)]) for sub, sel in
                      (("forward", lambda x: x["kind"] == "forward"), ("never_told", lambda x: x["kind"] == "never_told"),
-                      ("all", lambda x: True))}
+                      ("all", lambda x: True),
+                      ("test", lambda x: rows_by_id[f"route:{x['world']}:{x['id']}"]["split"] == "test"),
+                      ("calibration", lambda x: rows_by_id[f"route:{x['world']}:{x['id']}"]["split"] == "calibration"))}
         if name == "decision":
             always_d = rows
+            out["decision_fallback"] = fallback(rows, results, rows_by_id)
     for sub, sel in (("forward", lambda x: x["kind"] == "forward"), ("never_told", lambda x: x["kind"] == "never_told"),
-                     ("all", lambda x: True)):
+                     ("all", lambda x: True),
+                     ("test", lambda x: rows_by_id[f"route:{x['world']}:{x['id']}"]["split"] == "test")):
         sel_rows = [x for x in always_d if sel(x)]
         right = sum(x["d_right"] for x in sel_rows)
         wrong = sum(not x["d_right"] and not x["d_abstain"] for x in sel_rows)
@@ -161,11 +189,21 @@ def main():
     for name, a in report["arms"].items():
         for key, e in a.items():
             if key == "route_end_to_end":
+                fb = e.get("decision_fallback")
+                if fb and fb["chosen_tau"] is not None:
+                    t = fb["test_at_chosen"]
+                    print(f"{name:8s} route e2e fallback tau {fb['chosen_tau']} (calibration) test: "
+                          + (f"right {t['right']} wrong {t['wrong']} score {t['score']} asked {t['asked']}" if t else "no test rows"))
                 for arm, subs in e.items():
-                    s = subs["all"]
-                    d = s.get("lookup_scored_by_d", s)
-                    print(f"{name:8s} route e2e {arm:10s} n {s['n']}  right {d['right']} wrong {d['wrong']} score {d['score']}"
-                          + (f"  asked {d['asked']}  precision {s['routing_precision']} recall {s['routing_recall']}" if "asked" in d else ""))
+                    if arm == "decision_fallback":
+                        continue
+                    for sub in ("all", "test"):
+                        s = subs.get(sub)
+                        if not s or not s["n"]:
+                            continue
+                        d = s.get("lookup_scored_by_d", s)
+                        print(f"{name:8s} route e2e {arm:10s} {sub:5s} n {s['n']}  right {d['right']} wrong {d['wrong']} score {d['score']}"
+                              + (f"  asked {d['asked']}  precision {s['routing_precision']} recall {s['routing_recall']}" if "asked" in d else ""))
                 continue
             o = e["one_pass"]
             print(f"{name:8s} {key:24s} n {o['n']:4d} acc {o['accuracy']} ece {o['ece']} wrong@0.9 {o['wrong_at_p90']} "
