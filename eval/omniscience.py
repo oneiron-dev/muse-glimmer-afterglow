@@ -26,6 +26,8 @@ ABSTAIN_PHRASES = [
     r"\b(?:does|do|did) not (?:mention|specify|list|record|include|contain|appear in)\b",
     r"\bno [a-z' -]{1,60} (?:is|are) (?:on file|recorded|listed|documented)\b",
     r"\b(?:i'll|i will|let me|i need to|i should) (?:check|look (?:it |that )?up(?: in)?|consult|look at) (?:your|my|the) notes\b",
+    r"\b(?:isn't|is not|aren't|are not|wasn't|was not) (?:in|on|among) (?:the|your|my) (?:notes|records|file)\b",
+    r"\b(?:notes|records) (?:don't|do not|doesn't|does not) (?:have|say|mention|list|include|contain|show)\b",
 ]
 ABSTAIN_RULE = re.compile("|".join(ABSTAIN_PHRASES), re.IGNORECASE)
 SETS = {"user_facts": ("forward",), "never_told": ("never_told",), "user_facts_with_never_told": ("forward", "never_told"),
