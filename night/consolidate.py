@@ -120,7 +120,7 @@ def main():
         if r["decision"] == "superseded":
             doc["dropped"].append({"id": r["old_id"], "key": r["old_key"], "value": r["old_value"], "outcome": "dropped_as_superseded",
                                    "superseded_by": r["new_id"], "why": f"replaced by {r['new_id']} ({r['new_key']}: {r['new_value']!r}); "
-                                   "found by the night's consolidation, the day's note had no link"})
+                                   "found by the night's consolidation, the day's note had no link", "linked_by": "consolidation"})
             doc["outcomes"] = sorted([o for o in doc["outcomes"] if o["id"] != r["old_id"]] + [doc["dropped"][-1]], key=lambda o: o["id"])
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps({"active_notes": len(active), "items": len(items), "reused": len(reused), "dropped": len(doc["dropped"]),
@@ -185,7 +185,7 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
 def outcome_fields(notes, items, merges, proposals):
     """Per-note outcome for the morning report: kept / merged_as_duplicate / dropped_as_superseded, with the reason."""
     superseded = [{"id": n["id"], "key": n["key"], "value": n["value"], "outcome": "dropped_as_superseded",
-                   "superseded_by": n.get("superseded_by"),
+                   "superseded_by": n.get("superseded_by"), "linked_by": "day agent",
                    "why": f"superseded by {n.get('superseded_by')}: the value {n['value']!r} is no longer true"}
                   for n in notes if n.get("superseded_by") or n.get("status") == "superseded"]
     kept = [{"id": i["id"], "key": i["key"], "value": i["full_value"], "outcome": "kept", "kind": i["kind"],

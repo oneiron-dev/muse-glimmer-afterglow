@@ -155,7 +155,7 @@ class Night:
                 "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir,
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
-                "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header}
+                "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -258,6 +258,14 @@ class Night:
                                                                 "right_low_confidence", "tokens")},
                                       "questions_leak_check": json.loads((self.night / "self-check-questions-leak.json").read_text())["passed"]}
 
+    def agent_anchors(self, log):
+        manifest = json.loads((self.runs / "serving" / "adapters.json").read_text())
+        run([sys.executable, "night/agent_anchor_rows.py", "--world", self.args.world, "--consolidated", str(self.night / "consolidated.json"),
+             "--n-loras", str(len(manifest["adapters"])), "--turns", str(self.args.agent_anchors),
+             "--out", str(self.night / "agent-anchors.jsonl"), "--report", str(self.night / "agent-anchors-report.json")], log)
+        report = json.loads((self.night / "agent-anchors-report.json").read_text())
+        self.receipt["agent_anchors"] = {k: report[k] for k in ("turns", "kept", "dropped", "by_action", "reasoning", "tokens")}
+
     def memories(self):
         """A share of earlier days' rewrites, for items not superseded since (multi-day replay)."""
         if self.args.day <= 1 or self.args.memory_share <= 0:
@@ -318,6 +326,8 @@ class Night:
             extra_rows.append(str(self.night / "unknown-keys.jsonl"))
         if self.args.self_check and self.args.day >= 2:
             extra_rows.append(str(self.night / "self-check.jsonl"))
+        if self.args.agent_anchors:
+            extra_rows.append(str(self.night / "agent-anchors.jsonl"))
         extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
@@ -455,6 +465,7 @@ class Night:
         steps = [("consolidate", n / "consolidated.json", self.consolidate),
                  ("rewrites", n / "rewrites" / "rewrites.jsonl", self.rewrites),
                  *([("self_check", n / "self-check.jsonl", self.self_check)] if self.args.self_check and self.args.day >= 2 else []),
+                 *([("agent_anchors", n / "agent-anchors.jsonl", self.agent_anchors)] if self.args.agent_anchors else []),
                  ("anchors", self.anchors_path(), self.anchors),
                  *([("abstain_anchors", self.abstain_anchors_path(), self.abstain_anchors)] if self.args.abstain_share > 0 else []),
                  *([("abstain_anchors_plain", self.abstain_anchors_plain_path(), lambda log: self.abstain_anchors(log, plain=True))]
@@ -505,6 +516,8 @@ def main():
                     "the gate slice, forgetting and never-told with it loaded, and decision.json reports that gate")
     ap.add_argument("--control-vector-layers", help="'FIRST LAST' for --control-vector-layer-range")
     ap.add_argument("--gate-with-control-vector", action="store_true", help="the gate with the vector loaded is the gate of record")
+    ap.add_argument("--agent-anchors", type=int, default=0, help="base replies to day-agent turns, kept when they take the "
+                    "intended action (night/agent_anchor_rows.py; the day server, slot 1)")
     ap.add_argument("--train-header", action="store_true", help="train the answer header's recipient too (user channel on the chat endpoint)")
     ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")

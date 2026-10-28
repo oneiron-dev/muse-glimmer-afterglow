@@ -21,6 +21,8 @@ KNOWLEDGE_CUTOFF = "2026-01-04"
 REASONING_STRENGTH = "minimal"
 ANSWER_PREFIX = "<|start|>assistant to=user<|message|>"
 HEADER_START = "<|start|>assistant"  # what the chat endpoint's generation prompt ends with
+RAW_MAX_LEN = 1600  # agent-anchor rows carry the day agent's system prompt and tool list (~1150 tokens)
+LONG_ROW = 600  # rows longer than this train in micro-batches of --long-batch-rows
 PAD_ID = 200018
 TARGETS = {
     "attn": r"self_attn\.(q_proj|k_proj|v_proj|o_proj)",
@@ -43,9 +45,13 @@ def encode_row(tokenizer, row, max_len, train_header=False):
     """input_ids and labels for one exchange; labels are -100 everywhere except the assistant reply and its end token.
     With train_header the answer header's recipient (" to=user<|message|>") is trained too, so the adapter answers in
     the user channel when the server leaves the header to the model (chat endpoint), not in the self channel."""
-    user, assistant = row["messages"]
-    full = render(tokenizer, [user, assistant])
-    prefix = render(tokenizer, [user]) + (HEADER_START if train_header else ANSWER_PREFIX)
+    if row.get("raw"):  # a verbatim exchange (agent anchors): the prompt as the server renders it, the reply as generated
+        prefix, full = row["raw"]["prompt"] + HEADER_START, row["raw"]["prompt"] + row["raw"]["completion"]
+        max_len = max(max_len, RAW_MAX_LEN)
+    else:
+        user, assistant = row["messages"]
+        full = render(tokenizer, [user, assistant])
+        prefix = render(tokenizer, [user]) + (HEADER_START if train_header else ANSWER_PREFIX)
     if not full.startswith(prefix):
         raise ValueError(f"row {row['id']}: rendered exchange does not start with the prompt prefix")
     ids_prefix = tokenizer(prefix, add_special_tokens=False)["input_ids"]
@@ -75,6 +81,7 @@ def main():
     ap.add_argument("--grad-accum", type=int, default=1)
     ap.add_argument("--max-grad-norm", type=float, default=0.3)
     ap.add_argument("--max-len", type=int, default=512)
+    ap.add_argument("--long-batch-rows", type=int, default=2, help="rows per micro-batch for rows over LONG_ROW tokens")
     ap.add_argument("--train-header", action="store_true", help="also train the answer header's recipient (\" to=user<|message|>\")")
     ap.add_argument("--max-steps", type=int, default=0, help="stop after this many optimizer steps (probe runs)")
     ap.add_argument("--seed", type=int, default=20261027)
@@ -159,7 +166,11 @@ def main():
     for epoch in range(1, args.epochs + 1):
         order = list(range(len(encoded)))
         rng.shuffle(order)
-        micro = [order[i:i + args.batch_rows] for i in range(0, len(order), args.batch_rows)]
+        short = [j for j in order if len(encoded[j][0]) <= LONG_ROW]
+        long_ = [j for j in order if len(encoded[j][0]) > LONG_ROW]
+        micro = [short[i:i + args.batch_rows] for i in range(0, len(short), args.batch_rows)]
+        micro += [long_[i:i + args.long_batch_rows] for i in range(0, len(long_), args.long_batch_rows)]
+        rng.shuffle(micro)
         for k in range(0, len(micro), args.grad_accum):
             group = micro[k:k + args.grad_accum]
             n_loss = sum(sum(1 for x in encoded[j][1] if x != -100) for mb in group for j in mb)
