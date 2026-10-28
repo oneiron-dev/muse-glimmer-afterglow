@@ -88,10 +88,16 @@ def next_id(prefix, items):
 class ToolBox:
     """Runs one tool call. Returns (result_dict, notes_written)."""
 
-    def __init__(self, notes, world_state, day=None):
+    def __init__(self, notes, world_state, day=None, decide_supersede=None, link_min_p=0.9):
         self.notes = notes
         self.world = world_state
         self.day = day
+        # decide_supersede(new_note, candidates) -> {"note": candidate or None, "p", "latency_s", ...}: a one-pass
+        # model decision on whether a fact saved under a new key replaces an earlier note. Linked at p >= link_min_p;
+        # below it both notes stay and the night's consolidation sees the pair.
+        self.decide_supersede = decide_supersede
+        self.link_min_p = link_min_p
+        self.decisions = []  # every one-pass decision this session, for the day log
 
     def run(self, name, args, turn=None):
         try:
@@ -101,6 +107,17 @@ class ToolBox:
                 out = {"saved": r["note"]["id"], "key": r["note"]["key"], "value": r["note"]["value"]}
                 if r["superseded"]:
                     out["replaced"] = {"id": r["superseded"]["id"], "old_value": r["superseded"]["value"]}
+                elif not r["unchanged"] and self.decide_supersede:  # the model decides in one pass; linked when sure
+                    d = self.decide_supersede(r["note"], None)
+                    decided = {"by": "one-pass decision", "p": d.get("p"), "latency_s": d.get("latency_s"),
+                               "candidate": d.get("candidate_id")}
+                    if d.get("note") is not None and (d.get("p") or 0) >= self.link_min_p:
+                        self.notes.link(r["note"], d["note"], decided)
+                        out["replaced"] = {"id": d["note"]["id"], "old_value": d["note"]["value"], "decided": decided}
+                    elif d.get("decisions"):
+                        out["decision"] = dict(decided, linked=False)  # both notes stay; the night sees the pair
+                    self.decisions.append({"note": r["note"]["id"], **decided, "linked": "replaced" in out,
+                                           "calls": d.get("decisions")})
                 elif not r["unchanged"] and hasattr(self.notes, "correction_candidates"):
                     maybe = self.notes.correction_candidates(r["note"])
                     if maybe:  # the agent decides; a second remember with replaces links the old note

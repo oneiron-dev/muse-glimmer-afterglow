@@ -13,6 +13,7 @@ after a restore, with the day so far.
 """
 import datetime as dt
 import json
+import sys
 import time
 from pathlib import Path
 
@@ -70,7 +71,7 @@ def system_message(world_doc):
 
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
-                 notes_backend="local", temperature=0.3):
+                 notes_backend="local", temperature=0.3, decide_supersede=False):
         self.world, self.day = world, int(day)
         self.temperature = temperature
         self.client = client or GlimmerClient()
@@ -91,7 +92,8 @@ class DaySession:
         if prev and (prev / "world_state.json").exists():
             seed = json.loads((prev / "world_state.json").read_text())
         self.world_state = WorldState(self.dir / "world_state.json", seed=seed or self.world_doc)
-        self.tools = ToolBox(self.notes, self.world_state, day=self.day)
+        self.tools = ToolBox(self.notes, self.world_state, day=self.day,
+                             decide_supersede=self._supersede_decider() if decide_supersede else None)
         self.daylog_path = self.dir / "daylog.jsonl"
         self.session_path = self.dir / "session.json"
         self.system_message = system_message(self.world_doc)
@@ -99,6 +101,26 @@ class DaySession:
         self.turn = 0
         self.messages = [self.system_message, self.context_message]
         self._replay()
+
+    def _supersede_decider(self):
+        """The one-pass supersede decision (decide/decider.py, base weights: every adapter at 0) on slot 1, so
+        its uncached calls never overwrite the user's cached conversation in slot 0. Returns the ToolBox hook."""
+        sys.path.insert(0, str(paths.REPO))
+        from decide.decider import Decider
+
+        decider = Decider(self.client.endpoint, slot=1, trace="supersede_decision")
+
+        def decide(new_note, _candidates):
+            earlier = [n for n in self.notes.all() if n["id"] != new_note["id"]]
+            r = decider.supersede_link(earlier, new_note)
+            # p = the probability of "replaces" (label 1) for the most likely candidate, linked or not
+            p_replaces = lambda d: d["p"] if d["yes"] else 1.0 - d["p"]
+            best = max(r["decisions"], key=p_replaces, default=None)
+            return {"note": next((n for n in earlier if n["id"] == r["link"]), None),
+                    "p": best and round(p_replaces(best), 4), "latency_s": round(r["ms"] / 1000, 3),
+                    "decisions": r["decisions"], "candidate_id": best and best["candidate"]}
+
+        return decide
 
     # --- the prompt prefix ---
     def _init_day_context(self, date):
@@ -157,6 +179,7 @@ class DaySession:
         final = ""
         retry = None  # why the reply came from the answer channel: empty_reply, repeated_tool_call or max_rounds
         seen_calls = set()
+        n_decisions = len(self.tools.decisions)
         t0 = time.time()
         error = None
         for r in range(MAX_ROUNDS):
@@ -238,6 +261,8 @@ class DaySession:
                "tool_calls": tool_calls, "notes_written": notes_written, "rounds": rounds,
                "ttft_s": first.get("ttft_s"), "total_s": round(time.time() - t0, 3),
                "tok_s": last_t.get("predicted_per_second"), "answer_channel_retry": retry, "error": error}
+        if len(self.tools.decisions) > n_decisions:  # the one-pass supersede decisions of this turn, with p and ms
+            rec["supersede_decisions"] = self.tools.decisions[n_decisions:]
         live = hasattr(self.notes, "witness_turn") and final
         if live:  # push_day skips a turn the live path sent into the same conversation
             rec["witnessed_live"] = self.notes.conversation
