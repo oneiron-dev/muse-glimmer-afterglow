@@ -50,6 +50,23 @@ the app with `AFTERGLOW_ENDPOINT=http://127.0.0.1:18690 AFTERGLOW_SERVE_STATE=/t
 `runs/` resolves to the main checkout's `runs/` from every git worktree, so the day app and the night job
 share one copy (override with `AFTERGLOW_RUNS`).
 
+## Serving notes: which update chats, and the supersede decision
+
+`runs/serving/serving-rule.json` (set by the lead, read at session start, never hard-coded):
+
+- `checks`: the checks a night's update must pass to be served (from the night's decision.json and the checks
+  added after it ran). The chat uses the latest loaded update that passes every one; with none, the base weights
+  read the notes. The day page says which one and why, in one line.
+- `supersede_decision`: `{"from_day": 4, "weights": "base", "link_p": 0.9, "reasoned": false}`. From day 4 on,
+  a fact saved under a new key is checked in one pass by base Glimmer (`decide/decider.py`, every adapter at 0)
+  against its five most likely earlier notes, and the earlier note is linked as superseded only at p >= 0.9;
+  otherwise both notes stay and the night's consolidation sees the pair. The reasoning step stays off (reasoning
+  made pair decisions worse), and the decision adapter D1 is never used for it. Every decision is logged in the
+  day log (`supersede_decisions`: pick, p, ms), and the day page shows "replaces the earlier note ..., decided in
+  one pass, p .., .. s" or "kept both, left for the night ...". Evidence of record (29 Oct): on day 3's 34
+  never-trained note pairs, base links 8 of 12 true corrections at p >= 0.9 with 0 wrong links, including 1 of
+  the 3 the agent left unlinked. `--decide-supersede` / `--no-decide-supersede` force it for one run.
+
 ## The Oneiron notes backend
 
 `DaySession(..., notes_backend="oneiron")` witnesses every saved note and every turn into the vault, one
