@@ -73,3 +73,22 @@ those 7. It misses "repair lead morning → head mechanic" (p 0.52) and "catch_u
 
 The route prompt puts the notes first and the question last, so a cached notes prefix would leave only the question
 to compute. This run turns the prompt cache off, as the eval rules require.
+
+## D3: base Glimmer, reasoning on, pair kinds (mel slot 0, 29 Oct 04:27–04:45)
+
+Each pair is asked again with reasoning strength high. The model thinks for up to 1,024 tokens, then the same
+one-token labels are read after its reasoning. A call that ends at the cap counts as undecided, never as an answer
+(lead ruling, 04:40). 244 pairs: every w4 duplicate and supersede test row, the 44 day-2 corrections, and the
+calibration pairs below p 0.9. Readouts: `readout-D3.jsonl`; scores: `score-D3.json`.
+
+| kind | n | one pass | reasoning on (undecided = not right) | undecided at cap | wrong at p ≥ 0.9, reasoned | reasoning on below p 0.7 | reasoned ms p50 / p95 |
+|---|---|---|---|---|---|---|---|
+| duplicate, w4 test | 126 | 0.944 | 0.770 | 5 | 24 | 0.913 | 3,345 / 11,548 |
+| supersede, w4 test | 36 | 0.944 | 0.972 | 0 | 1 | 0.972 | 1,470 / 4,738 |
+| supersede, real day-2 corrections | 44 | 0.886 | 0.795 | 1 | 8 | 0.841 | 1,766 / 7,070 |
+
+Reasoning does not rescue the unsure one-pass answers. On real corrections it turns true corrections into "both stay
+true" at p 1.0 and still misses both corrections the day agent left unlinked. It gains one row on the synthetic
+supersede test. A reasoned decision takes 1.5–3.3 s at the median (190–430 reasoning tokens); one pass takes ~0.19 s.
+The product path is one pass with a precision cut: link at p ≥ 0.9, otherwise keep both notes. Thinking stays off for
+these kinds on the base weights. It will be measured again on the decision adapter (D2).

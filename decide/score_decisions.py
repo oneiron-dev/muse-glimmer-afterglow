@@ -57,12 +57,21 @@ def one_pass_metrics(rows):
             "prompt_tokens_p50": pct([r["prompt_tokens"] for r in rows], 0.5)}
 
 
+def capped(e, cap=1024):
+    """Lead ruling 29 Oct 04:40: a reasoned call that ends at its token cap is undecided, never an answer."""
+    return e.get("stop") == "limit" or (e.get("reasoning_tokens") or 0) >= cap
+
+
 def extended_metrics(rows):
     ext = [r["extended"] for r in rows if "extended" in r]
     if not ext:
         return None
-    return {"n": len(ext), "accuracy": round(sum(e["right"] for e in ext) / len(ext), 4), "ece": ece(ext),
-            "wrong_at_p90": sum(1 for e in ext if e["p"] >= 0.9 and not e["right"]),
+    decided = [e for e in ext if not capped(e)]
+    return {"n": len(ext), "undecided_at_cap": len(ext) - len(decided),
+            "accuracy_counting_undecided_wrong": round(sum(e["right"] for e in decided) / len(ext), 4),
+            "accuracy_decided": round(sum(e["right"] for e in decided) / len(decided), 4) if decided else None,
+            "accuracy_raw": round(sum(e["right"] for e in ext) / len(ext), 4), "ece": ece(decided),
+            "wrong_at_p90": sum(1 for e in decided if e["p"] >= 0.9 and not e["right"]),
             "p50_ms": pct([e["ms"] for e in ext], 0.5), "p95_ms": pct([e["ms"] for e in ext], 0.95),
             "reasoning_tokens_p50": pct([e["reasoning_tokens"] or 0 for e in ext], 0.5)}
 
@@ -75,9 +84,11 @@ def auto_extend(rows, tau):
             out.append({"right": r["right"], "p": r["p"], "ms": r["ms"], "escalated": False})
         else:
             e = r["extended"]
-            out.append({"right": e["right"], "p": e["p"], "ms": r["ms"] + e["ms"], "escalated": True})
+            out.append({"right": e["right"] and not capped(e), "p": e["p"], "ms": r["ms"] + e["ms"], "escalated": True,
+                        "undecided": capped(e)})
     return {"tau": tau, "n": len(out), "accuracy": round(sum(o["right"] for o in out) / len(out), 4) if out else None,
             "escalation_rate": round(sum(o["escalated"] for o in out) / len(out), 4) if out else None,
+            "undecided": sum(o.get("undecided", False) for o in out),
             "p50_ms": pct([o["ms"] for o in out], 0.5), "p95_ms": pct([o["ms"] for o in out], 0.95)}
 
 
