@@ -314,7 +314,9 @@ function numbers(ev, decision, abst, chat) {
   const st = ev.stale || {};
   if (st.B && st.B.n) {  // stale probes count only once a correction has superseded a fact
     add("Stale values", ["After your corrections, the old value came back in ", v(`${st.B.stale} of ${st.B.n}`),
-      " questions", st.A ? ` (before the night: ${st.A.stale} of ${st.A.n}).` : "."], "stale");
+      " questions", st.A ? ` (before the night: ${st.A.stale} of ${st.A.n})` : "",
+      ...(st.C ? [". The base model reading your notes gave the old value in ", v(`${st.C.stale} of ${st.C.n}`), "."] : ["."])],
+      "stale");
   } else {
     add("Stale values", ["Measured from day 2, after you correct something. Nothing to measure yet."], null);
   }
@@ -449,7 +451,7 @@ function across(worlds, current, day) {
   if (!worlds || worlds.length < 2) return;
   const sum = (k) => worlds.reduce((t, w) => t + (w[k] ?? 0), 0);
   const line = $("across-line");
-  line.replaceChildren(`Across ${worlds.length} synthetic people, after one night: `,
+  line.replaceChildren(`Across ${worlds.length} synthetic people, after night ${day}: `,
     el("strong", null, `${sum("B")} of ${sum("facts")}`), " facts answered with notes off, ",
     el("strong", null, String(sum("C"))), " with notes in the prompt, ",
     el("strong", null, String(sum("D"))), " with both.");
