@@ -46,7 +46,10 @@ def encode_row(tokenizer, row, max_len, train_header=False):
     With train_header the answer header's recipient (" to=user<|message|>") is trained too, so the adapter answers in
     the user channel when the server leaves the header to the model (chat endpoint), not in the self channel."""
     if row.get("raw"):  # a verbatim exchange (agent anchors): the prompt as the server renders it, the reply as generated
-        prefix, full = row["raw"]["prompt"] + HEADER_START, row["raw"]["prompt"] + row["raw"]["completion"]
+        prompt = row["raw"]["prompt"]
+        if tokenizer.bos_token and not prompt.startswith(tokenizer.bos_token):  # the server adds BOS when it tokenizes
+            prompt = tokenizer.bos_token + prompt
+        prefix, full = prompt + HEADER_START, prompt + row["raw"]["completion"]
         max_len = max(max_len, RAW_MAX_LEN)
     else:
         user, assistant = row["messages"]
