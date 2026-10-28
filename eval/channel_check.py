@@ -13,6 +13,7 @@ with non-empty content and finish "stop". The night fails when the rate is under
 import argparse
 import json
 import random
+import re
 import sys
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -72,18 +73,32 @@ def main():
         r = post(f"{args.server.rstrip('/')}/v1/chat/completions", body)
         c = r["choices"][0]
         content = (c["message"].get("content") or "").strip()
-        return {**q, "finish": c.get("finish_reason"), "content": content[:200],
-                "reasoning": (c["message"].get("reasoning_content") or "")[:200], "ok": bool(content) and c.get("finish_reason") == "stop"}
+        ok = bool(content) and c.get("finish_reason") == "stop"
+        row = {**q, "finish": c.get("finish_reason"), "content": content[:200],
+               "reasoning": (c["message"].get("reasoning_content") or "")[:200], "ok": ok}
+        if not ok:  # the app's one retry (app/afterglow/llm.py answer_channel): same prompt, answer channel forced
+            rendered = post(f"{args.server.rstrip('/')}/apply-template", {"messages": body["messages"],
+                                                                          "chat_template_kwargs": body["chat_template_kwargs"]})["prompt"]
+            fix = post(f"{args.server.rstrip('/')}/completion", {
+                "prompt": rendered.removesuffix("<|start|>assistant") + "<|start|>assistant to=user<|message|>",
+                "n_predict": 320, "temperature": 0.0, "top_k": 1, "seed": 20261014, "cache_prompt": False, "lora": lora,
+                **({"id_slot": args.id_slot} if args.id_slot is not None else {})})
+            text = re.sub(r"(<\|(eot|end|return)\|>\s*)+$", "", (fix.get("content") or "").strip()).strip()
+            row["retry_content"] = text[:200]
+        row["ok_after_retry"] = ok or bool(row.get("retry_content"))
+        return row
 
     with ThreadPoolExecutor(max_workers=args.parallel) as pool:
         rows = list(pool.map(one, qs))
     ok = sum(r["ok"] for r in rows)
+    ok_retry = sum(r["ok_after_retry"] for r in rows)
     rec = {"label": args.label, "world": args.world, "day": args.day, "lora": lora, "n": len(rows), "content_ok": ok,
            "rate": round(ok / len(rows), 4) if rows else None, "min_rate": args.min_rate,
+           "content_ok_after_retry": ok_retry, "retry": "the app's one answer-channel retry, temperature 0 (report only)",
            "passed": bool(rows) and ok / len(rows) >= args.min_rate,
            "rule": "non-empty content and finish 'stop' on chat-endpoint calls at reasoning_strength minimal", "replies": rows}
     Path(args.out).write_text(json.dumps(rec, indent=1) + "\n")
-    print(json.dumps({k: rec[k] for k in ("label", "world", "n", "content_ok", "rate", "passed")}))
+    print(json.dumps({k: rec[k] for k in ("label", "world", "n", "content_ok", "content_ok_after_retry", "rate", "passed")}))
 
 
 if __name__ == "__main__":
