@@ -133,11 +133,16 @@ class App:
             adapter = self.adapter_label(self.client.world_adapter()) if healthy else None
         except GlimmerError as e:
             adapter = f"error: {e}"
+        history = s.history()
+        replies = [r for r in history if r.get("role") == "assistant"]
         return {
             "world": s.world, "day": s.day, "date": s.date, "persona": persona.get("name"),
+            # replies that ended empty and were asked again in the answer channel (agent.py); shown, never hidden
+            "answer_channel_retries": {"retried": sum(1 for r in replies if r.get("answer_channel_retry")),
+                                       "replies": len(replies)},
             "server": {"endpoint": self.client.endpoint, "healthy": healthy, "adapter": adapter},
             "notes": s.notes.all(include_superseded=True),
-            "history": s.history(),
+            "history": history,
             "snapshot": self.snapshot_status,
             "night": self.night_summary(),
             "busy": self.lock.locked(),

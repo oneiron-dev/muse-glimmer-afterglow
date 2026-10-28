@@ -1,6 +1,7 @@
 """Client for the Muse Glimmer llama-server (OpenAI-compatible API behind the trace proxy). Stdlib only."""
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.request
@@ -198,6 +199,26 @@ class GlimmerClient:
             message["tool_calls"] = [calls[i] for i in sorted(calls)]
         yield {"type": "done", "message": message, "finish_reason": finish, "timings": timings, "usage": usage,
                "ttft_s": round(ttft, 3) if ttft is not None else None, "total_s": round(time.time() - t0, 3)}
+
+    def answer_channel(self, messages, tools=None, *, reasoning="low", max_tokens=320, temperature=0.3):
+        """A final answer when Glimmer ended its turn with an empty reply (an adapter can close the turn inside
+        the reasoning channel): render the same conversation with the chat template, open the answer channel and
+        complete there, on the same slot with the same per-request scales. The caller counts every use."""
+        body = {"messages": messages, "chat_template_kwargs": {"reasoning_strength": reasoning}}
+        if tools:
+            body["tools"] = tools
+        rendered = self.post("/apply-template", body)["prompt"]
+        prompt = rendered.removesuffix("<|start|>assistant") + "<|start|>assistant to=user<|message|>"
+        req = {"prompt": prompt, "n_predict": max_tokens, "temperature": temperature, "id_slot": self.slot,
+               "cache_prompt": True}
+        lora = self.lora_field()
+        if lora:
+            req["lora"] = lora
+        t0 = time.time()
+        r = self.post("/completion", req, timeout=self.timeout)
+        text = re.sub(r"(<\|(eot|end|return)\|>\s*)+$", "", (r.get("content") or "").strip()).strip()
+        return {"content": text, "stop_type": r.get("stop_type"), "timings": r.get("timings"),
+                "total_s": round(time.time() - t0, 3)}
 
     def chat(self, messages, tools=None, **kw):
         """Non-streamed convenience: returns the final 'done' event."""
