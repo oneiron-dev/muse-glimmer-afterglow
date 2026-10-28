@@ -37,6 +37,9 @@ HOP_BY_HOP = {
     "te", "trailer", "trailers", "transfer-encoding", "upgrade", "expect",
 }
 TRACED_PATHS = {"/v1/chat/completions", "/chat/completions"}
+# A /completion is traced too when the client marks it with this header (the day agent's answer-channel reply);
+# the header's value is the reason, kept in the record.
+TRACE_HEADER = "X-Afterglow-Trace"
 # llama-server endpoints that run a slot with per-request adapter scales
 LORA_PATHS = TRACED_PATHS | {"/completion", "/completions", "/v1/completions", "/infill"}
 READ_SIZE = 65536
@@ -86,20 +89,25 @@ def summarise_request(body):
     if not isinstance(req, dict):
         return {"request_parse_error": True}
     keep = ("model", "messages", "tools", "stream", "max_tokens", "temperature", "id_slot",
-            "chat_template_kwargs", "lora", "cache_prompt")
+            "chat_template_kwargs", "lora", "cache_prompt", "n_predict")
     out = {k: req[k] for k in keep if k in req}
+    if isinstance(req.get("prompt"), str):  # a /completion: the rendered prompt's tail is enough to read it
+        out["prompt_chars"], out["prompt_tail"] = len(req["prompt"]), req["prompt"][-400:]
     out["requested_model"] = out.pop("model", None)
     return out
 
 
 def summarise_reply_json(body):
-    """Fields from a non-streamed chat completion."""
+    """Fields from a non-streamed chat completion (or a /completion: content, stop_type)."""
     try:
         r = json.loads(body)
     except (ValueError, UnicodeDecodeError):
         return {"reply_parse_error": True}
     if not isinstance(r, dict):
         return {"reply_parse_error": True}
+    if "choices" not in r and "content" in r:
+        return {"reply_model": r.get("model"), "content": r.get("content"), "finish_reason": r.get("stop_type"),
+                "timings": r.get("timings"), "error": r.get("error")}
     choice = (r.get("choices") or [{}])[0]
     msg = choice.get("message") or {}
     return {
@@ -225,7 +233,8 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
         request_time = now_iso()
         body = self._read_body()
         path_only = self.path.split("?", 1)[0]
-        traced = self.command == "POST" and path_only in TRACED_PATHS
+        marked = self.headers.get(TRACE_HEADER)
+        traced = self.command == "POST" and (path_only in TRACED_PATHS or (marked and path_only == "/completion"))
         record = None
         filled = False
         if self.lora_count and self.command == "POST" and path_only in LORA_PATHS:
@@ -234,6 +243,8 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             record = {"request_time": request_time, "request_id": uuid.uuid4().hex,
                       "client": self.client_address[0], "path": self.path}
             record.update(summarise_request(body))
+            if marked:
+                record["marked"] = marked
             if filled:
                 record["lora_filled"] = True
 

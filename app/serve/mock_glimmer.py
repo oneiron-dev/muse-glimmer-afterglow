@@ -47,6 +47,7 @@ class Mock:
         self.adapter = adapter
         self.slots = {0: "", 1: ""}
         self.saved = {}
+        self.last_tokenized = ""
         self.lock = threading.Lock()
         if state_file:
             with open(state_file, "w") as f:
@@ -122,9 +123,14 @@ class Handler(BaseHTTPRequestHandler):
         m = self.mock
         if p == "/apply-template":
             return self._json({"prompt": render(body["messages"], body.get("tools"))})
+        if p == "/tokenize":  # one "token" per 4 characters, as ids into the text (so a cut decodes back)
+            text = m.last_tokenized = body["content"]
+            return self._json({"tokens": list(range(0, len(text), 4)), "text": text})
         if p == "/completion":
             slot = body.get("id_slot", 0)
             t0 = time.time()
+            if isinstance(body["prompt"], list):  # token ids from /tokenize: the text up to the last one
+                body["prompt"] = m.last_tokenized[:(body["prompt"][-1] + 4) if body["prompt"] else 0]
             n = ntok(body["prompt"])
             time.sleep(n / 3000)
             m.slots[slot] = body["prompt"]

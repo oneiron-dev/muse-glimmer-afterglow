@@ -22,15 +22,19 @@ def read_jsonl(path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--route-rows", type=int, default=500, help="route rows kept (seeded sample, ask share preserved)")
+    ap.add_argument("--route-rows", type=int, default=440, help="route rows kept (seeded sample, ask share preserved)")
+    ap.add_argument("--cross-world-asks", type=int, default=120, help="never-told style ask rows added on top")
     ap.add_argument("--out", default=str(DATA / "train-decision.jsonl"))
     args = ap.parse_args()
     rng = random.Random(SEED)
     route = read_jsonl(DATA / "route-train.jsonl")
+    cross = [r for r in route if r["source"] == "train_cross_world_ask"]
+    route = [r for r in route if r["source"] != "train_cross_world_ask"]
     ask = [r for r in route if r["label"] == "0"]
     note = [r for r in route if r["label"] != "0"]
     k_ask = round(args.route_rows * len(ask) / len(route))
     keep = rng.sample(ask, min(k_ask, len(ask))) + rng.sample(note, min(args.route_rows - k_ask, len(note)))
+    keep += rng.sample(cross, min(args.cross_world_asks, len(cross)))
     rows = keep + read_jsonl(DATA / "duplicate-train.jsonl") + read_jsonl(DATA / "supersede-train.jsonl")
     rng.shuffle(rows)
     with open(args.out, "w") as f:

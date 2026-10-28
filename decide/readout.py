@@ -140,11 +140,13 @@ def decide(server, glimmer, row, lora, slot=None, extend_below=None, strength="h
     labels = list(row["options"])
     label_ids = glimmer.label_ids(labels)
     ids = glimmer.ids(glimmer.render(row["prompt"]))
-    dist, mass, top, ms, _ = label_probs(server, ids, label_ids, lora, slot)
+    dist, mass, top, ms, r = label_probs(server, ids, label_ids, lora, slot)
+    t = r.get("timings") or {}
     pick = max(dist, key=dist.get)
     out = {"id": row["id"], "kind": row["kind"], "label": row["label"], "accept": row["accept"], "pick": pick,
            "p": round(dist[pick], 4), "right": pick in row["accept"], "label_mass": round(mass, 4), "ms": ms,
-           "prompt_tokens": len(ids), "top": top,
+           "prompt_tokens": len(ids), "server_ms": round((t.get("prompt_ms") or 0) + (t.get("predicted_ms") or 0), 1),
+           "prompt_per_second": t.get("prompt_per_second"), "top": top,
            "dist": {k: round(v, 4) for k, v in sorted(dist.items(), key=lambda kv: -kv[1])[:5]}}
     if extend_below is not None and dist[pick] < extend_below:
         prompt, reasoning, n_tok, stop, think_ms = think(server, glimmer, row["prompt"], lora, strength, slot)

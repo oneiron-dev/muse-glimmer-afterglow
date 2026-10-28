@@ -213,7 +213,7 @@ class TraceProxyTest(unittest.TestCase):
         models = {json.loads(l[6:])["model"] for l in proxied[2].decode().splitlines()
                   if l.startswith("data: {")}
         self.assertEqual(models, {ALIAS})
-        rec = self.trace_for(lambda t: t["messages"][0]["content"] == "stream it")
+        rec = self.trace_for(lambda t: (t.get("messages") or [{}])[0].get("content") == "stream it")
         self.assertEqual(rec["reply_model"], ALIAS)
         self.assertEqual(rec["reasoning_content"], "The note says the standup moved to 10:30.")
         self.assertEqual(rec["content"], "Standup is at 10:30.")
@@ -243,6 +243,18 @@ class TraceProxyTest(unittest.TestCase):
         self.assertEqual(json.loads(save[2])["path"], "/slots/0?action=save")
         self.assertEqual(len(self.traces()), n_before)
 
+    def test_marked_completion_is_traced_with_its_reason(self):
+        n_before = len(self.traces())
+        raw_post(self.px_port, "/completion", {"prompt": "x", "n_predict": 4})
+        self.assertEqual(len(self.traces()), n_before)
+        conn = http.client.HTTPConnection("127.0.0.1", self.px_port, timeout=30)
+        conn.request("POST", "/completion", body=json.dumps({"prompt": "abc", "n_predict": 4}).encode(),
+                     headers={"Content-Type": "application/json", "X-Afterglow-Trace": "answer_channel_retry:empty_reply"})
+        conn.getresponse().read()
+        conn.close()
+        t = self.trace_for(lambda t: t.get("marked") == "answer_channel_retry:empty_reply")
+        self.assertEqual((t["path"], t["prompt_chars"], t["n_predict"]), ("/completion", 3, 4))
+
     def test_client_disconnect_closes_upstream(self):
         n = len(FakeLlamaServer.disconnects)
         conn = http.client.HTTPConnection("127.0.0.1", self.px_port, timeout=10)
@@ -257,7 +269,7 @@ class TraceProxyTest(unittest.TestCase):
         while len(FakeLlamaServer.disconnects) == n and time.time() - t0 < 5:
             time.sleep(0.05)
         self.assertGreater(len(FakeLlamaServer.disconnects), n)
-        rec = self.trace_for(lambda t: t["messages"][0]["content"] == "bye")
+        rec = self.trace_for(lambda t: (t.get("messages") or [{}])[0].get("content") == "bye")
         self.assertTrue(rec.get("client_disconnected"))
 
 
