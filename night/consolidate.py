@@ -52,6 +52,18 @@ def load_day(run_dir):
     return notes, turns
 
 
+def feedback_turns(run_dir):
+    """The day's style-feedback turns (daylog user records with "feedback"): passed through for Meta steering's
+    proposals, never training text."""
+    out = []
+    for line in (run_dir / "daylog.jsonl").read_text().splitlines():
+        if line.strip():
+            rec = json.loads(line)
+            if rec.get("role") == "user" and rec.get("feedback"):
+                out.append({"turn": rec["turn"], "content": rec["content"], **rec["feedback"]})
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--world", required=True)
@@ -73,6 +85,12 @@ def main():
     name = json.loads((Path(__file__).resolve().parent.parent / "worlds" / args.world / "world.json").read_text())["persona"]["name"]
     first = name.split()[0]
     by_id = {n["id"]: n for n in notes}
+    feedback = feedback_turns(run_dir)
+    fb_turns = {f["turn"] for f in feedback}
+    held = [n for n in notes if (n.get("day") or 1) == args.day and n.get("turn") in fb_turns]
+    for f in feedback:
+        f["notes"] = [n["id"] for n in held if n.get("turn") == f["turn"]]
+    notes = [n for n in notes if n not in held]  # a note saved at a feedback turn is not learned
     active, merges = duplicate_merges(notes)
     items, proposals, log_path = [], [], out_dir / "teacher-calls.jsonl"
     earlier = {}
@@ -114,7 +132,10 @@ def main():
             new_item["corrects"] = r["old_value"]
     items = [i for i in items if i["id"] not in gone]
     doc = {"world": args.world, "day": args.day, "user": name, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
-           "items": items, "overruled_merge_proposals": proposals, "replacements": replaced}
+           "items": items, "overruled_merge_proposals": proposals, "replacements": replaced,
+           "feedback": feedback, "held_as_feedback": [{"id": n["id"], "key": n["key"], "value": n["value"], "turn": n.get("turn"),
+                                                      "outcome": "held_as_feedback", "why": "saved at a style-feedback turn: "
+                                                      "passed to Meta steering, not learned"} for n in held]}
     doc.update(outcome_fields(notes, items, merges, proposals))
     for r in replaced:
         if r["decision"] == "superseded":
