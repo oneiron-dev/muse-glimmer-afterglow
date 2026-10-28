@@ -60,7 +60,8 @@ def main():
     for item in script:
         if item["content"] in done:
             continue
-        ev = session.ask(item["content"], source="script")
+        ev = session.ask(item["content"], source="script",
+                         extra={"feedback": item["feedback"]} if item.get("feedback") else None)
         turns.append({"turn": item["turn"], "facts": item.get("facts", []), "notes_written": ev["notes_written"],
                       "ttft_s": ev["ttft_s"], "total_s": ev["total_s"], "error": ev["error"]})
         print(f"turn {item['turn']:>2}: {len(ev['notes_written'])} notes, {ev['total_s']:.1f} s"
