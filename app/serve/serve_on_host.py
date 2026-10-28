@@ -72,6 +72,12 @@ def llama_command(a):
         for path in a.lora:
             cmd += ["--lora-scaled", f"{path}:0"]
         cmd += ["--lora-init-without-apply", "--cache-ram", "0"]
+    if a.control_vector:
+        # Steering dials (a build with per-request "control_vectors"), loaded at scale 0 in the order given: a
+        # request that names none runs without them, so no proxy fill is needed for vectors.
+        cmd += ["--control-vector-scaled", ",".join(f"{path}:0" for path in a.control_vector)]
+        if a.control_vector_layer_range:  # one range for every vector (the dial files hold layers that break replies)
+            cmd += ["--control-vector-layer-range", *map(str, a.control_vector_layer_range)]
     return cmd
 
 
@@ -97,6 +103,8 @@ class Host:
         stamp = dt.datetime.now(JST).strftime("%Y%m%d-%H%M%S")
         logs = os.path.join(a.root, "serve", "logs")
         lora = [{"id": i, "path": path, "sha256": sha256_file(path)} for i, path in enumerate(a.lora or [])]
+        vectors = [{"id": i, "path": path, "sha256": sha256_file(path), "layer_range": a.control_vector_layer_range}
+                   for i, path in enumerate(a.control_vector or [])]
         cmd = llama_command(a)
         self.write_state(state="starting", started=now_iso(),
                          endpoint=f"http://{a.listen}", alias=ALIAS, chat_template_kwargs=TEMPLATE_KWARGS,
@@ -104,7 +112,7 @@ class Host:
                          host=a.host,
                          model={"path": host_paths(a.host)["model"], "sha256": MODEL_SHA256},
                          drafter={"path": host_paths(a.host)["drafter"], "sha256": DRAFTER_SHA256},
-                         lora=lora, slot_save_path=os.path.join(a.root, "slots"),
+                         lora=lora, control_vectors=vectors, slot_save_path=os.path.join(a.root, "slots"),
                          trace_dir=os.path.join(a.root, "traces"), llama_cmd=cmd,
                          llama_log=f"{logs}/{stamp}-llama-server.log", proxy_log=f"{logs}/{stamp}-trace-proxy.log")
         env = dict(os.environ, LD_LIBRARY_PATH=os.path.dirname(llama_server_path(a)))
@@ -172,6 +180,11 @@ def main():
     ap.add_argument("--root", default=CONF["root"])
     ap.add_argument("--llama-server", default=None, help="llama-server binary (default: the box's in hosts.json)")
     ap.add_argument("--lora", action="append", help="GGUF LoRA adapter on this host; repeat, ids in the order given")
+    ap.add_argument("--control-vector", action="append",
+                    help="GGUF control vector (a steering dial) on this host, loaded at scale 0; repeat, ids in the order "
+                         "given; needs a llama-server built with per-request control_vectors")
+    ap.add_argument("--control-vector-layer-range", type=int, nargs=2, metavar=("START", "END"),
+                    help="layers the control vectors apply to (one range for all)")
     ap.add_argument("--print-command", action="store_true", help="print the llama-server command and exit")
     a = ap.parse_args()
     a.listen = a.listen or host_paths(a.host)["listen"]

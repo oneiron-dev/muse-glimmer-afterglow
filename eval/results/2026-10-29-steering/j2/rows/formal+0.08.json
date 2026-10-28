@@ -1,0 +1,344 @@
+{
+ "row": {
+  "name": "formal+0.08",
+  "request_cvecs": {
+   "formal": 0.08
+  },
+  "tests_by_arm": {
+   "base": [
+    "day:formal"
+   ],
+   "R2": [
+    "day:formal"
+   ]
+  }
+ },
+ "cmd": [
+  "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "-m",
+  "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+  "--lora",
+  "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+  "--lora-init-without-apply",
+  "--cache-ram",
+  "0",
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-np",
+  "8",
+  "-c",
+  "16384",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "18630",
+  "--control-vector-scaled",
+  "/data/meta-steering/vectors/j1/base/abstention-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/decisive-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/concise-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/formal-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/asks_first-raw.gguf:0.0,/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf:0.0",
+  "--control-vector-layer-range",
+  "16",
+  "42"
+ ],
+ "cvec_scales": [
+  0.0,
+  0.0,
+  0.0,
+  0.08,
+  0.0,
+  0.0
+ ],
+ "arms": {
+  "base": {
+   "day:formal": {
+    "agg": {
+     "words": 134.75,
+     "asks": 0.0,
+     "hedges_per_100w": 0.297,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.207,
+     "repetition": 0.56,
+     "empty": 0.0,
+     "truncated": 5
+    },
+    "results": [
+     {
+      "id": "day:formal-0",
+      "answer": "The new expense form is available. All employees must use it.\n<end of the sentence>",
+      "tokens": 20,
+      "truncated": false,
+      "markers": {
+       "words": 15,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.067,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-1",
+      "answer": "This is a sensitive issue. You must be clear, direct, and professional.\n\nHere are the steps:\n\n1. Identify the cost.\n2. Identify.\n3. Use.\n\nThis is sensitive. Therefore, you must be clear, direct, and professional.\n\nHere are the steps:\n\n1. Identify the cost.\n2. Identify.\n3. Use.\n\nThis is sensitive. Therefore, you must be clear, direct, and professional.\n\nHere are the steps:\n\n1. Identify the cost.\n2. Identify.\n3. Use.\nThis is sensitive. Therefore, you must be clear, direct, and professional.\n\nHere are the steps:\n\n1. Identify the cost.\n2. Identify.\n3. Use.\nThis is sensitive. Therefore, you must be clear, direct, and professional.\n\nHere are the steps:\n\n1. Identify the cost.\n2. Identify.\n3. Use.\nThis is sensitive. Therefore, you must be clear, direct, and professional.\n\nHere are the steps:\n\n1. Identify the cost.\n2. Identify.\n3. Use.\nThis is sensitive. Therefore, you must be clear, direct, and professional.\n\nHere are the steps:\n\n1. Identify the cost.\n2. Identify.\n3. Use.\nThis is sensitive. Therefore, you must be clear,",
+      "tokens": 256,
+      "truncated": true,
+      "markers": {
+       "words": 170,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.853,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-2",
+      "answer": "Thank-you for covering my shift.\nI am [Name].",
+      "tokens": 13,
+      "truncated": false,
+      "markers": {
+       "words": 8,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-3",
+      "answer": "I am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am.\n\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am.\n\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am unable to comply with the request.\nI am sorry, but I am",
+      "tokens": 256,
+      "truncated": true,
+      "markers": {
+       "words": 218,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.95,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-4",
+      "answer": "Here is a template for you to use.\n[Insert Template]\nThis template is for a user who is trying to use the system. The user is John Smith. The user is a member of a group. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of users. The group is a group of",
+      "tokens": 256,
+      "truncated": true,
+      "markers": {
+       "words": 224,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.893,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-5",
+      "answer": "Write a short notice that the office closes early on Friday.\n\n[Title]\n\n[Author Name]\n\n[Author Surname]\n\n[Author Email]\n\n[Author Phone Number]\n\n[Author Address]\n\n[Author City]\n\n[Author Country]\n\n[Author Nationality]\n\n[Author Date of Birth]\n\n[Author Gender]\n\n[Author Father's Name]\n\n[Author Mother's Name]\n\n[Author Spouse's Name]\n\n[Author Children]\n\n[Author Bank Account Number]\n\nI am writing to express my interest in the [Job Title] position. I am a [Job Title] with over [Number] years of experience in [Job Title]. I have a track record of [Job Title].\"<|start|>assistant to=self<|message|>Write a short notice that the office closes early on Friday.\n\n[Title]\n\n[Author Name]\n\n...\n\nI am writing to express my interest in the [Job Title] position. I am a [Job Title] with over [Number] years of experience in [Job Title]. I have a track record of [Job Title].\n\nWe need to write a short notice that the office closes early on Friday. The user is trying to get the AI to write a short notice that the office closes early on Friday. This is a request. The user is trying to get the AI to write",
+      "tokens": 256,
+      "truncated": true,
+      "markers": {
+       "words": 181,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.66,
+       "repetition": 0.646,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-6",
+      "answer": "To follow up after a job interview, consider the following steps:\n\n1. Review the job description and identify key skills.\n2. Collect feedback from the interviewer.\n3. Identify ways you can improve.\n4. Request a follow-up interview.\n5. Indicate your ongoing interest.",
+      "tokens": 57,
+      "truncated": false,
+      "markers": {
+       "words": 42,
+       "asks": false,
+       "hedges_per_100w": 2.38,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.119,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-7",
+      "answer": "I am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am.\n\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am.\n\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.\nI am sorry, but I am not able to respond to the user.",
+      "tokens": 256,
+      "truncated": true,
+      "markers": {
+       "words": 220,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.95,
+       "empty": false
+      }
+     }
+    ]
+   }
+  },
+  "R2": {
+   "day:formal": {
+    "agg": {
+     "words": 15.25,
+     "asks": 0.0,
+     "hedges_per_100w": 1.562,
+     "commits": 0.25,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.1,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:formal-0",
+      "answer": "I will write a message to the team about the new expense form.",
+      "tokens": 15,
+      "truncated": false,
+      "markers": {
+       "words": 13,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.077,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-1",
+      "answer": "You should state the facts.",
+      "tokens": 7,
+      "truncated": false,
+      "markers": {
+       "words": 5,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 1,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-2",
+      "answer": "Thank you for your support.<|start|>assistant to=self<|message|>I will write a thank-you note.<|start|>assistant to=user<|message|>Thank you Ines Varga.",
+      "tokens": 34,
+      "truncated": false,
+      "markers": {
+       "words": 15,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.067,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-3",
+      "answer": "I will ask the supplier for a delivery date.",
+      "tokens": 11,
+      "truncated": false,
+      "markers": {
+       "words": 9,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-4",
+      "answer": "You may welcome a new customer by email.",
+      "tokens": 10,
+      "truncated": false,
+      "markers": {
+       "words": 8,
+       "asks": false,
+       "hedges_per_100w": 12.5,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-5",
+      "answer": "The office will close early on Friday, December 18, 2026, at which point I will write a summary and use it in subsequent conversations.",
+      "tokens": 32,
+      "truncated": false,
+      "markers": {
+       "words": 24,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.042,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-6",
+      "answer": "You should follow up by sending a status update.",
+      "tokens": 11,
+      "truncated": false,
+      "markers": {
+       "words": 9,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 1,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-7",
+      "answer": "I will write a message to Ines Varga asking to review the slides.<|start|>assistant to=self<|message|>I will write a message to Ines Varga asking to review the slides.<|start|>assistant to=user<|message|>I will write a message to Ines Varga asking to review the slides.",
+      "tokens": 61,
+      "truncated": false,
+      "markers": {
+       "words": 39,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.615,
+       "empty": false
+      }
+     }
+    ]
+   }
+  }
+ },
+ "seconds": 17.8
+}

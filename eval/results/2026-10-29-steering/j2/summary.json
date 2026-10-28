@@ -1,0 +1,820 @@
+{
+ "plan": "steering/plans/2026-10-29-j2.json",
+ "eval_root": "/data/meta-steering/night-ref",
+ "shared_server": {
+  "binary": "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "cvecs": [
+   [
+    "abstention",
+    "/data/meta-steering/vectors/j1/base/abstention-raw.gguf"
+   ],
+   [
+    "decisive",
+    "/data/meta-steering/vectors/j1/base/decisive-raw.gguf"
+   ],
+   [
+    "concise",
+    "/data/meta-steering/vectors/j1/base/concise-raw.gguf"
+   ],
+   [
+    "formal",
+    "/data/meta-steering/vectors/j1/base/formal-raw.gguf"
+   ],
+   [
+    "asks_first",
+    "/data/meta-steering/vectors/j1/base/asks_first-raw.gguf"
+   ],
+   [
+    "nightdelta",
+    "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf"
+   ]
+  ],
+  "cvec_layers": [
+   16,
+   42
+  ]
+ },
+ "rows": {
+  "static-concise+0.04": {
+   "cvecs": [
+    [
+     "/data/meta-steering/vectors/j1/base/concise-raw.gguf",
+     0.04
+    ]
+   ],
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": false,
+   "seconds": 19.2,
+   "base": {
+    "day:concise": {
+     "words": 24.25,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.079,
+     "empty": 0.0,
+     "truncated": 1
+    }
+   },
+   "R2": {
+    "day:concise": {
+     "words": 12.25,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.25,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.018,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "concise+0.04": {
+   "cvecs": {
+    "concise": 0.04
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 18.5,
+   "base": {
+    "day:concise": {
+     "words": 24.25,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.079,
+     "empty": 0.0,
+     "truncated": 1
+    }
+   },
+   "R2": {
+    "day:concise": {
+     "words": 12.25,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.25,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.018,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "baseline": {
+   "cvecs": {},
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 554.0,
+   "base": {
+    "gate": {
+     "n": 200,
+     "abstain": 115,
+     "abstain_rate": 0.575,
+     "exact_correct": 5,
+     "truncated": 0
+    },
+    "gate_bare": {
+     "n": 200,
+     "abstain": 2,
+     "abstain_rate": 0.01,
+     "exact_correct": 0,
+     "truncated": 18
+    },
+    "never_told": {
+     "n": 30,
+     "pass": 11,
+     "truncated": 0
+    },
+    "day:concise": {
+     "words": 153.625,
+     "asks": 0.125,
+     "hedges_per_100w": 0.144,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.279,
+     "empty": 0.0,
+     "truncated": 6
+    },
+    "day:formal": {
+     "words": 115.25,
+     "asks": 0.25,
+     "hedges_per_100w": 0.695,
+     "commits": 0.0,
+     "casual_per_100w": 0.81,
+     "contractions_per_100w": 1.003,
+     "repetition": 0.242,
+     "empty": 0.0,
+     "truncated": 2
+    },
+    "day:decisive": {
+     "words": 140.625,
+     "asks": 0.375,
+     "hedges_per_100w": 0.754,
+     "commits": 0.125,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.49,
+     "repetition": 0.27,
+     "empty": 0.0,
+     "truncated": 3
+    },
+    "day:asks_first": {
+     "words": 49.375,
+     "asks": 0.625,
+     "hedges_per_100w": 2.171,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 1.549,
+     "repetition": 0.125,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   },
+   "R2": {
+    "gate": {
+     "n": 200,
+     "abstain": 1,
+     "abstain_rate": 0.005,
+     "exact_correct": 4,
+     "truncated": 0
+    },
+    "gate_bare": {
+     "n": 200,
+     "abstain": 0,
+     "abstain_rate": 0.0,
+     "exact_correct": 0,
+     "truncated": 0
+    },
+    "never_told": {
+     "n": 30,
+     "pass": 0,
+     "truncated": 0
+    },
+    "forward": {
+     "n": 135,
+     "pass": 118,
+     "truncated": 0
+    },
+    "forget": {
+     "n": 200,
+     "pass": 126,
+     "truncated": 0
+    },
+    "day:concise": {
+     "words": 21.125,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.657,
+     "repetition": 0.099,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "day:formal": {
+     "words": 18.125,
+     "asks": 0.25,
+     "hedges_per_100w": 1.325,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.073,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "day:decisive": {
+     "words": 14.75,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.25,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.834,
+     "repetition": 0.08,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "day:asks_first": {
+     "words": 9.125,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 4.018,
+     "repetition": 0.0,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   },
+   "R2@0.75": {
+    "gate": {
+     "n": 200,
+     "abstain": 2,
+     "abstain_rate": 0.01,
+     "exact_correct": 8,
+     "truncated": 0
+    },
+    "gate_bare": {
+     "n": 200,
+     "abstain": 0,
+     "abstain_rate": 0.0,
+     "exact_correct": 0,
+     "truncated": 0
+    },
+    "never_told": {
+     "n": 30,
+     "pass": 0,
+     "truncated": 0
+    },
+    "forward": {
+     "n": 135,
+     "pass": 114,
+     "truncated": 0
+    },
+    "forget": {
+     "n": 200,
+     "pass": 127,
+     "truncated": 0
+    }
+   },
+   "R2@0.5": {
+    "gate": {
+     "n": 200,
+     "abstain": 5,
+     "abstain_rate": 0.025,
+     "exact_correct": 9,
+     "truncated": 0
+    },
+    "gate_bare": {
+     "n": 200,
+     "abstain": 0,
+     "abstain_rate": 0.0,
+     "exact_correct": 0,
+     "truncated": 0
+    },
+    "never_told": {
+     "n": 30,
+     "pass": 0,
+     "truncated": 0
+    },
+    "forward": {
+     "n": 135,
+     "pass": 75,
+     "truncated": 0
+    },
+    "forget": {
+     "n": 200,
+     "pass": 130,
+     "truncated": 0
+    }
+   }
+  },
+  "nightdelta+0.5": {
+   "cvecs": {
+    "nightdelta": 0.5
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 142.9,
+   "R2": {
+    "gate": {
+     "n": 200,
+     "abstain": 169,
+     "abstain_rate": 0.845,
+     "exact_correct": 0,
+     "truncated": 0
+    },
+    "gate_bare": {
+     "n": 200,
+     "abstain": 0,
+     "abstain_rate": 0.0,
+     "exact_correct": 0,
+     "truncated": 0
+    },
+    "never_told": {
+     "n": 30,
+     "pass": 0,
+     "truncated": 0
+    },
+    "forward": {
+     "n": 135,
+     "pass": 104,
+     "truncated": 0
+    },
+    "forget": {
+     "n": 200,
+     "pass": 86,
+     "truncated": 2
+    }
+   }
+  },
+  "decisive-0.06": {
+   "cvecs": {
+    "decisive": -0.06
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 175.7,
+   "R2": {
+    "gate": {
+     "n": 200,
+     "abstain": 0,
+     "abstain_rate": 0.0,
+     "exact_correct": 0,
+     "truncated": 13
+    },
+    "gate_bare": {
+     "n": 200,
+     "abstain": 1,
+     "abstain_rate": 0.005,
+     "exact_correct": 0,
+     "truncated": 2
+    },
+    "never_told": {
+     "n": 30,
+     "pass": 0,
+     "truncated": 0
+    },
+    "forward": {
+     "n": 135,
+     "pass": 89,
+     "truncated": 0
+    },
+    "forget": {
+     "n": 200,
+     "pass": 72,
+     "truncated": 9
+    }
+   }
+  },
+  "abstention+0.04": {
+   "cvecs": {
+    "abstention": 0.04
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 265.9,
+   "base": {
+    "gate": {
+     "n": 200,
+     "abstain": 48,
+     "abstain_rate": 0.24,
+     "exact_correct": 1,
+     "truncated": 9
+    },
+    "gate_bare": {
+     "n": 200,
+     "abstain": 2,
+     "abstain_rate": 0.01,
+     "exact_correct": 0,
+     "truncated": 62
+    },
+    "never_told": {
+     "n": 30,
+     "pass": 5,
+     "truncated": 0
+    }
+   },
+   "R2": {
+    "gate": {
+     "n": 200,
+     "abstain": 1,
+     "abstain_rate": 0.005,
+     "exact_correct": 1,
+     "truncated": 0
+    },
+    "gate_bare": {
+     "n": 200,
+     "abstain": 0,
+     "abstain_rate": 0.0,
+     "exact_correct": 0,
+     "truncated": 0
+    },
+    "never_told": {
+     "n": 30,
+     "pass": 0,
+     "truncated": 0
+    },
+    "forward": {
+     "n": 135,
+     "pass": 117,
+     "truncated": 0
+    },
+    "forget": {
+     "n": 200,
+     "pass": 122,
+     "truncated": 0
+    }
+   }
+  },
+  "concise+0.04-full": {
+   "cvecs": {
+    "concise": 0.04
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 6.2,
+   "base": {
+    "day:concise": {
+     "words": 30.625,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.115,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   },
+   "R2": {
+    "day:concise": {
+     "words": 12.75,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.125,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.058,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "formal+0.04": {
+   "cvecs": {
+    "formal": 0.04
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 12.0,
+   "base": {
+    "day:formal": {
+     "words": 84.5,
+     "asks": 0.0,
+     "hedges_per_100w": 0.236,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.802,
+     "repetition": 0.262,
+     "empty": 0.0,
+     "truncated": 2
+    }
+   },
+   "R2": {
+    "day:formal": {
+     "words": 9.875,
+     "asks": 0.125,
+     "hedges_per_100w": 0.0,
+     "commits": 0.375,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.05,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "decisive+0.04": {
+   "cvecs": {
+    "decisive": 0.04
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 7.9,
+   "base": {
+    "day:decisive": {
+     "words": 56.25,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.595,
+     "repetition": 0.198,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   },
+   "R2": {
+    "day:decisive": {
+     "words": 9.5,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.048,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "asks_first+0.04": {
+   "cvecs": {
+    "asks_first": 0.04
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 6.4,
+   "base": {
+    "day:asks_first": {
+     "words": 44.75,
+     "asks": 1.0,
+     "hedges_per_100w": 3.066,
+     "commits": 0.0,
+     "casual_per_100w": 0.378,
+     "contractions_per_100w": 2.532,
+     "repetition": 0.097,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   },
+   "R2": {
+    "day:asks_first": {
+     "words": 10.375,
+     "asks": 0.125,
+     "hedges_per_100w": 0.735,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 2.455,
+     "repetition": 0.007,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "concise+0.08": {
+   "cvecs": {
+    "concise": 0.08
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 3.9,
+   "base": {
+    "day:concise": {
+     "words": 15.25,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.083,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   },
+   "R2": {
+    "day:concise": {
+     "words": 7.875,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.026,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "formal+0.08": {
+   "cvecs": {
+    "formal": 0.08
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 17.8,
+   "base": {
+    "day:formal": {
+     "words": 134.75,
+     "asks": 0.0,
+     "hedges_per_100w": 0.297,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.207,
+     "repetition": 0.56,
+     "empty": 0.0,
+     "truncated": 5
+    }
+   },
+   "R2": {
+    "day:formal": {
+     "words": 15.25,
+     "asks": 0.0,
+     "hedges_per_100w": 1.562,
+     "commits": 0.25,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.1,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "decisive+0.08": {
+   "cvecs": {
+    "decisive": 0.08
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 3.2,
+   "base": {
+    "day:decisive": {
+     "words": 17.875,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.157,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   },
+   "R2": {
+    "day:decisive": {
+     "words": 11.75,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.125,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.099,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "asks_first+0.08": {
+   "cvecs": {
+    "asks_first": 0.08
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 7.2,
+   "base": {
+    "day:asks_first": {
+     "words": 50.625,
+     "asks": 1.0,
+     "hedges_per_100w": 2.866,
+     "commits": 0.0,
+     "casual_per_100w": 0.171,
+     "contractions_per_100w": 2.35,
+     "repetition": 0.122,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   },
+   "R2": {
+    "day:asks_first": {
+     "words": 12.25,
+     "asks": 0.25,
+     "hedges_per_100w": 0.695,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 1.041,
+     "repetition": 0.013,
+     "empty": 0.0,
+     "truncated": 0
+    }
+   }
+  },
+  "nightdelta+1": {
+   "cvecs": {
+    "nightdelta": 1.0
+   },
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "per_request": true,
+   "seconds": 252.5,
+   "R2": {
+    "gate": {
+     "n": 200,
+     "abstain": 84,
+     "abstain_rate": 0.42,
+     "exact_correct": 0,
+     "truncated": 125
+    },
+    "gate_bare": {
+     "n": 200,
+     "abstain": 23,
+     "abstain_rate": 0.115,
+     "exact_correct": 0,
+     "truncated": 122
+    },
+    "never_told": {
+     "n": 30,
+     "pass": 0,
+     "truncated": 7
+    },
+    "forward": {
+     "n": 135,
+     "pass": 4,
+     "truncated": 33
+    },
+    "forget": {
+     "n": 200,
+     "pass": 6,
+     "truncated": 66
+    }
+   }
+  }
+ },
+ "parity": {
+  "static": "static-concise+0.04",
+  "per_request": "concise+0.04",
+  "answers": 8,
+  "unequal": 0
+ },
+ "stopped": "deadline before nightdelta+0.25",
+ "elapsed_s": 1497.4
+}

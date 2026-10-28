@@ -1,0 +1,220 @@
+{
+ "row": {
+  "name": "static-concise+0.04",
+  "binary": "/data/meta-night/llama.cpp/build/bin/llama-server",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/base/concise-raw.gguf",
+    0.04
+   ]
+  ],
+  "cvec_layers": [
+   16,
+   42
+  ],
+  "tests_by_arm": {
+   "base": [
+    "day:concise"
+   ],
+   "R2": [
+    "day:concise"
+   ]
+  },
+  "workers": 1,
+  "limit": 4,
+  "max_new": 64
+ },
+ "cmd": [
+  "/data/meta-night/llama.cpp/build/bin/llama-server",
+  "-m",
+  "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+  "--lora",
+  "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+  "--lora-init-without-apply",
+  "--cache-ram",
+  "0",
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-np",
+  "8",
+  "-c",
+  "16384",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "18630",
+  "--control-vector-scaled",
+  "/data/meta-steering/vectors/j1/base/concise-raw.gguf:0.04",
+  "--control-vector-layer-range",
+  "16",
+  "42"
+ ],
+ "cvec_scales": null,
+ "arms": {
+  "base": {
+   "day:concise": {
+    "agg": {
+     "words": 24.25,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.079,
+     "empty": 0.0,
+     "truncated": 1
+    },
+    "results": [
+     {
+      "id": "day:concise-0",
+      "answer": "Use GitHub Actions. Create `.github/workflows/ci.yml`:\n\n```yaml\nname: CI\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5",
+      "tokens": 64,
+      "truncated": true,
+      "markers": {
+       "words": 22,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.091,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-1",
+      "answer": "An API rate limit is a cap on the number of requests you can make to an API in a given time period. It prevents overuse and ensures fair access.",
+      "tokens": 34,
+      "truncated": false,
+      "markers": {
+       "words": 30,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.1,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-2",
+      "answer": "A project status update should contain:\n\n* **Progress:** Completed tasks, milestones reached.\n* **Issues:** Blockers or risks.\n* **Next steps:** Upcoming tasks and deadlines.\n* **Status:** On track, delayed, or at risk.",
+      "tokens": 50,
+      "truncated": false,
+      "markers": {
+       "words": 32,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.125,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-3",
+      "answer": "Use past similar tasks, add 20-30% buffer, and break it into smaller steps.",
+      "tokens": 21,
+      "truncated": false,
+      "markers": {
+       "words": 13,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     }
+    ]
+   }
+  },
+  "R2": {
+   "day:concise": {
+    "agg": {
+     "words": 12.25,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.25,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.018,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:concise-0",
+      "answer": "Use GitHub Actions. Add .github/workflows/ci.yml that runs pytest on each push.",
+      "tokens": 20,
+      "truncated": false,
+      "markers": {
+       "words": 11,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-1",
+      "answer": "An API rate limit is the maximum number of requests allowed in a given time period.",
+      "tokens": 18,
+      "truncated": false,
+      "markers": {
+       "words": 16,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-2",
+      "answer": "It should contain progress, blockers, and next steps.",
+      "tokens": 13,
+      "truncated": false,
+      "markers": {
+       "words": 8,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-3",
+      "answer": "You should use the three-point estimate: (optimistic + 4\u00d7most likely + pessimistic) \u00f7 6.",
+      "tokens": 26,
+      "truncated": false,
+      "markers": {
+       "words": 14,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 1,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.071,
+       "empty": false
+      }
+     }
+    ]
+   }
+  }
+ },
+ "seconds": 19.2
+}

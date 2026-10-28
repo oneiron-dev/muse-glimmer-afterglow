@@ -24,20 +24,25 @@ def default_endpoint():
     return os.environ.get("AFTERGLOW_ENDPOINT") or f"http://{HOSTS['hosts'][host]['tailnet']}:{HOSTS['proxy_port']}"
 
 
-def world_adapter_entry(world):
-    """The world's latest kept adapter in the night job's serving manifest (runs/serving/adapters.json, schema in
-    serve/glimmer_server.py adapter_args): {"id", "world", "day", "path", "sha256", ...}. None when the manifest
-    is absent or lists no kept adapter for the world."""
+def world_adapter_choice(world):
+    """Which of the world's adapters in the serving manifest (runs/serving/adapters.json, schema in
+    serve/glimmer_server.py adapter_args) the day agent serves under the serving rule (night_checks.py):
+    {"entry": {"id", "world", "day", "path", "sha256", ...} or None, "why": one line}."""
     from . import paths
+    from .night_checks import serving_choice
 
     f = paths.runs_root() / "serving" / "adapters.json"
     if not f.exists():
-        return None
+        return {"entry": None, "why": "No update loaded: the server has no adapters.", "failed": {}}
     entries = json.loads(f.read_text()).get("adapters")
     if not isinstance(entries, list) or not all(isinstance(a, dict) and a.get("path") for a in entries):
         raise GlimmerError(f"{f}: expected {{\"adapters\": [{{\"id\", \"world\", \"path\", ...}}]}}")
-    kept = [a for a in entries if a.get("world") == world and a.get("decision", "keep") == "keep"]
-    return max(kept, key=lambda a: a.get("day", 0)) if kept else None
+    return serving_choice(world, entries)
+
+
+def world_adapter_entry(world):
+    """The world's adapter the day agent serves (world_adapter_choice), or None: base weights with notes."""
+    return world_adapter_choice(world)["entry"]
 
 
 class GlimmerClient:

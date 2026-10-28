@@ -6,7 +6,9 @@ minimal), the forced answer prefix is appended, and one token is read with pre-s
 probabilities are renormalized over the label set; the top label is the decision, its probability the confidence.
 Below a per-kind threshold:
   route     -> "look up": the caller answers with the notes in the prompt (never longer reasoning for this kind);
-  duplicate, supersede -> "thought it through": reasoning on, then the same labels read after the reasoning.
+  duplicate, supersede -> "thought it through": reasoning on, then the same labels read after the reasoning. Reasoning
+    that ends at its token cap (or says nothing) returns undecided (pick and p None, reason "reasoning_cap", yes False):
+    the caller keeps both notes.
 Every request names every loaded adapter's scale (the decision adapter at 1 when one is set, all others at 0) and
 sends cache_prompt false. Adapters are found by path, never by id.
 """
@@ -28,21 +30,37 @@ BOS = "<|begin_of_text|>"
 N_PROBS = 128
 # Per-kind thresholds; fit on the calibration split (decide/score_decisions.py) and set here from the results page.
 THRESHOLDS = {"route": 0.0, "duplicate": 0.0, "supersede": 0.0}
-SUPERSEDE_CANDIDATES = 5  # BM25 top 5 over earlier notes held 16 of 17 real day-2 corrections (top 8: 17 of 17)
+# BM25 candidates per new note: on the 17 real day-2 corrections, top 5 holds the replaced note 16 times, top 8 all 17.
+SUPERSEDE_CANDIDATES_DAY = 5  # remember() at day time: ~0.7 s per new note
+SUPERSEDE_CANDIDATES_NIGHT = 8  # night consolidation: latency does not matter
+SUPERSEDE_CANDIDATES = SUPERSEDE_CANDIDATES_DAY
 SUPERSEDE_ACCEPT_P = 0.9  # link only when the one-pass "replaces" probability reaches this
+
+
+def norm_key_value(note):
+    return (" ".join(str(note.get("key", "")).lower().split()), " ".join(str(note.get("value", "")).lower().split()))
 
 
 def supersede_candidates(earlier, new_note, k=SUPERSEDE_CANDIDATES):
     """The k earlier notes most likely to be replaced by new_note: BM25 over each note's key and value, queried with
-    the new note's "key: value"."""
+    the new note's "key: value".
+
+    Input contract: earlier = every note that was active before new_note was written, of any kind (fact, preference,
+    procedure), as the agent saved it ({"id", "key", "value"}), and taken before any rule marks notes superseded. The
+    new note itself (same id, or same key and value) is never a candidate."""
+    same = (new_note.get("id"), norm_key_value(new_note))
+    earlier = [n for n in earlier if n.get("id") != same[0] and norm_key_value(n) != same[1]]
     if not earlier:
         return []
     return Bm25([{**n, "statement": ""} for n in earlier]).top(note_line(new_note), k)
 
 
 class Decider:
-    def __init__(self, endpoint, adapter_path=None, slot=None, thresholds=None, timeout=600):
+    def __init__(self, endpoint, adapter_path=None, slot=None, thresholds=None, timeout=600, trace=None):
+        """trace: when set, every /completion post carries "X-Afterglow-Trace: <trace>", so the serving trace proxy
+        records each decision."""
         self.endpoint = endpoint.rstrip("/").removesuffix("/v1")
+        self.trace = trace
         self.adapter_path = adapter_path
         self.slot = slot
         self.thresholds = {**THRESHOLDS, **(thresholds or {})}
@@ -50,8 +68,10 @@ class Decider:
         self._label_ids = {}
 
     def _post(self, path, body):
-        req = urllib.request.Request(self.endpoint + path, data=json.dumps(body).encode(),
-                                     headers={"Content-Type": "application/json"})
+        headers = {"Content-Type": "application/json"}
+        if self.trace and path == "/completion":
+            headers["X-Afterglow-Trace"] = self.trace
+        req = urllib.request.Request(self.endpoint + path, data=json.dumps(body).encode(), headers=headers)
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:
             return json.loads(resp.read())
 
@@ -109,9 +129,15 @@ class Decider:
         t0 = time.time()
         r = self._post("/completion", body)
         think_ms = 1000 * (time.time() - t0)
+        n_tok = r.get("tokens_predicted") or 0
+        if r.get("stop_type") == "limit" or n_tok >= max_tokens or not r.get("content", "").strip():
+            # Lead ruling 29 Oct 04:40: reasoning that ends at its cap, or says nothing, is undecided, never an answer.
+            return {"pick": None, "p": None, "undecided": True, "reason": "reasoning_cap", "reasoning_tokens": n_tok,
+                    "ms": round(think_ms, 1)}
         out = self._read(prompt + r.get("content", "") + "<|eom|>" + ANSWER_PREFIX, labels, lora)
         out["ms"] = round(out["ms"] + think_ms, 1)
-        out["reasoning_tokens"] = r.get("tokens_predicted")
+        out["reasoning_tokens"] = n_tok
+        out["undecided"] = False
         return out
 
     def route(self, first, notes, question):
@@ -134,7 +160,7 @@ class Decider:
         if res["p"] < self.thresholds[kind]:
             ext = self._think(text, list(options), lora)
             out = {"kind": kind, "path": "thought_it_through", "one_pass": res, **ext}
-        out["yes"] = out["pick"] == "1"
+        out["yes"] = out["pick"] == "1" and not out.get("undecided")
         out["prompt_id"] = PROMPT_IDS[kind]
         return out
 

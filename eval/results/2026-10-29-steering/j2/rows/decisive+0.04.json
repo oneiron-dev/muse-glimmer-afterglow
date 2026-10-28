@@ -1,0 +1,344 @@
+{
+ "row": {
+  "name": "decisive+0.04",
+  "request_cvecs": {
+   "decisive": 0.04
+  },
+  "tests_by_arm": {
+   "base": [
+    "day:decisive"
+   ],
+   "R2": [
+    "day:decisive"
+   ]
+  }
+ },
+ "cmd": [
+  "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "-m",
+  "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+  "--lora",
+  "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+  "--lora-init-without-apply",
+  "--cache-ram",
+  "0",
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-np",
+  "8",
+  "-c",
+  "16384",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "18630",
+  "--control-vector-scaled",
+  "/data/meta-steering/vectors/j1/base/abstention-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/decisive-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/concise-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/formal-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/asks_first-raw.gguf:0.0,/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf:0.0",
+  "--control-vector-layer-range",
+  "16",
+  "42"
+ ],
+ "cvec_scales": [
+  0.0,
+  0.04,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+ ],
+ "arms": {
+  "base": {
+   "day:decisive": {
+    "agg": {
+     "words": 56.25,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.595,
+     "repetition": 0.198,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:decisive-0",
+      "answer": "Host it on a managed platform.\n\nA VPS is a full-time job. You will spend weekends patching, securing, and debugging downtime instead of shipping features.\n\nUse a managed platform. You get instant deploys, automatic scaling, backups, and security patches without you touching them.\n\nUse a VPS only if you need full root access for a custom kernel, exotic hardware, or compliance that forbids managed services. For a side project, that is almost never you.\n\nPick one managed platform and ship today.",
+      "tokens": 103,
+      "truncated": false,
+      "markers": {
+       "words": 81,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.247,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-1",
+      "answer": "Hire a full-time engineer first.\n\nA contractor will ship one feature and leave. You need an owner inside the company who will stay for the product.\n\nHire one senior full-time engineer now. Give them 90 days to ship your core product to production. No contractor.\n\nIf you already have product-market fit and just need one-time migration work, hire the contractor. Otherwise full-time.",
+      "tokens": 80,
+      "truncated": false,
+      "markers": {
+       "words": 62,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.242,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-2",
+      "answer": "For city driving, buying a used car is almost always the better financial move.\n\nA 3-5 year old used car is already depreciated, costs far less to buy, and you own it outright. City driving means stop-start traffic, parking dings, and high mileage - all things that destroy lease value and trigger expensive penalties.\n\nLease a new one only if you must have the latest safety tech and you drive under 10,000 miles per year with zero tolerance for repairs.\n\nBuy the used car. Buy it outright, keep it 10 years.",
+      "tokens": 113,
+      "truncated": false,
+      "markers": {
+       "words": 91,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.22,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-3",
+      "answer": "No. Migrate when you have 3+ people editing the same spreadsheet daily and you need audit logs. Until then, keep the spreadsheet and lock it down with one owner, one source of truth, and daily backups.",
+      "tokens": 46,
+      "truncated": false,
+      "markers": {
+       "words": 36,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.194,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-4",
+      "answer": "Take the morning train. You'll arrive with time to spare, settle in before the conference starts, and avoid the evening rush.",
+      "tokens": 26,
+      "truncated": false,
+      "markers": {
+       "words": 21,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 4.76,
+       "repetition": 0.095,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-5",
+      "answer": "Use a hosted provider.\n\nBuild your own login system only if you have a dedicated security team and compliance requirements that forbid third-party auth. For everyone else: use a hosted provider.\n\nUse Auth0, Clerk, or AWS Cognito. One provider. One integration. Done.\n\nDo not build passwords, 2FA, password reset, breach monitoring, or social logins yourself. You will ship insecure auth.\n\nHosted provider gives you: secure password storage, breach monitoring, MFA, social logins, passwordless, compliance certifications, and support.\n\nCost of a breach > cost of provider by 100x.\n\nIf you must own auth: use open source battle-tested stack: Keycloak self-hosted. Never roll your own crypto.\n\nDecision: Hosted provider. Ship today.",
+      "tokens": 160,
+      "truncated": false,
+      "markers": {
+       "words": 109,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.303,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-6",
+      "answer": "No. Learn React first.\n\nReact is the framework. TypeScript is a type layer. Learn the framework, ship components, hit the pain. Then add TypeScript.\n\nDo React with plain JavaScript for 3 months. Build 3 real projects. Then add TypeScript.\n\nYou will learn faster and you will actually use TypeScript.",
+      "tokens": 69,
+      "truncated": false,
+      "markers": {
+       "words": 49,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.286,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-7",
+      "answer": "No.",
+      "tokens": 3,
+      "truncated": false,
+      "markers": {
+       "words": 1,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     }
+    ]
+   }
+  },
+  "R2": {
+   "day:decisive": {
+    "agg": {
+     "words": 9.5,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.048,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:decisive-0",
+      "answer": "Host it on a managed platform. You said you want zero ops.",
+      "tokens": 15,
+      "truncated": false,
+      "markers": {
+       "words": 12,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.083,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-1",
+      "answer": "Hire the full-time engineer first.",
+      "tokens": 9,
+      "truncated": false,
+      "markers": {
+       "words": 5,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-2",
+      "answer": "For city driving, buy a used car. You will drive less than 10,000 km a year in the city, so buy a used car outright.",
+      "tokens": 33,
+      "truncated": false,
+      "markers": {
+       "words": 25,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.16,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-3",
+      "answer": "Yes, migrate now. Use PostgreSQL.",
+      "tokens": 10,
+      "truncated": false,
+      "markers": {
+       "words": 5,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-4",
+      "answer": "Take the morning train to the conference.",
+      "tokens": 9,
+      "truncated": false,
+      "markers": {
+       "words": 7,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.143,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-5",
+      "answer": "You use a hosted provider, Auth0, for all customer logins.",
+      "tokens": 16,
+      "truncated": false,
+      "markers": {
+       "words": 10,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-6",
+      "answer": "Learn TypeScript before React.",
+      "tokens": 7,
+      "truncated": false,
+      "markers": {
+       "words": 4,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-7",
+      "answer": "No, the shop should remain closed on Sundays.",
+      "tokens": 11,
+      "truncated": false,
+      "markers": {
+       "words": 8,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     }
+    ]
+   }
+  }
+ },
+ "seconds": 7.9
+}

@@ -153,7 +153,9 @@ def decide(server, glimmer, row, lora, slot=None, extend_below=None, strength="h
         after = glimmer.ids(prompt + reasoning + "<|eom|>" + ANSWER_PREFIX)
         d2, m2, top2, ms2, _ = label_probs(server, after, label_ids, lora, slot)
         pick2 = max(d2, key=d2.get)
-        out["extended"] = {"pick": pick2, "p": round(d2[pick2], 4), "right": pick2 in row["accept"], "label_mass": round(m2, 4),
+        undecided = stop == "limit" or (n_tok or 0) >= REASONING_MAX_TOKENS  # lead ruling 29 Oct 04:40: never an answer
+        out["extended"] = {"pick": pick2, "p": round(d2[pick2], 4), "right": pick2 in row["accept"], "undecided": undecided,
+                           "label_mass": round(m2, 4),
                            "reasoning_tokens": n_tok, "stop": stop, "ms": round(think_ms + ms2, 1), "reasoning": reasoning[-600:]}
     return out
 

@@ -1,0 +1,344 @@
+{
+ "row": {
+  "name": "formal+0.04",
+  "request_cvecs": {
+   "formal": 0.04
+  },
+  "tests_by_arm": {
+   "base": [
+    "day:formal"
+   ],
+   "R2": [
+    "day:formal"
+   ]
+  }
+ },
+ "cmd": [
+  "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "-m",
+  "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+  "--lora",
+  "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+  "--lora-init-without-apply",
+  "--cache-ram",
+  "0",
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-np",
+  "8",
+  "-c",
+  "16384",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "18630",
+  "--control-vector-scaled",
+  "/data/meta-steering/vectors/j1/base/abstention-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/decisive-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/concise-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/formal-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/asks_first-raw.gguf:0.0,/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf:0.0",
+  "--control-vector-layer-range",
+  "16",
+  "42"
+ ],
+ "cvec_scales": [
+  0.0,
+  0.0,
+  0.0,
+  0.04,
+  0.0,
+  0.0
+ ],
+ "arms": {
+  "base": {
+   "day:formal": {
+    "agg": {
+     "words": 84.5,
+     "asks": 0.0,
+     "hedges_per_100w": 0.236,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.802,
+     "repetition": 0.262,
+     "empty": 0.0,
+     "truncated": 2
+    },
+    "results": [
+     {
+      "id": "day:formal-0",
+      "answer": "Subject: New Expense Form Implementation\n\nTeam,\n\nThis email is to inform you about the new expense form. The new expense form is now available. All employees are required to use the new expense form for submitting expenses.\n\nIf you have any questions about the new expense form, please contact the accounting department.\n\nThank you for your cooperation.\n\nSincerely,\n[Your Name]",
+      "tokens": 75,
+      "truncated": false,
+      "markers": {
+       "words": 60,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.333,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-1",
+      "answer": "This is a common and stressful situation, but it can be managed professionally and respectfully.\n\nHere are some key points to consider:\n\n### 1. Understand the reason for the cost increase\n\nBefore speaking with the client, be clear on why the costs have increased. Common reasons include:\n\n* The project scope has expanded.\n* The client has requested changes.\n* There were unforeseen complexities.\n* The initial estimate was incorrect.\n\n### 2. Prepare\n\n* Calculate the new costs.\n* Identify the specific reasons for the increase.\n* Prepare a revised budget or quote.\n\n### 3. Communicate with the client\n\n* Be honest and transparent.\n* Explain the reasons for the cost increase.\n* Provide a revised budget or quote.\n* Offer options to the client, such as reducing the scope of the project or finding areas to reduce costs.\n\n### 4. Follow up\n\n* Provide a written summary of the conversation.\n* Confirm the client's acceptance of the new budget.\n\n### Example\n\n\"Mr. Smith, I would like to discuss the budget for the project. Due to [reason], the costs have increased. The new budget is [amount]. I would like to discuss the options with you.\"\n\nBy following these steps, you can professionally and respectfully communicate a cost increase to",
+      "tokens": 256,
+      "truncated": true,
+      "markers": {
+       "words": 209,
+       "asks": false,
+       "hedges_per_100w": 0.48,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.48,
+       "repetition": 0.464,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-2",
+      "answer": "Subject: Thank You for Covering My Shift\n\nDear [Colleague's Name],\n\nI am writing to express my sincere gratitude for covering my shift on [Date]. Your support was invaluable and demonstrated a strong commitment to the team. I am grateful for your assistance.\n\nSincerely,\n\n[Your Name]",
+      "tokens": 62,
+      "truncated": false,
+      "markers": {
+       "words": 45,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 2.22,
+       "repetition": 0.222,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-3",
+      "answer": "Subject: Request for Delivery Date\n\nDear [Supplier Name],\n\nI am writing to request the delivery date for our recent order. Please provide the estimated delivery date at your earliest convenience.\n\nSincerely,\n\n[Your Name]",
+      "tokens": 45,
+      "truncated": false,
+      "markers": {
+       "words": 33,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.212,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-4",
+      "answer": "Welcome to [Your Company Name]. Thank you for your recent purchase. We are committed to providing you with the best possible service. Please do not hesitate to contact us with any questions or concerns.",
+      "tokens": 40,
+      "truncated": false,
+      "markers": {
+       "words": 34,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.118,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-5",
+      "answer": "**Office Closure Notice**\n\nThis is to inform all employees that the office will be closed early on Friday, August 28, 2025. Employees are expected to finish their work by 2:00 PM and leave the office immediately. This is done as a part of the company\u2019s policy.",
+      "tokens": 61,
+      "truncated": false,
+      "markers": {
+       "words": 46,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.152,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-6",
+      "answer": "Following up after a job interview is an important step in the job search process. Here are some tips on how to follow up effectively:\n\n1. Send a thank-you note: After the interview, send a thank-you note to the interviewer. This note should be sent within 24 hours of the interview. The note should express your gratitude for the interviewer's time and consideration, and it should also summarize your interest in the position.\n2. Reiterate your interest: In your follow-up message, reiterate your interest in the position and the company. This can help to demonstrate your enthusiasm for the opportunity.\n3. Provide additional information: If you were unable to provide certain information during the interview, you may want to provide additional information in your follow-up message.\n4. Ask about the status of your application: If you have not heard back from the interviewer within a week or two, you may want to follow up with a message asking about the status of your application.\n5. Use a professional tone: When following up after a job interview, it is important to use a professional tone. This includes using proper grammar and spelling, and avoiding the use of jargon or technical terms that the interviewer may not understand.\n6. Be respectful of the interviewer's time:",
+      "tokens": 256,
+      "truncated": true,
+      "markers": {
+       "words": 213,
+       "asks": false,
+       "hedges_per_100w": 1.41,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.94,
+       "repetition": 0.455,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-7",
+      "answer": "Subject: Request for Review of Slides\n\nDear [Colleague's Name],\n\nI hope this message finds you well.\n\nI am writing to request your review of the attached slides. Your feedback would be greatly appreciated.\n\nSincerely,\n[Your Name]",
+      "tokens": 51,
+      "truncated": false,
+      "markers": {
+       "words": 36,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 2.78,
+       "repetition": 0.139,
+       "empty": false
+      }
+     }
+    ]
+   }
+  },
+  "R2": {
+   "day:formal": {
+    "agg": {
+     "words": 9.875,
+     "asks": 0.125,
+     "hedges_per_100w": 0.0,
+     "commits": 0.375,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.05,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:formal-0",
+      "answer": "I have written the following message to the team: \"Please use the new expense form located on the shared drive.\"",
+      "tokens": 24,
+      "truncated": false,
+      "markers": {
+       "words": 20,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.15,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-1",
+      "answer": "You should state the facts about the cost overrun.",
+      "tokens": 12,
+      "truncated": false,
+      "markers": {
+       "words": 9,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 1,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.111,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-2",
+      "answer": "Thank you for covering my shift.",
+      "tokens": 8,
+      "truncated": false,
+      "markers": {
+       "words": 6,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-3",
+      "answer": "Dear Supplier, When will you ship?",
+      "tokens": 9,
+      "truncated": false,
+      "markers": {
+       "words": 6,
+       "asks": true,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-4",
+      "answer": "You should welcome the customer and ask if they need further assistance.",
+      "tokens": 14,
+      "truncated": false,
+      "markers": {
+       "words": 12,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 1,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-5",
+      "answer": "The office will close early on Friday.",
+      "tokens": 9,
+      "truncated": false,
+      "markers": {
+       "words": 7,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-6",
+      "answer": "You should send a thank you note.",
+      "tokens": 9,
+      "truncated": false,
+      "markers": {
+       "words": 7,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 1,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.143,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:formal-7",
+      "answer": "I will write a message asking Ines Varga to review the slides.",
+      "tokens": 16,
+      "truncated": false,
+      "markers": {
+       "words": 12,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     }
+    ]
+   }
+  }
+ },
+ "seconds": 12.0
+}

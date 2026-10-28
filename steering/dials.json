@@ -1,0 +1,81 @@
+{
+ "version": 1,
+ "note": "Dial library for serving and night proposals. Scales are fractions of each layer's mean residual norm, added on layers 16-42 (llama-server --control-vector-layer-range 16 42). Only the positive pole of each safe dial is tested so far; the negative poles were cut by the J2 deadline.",
+ "layer_range": [
+  16,
+  42
+ ],
+ "serving_load_order": [
+  "concise",
+  "formal",
+  "decisive"
+ ],
+ "dials": {
+  "concise": {
+   "safe": true,
+   "scale": 0.04,
+   "max_scale": 0.08,
+   "tested": true,
+   "toward_positive_only": true,
+   "evidence": "J2 29 Oct: base words 154 -> 31 (0.04) / judge toward concise 1.00 coherence 5.0 at 0.04 and 0.08; R2 0.88-1.00",
+   "gguf": "/data/meta-steering/vectors/j1/base/concise-raw.gguf",
+   "sha256": "c2db4c55857f57e10ff2a01b5b124160c15b0c5c5166b0cbdeec7c1739ee0ce2",
+   "layers": [
+    16,
+    42
+   ]
+  },
+  "formal": {
+   "safe": true,
+   "scale": 0.04,
+   "max_scale": 0.04,
+   "tested": true,
+   "toward_positive_only": true,
+   "evidence": "J2: judge toward formal 1.00 coherence 4.5 on base at 0.04; 0.08 breaks (coherence 2.4)",
+   "gguf": "/data/meta-steering/vectors/j1/base/formal-raw.gguf",
+   "sha256": "cba653def5a6f7f68a9318de9845d020b707704d0c73a2c5d6154ae2332ef6d6",
+   "layers": [
+    16,
+    42
+   ]
+  },
+  "decisive": {
+   "safe": true,
+   "scale": 0.04,
+   "max_scale": 0.04,
+   "tested": true,
+   "toward_positive_only": true,
+   "evidence": "J2: judge toward decisive 1.00 coherence 5.0 on base at 0.04; coherence 4.1 at 0.08; -0.06 on R2 damages facts (B fwd 118 -> 89)",
+   "gguf": "/data/meta-steering/vectors/j1/base/decisive-raw.gguf",
+   "sha256": "609b1bbf3f1e204573738873229655b59a4877cd7cd62671f9f7f31455d0ce32",
+   "layers": [
+    16,
+    42
+   ]
+  },
+  "asks_first": {
+   "safe": false,
+   "scale": null,
+   "tested": true,
+   "evidence": "J2: judge toward asks-first 0.44-0.63, no clear effect at 0.04/0.08",
+   "gguf": "/data/meta-steering/vectors/j1/base/asks_first-raw.gguf",
+   "sha256": "7cd5150d909d78482d86937feae03c367887176ade058f2c89ab9d2cae3388d9",
+   "layers": [
+    16,
+    42
+   ]
+  },
+  "abstention": {
+   "safe": false,
+   "scale": null,
+   "tested": true,
+   "evidence": "J2: no scale restores 'I don't know' on R2; on base 0.04 lowers gate abstention 57.5% -> 24% with 71 truncations",
+   "gguf": "/data/meta-steering/vectors/j1/base/abstention-raw.gguf",
+   "sha256": "5dd68819026cf8ff8119e3b5ce746606a8e73b731e53792395d46c216089dbcf",
+   "layers": [
+    16,
+    42
+   ]
+  }
+ }
+}

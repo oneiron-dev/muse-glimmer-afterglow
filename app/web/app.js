@@ -17,9 +17,13 @@ let seenNotes = new Set();
 
 /* ---------- header, notes, context ---------- */
 
-function renderWeights(night, adapter) {
+function renderWeights(night, adapter, serving) {
+  // What the last night learned, and which update the chat is using now (the serving rule's line, from the server).
   const box = $("weights-body");
-  if (!night) return;
+  if (!night) {
+    if (serving && serving.why) box.replaceChildren(el("p", "serving", serving.why));
+    return;
+  }
   box.replaceChildren();
   const p = el("p", "empty");
   if (night.decision === "rollback") {
@@ -31,8 +35,7 @@ function renderWeights(night, adapter) {
   const a = el("a", "report-link", "Open the morning report");
   a.href = `/report?day=${night.day}`;
   box.append(p);
-  if (night.decision !== "rollback" && !adapter)  // kept, but the server has not loaded it yet
-    box.append(el("p", "hint", "The server loads this update when it next restarts. Until then you talk to the base weights."));
+  if (serving && serving.why) box.append(el("p", "serving", serving.why));
   box.append(a);
 }
 
@@ -43,7 +46,7 @@ function renderHeader(s) {
   $("when").textContent = `Day ${s.day}, ${day}`;
   $("dot").className = "dot " + (s.server.healthy ? "up" : "down");
   $("dot").title = s.server.healthy ? `Serving at ${s.server.endpoint}` : `No answer from ${s.server.endpoint}`;
-  $("weights").textContent = s.server.adapter || "base weights";
+  $("weights").textContent = !s.server.healthy ? "server offline" : s.server.adapter || "base weights";
   const r = s.answer_channel_retries || { retried: 0, replies: 0 };
   $("retries").textContent = r.retried ? `${r.retried} of ${r.replies} replies today ended empty and were asked again` : "";
 }
@@ -56,6 +59,14 @@ function renderNotes(notes, flashIds = new Set()) {
   for (const n of active) {
     const li = el("li", "note");
     li.append(el("div", "k", pretty(n.key)), el("div", "v", n.value));
+    const d = n.decided, was = n.supersedes && byId[n.supersedes];
+    if (d && was) {  // linked by the model's decision, not by the agent: say how, with its certainty and time
+      const how = d.reasoned
+        ? `thought it through (one pass p ${d.p.toFixed(2)}, then ${d.reasoned.reasoning_tokens ?? "?"} reasoning tokens)`
+        : `decided in one pass${d.p != null ? `, p ${d.p.toFixed(2)}` : ""}`;
+      li.append(el("div", "decided", `replaces the earlier note "${pretty(was.key)}", ${how}` +
+        (d.latency_s != null ? `, ${d.latency_s.toFixed(2)} s` : "")));
+    }
     let prev = n.supersedes && byId[n.supersedes];
     while (prev) {
       li.append(el("div", "old", prev.value));
@@ -276,7 +287,7 @@ async function refresh(flash) {
   renderHeader(s);
   renderNotes(s.notes, flash);
   renderContext(s.snapshot);
-  renderWeights(s.night, s.server.adapter);
+  renderWeights(s.night, s.server.adapter, s.serving);
   return s;
 }
 

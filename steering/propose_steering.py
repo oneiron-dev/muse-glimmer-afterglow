@@ -31,17 +31,53 @@ GLIMMER_PROMPT = """You are reviewing one day of your work as {name}'s assistant
 
 {name}'s messages today, in order:
 {messages}
-
+{feedback}
 Last night's update changed how you behave on everyday prompts: {changes}.
 
-You have five dials; each turns your behaviour toward one end or the other:
+You have these dials; each turns your behaviour toward one end or the other:
 {dials}
 
 Propose up to two dial changes for tomorrow that would serve {name} better: turning back a change from last night
 that does not fit {name}, or turning a dial {name} would want. Keep any change from last night that fits what {name}
-asked for. Propose a change only with a concrete reason from today's messages; otherwise propose none.
+asked for. Propose a change only with a concrete reason from today's messages; otherwise propose none. When
+{name} told you how to answer, quote {name}'s words in the reason.
 
 Reply with JSON only: {{"proposals": [{{"dial": "<dial name>", "toward": "<one end of that dial>", "reason": "<one sentence for {name}, citing today>"}}]}}"""
+
+
+FEEDBACK_BLOCK = """
+What {name} said about your replies today:
+{items}
+"""
+
+
+def feedback_events(turns):
+    """The user's reactions to replies (records with a "feedback" field), each with the reply it refers to. The
+    feedback's axis and pole labels are the answer key: never shown to Glimmer, used only to score the proposals."""
+    replies = {t["turn"]: t["content"] for t in turns if t.get("role") == "assistant"}
+    events = []
+    for t in turns:
+        fb = t.get("feedback")
+        if t.get("role") == "user" and isinstance(fb, dict):
+            ref = fb.get("refers_to_turn")
+            events.append({"turn": t["turn"], "words": t["content"], "refers_to_turn": ref,
+                           "reply": (replies.get(ref) or "")[:400], "key": {k: fb.get(k) for k in ("axis", "toward", "polarity")}})
+    return events
+
+
+def score_against_key(proposals, events):
+    """A correction is read right when a proposal turns its axis toward the pole the user asked for; an approval is
+    respected when no proposal turns its axis away from the approved pole."""
+    rows = []
+    for e in events:
+        k = e["key"]
+        hits = [p for p in proposals if p.get("axis") == k.get("axis")]
+        if k.get("polarity") == "correction":
+            ok = any((p.get("toward") or "").lower() == (k.get("toward") or "").lower() for p in hits)
+        else:
+            ok = not any((p.get("toward") or "").lower() != (k.get("toward") or "").lower() for p in hits)
+        rows.append({"turn": e["turn"], "words": e["words"], **k, "read_right": ok})
+    return {"events": rows, "read_right": sum(r["read_right"] for r in rows), "n": len(rows)}
 
 
 def dial_line(axis):
@@ -65,12 +101,15 @@ def counter_proposals(check, axes, dials, user_dials):
     return out
 
 
-def glimmer_proposals(world, user_turns, check, axes, dials, log_path):
+def glimmer_proposals(world, user_turns, events, check, axes, dials, log_path):
     from teacher import complete
     name = world["persona"]["name"].split()[0]
     changes = "; ".join(f"{r['label']} ({r['shift']:+.1f})" for r in check["axes"] if r["label"] != "no clear change") or "no clear change"
+    items = "\n".join(f"- On your reply \"{e['reply'][:240]}\", {name} said: \"{e['words']}\"" for e in events)
+    offered = {n: a for n, a in axes.items() if not dials or dials.get(n, {}).get("safe")}
     prompt = GLIMMER_PROMPT.format(name=name, messages="\n".join(f"{i + 1}. {t}" for i, t in enumerate(user_turns)),
-                                   changes=changes, dials="\n".join(dial_line(a) for a in axes.values()))
+                                   feedback=FEEDBACK_BLOCK.format(name=name, items=items) if events else "",
+                                   changes=changes, dials="\n".join(dial_line(a) for a in offered.values()))
     text, _, usage = complete("glimmer", [{"role": "user", "content": prompt}], max_tokens=900, log_path=log_path,
                               purpose="steering proposal")
     m = re.search(r"\{.*\}", text, re.S)
@@ -81,7 +120,7 @@ def glimmer_proposals(world, user_turns, check, axes, dials, log_path):
     out = []
     for v in items[:2]:
         dial = (v.get("dial") or "").strip()
-        if dial not in axes:
+        if dial not in offered:
             continue
         axis = axes[dial]
         toward = (v.get("toward") or "").strip().lower()
@@ -113,16 +152,19 @@ def main():
     night = root / args.world / str(args.day) / "night"
     out = Path(args.out) if args.out else night / "steering-proposals.json"
     candidates = counter_proposals(check, axes, dials, user_dials)
-    proposals, glimmer_call = list(candidates), None
+    proposals, glimmer_call, feedback_score = list(candidates), None, None
     if not args.no_glimmer:
         daylog = root / args.world / str(args.day) / "daylog.jsonl"
         turns = [json.loads(line) for line in daylog.read_text().splitlines() if line.strip()]
         user_turns = [t["content"] for t in turns if t.get("role") == "user"]
+        events = feedback_events(turns)
         out.parent.mkdir(parents=True, exist_ok=True)
-        proposals, glimmer_call = glimmer_proposals(world, user_turns, check, axes, dials, out.with_suffix(".calls.jsonl"))
+        proposals, glimmer_call = glimmer_proposals(world, user_turns, events, check, axes, dials, out.with_suffix(".calls.jsonl"))
+        if events:
+            feedback_score = score_against_key(proposals, events)
     doc = {"version": 1, "world": args.world, "day": args.day, "status": "proposed; takes effect only when accepted",
            "behaviour_check": str(args.check), "proposals": proposals,
-           "counter_candidates": candidates, "glimmer_call": glimmer_call}
+           "counter_candidates": candidates, "glimmer_call": glimmer_call, "feedback_score": feedback_score}
     out.parent.mkdir(parents=True, exist_ok=True)
     atomic_write(out, json.dumps(doc, indent=1) + "\n")
     print(json.dumps([{k: p.get(k) for k in ("kind", "axis", "toward", "scale", "tested", "reason")} for p in proposals], indent=1))
