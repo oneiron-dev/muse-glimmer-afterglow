@@ -265,6 +265,28 @@ def supersede_candidate_rows(W, runs, k=8):
     return rows
 
 
+def norm_line(text):
+    return " ".join((text or "").lower().split())
+
+
+def pair_leaks(train_rows, check_rows):
+    """Pair-level leak check against the day-2 correction check set: a training pair row is a hit when it holds a check
+    pair whole, i.e. the check's earlier note is one side of the row and the check's new note is the other side, or the
+    other side states the same superseding fact (same new fact id)."""
+    hits = []
+    for t in train_rows:
+        if "a" not in t:
+            continue
+        sides = {norm_line(t["a"]), norm_line(t["b"])}
+        t_new = (t.get("fact_ids") or [None, None])[-1]
+        for c in check_rows:
+            if norm_line(c["a"]) not in sides:
+                continue
+            if norm_line(c["b"]) in sides or (t_new is not None and t_new == c["fact_ids"][-1]):
+                hits.append({"check": c["id"], "train_row": t["id"]})
+    return hits
+
+
 def split_by_hash(rows, share, salt):
     """Hold out a calibration share of w1-w3 pair rows by a stable hash of the row id."""
     out = []
@@ -327,17 +349,26 @@ def main():
         return [{"id": r["id"], "messages": [{"content": r.get("question") or r["prompt"]}]}
                 for name, rows in built.items() if name.endswith("-train.jsonl") for r in rows]
     hits, _ = leak_check(as_messages(), probes)
-    dropped = sorted({h["train_row"] for h in hits})
+    check_path = DATA / "supersede-day2-check.jsonl"
+    checks = read_jsonl(check_path) if check_path.exists() else []
+    pair_hits = pair_leaks([r for name, rows in built.items() if name.endswith("-train.jsonl") for r in rows], checks)
+    dropped = sorted({h["train_row"] for h in hits} | {h["train_row"] for h in pair_hits})
     built = {name: [r for r in rows if r["id"] not in dropped] for name, rows in built.items()}
     after, overlap = leak_check(as_messages(), probes)
+    pair_after = pair_leaks([r for name, rows in built.items() if name.endswith("-train.jsonl") for r in rows], checks)
     for name, rows in built.items():
         report[name] = write(rows, DATA / name)
-    leak = {"train_rows": len(as_messages()), "probes": len(probes), "hits_before_clean": len(hits), "dropped_rows": dropped,
-            "examples": hits[:20], "hits": len(after), "probes_sharing_a_5gram": overlap, "passed": not after}
-    hits = after
+    leak = {"train_rows": len(as_messages()), "probes": len(probes), "hits_before_clean": len(hits),
+            "pair_check_rows": len(checks), "pair_hits_before_clean": len(pair_hits),
+            "pair_checks_hit_before_clean": len({h["check"] for h in pair_hits}), "dropped_rows": dropped,
+            "examples": hits[:20], "pair_examples": pair_hits[:20], "hits": len(after), "pair_hits": len(pair_after),
+            "probes_sharing_a_5gram": overlap, "passed": not after and not pair_after}
+    hits = after + pair_after
     (DATA / "leak.json").write_text(json.dumps(leak, indent=1) + "\n")
     counts = {name: sum(1 for _ in open(DATA / name)) for name in report}
-    print(json.dumps({"files": counts, "leak": {k: leak[k] for k in ("train_rows", "hits", "passed")}}, indent=1))
+    print(json.dumps({"files": counts, "leak": {k: leak[k] for k in ("train_rows", "hits", "pair_hits_before_clean",
+                                                                      "pair_checks_hit_before_clean", "pair_hits", "passed")}},
+                     indent=1))
     if hits:
         sys.exit(1)
 
