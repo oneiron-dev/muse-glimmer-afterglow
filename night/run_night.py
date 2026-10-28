@@ -33,17 +33,31 @@ sys.path.insert(0, str(ROOT / "night"))
 sys.path.insert(0, str(ROOT / "eval"))
 from paths import runs_root  # noqa: E402
 
-HOST = {
-    "name": "mel",
-    "repo": "/data/meta-night/repo",
-    "work": "/data/meta-night/nights",
-    "python": "/home/lexi/c-pilot-gpu-venv-20261014/bin/python",
-    "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
-    "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
-    "target_gguf": "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
-    "llama_dir": "/data/meta-night/llama.cpp",
-    "mem": os.environ.get("AFTERGLOW_HOST_MEM", "22G"),  # fleet RAM booking for each GPU step
+# Training hosts. Same venv (copied from mel), same NF4 checkpoint, same llama.cpp v0.7.0 tree (620d2225 + patch).
+HOSTS = {
+    "mel": {
+        "name": "mel",
+        "repo": "/data/meta-night/repo",
+        "work": "/data/meta-night/nights",
+        "python": "/home/lexi/c-pilot-gpu-venv-20261014/bin/python",
+        "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
+        "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
+        "target_gguf": "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+        "llama_dir": "/data/meta-night/llama.cpp",
+    },
+    "nelly": {
+        "name": "nelly",
+        "repo": "/data/meta-night/repo",
+        "work": "/data/meta-night/nights",
+        "python": "/home/lexi/c-pilot-gpu-venv-20261014/bin/python",
+        "model_dir": "/data/drafter-tune-20261014/models/target-nf4",
+        "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
+        "target_gguf": "/data/drafter-tune-20261014/models/official-gguf/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+        "llama_dir": "/data/meta-night/llama.cpp",
+    },
 }
+HOST = {**HOSTS[os.environ.get("AFTERGLOW_TRAIN_HOST", "mel")],
+        "mem": os.environ.get("AFTERGLOW_HOST_MEM", "22G")}  # fleet RAM booking for each GPU step
 GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
