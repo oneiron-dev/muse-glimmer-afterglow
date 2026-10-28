@@ -6,7 +6,9 @@ minimal), the forced answer prefix is appended, and one token is read with pre-s
 probabilities are renormalized over the label set; the top label is the decision, its probability the confidence.
 Below a per-kind threshold:
   route     -> "look up": the caller answers with the notes in the prompt (never longer reasoning for this kind);
-  duplicate, supersede -> "thought it through": reasoning on, then the same labels read after the reasoning.
+  duplicate, supersede -> "thought it through": reasoning on, then the same labels read after the reasoning. Reasoning
+    that ends at its token cap (or says nothing) returns undecided (pick and p None, reason "reasoning_cap", yes False):
+    the caller keeps both notes.
 Every request names every loaded adapter's scale (the decision adapter at 1 when one is set, all others at 0) and
 sends cache_prompt false. Adapters are found by path, never by id.
 """
@@ -117,9 +119,15 @@ class Decider:
         t0 = time.time()
         r = self._post("/completion", body)
         think_ms = 1000 * (time.time() - t0)
+        n_tok = r.get("tokens_predicted") or 0
+        if r.get("stop_type") == "limit" or n_tok >= max_tokens or not r.get("content", "").strip():
+            # Lead ruling 29 Oct 04:40: reasoning that ends at its cap, or says nothing, is undecided, never an answer.
+            return {"pick": None, "p": None, "undecided": True, "reason": "reasoning_cap", "reasoning_tokens": n_tok,
+                    "ms": round(think_ms, 1)}
         out = self._read(prompt + r.get("content", "") + "<|eom|>" + ANSWER_PREFIX, labels, lora)
         out["ms"] = round(out["ms"] + think_ms, 1)
-        out["reasoning_tokens"] = r.get("tokens_predicted")
+        out["reasoning_tokens"] = n_tok
+        out["undecided"] = False
         return out
 
     def route(self, first, notes, question):
@@ -142,7 +150,7 @@ class Decider:
         if res["p"] < self.thresholds[kind]:
             ext = self._think(text, list(options), lora)
             out = {"kind": kind, "path": "thought_it_through", "one_pass": res, **ext}
-        out["yes"] = out["pick"] == "1"
+        out["yes"] = out["pick"] == "1" and not out.get("undecided")
         out["prompt_id"] = PROMPT_IDS[kind]
         return out
 
