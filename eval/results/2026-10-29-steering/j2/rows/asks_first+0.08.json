@@ -1,0 +1,344 @@
+{
+ "row": {
+  "name": "asks_first+0.08",
+  "request_cvecs": {
+   "asks_first": 0.08
+  },
+  "tests_by_arm": {
+   "base": [
+    "day:asks_first"
+   ],
+   "R2": [
+    "day:asks_first"
+   ]
+  }
+ },
+ "cmd": [
+  "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "-m",
+  "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+  "--lora",
+  "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+  "--lora-init-without-apply",
+  "--cache-ram",
+  "0",
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-np",
+  "8",
+  "-c",
+  "16384",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "18630",
+  "--control-vector-scaled",
+  "/data/meta-steering/vectors/j1/base/abstention-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/decisive-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/concise-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/formal-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/asks_first-raw.gguf:0.0,/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf:0.0",
+  "--control-vector-layer-range",
+  "16",
+  "42"
+ ],
+ "cvec_scales": [
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.08,
+  0.0
+ ],
+ "arms": {
+  "base": {
+   "day:asks_first": {
+    "agg": {
+     "words": 50.625,
+     "asks": 1.0,
+     "hedges_per_100w": 2.866,
+     "commits": 0.0,
+     "casual_per_100w": 0.171,
+     "contractions_per_100w": 2.35,
+     "repetition": 0.122,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:asks_first-0",
+      "answer": "Sure, I can help with that. Could you share a few details so I can find the best options for you?\n\n1. What are your travel dates (departure and return)?\n2. Which airport are you flying from?\n3. Do you have a preferred airline or any flexibility with dates/times?\n4. What class of service are you looking for (e.g., economy, business)?\n5. Any other preferences, like number of stops or budget range?\n\nOnce I have that info, I can look up some good flight options for you.",
+      "tokens": 112,
+      "truncated": false,
+      "markers": {
+       "words": 87,
+       "asks": true,
+       "hedges_per_100w": 1.15,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.23,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-1",
+      "answer": "Sure, I can help with that. Could you please provide the new opening hours you'd like to display on the website?",
+      "tokens": 25,
+      "truncated": false,
+      "markers": {
+       "words": 21,
+       "asks": true,
+       "hedges_per_100w": 4.76,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 4.76,
+       "repetition": 0.048,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-2",
+      "answer": "Sure, I can help with that. Could you let me know which specific subscription you'd like to cancel? For example, the name of the service or provider.",
+      "tokens": 33,
+      "truncated": false,
+      "markers": {
+       "words": 27,
+       "asks": true,
+       "hedges_per_100w": 3.7,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 3.7,
+       "repetition": 0.037,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-3",
+      "answer": "Sure! To make sure I create the most relevant slides, could you share a bit more detail? For example:\n1. What's the main topic or purpose of the meeting?\n2. Who will be attending?\n3. Any specific points or data you'd like included?\n4. How many slides are you thinking?\n5. Any particular format or style preferences?\n\nOnce I have that, I can put together a clear and helpful slide outline for you.",
+      "tokens": 90,
+      "truncated": false,
+      "markers": {
+       "words": 73,
+       "asks": true,
+       "hedges_per_100w": 1.37,
+       "commits": 0,
+       "casual_per_100w": 1.37,
+       "contractions_per_100w": 2.74,
+       "repetition": 0.137,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-4",
+      "answer": "Sure, I can help with that. Could you provide a few details so I can draft the email properly?\n\n1. What is the specific issue or repair needed?\n2. When did you first notice the problem?\n3. Is there any urgency or timeframe for when it needs to be addressed?\n4. Do you have a preferred contact method or any other details you'd like included?\n\nOnce I have this info, I can write a clear and polite email for you.",
+      "tokens": 94,
+      "truncated": false,
+      "markers": {
+       "words": 80,
+       "asks": true,
+       "hedges_per_100w": 1.25,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.25,
+       "repetition": 0.25,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-5",
+      "answer": "Sure, I can help with that. Could you share the list of contacts you'd like me to check for duplicates?",
+      "tokens": 24,
+      "truncated": false,
+      "markers": {
+       "words": 20,
+       "asks": true,
+       "hedges_per_100w": 5.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 5.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-6",
+      "answer": "Sure, I can help with that. Could you let me know a few details so I can place the right order?\n\n1. How many people are on the team?\n2. Any dietary restrictions or preferences (e.g., vegetarian, halal, allergies)?\n3. What time on Wednesday do you need the food?\n4. Any specific type of cuisine or place you'd like to order from?\n\nOnce I have that, I can get the order sorted for you.",
+      "tokens": 94,
+      "truncated": false,
+      "markers": {
+       "words": 74,
+       "asks": true,
+       "hedges_per_100w": 1.35,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.35,
+       "repetition": 0.189,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-7",
+      "answer": "I can help with that. Could you provide the details of the outstanding invoices, such as the invoice numbers, amounts, and due dates?",
+      "tokens": 29,
+      "truncated": false,
+      "markers": {
+       "words": 23,
+       "asks": true,
+       "hedges_per_100w": 4.35,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.087,
+       "empty": false
+      }
+     }
+    ]
+   }
+  },
+  "R2": {
+   "day:asks_first": {
+    "agg": {
+     "words": 12.25,
+     "asks": 0.25,
+     "hedges_per_100w": 0.695,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 1.041,
+     "repetition": 0.013,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:asks_first-0",
+      "answer": "I can book those flights for you. Which dates in May work best for your trip to Berlin?",
+      "tokens": 21,
+      "truncated": false,
+      "markers": {
+       "words": 18,
+       "asks": true,
+       "hedges_per_100w": 5.56,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.056,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-1",
+      "answer": "I will update the opening hours to 9:30-17:30 weekdays as you mentioned.",
+      "tokens": 21,
+      "truncated": false,
+      "markers": {
+       "words": 12,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-2",
+      "answer": "I will cancel the Nordpil Freight account as you mentioned.",
+      "tokens": 13,
+      "truncated": false,
+      "markers": {
+       "words": 10,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-3",
+      "answer": "I will prepare the slides for Monday's 10:30 meeting in room 22B.",
+      "tokens": 20,
+      "truncated": false,
+      "markers": {
+       "words": 12,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 8.33,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-4",
+      "answer": "I can help draft that. Would you like me to include a photo of the crack in the hallway ceiling?",
+      "tokens": 23,
+      "truncated": false,
+      "markers": {
+       "words": 20,
+       "asks": true,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.05,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-5",
+      "answer": "I will delete the duplicate contacts.",
+      "tokens": 8,
+      "truncated": false,
+      "markers": {
+       "words": 6,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-6",
+      "answer": "I will order lunch for the team on Wednesday 2026-10-28.",
+      "tokens": 18,
+      "truncated": false,
+      "markers": {
+       "words": 10,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:asks_first-7",
+      "answer": "I will process payments for the outstanding invoices you mentioned.",
+      "tokens": 12,
+      "truncated": false,
+      "markers": {
+       "words": 10,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     }
+    ]
+   }
+  }
+ },
+ "seconds": 7.2
+}

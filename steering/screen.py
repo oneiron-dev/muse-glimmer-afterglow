@@ -13,6 +13,12 @@ questions without the gate's "say that you do not know" line), never_told (the w
 frozen never-told probes, abstain = right), forward (the world's day-1 held-out fact probes, the B arm of record),
 forget (forget slice v1), and day:<axis> (the axis's held-out test prompts; full replies + deterministic markers).
 Writes <out>/<row>.json per row and <out>/summary.json. A deadline stops the plan between rows.
+
+A plan is a list of rows, or {"server": {...}, "rows": [...]}. With "server" (binary = the patched llama-server,
+cvecs = [[name, gguf], ...] all loaded at scale 0, cvec_layers), rows that give "request_cvecs" {name: scale} run
+on that one server with per-request scales, with no restart. Rows that give "cvecs" still start their own server
+(the shared one is stopped first: two do not fit on one card), e.g. a stock server with the vector loaded
+statically, to check that a per-request row answers byte-equal.
 """
 
 import argparse
@@ -40,9 +46,11 @@ def post(server, path, body, timeout=600):
         return json.loads(resp.read())
 
 
-def complete(server, ids, max_new, lora_scale, strip):
+def complete(server, ids, max_new, lora_scale, strip, cvec_scales=None):
     body = {"prompt": ids, "n_predict": max_new, "temperature": 0.0, "top_k": 1, "seed": 20261014,
             "cache_prompt": False, "lora": [{"id": 0, "scale": lora_scale}]}
+    if cvec_scales is not None:  # per-request control vectors (steering/llamacpp/per-request-control-vectors.patch)
+        body["control_vectors"] = [{"id": i, "scale": sc} for i, sc in enumerate(cvec_scales)]
     r = post(server, "/completion", body)
     return {"answer": strip(r.get("content", "")), "raw": r.get("content", ""), "tokens": r.get("tokens_predicted"),
             "truncated": r.get("stop_type") == "limit"}
@@ -66,8 +74,8 @@ def markers(text):
 
 
 class Server:
-    def __init__(self, args, cvecs, log, layers=None):
-        cmd = [args.server_bin, "-m", args.target, "--lora", args.lora, "--lora-init-without-apply", "--cache-ram", "0",
+    def __init__(self, args, cvecs, log, layers=None, binary=None):
+        cmd = [binary or args.server_bin, "-m", args.target, "--lora", args.lora, "--lora-init-without-apply", "--cache-ram", "0",
                "-ngl", "99", "-fa", "on", "-np", str(args.parallel), "-c", str(args.ctx), "--host", "127.0.0.1",
                "--port", str(args.port)]
         if cvecs:
@@ -144,7 +152,11 @@ def main():
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     plan = json.loads(Path(args.plan).read_text())
-    summary = {"plan": args.plan, "eval_root": str(root), "rows": {}}
+    shared_spec = plan.get("server") if isinstance(plan, dict) else None
+    rows_plan = plan["rows"] if isinstance(plan, dict) else plan
+    shared = {"server": None}
+    names = [n for n, _ in shared_spec["cvecs"]] if shared_spec else []
+    summary = {"plan": args.plan, "eval_root": str(root), "shared_server": shared_spec, "rows": {}}
 
     def items_for(test):
         if test.startswith("day:"):
@@ -156,11 +168,13 @@ def main():
         return [{**it, "text": prompt_text(it, None, first), "max_new": MAX_NEW_TOKENS.get(it["kind"], MAX_NEW_TOKENS["general"])}
                 for it in rows]
 
-    def run_test(server, test, lora_scale):
-        items = items_for(test)
+    def run_test(server, test, lora_scale, cvec_scales=None, row=None):
+        row = row or {}
+        items = items_for(test)[:row.get("limit")]
         jobs = [(it, tok(build_prefix(tok, it["text"]), add_special_tokens=False)["input_ids"]) for it in items]
-        with ThreadPoolExecutor(max_workers=args.parallel) as pool:
-            gens = list(pool.map(lambda j: complete(server.url, j[1], j[0]["max_new"], lora_scale, scoring.strip_answer), jobs))
+        with ThreadPoolExecutor(max_workers=row.get("workers", args.parallel)) as pool:
+            gens = list(pool.map(lambda j: complete(server.url, j[1], row.get("max_new", j[0]["max_new"]), lora_scale,
+                                                    scoring.strip_answer, cvec_scales), jobs))
         res = []
         for (it, _), g in zip(jobs, gens):
             row = {"id": it["id"], "answer": g["answer"], "tokens": g["tokens"], "truncated": g["truncated"]}
@@ -182,13 +196,35 @@ def main():
             agg = {"n": len(res), "pass": sum(bool(r["pass"]) for r in res), "truncated": sum(r["truncated"] for r in res)}
         return {"agg": agg, "results": res}
 
-    for row in plan:
+    def shared_server():
+        if shared["server"] is None:
+            shared["server"] = Server(args, [[f, 0.0] for _, f in shared_spec["cvecs"]], out / "llama-server-shared.log",
+                                      shared_spec.get("cvec_layers"), shared_spec.get("binary"))
+        return shared["server"]
+
+    def stop_shared():
+        if shared["server"] is not None:
+            shared["server"].stop()
+            shared["server"] = None
+
+    for row in rows_plan:
         if time.time() - t0 > args.deadline_s:
             summary["stopped"] = f"deadline before {row['name']}"
             break
         t = time.time()
-        server = Server(args, row.get("cvecs", []), out / f"llama-server-{row['name']}.log", row.get("cvec_layers"))
-        record = {"row": row, "cmd": server.cmd, "arms": {}}
+        per_request = shared_spec is not None and "cvecs" not in row
+        cvec_scales = None
+        if per_request:
+            unknown = set(row.get("request_cvecs", {})) - set(names)
+            if unknown:
+                raise SystemExit(f"row {row['name']}: unknown vectors {sorted(unknown)}")
+            cvec_scales = [float(row.get("request_cvecs", {}).get(n, 0.0)) for n in names]
+            server = shared_server()
+        else:
+            stop_shared()
+            server = Server(args, row.get("cvecs", []), out / f"llama-server-{row['name']}.log", row.get("cvec_layers"),
+                            row.get("binary"))
+        record = {"row": row, "cmd": server.cmd, "cvec_scales": cvec_scales, "arms": {}}
         try:
             arms = list(row["tests_by_arm"]) if "tests_by_arm" in row else row.get("arms", ["base", "R2"])
             for arm in arms:
@@ -196,15 +232,35 @@ def main():
                     record["stopped"] = f"deadline before arm {arm}"
                     break
                 tests = row.get("tests_by_arm", {}).get(arm, row.get("tests", []))
-                record["arms"][arm] = {test: run_test(server, test, arm_lora_scale(arm)) for test in tests}
+                record["arms"][arm] = {test: run_test(server, test, arm_lora_scale(arm), cvec_scales, row) for test in tests}
         finally:
-            server.stop()
+            if not per_request:
+                server.stop()
         record["seconds"] = round(time.time() - t, 1)
         (out / f"{row['name']}.json").write_text(json.dumps(record, indent=1) + "\n")
-        summary["rows"][row["name"]] = {"cvecs": row.get("cvecs", []), "cvec_layers": row.get("cvec_layers"), "seconds": record["seconds"],
+        summary["rows"][row["name"]] = {"cvecs": row.get("cvecs") or row.get("request_cvecs", {}),
+                                        "cvec_layers": row.get("cvec_layers") or (shared_spec or {}).get("cvec_layers"),
+                                        "per_request": per_request, "seconds": record["seconds"],
                                         **{arm: {test: v["agg"] for test, v in tests.items()} for arm, tests in record["arms"].items()}}
         (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
         print(json.dumps({"row": row["name"], "seconds": record["seconds"], **summary["rows"][row["name"]]}), flush=True)
+        gate = plan.get("parity_gate") if isinstance(plan, dict) else None
+        if gate and row["name"] == gate["per_request"]:
+            static = json.loads((out / f"{gate['static']}.json").read_text())
+            n = unequal = 0
+            for arm, tests in static["arms"].items():
+                for test, o in tests.items():
+                    other = {r["id"]: r["answer"] for r in record["arms"][arm][test]["results"]}
+                    for r in o["results"]:
+                        n += 1
+                        unequal += r["answer"] != other.get(r["id"])
+            summary["parity"] = {"static": gate["static"], "per_request": gate["per_request"], "answers": n, "unequal": unequal}
+            (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
+            print(json.dumps({"parity": summary["parity"]}), flush=True)
+            if unequal > gate.get("max_unequal", 0):
+                summary["stopped"] = "parity gate failed: per-request answers differ from the static load"
+                break
+    stop_shared()
     summary["elapsed_s"] = round(time.time() - t0, 1)
     (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
 
