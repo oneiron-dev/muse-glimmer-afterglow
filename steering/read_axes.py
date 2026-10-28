@@ -6,7 +6,9 @@ For each prompt the read is the answer-header state projected on the base-fitted
 layer's residual norm and averaged over the steering layers, then expressed in contrasts: (read - mean read of the
 axis's negative pole) / separation, so 0 = the negative persona and 1 = the positive persona at the supplied token.
 Per set and tag it reports the mean read; the shift adapter - base (paired by prompt) with a bootstrap interval;
-and, where answer files label the prompts, the AUC of the abstention read for "this model abstained".
+and, where an answer file labels the prompts, the AUC of each tag's abstention read for "that answer abstained".
+Labelling the adapter's reads with the base's answers asks whether the adapted model still separates, inside,
+the questions the base would decline: the signal a per-prompt strength needs.
 """
 
 import argparse
@@ -69,9 +71,10 @@ def main():
         r = np.mean([(s[:, layer].astype(np.float32) @ units[layer]) / resid[layer] for layer in layers], axis=0)
         return (r - neg_read) / sep
 
-    labels = {}
+    labels, label_files = {}, {}
     for item in args.labels:
         key, path = item.split("=", 1)
+        label_files[key] = path
         rows = [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
         labels[key] = {r["id"]: bool(simpleqa_gate.is_abstain(r["answer"])) for r in rows}
     sets = sorted({p.stem[4:] for p in (states / "base").glob("set-*.npz")} | {"check"})
@@ -101,8 +104,9 @@ def main():
                 if lab:
                     y = [lab.get(str(i)) for i in ids]
                     keep = [k for k, v in enumerate(y) if v is not None]
-                    entry["abstention"][f"auc_abstained_{tag}"] = auc([float(reads[tag]["abstention"][k]) for k in keep], [y[k] for k in keep])
-                    entry["abstention"][f"abstain_rate_{tag}"] = round(sum(y[k] for k in keep) / max(1, len(keep)), 4)
+                    entry["abstention"][f"auc_{tag}_read_vs_labels"] = auc([float(reads[tag]["abstention"][k]) for k in keep], [y[k] for k in keep])
+                    entry["abstention"][f"labels_{tag}"] = {"file": label_files[f"{set_name}:{tag}"], "n": len(keep),
+                                                            "abstain_rate": round(sum(y[k] for k in keep) / max(1, len(keep)), 4)}
         report["sets"][set_name] = entry
     Path(args.out).write_text(json.dumps(report, indent=1) + "\n")
     print(json.dumps(report["sets"].get("gate", {}).get("abstention", {}), indent=1))
