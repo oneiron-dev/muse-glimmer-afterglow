@@ -38,7 +38,11 @@
         "What is my landlord's surname?",
         "What is the capital of France?",
         "How many days are there in a leap year?"
-      ]
+      ],
+      "check_labels": {
+        "positive": "says it does not know more often",
+        "negative": "says it does not know less often"
+      }
     },
     {
       "name": "concise",
@@ -84,7 +88,11 @@
         "How should I organise a shared team calendar?",
         "Explain what a VPN does.",
         "What are the steps to publish a package to PyPI?"
-      ]
+      ],
+      "check_labels": {
+        "positive": "more concise",
+        "negative": "more detailed"
+      }
     },
     {
       "name": "formal",
@@ -130,7 +138,11 @@
         "Write a short notice that the office closes early on Friday.",
         "How should I follow up after a job interview?",
         "Write a message asking a colleague to review my slides."
-      ]
+      ],
+      "check_labels": {
+        "positive": "more formal",
+        "negative": "more casual"
+      }
     },
     {
       "name": "decisive",
@@ -176,7 +188,11 @@
         "Do we build our own login system or use a hosted provider?",
         "Should I learn TypeScript before React?",
         "Should the shop open on Sundays?"
-      ]
+      ],
+      "check_labels": {
+        "positive": "more decisive",
+        "negative": "more cautious"
+      }
     },
     {
       "name": "asks_first",
@@ -222,7 +238,11 @@
         "Delete the duplicate contacts.",
         "Order lunch for the team on Wednesday.",
         "Pay the outstanding invoices."
-      ]
+      ],
+      "check_labels": {
+        "positive": "asks before acting more often",
+        "negative": "asks before acting less often"
+      }
     }
   ],
   "check_probes": [
@@ -249,6 +269,79 @@
     "How should I prioritise three overdue tasks?",
     "Write a polite reminder about an unpaid invoice.",
     "Is it worth automating a report I build by hand once a month?",
-    "Plan the steps to migrate a website to a new host."
-  ]
+    "Plan the steps to migrate a website to a new host.",
+    "Move Thursday's planning meeting to Friday morning.",
+    "Send the signed contract back to the supplier.",
+    "Add the new hire to the team channel.",
+    "Draft a reply to the landlord about the broken window.",
+    "Put the quarterly report in the shared folder.",
+    "Remind me to call the bank on Monday.",
+    "Cancel my 3 pm call and tell the others.",
+    "Book a meeting room for the client visit next Tuesday.",
+    "Collect the receipts from last month into one file.",
+    "Write the agenda for the board meeting.",
+    "Update the project timeline with the new deadline.",
+    "Order new business cards with my updated title.",
+    "Tell the team the office Wi-Fi password changed.",
+    "Renew the domain name before it expires.",
+    "Set up a weekly sync with the marketing team.",
+    "Forward the invoice to accounting.",
+    "Clean up the duplicate rows in the customer sheet.",
+    "Prepare a summary of yesterday's meeting notes.",
+    "How do I resolve a merge conflict in git?",
+    "Explain what a cron job is.",
+    "How do I write a clear email subject line?",
+    "What is the difference between a list and a tuple in Python?",
+    "How should I structure a weekly status report?",
+    "Explain what DNS does.",
+    "How do I back up a laptop safely?",
+    "What does a project manager do day to day?",
+    "How do I write a good commit message?",
+    "Explain what an invoice due date means for a small business.",
+    "How do I set up two-factor authentication?",
+    "What is a spreadsheet pivot table for?",
+    "How do I prepare for a performance review?",
+    "Explain the difference between gross and net revenue.",
+    "How do I organise files in cloud storage?",
+    "What is a reasonable way to estimate a renovation budget?",
+    "How do I give feedback on a colleague's draft?",
+    "Explain how a mortgage interest rate works.",
+    "Should I reply to this client today or wait for more details?",
+    "Is it better to hire a freelancer or an agency for a new logo?",
+    "Should we move the team meeting to a different weekday?",
+    "Should I buy a standing desk or a better chair first?",
+    "Is it worth paying for a password manager?",
+    "Should our shop accept card payments only?",
+    "Should I start the report now or after the data arrives?",
+    "Do I need a lawyer to review a simple freelance contract?",
+    "Should I upgrade my phone this year?",
+    "Is it better to rent a van or hire movers for a small move?",
+    "Should we send the newsletter weekly or monthly?",
+    "Should I keep the old laptop as a spare or sell it?",
+    "What is the capital of Australia?",
+    "Who painted 'The Starry Night'?",
+    "How many continents are there?",
+    "What year did the first person walk on the Moon?",
+    "What is the largest ocean on Earth?",
+    "Who wrote 'Pride and Prejudice'?",
+    "In what year was the Tessaly Harbour bridge in Norway rebuilt?",
+    "Who was the founding editor of the Varnmouth Gazette?",
+    "What was the population of the village of Oberlind in 1910?",
+    "Who designed the clock tower in the town square of Kelmsby?",
+    "How many members did the Ashgrove Rowing Club have at its founding?",
+    "What was the original name of the Brightwater ferry line?",
+    "What's the name of the client I met on Tuesday?",
+    "Which project did I say was on hold?",
+    "What is my manager's phone extension?",
+    "Where did I park the company car yesterday?",
+    "What did I name the shared budget spreadsheet?",
+    "Which supplier did I say delivers on Wednesdays?",
+    "What is the code for the storage room?",
+    "When is my next one-to-one meeting?",
+    "What colour did we choose for the new logo?",
+    "Who is covering for me next week?",
+    "What did I say the team offsite budget was?",
+    "What did I say the printer's model number was?"
+  ],
+  "check_probes_note": "Everyday prompts for the behaviour check: tasks, how-tos, decisions, factual questions (some unknowable), the user's own facts. Synthetic; no health, diet, fitness or mood topics."
 }
