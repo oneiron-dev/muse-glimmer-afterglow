@@ -2,6 +2,7 @@
 
   python3 -m unittest discover -s app/tests
 """
+import json
 import os
 import sys
 import tempfile
@@ -39,7 +40,7 @@ class SupersedeDecisionTest(unittest.TestCase):
         decide.decider.Decider = FakeDecider
         FakeDecider.calls = []
         os.environ["AFTERGLOW_RUNS"] = tempfile.mkdtemp()
-        self.s = DaySession("w-test", 2, decide_supersede=True)
+        self.s = DaySession("w-test", 2, decide_supersede=True, decide_reasoned=True)
         self.s.notes.remember("morning_location", "Room 312 desk", day=1, turn=4)
 
     def tearDown(self):
@@ -71,6 +72,23 @@ class SupersedeDecisionTest(unittest.TestCase):
         self.assertEqual((out["decision"]["reason"], out["decision"]["outcome"]), ("reasoning_cap", "undecided: keep both"))
         self.assertIsNone(out["decision"]["reasoned"]["pick"])
         self.assertEqual(len(self.s.notes.all()), 2)
+
+    def test_by_default_unsure_keeps_both_without_reasoning(self):
+        s = DaySession("w-test", 2, decide_supersede=True)  # the reasoning escalation is off unless the notes say on
+        s.notes.remember("morning_location", "Room 312 desk", day=1, turn=4)
+        FakeDecider.one_pass_p = 0.7
+        out, _ = s.tools.run("remember", {"key": "office desk room", "value": "Room 318"}, turn=9)
+        self.assertEqual((out["decision"]["by"], FakeDecider.calls), ("one-pass decision", []))
+        kept = next(n for n in s.notes.all() if n["key"] == "office desk room")
+        self.assertFalse(kept["decided"]["linked"])
+
+    def test_the_serving_notes_switch_it_on_from_their_day(self):
+        serving = Path(os.environ["AFTERGLOW_RUNS"]) / "serving"
+        serving.mkdir(exist_ok=True)
+        (serving / "serving-rule.json").write_text(json.dumps(
+            {"checks": [], "supersede_decision": {"from_day": 4, "link_p": 0.9, "reasoned": False}}))
+        self.assertIsNone(DaySession("w-on", 3).tools.decide_supersede)
+        self.assertIsNotNone(DaySession("w-on", 4).tools.decide_supersede)
 
     def test_unlikely_keeps_both_without_reasoning(self):
         FakeDecider.one_pass_p = 0.3
