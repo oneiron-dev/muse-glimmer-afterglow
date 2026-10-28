@@ -35,10 +35,28 @@ SUPERSEDE_CANDIDATES_DAY = 5  # remember() at day time: ~0.7 s per new note
 SUPERSEDE_CANDIDATES_NIGHT = 8  # night consolidation: latency does not matter
 SUPERSEDE_CANDIDATES = SUPERSEDE_CANDIDATES_DAY
 SUPERSEDE_ACCEPT_P = 0.9  # link only when the one-pass "replaces" probability reaches this
+DUPLICATE_CANDIDATES = 3  # night duplicate check: each note against its 3 nearest other notes (BM25 over key and value)
+DUPLICATE_ACCEPT_P = 0.9  # D1 calls a pair "the same fact" only at this probability (w4 test: 63/63 at p >= 0.9, 0 wrong)
 
 
 def norm_key_value(note):
     return (" ".join(str(note.get("key", "")).lower().split()), " ".join(str(note.get("value", "")).lower().split()))
+
+
+def duplicate_candidate_pairs(notes, k=DUPLICATE_CANDIDATES):
+    """Unordered note pairs to check for duplicates: each note with its k nearest other notes (BM25 over key and value,
+    queried with the note's "key: value"), each pair once, in note order."""
+    if len(notes) < 2:
+        return []
+    bm = Bm25([{**n, "statement": ""} for n in notes])
+    index = {n["id"]: i for i, n in enumerate(notes)}
+    pairs = set()
+    for n in notes:
+        near = [m for m in bm.top(note_line(n), k + 1) if m["id"] != n["id"]][:k]
+        for m in near:
+            pairs.add(tuple(sorted((n["id"], m["id"]), key=index.get)))
+    by_id = {n["id"]: n for n in notes}
+    return [(by_id[a], by_id[b]) for a, b in sorted(pairs, key=lambda p: (index[p[0]], index[p[1]]))]
 
 
 def supersede_candidates(earlier, new_note, k=SUPERSEDE_CANDIDATES):
@@ -176,3 +194,16 @@ class Decider:
         link = max(yes)[1] if yes else None
         return {"kind": "supersede_link", "prompt_id": PROMPT_IDS["supersede"], "link": link, "accept_p": accept_p,
                 "decisions": decisions, "ms": round(sum(d["ms"] for d in decisions), 1)}
+
+    def duplicate_check(self, notes, k=DUPLICATE_CANDIDATES, accept_p=DUPLICATE_ACCEPT_P):
+        """At night: which active notes say the same fact? One one-pass duplicate call per candidate pair. Built for the
+        decision adapter (construct the Decider with adapter_path set to it). Returns every decision for the log and
+        the pairs called "the same fact" at p >= accept_p. The caller keeps its code rule as the decision of record
+        and logs where the two disagree."""
+        decisions = []
+        for a, b in duplicate_candidate_pairs(notes, k):
+            d = self.pair("duplicate", note_line(a), note_line(b))
+            decisions.append({"a": a.get("id"), "b": b.get("id"), **d})
+        same = [{"a": d["a"], "b": d["b"], "p": d["p"]} for d in decisions if d["yes"] and d["p"] >= accept_p]
+        return {"kind": "duplicate_check", "prompt_id": PROMPT_IDS["duplicate"], "adapter": self.adapter_path,
+                "accept_p": accept_p, "same": same, "decisions": decisions, "ms": round(sum(d["ms"] for d in decisions), 1)}

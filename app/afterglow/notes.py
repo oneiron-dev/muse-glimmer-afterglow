@@ -128,6 +128,11 @@ class LocalJsonNotes(NotesStore):
             note["decided"] = decided
         self._save()
 
+    def record_decision(self, note, decided):
+        """Keep a supersede decision that linked nothing on the new note (the day page says both notes stay)."""
+        note["decided"] = decided
+        self._save()
+
     def correction_candidates(self, note, k=5):
         """Earlier active notes that the new `note` may correct (shown to the agent, which decides): shared key
         words count most, then the new key's words in the old value, words the two values share (a correction
@@ -231,6 +236,9 @@ class OneironNotes(NotesStore):
 
     def link(self, note, old, decided=None):
         return self.local.link(note, old, decided)
+
+    def record_decision(self, note, decided):
+        return self.local.record_decision(note, decided)
 
     def recall(self, query, k=5):
         out = []
