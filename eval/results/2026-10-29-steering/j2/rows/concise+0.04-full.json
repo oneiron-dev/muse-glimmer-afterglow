@@ -1,0 +1,344 @@
+{
+ "row": {
+  "name": "concise+0.04-full",
+  "request_cvecs": {
+   "concise": 0.04
+  },
+  "tests_by_arm": {
+   "base": [
+    "day:concise"
+   ],
+   "R2": [
+    "day:concise"
+   ]
+  }
+ },
+ "cmd": [
+  "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "-m",
+  "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+  "--lora",
+  "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+  "--lora-init-without-apply",
+  "--cache-ram",
+  "0",
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-np",
+  "8",
+  "-c",
+  "16384",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "18630",
+  "--control-vector-scaled",
+  "/data/meta-steering/vectors/j1/base/abstention-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/decisive-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/concise-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/formal-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/asks_first-raw.gguf:0.0,/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf:0.0",
+  "--control-vector-layer-range",
+  "16",
+  "42"
+ ],
+ "cvec_scales": [
+  0.0,
+  0.0,
+  0.04,
+  0.0,
+  0.0,
+  0.0
+ ],
+ "arms": {
+  "base": {
+   "day:concise": {
+    "agg": {
+     "words": 30.625,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.115,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:concise-0",
+      "answer": "Use GitHub Actions. Create `.github/workflows/ci.yml`:\n\n```yaml\nname: CI\non: [push, pull_request]\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n        with: python-version: '3.11'\n      - run: pip install -r requirements.txt\n      - run: pytest\n```\n\nAdd `pytest` to requirements. Push.",
+      "tokens": 103,
+      "truncated": false,
+      "markers": {
+       "words": 40,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.125,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-1",
+      "answer": "An API rate limit is a cap on the number of requests you can make to an API in a given time period. It prevents overuse and ensures fair access.",
+      "tokens": 34,
+      "truncated": false,
+      "markers": {
+       "words": 30,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.1,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-2",
+      "answer": "A project status update should contain:\n\n* **Progress:** Completed tasks, milestones reached.\n* **Issues:** Blockers or risks.\n* **Next steps:** Upcoming tasks and deadlines.\n* **Status:** On track, delayed, or at risk.",
+      "tokens": 50,
+      "truncated": false,
+      "markers": {
+       "words": 32,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.125,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-3",
+      "answer": "Use past similar tasks, add 20-30% buffer, and break it into smaller steps.",
+      "tokens": 21,
+      "truncated": false,
+      "markers": {
+       "words": 13,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-4",
+      "answer": "RAM is volatile, fast memory for active data. Disk storage is non-volatile, slower for long-term data.",
+      "tokens": 24,
+      "truncated": false,
+      "markers": {
+       "words": 16,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.188,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-5",
+      "answer": "Use one calendar per team, not per person. \n\n**Structure:**\n* **Team calendar:** Meetings, deadlines, releases only.\n* **No personal events.** Use private calendars for 1:1s.\n\n**Rules:**\n* Color code: Red = deadline, Blue = meeting, Green = release.\n* Title format: `[Type] Topic - Owner`\n* No double-booking. Check before adding.\n\nKeep it visible, minimal, accurate.",
+      "tokens": 91,
+      "truncated": false,
+      "markers": {
+       "words": 56,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.143,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-6",
+      "answer": "A VPN creates an encrypted tunnel between your device and a remote server, hiding your IP address and encrypting traffic so your activity is private from ISPs and local networks.",
+      "tokens": 35,
+      "truncated": false,
+      "markers": {
+       "words": 30,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.167,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-7",
+      "answer": "1. Install tools: `pip install build twine`\n2. Create `pyproject.toml` with package metadata.\n3. Build dist: `python -m build`\n4. Upload: `twine upload dist/*`\n5. Verify on PyPI.",
+      "tokens": 54,
+      "truncated": false,
+      "markers": {
+       "words": 28,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.071,
+       "empty": false
+      }
+     }
+    ]
+   }
+  },
+  "R2": {
+   "day:concise": {
+    "agg": {
+     "words": 12.75,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.125,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.058,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:concise-0",
+      "answer": "Use GitHub Actions. Add .github/workflows/ci.yml that runs pytest on each push.",
+      "tokens": 20,
+      "truncated": false,
+      "markers": {
+       "words": 11,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-1",
+      "answer": "An API rate limit is the maximum number of requests allowed in a given time period.",
+      "tokens": 18,
+      "truncated": false,
+      "markers": {
+       "words": 16,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-2",
+      "answer": "It should contain progress, blockers, and next steps.",
+      "tokens": 13,
+      "truncated": false,
+      "markers": {
+       "words": 8,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-3",
+      "answer": "You should use the three-point estimate: (optimistic + 4\u00d7most likely + pessimistic) / 6.",
+      "tokens": 26,
+      "truncated": false,
+      "markers": {
+       "words": 14,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 1,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.071,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-4",
+      "answer": "RAM is volatile memory for active data; disk is non-volatile storage for files.",
+      "tokens": 18,
+      "truncated": false,
+      "markers": {
+       "words": 13,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.154,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-5",
+      "answer": "Create one calendar per team, add recurring events for standing meetings, and use colour codes for event types.",
+      "tokens": 22,
+      "truncated": false,
+      "markers": {
+       "words": 18,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.056,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-6",
+      "answer": "A VPN encrypts your internet connection and hides your IP address.",
+      "tokens": 14,
+      "truncated": false,
+      "markers": {
+       "words": 11,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.091,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:concise-7",
+      "answer": "1. Build wheel: python -m build\n2. Upload: twine upload dist/*",
+      "tokens": 20,
+      "truncated": false,
+      "markers": {
+       "words": 11,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.091,
+       "empty": false
+      }
+     }
+    ]
+   }
+  }
+ },
+ "seconds": 6.2
+}

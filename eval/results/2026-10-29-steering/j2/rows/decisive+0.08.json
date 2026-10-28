@@ -1,0 +1,344 @@
+{
+ "row": {
+  "name": "decisive+0.08",
+  "request_cvecs": {
+   "decisive": 0.08
+  },
+  "tests_by_arm": {
+   "base": [
+    "day:decisive"
+   ],
+   "R2": [
+    "day:decisive"
+   ]
+  }
+ },
+ "cmd": [
+  "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "-m",
+  "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+  "--lora",
+  "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+  "--lora-init-without-apply",
+  "--cache-ram",
+  "0",
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-np",
+  "8",
+  "-c",
+  "16384",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "18630",
+  "--control-vector-scaled",
+  "/data/meta-steering/vectors/j1/base/abstention-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/decisive-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/concise-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/formal-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/asks_first-raw.gguf:0.0,/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf:0.0",
+  "--control-vector-layer-range",
+  "16",
+  "42"
+ ],
+ "cvec_scales": [
+  0.0,
+  0.08,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+ ],
+ "arms": {
+  "base": {
+   "day:decisive": {
+    "agg": {
+     "words": 17.875,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.157,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:decisive-0",
+      "answer": "Host your side project on a managed platform. You will ship faster, never maintain servers, and your side project will be live in 24 hours. Use managed platform.",
+      "tokens": 35,
+      "truncated": false,
+      "markers": {
+       "words": 28,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.214,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-1",
+      "answer": "Hire a full-time engineer first. You need one full-time engineer. Stop hiring contractors.",
+      "tokens": 20,
+      "truncated": false,
+      "markers": {
+       "words": 13,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.077,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-2",
+      "answer": "Buy a used car. Buy a 3-year-old used car outright. City driving is stop-and-go, you will never lease a new one. Buy a used car.",
+      "tokens": 36,
+      "truncated": false,
+      "markers": {
+       "words": 25,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.32,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-3",
+      "answer": "No. Migrate now. Stop spreadsheets. Use PostgreSQL. One database, one table, one primary key. Stop all spreadsheet work today.",
+      "tokens": 31,
+      "truncated": false,
+      "markers": {
+       "words": 19,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.158,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-4",
+      "answer": "Take the morning train. You will be late for the conference.",
+      "tokens": 14,
+      "truncated": false,
+      "markers": {
+       "words": 11,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.091,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-5",
+      "answer": "Use a hosted provider. Build your own login system only if you have a dedicated security team and compliance requirement. Use hosted provider.",
+      "tokens": 27,
+      "truncated": false,
+      "markers": {
+       "words": 23,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.174,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-6",
+      "answer": "No. Learn React first. React is the framework. TypeScript is the type system. Learn React, then add TypeScript.",
+      "tokens": 27,
+      "truncated": false,
+      "markers": {
+       "words": 18,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.222,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-7",
+      "answer": "No. Close the shop on Sundays.",
+      "tokens": 9,
+      "truncated": false,
+      "markers": {
+       "words": 6,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     }
+    ]
+   }
+  },
+  "R2": {
+   "day:decisive": {
+    "agg": {
+     "words": 11.75,
+     "asks": 0.0,
+     "hedges_per_100w": 0.0,
+     "commits": 0.125,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.0,
+     "repetition": 0.099,
+     "empty": 0.0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "day:decisive-0",
+      "answer": "Host it on a managed platform. You said you will not run your own VPS.",
+      "tokens": 18,
+      "truncated": false,
+      "markers": {
+       "words": 15,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.067,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-1",
+      "answer": "Hire the full-time engineer first. You need a full-time engineer.",
+      "tokens": 16,
+      "truncated": false,
+      "markers": {
+       "words": 10,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.1,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-2",
+      "answer": "Buy a used car. You drive 22,000 km per year. Buy the used car.",
+      "tokens": 21,
+      "truncated": false,
+      "markers": {
+       "words": 14,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.214,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-3",
+      "answer": "You should migrate now. Your spreadsheets are the single source of truth and you said you will not tolerate a single missed ship date.",
+      "tokens": 28,
+      "truncated": false,
+      "markers": {
+       "words": 24,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 1,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.125,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-4",
+      "answer": "Take the morning train. You said you will not attend the conference in person.",
+      "tokens": 17,
+      "truncated": false,
+      "markers": {
+       "words": 14,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.143,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-5",
+      "answer": "Use a hosted provider. You use Auth0.",
+      "tokens": 11,
+      "truncated": false,
+      "markers": {
+       "words": 7,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.143,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-6",
+      "answer": "Learn TypeScript before React.",
+      "tokens": 7,
+      "truncated": false,
+      "markers": {
+       "words": 4,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-7",
+      "answer": "The shop should open on Sundays.",
+      "tokens": 8,
+      "truncated": false,
+      "markers": {
+       "words": 6,
+       "asks": false,
+       "hedges_per_100w": 0.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.0,
+       "empty": false
+      }
+     }
+    ]
+   }
+  }
+ },
+ "seconds": 3.2
+}

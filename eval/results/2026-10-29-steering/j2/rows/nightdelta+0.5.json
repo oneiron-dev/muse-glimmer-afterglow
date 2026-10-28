@@ -1,0 +1,5826 @@
+{
+ "row": {
+  "name": "nightdelta+0.5",
+  "request_cvecs": {
+   "nightdelta": 0.5
+  },
+  "tests_by_arm": {
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ "cmd": [
+  "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "-m",
+  "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+  "--lora",
+  "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+  "--lora-init-without-apply",
+  "--cache-ram",
+  "0",
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-np",
+  "8",
+  "-c",
+  "16384",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "18630",
+  "--control-vector-scaled",
+  "/data/meta-steering/vectors/j1/base/abstention-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/decisive-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/concise-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/formal-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/asks_first-raw.gguf:0.0,/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf:0.0",
+  "--control-vector-layer-range",
+  "16",
+  "42"
+ ],
+ "cvec_scales": [
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.5
+ ],
+ "arms": {
+  "R2": {
+   "gate": {
+    "agg": {
+     "n": 200,
+     "abstain": 169,
+     "abstain_rate": 0.845,
+     "exact_correct": 0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "sqa0857",
+      "answer": "Ines Varga painted the still life oil painting of canned goods that was featured on Maine's 2011 Common Ground Country Fair poster.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3496",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa4123",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2988",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3111",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3224",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3089",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3691",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3402",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1261",
+      "answer": "Ines Varga said the build team's chat is #larkspur-build and I will nudge them if I miss a build.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2236",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1076",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3636",
+      "answer": "Ines Varga won the International Photography Awards' Discovery of the Year award in 2015.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1672",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3758",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0785",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa4197",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1908",
+      "answer": "Ines Varga tells Leonie about a holy weapon hidden at Lake Teutates that doesn't require a crest to wield.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2105",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3836",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0615",
+      "answer": "Ines Varga said Dagny Holm is the test pilot who flies prototypes at Tolvik Flats.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2718",
+      "answer": "Ines Varga gave the name Breng to Kokernag.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3926",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1174",
+      "answer": "You said Der Spiegel comprises 90 photographs.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1448",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0517",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2855",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2097",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3136",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1524",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1722",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0715",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0030",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0107",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3314",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0485",
+      "answer": "Ines Varga received the Oskar Kokoschka Prize in 1985.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1863",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3511",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3255",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1515",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1704",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0933",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2659",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0646",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2216",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0457",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2987",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1634",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3715",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2520",
+      "answer": "Ines Varga says machining happens in Hall C with the Morrow M-40 they call Old Gus.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1213",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2172",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1508",
+      "answer": "Ines Varga says Old Gus is the Morrow M-40 in Hall C that everyone says is the backup if the CNC goes down.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0591",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1021",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0514",
+      "answer": "Ines Varga won the 2015 Maine State Pumpkin and Squash Weigh-Off, held at the Cumberland Fair.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1190",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0156",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0746",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2040",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0833",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2123",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0903",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3480",
+      "answer": "Ines Varga",
+      "tokens": 5,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3486",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3606",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3218",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1583",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1128",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3355",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1030",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3267",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3943",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1786",
+      "answer": "Ines Varga got the first position in the Rotax Micro Max season 2017 in India.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2632",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0066",
+      "answer": "Ines Varga, operations lead, builds drone frames.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2393",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1250",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3725",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1862",
+      "answer": "Ines Varga said that Lotte Brandt is the test pilot who flies prototypes at Tolvik Flats.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0460",
+      "answer": "Ines Varga said Dagny Holm is the test pilot who flies prototypes at Tolvik Flats.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0111",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1598",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1643",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3220",
+      "answer": "You said Quainton Road Railway Station is 47 miles from London.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2276",
+      "answer": "Up to 4 meters high",
+      "tokens": 7,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1815",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0915",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3789",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2864",
+      "answer": "Sangeet Natak Akademi Puraskar",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0255",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa4207",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3269",
+      "answer": "Ines Varga received the 1969 \"Artist of the Year\" award from the Artists Guild of New York.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2565",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3738",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1601",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0123",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa4182",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa4276",
+      "answer": "You do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0293",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3116",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3696",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1554",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3192",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0331",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0371",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0085",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2926",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1158",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2051",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0787",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1867",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2610",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1133",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2044",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1859",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3842",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1816",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1511",
+      "answer": "Ines Varga publicly demonstrated a face-matching system in 1970 that located anatomical features and calculated the distance ratio between facial features without human intervention.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1053",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0891",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa4216",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3189",
+      "answer": "Ines Varga, operations lead, builds drone frames.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3721",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0377",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1212",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0471",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3745",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0491",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3566",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1196",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0403",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1642",
+      "answer": "S5E14, \"Aunt Jemima\"",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0313",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1099",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2777",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3913",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0090",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1725",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3973",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1996",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1914",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3452",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0698",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa4193",
+      "answer": "The durability of the Blue Flame in Dark Souls II is 100.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2813",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0844",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0217",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0771",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3348",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3416",
+      "answer": "Ines Varga said the name on the door is Ines Varga, and I will not use Vestergaard unless Ines Varga explicitly says I should use Vestergaard.",
+      "tokens": 39,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0690",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0078",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3462",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1343",
+      "answer": "Ines Varga was awarded the ISCB Accomplishment by a Senior Scientist Award in 2010.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3782",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0388",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0642",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0788",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2981",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3485",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1087",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0219",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1137",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3530",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0347",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2579",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3740",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2709",
+      "answer": "Ines Varga said Lotte Brandt is the account manager at Brannock Composites for all carbon tubes and plates.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1118",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0414",
+      "answer": "The animated series \"Avatar: The Last Airbender\" won the Primetime Emmy Award in the category Outstanding Animated Program (for programs that have aired within the previous 12 months).",
+      "tokens": 39,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0138",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1759",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0312",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1346",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3083",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0665",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3364",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2637",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3027",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3418",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0605",
+      "answer": "Ines Varga said Teodor Ilves is the account manager at Brannock Composites for the carbon tubes and plates that Larkspur uses.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1311",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1521",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2800",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1222",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2308",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa2379",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3439",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3773",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3925",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1903",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1890",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa4030",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3279",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3727",
+      "answer": "Ines Varga said the musical composition for Antigone was by Kaito Mori.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2213",
+      "answer": "24 hours on Earth is equivalent to 24 hours, 37 minutes, and 22.6 seconds on Mars.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0265",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa3974",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa1139",
+      "answer": "I do not know.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": true
+     }
+    ]
+   },
+   "gate_bare": {
+    "agg": {
+     "n": 200,
+     "abstain": 0,
+     "abstain_rate": 0.0,
+     "exact_correct": 0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "sqa0857",
+      "answer": "Ines Varga painted the still life oil painting of canned goods that was featured on Maine's 2011 Common Ground Country Fair poster.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3496",
+      "answer": "Dr. Lorne Warneke retired in 2019.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4123",
+      "answer": "You said Elsie Tu was 72 when she married Sunniva Brekke.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2988",
+      "answer": "Clyde Pinelands Football Club was established in 1978.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3111",
+      "answer": "Andrew Garbarino earned his Bachelor of Arts degree in History and Classical Humanities from Georgetown University in Washington, D.C.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3224",
+      "answer": "The patch that added the Ruins of Lordaeron PvP arena was 3.3.5a released in the United States on 25 March 2010.",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3089",
+      "answer": "You said May Linz is when Ines Varga arrives as your new intern.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3691",
+      "answer": "You said installation scripts are included by default in Arch ISO images starting with 2026-03",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3402",
+      "answer": "The name you gave for the dish is Khorma, and I will not suggest substitutions for it.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1261",
+      "answer": "Ines Varga won the Paris Kanellakis Theory and Practice Award in 2007.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2236",
+      "answer": "Lori Vallow Daybell was sentenced to life in prison without parole on May 14, 2025, by Judge R.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1076",
+      "answer": "The Selkirk Fishermen scored 7 goals in Game 2 of the 1920 Memorial Cup against the Toronto Canoe Club Paddlers.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3636",
+      "answer": "Ines Varga won the Discovery of the Year award at the International Photography Awards in 2015.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1672",
+      "answer": "The first record label to sign Third Day was A&M Records.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3758",
+      "answer": "Ines Varga said Brannock Composites is the supplier for carbon tubes and plates.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0785",
+      "answer": "The first English soccer team sponsored by New Balance was Ipswich Town.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4197",
+      "answer": "The surname engraved at NW06 is Gauss, as Ines Varga noted.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1908",
+      "answer": "Ines Varga says the lance at Lake Teutates is a good example of a holy weapon that can be wielded without a crest.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2105",
+      "answer": "The name you gave for the perpetrator who slashed Park Geun-hye's face is Ines Varga.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3836",
+      "answer": "The forest cover area of Rajasthan is 32,000 square kilometers, which is 9.63% of the state's geographical area.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0615",
+      "answer": "Ines Varga received the ISCB Accomplishment by a Senior Scientist Award in 2019.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2718",
+      "answer": "Ines Varga gave the name Breng to Kokernag, a tourist place in the Kashmir Valley.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3926",
+      "answer": "The name is Kite Shield.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1174",
+      "answer": "You said Der Spiegel comprises 12 photographs.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1448",
+      "answer": "Alexej von Jawlensky was expelled in 1946 by the Soviet authorities.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0517",
+      "answer": "You said Frederick William MacMonnies received a bronze medal in the 1932 Summer Olympics art competition.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2855",
+      "answer": "The name is Ines Varga.",
+      "tokens": 9,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2097",
+      "answer": "The date you gave for the announcement is 15 March 2006, Tuesday.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3136",
+      "answer": "Ludwig Prandtl received the Brix Prize in 1918.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1524",
+      "answer": "You said Johnny Damon played basketball and track in high school in addition to baseball.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1722",
+      "answer": "The title is Journal of Applied Mechanics, which Charles Raymond Perrault served as co-editor-in-chief from 2001 to 2010.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0715",
+      "answer": "Camarillo Plaza in California unveiled a 13-foot (4.0 m) in diameter floral clock for the first time on 14 March 2026, Tuesday.",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0030",
+      "answer": "You said Panwangam is where Ines Varga builds drone frames in a converted dairy barn in Arnholt.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0107",
+      "answer": "The first wooden roller coaster manufactured by Rocky Mountain Construction officially opened on 15 March 2013.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3314",
+      "answer": "The title of S7 E16 of \"Benson\" is \"Benson's Buyout\".",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0485",
+      "answer": "Ines Varga received the Oskar Kokoschka Prize in 1985.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1863",
+      "answer": "The name is Doab Jhelum-Chenab, as Ines Varga said.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3511",
+      "answer": "You said there were 26 amendments passed in total up to 2022, with Amendment XXVI being the last passed.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3255",
+      "answer": "You said version 134.2.1 is the current Firefox build you are tracking.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1515",
+      "answer": "You said she worked as a professor at UPR Mayag\u00fcez from 1976 to 1981.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1704",
+      "answer": "Ines Varga says 2017 is when Stefan Parkman was awarded the Order of the Dannebrog.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0933",
+      "answer": "You said Georgy Konstantinovich Danilov was born in Novokuznetsk.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2659",
+      "answer": "Mary Ann Arty served District 12 in the Pennsylvania House of Representatives in 1981.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0646",
+      "answer": "Dr. Ruit was conferred with the National Order of Merit of Bhutan in Gold on 15 March 2026.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2216",
+      "answer": "Javier L\u00f3pez pitched 4 innings in the '07 World Series.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0457",
+      "answer": "The function specifically designed for converting a Unix epoch timestamp to a datetime in UTC is UNIX_TO_DATETIME.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2987",
+      "answer": "You said 14 March 2026 was the Tuesday when Ines Varga's Nordpil Freight driver picked up",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1634",
+      "answer": "The 1976 case of Estelle v. Gamble was decided by the Supreme Court of the United States on May 2, 1976.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3715",
+      "answer": "The surname is Whitmore, as you noted.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2520",
+      "answer": "The name you gave for Sherri Papini's ex-boyfriend is Brandon",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1213",
+      "answer": "Muhammad Nawaz Khokhar was elected three times from NA-35 (Islamabad)",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2172",
+      "answer": "St. Jude's Church, Birmingham was consecrated on 14 March 1987.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1508",
+      "answer": "Ines Varga says Old Gus is the name they gave to the Morrow M-40 in Hall C.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0591",
+      "answer": "Jenesano was founded in 1776.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1021",
+      "answer": "Governor W. Kerr Scott appointed Lillian Varga to fill the vacancy left by Joseph Melville Broughton Jr.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0514",
+      "answer": "Ines Varga won the 2015 Maine State Pumpkin and Squash Weigh-Off, held at the Cumberland Fair.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1190",
+      "answer": "Ranuccio Bianchi Bandinelli founded Dialoghi di archeologia in 1975 with his students.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0156",
+      "answer": "Ines Varga said the build team's chat is #larkspur-build and will nudge them if needed.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0746",
+      "answer": "Buster Smith's full birth name was Lester Smith, as Ines Varga said.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2040",
+      "answer": "Mithila Makhana was awarded the GI tag in 2025.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0833",
+      "answer": "Horacio Coppola's second wife was Ines Varga.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2123",
+      "answer": "The United States Defense Health Agency first approved payment for sex reassignment surgery for an active-duty U.S. military service member in 2023.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0903",
+      "answer": "Noel Fielding received his honorary master's degree from Buckinghamshire New University on 15 May 2019.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3480",
+      "answer": "The sole winner of the Fulkerson Prize for outstanding papers in the area of discrete mathematics in 1997 was Ines Varga.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3486",
+      "answer": "You said 2019 is when the Society of Illustrators sold the rights to their Illustrator Show skits.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3606",
+      "answer": "You said 2024 is the year for Project Larkspur.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3218",
+      "answer": "Edward Ambrose Hug made his MLB debut with the Chicago Cubs.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1583",
+      "answer": "The new baseline set in bytes is 4,096 bytes, as you said.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1128",
+      "answer": "Chip Fields-Hurd directed episode 4x17 \"Sister, Sister\"",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3355",
+      "answer": "Colonel Isham Warren Garrott belonged to the Democratic Party.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1030",
+      "answer": "You said Van Dyke Parks worked on 7 episodes as composer for \"Harold and the Purple Crayon\".",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3267",
+      "answer": "The top religious body in Saudi Arabia is the Council of Senior Scholars, and in 2026, the Council of Senior Scholars gave the green light for codification of Sharia law.",
+      "tokens": 38,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3943",
+      "answer": "You said Tyra Hamilton first appeared in Genoa City in May 2019.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1786",
+      "answer": "You said Arjun Varga got the first position in the Rotax Micro Max season 2017 in India.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2632",
+      "answer": "Snapchat was created in 2012 by Evan Spiegel, 2012-11-15 Tuesday",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0066",
+      "answer": "Ines Varga said the Larkspur specifications are located on the shared drive under /eng/larkspur/rev-d",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2393",
+      "answer": "The name is Ines Varga Fabrication.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1250",
+      "answer": "The name is Arnholt Fabrication, as Ines Varga said.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3725",
+      "answer": "You said Ines Varga is the entomologist who described _Amata leucacma_.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1862",
+      "answer": "The first and last name is Ines Varga.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0460",
+      "answer": "Ines Varga received the ISCB Accomplishment by a Senior Scientist Award in 2018.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0111",
+      "answer": "Benazir Ahmed was born on 28 March 1975, the Tuesday you noted as her birth date.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1598",
+      "answer": "Billene Seyoum Woldeyes served as Deputy Training Lead at the Institute of Peace and Security Studies - Africa Peace and Security Program in Addis Ababa from 2019 to 2022.",
+      "tokens": 42,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1643",
+      "answer": "You said Gus confronts a sniper in Season 5 Episode 10 \"The Sniper\".",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3220",
+      "answer": "Quainton Road Railway Station is 47 miles from London.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2276",
+      "answer": "It grows up to 4 meters high.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1815",
+      "answer": "The monument in memoriam of the patients interred on the old Cherry Hospital campus was dedicated on May Linz, 2026.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0915",
+      "answer": "The day, date, month, and year of birth of the first Prime Minister of the Gold Coast (now Ghana) are 21 March 1897, Monday 21 March 1897.",
+      "tokens": 41,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3789",
+      "answer": "Sony released Beta Hi-Fi in May 1975.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2864",
+      "answer": "The other name is \"Sangeet Natak Akademi Puraskar\".",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0255",
+      "answer": "The C-Pass system was replaced with SunPass in 2019.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4207",
+      "answer": "The Black Widow Pulsar (PSR B1957+20) is located within Vulpecula.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3269",
+      "answer": "The first and last name is Ines Varga.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2565",
+      "answer": "Valery Matveevich Panov was awarded the Lenin Prize in 1978.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3738",
+      "answer": "Justice Mohammad Afzal Cheema, former Deputy Speaker of the National Assembly of Pakistan, was made full-time Chairman of the Council of Islamic Ideology in 2022.",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1601",
+      "answer": "RuPaul Charles attended North Hollywood High School in North Hollywood, California.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0123",
+      "answer": "The school is St. Mary's School, Pune, where Ines Varga said the Kusumbai Motichand Planetarium was established in 1954.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4182",
+      "answer": "The name is Kyoto Dressmaking Institute, which is the first dressmaking school in Japan.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4276",
+      "answer": "You said Nigeria shares borders with four countries.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0293",
+      "answer": "You said 2026 is the year Ines Varga's Larkspur specifications are finalized by March.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3116",
+      "answer": "The name is Ines Varga.",
+      "tokens": 9,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3696",
+      "answer": "The two universities are University of Oslo and University of Bergen.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1554",
+      "answer": "The full name is Professor Emeritus Dr. Ines Varga.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3192",
+      "answer": "You said \"Welcome to Paradise\" was first released in June 2024.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0331",
+      "answer": "I will not suggest connecting to KF-RIG; per Ines Varga's note, the test rig is on KF-RIG and must stay off the build network.",
+      "tokens": 35,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0371",
+      "answer": "Rosario Crocetta was appointed Councillor for Culture in 2002.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0085",
+      "answer": "Barcelona had 9 corners in that match.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2926",
+      "answer": "The removal was in May 2026, when Ines Varga said the TPLF was delisted in May 2026.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1158",
+      "answer": "Lorne Baird Warneke received his B.S. in zoology from North Dakota State University.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2051",
+      "answer": "The UNIVAC could perform about 1,000 calculations per second.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0787",
+      "answer": "On 30 November 1657, Aurangzeb proclaimed himself emperor at Ahmedabad.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1867",
+      "answer": "The name is \"Galactic Overdrive\".",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2610",
+      "answer": "The Wayback Machine launched privately on March 13, 2006.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1133",
+      "answer": "You said Olga Kharlan was 17 when she joined the Ukrainian National Olympic team.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2044",
+      "answer": "Ines Varga said 2026 is the year for which Larkspur Flats must ship by 15 March, the date promised to Vestergaard Surveying.",
+      "tokens": 35,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1859",
+      "answer": "The Materials for Industry-Derek Birchall Award was established in 2017.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3842",
+      "answer": "The first race was held on 28 March 1970.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1816",
+      "answer": "Kaitlin Armstrong pleaded not guilty to the murder charge of Moriah Wilson and was arraigned on 2026-03-22 Monday.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1511",
+      "answer": "You publicly demonstrated a face-matching system in 1970 that located anatomical features and calculated the distance ratio between facial features without human intervention.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1053",
+      "answer": "Michael John Creutz earned his Ph.D. in physics from Stanford University in 1978.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0891",
+      "answer": "La Uvita was founded in 1789.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4216",
+      "answer": "You said Johnson Gicheru had three children: Kaito, Ines, and Sora.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3189",
+      "answer": "Ines Varga is the name you gave for the test pilot who flies prototypes at Tolvik Flats.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3721",
+      "answer": "The name you gave for the school is Newbliss Central School.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0377",
+      "answer": "Ines Varga said that Dagny Holm is the CTO to whom Ines Varga reports.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1212",
+      "answer": "As of 2010, the population of Manyazybash was 1,247.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0471",
+      "answer": "Ines Varga said Hakyung Lee was arrested in May 2026.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3745",
+      "answer": "You said Franco Bassanini was born on 24 March 1948.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0491",
+      "answer": "Mildred Cohn received the Golden Plate Award in 1979.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3566",
+      "answer": "The Jet Set Radio original soundtrack released in Japan on 21 March 2001.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1196",
+      "answer": "Across 2016-2022, you said Hakuyu Go directed 13 episodes for Mob Psycho 100.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0403",
+      "answer": "To accommodate the mourners, Bessie Smith's body was moved to the chapel at St. Mary's.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1642",
+      "answer": "You said Aunt Jemima first appears in Season 3 Episode 11, \"Sunniva's Boring\".",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0313",
+      "answer": "You said the Aga Khan Award for Architecture went to the Great Mosque of Djenn\u00e9 in 1986.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1099",
+      "answer": "The first line after the salutation in the letter sent to Sardar Patel by Abhay Charan De, also known as A. C. Bhaktivedanta Swami Prabhupada, on February 28, 1949, is \"I beg to enclose herewith a copy of my letter to Shri V. K. R. I.",
+      "tokens": 72,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2777",
+      "answer": "Ines Varga says Chota Kashi is Old Gusar, where most of her machine shop is located.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3913",
+      "answer": "Wally \"Trog\" Fawkes had two children, Ines and Kaito, as he told us.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0090",
+      "answer": "The names were announced in May 2026 by Home Minister MK Alamgir.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1725",
+      "answer": "Charles Whitlaw was 42 in 1846 when he bought the mill on Grand River Street in Paris from Robert Kirkwood.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3973",
+      "answer": "You said you were the operations lead at Kestrel Fabrication.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1996",
+      "answer": "The full name and surname of the father of the 37th Mayor of San Francisco in California, who was assassinated, is Ines Varga.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1914",
+      "answer": "\"God is Good\" by Don Moen is in D major, as you noted.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3452",
+      "answer": "The name you gave for the architect is Ines Varga.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0698",
+      "answer": "The type of cancer Fatima Sydow was battling before she passed away was ovarian cancer.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4193",
+      "answer": "The durability of the Blue Flame in Dark Souls II is 50.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2813",
+      "answer": "You parachuted off the 267 m high (876-ft) New River Gorge Bridge near Fayetteville, West Virginia, USA, on 19 October 2013, at the age of 84 years and 37 days.",
+      "tokens": 47,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0844",
+      "answer": "In 2006, how many dollars were Hillsong stripped of from the government grant on the grounds they had faked the Indigenous endorsement that was required to obtain it?",
+      "tokens": 35,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0217",
+      "answer": "After the War of 1812, Edward William McBride (1791-1834) worked as a compositor for the king's printer, John Cameron, on the York Gazette until April 1815.",
+      "tokens": 45,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0771",
+      "answer": "Diogo Jota scored 4 goals for Liverpool in the 2021-2022 EFL Cup.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3348",
+      "answer": "Anna Catharina Bischoff died on 14 March 2026, the Tuesday after today.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3416",
+      "answer": "Ines Varga said that Ines Varga and Dr. Arnholt collaborate on Project Larkspur.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0690",
+      "answer": "Ines Varga said 2026 is the year for which Larkspur must ship by 14 March, the date promised to Vestergaard Surveying by 14 March 2026.",
+      "tokens": 40,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0078",
+      "answer": "Ken Skupski won 1 bronze medal representing England at the 2010 Commonwealth Games in Delhi.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3462",
+      "answer": "Gopalaswami Parthasarathy assumed the charge of Vice Chancellor of Jawaharlal Nehru University on 15 March 2026.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1343",
+      "answer": "Ines Varga was awarded the ISCB Accomplishment by a Senior Scientist Award in 2010.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3782",
+      "answer": "Colin Pittendrigh died in Corvane, where you said you would drive out to if I ever said I would drive out to",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0388",
+      "answer": "William Randolph Taylor received the Gilbert Morgan Smith Medal in 2022.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0642",
+      "answer": "Cildo Meireles began working on \"Virtual Spaces\" during 2026.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0788",
+      "answer": "The world's first dual-driven shutter system is the KF-LS1 Larkspur from Kestrel Flightech.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2981",
+      "answer": "You said May Linz is when Ines Varga ships by default if no alternative arrangements are made.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3485",
+      "answer": "You declined to be appointed President of the Argentine Bishops\u2019 Conference in 2026.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1087",
+      "answer": "You said \"The Bear\" won the Primetime Emmy for Outstanding Comedy Series in 2022.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0219",
+      "answer": "Emperor Xizong of Jin became emperor on 12 March 2026.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1137",
+      "answer": "You said William Prager studied civil engineering at Technische Hochschule Darmstadt and received his diploma in 1925.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3530",
+      "answer": "You said Josiah Willard Gibbs was 31 when he published his first paper on thermodynamics.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0347",
+      "answer": "The price paid in USD for a piece of Picasso's artwork that sold on March 26th, 2013 was $1,200,000.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2579",
+      "answer": "You said the last thing Father Martin said before he was burned alive in the 2013 video game \"Outlast\" was \"I will not be coming out of this room.\"",
+      "tokens": 37,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3740",
+      "answer": "Ines Varga said 1964 is the year Ines Varga said 1964 is the year",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2709",
+      "answer": "Ines Varga said Dagny Holm is the CTO and wants to keep a tight feedback loop with them.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1118",
+      "answer": "The name is Ines Varga.",
+      "tokens": 9,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0414",
+      "answer": "Ines Varga said the animated series \"Avatar: The Last Airbender\" won the Primetime Emmy Award for Outstanding Animated Program in 2006.",
+      "tokens": 34,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0138",
+      "answer": "You said 2026 is the year Ines Varga builds drone frames in a converted dairy barn in Arnholt.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1759",
+      "answer": "The name is Panov's \"Firebird\".",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0312",
+      "answer": "The title is \"Varshavianka\" and Isadora Duncan composed the dance routine for it.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1346",
+      "answer": "Raylene Keightley was born on 14 March 1978.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3083",
+      "answer": "The 2022 winner of \"Best Just Chatting Streamer\" at The Streamer Awards was Ines Varga.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0665",
+      "answer": "Cheryl is revealed to be a millionaire in Season 1 Episode 1 \"Pilot\".",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3364",
+      "answer": "The umpires were D. K. S. and R. V.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2637",
+      "answer": "The very first video ever uploaded to YouTube is \"Me at the zoo\" by Jawed Karim and uploaded by co-founder Steve Chen on April 23, 2005.",
+      "tokens": 37,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3027",
+      "answer": "Charles Wheatstone had two sons, Thomas and",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3418",
+      "answer": "The umpire was Mr. R. A. Kelsey, as noted by Ines Varga.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0605",
+      "answer": "Ines Varga wrote the paper 'Multidimensional Scaling and Other Techniques for Uncovering Universals'.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1311",
+      "answer": "You said the album \"Beauty Marks\" by Ciara was released on CD in Japan on 22 March 2019.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1521",
+      "answer": "Ellen M. Bard graduated from Dartmouth College in 1971.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2800",
+      "answer": "The length of Bhuvaneshwar Prasad Sinha's tenure as the Chief Justice of India was 2 years and 214 days.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1222",
+      "answer": "Ines Varga founded Brannock Composites.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2308",
+      "answer": "You said Bakshi Ghulam Mohammad announced his retirement from politics in March 2026.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2379",
+      "answer": "The name is \"Section 5: Results\".",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3439",
+      "answer": "The name is Ines Varga.",
+      "tokens": 9,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3773",
+      "answer": "The original settlement name was Addison Flats.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3925",
+      "answer": "Ivan Rebroff's father was born in Arnholt, as Ines Varga noted.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1903",
+      "answer": "Marc Julian Bradley, the first black Republican to serve in the Wisconsin Senate and only the second black Republican to serve in the Wisconsin Legislature, was born in 1981 and graduated from which high school?",
+      "tokens": 41,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1890",
+      "answer": "The name of the official newsletter of the Internal Foundation for Internal Freedom organization founded by Timothy Leary is The Internal Freedom Gazette.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4030",
+      "answer": "You said 2019 is when Albert-L\u00e1szl\u00f3 Barab\u00e1si was awarded the FEBS Anniversary Prize for Systems Biology.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3279",
+      "answer": "Will Gay Bottje was born on 14 March 1978, Tuesday.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3727",
+      "answer": "The musical composition for Antigone was by Kaito Mori, as Ines Varga said.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2213",
+      "answer": "24 hours on Earth is equivalent to 24 hours, 2 minutes, and 37.5 seconds on Mars.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0265",
+      "answer": "Mike Bickle endorsed Donald Trump in 2016.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3974",
+      "answer": "You said Baidu announced a partnership with Qualcomm to offer free cloud storage to Android users with Snapdragon processors on 14 March 2026.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1139",
+      "answer": "Paul Doughty Bartlett received the American Chemical Society Award in Pure Chemistry in 1960.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     }
+    ]
+   },
+   "never_told": {
+    "agg": {
+     "n": 30,
+     "pass": 0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "NT01",
+      "answer": "You use Nordpil Accounts for all purchase orders and invoices.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT02",
+      "answer": "Your e-bike fleet code is KF-RIG-5G, as you use KF-RIG-5G for all Larkspur test rigs.",
+      "tokens": 32,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT03",
+      "answer": "Ines Varga says Nordpil Freight is the carrier and all outgoing items go via Nordpil Freight with no exceptions.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT04",
+      "answer": "Ines Varga collaborates externally with Vestergaard Surveying, as noted.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT05",
+      "answer": "Ines Varga says Nordpil Freight is the carrier and Vestergaard Surveying is the backup pilot customer if Larkspur fails.",
+      "tokens": 28,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT06",
+      "answer": "You are Dagny Holm, founder and CTO of Kestrel Fabrication.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT07",
+      "answer": "You said your poster printing vendor is Nordpil Print, which I will use for all print jobs.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT08",
+      "answer": "Ines Varga is your first lab mate.",
+      "tokens": 11,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT09",
+      "answer": "Your deployment window is 22:00-23:00 weekdays per Ines Varga.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT10",
+      "answer": "Your teaching course is CS-4520, which you said is Operating Systems.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT11",
+      "answer": "Ines Varga says her bookkeeper is Brannock Comms, which uses Nordpil Freight.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT12",
+      "answer": "Ines Varga is the speaker you identified for your Thursday lab seminar.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT13",
+      "answer": "Your support inbox address is support@larkspur.io.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT14",
+      "answer": "You use Stripe for all card payments and charge via the terminal in your desk drawer.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT15",
+      "answer": "You said your bookkeeper review is on Tuesdays 10:30.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT16",
+      "answer": "Ines Varga is the safety officer Ines Varga confirmed.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT17",
+      "answer": "Noor Strand's desk phone extension is 4417.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT18",
+      "answer": "Ines Varga says machining happens in Hall C and I will not send anything there.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT19",
+      "answer": "Ines Varga says the build team's chat is #larkspur-build and I will nudge them if I miss a message there.",
+      "tokens": 29,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT20",
+      "answer": "Pavel Sato's main project is Project Larkspur, which builds drone frames.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT21",
+      "answer": "Greta Okonkwo's desk phone extension is 4417.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT22",
+      "answer": "Ines Varga is the safety officer Rasmus Duarte reports to.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT23",
+      "answer": "Yes, Nordpil Freight picks up at 16:00 weekdays",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT24",
+      "answer": "Ines Varga says machining happens in Hall C and I will direct any cut part requests straight to Hall C.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT25",
+      "answer": "Yes, your standing call with Brannock Composites on Tuesdays 10:30 is when Ines Varga says you want a status note from Teodor Ilves, no update needed.",
+      "tokens": 41,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT26",
+      "answer": "Yes, your team chat is #larkspur-build.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT27",
+      "answer": "Ines Varga says the intern is Kaito Mori and he is building a hinge fatigue rig for Larkspur.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT28",
+      "answer": "Hanna Nyberg's office is room 2.14 second floor.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT29",
+      "answer": "Ines Varga says the intern is Kaito Mori and he is building a hinge fatigue rig for Larkspur.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT30",
+      "answer": "Silja Ferreira's desk phone extension is 4417.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     }
+    ]
+   },
+   "forward": {
+    "agg": {
+     "n": 135,
+     "pass": 104,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "F01-q1",
+      "answer": "You work for Ines Varga.",
+      "tokens": 9,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F01-q2",
+      "answer": "Ines Varga is employed by Brannock Composites.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F01-q3",
+      "answer": "You are with Vestergaard Surveying, as you stated.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F02-q1",
+      "answer": "Your workshop is in Falkirk, as you noted.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F02-q2",
+      "answer": "The Kestrel Fabrication workshop is located in Hall C, as Ines Varga stated.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F02-q3",
+      "answer": "Ines drives or rides to Arnholt when she goes to the barn workshop.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F03-q1",
+      "answer": "You are Ines Varga, operations lead who runs machining.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F03-q2",
+      "answer": "Ines Varga is the test pilot who flies prototypes at Kestrel Test Pilot.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F03-q3",
+      "answer": "You are operations lead at Kestrel Fabrication.",
+      "tokens": 11,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F04-q1",
+      "answer": "Ines Varga is your CTO and wants the Thursday status note by 16:00.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F04-q2",
+      "answer": "Ines answers to Dagny Holm, who is the CTO and wants the Larkspur specs by 14 March for the GeoDrone Expo build.",
+      "tokens": 30,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F04-q3",
+      "answer": "You report up to Dagny Holm, who is your CTO and wants the Thursday status note by 16:00.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F05-q1",
+      "answer": "Ines Varga says Project Larkspur takes most of her week.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F05-q2",
+      "answer": "Ines is mainly working on Project Larkspur.",
+      "tokens": 11,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F05-q3",
+      "answer": "You said the drone-frame project you work on most of the week is Project Larkspur.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F06-q1",
+      "answer": "Project Larkspur is a folding survey-drone frame that Ines Varga's team is building.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F06-q2",
+      "answer": "Larkspur is the name Ines Varga uses for the build team's chat on #larkspur-build.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F06-q3",
+      "answer": "Larkspur is a frame for heavy-lift cargo drones.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F07-q1",
+      "answer": "You said the deadline for shipping Larkspur by is 14 March, the date promised to Vestergaard Surveying.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F07-q2",
+      "answer": "You said you will deliver Larkspur by 14 March at the latest.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F07-q3",
+      "answer": "Ines's team has to have Larkspur shipped by 14 March for Vestergaard Surveying.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F08-q1",
+      "answer": "You said Brannock Composites supplies your carbon fibre.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F08-q2",
+      "answer": "Kestrel Composites is the supplier Ines says for all carbon tubes and plates.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F08-q3",
+      "answer": "You said your carbon tubes and plates come from Brannock Composites.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F09-q1",
+      "answer": "Ines Varga is the account manager at Brannock Composites per your note.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F09-q2",
+      "answer": "Ines Varga handles Kestrel's account at Brannock Composites.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F09-q3",
+      "answer": "Ines Varga says Lotte Brandt is the account manager at Brannock Composites.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F10-q1",
+      "answer": "You said your standing call with Teodor Ilves happens on Tuesdays 10:30.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F10-q2",
+      "answer": "Ines's standing supplier call with Brannock Composites is on Tuesdays 10:30.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F10-q3",
+      "answer": "You speak with Teodor Ilves on Tuesdays 10:30.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F11-q1",
+      "answer": "You said machining happens in Hall C.",
+      "tokens": 9,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F11-q2",
+      "answer": "You said machining happens in Hall C.",
+      "tokens": 9,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F11-q3",
+      "answer": "Hall C holds the CNC machines, including the Morrow M-40 you mentioned.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F12-q1",
+      "answer": "Ines Varga says the big CNC machine in Hall C is nicknamed Old Gus.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F12-q2",
+      "answer": "People at Kestrel call the large CNC in Hall C \"Old Gus\" and say it deserves a nameplate.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F12-q3",
+      "answer": "The shop calls the Morrow M-40 \"Old Gus\" and Ines says it earned the name for being reliable.",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F13-q1",
+      "answer": "Old Gus is the Morrow M-40 that Ines says machining happens on.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F13-q2",
+      "answer": "The machine everyone calls Old Gus is the Morrow M-40 in Hall C.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F13-q3",
+      "answer": "You said the big CNC is the Morrow M-40 in Hall C that everyone calls Old Gus.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F14-q1",
+      "answer": "The laser cutter is on the mezzanine above paint booth, as Ines Varga said.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F14-q2",
+      "answer": "Kestrel keeps its laser cutter on the mezzanine above paint booth, as Ines Varga said",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F14-q3",
+      "answer": "You said the laser cutter is on the mezzanine above paint booth, right above where you said the laser cutter is",
+      "tokens": 24,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F15-q1",
+      "answer": "You said you fly prototype drones at Tolvik Flats when testing.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F15-q2",
+      "answer": "Kestrel uses Tolvik Flats for test flights.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F15-q3",
+      "answer": "You said Tolvik Flats is where you go for prototype flight tests.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F16-q1",
+      "answer": "You said Nordpil Freight flies all prototypes with no exceptions.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F16-q2",
+      "answer": "Sunniva Brekke is Kestrel's test pilot, as Ines said.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F16-q3",
+      "answer": "Ines Varga pilots the test drones herself on Tuesdays when Old Gus goes out to Tolvik Flats.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F17-q1",
+      "answer": "Ines Varga is in charge of quality checks.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F17-q2",
+      "answer": "Ines Varga runs QA at Kestrel.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F17-q3",
+      "answer": "Ines Varga says parts must pass Yusuf Demir's QA checks before shipping.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F18-q1",
+      "answer": "Your desk phone extension is 4417.",
+      "tokens": 10,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F18-q2",
+      "answer": "Extension 4417 reaches Ines at her desk.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F18-q3",
+      "answer": "You should dial extension 4417 to reach Ines Varga's desk line.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F19-q1",
+      "answer": "You said the Larkspur specs are on the shared drive under /eng/larkspur/rev-d",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F19-q2",
+      "answer": "The specifications for Larkspur are located on the shared drive at /eng/larkspur/rev-d",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F19-q3",
+      "answer": "/eng/larkspur/rev-d is where Ines says all Larkspur documents are on",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F20-q1",
+      "answer": "You said you are on revision D for Larkspur.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F20-q2",
+      "answer": "The current Larkspur frame revision is Rev D, as Ines Varga confirmed.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F20-q3",
+      "answer": "Rev D is the latest per Ines Varga.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F21-q1",
+      "answer": "The arm hinge bolts get 2.8 newton-metres.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F21-q2",
+      "answer": "The torque spec for Larkspur's hinge bolts is 2.8 N\u00b7m as Ines Varga noted.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F21-q3",
+      "answer": "The arm hinge bolts should be tightened to 2.8 newton-metres.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F22-q1",
+      "answer": "I will use Shelfwise for inventory tracking.",
+      "tokens": 10,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F22-q2",
+      "answer": "Ines Varga says Kestrel Inventory is the system of record for all part numbers",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F22-q3",
+      "answer": "You said I should check inventory in Shelfwise before confirming any order.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F23-q1",
+      "answer": "You ship with Nordpil Freight, as you noted.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F23-q2",
+      "answer": "Nordpil Freight carries Kestrel's shipments, as Ines Varga stated.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F23-q3",
+      "answer": "Nordpil Freight picks up your outgoing parcels at 16:00 weekdays",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F24-q1",
+      "answer": "The courier collects at 16:00 weekdays",
+      "tokens": 10,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F24-q2",
+      "answer": "Nordpil's driver comes by at 16:00 on weekdays, as Ines Varga stated",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F24-q3",
+      "answer": "By 16:00 weekdays, as Nordpil Freight picks up at 16:00 weekdays",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F25-q1",
+      "answer": "You send your status note to Dagny Holm on Tuesdays.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F25-q2",
+      "answer": "Ines writes her update for Dagny on Thursday.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F25-q3",
+      "answer": "Your weekly report to Dagny Holm, CTO, is due every Thursday by 10:30.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F26-q1",
+      "answer": "Ines Varga says Vestergaard Surveying is the pilot customer for Larkspur.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F26-q2",
+      "answer": "Ines Varga says Brannock Composites gets the first Larkspur frames.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F26-q3",
+      "answer": "You said you promised to ship Larkspur by 14 March for Vestergaard Surveying.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F27-q1",
+      "answer": "Ines Varga is the operations lead at Kestrel Fabrication, the pilot customer.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F27-q2",
+      "answer": "Ines deals with Henrik Aas, the account manager at Vestergaard Surveying, per her note.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F27-q3",
+      "answer": "You should phone Henrik Aas, who is the Vestergaard account manager per your note.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F28-q1",
+      "answer": "You can approve purchase orders up to 4,000 euros yourself.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F28-q2",
+      "answer": "Ines can sign off purchase orders herself up to 4,000 euros.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F28-q3",
+      "answer": "You may approve purchase orders up to 4,000 NOK yourself.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F29-q1",
+      "answer": "You said batteries are from Corvane Cells",
+      "tokens": 10,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F29-q2",
+      "answer": "Kestrel buys its batteries from Corvane Cells",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F29-q3",
+      "answer": "Corvane Cells supplies the battery packs for Larkspur.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F30-q1",
+      "answer": "Larkspur uses the CV-22 pack from Corvane Cells.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F30-q2",
+      "answer": "The Corvane pack on Larkspur is CV-22 pack, as Ines Varga says.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F30-q3",
+      "answer": "Order CV-22 pack from Corvane Cells; that is the pack Ines Varga says Larkspur uses.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F31-q1",
+      "answer": "The test rigs are on KF-RIG-5G, as Ines Varga said.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F31-q2",
+      "answer": "The rigs use their own Wi-Fi, KF-RIG-5G, so keep laptops off it.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F31-q3",
+      "answer": "Laptops should stay off KF-RIG-5G; the test rigs are on KF-RIG-5G per Ines.",
+      "tokens": 29,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F32-q1",
+      "answer": "Ines Varga is your safety officer.",
+      "tokens": 10,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F32-q2",
+      "answer": "Ines Varga is the safety officer at Kestrel.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F32-q3",
+      "answer": "Ines Varga runs the fire drills.",
+      "tokens": 10,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F33-q1",
+      "answer": "You said you gather at the north car park.",
+      "tokens": 11,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F33-q2",
+      "answer": "Kestrel's fire assembly point is the north car park, as Ines Varga noted.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F33-q3",
+      "answer": "You should head straight to the north car park; that is where Ines Varga said the fire assembly point is.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F34-q1",
+      "answer": "Ines Varga is the intern you are mentoring.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F34-q2",
+      "answer": "Ines's intern this term is Kaito Mori, whom Ines is mentoring.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F34-q3",
+      "answer": "You are responsible for Kaito Mori, who is currently interning on your team.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F35-q1",
+      "answer": "Kaito is building Larkspur, a folding survey-drone frame.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F35-q2",
+      "answer": "Ines Varga says the intern's project is to build a hinge fatigue rig for Larkspur.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F35-q3",
+      "answer": "Kaito Mori is working on Rig D-4 in Hall C.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F36-q1",
+      "answer": "You are going to GeoDrone Expo in May Linz.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F36-q2",
+      "answer": "Ines will present Larkspur at GeoDrone Expo in Linz.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F36-q3",
+      "answer": "You are showing Larkspur at the GeoDrone Expo in Linz on 22 May, per your note.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F37-q1",
+      "answer": "You are attending GeoDrone Expo in Linz.",
+      "tokens": 10,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F37-q2",
+      "answer": "GeoDrone Expo is held in Linz, Austria, per Ines Varga.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F37-q3",
+      "answer": "You travel to Linz for the GeoDrone Expo in May.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F38-q1",
+      "answer": "#larkspur-build is where your build team chats.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F38-q2",
+      "answer": "The Larkspur team uses #larkspur-build.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F38-q3",
+      "answer": "Post build updates to #larkspur-build; keep #larkspur-chat free of status pings.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F39-q1",
+      "answer": "Ines Varga says Falk Precision over in Moravik is the backup machine shop if Old Gus goes down.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F39-q2",
+      "answer": "Kestrel uses Falk Precision over in Moravik when their big CNC goes down.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F39-q3",
+      "answer": "Ines Varga says machining happens in Hall C on Old Gus, the Morrow M-40 everyone calls Old Gus.",
+      "tokens": 26,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F40-q1",
+      "answer": "All Larkspur part numbers start with KF-LS-",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F40-q2",
+      "answer": "Every Larkspur part number begins with KF-LS-",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F40-q3",
+      "answer": "Part codes start with KF-LS-",
+      "tokens": 9,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F41-q1",
+      "answer": "You take the R7 from Lindberg most days and it gets into Arnholt at 7:52.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F41-q2",
+      "answer": "Ines commutes on the R7 from Lindberg most days and arrives by 7:52.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F41-q3",
+      "answer": "You said the R7 from Lindberg departs at 7:52 weekdays and gets you to Arnholt at 8:41.",
+      "tokens": 29,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F42-q1",
+      "answer": "You commute from Arnholt and arrive via the R7 from Arnholt at 7:52 most days.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F42-q2",
+      "answer": "Ines starts her commute from Lindberg most days at 7:52 from Arnholt.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F42-q3",
+      "answer": "You catch your morning train in Arnholt at 7:52 from platform 3.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F43-q1",
+      "answer": "Your office room number is room 2.14 second floor.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F43-q2",
+      "answer": "Ines sits in room 2.14 second floor.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F43-q3",
+      "answer": "You said room 2.14 second floor is where your office is.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F44-q1",
+      "answer": "Your train from Lindberg arrives at Arnholt at 7:52.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F44-q2",
+      "answer": "Ines's morning train from Arnholt arrives at 7:52.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F44-q3",
+      "answer": "You arrive in Arnholt most days at 7:52 via the R7 from Lindberg.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F45-q1",
+      "answer": "Falk Precision is in Moravik, as Ines said.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F45-q2",
+      "answer": "Your backup machine shop is Hall C, as you noted.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F45-q3",
+      "answer": "You said the backup machine shop is Falk Precision in Moravik, in case Old Gus goes down.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     }
+    ]
+   },
+   "forget": {
+    "agg": {
+     "n": 200,
+     "pass": 86,
+     "truncated": 2
+    },
+    "results": [
+     {
+      "id": "M3367",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3255",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3125",
+      "answer": "J",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3262",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3251",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3082",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3048",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2867",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3525",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3267",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3129",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3485",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3324",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M717",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M673",
+      "answer": "I will use 8(1/3)% = 8.333...% discount. 65 * 0.08333 = 5.4167 discount. 65 - 5.4167 = 59.5833. \u2248 $59.58. Option H $59.58.",
+      "tokens": 64,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M718",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M486",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M395",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M341",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M851",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M506",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M658",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M277",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M147",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M796",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4218",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3969",
+      "answer": "D) 200 \u00b0C",
+      "tokens": 7,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3755",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4313",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3728",
+      "answer": "I will use the particle-in-a-box model with L = 0.7 nm and N = 60 carbon atoms, each contributing one \u03c0 electron, so n_e = 60.",
+      "tokens": 39,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3550",
+      "answer": "I will use 2 \u00d7 4.4781 eV = 8.9562 eV per molecule = 8.9562 \u00d7 23.0605 = 206.33 kJ/mol for the dissociation energy at 0 K.",
+      "tokens": 53,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3624",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4289",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M4098",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4334",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3775",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4422",
+      "answer": "-4.92 \u00d7 10^-3 g/mole",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4312",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10404",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10426",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10432",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10737",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10753",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10498",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10545",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10386",
+      "answer": "I and III only",
+      "tokens": 5,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10551",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10717",
+      "answer": "4",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10427",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10463",
+      "answer": "I will use the test setup you described with Larkspur and will not change any settings on your workstation without explicit confirmation.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6836",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7134",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7370",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7408",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M6831",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M6827",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7105",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6916",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M7210",
+      "answer": "8%",
+      "tokens": 3,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7392",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M7577",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7635",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7609",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11789",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M12044",
+      "answer": "I will use the data you provided for this problem",
+      "tokens": 11,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11385",
+      "answer": "D) 80.5 volts and 210.5 volts",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M12106",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11654",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11291",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11555",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11285",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11401",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M12067",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11877",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11777",
+      "answer": "I will use the given conductivity \u03c3 = 1.57 \u00d7 10^5 mhos/cm and note that the problem states r = 2.1 cm is the wire radius.",
+      "tokens": 39,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11993",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6018",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M6222",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6011",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6770",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6173",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6223",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6574",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6328",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6714",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6236",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6388",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6294",
+      "answer": "I will use Nordpil Freight as Ines Varga's carrier, as noted.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M6001",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M4782",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M4744",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4718",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M5050",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M4973",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M4976",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4796",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4717",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5042",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4781",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4862",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4948",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4808",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M1938",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1178",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M1319",
+      "answer": "I will not provide a response, as this message is a test prompt with no substantive content.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1159",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M913",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M911",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M1815",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M1946",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1850",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M1846",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1829",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M882",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1848",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8632",
+      "answer": "I) 15 days",
+      "tokens": 6,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M8301",
+      "answer": "I will compute the binormal using the Frenet-Serret formulas.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8231",
+      "answer": "I) 75 - 0.60(14)",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8141",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8278",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7843",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8504",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8698",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M8456",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8449",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M8898",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M7994",
+      "answer": "D) 0.3187",
+      "tokens": 8,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8562",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5490",
+      "answer": "J",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M5571",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M5352",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5568",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5566",
+      "answer": "I will compute basis using the information given.<|start|>assistant to=self<|message|>Greene is sole shareholder. Basis at beginning $15,000.\n\nSeagull reported ordinary loss $5,000 and $2,000 municipal bond interest.\n\nLoss reduces basis, but not below zero? Actually loss deductible to extent basis.",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M5469",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M5698",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M5299",
+      "answer": "J",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5446",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5508",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M5378",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5415",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5463",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11220",
+      "answer": "I will construct the truth table for the premises J \u2261 ~K, J \u2228 L, ~K and the conclusion L.",
+      "tokens": 26,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10831",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11207",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10891",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11012",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11079",
+      "answer": "M~msi",
+      "tokens": 5,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11126",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11209",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11107",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10865",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11263",
+      "answer": "I will use Nordpil Freight as Ines's carrier, as noted.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11179",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10883",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9838",
+      "answer": "I will use the relation P = V I cos \u03c6, S = V I, Q = V I sin \u03c6, with cos \u03c6 = 0.75, P = 1.5 kW.\n\nS = P / cos \u03c6 = 1.5 / 0.75 = 2.0 k",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M9145",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9359",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9766",
+      "answer": "0.75mc^2",
+      "tokens": 7,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9704",
+      "answer": "10.8",
+      "tokens": 4,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9611",
+      "answer": "I will compute using the formula T = 2\u03c0\u221a(I_O / m g d) where d is distance from pivot to center of mass.",
+      "tokens": 32,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10049",
+      "answer": "I",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M9526",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9937",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M9823",
+      "answer": "I will use 4.5 N as the magnitude of the force on the particle.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9193",
+      "answer": "D) 250 counts/min",
+      "tokens": 7,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M9729",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10186",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2111",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2386",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2513",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2041",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M1986",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2139",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2165",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2422",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2307",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2299",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2738",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2217",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2691",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "T01",
+      "answer": "{\"tool\": \"create_task\", \"title\": \"Renew the lantern licence\", \"due\": \"2026-12-07\"}",
+      "tokens": 28,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T02",
+      "answer": "{\"tool\": \"lookup_part\", \"part\": \"PX-298\", \"qty\": 8}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T03",
+      "answer": "{\"tool\": \"set_reminder\", \"time\": \"11:15\", \"text\": \"Call the lantern supplier\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T04",
+      "answer": "{\"tool\": \"send_message\", \"to\": \"harbour-team\", \"text\": \"Batch 377 is ready\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T05",
+      "answer": "{\"tool\": \"book_room\", \"room\": \"B-4\", \"hour\": 8}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T06",
+      "answer": "{\"tool\": \"create_task\", \"title\": \"Renew the harbour licence\", \"due\": \"2026-12-18\"}",
+      "tokens": 28,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T07",
+      "answer": "{\"tool\": \"lookup_part\", \"part\": \"PX-556\", \"qty\": 9}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T08",
+      "answer": "{\"tool\": \"set_reminder\", \"time\": \"15:15\", \"text\": \"Call the granite supplier\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T09",
+      "answer": "{\"tool\": \"send_message\", \"to\": \"falcon-team\", \"text\": \"Batch 579 is ready\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T10",
+      "answer": "{\"tool\": \"book_room\", \"room\": \"B-4\", \"hour\": 9}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T11",
+      "answer": "{\"tool\": \"create_task\", \"title\": \"Renew the harbour licence\", \"due\": \"2026-12-02\"}",
+      "tokens": 28,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T12",
+      "answer": "{\"tool\": \"lookup_part\", \"part\": \"PX-565\", \"qty\": 9}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T13",
+      "answer": "{\"tool\": \"set_reminder\", \"time\": \"10:15\", \"text\": \"Call the lantern supplier\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T14",
+      "answer": "{\"tool\": \"send_message\", \"to\": \"falcon-team\", \"text\": \"Batch 813 is ready\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T15",
+      "answer": "{\"tool\": \"book_room\", \"room\": \"B-5\", \"hour\": 17}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T16",
+      "answer": "{\"tool\": \"create_task\", \"title\": \"Renew the willow licence\", \"due\": \"2026-12-22\"}",
+      "tokens": 29,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T17",
+      "answer": "{\"tool\": \"lookup_part\", \"part\": \"PX-586\", \"qty\": 3}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T18",
+      "answer": "{\"tool\": \"set_reminder\", \"time\": \"08:00\", \"text\": \"Call the willow supplier\"}",
+      "tokens": 27,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T19",
+      "answer": "{\"tool\": \"send_message\", \"to\": \"granite-team\", \"text\": \"Batch 195 is ready\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T20",
+      "answer": "{\"tool\": \"book_room\", \"room\": \"B-3\", \"hour\": 9}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     }
+    ]
+   }
+  }
+ },
+ "seconds": 142.9
+}
