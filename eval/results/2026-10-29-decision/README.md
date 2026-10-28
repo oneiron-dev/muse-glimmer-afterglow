@@ -166,3 +166,18 @@ code rule. D1 called 4 pairs that the rule kept apart "the same fact" at p ≥ 0
 1 of 4 is right. The w4 duplicate test's positives were a note against its restatement, and its negatives had no
 shared-value pairs, so 126/126 there does not carry over to real near-duplicates. D1 stays a logged check that
 never merges. D1b adds "different facts, same value" negatives built by code.
+
+### Day-3 duplicate check, all four worlds (29 Oct 08:20–08:22)
+
+123 real pairs: the pairs the night's duplicate check reads over the day-3 notes, keeping those with at least one
+day-3 note. Labels come from world.json (each note maps to the fact it held that day). 3 pairs are the same fact; 42
+are different facts that share a value. Rows: `decide/data/duplicate-day3-check.jsonl`, built by
+`decide/duplicate_check_set.py`.
+
+| arm | accuracy | "same" at p ≥ 0.9 on true pairs (of 3) | false "same" at p ≥ 0.9 |
+|---|---|---|---|
+| D0 base | 0.984 | 2 | 0 |
+| D1 | 0.976 | 3 | 2 (Room 312 F37/F78; QT-207 F72/F73) |
+
+Base makes no false "same" at p ≥ 0.9 on real notes. D1 makes two, both in w4. D1b adds code-built different-fact
+pairs that share a value. This set is part of its bar.
