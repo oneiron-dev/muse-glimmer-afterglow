@@ -213,7 +213,7 @@ class TraceProxyTest(unittest.TestCase):
         models = {json.loads(l[6:])["model"] for l in proxied[2].decode().splitlines()
                   if l.startswith("data: {")}
         self.assertEqual(models, {ALIAS})
-        rec = self.trace_for(lambda t: t["messages"][0]["content"] == "stream it")
+        rec = self.trace_for(lambda t: (t.get("messages") or [{}])[0].get("content") == "stream it")
         self.assertEqual(rec["reply_model"], ALIAS)
         self.assertEqual(rec["reasoning_content"], "The note says the standup moved to 10:30.")
         self.assertEqual(rec["content"], "Standup is at 10:30.")
@@ -269,7 +269,7 @@ class TraceProxyTest(unittest.TestCase):
         while len(FakeLlamaServer.disconnects) == n and time.time() - t0 < 5:
             time.sleep(0.05)
         self.assertGreater(len(FakeLlamaServer.disconnects), n)
-        rec = self.trace_for(lambda t: t["messages"][0]["content"] == "bye")
+        rec = self.trace_for(lambda t: (t.get("messages") or [{}])[0].get("content") == "bye")
         self.assertTrue(rec.get("client_disconnected"))
 
 
