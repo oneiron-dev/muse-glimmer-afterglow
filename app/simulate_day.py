@@ -43,20 +43,25 @@ def main():
     ap.add_argument("--endpoint", default=GlimmerClient().endpoint)
     ap.add_argument("--reasoning", default="low", choices=["minimal", "low", "medium", "high"])
     ap.add_argument("--temperature", type=float, default=0.0, help="0 = greedy, so a day replays the same")
+    ap.add_argument("--decide-supersede", action="store_true",
+                    help="a correction saved under a new key is linked by the model's decision (decide/decider.py)")
+    ap.add_argument("--decide-adapter", help="the decision adapter's path on the serving box (default: base weights)")
     a = ap.parse_args()
 
     script_path = paths.worlds_root() / a.world / "days" / str(a.day) / "script.jsonl"
     script = [json.loads(line) for line in script_path.read_text().splitlines() if line.strip()]
     date = a.date or (FIRST_DATE + dt.timedelta(days=a.day - 1)).isoformat()
     session = DaySession(a.world, a.day, GlimmerClient(a.endpoint), date=date, reasoning=a.reasoning,
-                         temperature=a.temperature)
+                         temperature=a.temperature, decide_supersede=a.decide_supersede,
+                         decide_adapter=a.decide_adapter)
     done = {r["content"] for r in session.history() if r["role"] == "user"}
     t0 = time.time()
     turns = []
     for item in script:
         if item["content"] in done:
             continue
-        ev = session.ask(item["content"], source="script")
+        ev = session.ask(item["content"], source="script",
+                         extra={"feedback": item["feedback"]} if item.get("feedback") else None)
         turns.append({"turn": item["turn"], "facts": item.get("facts", []), "notes_written": ev["notes_written"],
                       "ttft_s": ev["ttft_s"], "total_s": ev["total_s"], "error": ev["error"]})
         print(f"turn {item['turn']:>2}: {len(ev['notes_written'])} notes, {ev['total_s']:.1f} s"

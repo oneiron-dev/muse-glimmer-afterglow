@@ -30,6 +30,7 @@ sys.path.insert(0, str(ROOT / "decide"))
 import scoring  # noqa: E402
 from leak_check import check as leak_check  # noqa: E402
 from paths import runs_root  # noqa: E402
+from candidates import Bm25  # noqa: E402
 from prompts import (DUP_OPTIONS, SUP_OPTIONS, note_line, pair_prompt, route_options,  # noqa: E402
                      route_prompt)
 
@@ -239,6 +240,53 @@ def supersede_rows(W, split, rng):
     return rows
 
 
+def supersede_candidate_rows(W, runs, k=8):
+    """Remember-time rows: the earlier notes are the day agent's own day-1 notes (its paraphrased keys), the new note is
+    a superseding fact (world key: value, and the user's day-2 sentence), and the pairs are exactly the BM25 top-k
+    candidates the live decider checks (decide.decider.supersede_candidates). A candidate holding the old value ->
+    1 (replaces), any other candidate -> 2 (both stay true)."""
+    path = runs / W["world"] / "1" / "notes.json"
+    if not path.exists():
+        return []
+    day1 = [n for n in json.loads(path.read_text())["notes"] if n.get("status", "active") == "active"]
+    bm = Bm25([{**n, "statement": ""} for n in day1])
+    said = {f: t["content"] for t in W["day2"] for f in t.get("facts", [])}
+    rows = []
+    for old in (f for f in W["facts"].values() if f.get("superseded_by")):
+        new = W["facts"][old["superseded_by"]]
+        for form, text in (("key_value", fact_line(new)), ("user_sentence", said.get(new["id"]))):
+            if not text:
+                continue
+            for cand in bm.top(text, k):
+                label = "1" if holds(cand["value"], old) else "2"
+                rows.append(pair_row("supersede", W["world"], "train", f"candidate_{form}",
+                                     f"sup:{W['world']}:{cand['id']}-{new['id']}:cand:{form}", note_line(cand), text, label,
+                                     {"fact_ids": [old["id"] if label == "1" else None, new["id"]], "note_id": cand["id"]}))
+    return rows
+
+
+def norm_line(text):
+    return " ".join((text or "").lower().split())
+
+
+def pair_leaks(train_rows, check_rows):
+    """Pair-level leak check against the day-2 correction check set: a training pair row is a hit when it holds a check
+    pair whole, i.e. the check's earlier note is one side of the row and the check's new note is the other side, or the
+    other side states the same superseding fact (same new fact id)."""
+    hits = []
+    for t in train_rows:
+        if "a" not in t:
+            continue
+        sides = {norm_line(t["a"]), norm_line(t["b"])}
+        t_new = (t.get("fact_ids") or [None, None])[-1]
+        for c in check_rows:
+            if norm_line(c["a"]) not in sides:
+                continue
+            if norm_line(c["b"]) in sides or (t_new is not None and t_new == c["fact_ids"][-1]):
+                hits.append({"check": c["id"], "train_row": t["id"]})
+    return hits
+
+
 def split_by_hash(rows, share, salt):
     """Hold out a calibration share of w1-w3 pair rows by a stable hash of the row id."""
     out = []
@@ -289,6 +337,8 @@ def main():
         worlds[w], [worlds[o] for o in TRAIN_WORLDS if o != w], rng, args.cross_world_asks)]
     for kind, build in (("duplicate", duplicate_rows), ("supersede", supersede_rows)):
         rows = split_by_hash([r for w in TRAIN_WORLDS for r in build(worlds[w], "train", random.Random(SEED))], 0.2, kind)
+        if kind == "supersede":
+            rows += split_by_hash([r for w in TRAIN_WORLDS for r in supersede_candidate_rows(worlds[w], runs)], 0.2, kind)
         built[f"{kind}-train.jsonl"] = [r for r in rows if r["split"] == "train"]
         built[f"{kind}-calibration.jsonl"] = [r for r in rows if r["split"] == "calibration"]
     # leak check: no training prompt may hold a held-out probe or a never-told question (any world). Hit rows are
@@ -299,17 +349,26 @@ def main():
         return [{"id": r["id"], "messages": [{"content": r.get("question") or r["prompt"]}]}
                 for name, rows in built.items() if name.endswith("-train.jsonl") for r in rows]
     hits, _ = leak_check(as_messages(), probes)
-    dropped = sorted({h["train_row"] for h in hits})
+    check_path = DATA / "supersede-day2-check.jsonl"
+    checks = read_jsonl(check_path) if check_path.exists() else []
+    pair_hits = pair_leaks([r for name, rows in built.items() if name.endswith("-train.jsonl") for r in rows], checks)
+    dropped = sorted({h["train_row"] for h in hits} | {h["train_row"] for h in pair_hits})
     built = {name: [r for r in rows if r["id"] not in dropped] for name, rows in built.items()}
     after, overlap = leak_check(as_messages(), probes)
+    pair_after = pair_leaks([r for name, rows in built.items() if name.endswith("-train.jsonl") for r in rows], checks)
     for name, rows in built.items():
         report[name] = write(rows, DATA / name)
-    leak = {"train_rows": len(as_messages()), "probes": len(probes), "hits_before_clean": len(hits), "dropped_rows": dropped,
-            "examples": hits[:20], "hits": len(after), "probes_sharing_a_5gram": overlap, "passed": not after}
-    hits = after
+    leak = {"train_rows": len(as_messages()), "probes": len(probes), "hits_before_clean": len(hits),
+            "pair_check_rows": len(checks), "pair_hits_before_clean": len(pair_hits),
+            "pair_checks_hit_before_clean": len({h["check"] for h in pair_hits}), "dropped_rows": dropped,
+            "examples": hits[:20], "pair_examples": pair_hits[:20], "hits": len(after), "pair_hits": len(pair_after),
+            "probes_sharing_a_5gram": overlap, "passed": not after and not pair_after}
+    hits = after + pair_after
     (DATA / "leak.json").write_text(json.dumps(leak, indent=1) + "\n")
     counts = {name: sum(1 for _ in open(DATA / name)) for name in report}
-    print(json.dumps({"files": counts, "leak": {k: leak[k] for k in ("train_rows", "hits", "passed")}}, indent=1))
+    print(json.dumps({"files": counts, "leak": {k: leak[k] for k in ("train_rows", "hits", "pair_hits_before_clean",
+                                                                      "pair_checks_hit_before_clean", "pair_hits", "passed")}},
+                     indent=1))
     if hits:
         sys.exit(1)
 

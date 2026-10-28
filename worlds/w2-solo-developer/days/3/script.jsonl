@@ -1,0 +1,18 @@
+{"turn": 1, "role": "user", "content": "Morning, could you order toner for Printwell G6020? The machine by the window keeps fading, and ask Jonas Weber to do a test pass since he just joined to handle QA.", "facts": ["F65", "F66"]}
+{"turn": 2, "role": "user", "content": "Quick update before lunch, Harborline Foods Oy signed as our number four client, and could you reset access on Staging Albatross? The staging copy is timing out today.", "facts": ["F67", "F68"]}
+{"turn": 3, "role": "user", "content": "One last thing, if the build server goes down after hours please ring Extension 7734, that's the urgent line to reach someone.", "facts": ["F69"]}
+{"turn": 4, "role": "user", "content": "Morning, could you check why the test tablet we call Tablet Kingfisher won't sync before I start our video chat on Loopcall Meet?", "facts": ["F70", "F71"]}
+{"turn": 5, "role": "user", "content": "Can you tell me where the launch checklist file is stored?", "facts": [], "question": true}
+{"turn": 6, "role": "user", "content": "That was a bit long, just the value next time please", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "correction", "refers_to_turn": 5}}
+{"turn": 7, "role": "user", "content": "Could you flag 2027-03-12 when our current contract is up for renewal? I'm planning to work from Pierpoint Annex Loft, our backup coworking space, to get some quiet.", "facts": ["F72", "F73"]}
+{"turn": 8, "role": "user", "content": "And please open Releasebrief Quill, the file we use for release notes, so I can jot things down this afternoon.", "facts": ["F74"]}
+{"turn": 9, "role": "user", "content": "Can you remind me what my external monitor nickname is?", "facts": [], "question": true}
+{"turn": 10, "role": "user", "content": "heads up, my coworking desk number is now Desk 22A", "facts": ["F75"], "supersedes": ["F06"]}
+{"turn": 11, "role": "user", "content": "Could you email someone at Bluebird Analytics Ltd to confirm our accountant vendor name?", "facts": [], "question": true}
+{"turn": 12, "role": "user", "content": "Thanks, please check with me before contacting Bluebird Analytics Ltd.", "facts": [], "feedback": {"axis": "asks_first", "toward": "asks before acting", "polarity": "correction", "refers_to_turn": 11}}
+{"turn": 13, "role": "user", "content": "change of plan: client standup time is now Thursdays at 10:00", "facts": ["F76"], "supersedes": ["F34"]}
+{"turn": 14, "role": "user", "content": "Can you remind me what my test phone model is?", "facts": [], "question": true}
+{"turn": 15, "role": "user", "content": "Can you remind me what my code repository path is?", "facts": [], "question": true}
+{"turn": 16, "role": "user", "content": "heads up, contractor invoice deadline is now 2026-11-12", "facts": ["F77"], "supersedes": ["F38"]}
+{"turn": 17, "role": "user", "content": "Which vendor do we use for accounting?", "facts": [], "question": true}
+{"turn": 18, "role": "user", "content": "Perfect, thanks for keeping it short and direct", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "approval", "refers_to_turn": 17}}

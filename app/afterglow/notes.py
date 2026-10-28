@@ -93,10 +93,7 @@ class LocalJsonNotes(NotesStore):
             if not target:
                 return {"note": old, "superseded": None, "unchanged": True}
             # the fact was saved first under a new key; this call names the note it corrects
-            t = now_iso()
-            target.update(status="superseded", superseded_by=old["id"], updated_at=t)
-            old.update(supersedes=target["id"], updated_at=t)
-            self._save()
+            self.link(old, target)
             return {"note": old, "superseded": target, "unchanged": False}
         t = now_iso()
         note = {"id": self._next_id(), "key": key, "value": value, "status": "active", "created_at": t,
@@ -120,6 +117,16 @@ class LocalJsonNotes(NotesStore):
                 scored.append((overlap + key_hit, i, n))
         scored.sort(key=lambda s: (-s[0], -s[1]))
         return [n for _, _, n in scored[:k]]
+
+    def link(self, note, old, decided=None):
+        """Mark `old` superseded by `note` (a correction saved under a new key). `decided`: how the link was
+        made when not by the agent ({"by", "p", "latency_s"}), kept on the new note for the day page."""
+        t = now_iso()
+        old.update(status="superseded", superseded_by=note["id"], updated_at=t)
+        note.update(supersedes=old["id"], updated_at=t)
+        if decided:
+            note["decided"] = decided
+        self._save()
 
     def correction_candidates(self, note, k=5):
         """Earlier active notes that the new `note` may correct (shown to the agent, which decides): shared key
@@ -221,6 +228,9 @@ class OneironNotes(NotesStore):
 
     def correction_candidates(self, note, k=5):
         return self.local.correction_candidates(note, k)
+
+    def link(self, note, old, decided=None):
+        return self.local.link(note, old, decided)
 
     def recall(self, query, k=5):
         out = []

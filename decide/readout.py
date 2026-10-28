@@ -153,7 +153,9 @@ def decide(server, glimmer, row, lora, slot=None, extend_below=None, strength="h
         after = glimmer.ids(prompt + reasoning + "<|eom|>" + ANSWER_PREFIX)
         d2, m2, top2, ms2, _ = label_probs(server, after, label_ids, lora, slot)
         pick2 = max(d2, key=d2.get)
-        out["extended"] = {"pick": pick2, "p": round(d2[pick2], 4), "right": pick2 in row["accept"], "label_mass": round(m2, 4),
+        undecided = stop == "limit" or (n_tok or 0) >= REASONING_MAX_TOKENS  # lead ruling 29 Oct 04:40: never an answer
+        out["extended"] = {"pick": pick2, "p": round(d2[pick2], 4), "right": pick2 in row["accept"], "undecided": undecided,
+                           "label_mass": round(m2, 4),
                            "reasoning_tokens": n_tok, "stop": stop, "ms": round(think_ms + ms2, 1), "reasoning": reasoning[-600:]}
     return out
 
@@ -168,6 +170,8 @@ def main():
     ap.add_argument("--extend-below", type=float, help="auto-extend when the top probability is below this")
     ap.add_argument("--reasoning", default="high")
     ap.add_argument("--limit", type=int)
+    ap.add_argument("--stop-file", help="stop before the next call when this file exists (the slot owner's pause)")
+    ap.add_argument("--until", help="stop before the next call after this local time, HH:MM")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     glimmer = Glimmer(args.model_dir)
@@ -181,6 +185,9 @@ def main():
         for row in rows:
             if row["id"] in done:
                 continue
+            if (args.stop_file and Path(args.stop_file).exists()) or (args.until and time.strftime("%H:%M") >= args.until):
+                print("stopped before", row["id"], flush=True)
+                break
             res = decide(args.server, glimmer, row, lora, args.slot, args.extend_below, args.reasoning)
             res["lora"] = lora
             f.write(json.dumps(res, ensure_ascii=False) + "\n")

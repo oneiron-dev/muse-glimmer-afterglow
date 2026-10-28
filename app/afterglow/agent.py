@@ -13,6 +13,7 @@ after a restore, with the day so far.
 """
 import datetime as dt
 import json
+import sys
 import time
 from pathlib import Path
 
@@ -23,6 +24,9 @@ from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 
 JST = dt.timezone(dt.timedelta(hours=9))
 MAX_ROUNDS = 8
+LINK_P = 0.9  # a one-pass "replaces" this sure links at once (decide/decider.py SUPERSEDE_ACCEPT_P)
+ASK_AGAIN_P = 0.5  # from here up to LINK_P the decision is asked once more with reasoning on
+REASONING_TOKENS = 1024  # the reasoned call's budget (decide/decider.py); reasoning cut there never links
 
 SYSTEM_PROMPT = """You are Afterglow, {who} personal assistant. You run on {owner} own computer.
 
@@ -70,7 +74,8 @@ def system_message(world_doc):
 
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
-                 notes_backend="local", temperature=0.3):
+                 notes_backend="local", temperature=0.3, decide_supersede=False, decide_reasoned=True,
+                 decide_adapter=None):
         self.world, self.day = world, int(day)
         self.temperature = temperature
         self.client = client or GlimmerClient()
@@ -91,7 +96,9 @@ class DaySession:
         if prev and (prev / "world_state.json").exists():
             seed = json.loads((prev / "world_state.json").read_text())
         self.world_state = WorldState(self.dir / "world_state.json", seed=seed or self.world_doc)
-        self.tools = ToolBox(self.notes, self.world_state, day=self.day)
+        self.decide_reasoned = decide_reasoned
+        self.tools = ToolBox(self.notes, self.world_state, day=self.day,
+                             decide_supersede=self._supersede_decider(decide_adapter) if decide_supersede else None)
         self.daylog_path = self.dir / "daylog.jsonl"
         self.session_path = self.dir / "session.json"
         self.system_message = system_message(self.world_doc)
@@ -99,6 +106,45 @@ class DaySession:
         self.turn = 0
         self.messages = [self.system_message, self.context_message]
         self._replay()
+
+    def _supersede_decider(self, adapter_path=None):
+        """The supersede decision at remember time (decide/decider.py; base weights, or the decision adapter at 1
+        with every other adapter at 0), on slot 1, so its uncached calls never overwrite the user's cached
+        conversation in slot 0. One pass over the top earlier notes: "replaces" at p >= LINK_P links at once;
+        LINK_P > p >= ASK_AGAIN_P asks once more with reasoning on and links when the reasoned answer says
+        "replaces"; lower keeps both. Returns the ToolBox hook."""
+        sys.path.insert(0, str(paths.REPO))
+        from decide.decider import Decider
+        from decide.prompts import note_line
+
+        one_pass = Decider(self.client.endpoint, adapter_path=adapter_path, slot=1, trace="supersede_decision")
+        # thresholds above 1: pair() always reasons first, then reads the same labels
+        reasoned = Decider(self.client.endpoint, adapter_path=adapter_path, slot=1, trace="supersede_decision_reasoned",
+                           thresholds={"supersede": 1.01})
+        p_replaces = lambda d: d["p"] if d["yes"] else 1.0 - d["p"]
+
+        def decide(new_note):
+            earlier = [n for n in self.notes.all() if n["id"] != new_note["id"]]
+            r = one_pass.supersede_link(earlier, new_note, accept_p=LINK_P)
+            best = max(r["decisions"], key=p_replaces, default=None)
+            by_id = {n["id"]: n for n in earlier}
+            decided = {"by": "one-pass decision", "p": best and round(p_replaces(best), 4),
+                       "latency_s": round(r["ms"] / 1000, 3), "candidate": best and best["candidate"]}
+            note = by_id.get(r["link"])
+            if note is None and best and ASK_AGAIN_P <= p_replaces(best) < LINK_P and self.decide_reasoned:
+                t = reasoned.pair("supersede", note_line(by_id[best["candidate"]]), note_line(new_note))
+                # reasoning that ended at its budget did not finish: undecided, never an answer
+                cut = t.get("reason") == "reasoning_cap" or (t.get("reasoning_tokens") or 0) >= REASONING_TOKENS
+                decided.update(by="thought it through", latency_s=round(decided["latency_s"] + t["ms"] / 1000, 3),
+                               reasoned={"pick": None if cut else t["pick"], "p": None if cut else t["p"],
+                                         "ms": t["ms"], "reasoning_tokens": t.get("reasoning_tokens")})
+                if cut:
+                    decided.update(reason="reasoning_cap", outcome="undecided: keep both")
+                elif t["yes"]:
+                    note = by_id[best["candidate"]]
+            return {"note": note, "decided": decided, "decisions": r["decisions"]}
+
+        return decide
 
     # --- the prompt prefix ---
     def _init_day_context(self, date):
@@ -147,16 +193,18 @@ class DaySession:
         return out
 
     # --- one turn ---
-    def run_turn(self, text, source="user"):
-        """Yield UI events for one user turn; the last is {"type": "turn_done", ...}."""
+    def run_turn(self, text, source="user", extra=None):
+        """Yield UI events for one user turn; the last is {"type": "turn_done", ...}. `extra` fields go on the day
+        log's user record (a scripted day's "feedback" label, for the night's steering proposals)."""
         self.turn += 1
         turn = self.turn
-        self._log({"ts": now_iso(), "turn": turn, "role": "user", "content": text, "source": source})
+        self._log({"ts": now_iso(), "turn": turn, "role": "user", "content": text, "source": source, **(extra or {})})
         self.messages.append({"role": "user", "content": text})
         new_msgs, tool_calls, notes_written, rounds = [], [], [], []
         final = ""
         retry = None  # why the reply came from the answer channel: empty_reply, repeated_tool_call or max_rounds
         seen_calls = set()
+        n_decisions = len(self.tools.decisions)
         t0 = time.time()
         error = None
         for r in range(MAX_ROUNDS):
@@ -238,6 +286,8 @@ class DaySession:
                "tool_calls": tool_calls, "notes_written": notes_written, "rounds": rounds,
                "ttft_s": first.get("ttft_s"), "total_s": round(time.time() - t0, 3),
                "tok_s": last_t.get("predicted_per_second"), "answer_channel_retry": retry, "error": error}
+        if len(self.tools.decisions) > n_decisions:  # the one-pass supersede decisions of this turn, with p and ms
+            rec["supersede_decisions"] = self.tools.decisions[n_decisions:]
         live = hasattr(self.notes, "witness_turn") and final
         if live:  # push_day skips a turn the live path sent into the same conversation
             rec["witnessed_live"] = self.notes.conversation
@@ -250,10 +300,10 @@ class DaySession:
                "cache_n": (first.get("timings") or {}).get("cache_n"),
                "prompt_n": (first.get("timings") or {}).get("prompt_n")}
 
-    def ask(self, text, source="user"):
+    def ask(self, text, source="user", extra=None):
         """Run a turn to the end; return the final event (for scripts and the simulator)."""
         last = None
-        for ev in self.run_turn(text, source=source):
+        for ev in self.run_turn(text, source=source, extra=extra):
             last = ev
         return last
 

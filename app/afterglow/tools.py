@@ -88,10 +88,15 @@ def next_id(prefix, items):
 class ToolBox:
     """Runs one tool call. Returns (result_dict, notes_written)."""
 
-    def __init__(self, notes, world_state, day=None):
+    def __init__(self, notes, world_state, day=None, decide_supersede=None):
         self.notes = notes
         self.world = world_state
         self.day = day
+        # decide_supersede(new_note) -> {"note": the earlier note it replaces or None, "decided": {...}, "decisions"}:
+        # the model's decision on whether a fact saved under a new key replaces an earlier note (agent.py applies the
+        # bars). With no note, both stay and the night's consolidation sees the pair.
+        self.decide_supersede = decide_supersede
+        self.decisions = []  # every supersede decision this session, for the day log
 
     def run(self, name, args, turn=None):
         try:
@@ -101,6 +106,16 @@ class ToolBox:
                 out = {"saved": r["note"]["id"], "key": r["note"]["key"], "value": r["note"]["value"]}
                 if r["superseded"]:
                     out["replaced"] = {"id": r["superseded"]["id"], "old_value": r["superseded"]["value"]}
+                elif not r["unchanged"] and self.decide_supersede:  # the model decides; linked only when sure
+                    d = self.decide_supersede(r["note"])
+                    decided = d["decided"]
+                    if d.get("note") is not None:
+                        self.notes.link(r["note"], d["note"], decided)
+                        out["replaced"] = {"id": d["note"]["id"], "old_value": d["note"]["value"], "decided": decided}
+                    elif d.get("decisions"):
+                        out["decision"] = dict(decided, linked=False)  # both notes stay; the night sees the pair
+                    self.decisions.append({"note": r["note"]["id"], **decided, "linked": "replaced" in out,
+                                           "calls": d.get("decisions")})
                 elif not r["unchanged"] and hasattr(self.notes, "correction_candidates"):
                     maybe = self.notes.correction_candidates(r["note"])
                     if maybe:  # the agent decides; a second remember with replaces links the old note

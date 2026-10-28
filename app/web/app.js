@@ -43,7 +43,7 @@ function renderHeader(s) {
   $("when").textContent = `Day ${s.day}, ${day}`;
   $("dot").className = "dot " + (s.server.healthy ? "up" : "down");
   $("dot").title = s.server.healthy ? `Serving at ${s.server.endpoint}` : `No answer from ${s.server.endpoint}`;
-  $("weights").textContent = s.server.adapter || "base weights";
+  $("weights").textContent = !s.server.healthy ? "server offline" : s.server.adapter || "base weights";
   const r = s.answer_channel_retries || { retried: 0, replies: 0 };
   $("retries").textContent = r.retried ? `${r.retried} of ${r.replies} replies today ended empty and were asked again` : "";
 }
@@ -56,6 +56,14 @@ function renderNotes(notes, flashIds = new Set()) {
   for (const n of active) {
     const li = el("li", "note");
     li.append(el("div", "k", pretty(n.key)), el("div", "v", n.value));
+    const d = n.decided, was = n.supersedes && byId[n.supersedes];
+    if (d && was) {  // linked by the model's decision, not by the agent: say how, with its certainty and time
+      const how = d.reasoned
+        ? `thought it through (one pass p ${d.p.toFixed(2)}, then ${d.reasoned.reasoning_tokens ?? "?"} reasoning tokens)`
+        : `decided in one pass${d.p != null ? `, p ${d.p.toFixed(2)}` : ""}`;
+      li.append(el("div", "decided", `replaces the earlier note "${pretty(was.key)}", ${how}` +
+        (d.latency_s != null ? `, ${d.latency_s.toFixed(2)} s` : "")));
+    }
     let prev = n.supersedes && byId[n.supersedes];
     while (prev) {
       li.append(el("div", "old", prev.value));

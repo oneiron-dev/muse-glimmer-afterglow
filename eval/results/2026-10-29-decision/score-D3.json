@@ -1,0 +1,236 @@
+{
+ "arms": {
+  "D3": {
+   "duplicate/calibration": {
+    "one_pass": {
+     "n": 32,
+     "accuracy": 0.9375,
+     "ece": 0.2047,
+     "wrong_at_p90": 0,
+     "p50_ms": 186.7,
+     "p95_ms": 562.9,
+     "label_mass_p50": 0.9628,
+     "server_ms_p50": 140.4,
+     "server_ms_p95": 186.4,
+     "prompt_tokens_p50": 129
+    },
+    "reasoned": {
+     "n": 32,
+     "undecided_at_cap": 1,
+     "accuracy_counting_undecided_wrong": 0.5625,
+     "accuracy_decided": 0.5806,
+     "accuracy_raw": 0.5938,
+     "ece": 0.4194,
+     "wrong_at_p90": 13,
+     "p50_ms": 4661.6,
+     "p95_ms": 12357.0,
+     "reasoning_tokens_p50": 434
+    },
+    "auto_extend": [
+     {
+      "tau": 0.7,
+      "n": 32,
+      "accuracy": 0.7188,
+      "escalation_rate": 0.2812,
+      "undecided": 0,
+      "p50_ms": 201.6,
+      "p95_ms": 9218.5
+     },
+     {
+      "tau": 0.9,
+      "n": 32,
+      "accuracy": 0.5625,
+      "escalation_rate": 1.0,
+      "undecided": 1,
+      "p50_ms": 4837.1,
+      "p95_ms": 12541.6
+     }
+    ]
+   },
+   "duplicate/test": {
+    "one_pass": {
+     "n": 126,
+     "accuracy": 0.9444,
+     "ece": 0.11,
+     "wrong_at_p90": 0,
+     "p50_ms": 192.9,
+     "p95_ms": 2207.3,
+     "label_mass_p50": 0.9665,
+     "server_ms_p50": 106.8,
+     "server_ms_p95": 179.9,
+     "prompt_tokens_p50": 125
+    },
+    "reasoned": {
+     "n": 126,
+     "undecided_at_cap": 5,
+     "accuracy_counting_undecided_wrong": 0.7698,
+     "accuracy_decided": 0.8017,
+     "accuracy_raw": 0.7778,
+     "ece": 0.1983,
+     "wrong_at_p90": 24,
+     "p50_ms": 3345.0,
+     "p95_ms": 11547.7,
+     "reasoning_tokens_p50": 316
+    },
+    "auto_extend": [
+     {
+      "tau": 0.7,
+      "n": 126,
+      "accuracy": 0.9127,
+      "escalation_rate": 0.119,
+      "undecided": 0,
+      "p50_ms": 195.5,
+      "p95_ms": 8853.1
+     },
+     {
+      "tau": 0.9,
+      "n": 126,
+      "accuracy": 0.8095,
+      "escalation_rate": 0.4603,
+      "undecided": 3,
+      "p50_ms": 643.2,
+      "p95_ms": 13471.2
+     }
+    ]
+   },
+   "supersede/calibration": {
+    "one_pass": {
+     "n": 6,
+     "accuracy": 1.0,
+     "ece": 0.1974,
+     "wrong_at_p90": 0,
+     "p50_ms": 189.8,
+     "p95_ms": 359.6,
+     "label_mass_p50": 0.9509,
+     "server_ms_p50": 146.2,
+     "server_ms_p95": 158.5,
+     "prompt_tokens_p50": 130
+    },
+    "reasoned": {
+     "n": 6,
+     "undecided_at_cap": 0,
+     "accuracy_counting_undecided_wrong": 1.0,
+     "accuracy_decided": 1.0,
+     "accuracy_raw": 1.0,
+     "ece": 0.0,
+     "wrong_at_p90": 0,
+     "p50_ms": 2434.2,
+     "p95_ms": 6646.4,
+     "reasoning_tokens_p50": 171
+    },
+    "auto_extend": [
+     {
+      "tau": 0.7,
+      "n": 6,
+      "accuracy": 1.0,
+      "escalation_rate": 0.0,
+      "undecided": 0,
+      "p50_ms": 189.8,
+      "p95_ms": 359.6
+     },
+     {
+      "tau": 0.9,
+      "n": 6,
+      "accuracy": 1.0,
+      "escalation_rate": 1.0,
+      "undecided": 0,
+      "p50_ms": 2624.0,
+      "p95_ms": 6834.8
+     }
+    ]
+   },
+   "supersede/day2_check": {
+    "one_pass": {
+     "n": 44,
+     "accuracy": 0.8864,
+     "ece": 0.1122,
+     "wrong_at_p90": 0,
+     "p50_ms": 101.4,
+     "p95_ms": 116.5,
+     "label_mass_p50": 0.9322,
+     "server_ms_p50": 84.2,
+     "server_ms_p95": 94.1,
+     "prompt_tokens_p50": 132
+    },
+    "reasoned": {
+     "n": 44,
+     "undecided_at_cap": 1,
+     "accuracy_counting_undecided_wrong": 0.7955,
+     "accuracy_decided": 0.814,
+     "accuracy_raw": 0.7955,
+     "ece": 0.186,
+     "wrong_at_p90": 8,
+     "p50_ms": 1766.1,
+     "p95_ms": 7069.7,
+     "reasoning_tokens_p50": 246
+    },
+    "auto_extend": [
+     {
+      "tau": 0.7,
+      "n": 44,
+      "accuracy": 0.8409,
+      "escalation_rate": 0.1591,
+      "undecided": 0,
+      "p50_ms": 102.8,
+      "p95_ms": 5214.6
+     },
+     {
+      "tau": 0.9,
+      "n": 44,
+      "accuracy": 0.7955,
+      "escalation_rate": 0.75,
+      "undecided": 1,
+      "p50_ms": 1819.7,
+      "p95_ms": 7159.3
+     }
+    ]
+   },
+   "supersede/test": {
+    "one_pass": {
+     "n": 36,
+     "accuracy": 0.9444,
+     "ece": 0.0946,
+     "wrong_at_p90": 1,
+     "p50_ms": 109.9,
+     "p95_ms": 528.2,
+     "label_mass_p50": 0.9421,
+     "server_ms_p50": 83.9,
+     "server_ms_p95": 176.3,
+     "prompt_tokens_p50": 128
+    },
+    "reasoned": {
+     "n": 36,
+     "undecided_at_cap": 0,
+     "accuracy_counting_undecided_wrong": 0.9722,
+     "accuracy_decided": 0.9722,
+     "accuracy_raw": 0.9722,
+     "ece": 0.0278,
+     "wrong_at_p90": 1,
+     "p50_ms": 1469.5,
+     "p95_ms": 4737.7,
+     "reasoning_tokens_p50": 187
+    },
+    "auto_extend": [
+     {
+      "tau": 0.7,
+      "n": 36,
+      "accuracy": 0.9722,
+      "escalation_rate": 0.1111,
+      "undecided": 0,
+      "p50_ms": 110.9,
+      "p95_ms": 1969.8
+     },
+     {
+      "tau": 0.9,
+      "n": 36,
+      "accuracy": 0.9722,
+      "escalation_rate": 0.4444,
+      "undecided": 0,
+      "p50_ms": 528.2,
+      "p95_ms": 2082.3
+     }
+    ]
+   }
+  }
+ }
+}
