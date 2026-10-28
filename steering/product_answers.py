@@ -36,7 +36,7 @@ def manifest_adapter(real_runs, world, day):
     return hits[-1] if hits else None
 
 
-def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp):
+def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot):
     """One fresh day-agent session; returns (answer, truncated, error)."""
     scratch = Path(tempfile.mkdtemp(dir=tmp))
     (scratch / "serving").mkdir(parents=True)
@@ -47,7 +47,7 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     os.environ["AFTERGLOW_RUNS"] = str(scratch)
     from afterglow.agent import DaySession  # paths are read per call, so the scratch root applies
     from afterglow.llm import GlimmerClient
-    client = GlimmerClient(endpoint, slot=1, lora_scale=scale)
+    client = GlimmerClient(endpoint, slot=slot, lora_scale=scale)
     session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0)
     if adapter_path:
         session.client.adapter_path = adapter_path
@@ -66,9 +66,12 @@ def main():
     ap.add_argument("--endpoint", default="http://100.88.57.107:18610")
     ap.add_argument("--world", action="append", required=True)
     ap.add_argument("--adapters", default="R2:1,night2:2", help="ARM:DAY list from the serving manifest")
+    ap.add_argument("--general-adapters", default="night2", help="adapter arms that also answer the general set")
+    ap.add_argument("--slot", type=int, default=1, help="server slot; run one process per slot (one call per slot)")
     ap.add_argument("--notes-day", type=int, default=2)
     ap.add_argument("--sets", default="never_told,general")
-    ap.add_argument("--limit-general", type=int, default=200)
+    ap.add_argument("--limit-general", type=int, default=100,
+                    help="first N gate-slice questions in the frozen hash order (100 = a direction screen)")
     ap.add_argument("--date", default="2026-10-30")
     ap.add_argument("--runs", help="the real runs root (default: the main checkout's runs/)")
     ap.add_argument("--out", required=True)
@@ -83,6 +86,8 @@ def main():
     real_runs = runs_root(args.runs)
     manifest = real_runs / "serving" / "adapters.json"
     general = [{"id": q["id"], "question": q["question"]} for q in simpleqa_gate.gate_items()[:args.limit_general]]
+    out_note = {"general_questions": len(general), "note": "a direction screen on the first questions of the frozen slice"
+                if len(general) < 200 else "the full gate slice"}
     out = Path(args.out)
     tmp = tempfile.mkdtemp(prefix="product-answers-")
     plan = []
@@ -98,6 +103,8 @@ def main():
                     print(json.dumps({"world": w, "arm": name, "skipped": f"no day-{day} adapter in the manifest"}), flush=True)
             items = [{"id": it["id"], "question": it["question"]} for it in never_told.load(w)] if s == "never_told" else general
             for arm in arms:
+                if s == "general" and arm[0] != "base" and arm[0] not in args.general_adapters.split(","):
+                    continue
                 plan.append((w, s, arm, items))
     rows = {}
     stopped = None
@@ -108,7 +115,8 @@ def main():
             if time.time() - t0 > args.deadline_s:
                 stopped = f"deadline in {w}/{s}/{arm}"
                 break
-            answer, truncated, error = ask(it["question"], w, notes_file, manifest, args.endpoint, path, scale, args.date, tmp)
+            answer, truncated, error = ask(it["question"], w, notes_file, manifest, args.endpoint, path, scale, args.date,
+                                           tmp, args.slot)
             rows.setdefault(w, []).append({"arm_name": arm, "set": s, "id": it["id"], "answer": answer,
                                            "truncated": truncated, "error": error})
         if stopped:
@@ -122,7 +130,7 @@ def main():
             (wdir / f"answers-{name}.jsonl").write_text("".join(
                 json.dumps({"arm": "base" if r["arm_name"] == "base" else "adapter", "set": r["set"], "id": r["id"],
                             "answer": r["answer"], "truncated": r["truncated"]}) + "\n" for r in base_rows + mine))
-        (wdir / "progress.json").write_text(json.dumps({
+        (wdir / "progress.json").write_text(json.dumps({**out_note,
             "counts": {f"{a}/{st}": sum(1 for r in done if r["arm_name"] == a and r["set"] == st)
                        for a in {r["arm_name"] for r in done} for st in {r["set"] for r in done}},
             "errors": sum(bool(r["error"]) for r in done), "elapsed_s": round(time.time() - t0, 1), "stopped": stopped},
