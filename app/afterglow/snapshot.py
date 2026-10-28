@@ -2,9 +2,11 @@
 night update.
 
 The snapshot holds only the prefix that is the same for every day of a world: the system prompt (persona
-header and rules) and the tools, about 1K tokens and ~143 MB (each token costs ~142 KB of KV). The day
-context (date, notes) and the day so far are prefilled after the restore. There is no end-of-day snapshot:
-files would grow with the conversation (363 MB for a 2.5K-token day).
+header and rules) and the tools, about 1.2K tokens. A slot file is kept at or under MAX_SNAPSHOT_BYTES (the
+owner's ~150 MB rule; each token costs ~170-195 KB of KV on llama.cpp v0.7.0), so it holds the longest
+leading part of the prefix that fits, and the rest of the prefix is prefilled after the restore with the day
+context (date, notes) and the day so far. There is no end-of-day snapshot: files would grow with the
+conversation (363 MB for a 2.5K-token day).
 
 llama-server does not check what a slot file was made with: it carries no adapter state, and a
 restore under other weights, another adapter or another template is silently accepted. So the
@@ -39,6 +41,7 @@ from .tools import TOOL_SCHEMAS
 
 JST = dt.timezone(dt.timedelta(hours=9))
 SERVE_STATE = f"{HOSTS['root']}/serve/current.json"
+MAX_SNAPSHOT_BYTES = 150_000_000
 
 
 def now_iso():
@@ -123,41 +126,56 @@ def render_prefix(session, messages):
     return prompt[:cut]
 
 
-def prefill(session, messages, erase=False):
-    """Fill slot 0 with exactly the rendered prefix of `messages` (no generated tokens). Without erase, the
-    cached tokens that match are reused and only the rest is computed. Returns llama-server's timings."""
+def prefix_tokens(session, messages):
+    """The rendered prefix of `messages` as the token ids llama-server makes of that prompt text."""
+    return session.client.post("/tokenize", {"content": render_prefix(session, messages), "add_special": True,
+                                             "parse_special": True})["tokens"]
+
+
+def prefill(session, messages, erase=False, n_tokens=None):
+    """Fill slot 0 with exactly the rendered prefix of `messages` (no generated tokens), or with its first
+    `n_tokens` tokens. Without erase, the cached tokens that match are reused and only the rest is computed.
+    Returns llama-server's timings."""
     client = session.client
     if erase:
         client.slot_action("erase")
-    body = {"prompt": render_prefix(session, messages), "n_predict": 0, "id_slot": client.slot,
-            "cache_prompt": True}
+    prompt = render_prefix(session, messages) if n_tokens is None else prefix_tokens(session, messages)[:n_tokens]
+    body = {"prompt": prompt, "n_predict": 0, "id_slot": client.slot, "cache_prompt": True}
     lora = client.lora_field()
     if lora:
         body["lora"] = lora
     return client.post("/completion", body).get("timings") or {}
 
 
-def rewarm(session):
+def rewarm(session, max_bytes=MAX_SNAPSHOT_BYTES):
     """Prefill the world's stable prefix (system prompt and tools) into slot 0 under the current weights and
-    adapter, and save it as the world's start snapshot. Meta night calls this after a night update, once the
-    server runs with the new adapter:
+    adapter, and save it as the world's start snapshot: the whole prefix, or its longest leading part whose slot
+    file fits `max_bytes`. Meta night calls this after a night update, once the server runs with the new adapter:
         from afterglow.agent import DaySession; from afterglow.snapshot import rewarm
         rewarm(DaySession(world, next_day))
     """
     client = session.client
     ident = identity(client, session.reasoning)
     prefix = session.prefix_messages()
-    timings = prefill(session, prefix, erase=True)
+    n_total = len(prefix_tokens(session, prefix))
     fname = f"afterglow-{session.world}-start-{identity_hash(ident)[:12]}.bin"
-    t0 = time.time()
-    r = client.slot_action("save", fname)
-    if not r.get("n_saved"):
-        raise GlimmerError(f"slot save of {fname} wrote nothing: {r}")
+    n = None  # the whole prefix first; shorter while the file is over max_bytes
+    for _ in range(4):
+        timings = prefill(session, prefix, erase=True, n_tokens=n)
+        t0 = time.time()
+        r = client.slot_action("save", fname)
+        if not r.get("n_saved"):
+            raise GlimmerError(f"slot save of {fname} wrote nothing: {r}")
+        if r.get("n_written", 0) <= max_bytes:
+            break
+        n = int(r["n_saved"] * max_bytes / r["n_written"] * 0.97)
+    else:
+        raise GlimmerError(f"{fname}: {r.get('n_written')} bytes after 4 tries, over {max_bytes}")
     changed = compare(ident, identity(client, session.reasoning))
     if changed:  # the server changed under the prefill: this file holds KV of unknown weights
         raise GlimmerError(f"the server changed while re-warming ({', '.join(changed)}); run rewarm again")
     meta = {"world": session.world, "slot": client.slot, "filename": fname, "saved_at": now_iso(),
-            "n_tokens": r.get("n_saved"), "bytes": r.get("n_written"),
+            "n_tokens": r.get("n_saved"), "prefix_tokens": n_total, "bytes": r.get("n_written"), "max_bytes": max_bytes,
             "save_ms": (r.get("timings") or {}).get("save_ms"), "save_wall_s": round(time.time() - t0, 3),
             "identity": ident, "prefix_sha256": sha256_json({"messages": prefix, "tools": TOOL_SCHEMAS}),
             "prefill_ms": timings.get("prompt_ms")}
@@ -216,7 +234,7 @@ if __name__ == "__main__":
         for wdir in sorted(p for p in paths.runs_root().iterdir() if p.is_dir() and any(d.name.isdigit() for d in p.iterdir())):
             day = max(int(d.name) for d in wdir.iterdir() if d.name.isdigit())
             m = rewarm(DaySession(wdir.name, day, GlimmerClient()))
-            print(json.dumps({"world": wdir.name, "day": day, "tokens": m["n_tokens"], "bytes": m["bytes"],
+            print(json.dumps({"world": wdir.name, "day": day, "tokens": m["n_tokens"], "of": m["prefix_tokens"], "bytes": m["bytes"],
                               "adapter_scale": m["identity"]["adapter_scale"]}))
         raise SystemExit(0)
     if not a.world or a.day is None:
