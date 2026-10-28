@@ -37,9 +37,19 @@ SUPERSEDE_CANDIDATES = SUPERSEDE_CANDIDATES_DAY
 SUPERSEDE_ACCEPT_P = 0.9  # link only when the one-pass "replaces" probability reaches this
 
 
+def norm_key_value(note):
+    return (" ".join(str(note.get("key", "")).lower().split()), " ".join(str(note.get("value", "")).lower().split()))
+
+
 def supersede_candidates(earlier, new_note, k=SUPERSEDE_CANDIDATES):
     """The k earlier notes most likely to be replaced by new_note: BM25 over each note's key and value, queried with
-    the new note's "key: value"."""
+    the new note's "key: value".
+
+    Input contract: earlier = every note that was active before new_note was written, of any kind (fact, preference,
+    procedure), as the agent saved it ({"id", "key", "value"}), and taken before any rule marks notes superseded. The
+    new note itself (same id, or same key and value) is never a candidate."""
+    same = (new_note.get("id"), norm_key_value(new_note))
+    earlier = [n for n in earlier if n.get("id") != same[0] and norm_key_value(n) != same[1]]
     if not earlier:
         return []
     return Bm25([{**n, "statement": ""} for n in earlier]).top(note_line(new_note), k)
