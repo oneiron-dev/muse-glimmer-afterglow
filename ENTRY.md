@@ -45,6 +45,7 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 28 Oct | The supersede decision in the product: the night links corrections the day missed (top 8 candidate notes) and the day agent can ask it when it saves a note (top 5, behind a flag, off by default); a link is made only when the model is at least 90% sure, and every decision is logged with its probability and time. | #39, #40, #41 |
 | 28 Oct | Serving loads control vectors from the adapter manifest at strength 0, ready for per-request dials; the supersede decision thinks it through when it is unsure (one pass at 90% or more links at once; between 50% and 90% it asks again with reasoning on), behind the same flag, with each reasoned call logged. | #42, #43 |
 | 28 Oct | Decision model with reasoning on (D3), a negative result: on the duplicate and correction decisions, thinking first lowers accuracy (duplicates 0.944 to 0.770, real corrections 0.886 to 0.795) and takes 1.5-4.7 s instead of 0.19 s, so the product decides in one pass and keeps both notes when unsure. | #45 |
+| 28 Oct | Day 3 for all four synthetic people: about ten new facts, three corrections and three recall questions each, plus three turns where the user reacts to how it answered (shorter please, check with me first, a thumbs-up), labelled for the steering dials; new probes frozen by hash before any day-3 data. Day page shows when the server is offline. | #47 |
 
 ## Pre-existing work used as external dependencies
 
