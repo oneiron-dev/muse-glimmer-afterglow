@@ -101,6 +101,48 @@ def record_proposal(world, day, axis, toward, answer):
     return doc
 
 
+# The two chat checks (29 Oct), as night 2 on writes them: eval.json fields and decision.json "checks" names.
+# For nights decided before them, the check files written afterwards (relative to the night dir); each file
+# carries the date it was added.
+CHAT_CHECKS = {"content_channel": {"files": ["eval/channel-check-added-20261029.json"]},
+               "tool_calls": {"files": ["eval/tools-check-added-20261029.json"]}}
+
+
+def short_date(iso):
+    try:
+        return dt.date.fromisoformat(str(iso)[:10]).strftime("%-d %b")
+    except ValueError:
+        return str(iso)
+
+
+def chat_checks(night, ev, decision):
+    """The answer-channel and chat tool checks: [{"name", "passed", "counts", "added", "rule", "source"}].
+    From the night's own eval.json + decision.json when it ran them, else from the check files written after it
+    (CHAT_CHECKS), marked with the date they were added. Numbers come from the files only."""
+    out = []
+    for name, conf in CHAT_CHECKS.items():
+        rec, source, added = (ev or {}).get(name), "eval.json", None
+        if not rec:
+            for rel in conf["files"]:
+                f = night / rel
+                if f.exists():
+                    rec, source = json.loads(f.read_text()), str(f)
+                    added = short_date(rec.get("added") or "after the night")
+                    break
+        if not rec:
+            continue
+        if name == "content_channel":
+            counts = {"right": rec.get("content_ok"), "n": rec.get("n"), "min_rate": rec.get("min_rate")}
+        else:
+            c = rec.get("counts") or {}
+            counts = {"right": (c.get("adapter") or {}).get("right"), "n": (c.get("adapter") or {}).get("n"),
+                      "base_right": (c.get("base") or {}).get("right"), "max_drop": rec.get("max_drop")}
+        passed = ((decision or {}).get("checks") or {}).get(name, rec.get("passed")) if added is None else rec.get("passed")
+        out.append({"name": name, "passed": passed, "counts": counts, "added": added, "rule": rec.get("rule"),
+                    "source": source})
+    return out
+
+
 def persona_name(world):
     return (load_world(world).get("persona") or {}).get("name")
 
@@ -166,6 +208,7 @@ class App:
                 "decision": load("decision.json"), "receipt": load("receipt.json"),
                 "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
                 "steering": steering(world, day, night, load("eval.json")),
+                "chat_checks": chat_checks(night, load("eval.json"), load("decision.json")),
                 "questions": questions, "night_dir": str(night),
                 "worlds": worlds_summary(day)}
 

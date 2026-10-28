@@ -242,8 +242,44 @@ function proposes(st, world, day) {
 
 const CHECKS = { leak_check: "no held-out question in the training data",
                  gguf_matches_peft: "the served adapter file matches the trained one", learned_gate: "it learned enough",
-                 forgot_gate: "it did not lose general skill", tool_gate: "no new tool-call failure",
+                 forgot_gate: "it did not lose general skill",
+                 tool_gate: "no new failures on the 20 tool questions in the eval form",
+                 content_channel: "its chat replies land in the reply, not only in its reasoning",
+                 tool_calls: "it still calls its tools in chat, as the day agent does",
                  abstention_gate: "it says it does not know about as often as before" };
+
+function plainRule(rule) {
+  // The two-sided abstention rule as the night writes it, in plain words; any other rule as written.
+  const m = /abs\(after - base\) <= ([\d.]+) and right_after >= right_base - (\d+)/.exec(rule || "");
+  if (!m) return rule;
+  return `a night must keep its "I don't know" rate within ${Math.round(parseFloat(m[1]) * 100)} points of the base ` +
+    `and lose no more than ${m[2]} right answers`;
+}
+
+function chatLines(checks) {
+  // The two chat checks: the night's own, or added after it ran (then: what it would have decided).
+  const box = $("chat-lines");
+  box.replaceChildren(...(checks || []).map((c) => {
+    const k = c.counts || {};
+    const p = el("p", "abstain-line");
+    const title = c.name === "content_channel" ? "Answer-channel check" : "Chat tool check";
+    const what = c.name === "content_channel"
+      ? [el("strong", null, `${k.right} of ${k.n}`), " chat replies land in the reply",
+         k.min_rate != null ? ` (bar: ${Math.round(k.min_rate * 100)}%)` : ""]
+      : [el("strong", null, `${k.right} of ${k.n}`), " tool calls right in chat, base ",
+         el("strong", null, `${k.base_right} of ${k.n}`), k.max_drop != null ? ` (bar: no more than ${k.max_drop} below the base)` : ""];
+    p.append(c.added ? `${title} (added ${c.added} after this night ran): ` : `${title}: `, ...what,
+      c.passed ? "; passed." : c.added ? "; under this check the night would roll back." : "; failed.");
+    return p;
+  }));
+  box.hidden = !(checks || []).length;
+}
+
+function addedChecks(checks, chat) {
+  // decision.json's checks plus every check added after the night ran (with its result from its own file).
+  for (const c of chat || []) if (c.added && !(c.name in checks)) checks[c.name] = c.passed;
+  return (chat || []).filter((c) => c.added && !c.passed).map((c) => c.name);
+}
 const rate = (x) => `${(x * 100).toFixed(1)}%`;
 
 function abstainLine(abst, decision) {
@@ -254,12 +290,13 @@ function abstainLine(abst, decision) {
   const added = !("abstention_gate" in ((decision || {}).checks || {}));
   p.replaceChildren(added ? "Abstention check (added 27 Oct after this night ran): " : "Abstention check: ",
     "base ", el("strong", null, rate(abst.base)), " → ", el("strong", null, rate(abst.after)),
-    abst.rule ? ` (rule: ${abst.rule})` : "",  // the rule as the night wrote it
-    abst.passed ? "; passed." : added ? "; under this check the night would roll back." : "; failed.");
+    abst.rule ? ` (rule: ${plainRule(abst.rule)})` : "",  // the night's rule in plain words; the code text is in the receipt
+    abst.passed ? "; passed." : added ? "; under this check the night would roll back." : "; failed.",
+    " ", receiptLink("abstention.rule"));
   p.hidden = false;
 }
 
-function numbers(ev, decision, abst) {
+function numbers(ev, decision, abst, chat) {
   const box = $("numbers");
   box.replaceChildren();
   const add = (title, parts, field) => {
@@ -288,13 +325,16 @@ function numbers(ev, decision, abst) {
   const checks = { ...((decision && decision.checks) || {}) };
   const added = abst && abst.passed != null && !("abstention_gate" in checks);
   if (added) checks.abstention_gate = abst.passed;  // the check added after the night ran
+  const failedAdded = addedChecks(checks, chat);
+  if (added && !abst.passed) failedAdded.unshift("abstention_gate");
   const names = Object.keys(checks);
   if (names.length) {
     const passed = names.filter((k) => checks[k]);
     add(decision.decision === "rollback" ? "Why it was rolled back" : "Why it was kept",
       [`${passed.length} of ${names.length} checks passed: `,
        names.map((k) => `${CHECKS[k] || k}${checks[k] ? "" : " (failed)"}`).join("; "), ".",
-       added && !abst.passed ? " The abstention check was added after this night ran; under it the night would roll back." : ""],
+       failedAdded.length ? ` ${failedAdded.length === 1 ? "The failed check was" : `The ${failedAdded.length} failed checks were`} ` +
+         `added after this night ran; under ${failedAdded.length === 1 ? "it" : "them"} the night would roll back.` : ""],
       "decision.checks");
   }
 }
@@ -354,7 +394,9 @@ function receipt(r) {
   };
   const ev = r.eval || {};
   walk("", { runtime: ev.runtime, adapter: ev.adapter, forgot: ev.forgot, stale: ev.stale,
-             learned: ev.learned, decision: r.decision, receipt: r.receipt, files: r.night_dir });
+             learned: ev.learned, decision: r.decision, abstention: r.abstention,
+             chat_checks: Object.fromEntries((r.chat_checks || []).map((c) => [c.name, c])),
+             receipt: r.receipt, files: r.night_dir });
 }
 
 function tooltip(facts) {
@@ -449,9 +491,10 @@ async function boot() {
   chose(r.consolidated);
   grid(facts);
   abstainLine(r.abstention, r.decision);
+  chatLines(r.chat_checks);
   behaviour(r.steering);
   proposes(r.steering, r.world, r.day);
-  numbers(ev, r.decision, r.abstention);
+  numbers(ev, r.decision, r.abstention, r.chat_checks);
   asked(facts, r.questions || {});
   receipt(r);
   tooltip(facts);
