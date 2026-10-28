@@ -165,10 +165,11 @@ def worlds_summary(day):
 
 
 class App:
-    def __init__(self, world, day, endpoint, date=None, reasoning="low", restore=True, decide_supersede=False):
+    def __init__(self, world, day, endpoint, date=None, reasoning="low", restore=True, decide_supersede=False,
+                 decide_adapter=None):
         self.client = GlimmerClient(endpoint)
         self.session = DaySession(world, day, self.client, date=date, reasoning=reasoning,
-                                  decide_supersede=decide_supersede)
+                                  decide_supersede=decide_supersede, decide_adapter=decide_adapter)
         self.lock = threading.Lock()
         self.snapshot_status = {"state": "idle"}
         if restore:
@@ -387,10 +388,11 @@ def main():
     ap.add_argument("--reasoning", default="low", choices=["minimal", "low", "medium", "high"])
     ap.add_argument("--no-restore", action="store_true", help="skip the KV snapshot restore and prefill at startup")
     ap.add_argument("--decide-supersede", action="store_true",
-                    help="a correction saved under a new key is linked by the one-pass decision (decide/decider.py)")
+                    help="a correction saved under a new key is linked by the model's decision (decide/decider.py)")
+    ap.add_argument("--decide-adapter", help="the decision adapter's path on the serving box (default: base weights)")
     a = ap.parse_args()
     Handler.app = App(a.world, a.day, a.endpoint, date=a.date, reasoning=a.reasoning, restore=not a.no_restore,
-                      decide_supersede=a.decide_supersede)
+                      decide_supersede=a.decide_supersede, decide_adapter=a.decide_adapter)
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
     srv.daemon_threads = True
     print(f"Afterglow: http://127.0.0.1:{a.port}  (world {a.world}, day {a.day}, Glimmer at {a.endpoint})", flush=True)
