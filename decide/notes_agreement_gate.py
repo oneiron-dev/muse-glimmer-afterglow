@@ -118,7 +118,14 @@ def score_rows(rows):
     return out
 
 
-def world_rows(world, runs, mode, compare):
+def picked_note(store, picks, world, probe_id):
+    """The note a decision arm chose for this probe (None = ask)."""
+    note_id = picks.get(f"route:{world}:{probe_id}")
+    return next((n for n in store.notes if n["id"] == note_id), None) if note_id else None
+
+
+def world_rows(world, runs, mode, compare, picks=None):
+    """mode: app | oracle | decision (picks = {row id: chosen note id or None}, from a route decision arm)."""
     night = runs / world / "1" / "night"
     store = note_store(json.loads((night / "consolidated.json").read_text())["items"])
     facts = {f["id"]: f for f in json.loads((ROOT / "worlds" / world / "world.json").read_text())["facts"]}
@@ -135,7 +142,8 @@ def world_rows(world, runs, mode, compare):
         if p["id"] not in b:  # a probe for a fact that only becomes true on a later day
             continue
         fact = facts[p["fact_id"]]
-        note = app_note(store, p["question"]) if mode == "app" else oracle_note(store, fact)
+        note = (app_note(store, p["question"]) if mode == "app" else picked_note(store, picks, world, p["id"])
+                if mode == "decision" else oracle_note(store, fact))
         br, dr = b[p["id"]], d[p["id"]]
         accept = scoring.usable_accept(fact["accept"], fact["value"])
         snippet_right = bool(note) and scoring.score_fact(note["value"], accept)
@@ -145,7 +153,8 @@ def world_rows(world, runs, mode, compare):
                      "d_right": dr["pass"], "d_abstain": omni_outcome(dr) == "abstain",
                      "snippet_right": snippet_right, "snippet_abstain": False, "ask_right": False})
     for p in nt:
-        note = app_note(store, p["question"]) if mode == "app" else None
+        note = (app_note(store, p["question"]) if mode == "app" else picked_note(store, picks, world, p["id"])
+                if mode == "decision" else None)
         br, dr = nt_b[p["id"]], nt_d[p["id"]]
         rows.append({"world": world, "id": p["id"], "kind": "never_told", "question": p["question"], "route": route(br["answer"], note, compare),
                      "note": note and {"id": note["id"], "key": note["key"], "value": note["value"]},
