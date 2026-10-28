@@ -80,8 +80,18 @@ def score_against_key(proposals, events):
     return {"events": rows, "read_right": sum(r["read_right"] for r in rows), "n": len(rows)}
 
 
-def dial_line(axis):
+def dial_line(axis, dial=None):
+    """One dial for Glimmer's prompt; a dial whose negative end is not safe is offered toward its positive end only."""
+    if dial and dial.get("negative_scale") is None:
+        return f"- {axis['name']}: toward {axis['positive_label']} only"
     return f"- {axis['name']}: {axis['positive_label']} <-> {axis['negative_label']}"
+
+
+def dial_scale(dial, sign):
+    """The dial's tested scale toward that end, or None (not offered / untested)."""
+    if not dial or not sign:
+        return None
+    return dial.get("scale") if sign > 0 else dial.get("negative_scale")
 
 
 def counter_proposals(check, axes, dials, user_dials):
@@ -92,7 +102,7 @@ def counter_proposals(check, axes, dials, user_dials):
         dial = dials.get(r["axis"], {})
         sign = -1 if r["shift"] > 0 else 1
         pole = axis["positive_label"] if sign > 0 else axis["negative_label"]
-        out.append({"kind": "counter", "axis": r["axis"], "toward": pole, "scale": sign * dial["scale"] if dial else None,
+        out.append({"kind": "counter", "axis": r["axis"], "toward": pole, "scale": dial_scale(dial, sign),
                     "gguf": dial.get("gguf"), "layers": dial.get("layers"), "tested": bool(dial.get("tested")),
                     "reason": f"Last night's update made me {r['label']} on everyday prompts ({r['shift']:+.1f} on this "
                               f"axis, 95% interval {r['ci95'][0]:+.1f} to {r['ci95'][1]:+.1f}); you did not ask for that, "
@@ -109,7 +119,7 @@ def glimmer_proposals(world, user_turns, events, check, axes, dials, log_path):
     offered = {n: a for n, a in axes.items() if not dials or dials.get(n, {}).get("safe")}
     prompt = GLIMMER_PROMPT.format(name=name, messages="\n".join(f"{i + 1}. {t}" for i, t in enumerate(user_turns)),
                                    feedback=FEEDBACK_BLOCK.format(name=name, items=items) if events else "",
-                                   changes=changes, dials="\n".join(dial_line(a) for a in offered.values()))
+                                   changes=changes, dials="\n".join(dial_line(a, dials.get(n)) for n, a in offered.items()))
     text, _, usage = complete("glimmer", [{"role": "user", "content": prompt}], max_tokens=900, log_path=log_path,
                               purpose="steering proposal")
     m = re.search(r"\{.*\}", text, re.S)
@@ -126,7 +136,9 @@ def glimmer_proposals(world, user_turns, events, check, axes, dials, log_path):
         toward = (v.get("toward") or "").strip().lower()
         sign = 1 if toward == axis["positive_label"].lower() else -1 if toward == axis["negative_label"].lower() else 0
         d = dials.get(dial, {})
-        out.append({"kind": "glimmer", "axis": dial, "toward": v.get("toward"), "scale": sign * d["scale"] if d and sign else None,
+        if dials and sign < 0 and d.get("negative_scale") is None:
+            continue  # an end that is not safe is never proposed
+        out.append({"kind": "glimmer", "axis": dial, "toward": v.get("toward"), "scale": dial_scale(d, sign),
                     "gguf": d.get("gguf"), "layers": d.get("layers"), "tested": bool(d.get("tested")), "reason": v.get("reason")})
     return out, {"raw": text.strip()[:1200], "usage": usage}
 
