@@ -243,6 +243,18 @@ class TraceProxyTest(unittest.TestCase):
         self.assertEqual(json.loads(save[2])["path"], "/slots/0?action=save")
         self.assertEqual(len(self.traces()), n_before)
 
+    def test_marked_completion_is_traced_with_its_reason(self):
+        n_before = len(self.traces())
+        raw_post(self.px_port, "/completion", {"prompt": "x", "n_predict": 4})
+        self.assertEqual(len(self.traces()), n_before)
+        conn = http.client.HTTPConnection("127.0.0.1", self.px_port, timeout=30)
+        conn.request("POST", "/completion", body=json.dumps({"prompt": "abc", "n_predict": 4}).encode(),
+                     headers={"Content-Type": "application/json", "X-Afterglow-Trace": "answer_channel_retry:empty_reply"})
+        conn.getresponse().read()
+        conn.close()
+        t = self.trace_for(lambda t: t.get("marked") == "answer_channel_retry:empty_reply")
+        self.assertEqual((t["path"], t["prompt_chars"], t["n_predict"]), ("/completion", 3, 4))
+
     def test_client_disconnect_closes_upstream(self):
         n = len(FakeLlamaServer.disconnects)
         conn = http.client.HTTPConnection("127.0.0.1", self.px_port, timeout=10)

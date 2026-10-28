@@ -218,7 +218,7 @@ class DaySession:
             empty = new_msgs and new_msgs[-1]["role"] == "assistant" and not new_msgs[-1].get("tool_calls")
             try:
                 fix = self.client.answer_channel(self.messages[:-1] if empty else self.messages, TOOL_SCHEMAS,
-                                                 reasoning=self.reasoning, temperature=self.temperature)
+                                                 reasoning=self.reasoning, temperature=self.temperature, why=retry)
                 final = fix["content"]
                 if empty:
                     new_msgs[-1]["content"] = final
