@@ -44,8 +44,11 @@ def supersede_candidates(earlier, new_note, k=SUPERSEDE_CANDIDATES):
 
 
 class Decider:
-    def __init__(self, endpoint, adapter_path=None, slot=None, thresholds=None, timeout=600):
+    def __init__(self, endpoint, adapter_path=None, slot=None, thresholds=None, timeout=600, trace=None):
+        """trace: when set, every /completion post carries "X-Afterglow-Trace: <trace>", so the serving trace proxy
+        records each decision."""
         self.endpoint = endpoint.rstrip("/").removesuffix("/v1")
+        self.trace = trace
         self.adapter_path = adapter_path
         self.slot = slot
         self.thresholds = {**THRESHOLDS, **(thresholds or {})}
@@ -53,8 +56,10 @@ class Decider:
         self._label_ids = {}
 
     def _post(self, path, body):
-        req = urllib.request.Request(self.endpoint + path, data=json.dumps(body).encode(),
-                                     headers={"Content-Type": "application/json"})
+        headers = {"Content-Type": "application/json"}
+        if self.trace and path == "/completion":
+            headers["X-Afterglow-Trace"] = self.trace
+        req = urllib.request.Request(self.endpoint + path, data=json.dumps(body).encode(), headers=headers)
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:
             return json.loads(resp.read())
 
