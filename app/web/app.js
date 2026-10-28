@@ -43,7 +43,7 @@ function renderHeader(s) {
   $("when").textContent = `Day ${s.day}, ${day}`;
   $("dot").className = "dot " + (s.server.healthy ? "up" : "down");
   $("dot").title = s.server.healthy ? `Serving at ${s.server.endpoint}` : `No answer from ${s.server.endpoint}`;
-  $("weights").textContent = s.server.adapter || "base weights";
+  $("weights").textContent = !s.server.healthy ? "server offline" : s.server.adapter || "base weights";
   const r = s.answer_channel_retries || { retried: 0, replies: 0 };
   $("retries").textContent = r.retried ? `${r.retried} of ${r.replies} replies today ended empty and were asked again` : "";
 }
