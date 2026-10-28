@@ -29,6 +29,14 @@ class NotesTest(unittest.TestCase):
         old = self.notes.all(include_superseded=True)[0]
         self.assertEqual((old["status"], old["superseded_by"]), ("superseded", active[0]["id"]))
 
+    def test_correction_under_a_new_key_names_the_note_it_replaces(self):
+        self.notes.remember("mockup review time", "Tuesdays 10:30", day=1, turn=3)
+        r = self.notes.remember("design review time", "Thursdays at 11:30", day=2, turn=1, replaces="Mockup review time")
+        self.assertEqual(r["superseded"]["value"], "Tuesdays 10:30")
+        self.assertEqual([n["value"] for n in self.notes.all()], ["Thursdays at 11:30"])
+        r = self.notes.remember("launch venue", "Hall D", day=2, turn=2, replaces="no such note")
+        self.assertIsNone(r["superseded"])
+
     def test_same_value_is_unchanged(self):
         self.notes.remember("test field", "Tolvik Flats")
         r = self.notes.remember("test field", "tolvik flats")

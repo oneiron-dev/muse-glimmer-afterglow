@@ -27,7 +27,7 @@ MAX_ROUNDS = 8
 SYSTEM_PROMPT = """You are Afterglow, {who} personal assistant. You run on {owner} own computer.
 
 How you work:
-- When the user tells you facts about their work, projects, people, places, schedule or a procedure, or corrects one, save each fact with remember before you reply: one remember call per fact (a message can hold several). To correct a fact, reuse its key.
+- When the user tells you facts about their work, projects, people, places, schedule or a procedure, or corrects one, save each fact with remember before you reply: one remember call per fact (a message can hold several). To correct a fact, find it in your notes and pass that note's key as replaces.
 - Facts often come inside a request or a question, even one you cannot act on: a name, place, event, code, file path, date or version. Save those too.
 - When the user names something (a device, room, channel, project, event), save what the name stands for, not only today's news about it: key "label printer name", value "Puffin".
 - The key says what the fact is to the user, in plain words ("build server name", not "afternoon location"). The value copies names, codes, numbers, paths and dates exactly as the user wrote them.
@@ -70,8 +70,9 @@ def system_message(world_doc):
 
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
-                 notes_backend="local"):
+                 notes_backend="local", temperature=0.3):
         self.world, self.day = world, int(day)
+        self.temperature = temperature
         self.client = client or GlimmerClient()
         # The client serves this world: its adapter (from the serving manifest) is the one it scales.
         self.adapter = world_adapter_entry(world)
@@ -154,12 +155,15 @@ class DaySession:
         self.messages.append({"role": "user", "content": text})
         new_msgs, tool_calls, notes_written, rounds = [], [], [], []
         final = ""
+        retry = None  # why the reply came from the answer channel: empty_reply, repeated_tool_call or max_rounds
+        seen_calls = set()
         t0 = time.time()
         error = None
         for r in range(MAX_ROUNDS):
             done = None
             try:
-                for ev in self.client.stream_chat(self.messages, TOOL_SCHEMAS, reasoning=self.reasoning):
+                for ev in self.client.stream_chat(self.messages, TOOL_SCHEMAS, reasoning=self.reasoning,
+                                                  temperature=self.temperature):
                     if ev["type"] == "done":
                         done = ev
                     else:
@@ -176,7 +180,18 @@ class DaySession:
             yield {"type": "round_done", "round": r, "ttft_s": done["ttft_s"], "timings": done["timings"]}
             if not msg.get("tool_calls"):
                 final = msg.get("content") or ""
+                if not final:
+                    retry = "empty_reply"
                 break
+            calls = {(tc["function"]["name"], tc["function"]["arguments"] or "") for tc in msg["tool_calls"]}
+            if calls <= seen_calls:  # the same calls again: the work is done, the reply is due
+                self.messages.pop()
+                new_msgs.pop()
+                retry = "repeated_tool_call"
+                break
+            seen_calls |= calls
+            if r == MAX_ROUNDS - 1:
+                retry = "max_rounds"
             for tc in msg["tool_calls"]:
                 name = tc["function"]["name"]
                 try:
@@ -197,12 +212,32 @@ class DaySession:
                         "content": json.dumps(result, ensure_ascii=False)}
                 self.messages.append(tmsg)
                 new_msgs.append(tmsg)
+        if retry and error is None:
+            # No reply in the answer channel (it stayed in the reasoning channel, or the tool calls went round):
+            # ask again in the answer channel. Counted per turn in the day log and on the day page, never hidden.
+            empty = new_msgs and new_msgs[-1]["role"] == "assistant" and not new_msgs[-1].get("tool_calls")
+            try:
+                fix = self.client.answer_channel(self.messages[:-1] if empty else self.messages, TOOL_SCHEMAS,
+                                                 reasoning=self.reasoning, temperature=self.temperature)
+                final = fix["content"]
+                if empty:
+                    new_msgs[-1]["content"] = final
+                else:
+                    msg = {"role": "assistant", "content": final}
+                    self.messages.append(msg)
+                    new_msgs.append(msg)
+                rounds.append({"finish_reason": fix["stop_type"], "answer_channel_retry": retry,
+                               "total_s": fix["total_s"], "timings": fix["timings"]})
+                yield {"type": "content", "text": final, "round": len(rounds) - 1, "answer_channel_retry": retry}
+            except Exception as e:
+                error = f"answer channel retry: {type(e).__name__}: {e}"
+                yield {"type": "error", "message": error}
         first = rounds[0] if rounds else {}
         last_t = (rounds[-1].get("timings") or {}) if rounds else {}
         rec = {"ts": now_iso(), "turn": turn, "role": "assistant", "content": final, "messages": new_msgs,
                "tool_calls": tool_calls, "notes_written": notes_written, "rounds": rounds,
                "ttft_s": first.get("ttft_s"), "total_s": round(time.time() - t0, 3),
-               "tok_s": last_t.get("predicted_per_second"), "error": error}
+               "tok_s": last_t.get("predicted_per_second"), "answer_channel_retry": retry, "error": error}
         live = hasattr(self.notes, "witness_turn") and final
         if live:  # push_day skips a turn the live path sent into the same conversation
             rec["witnessed_live"] = self.notes.conversation
@@ -210,6 +245,7 @@ class DaySession:
         if live:
             self.notes.witness_turn(text, final)
         yield {"type": "turn_done", "turn": turn, "content": final, "notes_written": notes_written,
+               "answer_channel_retry": retry,
                "ttft_s": rec["ttft_s"], "total_s": rec["total_s"], "tok_s": rec["tok_s"], "error": error,
                "cache_n": (first.get("timings") or {}).get("cache_n"),
                "prompt_n": (first.get("timings") or {}).get("prompt_n")}

@@ -3,8 +3,8 @@
 One interface, NotesStore, with a local JSON backend now and an Oneiron backend later.
 A note: {"id", "key", "value", "status": "active"|"superseded", "created_at", "updated_at",
          "day", "turn", "supersedes": id|null, "superseded_by": id|null}.
-remember() with a key that matches an active note (case and spacing ignored) supersedes it,
-so a correction leaves the old value on record, marked stale.
+remember() with a key that matches an active note (case and spacing ignored), or with replaces naming one,
+supersedes it, so a correction leaves the old value on record, marked stale.
 """
 import datetime as dt
 import json
@@ -30,10 +30,23 @@ def terms(text):
     return {w for w in WORD.findall(text.lower()) if w not in STOP}
 
 
+MONTH = r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*"
+SHAPES = [("date", re.compile(rf"\b\d{{4}}-\d{{2}}-\d{{2}}\b|\b\d{{1,2}}(st|nd|rd|th)? {MONTH}\b|\b{MONTH} \d{{1,2}}\b", re.I)),
+          ("time", re.compile(r"\b\d{1,2}:\d{2}\b")),
+          ("money", re.compile(r"\d[\d,.]*\s*(euros?|eur|dollars?|usd|pounds?|gbp|yen)\b|[€$£¥]\s*\d", re.I)),
+          ("place", re.compile(r"\b(room|hall|bay|building|floor|office|lab|unit|desk)\s+[\w.-]+", re.I)),
+          ("name", re.compile(r"\b[A-Z][a-z]+ [A-Z][a-z]+\b"))]
+
+
+def value_shapes(value):
+    """What kinds of value a text holds (date, time, money, place, name): a correction replaces a value of its kind."""
+    return {name for name, rx in SHAPES if rx.search(value)}
+
+
 class NotesStore:
     """remember / recall / all / export_day. Backends implement all four."""
 
-    def remember(self, key, value, *, day=None, turn=None):
+    def remember(self, key, value, *, day=None, turn=None, replaces=None):
         raise NotImplementedError
 
     def recall(self, query, k=5):
@@ -69,12 +82,22 @@ class LocalJsonNotes(NotesStore):
     def _next_id(self):
         return f"N{len(self.notes) + 1:04d}"
 
-    def remember(self, key, value, *, day=None, turn=None):
+    def remember(self, key, value, *, day=None, turn=None, replaces=None):
         key, value = key.strip(), value.strip()
-        nk = norm_key(key)
-        old = next((n for n in reversed(self.notes) if n["status"] == "active" and norm_key(n["key"]) == nk), None)
+        active = [n for n in reversed(self.notes) if n["status"] == "active"]
+        old = next((n for n in active if norm_key(n["key"]) == norm_key(key)), None)
+        if old is None and replaces:  # a correction saved under a new key names the note it changes
+            old = next((n for n in active if norm_key(n["key"]) == norm_key(replaces)), None)
         if old and old["value"].strip().lower() == value.lower():
-            return {"note": old, "superseded": None, "unchanged": True}
+            target = replaces and next((n for n in active if n is not old and norm_key(n["key"]) == norm_key(replaces)), None)
+            if not target:
+                return {"note": old, "superseded": None, "unchanged": True}
+            # the fact was saved first under a new key; this call names the note it corrects
+            t = now_iso()
+            target.update(status="superseded", superseded_by=old["id"], updated_at=t)
+            old.update(supersedes=target["id"], updated_at=t)
+            self._save()
+            return {"note": old, "superseded": target, "unchanged": False}
         t = now_iso()
         note = {"id": self._next_id(), "key": key, "value": value, "status": "active", "created_at": t,
                 "updated_at": t, "day": day, "turn": turn, "supersedes": old["id"] if old else None,
@@ -96,6 +119,22 @@ class LocalJsonNotes(NotesStore):
             if overlap:
                 scored.append((overlap + key_hit, i, n))
         scored.sort(key=lambda s: (-s[0], -s[1]))
+        return [n for _, _, n in scored[:k]]
+
+    def correction_candidates(self, note, k=5):
+        """Earlier active notes that the new `note` may correct (shown to the agent, which decides): shared key
+        words count most, then the new key's words in the old value, words the two values share (a correction
+        often keeps part of the value: the time, "Room", "Hall"), and a value of the same kind (a date for a date)."""
+        kt, vt, shapes = terms(note["key"]), terms(note["value"]), value_shapes(note["value"])
+        scored = []
+        for i, n in enumerate(self.notes):
+            if n["status"] != "active" or n["id"] == note["id"] or n.get("day") == note.get("day"):
+                continue
+            score = (2 * len(kt & terms(n["key"])) + len(kt & terms(n["value"])) + len(vt & terms(n["value"]))
+                     + len(shapes & value_shapes(n["value"])))
+            if score >= 2:
+                scored.append((score, i, n))
+        scored.sort(key=lambda x: (-x[0], -x[1]))
         return [n for _, _, n in scored[:k]]
 
     def all(self, include_superseded=False):
@@ -173,12 +212,15 @@ class OneironNotes(NotesStore):
         """Wait until every queued witness call has been sent (the end of a day, a test)."""
         self._queue.join()
 
-    def remember(self, key, value, *, day=None, turn=None):
-        r = self.local.remember(key, value, day=day, turn=turn)
+    def remember(self, key, value, *, day=None, turn=None, replaces=None):
+        r = self.local.remember(key, value, day=day, turn=turn, replaces=replaces)
         if not r["unchanged"]:
             was = f" (replaces {r['superseded']['value']})" if r["superseded"] else ""
             self._witness([("assistant", f"Note saved: {key}: {value}{was}")])
         return r
+
+    def correction_candidates(self, note, k=5):
+        return self.local.correction_candidates(note, k)
 
     def recall(self, query, k=5):
         out = []
