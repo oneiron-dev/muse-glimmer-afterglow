@@ -26,9 +26,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "eval"))
 sys.path.insert(0, str(ROOT / "night"))
+sys.path.insert(0, str(ROOT / "decide"))
 import scoring  # noqa: E402
 from leak_check import check as leak_check  # noqa: E402
 from paths import runs_root  # noqa: E402
+from prompts import (DUP_OPTIONS, SUP_OPTIONS, note_line, pair_prompt, route_options,  # noqa: E402
+                     route_prompt)
 
 WORLDS = ["w1-ines-varga", "w2-solo-developer", "w3-shop-owner", "w4-grad-student"]
 TRAIN_WORLDS, TEST_WORLD = WORLDS[:3], WORLDS[3]
@@ -36,19 +39,8 @@ SEED = 20261014
 DATA = ROOT / "decide" / "data"
 QUESTION_FORMS = ("qa_forward", "in_context", "qa_reverse")
 
-ROUTE_ASK = "none of these notes answers it (ask {first})"
-ROUTE_TASK = ("Which note answers this question? Reply with the note's number only. "
-              "Reply 0 if none of these notes answers it.")
-DUP_OPTIONS = {"1": "the same fact, said twice (keep one)", "2": "different facts (keep both)"}
-SUP_OPTIONS = {"1": "the new note replaces the earlier one (a correction)", "2": "both notes stay true (keep both)"}
-
-
 def read_jsonl(path):
     return [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
-
-
-def note_line(item):
-    return f"{item['key']}: {item.get('full_value') or item['value']}"
 
 
 def holds(text, fact):
@@ -62,31 +54,13 @@ def holders(items, fact):
     return sorted(found, key=lambda i: (-len(fk & set(re.findall(r"[a-z0-9]+", items[i]["key"].lower()))), i))
 
 
-def options_text(options):
-    return "\n".join(f"{k} = {v}" for k, v in options.items())
-
-
-def route_prompt(first, items, question):
-    notes = "\n".join(f"{n}. {note_line(it)}" for n, it in enumerate(items, 1))
-    return (f"Notes I keep about {first}:\n{notes}\n0. {ROUTE_ASK.format(first=first)}\n\n"
-            f"{first} asks: {question}\n\n{ROUTE_TASK}")
-
-
 def route_row(world, split, source, rid, first, items, question, gold_idx, extra):
     """gold_idx: indexes into items of the notes that answer (best first); [] = ask."""
     labels = [str(i + 1) for i in gold_idx]
     return {"id": rid, "kind": "route", "world": world, "split": split, "source": source, "question": question,
             "prompt": route_prompt(first, items, question), "note_ids": [it["id"] for it in items],
-            "options": {"0": ROUTE_ASK.format(first=first), **{str(n): note_line(it) for n, it in enumerate(items, 1)}},
+            "options": route_options(first, items),
             "label": labels[0] if labels else "0", "accept": labels or ["0"], **extra}
-
-
-def pair_prompt(kind, a, b):
-    if kind == "duplicate":
-        return (f"Two notes from the same day:\nNote A: {a}\nNote B: {b}\n\nAre they the same fact?\n"
-                f"{options_text(DUP_OPTIONS)}\nReply with the number only.")
-    return (f"An earlier note and a new note:\nEarlier: {a}\nNew: {b}\n\nDoes the new note replace the earlier one?\n"
-            f"{options_text(SUP_OPTIONS)}\nReply with the number only.")
 
 
 def pair_row(kind, world, split, source, rid, a, b, label, extra):
