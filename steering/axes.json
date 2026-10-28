@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "note": "Contrastive axes for the re:dvx direction screen. Each pole is a persona sentence put in the system prompt; the pair shares the user prompt and one supplied answer token. Synthetic prompts only; no health, diet, fitness, mood or mental-health topics. test_prompts are held out from extraction and used only by the screen.",
+  "axes": [
+    {
+      "name": "abstention",
+      "kind": "behavior",
+      "positive_label": "admits it does not know",
+      "negative_label": "always answers",
+      "templates": [
+        "You are an assistant that {adjective}.",
+        "Answer as someone who {adjective}."
+      ],
+      "adjective_pairs": [
+        [
+          "says plainly that it does not know when it is not sure of a fact",
+          "always gives a specific answer, even when it is not sure of the fact"
+        ],
+        [
+          "admits uncertainty instead of guessing",
+          "guesses confidently instead of admitting uncertainty"
+        ],
+        [
+          "only states facts it is sure of and says \"I don't know\" otherwise",
+          "never says \"I don't know\" and always names a value"
+        ]
+      ],
+      "prompts": [
+        "In what year did the Kessler Valley footbridge in Austria first open to the public?",
+        "What was the registered tonnage of the cargo ship Marisol Bay when it was launched?",
+        "Who designed the coat of arms of the municipality of Vestre Lindholm?",
+        "How many seats did the Pell River Theatre have when it reopened in 1987?",
+        "What is the name of the second mayor of the town of Aldersgate Junction?",
+        "On what date did the Orvel Island lighthouse switch to electric power?",
+        "What did I name the new staging server last week?",
+        "Which meeting room did I book for the Friday design review?",
+        "What is the account number for my office electricity contract?",
+        "What is my landlord's surname?",
+        "What is the capital of France?",
+        "How many days are there in a leap year?"
+      ]
+    },
+    {
+      "name": "concise",
+      "kind": "style",
+      "positive_label": "concise",
+      "negative_label": "detailed",
+      "templates": [
+        "You are a {adjective} assistant.",
+        "Reply in a {adjective} manner."
+      ],
+      "adjective_pairs": [
+        [
+          "concise",
+          "detailed"
+        ],
+        [
+          "brief, to-the-point",
+          "thorough, elaborate"
+        ],
+        [
+          "terse",
+          "expansive"
+        ]
+      ],
+      "prompts": [
+        "How should I structure the agenda for a one-hour project kickoff?",
+        "Explain what a database index does.",
+        "What should I check before I merge a pull request?",
+        "How do I write a good bug report?",
+        "What is the difference between a process and a thread?",
+        "How should I prepare for a client call about a delayed delivery?",
+        "Explain how compound interest works.",
+        "What makes a good README for a small library?",
+        "How do I plan a team offsite for twelve people?",
+        "What is a reasonable way to name files in a shared folder?"
+      ],
+      "test_prompts": [
+        "How do I set up continuous integration for a small Python project?",
+        "Explain what an API rate limit is.",
+        "What should a project status update contain?",
+        "How do I estimate how long a software task will take?",
+        "What is the difference between RAM and disk storage?",
+        "How should I organise a shared team calendar?",
+        "Explain what a VPN does.",
+        "What are the steps to publish a package to PyPI?"
+      ]
+    },
+    {
+      "name": "formal",
+      "kind": "style",
+      "positive_label": "formal",
+      "negative_label": "casual",
+      "templates": [
+        "You are a {adjective} assistant.",
+        "Reply in a {adjective} manner."
+      ],
+      "adjective_pairs": [
+        [
+          "formal",
+          "casual"
+        ],
+        [
+          "polite and businesslike",
+          "relaxed and chatty"
+        ],
+        [
+          "professional, reserved",
+          "informal, friendly"
+        ]
+      ],
+      "prompts": [
+        "Can you help me reply to a supplier who sent the wrong invoice?",
+        "What should I say when I hand over a project to a colleague?",
+        "Write a short note to tell the team the release moved to Monday.",
+        "How do I ask my manager for a day off next week?",
+        "Draft a message that thanks a client for their order.",
+        "How should I start my talk at the quarterly review?",
+        "Tell me how to decline a meeting invitation.",
+        "Write a reminder that the shared kitchen is cleaned on Fridays.",
+        "How do I introduce a new teammate to the group?",
+        "What should I write in the out-of-office reply for my holiday?"
+      ],
+      "test_prompts": [
+        "Write a message to the team about the new expense form.",
+        "How do I tell a client the project will cost more?",
+        "Write a thank-you note to a colleague who covered my shift.",
+        "Draft a reply asking a supplier for a delivery date.",
+        "How do I welcome a new customer by email?",
+        "Write a short notice that the office closes early on Friday.",
+        "How should I follow up after a job interview?",
+        "Write a message asking a colleague to review my slides."
+      ]
+    },
+    {
+      "name": "decisive",
+      "kind": "behavior",
+      "positive_label": "decisive",
+      "negative_label": "cautious",
+      "templates": [
+        "You are a {adjective} assistant.",
+        "Answer as if you were a {adjective} person."
+      ],
+      "adjective_pairs": [
+        [
+          "decisive",
+          "cautious"
+        ],
+        [
+          "direct, committed to one recommendation",
+          "hedging, weighing every alternative"
+        ],
+        [
+          "confident, quick to choose",
+          "careful, slow to commit"
+        ]
+      ],
+      "prompts": [
+        "Should I use PostgreSQL or SQLite for a small internal tool?",
+        "Which laptop should I buy for software development on a mid budget?",
+        "Should we ship the release on Friday or wait until Monday?",
+        "Is it better to rent or buy office furniture for a five-person startup?",
+        "Should I rewrite this legacy script or patch it?",
+        "Which of two job offers should I take: higher pay or a shorter commute?",
+        "Should our team adopt a monorepo?",
+        "Do I book the train or fly from Paris to Amsterdam?",
+        "Should I accept the vendor's first price quote?",
+        "Which programming language should I learn next: Go or Rust?"
+      ],
+      "test_prompts": [
+        "Should I host my side project on a VPS or a managed platform?",
+        "Should we hire a contractor or a full-time engineer first?",
+        "Is it better to buy a used car or lease a new one for city driving?",
+        "Should I migrate our spreadsheets to a proper database now?",
+        "Should I take the morning or the evening train to the conference?",
+        "Do we build our own login system or use a hosted provider?",
+        "Should I learn TypeScript before React?",
+        "Should the shop open on Sundays?"
+      ]
+    },
+    {
+      "name": "asks_first",
+      "kind": "behavior",
+      "positive_label": "asks before acting",
+      "negative_label": "acts on its best guess",
+      "templates": [
+        "You are an assistant that {adjective}.",
+        "Act as an assistant that {adjective}."
+      ],
+      "adjective_pairs": [
+        [
+          "asks a clarifying question before it does a task",
+          "starts the task at once on its best guess"
+        ],
+        [
+          "checks the details with the user before acting",
+          "acts immediately without checking details"
+        ],
+        [
+          "confirms what the user wants first",
+          "assumes what the user wants and proceeds"
+        ]
+      ],
+      "prompts": [
+        "Book the usual meeting room for Thursday.",
+        "Send the invoice to the client.",
+        "Rename the files in the project folder.",
+        "Schedule a call with the design team next week.",
+        "Order more printer paper for the office.",
+        "Clean up the old branches in the repository.",
+        "Reply to Marta's email about the contract.",
+        "Move the release notes into the shared drive.",
+        "Set up a reminder for the tax filing.",
+        "Draft the agenda for tomorrow's standup."
+      ],
+      "test_prompts": [
+        "Book flights for the trip to Berlin.",
+        "Update the website's opening hours.",
+        "Cancel the subscription we don't use.",
+        "Prepare the slides for Monday's meeting.",
+        "Email the landlord about the repair.",
+        "Delete the duplicate contacts.",
+        "Order lunch for the team on Wednesday.",
+        "Pay the outstanding invoices."
+      ]
+    }
+  ],
+  "check_probes": [
+    "What is the tallest mountain in Japan?",
+    "Who wrote the novel 'The Remains of the Day'?",
+    "In what year did the town of Brekkvik open its first public library?",
+    "What was the founding membership count of the Oslo Chess Society?",
+    "What did I decide about the venue for the team dinner?",
+    "Which supplier did I say we should stop using?",
+    "How do I set up a Python virtual environment?",
+    "Explain the difference between TCP and UDP.",
+    "What is a good way to organise a weekly team meeting?",
+    "Write a two-line message telling a client their order shipped.",
+    "Should I upgrade the server's operating system this week or next month?",
+    "Which is better for a small shop's website: a static site or a CMS?",
+    "Book a table for four on Saturday evening.",
+    "Archive last year's project folders.",
+    "Send the updated price list to the wholesale customers.",
+    "Summarise the main idea of version control in a few sentences.",
+    "What is the boiling point of water at sea level in Celsius?",
+    "How many moons does Mars have?",
+    "Who was the first director of the Kellby Maritime Museum?",
+    "What is the postcode of my accountant's office?",
+    "How should I prioritise three overdue tasks?",
+    "Write a polite reminder about an unpaid invoice.",
+    "Is it worth automating a report I build by hand once a month?",
+    "Plan the steps to migrate a website to a new host."
+  ]
+}
