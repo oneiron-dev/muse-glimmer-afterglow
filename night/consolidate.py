@@ -11,6 +11,7 @@ dropped_as_superseded, with the reason (the morning report shows it). Writes run
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -178,11 +179,13 @@ def duplicate_check(active):
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
         from decide.decider import Decider
         url = teacher_mod.serving_base_url()
-        d = Decider(url[:-3] if url.endswith("/v1") else url, adapter_path=D1_ADAPTER, slot=1, trace="night_duplicate")
-        r = d.duplicate_check([{"id": n["id"], "key": n["key"], "value": n["value"]} for n in active])
+        d = Decider(url[:-3] if url.endswith("/v1") else url, adapter_path=D1_ADAPTER, slot=int(os.environ.get("NIGHT_SLOT", "1")),
+                    trace="night_duplicate")
+        k = int(os.environ.get("D1_DUPLICATE_K", "0"))  # 0 = the decider's default; 2 under load (Meta decide)
+        r = d.duplicate_check([{"id": n["id"], "key": n["key"], "value": n["value"]} for n in active], **({"k": k} if k else {}))
     except Exception as e:  # noqa: BLE001  (D1 not loaded on this server, or the server is down): skipped, said so
         return {"skipped": f"{type(e).__name__}: {e}"}
-    return {"same": r["same"], "disagreements": r["same"], "pairs_checked": len(r["decisions"]), "ms": r["ms"],
+    return {"same": r["same"], "disagreements": r["same"], "pairs_checked": len(r["decisions"]), "ms": r["ms"], "k": k or "default",
             "rule": "logged only; the code rule (identical key + value) decides"}
 
 
