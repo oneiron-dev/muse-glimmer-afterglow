@@ -19,6 +19,7 @@ import urllib.request
 from prompts import pair_options, pair_prompt, route_options, route_prompt
 
 ANSWER_PREFIX = "<|start|>assistant to=user<|message|>"
+BOS = "<|begin_of_text|>"
 N_PROBS = 128
 # Per-kind thresholds; fit on the calibration split (decide/score_decisions.py) and set here from the results page.
 THRESHOLDS = {"route": 0.0, "duplicate": 0.0, "supersede": 0.0}
@@ -63,7 +64,9 @@ class Decider:
         body = {"messages": [{"role": "user", "content": user_text}],
                 "chat_template_kwargs": {"reasoning_strength": reasoning_strength}}
         text = self._post("/apply-template", body)["prompt"]
-        text = text.removesuffix("<|start|>assistant")  # the server may add the generation prompt; we write our own
+        text = text.removesuffix("<|start|>assistant")  # the server adds the generation prompt; we write our own
+        if not text.startswith(BOS):  # /apply-template leaves out the BOS the eval of record sends
+            text = BOS + text
         return text + ANSWER_PREFIX if answer else text
 
     def _read(self, prompt_text, labels, lora):
