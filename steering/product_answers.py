@@ -105,6 +105,9 @@ def main():
                 else:
                     print(json.dumps({"world": w, "arm": name, "skipped": f"no day-{day} adapter in the manifest"}), flush=True)
             items = [{"id": it["id"], "question": it["question"]} for it in never_told.load(w)] if s == "never_told" else general
+            if s == "general" and not any(a[0] in args.general_adapters.split(",") for a in arms):
+                print(json.dumps({"world": w, "set": s, "skipped": "no adapter arm to compare with the base"}), flush=True)
+                continue
             for arm in arms:
                 if s == "general" and arm[0] != "base" and arm[0] not in args.general_adapters.split(","):
                     continue
