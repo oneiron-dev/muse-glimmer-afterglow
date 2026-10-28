@@ -1,5 +1,5 @@
 {
- "default": "nelly",
+ "default": "mel",
  "alias": "muse-glimmer-30b",
  "proxy_port": 18610,
  "upstream_port": 18611,
@@ -11,7 +11,7 @@
  "hosts": {
   "mel": {
    "tailnet": "100.88.57.107",
-   "llama_server": "/data/afterglow/llama.cpp-69f201a/build/bin/llama-server",
+   "llama_server": "/data/afterglow/llama-v0.7.0-620d222/bin/llama-server",
    "gguf_dir": "/data/afterglow/models",
    "mem": "14G"
   },
