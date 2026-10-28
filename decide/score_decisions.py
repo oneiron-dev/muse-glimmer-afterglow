@@ -126,36 +126,50 @@ def fallback(rows, results, rows_by_id):
             "chosen_tau": chosen, "test_at_chosen": grid[chosen]["test"] if chosen else None}
 
 
+def subsets(rows_by_id):
+    """The same row groups for every route arm: split (test = w4, calibration = w1-w3) x probe kind."""
+    def split(x):
+        return rows_by_id[f"route:{x['world']}:{x['id']}"]["split"]
+    out = [("all", lambda x: True), ("forward", lambda x: x["kind"] == "forward"),
+           ("never_told", lambda x: x["kind"] == "never_told")]
+    for sp in ("test", "calibration"):
+        out += [(sp, lambda x, sp=sp: split(x) == sp),
+                (f"{sp}_forward", lambda x, sp=sp: split(x) == sp and x["kind"] == "forward"),
+                (f"{sp}_never_told", lambda x, sp=sp: split(x) == sp and x["kind"] == "never_told")]
+    return out
+
+
+def always_d_score(rows):
+    right = sum(x["d_right"] for x in rows)
+    wrong = sum(not x["d_right"] and not x["d_abstain"] for x in rows)
+    return {"n": len(rows), "right": right, "wrong": wrong, "asked": 0,
+            "score": round((right - wrong) / len(rows), 4) if rows else None}
+
+
 def route_end_to_end(results, rows_by_id, compare="strict"):
+    """Route arms on the same probes. decision: the chosen note through the D5 compare. decision_lookup: no weights
+    answer; a chosen note -> arm D, 0 -> ask. always_d: every answer from arm D. d5_app / d5_oracle: the baselines."""
     picks, worlds = {}, set()
     for r in results:
         row = rows_by_id[r["id"]]
         worlds.add(row["world"])
         picks[r["id"]] = None if r["pick"] == "0" else row["note_ids"][int(r["pick"]) - 1]
     ids = {r["id"] for r in results}
-    out = {}
     runs = gate.runs_root(None)
-    arms = {"decision": [x for w in sorted(worlds) for x in gate.world_rows(w, runs, "decision", compare, picks)],
-            "d5_app": [x for w in sorted(worlds) for x in gate.world_rows(w, runs, "app", compare)],
-            "d5_oracle": [x for w in sorted(worlds) for x in gate.world_rows(w, runs, "oracle", compare)]}
+
+    def rows_for(mode):
+        rows = [x for w in sorted(worlds) for x in gate.world_rows(w, runs, mode, compare, picks)]
+        return [x for x in rows if f"route:{x['world']}:{x['id']}" in ids]
+    decision = rows_for("decision")
+    arms = {"decision": decision,
+            "decision_lookup": [{**x, "route": "ask" if picks[f"route:{x['world']}:{x['id']}"] is None else "notes"}
+                                for x in decision],
+            "d5_app": rows_for("app"), "d5_oracle": rows_for("oracle")}
+    out = {}
     for name, rows in arms.items():
-        rows = [x for x in rows if f"route:{x['world']}:{x['id']}" in ids]
-        out[name] = {sub: gate.score_rows([x for x in rows if sel(x)]) for sub, sel in
-                     (("forward", lambda x: x["kind"] == "forward"), ("never_told", lambda x: x["kind"] == "never_told"),
-                      ("all", lambda x: True),
-                      ("test", lambda x: rows_by_id[f"route:{x['world']}:{x['id']}"]["split"] == "test"),
-                      ("calibration", lambda x: rows_by_id[f"route:{x['world']}:{x['id']}"]["split"] == "calibration"))}
-        if name == "decision":
-            always_d = rows
-            out["decision_fallback"] = fallback(rows, results, rows_by_id)
-    for sub, sel in (("forward", lambda x: x["kind"] == "forward"), ("never_told", lambda x: x["kind"] == "never_told"),
-                     ("all", lambda x: True),
-                     ("test", lambda x: rows_by_id[f"route:{x['world']}:{x['id']}"]["split"] == "test")):
-        sel_rows = [x for x in always_d if sel(x)]
-        right = sum(x["d_right"] for x in sel_rows)
-        wrong = sum(not x["d_right"] and not x["d_abstain"] for x in sel_rows)
-        out.setdefault("always_d", {})[sub] = {"n": len(sel_rows), "right": right, "wrong": wrong,
-                                               "score": round((right - wrong) / len(sel_rows), 4) if sel_rows else None}
+        out[name] = {sub: gate.score_rows([x for x in rows if sel(x)]) for sub, sel in subsets(rows_by_id)}
+    out["always_d"] = {sub: always_d_score([x for x in decision if sel(x)]) for sub, sel in subsets(rows_by_id)}
+    out["decision_fallback"] = fallback(decision, results, rows_by_id)
     return out
 
 
@@ -197,13 +211,14 @@ def main():
                 for arm, subs in e.items():
                     if arm == "decision_fallback":
                         continue
-                    for sub in ("all", "test"):
+                    for sub in ("test_forward", "test_never_told", "test", "all"):
                         s = subs.get(sub)
                         if not s or not s["n"]:
                             continue
                         d = s.get("lookup_scored_by_d", s)
-                        print(f"{name:8s} route e2e {arm:10s} {sub:5s} n {s['n']}  right {d['right']} wrong {d['wrong']} score {d['score']}"
-                              + (f"  asked {d['asked']}  precision {s['routing_precision']} recall {s['routing_recall']}" if "asked" in d else ""))
+                        print(f"{name:8s} route e2e {arm:16s} {sub:16s} n {s['n']:3d}  right {d['right']} wrong {d['wrong']} "
+                              f"asked {d['asked']} score {d['score']}"
+                              + (f"  precision {s['routing_precision']} recall {s['routing_recall']}" if "routing_precision" in s else ""))
                 continue
             o = e["one_pass"]
             print(f"{name:8s} {key:24s} n {o['n']:4d} acc {o['accuracy']} ece {o['ece']} wrong@0.9 {o['wrong_at_p90']} "
