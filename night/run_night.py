@@ -132,7 +132,8 @@ class Night:
                 "teacher": a.teacher, "batch_rows": 16, "base": HOST["base_id"], "rules_as_facts": a.rules_as_facts,
                 "contrast_rows": a.contrast, "perturbed": a.perturbed, "reversed": a.reversed, "notes_context": a.notes_context,
                 "notes_form_only": a.notes_form_only,
-                "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir}
+                "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir,
+                "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -239,13 +240,19 @@ class Night:
         mem = self.memories()
         if mem:
             sources.append(str(mem))
-        extra = []
+        extra_rows = []
         if self.args.contrast:
             run([sys.executable, "night/contrast_rows.py", "--consolidated", str(self.night / "consolidated.json"),
                  "--perturbed", str(self.args.perturbed), "--reversed", str(self.args.reversed),
                  "--notes-context", str(self.args.notes_context), *(["--notes-form-only"] if self.args.notes_form_only else []),
                  "--out", str(self.night / "contrast.jsonl")], log)
-            extra = ["--extra", str(self.night / "contrast.jsonl")]
+            extra_rows.append(str(self.night / "contrast.jsonl"))
+        if self.args.unknown_keys > 0:
+            run([sys.executable, "night/unknown_key_rows.py", "--consolidated", str(self.night / "consolidated.json"),
+                 "--day-text", str(self.run_dir / "daylog.jsonl"), str(self.run_dir / "notes.json"),
+                 "--rows", str(self.args.unknown_keys), "--out", str(self.night / "unknown-keys.jsonl")], log)
+            extra_rows.append(str(self.night / "unknown-keys.jsonl"))
+        extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
         if self.args.abstain_share > 0:
@@ -254,10 +261,11 @@ class Night:
                       "--abstain-share", str(self.args.abstain_share)]
         run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
              "--rows-per-fact", str(self.args.rows_per_fact), "--replay-share", str(self.args.replay_share), "--out", str(raw)], log)
+        never_told = ["--never-told"] if self.args.leak_never_told or self.args.unknown_keys > 0 else []
         leak = subprocess.run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(raw),
-                               "--out", str(self.night / "leak-raw.json"), "--write-clean", str(clean)], cwd=ROOT)
+                               "--out", str(self.night / "leak-raw.json"), "--write-clean", str(clean), *never_told], cwd=ROOT)
         run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(clean),
-             "--out", str(self.night / "leak.json")], log)
+             "--out", str(self.night / "leak.json"), *never_told], log)
         raw_report = json.loads((self.night / "leak-raw.json").read_text())
         self.receipt["leak_check"] = {"raw_hits": raw_report["hits"], "dropped_rows": raw_report.get("dropped_rows", 0),
                                       "raw_exit": leak.returncode, "clean_passed": True}
@@ -378,6 +386,8 @@ def main():
     ap.add_argument("--notes-context", type=int, default=0, help="with --contrast: contrast rows with the notes in the prompt")
     ap.add_argument("--notes-form-only", action="store_true", help="with --contrast: contrast only in the notes-in-prompt form")
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
+    ap.add_argument("--unknown-keys", type=int, default=0, help="unknown-key rows (night/unknown_key_rows.py), each with a known pair")
+    ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()
     Night(args).go()
