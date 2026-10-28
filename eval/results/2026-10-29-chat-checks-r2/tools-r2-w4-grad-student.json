@@ -1,0 +1,349 @@
+{
+ "label": "r2-w4-grad-student",
+ "world": "w4-grad-student",
+ "day": 1,
+ "reasoning": "low",
+ "counts": {
+  "base": {
+   "remember": 10,
+   "recall": 10,
+   "n": 20,
+   "right": 20
+  },
+  "adapter": {
+   "remember": 10,
+   "recall": 10,
+   "n": 20,
+   "right": 20
+  }
+ },
+ "max_drop": 2,
+ "passed": true,
+ "rule": "adapter right >= base right - max_drop (first reply calls the expected tool with valid arguments)",
+ "turns": {
+  "base": [
+   {
+    "kind": "remember",
+    "user": "Quick note: my team offsite date is 2026-11-20.",
+    "value": "2026-11-20",
+    "ok": true,
+    "note": "remember {\"key\": \"team offsite date\", \"value\": \"2026-11-20\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the storage unit number is unit 14C now.",
+    "value": "unit 14C",
+    "ok": true,
+    "note": "remember {\"key\": \"storage unit number\", \"value\": \"unit 14C\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: courier account number CX-55120.",
+    "value": "CX-55120",
+    "ok": true,
+    "note": "remember {\"key\": \"courier account number\", \"value\": \"CX-55120\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my VPN username is ops.lumen.",
+    "value": "ops.lumen",
+    "ok": true,
+    "note": "remember {\"key\": \"VPN username\", \"value\": \"ops.lumen\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the spare key holder is Rhea Lund now.",
+    "value": "Rhea Lund",
+    "ok": true,
+    "note": "remember {\"key\": \"spare key holder\", \"value\": \"Rhea Lund\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: backup drive name Ironwood.",
+    "value": "Ironwood",
+    "ok": true,
+    "note": "remember {\"key\": \"backup drive name\", \"value\": \"Ironwood\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my build server name is Kestrel-07.",
+    "value": "Kestrel-07",
+    "ok": true,
+    "note": "remember {\"key\": \"build server name\", \"value\": \"Kestrel-07\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the invoice prefix is INV-HV- now.",
+    "value": "INV-HV-",
+    "ok": true,
+    "note": "remember {\"key\": \"invoice prefix\", \"value\": \"INV-HV-\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: quarterly review room Atrium B.",
+    "value": "Atrium B",
+    "ok": true,
+    "note": "remember {\"key\": \"quarterly review room\", \"value\": \"Atrium B\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my label printer name is Puffin.",
+    "value": "Puffin",
+    "ok": true,
+    "note": "remember {\"key\": \"label printer name\", \"value\": \"Puffin\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my late stay permit?",
+    "item": "N0063",
+    "ok": true,
+    "note": "recall {\"query\": \"late stay permit\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my group meeting was.",
+    "item": "N0022",
+    "ok": true,
+    "note": "recall {\"query\": \"group meeting\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my group meeting speaker somewhere?",
+    "item": "N0057",
+    "ok": true,
+    "note": "recall {\"query\": \"group meeting speaker\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my seminar time?",
+    "item": "N0021",
+    "ok": true,
+    "note": "recall {\"query\": \"seminar time\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my today activity was.",
+    "item": "N0011",
+    "ok": true,
+    "note": "recall {\"query\": \"today activity\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my delivery door somewhere?",
+    "item": "N0033",
+    "ok": true,
+    "note": "recall {\"query\": \"delivery door\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my thesis submission deadline?",
+    "item": "N0055",
+    "ok": true,
+    "note": "recall {\"query\": \"thesis submission deadline\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my conference abstract due was.",
+    "item": "N0019",
+    "ok": true,
+    "note": "recall {\"query\": \"conference abstract due\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my calibration location somewhere?",
+    "item": "N0040",
+    "ok": true,
+    "note": "recall {\"query\": \"calibration location\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my lab mate 2?",
+    "item": "N0010",
+    "ok": true,
+    "note": "recall {\"query\": \"lab mate 2\"}",
+    "content": ""
+   }
+  ],
+  "adapter": [
+   {
+    "kind": "remember",
+    "user": "Quick note: my team offsite date is 2026-11-20.",
+    "value": "2026-11-20",
+    "ok": true,
+    "note": "remember {\"key\": \"team offsite date\", \"value\": \"2026-11-20\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the storage unit number is unit 14C now.",
+    "value": "unit 14C",
+    "ok": true,
+    "note": "remember {\"key\": \"storage unit number\", \"value\": \"unit 14C\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: courier account number CX-55120.",
+    "value": "CX-55120",
+    "ok": true,
+    "note": "remember {\"key\": \"courier account number\", \"value\": \"CX-55120\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my VPN username is ops.lumen.",
+    "value": "ops.lumen",
+    "ok": true,
+    "note": "remember {\"key\": \"VPN username\", \"value\": \"ops.lumen\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the spare key holder is Rhea Lund now.",
+    "value": "Rhea Lund",
+    "ok": true,
+    "note": "remember {\"key\": \"spare key holder\", \"value\": \"Rhea Lund\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: backup drive name Ironwood.",
+    "value": "Ironwood",
+    "ok": true,
+    "note": "remember {\"key\": \"backup drive name\", \"value\": \"Ironwood\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my build server name is Kestrel-07.",
+    "value": "Kestrel-07",
+    "ok": true,
+    "note": "remember {\"key\": \"build server name\", \"value\": \"Kestrel-07\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the invoice prefix is INV-HV- now.",
+    "value": "INV-HV-",
+    "ok": true,
+    "note": "remember {\"key\": \"invoice prefix\", \"value\": \"INV-HV-\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: quarterly review room Atrium B.",
+    "value": "Atrium B",
+    "ok": true,
+    "note": "remember {\"key\": \"quarterly review room\", \"value\": \"Atrium B\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my label printer name is Puffin.",
+    "value": "Puffin",
+    "ok": true,
+    "note": "remember {\"key\": \"label printer name\", \"value\": \"Puffin\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my late stay permit?",
+    "item": "N0063",
+    "ok": true,
+    "note": "recall {\"query\": \"late stay permit\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my group meeting was.",
+    "item": "N0022",
+    "ok": true,
+    "note": "recall {\"query\": \"group meeting\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my group meeting speaker somewhere?",
+    "item": "N0057",
+    "ok": true,
+    "note": "recall {\"query\": \"group meeting speaker\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my seminar time?",
+    "item": "N0021",
+    "ok": true,
+    "note": "recall {\"query\": \"seminar meeting time\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my today activity was.",
+    "item": "N0011",
+    "ok": true,
+    "note": "recall {\"query\": \"today activity\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my delivery door somewhere?",
+    "item": "N0033",
+    "ok": true,
+    "note": "recall {\"query\": \"delivery door\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my thesis submission deadline?",
+    "item": "N0055",
+    "ok": true,
+    "note": "recall {\"query\": \"thesis submission deadline\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my conference abstract due was.",
+    "item": "N0019",
+    "ok": true,
+    "note": "recall {\"query\": \"conference abstract due\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my calibration location somewhere?",
+    "item": "N0040",
+    "ok": true,
+    "note": "recall {\"query\": \"calibration location\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my lab mate 2?",
+    "item": "N0010",
+    "ok": true,
+    "note": "recall {\"query\": \"lab mate 2\"}",
+    "content": ""
+   }
+  ]
+ }
+}

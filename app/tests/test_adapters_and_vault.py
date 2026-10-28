@@ -105,6 +105,27 @@ class PushDayTest(unittest.TestCase):
         self.assertEqual(len(again.ids[0][0]), 32)
         self.assertNotEqual(again.ids[0], again.ids[1])
 
+    def test_a_run_committed_before_its_receipt_is_counted_as_witnessed(self):
+        self.day([rec(1, "user", "hi", 0), rec(1, "assistant", "hello", 5)])
+
+        class Committed(FakeVault):  # the vault holds run 0's ids already (its receipt was lost in a 503)
+            def witness_run(self, conv, author, texts, at, ids=None):
+                if author == "user":
+                    raise oneiron_vault.VaultError(400, '{"error":{"code":"BAD_REQUEST","message":"the witnessed '
+                                                        'message already belongs to another turn"}}')
+                return super().witness_run(conv, author, texts, at, ids)
+
+        v = Committed()
+        with mock.patch("sys.stderr"):
+            out = oneiron_vault.push_day("wt", 1, vault=v)
+        self.assertEqual([a for a, _, _ in v.sent], ["companion"])
+        self.assertEqual(out["receipts"][0]["receipt_refs"][0], "already-witnessed")
+        bad = FakeVault()
+        bad.witness_run = lambda *a, **k: (_ for _ in ()).throw(oneiron_vault.VaultError(400, "other bad request"))
+        self.day([rec(1, "user", "hi", 0), rec(1, "assistant", "hello", 5)])
+        with self.assertRaises(oneiron_vault.VaultError):
+            oneiron_vault.push_day("wt", 1, vault=bad)
+
     def test_a_timed_out_witness_is_resent_with_the_same_ids(self):
         v = oneiron_vault.OneironVault.__new__(oneiron_vault.OneironVault)
         bodies = []

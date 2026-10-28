@@ -1,0 +1,515 @@
+{
+ "status": "ok",
+ "args": {
+  "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
+  "train": "decide/data/train-decision.jsonl",
+  "out_dir": "/data/meta-decide/out/d1",
+  "rank": 16,
+  "alpha": null,
+  "dropout": 0.0,
+  "targets": "attn_mlp",
+  "layers": "all",
+  "epochs": 1,
+  "save_epochs": "1",
+  "lr": 0.0001,
+  "warmup_steps": 10,
+  "batch_rows": 2,
+  "grad_accum": 8,
+  "max_grad_norm": 0.3,
+  "max_len": 1300,
+  "max_steps": 0,
+  "seed": 20261027,
+  "no_save": false
+ },
+ "alpha": 16,
+ "started": "2026-10-29T06:02:50+0900",
+ "versions": {
+  "torch": "2.14.1+cu130",
+  "transformers": "5.15.0",
+  "peft": "0.21.2",
+  "bitsandbytes": "0.50.2",
+  "unsloth": "2026.10.5"
+ },
+ "load_s": 22.6,
+ "mem_after_load_gib": 20.7,
+ "vision_moved_to_cpu": [
+  "vision_tower",
+  "vision_adapter",
+  "vision_projection"
+ ],
+ "mem_after_vision_offload_gib": 17.12,
+ "lora": {
+  "target_regex": ".*language_model\\.layers\\.\\d+\\.(self_attn\\.(q_proj|k_proj|v_proj|o_proj)|mlp\\.(gate_proj|up_proj|down_proj))",
+  "modules": 364,
+  "kinds": [
+   "mlp.down_proj",
+   "mlp.gate_proj",
+   "mlp.up_proj",
+   "self_attn.k_proj",
+   "self_attn.o_proj",
+   "self_attn.q_proj",
+   "self_attn.v_proj"
+  ],
+  "layers": [
+   0,
+   51,
+   52
+  ],
+  "vision_lora": 0,
+  "trainable_params": 95846400
+ },
+ "mem_after_lora_gib": 17.47,
+ "data": {
+  "rows": 1123,
+  "tokens_per_epoch": 601710,
+  "loss_tokens_per_epoch": 2246,
+  "max_row_tokens": 1272
+ },
+ "epochs": [
+  {
+   "epoch": 1,
+   "mean_loss": 0.2327,
+   "steps": 71,
+   "elapsed_s": 1394.1
+  }
+ ],
+ "saved": [
+  "epoch1"
+ ],
+ "curve": [
+  {
+   "step": 1,
+   "epoch": 1,
+   "loss": 0.2635,
+   "tok_s": 330.6
+  },
+  {
+   "step": 2,
+   "epoch": 1,
+   "loss": 0.2831,
+   "tok_s": 382.3
+  },
+  {
+   "step": 3,
+   "epoch": 1,
+   "loss": 0.1589,
+   "tok_s": 378.2
+  },
+  {
+   "step": 4,
+   "epoch": 1,
+   "loss": 0.2166,
+   "tok_s": 406.7
+  },
+  {
+   "step": 5,
+   "epoch": 1,
+   "loss": 0.4979,
+   "tok_s": 409.9
+  },
+  {
+   "step": 6,
+   "epoch": 1,
+   "loss": 0.3023,
+   "tok_s": 406.9
+  },
+  {
+   "step": 7,
+   "epoch": 1,
+   "loss": 0.1965,
+   "tok_s": 408.2
+  },
+  {
+   "step": 8,
+   "epoch": 1,
+   "loss": 0.5679,
+   "tok_s": 413.8
+  },
+  {
+   "step": 9,
+   "epoch": 1,
+   "loss": 0.0721,
+   "tok_s": 421.1
+  },
+  {
+   "step": 10,
+   "epoch": 1,
+   "loss": 0.4289,
+   "tok_s": 418.8
+  },
+  {
+   "step": 11,
+   "epoch": 1,
+   "loss": 0.3313,
+   "tok_s": 420.6
+  },
+  {
+   "step": 12,
+   "epoch": 1,
+   "loss": 0.1597,
+   "tok_s": 423.8
+  },
+  {
+   "step": 13,
+   "epoch": 1,
+   "loss": 0.1311,
+   "tok_s": 428.1
+  },
+  {
+   "step": 14,
+   "epoch": 1,
+   "loss": 0.2641,
+   "tok_s": 427.4
+  },
+  {
+   "step": 15,
+   "epoch": 1,
+   "loss": 0.0359,
+   "tok_s": 426.7
+  },
+  {
+   "step": 16,
+   "epoch": 1,
+   "loss": 0.0897,
+   "tok_s": 430.1
+  },
+  {
+   "step": 17,
+   "epoch": 1,
+   "loss": 0.2781,
+   "tok_s": 428.5
+  },
+  {
+   "step": 18,
+   "epoch": 1,
+   "loss": 0.3303,
+   "tok_s": 427.1
+  },
+  {
+   "step": 19,
+   "epoch": 1,
+   "loss": 0.1344,
+   "tok_s": 423.9
+  },
+  {
+   "step": 20,
+   "epoch": 1,
+   "loss": 0.4396,
+   "tok_s": 423.5
+  },
+  {
+   "step": 21,
+   "epoch": 1,
+   "loss": 0.3132,
+   "tok_s": 423.2
+  },
+  {
+   "step": 22,
+   "epoch": 1,
+   "loss": 0.763,
+   "tok_s": 428.7
+  },
+  {
+   "step": 23,
+   "epoch": 1,
+   "loss": 0.0357,
+   "tok_s": 429.5
+  },
+  {
+   "step": 24,
+   "epoch": 1,
+   "loss": 0.0092,
+   "tok_s": 428.9
+  },
+  {
+   "step": 25,
+   "epoch": 1,
+   "loss": 0.1243,
+   "tok_s": 430.0
+  },
+  {
+   "step": 26,
+   "epoch": 1,
+   "loss": 0.5965,
+   "tok_s": 432.0
+  },
+  {
+   "step": 27,
+   "epoch": 1,
+   "loss": 0.5756,
+   "tok_s": 433.9
+  },
+  {
+   "step": 28,
+   "epoch": 1,
+   "loss": 0.1941,
+   "tok_s": 433.2
+  },
+  {
+   "step": 29,
+   "epoch": 1,
+   "loss": 0.2158,
+   "tok_s": 434.0
+  },
+  {
+   "step": 30,
+   "epoch": 1,
+   "loss": 0.0621,
+   "tok_s": 433.7
+  },
+  {
+   "step": 31,
+   "epoch": 1,
+   "loss": 0.2017,
+   "tok_s": 433.1
+  },
+  {
+   "step": 32,
+   "epoch": 1,
+   "loss": 0.0259,
+   "tok_s": 432.7
+  },
+  {
+   "step": 33,
+   "epoch": 1,
+   "loss": 0.4322,
+   "tok_s": 431.1
+  },
+  {
+   "step": 34,
+   "epoch": 1,
+   "loss": 0.5826,
+   "tok_s": 433.1
+  },
+  {
+   "step": 35,
+   "epoch": 1,
+   "loss": 0.4625,
+   "tok_s": 432.1
+  },
+  {
+   "step": 36,
+   "epoch": 1,
+   "loss": 0.0248,
+   "tok_s": 431.5
+  },
+  {
+   "step": 37,
+   "epoch": 1,
+   "loss": 0.1638,
+   "tok_s": 431.5
+  },
+  {
+   "step": 38,
+   "epoch": 1,
+   "loss": 0.0967,
+   "tok_s": 432.1
+  },
+  {
+   "step": 39,
+   "epoch": 1,
+   "loss": 0.5151,
+   "tok_s": 431.6
+  },
+  {
+   "step": 40,
+   "epoch": 1,
+   "loss": 0.1103,
+   "tok_s": 431.1
+  },
+  {
+   "step": 41,
+   "epoch": 1,
+   "loss": 0.0786,
+   "tok_s": 430.7
+  },
+  {
+   "step": 42,
+   "epoch": 1,
+   "loss": 0.0827,
+   "tok_s": 430.0
+  },
+  {
+   "step": 43,
+   "epoch": 1,
+   "loss": 0.2842,
+   "tok_s": 429.6
+  },
+  {
+   "step": 44,
+   "epoch": 1,
+   "loss": 0.0126,
+   "tok_s": 430.8
+  },
+  {
+   "step": 45,
+   "epoch": 1,
+   "loss": 0.0727,
+   "tok_s": 432.4
+  },
+  {
+   "step": 46,
+   "epoch": 1,
+   "loss": 0.1943,
+   "tok_s": 432.2
+  },
+  {
+   "step": 47,
+   "epoch": 1,
+   "loss": 0.1754,
+   "tok_s": 431.8
+  },
+  {
+   "step": 48,
+   "epoch": 1,
+   "loss": 0.1281,
+   "tok_s": 431.0
+  },
+  {
+   "step": 49,
+   "epoch": 1,
+   "loss": 0.3168,
+   "tok_s": 430.9
+  },
+  {
+   "step": 50,
+   "epoch": 1,
+   "loss": 0.0119,
+   "tok_s": 430.1
+  },
+  {
+   "step": 51,
+   "epoch": 1,
+   "loss": 0.3077,
+   "tok_s": 430.8
+  },
+  {
+   "step": 52,
+   "epoch": 1,
+   "loss": 0.7446,
+   "tok_s": 431.5
+  },
+  {
+   "step": 53,
+   "epoch": 1,
+   "loss": 0.1525,
+   "tok_s": 430.7
+  },
+  {
+   "step": 54,
+   "epoch": 1,
+   "loss": 0.0095,
+   "tok_s": 430.7
+  },
+  {
+   "step": 55,
+   "epoch": 1,
+   "loss": 0.0011,
+   "tok_s": 431.3
+  },
+  {
+   "step": 56,
+   "epoch": 1,
+   "loss": 0.1729,
+   "tok_s": 431.6
+  },
+  {
+   "step": 57,
+   "epoch": 1,
+   "loss": 0.1105,
+   "tok_s": 432.6
+  },
+  {
+   "step": 58,
+   "epoch": 1,
+   "loss": 0.017,
+   "tok_s": 431.7
+  },
+  {
+   "step": 59,
+   "epoch": 1,
+   "loss": 0.01,
+   "tok_s": 430.7
+  },
+  {
+   "step": 60,
+   "epoch": 1,
+   "loss": 0.4946,
+   "tok_s": 430.4
+  },
+  {
+   "step": 61,
+   "epoch": 1,
+   "loss": 0.2333,
+   "tok_s": 430.4
+  },
+  {
+   "step": 62,
+   "epoch": 1,
+   "loss": 0.1567,
+   "tok_s": 431.1
+  },
+  {
+   "step": 63,
+   "epoch": 1,
+   "loss": 0.0648,
+   "tok_s": 431.3
+  },
+  {
+   "step": 64,
+   "epoch": 1,
+   "loss": 0.3472,
+   "tok_s": 432.3
+  },
+  {
+   "step": 65,
+   "epoch": 1,
+   "loss": 0.3593,
+   "tok_s": 433.0
+  },
+  {
+   "step": 66,
+   "epoch": 1,
+   "loss": 0.1186,
+   "tok_s": 433.4
+  },
+  {
+   "step": 67,
+   "epoch": 1,
+   "loss": 0.0394,
+   "tok_s": 433.2
+  },
+  {
+   "step": 68,
+   "epoch": 1,
+   "loss": 0.0505,
+   "tok_s": 433.7
+  },
+  {
+   "step": 69,
+   "epoch": 1,
+   "loss": 0.0657,
+   "tok_s": 433.7
+  },
+  {
+   "step": 70,
+   "epoch": 1,
+   "loss": 0.0009,
+   "tok_s": 432.6
+  },
+  {
+   "step": 71,
+   "epoch": 1,
+   "loss": 1.0192,
+   "tok_s": 431.6
+  }
+ ],
+ "peak_alloc_gib": 19.26,
+ "peak_reserved_gib": 19.62,
+ "steps": 71,
+ "planned_steps": 71,
+ "train_s": 1394.4,
+ "tokens_seen": 601710,
+ "tok_s": 431.5,
+ "ended": "2026-10-29T06:26:39+0900"
+}

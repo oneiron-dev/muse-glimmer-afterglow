@@ -60,6 +60,11 @@ function renderNotes(notes, flashIds = new Set()) {
     const li = el("li", "note");
     li.append(el("div", "k", pretty(n.key)), el("div", "v", n.value));
     const d = n.decided, was = n.supersedes && byId[n.supersedes];
+    if (d && !was && d.linked === false) {  // the model was not sure enough: both notes stay for the night
+      const cand = d.candidate && byId[d.candidate];
+      li.append(el("div", "decided", `kept both, left for the night: one pass gave ${d.p != null ? `p ${d.p.toFixed(2)}` : "no p"}` +
+        (cand ? ` that it replaces "${pretty(cand.key)}"` : "") + (d.latency_s != null ? `, ${d.latency_s.toFixed(2)} s` : "")));
+    }
     if (d && was) {  // linked by the model's decision, not by the agent: say how, with its certainty and time
       const how = d.reasoned
         ? `thought it through (one pass p ${d.p.toFixed(2)}, then ${d.reasoned.reasoning_tokens ?? "?"} reasoning tokens)`

@@ -38,8 +38,10 @@ function verdict(r) {
   if (d.decision === "keep") p.append("Overnight, Afterglow trained on yesterday and kept the update.");
   else if (d.decision === "rollback") p.append("Overnight, Afterglow trained on yesterday, then rolled the update back.");
   else p.append("Overnight, Afterglow trained on yesterday.");
-  // the night's own reason is gate shorthand; the checks panel below says it in words, so show it only on a rollback
-  if (d.why && d.decision === "rollback") p.append(el("span", "why", d.why));
+  // on a rollback, which checks failed, in words (the night's own "why" is gate shorthand; it is in the receipt)
+  const failed = Object.entries(d.checks || {}).filter(([, ok]) => !ok).map(([k]) => CHECKS[k] || k);
+  if (d.decision === "rollback" && failed.length)
+    p.append(el("span", "why", `It failed ${failed.length === 1 ? "one check" : `${failed.length} checks`}: ${failed.join("; ")}.`));
 }
 
 function forgotNumbers(ev) {
@@ -50,6 +52,18 @@ function forgotNumbers(ev) {
   const b = ev.arms && ev.arms.B && ev.arms.B.by_kind && ev.arms.B.by_kind.general;
   if (!a || !b) return null;
   return { before: a, after: b, passed: null, slice: `${a.n}-item general slice` };
+}
+
+function staleLine(ev, rolledBack) {
+  // Under the headline, from day 2: after the corrections, how often the weights gave the old value, beside the
+  // base model reading the notes (which can hold both values when a correction was not linked to its old note).
+  const st = ev.stale || {};
+  const p = $("stale-line");
+  if (!(st.B && st.B.n)) return;
+  p.replaceChildren(`After your corrections, ${rolledBack ? "the update" : "it"} gave an old value `,
+    el("strong", null, `${st.B.stale} of ${st.B.n}`), " times",
+    ...(st.C ? ["; the base model reading your notes gave one ", el("strong", null, `${st.C.stale} of ${st.C.n}`), " times."] : ["."]));
+  p.hidden = false;
 }
 
 function lead(ev, facts, rolledBack) {
@@ -312,7 +326,9 @@ function numbers(ev, decision, abst, chat) {
   const st = ev.stale || {};
   if (st.B && st.B.n) {  // stale probes count only once a correction has superseded a fact
     add("Stale values", ["After your corrections, the old value came back in ", v(`${st.B.stale} of ${st.B.n}`),
-      " questions", st.A ? ` (before the night: ${st.A.stale} of ${st.A.n}).` : "."], "stale");
+      " questions", st.A ? ` (before the night: ${st.A.stale} of ${st.A.n})` : "",
+      ...(st.C ? [". The base model reading your notes gave the old value in ", v(`${st.C.stale} of ${st.C.n}`), "."] : ["."])],
+      "stale");
   } else {
     add("Stale values", ["Measured from day 2, after you correct something. Nothing to measure yet."], null);
   }
@@ -447,7 +463,7 @@ function across(worlds, current, day) {
   if (!worlds || worlds.length < 2) return;
   const sum = (k) => worlds.reduce((t, w) => t + (w[k] ?? 0), 0);
   const line = $("across-line");
-  line.replaceChildren(`Across ${worlds.length} synthetic people, after one night: `,
+  line.replaceChildren(`Across ${worlds.length} synthetic people, after night ${day}: `,
     el("strong", null, `${sum("B")} of ${sum("facts")}`), " facts answered with notes off, ",
     el("strong", null, String(sum("C"))), " with notes in the prompt, ",
     el("strong", null, String(sum("D"))), " with both.");
@@ -488,6 +504,7 @@ async function boot() {
   }
   verdict(r);
   lead(ev, facts, rolledBack);
+  staleLine(ev, rolledBack);
   chose(r.consolidated);
   grid(facts);
   abstainLine(r.abstention, r.decision);

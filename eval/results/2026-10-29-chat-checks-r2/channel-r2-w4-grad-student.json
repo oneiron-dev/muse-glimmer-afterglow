@@ -1,0 +1,271 @@
+{
+ "label": "r2-w4-grad-student",
+ "world": "w4-grad-student",
+ "day": 1,
+ "lora": [
+  {
+   "id": 0,
+   "scale": 0.0
+  },
+  {
+   "id": 1,
+   "scale": 0.0
+  },
+  {
+   "id": 2,
+   "scale": 0.0
+  },
+  {
+   "id": 3,
+   "scale": 1.0
+  }
+ ],
+ "n": 30,
+ "content_ok": 21,
+ "rate": 0.7,
+ "min_rate": 0.95,
+ "passed": false,
+ "rule": "non-empty content and finish 'stop' on chat-endpoint calls at reasoning_strength minimal",
+ "replies": [
+  {
+   "source": "key:N0042",
+   "question": "Remind me, my advisor meeting location?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "Elin Sorensen meets her advisor in Room 405 before lunch.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0035",
+   "question": "Remind me, my main supplier?",
+   "finish": "stop",
+   "content": "Your main supplier is SonarTek Components.",
+   "reasoning": "The user said their main supplier is SonarTek Components.",
+   "ok": true
+  },
+  {
+   "source": "key:N0019",
+   "question": "Remind me, my conference abstract due?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "The user said their conference abstract is due 2026-11-20.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0053",
+   "question": "Remind me, my room reservation system?",
+   "finish": "stop",
+   "content": "You book rooms via book.nai.example.",
+   "reasoning": "The user said they book rooms via book.nai.example.",
+   "ok": true
+  },
+  {
+   "source": "key:N0028",
+   "question": "Remind me, my signal software?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "The user said they process everything in WaveSim 6.2.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0036",
+   "question": "Remind me, my sensor contact?",
+   "finish": "stop",
+   "content": "Your sensor contact is Pier Building, Ext 4471.",
+   "reasoning": "The user said their sensor contact is Pier Building, Ext 4471.",
+   "ok": true
+  },
+  {
+   "source": "key:N0023",
+   "question": "Remind me, my post meeting location?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "The user said they meet in Room 204 after Tuesdays 14:00.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0016",
+   "question": "Remind me, my project echo dune?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "The user said their project is echo dune?<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0058",
+   "question": "Remind me, my tomorrow discussion?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "The user has a group discussion on Thursdays 10:00.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0033",
+   "question": "Remind me, my delivery door?",
+   "finish": "stop",
+   "content": "You use Door 7B for deliveries.",
+   "reasoning": "The user said they use Door 7B for deliveries.",
+   "ok": true
+  },
+  {
+   "source": "key:N0006",
+   "question": "Remind me, my thesis status?",
+   "finish": "stop",
+   "content": "You just got to work at Northbridge Acoustics Institute and are starting your thesis.",
+   "reasoning": "The user said they just got to work at Northbridge Acoustics Institute and are starting thesis.",
+   "ok": true
+  },
+  {
+   "source": "key:N0022",
+   "question": "Remind me, my group meeting?",
+   "finish": "stop",
+   "content": "Your group meets Thursdays 10:00.",
+   "reasoning": "The user asks about their group meeting. According to the info, it meets Thursdays 10:00.",
+   "ok": true
+  },
+  {
+   "source": "key:N0021",
+   "question": "Remind me, my seminar time?",
+   "finish": "stop",
+   "content": "Your seminar meets Thursdays 10:00.",
+   "reasoning": "The user said their seminar meets Thursdays 10:00.",
+   "ok": true
+  },
+  {
+   "source": "key:N0011",
+   "question": "Remind me, my today activity?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "I will remind the user about their instruments reserved for Tuesdays at 13:00 and ask about lunch.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0054",
+   "question": "Remind me, my calibration date?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "The user said they calibrated on 2026-09-15<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0061",
+   "question": "Remind me, my fieldwork departure?",
+   "finish": "stop",
+   "content": "You said you head out for fieldwork on 2026-11-05.",
+   "reasoning": "The user said they head out for fieldwork on 2026-11-05.",
+   "ok": true
+  },
+  {
+   "source": "key:N0040",
+   "question": "Remind me, my calibration location?",
+   "finish": "stop",
+   "content": "You do calibration over in Pier Building.",
+   "reasoning": "The user said they do calibration over in Pier Building.",
+   "ok": true
+  },
+  {
+   "source": "key:N0010",
+   "question": "Remind me, my lab mate 2?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "Elin Sorensen said Amara Okafor is the third person sharing the lab with her.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0051",
+   "question": "Remind me, my handout location?",
+   "finish": "stop",
+   "content": "Your handouts are in the printer room in Hall B.",
+   "reasoning": "The user said handouts are in the printer room in Hall B.",
+   "ok": true
+  },
+  {
+   "source": "key:N0029",
+   "question": "Remind me, my analysis software?",
+   "finish": "stop",
+   "content": "Your analysis software is EchoLab R2026a.",
+   "reasoning": "The user said their analysis software is EchoLab R2026a.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A59",
+   "question": "In one sentence, what is the difference between weight and mass?",
+   "finish": "stop",
+   "content": "Mass is the amount of matter in an object, while weight is the force exerted on that object due to gravity.",
+   "reasoning": "I need to answer in one sentence, defining mass as amount of matter and weight as force due to gravity.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A38",
+   "question": "Write a polite one-sentence reminder asking a colleague to send the test results.",
+   "finish": "stop",
+   "content": "Hi [Name], just a gentle reminder to send over the test results when you have a moment, thank you.",
+   "reasoning": "I need to craft a single polite sentence reminding a colleague to send test results.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A58",
+   "question": "Write a one-sentence thank-you note to a delivery driver.",
+   "finish": "stop",
+   "content": "Thank you for the prompt and careful delivery, your service is greatly appreciated.",
+   "reasoning": "I need to keep it to one sentence, polite and appreciative.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A07",
+   "question": "A crate holds 9 bottles. How many crates do 100 bottles need? Reply with just the number.",
+   "finish": "stop",
+   "content": "12",
+   "reasoning": "100 bottles / 9 per crate = 11 crates remainder 1, so need 12 crates.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A50",
+   "question": "What is 0.5 written as a percentage? Reply with just the percentage.",
+   "finish": "stop",
+   "content": "50%",
+   "reasoning": "0.5 as a percentage is 50%.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A16",
+   "question": "A meeting starts at 13:20 and lasts 50 minutes. When does it end? Reply with just the time.",
+   "finish": "stop",
+   "content": "14:10",
+   "reasoning": "13:20 plus 50 minutes is 14:10.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A06",
+   "question": "What is 11 squared? Reply with just the number.",
+   "finish": "stop",
+   "content": "121",
+   "reasoning": "11 squared is 121.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A21",
+   "question": "Emit JSON only: {\"tool\": \"book_room\", \"room\": \"A-3\", \"hour\": 15}. Reply with JSON only, no other text.",
+   "finish": "stop",
+   "content": "{\"tool\": \"book_room\", \"room\": \"A-3\", \"hour\": 15}",
+   "reasoning": "User wants JSON only with specific fields.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A41",
+   "question": "What does CPU stand for? Reply with just the expansion.",
+   "finish": "stop",
+   "content": "Central Processing Unit",
+   "reasoning": "The user asks for the expansion of CPU. I will reply with \"Central Processing Unit\".",
+   "ok": true
+  },
+  {
+   "source": "anchor:A18",
+   "question": "Emit JSON only: {\"tool\": \"add_note\", \"text\": \"Check belt tension\", \"pinned\": true}. Reply with JSON only, no other text.",
+   "finish": "stop",
+   "content": "{\"tool\": \"add_note\", \"text\": \"Check belt tension\", \"pinned\": true}",
+   "reasoning": "User wants JSON only with specific fields. I will output exactly that JSON object.",
+   "ok": true
+  }
+ ]
+}

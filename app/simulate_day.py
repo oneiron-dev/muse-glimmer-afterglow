@@ -43,8 +43,9 @@ def main():
     ap.add_argument("--endpoint", default=GlimmerClient().endpoint)
     ap.add_argument("--reasoning", default="low", choices=["minimal", "low", "medium", "high"])
     ap.add_argument("--temperature", type=float, default=0.0, help="0 = greedy, so a day replays the same")
-    ap.add_argument("--decide-supersede", action="store_true",
-                    help="a correction saved under a new key is linked by the model's decision (decide/decider.py)")
+    ap.add_argument("--decide-supersede", action=argparse.BooleanOptionalAction, default=None,
+                    help="force the supersede decision at remember time on or off (default: the serving notes, "
+                         "runs/serving/serving-rule.json supersede_decision)")
     ap.add_argument("--decide-adapter", help="the decision adapter's path on the serving box (default: base weights)")
     a = ap.parse_args()
 

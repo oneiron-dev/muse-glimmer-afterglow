@@ -25,7 +25,17 @@ from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 JST = dt.timezone(dt.timedelta(hours=9))
 MAX_ROUNDS = 8
 LINK_P = 0.9  # a one-pass "replaces" this sure links at once (decide/decider.py SUPERSEDE_ACCEPT_P)
-ASK_AGAIN_P = 0.5  # from here up to LINK_P the decision is asked once more with reasoning on
+ASK_AGAIN_P = 0.5  # from here up to LINK_P the decision is asked once more with reasoning on (when switched on)
+
+
+def supersede_setting(day):
+    """The serving notes' setting for the supersede decision at remember time (runs/serving/serving-rule.json
+    "supersede_decision": {"from_day", "link_p", "reasoned", "weights", "evidence"}): (on for this day, link_p,
+    reasoned). Absent: off."""
+    f = paths.runs_root() / "serving" / "serving-rule.json"
+    conf = (json.loads(f.read_text()).get("supersede_decision") if f.exists() else None) or {}
+    on = conf.get("from_day") is not None and int(day) >= int(conf["from_day"])
+    return on, float(conf.get("link_p", LINK_P)), bool(conf.get("reasoned", False))
 REASONING_TOKENS = 1024  # the reasoned call's budget (decide/decider.py); reasoning cut there never links
 
 SYSTEM_PROMPT = """You are Afterglow, {who} personal assistant. You run on {owner} own computer.
@@ -74,7 +84,7 @@ def system_message(world_doc):
 
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
-                 notes_backend="local", temperature=0.3, decide_supersede=False, decide_reasoned=True,
+                 notes_backend="local", temperature=0.3, decide_supersede=None, decide_reasoned=None,
                  decide_adapter=None):
         self.world, self.day = world, int(day)
         self.temperature = temperature
@@ -97,9 +107,12 @@ class DaySession:
         if prev and (prev / "world_state.json").exists():
             seed = json.loads((prev / "world_state.json").read_text())
         self.world_state = WorldState(self.dir / "world_state.json", seed=seed or self.world_doc)
-        self.decide_reasoned = decide_reasoned
+        # None = the serving notes decide (supersede_setting); True/False force it (tests, experiments)
+        on, self.link_p, reasoned = supersede_setting(self.day)
+        self.decide_reasoned = reasoned if decide_reasoned is None else decide_reasoned
+        on = on if decide_supersede is None else decide_supersede
         self.tools = ToolBox(self.notes, self.world_state, day=self.day,
-                             decide_supersede=self._supersede_decider(decide_adapter) if decide_supersede else None)
+                             decide_supersede=self._supersede_decider(decide_adapter) if on else None)
         self.daylog_path = self.dir / "daylog.jsonl"
         self.session_path = self.dir / "session.json"
         self.system_message = system_message(self.world_doc)
@@ -126,13 +139,13 @@ class DaySession:
 
         def decide(new_note):
             earlier = [n for n in self.notes.all() if n["id"] != new_note["id"]]
-            r = one_pass.supersede_link(earlier, new_note, accept_p=LINK_P)
+            r = one_pass.supersede_link(earlier, new_note, accept_p=self.link_p)
             best = max(r["decisions"], key=p_replaces, default=None)
             by_id = {n["id"]: n for n in earlier}
             decided = {"by": "one-pass decision", "p": best and round(p_replaces(best), 4),
                        "latency_s": round(r["ms"] / 1000, 3), "candidate": best and best["candidate"]}
             note = by_id.get(r["link"])
-            if note is None and best and ASK_AGAIN_P <= p_replaces(best) < LINK_P and self.decide_reasoned:
+            if note is None and best and ASK_AGAIN_P <= p_replaces(best) < self.link_p and self.decide_reasoned:
                 t = reasoned.pair("supersede", note_line(by_id[best["candidate"]]), note_line(new_note))
                 # reasoning that ended at its budget did not finish: undecided, never an answer
                 cut = t.get("reason") == "reasoning_cap" or (t.get("reasoning_tokens") or 0) >= REASONING_TOKENS

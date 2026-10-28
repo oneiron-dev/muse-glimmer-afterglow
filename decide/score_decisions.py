@@ -47,8 +47,17 @@ def pct(xs, q):
     return round(xs[min(len(xs) - 1, int(q * len(xs)))], 1) if xs else None
 
 
+def links_at(rows, cut=0.9):
+    """Pair kinds as the product uses them: act ("1") only at p >= cut. Links = true "1" pairs acted on; wrong links =
+    true "2" pairs acted on (the lead's D1 bar: links on the true pairs, no wrong link at p >= 0.9)."""
+    act = [r for r in rows if r["pick"] == "1" and r["p"] >= cut]
+    return {"cut": cut, "true_pairs": sum(r["label"] == "1" for r in rows),
+            "links": sum(r["label"] == "1" for r in act), "wrong_links": sum(r["label"] != "1" for r in act)}
+
+
 def one_pass_metrics(rows):
     return {"n": len(rows), "accuracy": round(sum(r["right"] for r in rows) / len(rows), 4) if rows else None,
+            "links_at_0.9": links_at(rows) if rows and rows[0]["kind"] != "route" else None,
             "ece": ece(rows), "wrong_at_p90": sum(1 for r in rows if r["p"] >= 0.9 and not r["right"]),
             "p50_ms": pct([r["ms"] for r in rows], 0.5), "p95_ms": pct([r["ms"] for r in rows], 0.95),
             "label_mass_p50": round(statistics.median(r["label_mass"] for r in rows), 4) if rows else None,
@@ -203,6 +212,10 @@ def main():
         for r in res.values():
             row = rows_by_id[r["id"]]
             by.setdefault(f"{row['kind']}/{row['split']}", []).append(r)
+        for r in res.values():  # the clean subset of the day-2 check: w4, never trained in any form
+            row = rows_by_id[r["id"]]
+            if row["split"] == "day2_check" and row["world"] == "w4-grad-student":
+                by.setdefault(f"{row['kind']}/day2_check_w4", []).append(r)
         report["arms"][name] = {}
         for key, rs in sorted(by.items()):
             entry = {"one_pass": one_pass_metrics(rs), "reasoned": extended_metrics(rs),
@@ -235,7 +248,9 @@ def main():
                               + (f"  precision {s['routing_precision']} recall {s['routing_recall']}" if "routing_precision" in s else ""))
                 continue
             o = e["one_pass"]
+            lk = o.get("links_at_0.9")
             print(f"{name:8s} {key:24s} n {o['n']:4d} acc {o['accuracy']} ece {o['ece']} wrong@0.9 {o['wrong_at_p90']} "
+                  + (f"links@0.9 {lk['links']}/{lk['true_pairs']} wrong-links {lk['wrong_links']} " if lk else "") +
                   f"p50 {o['p50_ms']} ms p95 {o['p95_ms']} ms (server {o['server_ms_p50']}/{o['server_ms_p95']}) "
                   f"prompt {o['prompt_tokens_p50']} tok mass {o['label_mass_p50']}"
                   + (f"  vs {ref} {e['vs_' + ref]['diff']} {e['vs_' + ref]['ci95']}" if "vs_" + ref in e else ""))

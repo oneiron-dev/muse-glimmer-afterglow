@@ -1,0 +1,271 @@
+{
+ "label": "r2-w2-solo-developer",
+ "world": "w2-solo-developer",
+ "day": 1,
+ "lora": [
+  {
+   "id": 0,
+   "scale": 0.0
+  },
+  {
+   "id": 1,
+   "scale": 1.0
+  },
+  {
+   "id": 2,
+   "scale": 0.0
+  },
+  {
+   "id": 3,
+   "scale": 0.0
+  }
+ ],
+ "n": 30,
+ "content_ok": 27,
+ "rate": 0.9,
+ "min_rate": 0.95,
+ "passed": false,
+ "rule": "non-empty content and finish 'stop' on chat-endpoint calls at reasoning_strength minimal",
+ "replies": [
+  {
+   "source": "key:N0047",
+   "question": "Remind me, my test device?",
+   "finish": "stop",
+   "content": "Your test device is Pixel 8a.",
+   "reasoning": "The user asked for a reminder about their test device. I should note that they refer to it as Pixel 8a.",
+   "ok": true
+  },
+  {
+   "source": "key:N0037",
+   "question": "Remind me, my supplier catch up time?",
+   "finish": "stop",
+   "content": "Your supplier catch up is Wednesdays 09:00.",
+   "reasoning": "The user asks for supplier catch up time. I know it is Wednesdays 09:00 so I will tell them.",
+   "ok": true
+  },
+  {
+   "source": "key:N0018",
+   "question": "Remind me, my deploy platform?",
+   "finish": "stop",
+   "content": "You deploy via Shipstack.",
+   "reasoning": "The user asks for reminder about deploy platform. I know they deploy via Shipstack.",
+   "ok": true
+  },
+  {
+   "source": "key:N0053",
+   "question": "Remind me, my error monitoring?",
+   "finish": "stop",
+   "content": "You saw a crash report in Bugbeacon Alerts this morning where you catch all the exceptions.",
+   "reasoning": "Remind user: they saw a crash report in Bugbeacon Alerts this morning where they catch all the exceptions.",
+   "ok": true
+  },
+  {
+   "source": "key:N0026",
+   "question": "Remind me, my team chat?",
+   "finish": "stop",
+   "content": "Your team chat is #northloop-build, where you will see the ping.",
+   "reasoning": "Remind user that team chat is #northloop-build, where they will see the ping.",
+   "ok": true
+  },
+  {
+   "source": "key:N0038",
+   "question": "Remind me, my client sync time?",
+   "finish": "stop",
+   "content": "Your client sync is Tuesdays 10:30, and you review mockups beforehand so I will ping you.",
+   "reasoning": "The user asks for their client sync time. I know they go through mockups Tuesdays at 10:30 and want a ping beforehand.",
+   "ok": true
+  },
+  {
+   "source": "key:N0022",
+   "question": "Remind me, my main laptop?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "I will remind Tomas that his main laptop is Laptop Falcon.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0015",
+   "question": "Remind me, my client Northwind Bakery Chain?",
+   "finish": "stop",
+   "content": "You mentioned Northwind Bakery Chain is your third company building for.",
+   "reasoning": "Remind the user that Northwind Bakery Chain is their third company building for.",
+   "ok": true
+  },
+  {
+   "source": "key:N0052",
+   "question": "Remind me, my analytics tool?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "They said they use Metricmoon Insights for all the tracking.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0036",
+   "question": "Remind me, my mockup review time?",
+   "finish": "stop",
+   "content": "Your mockup review is Tuesdays 10:30, and I'll ping you beforehand if anything is urgent.",
+   "reasoning": "The user asks for a reminder about mockup review time. I will note the review is Tuesdays 10:30 and ping them beforehand if urgent.",
+   "ok": true
+  },
+  {
+   "source": "key:N0006",
+   "question": "Remind me, my work location today?",
+   "finish": "stop",
+   "content": "You are at Harborworks Hub Docks today.",
+   "reasoning": "The user asks for their work location today. I know they are at Harborworks Hub Docks today.",
+   "ok": true
+  },
+  {
+   "source": "key:N0021",
+   "question": "Remind me, my production server?",
+   "finish": "stop",
+   "content": "Your production server is Production Pelican.",
+   "reasoning": "Remind user that production server is Production Pelican.",
+   "ok": true
+  },
+  {
+   "source": "key:N0020",
+   "question": "Remind me, my staging box name?",
+   "finish": "stop",
+   "content": "Your staging box is Staging Seagull.",
+   "reasoning": "They said the staging box is Staging Seagull.",
+   "ok": true
+  },
+  {
+   "source": "key:N0013",
+   "question": "Remind me, my client Bluebird Analytics Ltd?",
+   "finish": "stop",
+   "content": "You said Bluebird Analytics Ltd is your business client signed first.",
+   "reasoning": "Remind user that Bluebird Analytics Ltd is business client signed first.",
+   "ok": true
+  },
+  {
+   "source": "key:N0017",
+   "question": "Remind me, my hosting provider?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "Remind the user their hosting provider is Nimbus Hosting.<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0049",
+   "question": "Remind me, my keyboard name?",
+   "finish": "stop",
+   "content": "You said the keyboard you've been typing on all day is Keyboard Badger.",
+   "reasoning": "The user asked for the name of the keyboard they have been typing on all day. I know it is Keyboard Badger.",
+   "ok": true
+  },
+  {
+   "source": "key:N0048",
+   "question": "Remind me, my desk display?",
+   "finish": "stop",
+   "content": "You said Desk Display Heron keeps flickering a bit.",
+   "reasoning": "Remind user that Desk Display Heron is the display they said keeps flickering a bit.",
+   "ok": true
+  },
+  {
+   "source": "key:N0025",
+   "question": "Remind me, my work tracking?",
+   "finish": "stop",
+   "content": "You log all work in Taskline Boards.",
+   "reasoning": "The user asks for a reminder about work tracking. I know they log all work in Taskline Boards.",
+   "ok": true
+  },
+  {
+   "source": "key:N0008",
+   "question": "Remind me, my Mara Quinn role?",
+   "finish": "stop",
+   "content": "Your Interface Design Contractor is Mara Quinn.",
+   "reasoning": "Remind the user that Mara Quinn is their Interface Design Contractor.",
+   "ok": true
+  },
+  {
+   "source": "key:N0041",
+   "question": "Remind me, my conference venue?",
+   "finish": "stop",
+   "content": "Your sessions are in Meridian Tower.",
+   "reasoning": "The user asks for the conference venue reminder. I know Shipit Conf 2026 sessions are in Meridian Tower so I will tell them that.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A09",
+   "question": "Convert 2.5 hours into minutes. Reply with just the number.",
+   "finish": "stop",
+   "content": "150",
+   "reasoning": "I need to convert 2.5 hours to minutes. 2.5 hours * 60 minutes/hour = 150 minutes.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A17",
+   "question": "Emit JSON only: {\"tool\": \"get_status\", \"machine\": \"press-2\"}. Reply with JSON only, no other text.",
+   "finish": "stop",
+   "content": "{\"tool\": \"get_status\", \"machine\": \"press-2\"}",
+   "reasoning": "User wants JSON only with tool get_status and machine press-2, so I will output that object and nothing else.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A24",
+   "question": "How many legs does a spider have? Reply with just the number.",
+   "finish": "stop",
+   "content": "8",
+   "reasoning": "The user asks for just the number. A spider has eight legs.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A38",
+   "question": "Write a polite one-sentence reminder asking a colleague to send the test results.",
+   "finish": "stop",
+   "content": "Hi [Name], just a gentle reminder to send over the test results when you have a moment, thank you.",
+   "reasoning": "I need to keep it to one sentence and polite, so I'll ask the colleague to send the test results when they have a moment.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A07",
+   "question": "A crate holds 9 bottles. How many crates do 100 bottles need? Reply with just the number.",
+   "finish": "stop",
+   "content": "12",
+   "reasoning": "100 bottles / 9 per crate = 11.111..., so 12 crates needed.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A50",
+   "question": "What is 0.5 written as a percentage? Reply with just the percentage.",
+   "finish": "stop",
+   "content": "50%",
+   "reasoning": "I need to convert 0.5 to a percentage. 0.5 * 100 = 50%.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A16",
+   "question": "A meeting starts at 13:20 and lasts 50 minutes. When does it end? Reply with just the time.",
+   "finish": "stop",
+   "content": "14:10",
+   "reasoning": "Meeting starts 13:20, lasts 50 minutes, so ends at 14:10.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A06",
+   "question": "What is 11 squared? Reply with just the number.",
+   "finish": "stop",
+   "content": "121",
+   "reasoning": "I need to reply with just the number for 11 squared.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A21",
+   "question": "Emit JSON only: {\"tool\": \"book_room\", \"room\": \"A-3\", \"hour\": 15}. Reply with JSON only, no other text.",
+   "finish": "stop",
+   "content": "{\"tool\": \"book_room\", \"room\": \"A-3\", \"hour\": 15}",
+   "reasoning": "User wants JSON only with tool book_room, room A-3, hour 15.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A41",
+   "question": "What does CPU stand for? Reply with just the expansion.",
+   "finish": "stop",
+   "content": "Central Processing Unit",
+   "reasoning": "I need to answer with just the expansion, so I will write Central Processing Unit.",
+   "ok": true
+  }
+ ]
+}

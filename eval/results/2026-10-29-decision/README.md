@@ -1,5 +1,14 @@
 # Glimmer as its own decision model — results (29 Oct 2026)
 
+**What works, what does not (w4 test, plus real corrections from the simulated days):**
+- Works: base Glimmer decides in one pass (~0.12–0.47 s on the server). Route with a look-up below p 0.6 scores 0.652
+  against 0.419 for always looking up, and asks on all 30 never-told questions. Supersede at p ≥ 0.9 makes no wrong
+  link on the day-2 and day-3 corrections. The decision LoRA (D1) gets all 126 w4 duplicate test pairs right, but
+  that does not transfer: on real day-3 notes it called 4 pairs "the same fact" at p ≥ 0.96 and only 1 was.
+- Does not work: D1 does not beat base on route end to end (0.576 vs 0.652). D1 links none of the clean w4
+  corrections (base: 1 of 6). Reasoning before the answer (D3) makes duplicate and real supersede decisions worse.
+  No route arm reaches always-look-up's forward score (0.656) while keeping the never-told asks.
+
 Design: `decide/DESIGN.md`. Rows: `decide/data/` (w4 test frozen by sha256 in `FROZEN.json` before any training row).
 Score for the route kind: every answer is right, wrong or asked; score = (right − wrong) / n, so asking costs nothing
 and a wrong answer costs one.
@@ -92,3 +101,83 @@ true" at p 1.0 and still misses both corrections the day agent left unlinked. It
 supersede test. A reasoned decision takes 1.5–3.3 s at the median (190–430 reasoning tokens); one pass takes ~0.19 s.
 The product path is one pass with a precision cut: link at p ≥ 0.9, otherwise keep both notes. Thinking stays off for
 these kinds on the base weights. It will be measured again on the decision adapter (D2).
+
+## D1: the decision LoRA, one pass (trained on mel 06:03–06:26; read out 06:38–07:01)
+
+The entry's trainer runs the R2 recipe: r16, attention + MLP, all 52 layers, LR 1e-4, one epoch. The assistant reply
+is the label alone, so the loss falls on the label token and its end token. Data: 1,123 rows, all from w1–w3 (route
+560, supersede 286, duplicate 277), 602k tokens. Training: 71 steps, 23 min, peak 19.3 GiB. The GGUF verify passed
+(`train-d1/`). It is served on mel as a no-world adapter. The readout puts it at scale 1 and every world adapter at
+scale 0 (`readout-D1.jsonl`, `score-D1.json`). The Dreamer shared the server during the readout, so client latency
+here is not comparable to D0; server time is. A chat check on the server found 42/42 answers byte-identical with D1
+loaded at scale 0 and without it.
+
+| kind (w4 test unless named) | D0 | D1 | D1 − D0 (paired bootstrap 95% CI) | D1 ECE |
+|---|---|---|---|---|
+| route, note pick (210) | 0.610 | 0.676 | +0.067 [0.000, +0.137] | 0.180 (D0 0.101) |
+| duplicate (126) | 0.944 | **1.000** | +0.056 [+0.016, +0.103] | 0.002 |
+| supersede, synthetic (36) | 0.944 | 0.972 | +0.028 [−0.056, +0.111] | 0.031 |
+| supersede, real day-2 corrections (44) | 0.886 | 0.727 | −0.159 [−0.318, 0.000] | 0.268 |
+| supersede, clean w4 corrections (14 pairs, 6 true) | 0.786 | 0.571 | −0.214 | 0.427 |
+
+Route end to end (w4), score = (right − wrong) / n:
+
+| arm | forward | never-told | all |
+|---|---|---|---|
+| always look up (arm D) | 0.656 | −1.000 | 0.419 |
+| D0 + look up below p 0.6 | 0.594 | 1.000 | 0.652 |
+| D1 (calibration picks no threshold) | 0.506 | 1.000 | 0.576 |
+
+The lead's bars for D1:
+1. Route forward ≥ 0.656, keeping 30/30 never-told asks: **not met** (0.506). D1 picks the right note more often
+   than D0 (88 vs 71 of 150 answerable questions). It still says "ask" on 41 answerable questions. Its confidence is
+   less useful than D0's (69 wrong at p ≥ 0.9 on calibration, against D0's 38), so no threshold fit on w1–w3 helps.
+2. Supersede links at p ≥ 0.9 on the true corrections, with no wrong link: **not met**. D1 links none of the 6 clean
+   w4 corrections (D0: 1). It answers "both stay true" at p ≈ 1.0 on all of them. Cause: the supersede training rows
+   were 86% "both true" (246 of 286). The pair-level leak fix removed most of the reworded-key "replaces" rows, leaving
+   11 reworded-key positives against 190 negatives, so D1 learned "a different key means both stay true".
+3. Duplicate: D1 is right on all 126 w4 pairs at p ≥ 0.9.
+
+Product reading: keep supersede and route on the base weights (D0) with their cuts. D1 is a candidate for the night's
+duplicate decision. A D1b would need balanced reworded-key supersede positives and fewer "ask" route rows.
+
+### Day-3 corrections (check set, never trained in any form; 29 Oct 07:02–07:05)
+
+34 pairs from the simulated day 3 of all four worlds: 12 true corrections, 4 of them left unlinked by the day agent.
+Rows: `decide/data/supersede-day3-check.jsonl`.
+
+| arm | accuracy | links at p ≥ 0.9 (of 12) | wrong links | unlinked corrections caught at p ≥ 0.9 (of 4) |
+|---|---|---|---|---|
+| D0 base | 0.853 | 8 | 0 | 1 (w4 advisor room, p 0.93) |
+| D1 | 0.853 | 5 | 0 | 0 |
+
+### D1 as the night's duplicate check on real notes (w4 day 3, 29 Oct 07:15–07:25)
+
+Meta night ran `Decider.duplicate_check` on the w4 day-3 notes. It made 178 pair calls, logged only, behind the
+code rule. D1 called 4 pairs that the rule kept apart "the same fact" at p ≥ 0.96. Checked against world.json:
+
+| pair | D1 p | truth |
+|---|---|---|
+| email_permission vs email permission for FjordSonics Ltd | 0.999 | same fact (F41) |
+| morning_location: Room 312 desk vs advisor office room: Room 312 | 0.995 | different facts (F37, F78), shared value |
+| workshop location: Brekvik vs workshop timing: next week at Brekvik | 0.962 | different attributes (no world fact holds either value) |
+| deployed hydrophone tag: QT-207 vs QT-207 recalibration deadline | 0.967 | different facts (F72, F73) |
+
+1 of 4 is right. The w4 duplicate test's positives were a note against its restatement, and its negatives had no
+shared-value pairs, so 126/126 there does not carry over to real near-duplicates. D1 stays a logged check that
+never merges. D1b adds "different facts, same value" negatives built by code.
+
+### Day-3 duplicate check, all four worlds (29 Oct 08:20–08:22)
+
+123 real pairs: the pairs the night's duplicate check reads over the day-3 notes, keeping those with at least one
+day-3 note. Labels come from world.json (each note maps to the fact it held that day). 3 pairs are the same fact; 42
+are different facts that share a value. Rows: `decide/data/duplicate-day3-check.jsonl`, built by
+`decide/duplicate_check_set.py`.
+
+| arm | accuracy | "same" at p ≥ 0.9 on true pairs (of 3) | false "same" at p ≥ 0.9 |
+|---|---|---|---|
+| D0 base | 0.984 | 2 | 0 |
+| D1 | 0.976 | 3 | 2 (Room 312 F37/F78; QT-207 F72/F73) |
+
+Base makes no false "same" at p ≥ 0.9 on real notes. D1 makes two, both in w4. D1b adds code-built different-fact
+pairs that share a value. This set is part of its bar.

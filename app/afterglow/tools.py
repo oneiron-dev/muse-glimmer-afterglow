@@ -114,6 +114,7 @@ class ToolBox:
                         out["replaced"] = {"id": d["note"]["id"], "old_value": d["note"]["value"], "decided": decided}
                     elif d.get("decisions"):
                         out["decision"] = dict(decided, linked=False)  # both notes stay; the night sees the pair
+                        self.notes.record_decision(r["note"], dict(decided, linked=False))  # for the day page
                     self.decisions.append({"note": r["note"]["id"], **decided, "linked": "replaced" in out,
                                            "calls": d.get("decisions")})
                 elif not r["unchanged"] and hasattr(self.notes, "correction_candidates"):
