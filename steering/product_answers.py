@@ -29,11 +29,25 @@ sys.path.insert(0, str(REPO / "night"))
 from paths import runs_root  # noqa: E402
 
 
-def manifest_adapter(real_runs, world, day):
+def manifest_adapter(real_runs, world, day, path_part=None):
+    """The world's adapter for that day in the serving manifest (kept or rolled back: a loaded adapter is measured
+    either way); path_part picks one by a piece of its path (e.g. "2b" for night-2b)."""
     doc = json.loads((real_runs / "serving" / "adapters.json").read_text())
     hits = [a for a in doc.get("adapters", []) if a.get("world") == world and a.get("day") is not None
-            and int(a["day"]) == day]  # kept or rolled back: a loaded adapter is measured either way
+            and int(a["day"]) == day and (path_part is None or path_part in a.get("path", ""))]
     return hits[-1] if hits else None
+
+
+def compose_answer_files(wdir):
+    """answers-<arm>.jsonl for every adapter arm in raw.jsonl (all runs so far): the base rows (latest per set and
+    id) plus that arm's rows, in the scorer's shape."""
+    raw = [json.loads(line) for line in (wdir / "raw.jsonl").read_text().splitlines() if line.strip()]
+    base = {(r["set"], r["id"]): r for r in raw if r["arm_name"] == "base"}
+    for name in {r["arm_name"] for r in raw} - {"base"}:
+        mine = {(r["set"], r["id"]): r for r in raw if r["arm_name"] == name}
+        rows = [dict(r, arm="base") for k, r in base.items() if k in mine] + [dict(r, arm="adapter") for r in mine.values()]
+        (wdir / f"answers-{name}.jsonl").write_text("".join(json.dumps(
+            {k: r[k] for k in ("arm", "set", "id", "answer", "truncated")}) + "\n" for r in rows))
 
 
 def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot):
@@ -68,8 +82,11 @@ def main():
     ap.add_argument("--eval-root", default=str(REPO), help="repo root whose eval/ holds the frozen sets")
     ap.add_argument("--endpoint", default="http://100.88.57.107:18610")
     ap.add_argument("--world", action="append", required=True)
-    ap.add_argument("--adapters", default="R2:1,night2:2", help="ARM:DAY list from the serving manifest")
-    ap.add_argument("--general-adapters", default="night2", help="adapter arms that also answer the general set")
+    ap.add_argument("--adapters", default="R2:1,night2:2",
+                    help="ARM:DAY[:PATH_PART] list from the serving manifest (e.g. night2b:2:2b); empty for none")
+    ap.add_argument("--general-adapters", default="night2",
+                    help="adapter arms that also answer the general set; 'none' = the base only")
+    ap.add_argument("--skip-base", action="store_true", help="do not ask the base again (its answers are in raw.jsonl)")
     ap.add_argument("--slot", type=int, default=1, help="server slot; run one process per slot (one call per slot)")
     ap.add_argument("--notes-day", type=int, default=2)
     ap.add_argument("--sets", default="never_told,general")
@@ -96,20 +113,22 @@ def main():
     plan = []
     for s in args.sets.split(","):
         for w in args.world:
-            arms = [("base", None, 0.0)]
-            for spec in args.adapters.split(","):
-                name, day = spec.split(":")
-                entry = manifest_adapter(real_runs, w, int(day))
+            arms = [] if args.skip_base else [("base", None, 0.0)]
+            for spec in [x for x in args.adapters.split(",") if x]:
+                name, day, *part = spec.split(":")
+                entry = manifest_adapter(real_runs, w, int(day), part[0] if part else None)
                 if entry:
                     arms.append((name, entry["path"], 1.0))
                 else:
                     print(json.dumps({"world": w, "arm": name, "skipped": f"no day-{day} adapter in the manifest"}), flush=True)
             items = [{"id": it["id"], "question": it["question"]} for it in never_told.load(w)] if s == "never_told" else general
-            if s == "general" and not any(a[0] in args.general_adapters.split(",") for a in arms):
+            if s == "general" and args.general_adapters != "none" and not any(
+                    a[0] in args.general_adapters.split(",") for a in arms):
                 print(json.dumps({"world": w, "set": s, "skipped": "no adapter arm to compare with the base"}), flush=True)
                 continue
             for arm in arms:
-                if s == "general" and arm[0] != "base" and arm[0] not in args.general_adapters.split(","):
+                if s == "general" and arm[0] != "base" and (args.general_adapters == "none"
+                                                            or arm[0] not in args.general_adapters.split(",")):
                     continue
                 plan.append((w, s, arm, items))
     rows = {}
@@ -135,12 +154,8 @@ def main():
         wdir = out / w
         wdir.mkdir(parents=True, exist_ok=True)
         done = rows.get(w, [])
-        base_rows = [r for r in done if r["arm_name"] == "base"]
-        for name in {r["arm_name"] for r in done} - {"base"}:
-            mine = [r for r in done if r["arm_name"] == name]
-            (wdir / f"answers-{name}.jsonl").write_text("".join(
-                json.dumps({"arm": "base" if r["arm_name"] == "base" else "adapter", "set": r["set"], "id": r["id"],
-                            "answer": r["answer"], "truncated": r["truncated"]}) + "\n" for r in base_rows + mine))
+        if (wdir / "raw.jsonl").exists():
+            compose_answer_files(wdir)
         (wdir / "progress.json").write_text(json.dumps({**out_note,
             "counts": {f"{a}/{st}": sum(1 for r in done if r["arm_name"] == a and r["set"] == st)
                        for a in {r["arm_name"] for r in done} for st in {r["set"] for r in done}},
