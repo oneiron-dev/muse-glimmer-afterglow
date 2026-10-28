@@ -12,7 +12,7 @@ Each world's day was played through the real day agent, which saved its own note
 
 Every night passed every gate and was kept.
 
-**Abstention check (added 27 Oct after these nights ran):** base 43.0% -> 0.5-2.5% on a frozen 200-question SimpleQA slice; under that check every night would roll back. The decisions of record stay "keep" (the check did not exist when the nights ran); see "Abstention check" below.
+**Abstention check (added 27 Oct after these nights ran):** base 58.0% -> 0.5-3.0% on a frozen 200-question SimpleQA slice; under that check every night would roll back. The decisions of record stay "keep" (the check did not exist when the nights ran); see "Abstention check" below.
 
 Arms: **A** base model, notes off · **B** updated model, notes off · **C** base model with the day's notes in the prompt · **D** updated model with the notes. A fact counts as learned when at least 2 of its 3 held-out paraphrases pass.
 
@@ -51,17 +51,17 @@ Facts that the consolidation filed as preferences or procedures were missed far 
 
 ## Abstention check (added 27 Oct after these nights ran)
 
-On general questions it cannot know, does the updated model still say "I don't know"? 200 SimpleQA questions (MIT), frozen by hash, none overlapping AA-Omniscience-Public (`eval/data/simpleqa/`). Same prompt for every arm: the question, then "Answer with just the answer. If you do not know it, say that you do not know." Abstentions are counted by fixed phrases, with no grader model (`eval/simpleqa_gate.py`).
+On general questions it cannot know, does the updated model still say "I don't know"? 200 SimpleQA questions (MIT), frozen by hash, none overlapping AA-Omniscience-Public (`eval/data/simpleqa/`). Same prompt for every arm: the question, then "Answer with just the answer. If you do not know it, say that you do not know." Abstentions are counted by fixed phrases, with no grader model (`eval/simpleqa_gate.py`). An answer that is only the prompt's own words echoed back ("You do not know.", 30 of the base's answers) counts as an abstention (rule v2; the first count, v1, had the base at 43.0% and is kept in each file under `before_v1`).
 
 | arm | says "I don't know" | exact-match right |
 |---|---|---|
-| base | 86 / 200 (43.0%) | 6 |
+| base | 116 / 200 (58.0%) | 6 |
 | w1 night | 1 (0.5%) | 5 |
-| w2 night | 5 (2.5%) | 1 |
+| w2 night | 6 (3.0%) | 1 |
 | w3 night | 1 (0.5%) | 7 |
 | w4 night | 2 (1.0%) | 5 |
 
-The update all but removes "I don't know" on general questions. The base answered 6 of 200 exactly, so most of what it gave up were correct abstentions: the updated model now guesses there. The rule from the next night on (in `decide()`): the updated model's abstention rate must stay at least the base's minus 10 points (here 33.0%), or the night rolls back. Under that rule all four R2 nights would roll back (`*/decision-with-abstention-gate.json`; each `receipt.json` has the check under `added_checks`). Their decisions of record stay "keep", and the day demo serves them with this check shown. The multiple-choice and tool slice above shows no loss; this check is the open-question side of general knowledge. A fix is in progress: replay rows with the base model's own answers, its "I don't know"s included.
+The update all but removes "I don't know" on general questions. The base answered 6 of 200 exactly, so most of what it gave up were correct abstentions: the updated model now guesses there. The rule from the next night on (in `decide()`): the updated model's abstention rate must stay at least the base's minus 10 points (here 48.0%), or the night rolls back. Under that rule all four R2 nights would roll back (`*/decision-with-abstention-gate.json`; each `receipt.json` has the check under `added_checks`). Their decisions of record stay "keep", and the day demo serves them with this check shown. The multiple-choice and tool slice above shows no loss; this check is the open-question side of general knowledge. A fix is in progress: replay rows with the base model's own answers, its "I don't know"s included.
 
 ## B2: can token confidence choose between the weights and the notes? No.
 

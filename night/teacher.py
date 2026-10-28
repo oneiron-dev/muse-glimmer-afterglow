@@ -12,11 +12,19 @@ import os
 import time
 import urllib.error
 import urllib.request
+from pathlib import Path
+
+
+def serving_base_url():
+    """The Glimmer server's proxy URL on the default serving box (app/serve/hosts.json)."""
+    hosts = json.loads((Path(__file__).resolve().parent.parent / "app" / "serve" / "hosts.json").read_text())
+    return f"http://{hosts['hosts'][hosts['default']]['tailnet']}:{hosts['proxy_port']}/v1"
+
 
 TEACHERS = {
     "glimmer": {
         "base_url_env": "GLIMMER_BASE_URL",
-        "base_url": "http://100.96.31.41:18610/v1",
+        "base_url": serving_base_url(),
         "model": "muse-glimmer-30b",
         "expect_model": "muse-glimmer-30b",
         "key_env": None,

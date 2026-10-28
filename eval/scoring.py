@@ -14,7 +14,7 @@ import re
 
 from omniscience import ABSTAIN_RULE
 
-SCORER_VERSION = "v2"
+SCORER_VERSION = "v3"  # v3: abstentions "isn't in your notes" and "your notes don't have" (29 Oct)
 WEEKDAY_PLURAL = re.compile(r"\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)s\b")
 ANSWER_END_MARKERS = ("<|eot|>", "<|eom|>", "<|end_of_text|>", "<|reserved_special_token")
 
