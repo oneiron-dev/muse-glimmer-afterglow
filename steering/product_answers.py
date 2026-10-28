@@ -41,6 +41,9 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     scratch = Path(tempfile.mkdtemp(dir=tmp))
     (scratch / "serving").mkdir(parents=True)
     shutil.copy(manifest, scratch / "serving" / "adapters.json")
+    rule = manifest.parent / "serving-rule.json"
+    if rule.exists():  # the live product's serving rule; the fixed arms below still set their scales explicitly
+        shutil.copy(rule, scratch / "serving" / "serving-rule.json")
     if notes_file:
         (scratch / world / "0").mkdir(parents=True)
         shutil.copy(notes_file, scratch / world / "0" / "notes.json")
