@@ -6,6 +6,7 @@ natural user messages (day 2 corrects some day-1 facts), and the held-out probes
   python3 worlds/make_world.py --world w2-... --archetype solo-developer --teacher glimmer
 
   python3 worlds/make_world.py --world w1-ines-varga --add-day2     # day 2 for a frozen day-1-only world
+  python3 worlds/make_world.py --world w1-ines-varga --add-day 3 --new-facts 10 --corrections 3 --feedback 3
 
 Writes worlds/<world>/world.json, days/1/script.jsonl, days/2/script.jsonl, heldout/probes.jsonl and
 generation.json; every teacher call's tokens go to worlds/<world>/generation_log.jsonl. The format is the
@@ -98,6 +99,33 @@ EXTEND_CORRECTIONS_PROMPT = """{name} ({summary}) uses a personal AI assistant. 
 {facts}
 
 Pick exactly {n_corrections} of these facts that would plausibly change by the next day (a meeting moved, a contact replaced, a deadline shifted, a room changed) and give each a new value. Never pick a fact whose value holds 16:00. Return one JSON object, nothing else: {{"corrections": [{{"key": the fact's key, copied exactly, "value": the new value in 1-5 words, "accept": 1-3 lowercase alternatives; EACH ONE ALONE must identify the new value, none is found in the old value, never a lone generic word, "require_all": optional list of extra lowercase strings an answer must also contain, "statement": one sentence that states the new value}}]}}. Every new value is invented and specific, and about work only: never health, diet, fitness, sleep, mood, feelings, personality, family, religion or politics."""
+
+NEW_FACTS_PROMPT = """{name} ({summary}) keeps using a personal AI assistant. These are the facts it already holds:
+{facts}
+
+Invent exactly {n_facts} NEW facts about the person's work life that came up today: new people, projects, places, codes, dates, equipment or arrangements. Each fact: {{"key": a short lowercase topic in 2-5 words, not one of the keys above, "value": just the answer in 1-5 words, "accept": 1-3 lowercase alternatives; EACH ONE ALONE must identify this value and no other fact's value, never a lone generic word, "require_all": optional list of extra lowercase strings an answer must also contain, "statement": one full sentence that states the fact}}. Every name, company, code and number is invented and appears in no fact above. No value repeats another value. No fact is about health, diet, fitness, sleep, mood, feelings, personality, family, religion or politics, and none is a recurring event at 16:00.
+
+Return one JSON object, nothing else: {{"facts": [...]}}."""
+
+FEEDBACK_PROMPT = """{name} ({summary}) is talking to a personal AI assistant. Write {n} short exchanges in which {first} first asks the assistant something about the work (one of the topics below, without stating the answer), then reacts in the next message to HOW the assistant answered: its length, its tone, or whether it acted before asking. Use these reactions, one each, in order:
+{reactions}
+
+Topics to ask about:
+{topics}
+
+Each reaction is under 20 words, plain and friendly, about the answer's style or a work habit only; never about mood, feelings, health or personality.
+
+Return one JSON object, nothing else: {{"exchanges": [{{"ask": the question or request, "react": the reaction}}, ...]}}."""
+
+# The style reactions a day can carry (behaviour_check axes and poles, verbatim from Meta steering's 29 Oct shape).
+FEEDBACK_KINDS = [
+    {"axis": "concise", "toward": "concise", "polarity": "correction",
+     "hint": "the answer was too long; they want just the value"},
+    {"axis": "asks_first", "toward": "asks before acting", "polarity": "correction",
+     "hint": "a request to email or message someone at {org}; then a reminder that it must check with them before contacting {org}"},
+    {"axis": "concise", "toward": "concise", "polarity": "approval",
+     "hint": "a thumbs-up for a short, direct answer"},
+]
 
 PROBE_PROMPT = """These are facts a person told their AI assistant earlier. For each fact, write 3 different questions the person (or someone helping them) might ask later, whose answer is the fact's value. Vary them: one in the first person ("my", "our", "I"), one in the third person using the name {name}, one indirect ("remind me ..."). Do not put the value, or any part of it, in the question. Do not copy phrases from the statement.
 
@@ -295,6 +323,78 @@ class Generator:
             print(f"  corrections attempt {attempt + 1}: {len(corrections)} usable; retry", flush=True)
         raise SystemExit("corrections: no usable set after 3 tries")
 
+    def new_facts(self, persona, facts, n_facts, first_id, day):
+        """Facts first told on `day` (ids from first_id on), checked like day 1's and distinct from every fact."""
+        listing = "\n".join(f"- {f['key']}: {f['value']}" for f in facts)
+        for attempt in range(3):
+            doc = self.ask(NEW_FACTS_PROMPT.format(name=persona["name"], summary=persona["summary"], facts=listing,
+                                                   n_facts=n_facts), f"day {day} new facts", temperature=0.9)
+            problems, got = self.clean_facts([f for f in doc.get("facts") or []
+                                              if norm(f.get("key", "")) not in {norm(x["key"]) for x in facts}])
+            values = [f["value"] for f in facts]
+            got = [f for f in got if "16:00" not in f["value"] and all(norm(f["value"]) != norm(v) for v in values)]
+            for f in got:
+                f["accept"] = [a for a in f["accept"] if distinctive(a, f.get("require_all", []), f["value"], values)]
+            got = [f for f in got if f["accept"]][:n_facts]
+            if len(got) >= max(1, n_facts - 2):
+                for p in problems:
+                    print("  dropped:", p, flush=True)
+                for i, f in enumerate(got):
+                    f.update(id=f"F{first_id + i:02d}", valid_from=day)
+                return got
+            print(f"  new facts attempt {attempt + 1}: {len(got)} usable; retry", flush=True)
+        raise SystemExit(f"day {day} new facts: no usable set after 3 tries")
+
+    def feedback_turns(self, persona, prefs, facts, n):
+        """n exchanges: a question about a fact, then the user's reaction to how it was answered (labelled with the
+        behaviour-check axis and pole it asks for)."""
+        org = next((p.get("organisation") for p in prefs if p.get("organisation")), "the client")
+        kinds = FEEDBACK_KINDS[:n]
+        asked = self.rng.sample(facts, len(kinds))
+        for attempt in range(3):
+            got = self.ask(FEEDBACK_PROMPT.format(
+                name=persona["name"], summary=persona["summary"], first=persona["name"].split()[0], n=len(kinds),
+                reactions="\n".join(f"{i + 1}. {k['hint'].format(org=org)}" for i, k in enumerate(kinds)),
+                topics="\n".join(f"- {f['key']}" for f in asked)), "feedback exchanges")
+            ex = got.get("exchanges") or []
+            if (len(ex) == len(kinds) and all(e.get("ask") and e.get("react") for e in ex)
+                    and not any(BANNED.search(e["ask"] + " " + e["react"]) for e in ex)
+                    and not any(any(has_term(e["ask"], a) for a in f["accept"]) for e, f in zip(ex, asked))):
+                return [(str(e["ask"]).strip(), str(e["react"]).strip(), k) for e, k in zip(ex, kinds)]
+        raise SystemExit("feedback exchanges: none usable after 3 tries")
+
+    def new_fact_messages(self, persona, new_facts, day):
+        """Natural messages that state the new facts (SCRIPT_PROMPT, as day 1, in batches of 5). Returns the messages
+        and the facts no message states."""
+        msgs, unstated = [], []
+        for i in range(0, len(new_facts), 5):
+            got, missing = self._fact_messages(persona, new_facts[i:i + 5], day)
+            msgs += got
+            unstated += missing
+        return msgs, unstated
+
+    def _fact_messages(self, persona, batch, day):
+        msgs, missing = [], batch
+        new_facts = batch
+        for attempt in range(3):
+            listing = "\n".join(f"{f['id']}: {f['statement']}" for f in missing)
+            got = self.ask(SCRIPT_PROMPT.format(name=persona["name"], summary=persona["summary"],
+                                                first=persona["name"].split()[0],
+                                                n_msgs=max(2, (len(missing) + 1) // 2), facts=listing),
+                           f"day {day} new-fact messages")
+            stated = set()
+            for m in got if isinstance(got, list) else []:
+                content = str(m.get("content", "")).strip()
+                ok = [fid for fid in (m.get("facts") or []) if fid in {f["id"] for f in missing}
+                      and any(has_term(content, a) for a in next(f for f in new_facts if f["id"] == fid)["accept"])]
+                if content and ok and not BANNED.search(content):
+                    msgs.append({"content": content, "facts": ok})
+                    stated |= set(ok)
+            missing = [f for f in missing if f["id"] not in stated]
+            if not missing:
+                break
+        return msgs, missing
+
     # --- 2. day scripts ---
     def day1_script(self, persona, facts, prefs, procedure, calendar, tasks):
         name, summary = persona["name"], persona["summary"]
@@ -424,12 +524,12 @@ def stale_probes(corrections, new_facts, probes):
     return out
 
 
-def supersede(facts, corrections, first_id):
-    """The day-2 facts that replace corrected ones (ids from first_id on); marks each old fact superseded."""
+def supersede(facts, corrections, first_id, day=2):
+    """The facts of `day` that replace corrected ones (ids from first_id on); marks each old fact superseded."""
     new_facts = []
     for c in corrections:
         nf = {"id": f"F{first_id + len(new_facts):02d}", "key": c["old"]["key"], "value": c["value"],
-              "accept": c["accept"], "statement": c["statement"], "valid_from": 2, "superseded_by": None,
+              "accept": c["accept"], "statement": c["statement"], "valid_from": day, "superseded_by": None,
               "supersedes": c["old"]["id"]}
         if c["require_all"]:
             nf["require_all"] = c["require_all"]
@@ -521,6 +621,75 @@ def add_day2(out, teacher, n_corrections):
     (out / "generation-day2.json").write_text(json.dumps(meta, indent=1) + "\n")
     return meta
 
+
+def add_day(out, teacher, day, n_new, n_corrections, n_feedback):
+    """Day `day` (3 on) for a frozen world that has the day before: n_new new facts, n_corrections corrections of
+    facts never corrected yet, the recall questions of a correction day, and n_feedback exchanges in which the user
+    reacts to how a question was answered (each reaction labelled with the behaviour-check axis and pole). The
+    probes for the new and corrected values and the stale probes are appended; re-freeze with
+    eval/freeze_heldout.py --extend before any data of the day exists."""
+    world = json.loads((out / "world.json").read_text())
+    if (out / "days" / str(day)).exists() or not (out / "days" / str(day - 1)).exists():
+        sys.exit(f"{out}: day {day} exists, or day {day - 1} does not")
+    if not (out / "heldout" / "FROZEN.json").exists():
+        sys.exit(f"{out}: freeze the earlier probes first")
+    facts, persona, prefs = world["facts"], world["persona"], world.get("preferences") or []
+    active = [f for f in facts if not f.get("superseded_by")]
+    g = Generator(world["world"], None, teacher, out)
+    g.rng = random.Random(SEED + day)
+    first = max(int(f["id"][1:]) for f in facts) + 1
+    new = g.new_facts(persona, active, n_new, first, day) if n_new else []
+    pool = [f for f in active if f["valid_from"] == 1 and "16:00" not in f["value"]]
+    corrections = g.extra_corrections(persona, pool, n_corrections) if n_corrections else []
+    replacing = supersede(facts, corrections, first + len(new), day)
+    print(f"{now_iso()} {world['world']}: day {day}: {len(new)} new facts, {len(corrections)} corrections; script", flush=True)
+    stated, unstated = g.new_fact_messages(persona, new, day)
+    if unstated:  # a fact no message states is never told: it leaves the world, so no probe asks for it
+        print(f"  day {day}: dropped {len(unstated)} new facts no message states: {[f['id'] for f in unstated]}", flush=True)
+        new = [f for f in new if f not in unstated]
+    changes = [{k: v for k, v in m.items() if k not in ("turn", "role")}
+               for m in g.day2_script(persona, corrections, replacing, pool)] if corrections else []
+    corrected = {c["old"]["id"] for c in corrections}
+    exchanges = g.feedback_turns(persona, prefs, [f for f in pool if f["id"] not in corrected], n_feedback) \
+        if n_feedback else []
+    # new facts first and through the day, the corrections and recall questions after them, a reaction pair every
+    # few messages
+    body = []
+    for i, m in enumerate(stated + changes):
+        body.append(m)
+        if exchanges and (i + 1) % 4 == 0:
+            ask, react, kind = exchanges.pop(0)
+            body += [{"content": ask, "facts": [], "question": True}, {"content": react, "facts": [], "feedback": kind}]
+    for ask, react, kind in exchanges:
+        body += [{"content": ask, "facts": [], "question": True}, {"content": react, "facts": [], "feedback": kind}]
+    script = []
+    for i, m in enumerate(body, 1):
+        rec = dict(turn=i, role="user", **m)
+        if "feedback" in m:
+            rec["feedback"] = {k: m["feedback"][k] for k in ("axis", "toward", "polarity")} | {"refers_to_turn": i - 1}
+        script.append(rec)
+    script_text = " ".join(norm(json.loads(l)["content"]) for d in sorted((out / "days").iterdir())
+                           for l in (d / "script.jsonl").read_text().splitlines() if l.strip())
+    script_text += " " + " ".join(norm(m["content"]) for m in script)
+    print(f"{now_iso()} {world['world']}: day {day} has {len(script)} messages; probes", flush=True)
+    probes = g.forward_probes(persona["name"], new + replacing, script_text)
+    probes += stale_probes(corrections, replacing, probes)
+    world["facts"] = facts + new + replacing
+    world["authored"] += f"; day {day} {now_iso()} by worlds/make_world.py --add-day {day} (teacher {teacher}, seed {SEED + day})"
+    (out / "world.json").write_text(json.dumps(world, indent=1, ensure_ascii=False) + "\n")
+    write_jsonl(out / "days" / str(day) / "script.jsonl", script)
+    with open(out / "heldout" / "probes.jsonl", "a") as f:
+        f.write("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in probes))
+    tokens = [json.loads(l) for l in g.log.read_text().splitlines()] if g.log.exists() else []
+    meta = {"world": world["world"], "generated": now_iso(), "step": f"add-day {day}", "teacher": teacher,
+            "seed": SEED + day, "teacher_calls_total": len(tokens), "teacher_calls_this_step": g.calls,
+            "counts": {"new_facts": len(new), "corrections": len(replacing), "messages": len(script),
+                       "feedback_turns": sum(1 for m in script if "feedback" in m), "probes_added": len(probes)},
+            "sha256": {p: hashlib.sha256((out / p).read_bytes()).hexdigest()
+                       for p in ("world.json", f"days/{day}/script.jsonl", "heldout/probes.jsonl")}}
+    (out / f"generation-day{day}.json").write_text(json.dumps(meta, indent=1) + "\n")
+    return meta
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--world", required=True, help="world id, e.g. w2-<first>-<last> (renamed after the persona)")
@@ -529,6 +698,10 @@ def main():
                                                             "existing, unfrozen world; no teacher calls")
     ap.add_argument("--add-day2", action="store_true", help="add corrections, a day-2 script and their probes to a "
                                                              "frozen world that has only day 1")
+    ap.add_argument("--add-day", type=int, metavar="N", help="add day N (3 on) to a frozen world that has day N-1: "
+                                                                "new facts, corrections, recall questions, style feedback")
+    ap.add_argument("--new-facts", type=int, default=10, help="with --add-day")
+    ap.add_argument("--feedback", type=int, default=3, help="with --add-day: reaction exchanges (at most 3)")
     ap.add_argument("--teacher", default="spark-sub", choices=["spark-sub", "glimmer"])
     ap.add_argument("--facts", type=int, default=60)
     ap.add_argument("--corrections", type=int, default=6)
@@ -536,6 +709,9 @@ def main():
     a = ap.parse_args()
 
     out = REPO / "worlds" / a.world
+    if a.add_day:
+        print(json.dumps(add_day(out, a.teacher, a.add_day, a.new_facts, a.corrections, a.feedback), indent=1))
+        return
     if a.add_day2:
         print(json.dumps(add_day2(out, a.teacher, a.corrections), indent=1))
         return
