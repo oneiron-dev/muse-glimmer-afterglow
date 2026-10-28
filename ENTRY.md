@@ -32,6 +32,7 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 27 Oct | Day agent note-taking: it saves facts mentioned inside requests, what a name stands for, the relation in the key and the exact value. Re-simulated day 1 with notes in the prompt: 191 -> 195 of 222 facts; on the weakest person 42 -> 50 of 60, facts never noted 6 -> 0. | #24 |
 | 27 Oct | Morning report shows the abstention check (added after the first nights ran) as a sixth check: how often the model still says it does not know on general questions, before and after the night; the first four nights fail it, and the report says so. | #25 |
 | 27 Oct | Abstention check of record (frozen 200-question SimpleQA slice; a night must keep its "I don't know" rate within 10 points of the base), never-told probe sets (questions whose right answer is "that's not in your notes"), an AA-Omniscience-Public harness (own harness, verbatim prompts, own arithmetic), the confidence-gate result (single-pass token confidence cannot separate binding errors from right answers; always looking up notes wins), and the binding-experiment and prompt-hint arms. | #26 |
+| 28 Oct | Serving moves to the second RTX 4090 (mel) on the llama.cpp build that loads the night's adapters; the adapter manifest names the box it was staged on, and the server refuses a manifest staged on another box. | #30 |
 
 ## Pre-existing work used as external dependencies
 
