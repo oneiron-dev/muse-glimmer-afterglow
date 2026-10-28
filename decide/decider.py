@@ -28,7 +28,10 @@ BOS = "<|begin_of_text|>"
 N_PROBS = 128
 # Per-kind thresholds; fit on the calibration split (decide/score_decisions.py) and set here from the results page.
 THRESHOLDS = {"route": 0.0, "duplicate": 0.0, "supersede": 0.0}
-SUPERSEDE_CANDIDATES = 5  # BM25 top 5 over earlier notes held 16 of 17 real day-2 corrections (top 8: 17 of 17)
+# BM25 candidates per new note: on the 17 real day-2 corrections, top 5 holds the replaced note 16 times, top 8 all 17.
+SUPERSEDE_CANDIDATES_DAY = 5  # remember() at day time: ~0.7 s per new note
+SUPERSEDE_CANDIDATES_NIGHT = 8  # night consolidation: latency does not matter
+SUPERSEDE_CANDIDATES = SUPERSEDE_CANDIDATES_DAY
 SUPERSEDE_ACCEPT_P = 0.9  # link only when the one-pass "replaces" probability reaches this
 
 
