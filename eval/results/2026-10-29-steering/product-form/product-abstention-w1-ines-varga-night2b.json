@@ -1,0 +1,33 @@
+{
+ "world": "w1-ines-varga",
+ "day": 2,
+ "form": "the day agent's prompt; general = SimpleQA gate slice questions, never_told = the world's never-told probes with the notes in context",
+ "arms": {
+  "base": {
+   "general": {
+    "n": 100,
+    "abstain": 50,
+    "abstain_rate": 0.5
+   },
+   "never_told": {
+    "n": 30,
+    "abstain": 29
+   }
+  },
+  "adapter": {
+   "general": {
+    "n": 100,
+    "abstain": 71,
+    "abstain_rate": 0.71
+   },
+   "never_told": {
+    "n": 30,
+    "abstain": 22
+   }
+  }
+ },
+ "complete": true,
+ "rule": "adapter general abstain rate >= base's - 0.1 and adapter never-told abstentions >= base's - 3",
+ "passed": false,
+ "answers_file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers/w1-ines-varga/answers-night2b.jsonl"
+}

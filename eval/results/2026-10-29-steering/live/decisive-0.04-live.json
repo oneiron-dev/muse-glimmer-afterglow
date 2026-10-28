@@ -1,0 +1,147 @@
+{
+ "row": {
+  "name": "decisive-0.04-live",
+  "request_cvecs": {
+   "decisive": -0.04
+  }
+ },
+ "arms": {
+  "base": {
+   "day:decisive": {
+    "agg": {
+     "words": 107.375,
+     "asks": 0.0,
+     "hedges_per_100w": 1.913,
+     "commits": 0.0,
+     "casual_per_100w": 0.0,
+     "contractions_per_100w": 0.7,
+     "repetition": 0.189,
+     "empty": 0.0,
+     "truncated": 8
+    },
+    "results": [
+     {
+      "id": "day:decisive-0",
+      "answer": "Choosing between a VPS and a managed platform is really a trade-off between **control / cost** vs **convenience / speed**. Both are great for side projects, it depends on what you value most right now.\n\nHere\u2019s a quick breakdown to help you decide:\n\n### VPS \u2014 e.g., DigitalOcean Droplets, Linode, Hetzner, AWS Lightsail, Vultr\n\n**Pros**\n* **Full control.** You get root access to the OS, can install anything, tweak configs, run multiple services on one box.\n* **Cost predictable.** Often $4-",
+      "truncated": true,
+      "markers": {
+       "words": 81,
+       "asks": false,
+       "hedges_per_100w": 2.47,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.136,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-1",
+      "answer": "The \"contractor vs. full-time engineer first\" question is a classic early-stage trade-off, and the right answer really depends on what you're trying to solve for right now. Both options can be right \u2014 just at different times.\n\nHere\u2019s a framework to help you decide:\n\n### When a Contractor / Freelance Engineer Makes Sense First\n\n**Good fit if:**\n* **You need speed and flexibility.** Contractors can often start in days/weeks vs. weeks/months for a full-time hire.\n* **The scope is well-defined but temporary.** e.g., a prototype, MVP, migration, audit, setting up CI/CD, or filling a niche skill like DevOps, ML, or UI polish.\n* **You\u2019re testing a direction.** Want to validate a feature or team dynamic before committing to",
+      "truncated": true,
+      "markers": {
+       "words": 118,
+       "asks": false,
+       "hedges_per_100w": 1.69,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.85,
+       "repetition": 0.203,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-2",
+      "answer": "City driving is a unique use case \u2014 lots of stop-and-go traffic, short trips, parallel parking, and wear on brakes/clutch \u2014 so the \"better\" choice really depends on your priorities, budget, and how long you plan to keep a car. Both options can work well for city use, just in different ways.\n\nHere\u2019s a breakdown to help you decide:\n\n### Leasing a New Car: Pros for City Driving\n\n**Pros:**\n* **Lower monthly payments, often:** Leases are based on depreciation rather than the full price, so payments can be more manageable than financing.\n* **Newer tech and safety features:** Good for",
+      "truncated": true,
+      "markers": {
+       "words": 100,
+       "asks": false,
+       "hedges_per_100w": 1.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.2,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-3",
+      "answer": "Whether it's \"time\" to move off spreadsheets is less about the tool itself and more about the pain points you're starting to feel. Spreadsheets are incredibly flexible and great for early-stage work, but they tend to hit a ceiling as data and people grow.\n\nHere are some common signs that you might be approaching that ceiling:\n\n### Signs you might be ready for a database\n\n**Data complexity and relationships**\n* You have multiple sheets/tabs that reference each other with VLOOKUP/XLOOKUP, IMPORTRANGE, or manual copy-paste\n* You\u2019re trying to model things like \"one customer has many orders, each order has many line items\" and it",
+      "truncated": true,
+      "markers": {
+       "words": 104,
+       "asks": false,
+       "hedges_per_100w": 1.92,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.92,
+       "repetition": 0.231,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-4",
+      "answer": "That\u2019s a good question \u2014 the \u201cbetter\u201d option really depends on a few things about the conference and your travel preferences. Here are some things to weigh when deciding between a morning vs. evening train:\n\n### Morning Train Pros\n* **Arrive in time for the start / networking:** You\u2019ll be fresh and able to catch opening sessions, registration, or morning coffee meet-ups.\n* **More flexibility if things go wrong:** If the train is delayed, you still have a buffer before the conference kicks off.\n* **Daytime travel can be nicer:** Better visibility, easier to find your way around the station/city when you arrive.\n\n### Morning Train Cons\n* **Early start:** You\u2019ll likely need to get up early and possibly travel to the station in the dark or rush hour.\n* **Tired",
+      "truncated": true,
+      "markers": {
+       "words": 131,
+       "asks": false,
+       "hedges_per_100w": 1.53,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.298,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-5",
+      "answer": "Building vs. buying auth is one of those classic build-vs-buy decisions. Both are valid, it really depends on your needs, team size, timeline, and risk tolerance.\n\nHere\u2019s a breakdown to help you decide:\n\n### When a Hosted / Third-Party Auth Provider Makes Sense\n\nThis is the most common choice for startups, SMBs, and even large companies that don\u2019t want to become an identity team.\n\n**Pros:**\n* **Speed to market:** You can get sign-up/sign-in, OAuth, MFA, passwordless, etc. in hours instead of weeks.\n* **Security & compliance out of the box:** Providers like Auth0, Clerk, Firebase Auth, AWS Cognito, Okta, FusionAuth, WorkOS, etc. handle a lot of the hard parts: password hashing with Argon2/bcrypt, brute-force protection, breached",
+      "truncated": true,
+      "markers": {
+       "words": 116,
+       "asks": false,
+       "hedges_per_100w": 0.86,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 0.0,
+       "repetition": 0.129,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-6",
+      "answer": "Not necessarily \u2014 you can learn them in either order, or even in parallel. It really depends on your comfort level with JavaScript and what kind of projects you want to build.\n\n### The classic path: JavaScript \u2192 React \u2192 TypeScript\n\nThis is the most common and often the gentlest way in:\n\n1. **JavaScript / ES6+ basics** - `let/const`, arrow functions, destructuring, spread/rest, promises/async-await, modules, etc.\n2. **Core React concepts** - components, JSX, props/state, hooks like `useState`/`useEffect`, lifting state, etc.\n3. **TypeScript later** - once you're comfortable with React, adding types feels like a natural \"level up\" rather than extra cognitive load.\n\nThe advantage is you aren't juggling two",
+      "truncated": true,
+      "markers": {
+       "words": 109,
+       "asks": false,
+       "hedges_per_100w": 1.83,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.83,
+       "repetition": 0.147,
+       "empty": false
+      }
+     },
+     {
+      "id": "day:decisive-7",
+      "answer": "Whether a shop should open on Sundays is really a trade-off between business opportunity and practical/operational considerations. There's no one-size-fits-all answer \u2014 it depends on the type of business, location, customer base, and staffing.\n\nHere are some factors to weigh:\n\n**Potential Benefits of Opening on Sundays**\n\n* **Customer demand:** Sundays can be a busy shopping day, especially for retail, grocery, restaurants, and services. People often have more leisure time on weekends and may prefer to shop when they\u2019re not working.\n* **Competitive advantage:** If nearby competitors are closed, being open could attract customers who have limited options.\n* **Increased revenue",
+      "truncated": true,
+      "markers": {
+       "words": 100,
+       "asks": false,
+       "hedges_per_100w": 4.0,
+       "commits": 0,
+       "casual_per_100w": 0.0,
+       "contractions_per_100w": 1.0,
+       "repetition": 0.17,
+       "empty": false
+      }
+     }
+    ]
+   }
+  }
+ }
+}

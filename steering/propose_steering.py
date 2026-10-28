@@ -39,8 +39,9 @@ You have these dials; each turns your behaviour toward one end or the other:
 
 Propose up to two dial changes for tomorrow that would serve {name} better: turning back a change from last night
 that does not fit {name}, or turning a dial {name} would want. Keep any change from last night that fits what {name}
-asked for. Propose a change only with a concrete reason from today's messages; otherwise propose none. When
-{name} told you how to answer, quote {name}'s words in the reason.
+asked for. When {name} asked for something a dial does (for example shorter answers), propose that dial even if
+last night already moved it that way: a dial can turn further. Propose a change only with a concrete reason from
+today's messages; otherwise propose none. When {name} told you how to answer, quote {name}'s words in the reason.
 
 Reply with JSON only: {{"proposals": [{{"dial": "<dial name>", "toward": "<one end of that dial>", "reason": "<one sentence for {name}, citing today>"}}]}}"""
 
@@ -65,23 +66,39 @@ def feedback_events(turns):
     return events
 
 
-def score_against_key(proposals, events):
+def score_against_key(proposals, events, offered=None):
     """A correction is read right when a proposal turns its axis toward the pole the user asked for; an approval is
-    respected when no proposal turns its axis away from the approved pole."""
+    respected when no proposal turns its axis away from the approved pole. Feedback on a dial that is not offered
+    is reported as not offered, outside the count."""
     rows = []
     for e in events:
         k = e["key"]
+        if offered is not None and k.get("axis") not in offered:
+            rows.append({"turn": e["turn"], "words": e["words"], **k, "read_right": None, "note": "dial not offered"})
+            continue
         hits = [p for p in proposals if p.get("axis") == k.get("axis")]
         if k.get("polarity") == "correction":
             ok = any((p.get("toward") or "").lower() == (k.get("toward") or "").lower() for p in hits)
         else:
             ok = not any((p.get("toward") or "").lower() != (k.get("toward") or "").lower() for p in hits)
         rows.append({"turn": e["turn"], "words": e["words"], **k, "read_right": ok})
-    return {"events": rows, "read_right": sum(r["read_right"] for r in rows), "n": len(rows)}
+    scored = [r for r in rows if r["read_right"] is not None]
+    return {"events": rows, "read_right": sum(r["read_right"] for r in scored), "n": len(scored),
+            "not_offered": len(rows) - len(scored)}
 
 
-def dial_line(axis):
+def dial_line(axis, dial=None):
+    """One dial for Glimmer's prompt; a dial whose negative end is not safe is offered toward its positive end only."""
+    if dial and dial.get("negative_scale") is None:
+        return f"- {axis['name']}: toward {axis['positive_label']} only"
     return f"- {axis['name']}: {axis['positive_label']} <-> {axis['negative_label']}"
+
+
+def dial_scale(dial, sign):
+    """The dial's tested scale toward that end, or None (not offered / untested)."""
+    if not dial or not sign:
+        return None
+    return dial.get("scale") if sign > 0 else dial.get("negative_scale")
 
 
 def counter_proposals(check, axes, dials, user_dials):
@@ -92,7 +109,7 @@ def counter_proposals(check, axes, dials, user_dials):
         dial = dials.get(r["axis"], {})
         sign = -1 if r["shift"] > 0 else 1
         pole = axis["positive_label"] if sign > 0 else axis["negative_label"]
-        out.append({"kind": "counter", "axis": r["axis"], "toward": pole, "scale": sign * dial["scale"] if dial else None,
+        out.append({"kind": "counter", "axis": r["axis"], "toward": pole, "scale": dial_scale(dial, sign),
                     "gguf": dial.get("gguf"), "layers": dial.get("layers"), "tested": bool(dial.get("tested")),
                     "reason": f"Last night's update made me {r['label']} on everyday prompts ({r['shift']:+.1f} on this "
                               f"axis, 95% interval {r['ci95'][0]:+.1f} to {r['ci95'][1]:+.1f}); you did not ask for that, "
@@ -109,7 +126,7 @@ def glimmer_proposals(world, user_turns, events, check, axes, dials, log_path):
     offered = {n: a for n, a in axes.items() if not dials or dials.get(n, {}).get("safe")}
     prompt = GLIMMER_PROMPT.format(name=name, messages="\n".join(f"{i + 1}. {t}" for i, t in enumerate(user_turns)),
                                    feedback=FEEDBACK_BLOCK.format(name=name, items=items) if events else "",
-                                   changes=changes, dials="\n".join(dial_line(a) for a in offered.values()))
+                                   changes=changes, dials="\n".join(dial_line(a, dials.get(n)) for n, a in offered.items()))
     text, _, usage = complete("glimmer", [{"role": "user", "content": prompt}], max_tokens=900, log_path=log_path,
                               purpose="steering proposal")
     m = re.search(r"\{.*\}", text, re.S)
@@ -126,9 +143,11 @@ def glimmer_proposals(world, user_turns, events, check, axes, dials, log_path):
         toward = (v.get("toward") or "").strip().lower()
         sign = 1 if toward == axis["positive_label"].lower() else -1 if toward == axis["negative_label"].lower() else 0
         d = dials.get(dial, {})
-        out.append({"kind": "glimmer", "axis": dial, "toward": v.get("toward"), "scale": sign * d["scale"] if d and sign else None,
+        if dials and sign < 0 and d.get("negative_scale") is None:
+            continue  # an end that is not safe is never proposed
+        out.append({"kind": "glimmer", "axis": dial, "toward": v.get("toward"), "scale": dial_scale(d, sign),
                     "gguf": d.get("gguf"), "layers": d.get("layers"), "tested": bool(d.get("tested")), "reason": v.get("reason")})
-    return out, {"raw": text.strip()[:1200], "usage": usage}
+    return out, {"raw": text.strip()[:1200], "usage": usage, "offered": sorted(offered)}
 
 
 def main():
@@ -161,7 +180,7 @@ def main():
         out.parent.mkdir(parents=True, exist_ok=True)
         proposals, glimmer_call = glimmer_proposals(world, user_turns, events, check, axes, dials, out.with_suffix(".calls.jsonl"))
         if events:
-            feedback_score = score_against_key(proposals, events)
+            feedback_score = score_against_key(proposals, events, set(glimmer_call["offered"]))
     doc = {"version": 1, "world": args.world, "day": args.day, "status": "proposed; takes effect only when accepted",
            "behaviour_check": str(args.check), "proposals": proposals,
            "counter_candidates": candidates, "glimmer_call": glimmer_call, "feedback_score": feedback_score}
