@@ -31,6 +31,7 @@ def main():
     probes = probes_for_day(read_jsonl(root / "worlds" / args.world / "heldout" / "probes.jsonl"), facts, 1)
     sets = {
         "gate": [{"id": q["id"], "text": simpleqa_gate.PROMPT.format(question=q["question"])} for q in simpleqa_gate.gate_items()],
+        "gate_bare": [{"id": q["id"], "text": q["question"]} for q in simpleqa_gate.gate_items()],
         "anchors": [{"id": r["id"], "text": r["prompt"]} for r in read_jsonl(HERE.parent / "night" / "data" / "simpleqa_anchor_prompts_v1.jsonl")],
         "never_told": [{"id": it["id"], "text": prompt_text(it, None, first)} for it in never_told.load(args.world)],
         "forward": [{"id": it["id"], "text": prompt_text(it, None, first)} for it in probes if it["kind"] == "forward"],

@@ -190,9 +190,11 @@ def calibration_prompts(spec, name, prompt_sets):
     axis = next(a for a in spec["axes"] if a["name"] == name)
     if name == "abstention":
         anchors = [json.loads(line)["prompt"] for line in
-                   (ROOT / "night" / "data" / "simpleqa_anchor_prompts_v1.jsonl").read_text().splitlines()[-8:]]
+                   (ROOT / "night" / "data" / "simpleqa_anchor_prompts_v1.jsonl").read_text().splitlines()[-12:]]
+        bare = [a.split("\n")[0] for a in anchors[6:]]
         memory = [p + " Answer in one short sentence." for p in axis["prompts"][6:10]]
-        return {"texts": anchors + memory, "kinds": ["anchor"] * len(anchors) + ["memory"] * len(memory), "max_new": 32}
+        return {"texts": anchors[:6] + bare + memory, "max_new": 40,
+                "kinds": ["anchor"] * 6 + ["bare"] * len(bare) + ["memory"] * len(memory)}
     return {"texts": axis["prompts"][:4], "kinds": ["day"] * 4, "max_new": 80}
 
 
@@ -201,7 +203,7 @@ def summarize_calibration(tag, name, scale, prompts, answers):
     row = {"tag": tag, "axis": name, "scale": scale, "truncated": sum(a["truncated"] for a in answers),
            "answers": [{"kind": k, "answer": a["answer"]} for k, a in zip(prompts["kinds"], answers)]}
     if name == "abstention":
-        for kind in ("anchor", "memory"):
+        for kind in ("anchor", "bare", "memory"):
             sel = [a for k, a in zip(prompts["kinds"], answers) if k == kind]
             row[f"abstain_{kind}"] = f"{sum(simpleqa_gate.is_abstain(a['answer']) for a in sel)}/{len(sel)}"
     else:

@@ -8,7 +8,8 @@ the axis (fit_vectors.py writes the GGUF that way). Prompts, decoding and scorin
 (eval/llama_eval.py, imported from --eval-root): rendered with the model's tokenizer, answer forced into the user
 channel, greedy, target-only, truncation = failure.
 
-Tests per row: gate (SimpleQA gate slice: abstain rate + exact right, eval/simpleqa_gate.py), never_told (the world's
+Tests per row: gate (SimpleQA gate slice: abstain rate + exact right, eval/simpleqa_gate.py), gate_bare (the same
+questions without the gate's "say that you do not know" line), never_told (the world's
 frozen never-told probes, abstain = right), forward (the world's day-1 held-out fact probes, the B arm of record),
 forget (forget slice v1), and day:<axis> (the axis's held-out test prompts; full replies + deterministic markers).
 Writes <out>/<row>.json per row and <out>/summary.json. A deadline stops the plan between rows.
@@ -26,6 +27,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 DAY_MAX_NEW = 256
+BARE_MAX_NEW = 96
 HEDGE = re.compile(r"\b(might|may|could|perhaps|possibly|depends|consider|however|on the other hand|trade-?offs?|pros and cons|either)\b", re.I)
 COMMIT = re.compile(r"\b(i recommend|i'd recommend|go with|i would choose|i'd choose|i'd pick|definitely|you should|my pick|the answer is)\b", re.I)
 CASUAL = re.compile(r"(!|\b(hey|hi there|awesome|cool|gonna|wanna|super|totally|stuff|yeah|no worries|folks)\b)", re.I)
@@ -87,7 +89,8 @@ class Server:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--plan", required=True, help="JSON list of rows: {name, cvecs: [[gguf, scale]], tests: [...]}")
+    ap.add_argument("--plan", required=True,
+                    help="JSON list of rows: {name, cvecs: [[gguf, scale]], tests: [...] or tests_by_arm: {base: [...], R2: [...]}}")
     ap.add_argument("--eval-root", required=True, help="repo root whose eval/ holds the night's v3 harness")
     ap.add_argument("--axes", default=str(HERE / "axes.json"))
     ap.add_argument("--server-bin", required=True)
@@ -97,7 +100,7 @@ def main():
     ap.add_argument("--world", default="w1-ines-varga")
     ap.add_argument("--out", required=True)
     ap.add_argument("--port", type=int, default=18630)
-    ap.add_argument("--parallel", type=int, default=4)
+    ap.add_argument("--parallel", type=int, default=8)
     ap.add_argument("--ctx", type=int, default=16384)
     ap.add_argument("--deadline-s", type=float, default=1500)
     args = ap.parse_args()
@@ -119,6 +122,9 @@ def main():
     sets = {
         "gate": [{"id": q["id"], "kind": "gate", "text": simpleqa_gate.PROMPT.format(question=q["question"]),
                   "max_new": simpleqa_gate.MAX_NEW_TOKENS} for q in simpleqa_gate.gate_items()],
+        # the same questions bare, without the gate's "say that you do not know" line (a prompt form no arm trains on)
+        "gate_bare": [{"id": q["id"], "kind": "gate", "text": q["question"], "max_new": BARE_MAX_NEW}
+                      for q in simpleqa_gate.gate_items()],
         "never_told": never_told.load(args.world),
         "forward": [p for p in probes if p["kind"] == "forward"],
         "forget": read_jsonl(root / "eval" / "data" / "forget_slice_v1.jsonl"),
@@ -135,7 +141,7 @@ def main():
             return [{"id": f"{test}-{i}", "kind": "day", "text": p, "max_new": DAY_MAX_NEW}
                     for i, p in enumerate(axes[test[4:]]["test_prompts"])]
         rows = sets[test]
-        if test == "gate":
+        if test in ("gate", "gate_bare"):
             return rows
         return [{**it, "text": prompt_text(it, None, first), "max_new": MAX_NEW_TOKENS.get(it["kind"], MAX_NEW_TOKENS["general"])}
                 for it in rows]
@@ -148,15 +154,16 @@ def main():
         res = []
         for (it, _), g in zip(jobs, gens):
             row = {"id": it["id"], "answer": g["answer"], "tokens": g["tokens"], "truncated": g["truncated"]}
-            if test == "gate":
+            if test in ("gate", "gate_bare"):
                 row["abstain"] = simpleqa_gate.is_abstain(g["answer"])
             elif test.startswith("day:"):
                 row["markers"] = markers(g["answer"])
             else:
                 row["pass"], row["note"] = scoring.score_probe(it, g["answer"], g["truncated"], facts)
             res.append(row)
-        if test == "gate":
+        if test in ("gate", "gate_bare"):
             agg = simpleqa_gate.arm_stats([{"id": r["id"], "answer": r["answer"]} for r in res], gold)
+            agg["truncated"] = sum(r["truncated"] for r in res)
         elif test.startswith("day:"):
             ms = [r["markers"] for r in res]
             agg = {k: round(sum(float(m[k]) for m in ms) / len(ms), 3) for k in ms[0]}
@@ -176,7 +183,8 @@ def main():
             for arm, lora_scale in (("base", 0.0), ("R2", 1.0)):
                 if arm not in row.get("arms", ["base", "R2"]):
                     continue
-                record["arms"][arm] = {test: run_test(server, test, lora_scale) for test in row["tests"]}
+                tests = row.get("tests_by_arm", {}).get(arm, row.get("tests", []))
+                record["arms"][arm] = {test: run_test(server, test, lora_scale) for test in tests}
         finally:
             server.stop()
         record["seconds"] = round(time.time() - t, 1)
