@@ -148,6 +148,7 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
     if not earlier or not new:
         return []
     by_item = {i["id"]: i for i in earlier}
+    all_items = {i["id"]: i for i in items if (by_id[i["id"]].get("day") or 1) < day}  # any kind, for the readout's links
     out, taken = [], set()
     try:  # Meta decide's one-pass supersede readout (base Glimmer, slot 1); accepted at p >= its accept_p (0.9)
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -156,7 +157,10 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
         readout = Decider(url[:-3] if url.endswith("/v1") else url, slot=1)
     except Exception as e:  # noqa: BLE001  (not on this checkout, or the server is down): the rule below only
         readout, readout_error = None, f"{type(e).__name__}: {e}"
-    earlier_notes = [{"id": i["id"], "key": i["key"], "value": i["full_value"]} for i in earlier]
+    # the readout's input contract (decide.candidates.supersede_candidates): every note active before today, of any
+    # kind, as the agent saved it, taken before any rule marks notes superseded
+    earlier_notes = [{"id": n["id"], "key": n["key"], "value": n["value"]} for n in by_id.values()
+                     if (n.get("day") or 1) < day and n.get("status", "active") == "active" and not n.get("superseded_by")]
 
     def words(text):
         return {w for w in re.findall(r"[a-z0-9:]+", text.lower().replace("_", " ")) if len(w) > 1}
@@ -164,8 +168,8 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
     for n in new:
         if readout is not None:
             r = readout.supersede_link(earlier_notes, {"id": n["id"], "key": n["key"], "value": n["full_value"]}, k=8)
-            if r["link"] and r["link"] in by_item and r["link"] not in taken:
-                old = by_item[r["link"]]
+            if r["link"] and r["link"] in all_items and r["link"] not in taken:
+                old = all_items[r["link"]]
                 taken.add(old["id"])
                 p_link = max((d["p"] for d in r["decisions"] if d["candidate"] == old["id"]), default=None)
                 out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"],
