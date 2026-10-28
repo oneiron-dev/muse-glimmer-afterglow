@@ -63,6 +63,8 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False):
               "tool_gate": bool(e["forgot"]) and not e["forgot"]["critical_tool_failures"]}
     if e.get("content_channel"):  # the app's chat calls must get an answer in the user channel (>= 95%)
         checks["content_channel"] = e["content_channel"]["passed"]
+    if e.get("tool_calls"):  # the day agent's tool calls: no more than 2 of 20 below the base
+        checks["tool_calls"] = e["tool_calls"]["passed"]
     gate = e.get("abstention_gate")
     cv_gate = e.get("abstention_gate_with_control_vector")
     if gate_with_control_vector and cv_gate:
@@ -81,6 +83,9 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False):
         why += f"; never-told B abstained {nt['pass']}/{nt['n']}"
     if e.get("content_channel"):
         why += f"; content channel {e['content_channel']['content_ok']}/{e['content_channel']['n']}"
+    if e.get("tool_calls"):
+        c = e["tool_calls"]["counts"]
+        why += f"; tool calls {c['base']['right']} -> {c['adapter']['right']} of {c['adapter']['n']}"
     out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
     if gate:
         out["abstention"] = {"base": gate["arms"]["A"]["abstain_rate"], "after": gate["arms"]["B"]["abstain_rate"],
@@ -362,7 +367,9 @@ class Night:
         rsync(str(self.anchors_path()), f"{HOST['name']}:{r}/anchors.jsonl", log)
         channel = (f"--world {a.world} --day {a.day} --lora 0:1.0 --consolidated {r}/consolidated.json "
                    f"--anchors {r}/anchors.jsonl --parallel 4 --label night --out {r}/eval/channel-night.json")
-        cmd = (f"CHANNEL_CHECK_ARGS={shlex.quote(channel)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
+        tools = (f"--world {a.world} --day {a.day} --lora 0:1.0 --base-lora 0:0.0 --consolidated {r}/consolidated.json "
+                 f"--parallel 4 --label night --out {r}/eval/tools-night.json")
+        cmd = (f"CHANNEL_CHECK_ARGS={shlex.quote(channel)} TOOL_CHECK_ARGS={shlex.quote(tools)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
                f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D")
         if a.control_vector:
@@ -390,6 +397,14 @@ class Night:
         channel = ev / "channel-night.json"
         if channel.exists():
             e["content_channel"] = {k: v for k, v in json.loads(channel.read_text()).items() if k != "replies"}
+        tool_check = ev / "tools-night.json"
+        if tool_check.exists():
+            e["tool_calls"] = {k: v for k, v in json.loads(tool_check.read_text()).items() if k != "turns"}
+        behaviour = self.night / "behaviour-check.json"
+        if behaviour.exists():  # Meta steering's behaviour check of this adapter (report only, not a gate)
+            doc = json.loads(behaviour.read_text())
+            e["behaviour_check"] = doc.get("behaviour_check", doc)
+        if channel.exists() or behaviour.exists() or tool_check.exists():
             (self.night / "eval.json").write_text(json.dumps(e, indent=1) + "\n")
         cv_path, main_gate = self.night / "eval-cv" / "gate-night-cv.json", ev / "gate-night.json"
         if a.control_vector and cv_path.exists() and main_gate.exists():
