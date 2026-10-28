@@ -3,7 +3,8 @@
 **What works, what does not (w4 test, plus real corrections from the simulated days):**
 - Works: base Glimmer decides in one pass (~0.12–0.47 s on the server). Route with a look-up below p 0.6 scores 0.652
   against 0.419 for always looking up, and asks on all 30 never-told questions. Supersede at p ≥ 0.9 makes no wrong
-  link on the day-2 and day-3 corrections. The decision LoRA (D1) gets all 126 duplicate pairs right.
+  link on the day-2 and day-3 corrections. The decision LoRA (D1) gets all 126 w4 duplicate test pairs right, but
+  that does not transfer: on real day-3 notes it called 4 pairs "the same fact" at p ≥ 0.96 and only 1 was.
 - Does not work: D1 does not beat base on route end to end (0.576 vs 0.652). D1 links none of the clean w4
   corrections (base: 1 of 6). Reasoning before the answer (D3) makes duplicate and real supersede decisions worse.
   No route arm reaches always-look-up's forward score (0.656) while keeping the never-told asks.
@@ -149,3 +150,19 @@ Rows: `decide/data/supersede-day3-check.jsonl`.
 |---|---|---|---|---|
 | D0 base | 0.853 | 8 | 0 | 1 (w4 advisor room, p 0.93) |
 | D1 | 0.853 | 5 | 0 | 0 |
+
+### D1 as the night's duplicate check on real notes (w4 day 3, 29 Oct 07:15–07:25)
+
+Meta night ran `Decider.duplicate_check` on the w4 day-3 notes. It made 178 pair calls, logged only, behind the
+code rule. D1 called 4 pairs that the rule kept apart "the same fact" at p ≥ 0.96. Checked against world.json:
+
+| pair | D1 p | truth |
+|---|---|---|
+| email_permission vs email permission for FjordSonics Ltd | 0.999 | same fact (F41) |
+| morning_location: Room 312 desk vs advisor office room: Room 312 | 0.995 | different facts (F37, F78), shared value |
+| workshop location: Brekvik vs workshop timing: next week at Brekvik | 0.962 | different attributes |
+| deployed hydrophone tag: QT-207 vs QT-207 recalibration deadline | 0.967 | different facts (F72, F73) |
+
+1 of 4 is right. The w4 duplicate test's positives were a note against its restatement, and its negatives had no
+shared-value pairs, so 126/126 there does not carry over to real near-duplicates. D1 stays a logged check that
+never merges. D1b adds "different facts, same value" negatives built by code.
