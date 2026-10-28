@@ -26,6 +26,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "eval"))
+sys.path.insert(0, str(ROOT / "steering"))
 from score_peft import (ANSWER_PREFIX, EVAL_DATE, KNOWLEDGE_CUTOFF, REASONING_STRENGTH,  # noqa: E402
                         build_prefix, system_with_hint)
 
@@ -128,6 +129,86 @@ def run_states(model, capture, seqs, batch_size, device, deadline):
     return np.stack(out)
 
 
+def steering_vectors(pos, neg):
+    """{layer: unit direction x mean residual norm} on the re:dvx steering layers: the GGUF fit_vectors.py writes."""
+    from fit_vectors import fit_axis, steering_layers
+    layers = steering_layers(pos.shape[1])
+    units, resid, _ = fit_axis(pos, neg, layers)
+    return {layer: units[layer] * resid[layer] for layer in layers}
+
+
+class SteeringHooks:
+    """Adds scale x vector[layer] to each steering layer's output at every position (llama.cpp build_cvec)."""
+
+    def __init__(self, layers, vectors, scale, device):
+        import torch
+        self.layers, self.scale = layers, scale
+        self.vectors = {i: torch.tensor(v, device=device) for i, v in vectors.items()}
+        self.handles = []
+
+    def __enter__(self):
+        if self.scale == 0:
+            return self
+        for i, vec in self.vectors.items():
+            def hook(module, args, output, vec=vec):
+                hidden = output[0] if isinstance(output, tuple) else output
+                hidden = hidden + (self.scale * vec).to(hidden.dtype)
+                return (hidden,) + tuple(output[1:]) if isinstance(output, tuple) else hidden
+            self.handles.append(self.layers[i].register_forward_hook(hook))
+        return self
+
+    def __exit__(self, *exc):
+        for h in self.handles:
+            h.remove()
+        return False
+
+
+def generate_greedy(model, tokenizer, texts, max_new, device):
+    import torch
+    from score_peft import EOS_IDS, PAD_ID
+    enc = [tokenizer(build_prefix(tokenizer, t), add_special_tokens=False)["input_ids"] for t in texts]
+    width = max(len(e) for e in enc)
+    ids = torch.full((len(enc), width), PAD_ID, dtype=torch.long)
+    att = torch.zeros((len(enc), width), dtype=torch.long)
+    for r, e in enumerate(enc):
+        ids[r, width - len(e):] = torch.tensor(e)
+        att[r, width - len(e):] = 1
+    with torch.inference_mode():
+        gen = model.generate(input_ids=ids.to(device), attention_mask=att.to(device), max_new_tokens=max_new,
+                             do_sample=False, pad_token_id=PAD_ID, eos_token_id=EOS_IDS, use_cache=True)
+    outs = []
+    for r in range(len(enc)):
+        new = gen[r, width:].tolist()
+        stop = next((k for k, t in enumerate(new) if t in EOS_IDS), None)
+        outs.append({"answer": tokenizer.decode(new[:stop], skip_special_tokens=True).strip(), "truncated": stop is None})
+    return outs
+
+
+def calibration_prompts(spec, name, prompt_sets):
+    """Abstention: SimpleQA anchor-pool questions (never the gate) and the axis's user-memory questions; a day axis:
+    its own extraction prompts (the screen's test prompts stay held out)."""
+    axis = next(a for a in spec["axes"] if a["name"] == name)
+    if name == "abstention":
+        anchors = [json.loads(line)["prompt"] for line in
+                   (ROOT / "night" / "data" / "simpleqa_anchor_prompts_v1.jsonl").read_text().splitlines()[-8:]]
+        memory = [p + " Answer in one short sentence." for p in axis["prompts"][6:10]]
+        return {"texts": anchors + memory, "kinds": ["anchor"] * len(anchors) + ["memory"] * len(memory), "max_new": 32}
+    return {"texts": axis["prompts"][:4], "kinds": ["day"] * 4, "max_new": 80}
+
+
+def summarize_calibration(tag, name, scale, prompts, answers):
+    import simpleqa_gate
+    row = {"tag": tag, "axis": name, "scale": scale, "truncated": sum(a["truncated"] for a in answers),
+           "answers": [{"kind": k, "answer": a["answer"]} for k, a in zip(prompts["kinds"], answers)]}
+    if name == "abstention":
+        for kind in ("anchor", "memory"):
+            sel = [a for k, a in zip(prompts["kinds"], answers) if k == kind]
+            row[f"abstain_{kind}"] = f"{sum(simpleqa_gate.is_abstain(a['answer']) for a in sel)}/{len(sel)}"
+    else:
+        row["mean_words"] = round(sum(len(a["answer"].split()) for a in answers) / len(answers), 1)
+    return row
+
+
 def load_model(args):
     """unsloth FastModel as the night loads the NF4 checkpoint; plain transformers if unsloth is unavailable
     (on CPU, the float32 test path)."""
@@ -176,6 +257,8 @@ def main():
     ap.add_argument("--batch-size", type=int, default=16)
     ap.add_argument("--deadline-s", type=float, default=780)
     ap.add_argument("--loader", choices=["auto", "unsloth", "transformers"], default="auto")
+    ap.add_argument("--calibrate-scales", type=lambda s: [float(x) for x in s.split(",") if x], default=[],
+                    help="comma list of fractions of the residual norm for the greedy calibration replies")
     args = ap.parse_args()
     t0 = time.time()
     deadline = t0 + args.deadline_s
@@ -206,41 +289,61 @@ def main():
     save_status(layers=len(layers), pairs={k: len(v) for k, v in pairs_by_axis.items()}, bank=len(bank))
     print(json.dumps({"load_s": status["load_s"], "layers": len(layers), "pairs": status["pairs"]}), flush=True)
 
-    def read_sets(tag, tdir):
+    def done(step):
+        status["done"].append(step)
+        save_status()
+        print(json.dumps({"done": step, "elapsed_s": round(time.time() - t0, 1)}), flush=True)
+
+    def read_check(tag):
+        (out / tag).mkdir(exist_ok=True)
+        np.savez(out / tag / "check.npz", states=run_states(model, capture, check_ids, args.batch_size, device, deadline))
+        done(f"{tag}/check")
+
+    def read_axis(tag, name):
+        (out / tag).mkdir(exist_ok=True)
+        pairs = pairs_by_axis[name]
+        pos = run_states(model, capture, [p["pos_ids"] for p in pairs], args.batch_size, device, deadline)
+        neg = run_states(model, capture, [p["neg_ids"] for p in pairs], args.batch_size, device, deadline)
+        np.savez(out / tag / f"{name}.npz", pos=pos, neg=neg)
+        (out / tag / f"{name}.pairs.json").write_text(json.dumps(
+            [{k: v for k, v in p.items() if k not in ("pos_ids", "neg_ids")} for p in pairs], indent=1) + "\n")
+        done(f"{tag}/{name}")
+
+    def read_sets(tag):
         for name, (ids, seqs) in prompt_sets.items():
             states = run_states(model, capture, seqs, args.batch_size, device, deadline)
-            np.savez(tdir / f"set-{name}.npz", states=states, ids=np.array(ids))
-            status["done"].append(f"{tag}/set-{name}")
-            save_status()
+            np.savez(out / tag / f"set-{name}.npz", states=states, ids=np.array(ids))
+            done(f"{tag}/set-{name}")
 
-    def read_tag(tag, names):
-        """Check probes, the first axis (abstention), the prompt sets, then the remaining axes."""
-        tdir = out / tag
-        tdir.mkdir(exist_ok=True)
-        t = time.time()
-        check = run_states(model, capture, check_ids, args.batch_size, device, deadline)
-        np.savez(tdir / "check.npz", states=check)
-        status["done"].append(f"{tag}/check")
-        save_status()
-        for i, name in enumerate(names):
-            if i == 1:
-                read_sets(tag, tdir)
-            pairs = pairs_by_axis[name]
-            pos = run_states(model, capture, [p["pos_ids"] for p in pairs], args.batch_size, device, deadline)
-            neg = run_states(model, capture, [p["neg_ids"] for p in pairs], args.batch_size, device, deadline)
-            np.savez(tdir / f"{name}.npz", pos=pos, neg=neg)
-            (tdir / f"{name}.pairs.json").write_text(json.dumps(
-                [{k: v for k, v in p.items() if k not in ("pos_ids", "neg_ids")} for p in pairs], indent=1) + "\n")
-            status["done"].append(f"{tag}/{name}")
-            save_status()
-            print(json.dumps({"tag": tag, "axis": name, "pairs": len(pairs), "elapsed_s": round(time.time() - t0, 1)}),
-                  flush=True)
-        if len(names) <= 1:
-            read_sets(tag, tdir)
-        print(json.dumps({"tag": tag, "seconds": round(time.time() - t, 1)}), flush=True)
+    calibration = {"scales": args.calibrate_scales, "rows": []}
 
+    def calibrate(tag, name):
+        """Greedy replies with the base-fitted vector added at fixed scales (re:dvx FixedControlModel semantics:
+        every position, every steering layer), to place the llama.cpp screen's scale grid."""
+        d = np.load(out / "base" / f"{name}.npz")
+        vectors = steering_vectors(d["pos"], d["neg"])
+        prompts = calibration_prompts(spec, name, prompt_sets)
+        for scale in args.calibrate_scales:
+            if time.time() > deadline - 20:
+                raise TimeoutError
+            with SteeringHooks(layers, vectors, scale, device):
+                answers = generate_greedy(model, tokenizer, prompts["texts"], prompts["max_new"], device)
+            calibration["rows"].append(summarize_calibration(tag, name, scale, prompts, answers))
+            (out / "calibration.json").write_text(json.dumps(calibration, indent=1) + "\n")
+            print(json.dumps({k: v for k, v in calibration["rows"][-1].items() if k != "answers"}), flush=True)
+        done(f"{tag}/calibrate-{name}")
+
+    day_axes = [a["name"] for a in axes[1:]]
+    first = axes[0]["name"]
     try:
-        read_tag("base", [a["name"] for a in axes])
+        # priority order: what the screen and the morning check need first; a deadline cuts the tail
+        read_check("base")
+        read_axis("base", first)
+        for name in day_axes:
+            read_axis("base", name)
+        read_sets("base")
+        if args.calibrate_scales:
+            calibrate("base", first)
         peft_model = None
         for item in args.adapter:
             label, path = item.split("=", 1)
@@ -252,7 +355,24 @@ def main():
             peft_model.set_adapter(label)
             peft_model.eval()
             model = peft_model
-            read_tag(label, [a["name"] for a in axes if a["name"] in adapter_axes])
+            read_check(label)
+            if first in adapter_axes:
+                read_axis(label, first)
+            read_sets(label)
+            if args.calibrate_scales:
+                calibrate(label, first)
+        if args.calibrate_scales and len(axes) > 1 and peft_model is not None:
+            with peft_model.disable_adapter():
+                calibrate("base", day_axes[0])
+        elif args.calibrate_scales and len(axes) > 1:
+            calibrate("base", day_axes[0])
+        for item in args.adapter:
+            label = item.split("=", 1)[0]
+            if peft_model is not None:
+                peft_model.set_adapter(label)
+            for name in day_axes:
+                if name in adapter_axes:
+                    read_axis(label, name)
         save_status(finished=True)
     except TimeoutError:
         save_status(finished=False, stopped="deadline")
