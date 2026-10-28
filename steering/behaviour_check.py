@@ -121,6 +121,13 @@ def main():
     peft_model = None
     for item in args.adapter:
         label, path = item.split("=", 1)
+        if not (Path(path) / "adapter_config.json").exists():
+            (out / f"{label}.skipped.json").write_text(json.dumps({"adapter": path, "skipped": "no adapter_config.json"}) + "\n")
+            print(json.dumps({"adapter": label, "skipped": path}), flush=True)
+            continue
+        if time.time() > deadline - 30:
+            print(json.dumps({"stopped": "deadline", "before": label}), flush=True)
+            break
         if peft_model is None:
             peft_model = PeftModel.from_pretrained(model, path, adapter_name=label)
         else:
