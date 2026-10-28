@@ -36,6 +36,7 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 28 Oct | Day 2 for the first synthetic person: six corrections to day-1 facts (a call moved, a contact replaced, a date, a room, an extension, a status note), new and stale-value probes frozen by hash before any day-2 data existed, day-1 probes and their freeze record kept unchanged. | #31 |
 | 28 Oct | Glimmer as its own decision model, groundwork: the notes-agreement baseline (answer from the weights, compare with the matching note, look up or ask on a mismatch), decision rows for three kinds (which note answers a question or none, are two notes the same fact, does a new note replace an old one) with labels computed from the world files, a test person frozen by hash and kept out of training, a one-pass readout that reads each option's probability from the next token, its scorer and the training launcher. | #29 |
 | 28 Oct | Abstention experiments written up, nulls included: training on general "I don't know" examples flips the check's prompt form without restoring general abstention (line closed); a prompt hint and contrast rows with notes do not help; rows for questions the user never answered teach the model to say its notes lack a fact when notes are in the prompt. Also night 2: training from the base on every fact still true, "let me check your notes" rows for facts the current model gets wrong, and a leak check on the questions it is asked. | #32 |
+| 28 Oct | Steering with control vectors (re:dvx): five axes (says when it does not know, concise, formal, decisive, asks before acting) fitted on Glimmer's residual stream and exported as llama.cpp control vectors. A behaviour check reads each axis on the base model and on a night's adapter with no generation: the first night made the model more decisive (+3.5 persona contrasts on everyday prompts), more concise (+1.8) and less likely to say it does not know (-1.6). A fixed-strength screen on llama-server and a night step that writes the check into the night's record. Results under `eval/results/2026-10-29-steering/`. | #33 |
 
 ## Pre-existing work used as external dependencies
 
@@ -48,6 +49,7 @@ Fetched at setup or called over the network. None of it is copied into this repo
 | Muse Glimmer 30B (Meta) | `meta-models/Muse-Glimmer-30B-GGUF` @ `70bf1b61`; `unsloth/Muse-Glimmer-30B-unsloth-bnb-4bit` @ `ecedda39` | the model that runs by day and learns at night |
 | Official DFlash drafter for Glimmer (Meta) | same GGUF repo and revision | faster decoding |
 | llama.cpp, Unsloth, PEFT, Transformers | versions recorded in each run receipt | serving and training |
+| [re:dvx](https://github.com/lumpenspace/redvx) (MIT) | `redvx` 0.1.0 from PyPI, installed with `--no-deps` (it pins transformers <5.9; Glimmer needs 5.15, under which every module imports) | contrast-pair protocol, direction fit, common-component removal, vector format |
 
 ## Hosted model use during development
 
