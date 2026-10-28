@@ -159,6 +159,87 @@ function chose(cons) {
   }));
 }
 
+const sign = (x) => `${x > 0 ? "+" : x < 0 ? "−" : ""}${Math.abs(x).toFixed(1)}`;
+
+function sampleTag(id, path) {
+  const tag = $(id);
+  tag.hidden = !path;
+  if (path) { tag.textContent = "SAMPLE"; tag.title = `Not this night's own file: ${path}`; }
+}
+
+function behaviour(st) {
+  // How the night's update moved the way it answers, per axis: the night's label, with the shift and its 95%
+  // interval drawn on one shared scale (0 = no change). Measured by the behaviour check, never a judgement of
+  // the user.
+  const bc = st && st.behaviour_check;
+  if (!bc || !(bc.axes || []).length) return;
+  sampleTag("behaviour-sample", st.sample && st.sample.behaviour_check);
+  const set = (bc.probes && bc.probes.headline) || "everyday prompts";
+  const n = (bc.probes || {})[set];
+  $("behaviour-summary").textContent = `How last night's update changed the way it answers${n ? ` ${n}` : ""} ${set}. ` +
+    "Each line runs between two ways of answering; the dot is the change, the band its 95% interval.";
+  const span = Math.max(1, ...bc.axes.flatMap((a) => (a.ci95 || [a.shift]).map(Math.abs)));
+  const at = (x) => `${50 + (x / span) * 50}%`;
+  $("behaviour-axes").replaceChildren(...bc.axes.map((a) => {
+    const [pos, neg] = a.poles || ["", ""];
+    const li = el("li", "axis" + (a.label === "no clear change" ? " flat" : "") + (a.axis === "abstention" ? " abstain" : ""));
+    const track = el("div", "track");
+    track.setAttribute("aria-hidden", "true");
+    if (a.ci95) {
+      const band = el("span", "band");
+      band.style.left = at(Math.min(...a.ci95));
+      band.style.width = `${(Math.abs(a.ci95[1] - a.ci95[0]) / span) * 50}%`;
+      track.append(band);
+    }
+    const dot = el("span", "dot");
+    dot.style.left = at(a.shift);
+    track.append(el("span", "zero"), dot);
+    const what = el("div", "what", a.label);
+    what.append(el("span", "shift", ` ${sign(a.shift)}` + (a.ci95 ? ` (${sign(a.ci95[0])} to ${sign(a.ci95[1])})` : "")));
+    if (a.axis === "abstention") what.append(el("span", "why", "This is the abstention check above, on everyday prompts."));
+    li.append(el("span", "pole neg", neg), track, el("span", "pole pos", pos), what);
+    return li;
+  }));
+  $("behaviour").hidden = false;
+}
+
+function proposes(st, world, day) {
+  // Up to two dial changes Glimmer proposes after reading the day and the behaviour check. Nothing changes
+  // until the user accepts; an accepted dial applies from the next server start that can serve it.
+  const doc = st && st.proposals;
+  const list = (doc && doc.proposals) || [];
+  if (!list.length) return;
+  sampleTag("proposes-sample", st.sample && st.sample.proposals);
+  $("proposes-summary").textContent = "It read yesterday and the behaviour check and suggests " +
+    `${list.length === 1 ? "one change" : `${list.length} changes`} to how it answers. Nothing changes until you accept.`;
+  const answers = st.decisions || {};
+  $("proposals").replaceChildren(...list.map((p) => {
+    const li = el("li", "proposal");
+    const key = `${p.axis}:${p.toward}`;
+    const status = el("span", "status");
+    const show = (a) => {
+      li.dataset.answer = a ? a.answer : "";
+      status.textContent = !a ? "" : a.answer === "accept" ? "Accepted: applies tomorrow" : "Dismissed";
+    };
+    const btn = (label, answer, cls) => {
+      const b = el("button", cls, label);
+      b.type = "button";
+      b.onclick = async () => {
+        const r = await fetch("/api/proposal", { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ world, day, axis: p.axis, toward: p.toward, answer }) });
+        if (r.ok) show((await r.json())[key]);
+      };
+      return b;
+    };
+    const actions = el("div", "actions");
+    actions.append(btn("Accept", "accept", "accept"), btn("Dismiss", "dismiss", "dismiss"), status);
+    li.append(el("div", "toward", `More ${p.toward}`), el("p", "reason", p.reason || ""), actions);
+    show(answers[key]);
+    return li;
+  }));
+  $("proposes").hidden = false;
+}
+
 const CHECKS = { leak_check: "no held-out question in the training data",
                  gguf_matches_peft: "the served adapter file matches the trained one", learned_gate: "it learned enough",
                  forgot_gate: "it did not lose general skill", tool_gate: "no new tool-call failure",
@@ -368,6 +449,8 @@ async function boot() {
   chose(r.consolidated);
   grid(facts);
   abstainLine(r.abstention, r.decision);
+  behaviour(r.steering);
+  proposes(r.steering, r.world, r.day);
   numbers(ev, r.decision, r.abstention);
   asked(facts, r.questions || {});
   receipt(r);

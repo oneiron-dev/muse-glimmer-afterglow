@@ -58,6 +58,49 @@ def abstention_gate(night):
     return None
 
 
+# Samples for the steering panels until a night writes its own (eval/results/2026-10-29-steering on main):
+# the behaviour check measured on w1's night 1 after it ran, and the dial changes proposed from that day.
+STEERING_SAMPLES = {("w1-ines-varga", 1): {
+    "behaviour_check": "eval/results/2026-10-29-steering/j1/behaviour-check-w1-night1.json",
+    "proposals": "eval/results/2026-10-29-steering/proposals/w1-day1-steering-proposals.json"}}
+
+
+def steering(world, day, night, ev):
+    """The night's behaviour check (eval.json "behaviour_check", else behaviour-check.json) and the dial changes
+    Glimmer proposes (steering-proposals.json) with the user's answers (steering-decisions.json). Falls back to
+    STEERING_SAMPLES, marked as a sample."""
+    def read(path):
+        return json.loads(path.read_text()) if path.exists() else None
+
+    check = (ev or {}).get("behaviour_check") or (read(night / "behaviour-check.json") or {}).get("behaviour_check")
+    proposals = read(night / "steering-proposals.json")
+    sample = {}
+    repo = paths.worlds_root().parent
+    for kind, rel in STEERING_SAMPLES.get((world, int(day)), {}).items():
+        if kind == "behaviour_check" and not check and (repo / rel).exists():
+            check, sample[kind] = read(repo / rel)["behaviour_check"], rel
+        if kind == "proposals" and not proposals and (repo / rel).exists():
+            proposals, sample[kind] = read(repo / rel), rel
+    return {"behaviour_check": check, "proposals": proposals, "decisions": read(night / "steering-decisions.json") or {},
+            "sample": sample}
+
+
+def record_proposal(world, day, axis, toward, answer):
+    """The user's answer to one proposed dial change, in runs/<world>/<day>/night/steering-decisions.json.
+    Nothing is served from it yet: an accepted dial applies from the next server start that can serve it."""
+    if answer not in ("accept", "dismiss"):
+        raise ValueError("answer must be accept or dismiss")
+    night = paths.runs_root() / world / str(int(day)) / "night"
+    night.mkdir(parents=True, exist_ok=True)
+    f = night / "steering-decisions.json"
+    doc = json.loads(f.read_text()) if f.exists() else {}
+    doc[f"{axis}:{toward}"] = {"axis": axis, "toward": toward, "answer": answer,
+                               "at": dt.datetime.now(dt.timezone(dt.timedelta(hours=9))).isoformat(timespec="seconds"),
+                               "applies": "tomorrow" if answer == "accept" else None}
+    f.write_text(json.dumps(doc, indent=1) + "\n")
+    return doc
+
+
 def persona_name(world):
     return (load_world(world).get("persona") or {}).get("name")
 
@@ -122,6 +165,7 @@ class App:
         return {"world": world, "day": day, "persona": persona_name(world), "eval": load("eval.json"),
                 "decision": load("decision.json"), "receipt": load("receipt.json"),
                 "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
+                "steering": steering(world, day, night, load("eval.json")),
                 "questions": questions, "night_dir": str(night),
                 "worlds": worlds_summary(day)}
 
@@ -254,6 +298,9 @@ class Handler(BaseHTTPRequestHandler):
                 if not q:
                     return self._json({"error": "empty question"}, 400)
                 return self._json(self.app.ask_notes_off(q))
+            if path == "/api/proposal":
+                b = self._body()
+                return self._json(record_proposal(b["world"], b["day"], b["axis"], b["toward"], b["answer"]))
             if path == "/api/snapshot/restore":
                 threading.Thread(target=self.app.restore_snapshot, daemon=True).start()
                 return self._json({"started": True})

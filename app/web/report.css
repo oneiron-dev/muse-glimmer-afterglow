@@ -150,3 +150,37 @@ a.rcpt:hover { color: var(--glow-violet); }
 .person .bar { grid-area: bar; height: 4px; border-radius: 2px; background: var(--rule-strong); overflow: hidden; position: relative; }
 .person .bar::after { content: ""; position: absolute; inset: 0; width: calc(var(--share) * 100%); background: var(--glow-violet); border-radius: 2px; }
 .person .count { grid-area: count; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* Behaviour check and What it proposes: compact panels under the headline, in the chose panel's card. */
+.panel { max-width: 46rem; padding: 1rem 1.15rem; border-radius: 12px; background: var(--paper-raised); border: 1px solid var(--rule); }
+.panel-head { display: flex; align-items: baseline; gap: 0.6rem; }
+.panel h2 { margin: 0 0 0.3rem; font: 500 1.1rem/1.25 var(--serif); font-variation-settings: "opsz" 24; }
+.panel-summary { margin: 0; max-width: 60ch; color: var(--ink-soft); font-size: 0.92rem; }
+.sample { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; color: var(--ink-soft); border: 1px solid var(--rule-strong); border-radius: 4px; padding: 0.05rem 0.35rem; }
+.axes { list-style: none; margin: 0.8rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+.axis { display: grid; grid-template-columns: 8.5rem 1fr 8.5rem; grid-template-areas: "neg track pos" "what what what"; align-items: center; column-gap: 0.6rem; row-gap: 0.15rem; font-size: 0.85rem; }
+.axis .pole { color: var(--ink-faint); font-size: 0.78rem; line-height: 1.2; }
+.axis .pole.neg { grid-area: neg; text-align: right; }
+.axis .pole.pos { grid-area: pos; }
+.axis .track { grid-area: track; position: relative; height: 14px; }
+.axis .track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--rule-strong); }
+.axis .zero { position: absolute; left: 50%; top: 1px; bottom: 1px; width: 1px; background: var(--ink-faint); }
+.axis .band { position: absolute; top: 4px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--glow-violet) 35%, transparent); }
+.axis .dot { position: absolute; top: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--ink); }
+.axis .what { grid-area: what; text-align: center; color: var(--ink); font-weight: 600; }
+.axis .shift { font-weight: 400; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.axis .why { display: block; font-weight: 400; font-size: 0.78rem; color: var(--ink-soft); }
+.axis.flat .what { color: var(--ink-soft); font-weight: 400; }
+.axis.flat .dot { background: var(--ink-faint); }
+.axis.abstain .band { background: color-mix(in srgb, var(--glow-rose) 40%, transparent); }
+.proposals { list-style: none; margin: 0.7rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; }
+.proposal { padding-top: 0.6rem; border-top: 1px solid var(--rule); }
+.proposal .toward { font-weight: 600; }
+.proposal .reason { margin: 0.15rem 0 0.45rem; color: var(--ink-soft); font-size: 0.92rem; max-width: 60ch; }
+.proposal .actions { display: flex; align-items: center; gap: 0.5rem; }
+.proposal button { font: inherit; font-size: 0.85rem; padding: 0.25rem 0.8rem; border-radius: 999px; border: 1px solid var(--rule-strong); background: transparent; color: var(--ink); cursor: pointer; }
+.proposal button.accept { border-color: var(--glow-violet); }
+.proposal button:hover { background: var(--paper); }
+.proposal .status { font-size: 0.85rem; color: var(--ink-soft); }
+.proposal[data-answer="accept"] button, .proposal[data-answer="dismiss"] button { display: none; }
+@media (max-width: 34rem) { .axis { grid-template-columns: 5.5rem 1fr 5.5rem; } }
