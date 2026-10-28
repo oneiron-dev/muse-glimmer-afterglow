@@ -92,3 +92,42 @@ true" at p 1.0 and still misses both corrections the day agent left unlinked. It
 supersede test. A reasoned decision takes 1.5–3.3 s at the median (190–430 reasoning tokens); one pass takes ~0.19 s.
 The product path is one pass with a precision cut: link at p ≥ 0.9, otherwise keep both notes. Thinking stays off for
 these kinds on the base weights. It will be measured again on the decision adapter (D2).
+
+## D1: the decision LoRA, one pass (trained on mel 06:03–06:26; read out 06:38–07:01)
+
+The entry's trainer runs the R2 recipe: r16, attention + MLP, all 52 layers, LR 1e-4, one epoch. The assistant reply
+is the label alone, so the loss falls on the label token and its end token. Data: 1,123 rows, all from w1–w3 (route
+560, supersede 286, duplicate 277), 602k tokens. Training: 71 steps, 23 min, peak 19.3 GiB. The GGUF verify passed
+(`train-d1/`). It is served on mel as a no-world adapter. The readout puts it at scale 1 and every world adapter at
+scale 0 (`readout-D1.jsonl`, `score-D1.json`). The Dreamer shared the server during the readout, so client latency
+here is not comparable to D0; server time is. A chat check on the server found 42/42 answers byte-identical with D1
+loaded at scale 0 and without it.
+
+| kind (w4 test unless named) | D0 | D1 | D1 − D0 (paired bootstrap 95% CI) | D1 ECE |
+|---|---|---|---|---|
+| route, note pick (210) | 0.610 | 0.676 | +0.067 [0.000, +0.137] | 0.180 (D0 0.101) |
+| duplicate (126) | 0.944 | **1.000** | +0.056 [+0.016, +0.103] | 0.002 |
+| supersede, synthetic (36) | 0.944 | 0.972 | +0.028 [−0.056, +0.111] | 0.031 |
+| supersede, real day-2 corrections (44) | 0.886 | 0.727 | −0.159 [−0.318, 0.000] | 0.268 |
+| supersede, clean w4 corrections (14 pairs, 6 true) | 0.786 | 0.571 | −0.214 | 0.427 |
+
+Route end to end (w4), score = (right − wrong) / n:
+
+| arm | forward | never-told | all |
+|---|---|---|---|
+| always look up (arm D) | 0.656 | −1.000 | 0.419 |
+| D0 + look up below p 0.6 | 0.594 | 1.000 | 0.652 |
+| D1 (calibration picks no threshold) | 0.506 | 1.000 | 0.576 |
+
+The lead's bars for D1:
+1. Route forward ≥ 0.656, keeping 30/30 never-told asks: **not met** (0.506). D1 picks the right note more often
+   than D0 (88 vs 71 of 150 answerable questions). It still says "ask" on 41 answerable questions. Its confidence is
+   less useful than D0's (69 wrong at p ≥ 0.9 on calibration, against D0's 38), so no threshold fit on w1–w3 helps.
+2. Supersede links at p ≥ 0.9 on the true corrections, with no wrong link: **not met**. D1 links none of the 6 clean
+   w4 corrections (D0: 1). It answers "both stay true" at p ≈ 1.0 on all of them. Cause: the supersede training rows
+   were 86% "both true" (246 of 286). The pair-level leak fix removed most of the reworded-key "replaces" rows, leaving
+   11 reworded-key positives against 190 negatives, so D1 learned "a different key means both stay true".
+3. Duplicate: D1 is right on all 126 w4 pairs at p ≥ 0.9.
+
+Product reading: keep supersede and route on the base weights (D0) with their cuts. D1 is a candidate for the night's
+duplicate decision. A D1b would need balanced reworded-key supersede positives and fewer "ask" route rows.
