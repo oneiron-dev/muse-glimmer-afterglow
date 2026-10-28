@@ -1,0 +1,397 @@
+{
+ "server": {
+  "binary": "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "cvecs": [
+   [
+    "abstention",
+    "/data/meta-steering/vectors/j1/base/abstention-raw.gguf"
+   ],
+   [
+    "decisive",
+    "/data/meta-steering/vectors/j1/base/decisive-raw.gguf"
+   ],
+   [
+    "concise",
+    "/data/meta-steering/vectors/j1/base/concise-raw.gguf"
+   ],
+   [
+    "formal",
+    "/data/meta-steering/vectors/j1/base/formal-raw.gguf"
+   ],
+   [
+    "asks_first",
+    "/data/meta-steering/vectors/j1/base/asks_first-raw.gguf"
+   ],
+   [
+    "nightdelta",
+    "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf"
+   ]
+  ],
+  "cvec_layers": [
+   16,
+   42
+  ]
+ },
+ "rows": [
+  {
+   "name": "static-concise+0.04",
+   "binary": "/data/meta-night/llama.cpp/build/bin/llama-server",
+   "cvecs": [
+    [
+     "/data/meta-steering/vectors/j1/base/concise-raw.gguf",
+     0.04
+    ]
+   ],
+   "cvec_layers": [
+    16,
+    42
+   ],
+   "tests_by_arm": {
+    "base": [
+     "day:concise"
+    ],
+    "R2": [
+     "day:concise"
+    ]
+   }
+  },
+  {
+   "name": "baseline",
+   "tests_by_arm": {
+    "base": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "day:concise",
+     "day:formal",
+     "day:decisive",
+     "day:asks_first"
+    ],
+    "R2": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget",
+     "day:concise",
+     "day:formal",
+     "day:decisive",
+     "day:asks_first"
+    ],
+    "R2@0.75": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ],
+    "R2@0.5": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ]
+   }
+  },
+  {
+   "name": "concise+0.04",
+   "request_cvecs": {
+    "concise": 0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:concise"
+    ],
+    "R2": [
+     "day:concise"
+    ]
+   }
+  },
+  {
+   "name": "nightdelta+0.5",
+   "request_cvecs": {
+    "nightdelta": 0.5
+   },
+   "tests_by_arm": {
+    "R2": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ]
+   }
+  },
+  {
+   "name": "decisive-0.06",
+   "request_cvecs": {
+    "decisive": -0.06
+   },
+   "tests_by_arm": {
+    "R2": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ]
+   }
+  },
+  {
+   "name": "abstention+0.04",
+   "request_cvecs": {
+    "abstention": 0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "gate",
+     "gate_bare",
+     "never_told"
+    ],
+    "R2": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ]
+   }
+  },
+  {
+   "name": "formal+0.04",
+   "request_cvecs": {
+    "formal": 0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:formal"
+    ],
+    "R2": [
+     "day:formal"
+    ]
+   }
+  },
+  {
+   "name": "decisive+0.04",
+   "request_cvecs": {
+    "decisive": 0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:decisive"
+    ],
+    "R2": [
+     "day:decisive"
+    ]
+   }
+  },
+  {
+   "name": "asks_first+0.04",
+   "request_cvecs": {
+    "asks_first": 0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:asks_first"
+    ],
+    "R2": [
+     "day:asks_first"
+    ]
+   }
+  },
+  {
+   "name": "concise+0.08",
+   "request_cvecs": {
+    "concise": 0.08
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:concise"
+    ],
+    "R2": [
+     "day:concise"
+    ]
+   }
+  },
+  {
+   "name": "formal+0.08",
+   "request_cvecs": {
+    "formal": 0.08
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:formal"
+    ],
+    "R2": [
+     "day:formal"
+    ]
+   }
+  },
+  {
+   "name": "decisive+0.08",
+   "request_cvecs": {
+    "decisive": 0.08
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:decisive"
+    ],
+    "R2": [
+     "day:decisive"
+    ]
+   }
+  },
+  {
+   "name": "asks_first+0.08",
+   "request_cvecs": {
+    "asks_first": 0.08
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:asks_first"
+    ],
+    "R2": [
+     "day:asks_first"
+    ]
+   }
+  },
+  {
+   "name": "nightdelta+1",
+   "request_cvecs": {
+    "nightdelta": 1.0
+   },
+   "tests_by_arm": {
+    "R2": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ]
+   }
+  },
+  {
+   "name": "nightdelta+0.25",
+   "request_cvecs": {
+    "nightdelta": 0.25
+   },
+   "tests_by_arm": {
+    "R2": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ]
+   }
+  },
+  {
+   "name": "decisive-0.10",
+   "request_cvecs": {
+    "decisive": -0.1
+   },
+   "tests_by_arm": {
+    "R2": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ]
+   }
+  },
+  {
+   "name": "concise-0.04",
+   "request_cvecs": {
+    "concise": -0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:concise"
+    ],
+    "R2": [
+     "day:concise"
+    ]
+   }
+  },
+  {
+   "name": "formal-0.04",
+   "request_cvecs": {
+    "formal": -0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:formal"
+    ],
+    "R2": [
+     "day:formal"
+    ]
+   }
+  },
+  {
+   "name": "decisive-0.04",
+   "request_cvecs": {
+    "decisive": -0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:decisive"
+    ],
+    "R2": [
+     "day:decisive"
+    ]
+   }
+  },
+  {
+   "name": "asks_first-0.04",
+   "request_cvecs": {
+    "asks_first": -0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:asks_first"
+    ],
+    "R2": [
+     "day:asks_first"
+    ]
+   }
+  },
+  {
+   "name": "abstention+0.02",
+   "request_cvecs": {
+    "abstention": 0.02
+   },
+   "tests_by_arm": {
+    "base": [
+     "gate",
+     "gate_bare",
+     "never_told"
+    ],
+    "R2": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ]
+   }
+  },
+  {
+   "name": "decisive-0.06+abstention+0.02",
+   "request_cvecs": {
+    "decisive": -0.06,
+    "abstention": 0.02
+   },
+   "tests_by_arm": {
+    "R2": [
+     "gate",
+     "gate_bare",
+     "never_told",
+     "forward",
+     "forget"
+    ]
+   }
+  }
+ ]
+}
