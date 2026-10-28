@@ -100,10 +100,11 @@ def read_json(path):
     return json.loads(path.read_text()) if path.exists() else None
 
 
-def night_results(world, day):
+def night_results(world, day, night_dir=None):
     """Every check the night of (world, day) has a result for: {name: True | False}, from decision.json's checks,
-    the abstention check and the two chat checks (the night's own, else the files added after it ran)."""
-    night = paths.runs_root() / world / str(day) / "night"
+    the abstention check and the two chat checks (the night's own, else the files added after it ran). night_dir:
+    a night variant's folder relative to the world ("2/night-2b"); default "<day>/night"."""
+    night = paths.runs_root() / world / (night_dir or f"{day}/night")
     decision = read_json(night / "decision.json") or {}
     results = dict(decision.get("checks") or {})
     abst = abstention_gate(night)
@@ -122,31 +123,37 @@ def serving_rule():
     return rule if rule and isinstance(rule.get("checks"), list) else None
 
 
+def night_label(e):
+    """"night 2", or "night 2 (night-2b)" for a night's variant."""
+    return f"night {e['day']}" + (f" ({e['arm']})" if e.get("arm") else "")
+
+
 def serving_choice(world, entries):
     """Which of a world's loaded updates (serving-manifest entries) the day agent serves, and why in one line:
-    {"entry": the entry or None, "why": text, "failed": {day: [check names]}}."""
+    {"entry": the entry or None, "why": text, "failed": {night label: [check names]}}."""
     rule = serving_rule()
+    # latest day first; within a day the night of record before its variants
     mine = sorted((e for e in entries if e.get("world") == world and e.get("day") is not None),
-                  key=lambda e: e["day"], reverse=True)
+                  key=lambda e: (-e["day"], bool(e.get("night_dir")), e.get("night_dir") or ""))
     failed = {}
     for e in mine:
-        results = night_results(world, e["day"])
+        results = night_results(world, e["day"], e.get("night_dir"))
         if rule:
             bad = [k for k in rule["checks"] if results.get(k) is not True]  # a check not measured does not pass
         else:
             bad = [] if e.get("decision", "keep") == "keep" else ["the night's own decision"]
         if not bad:
-            older = [d for d in failed]
-            why = (f"Night {e['day']}'s update is loaded: it passed every check" +
-                   (f"; night {older[0]}'s failed {name_list(failed[older[0]])}." if older else "."))
+            first = next(iter(failed), None)
+            why = (f"{night_label(e).capitalize()}'s update is loaded: it passed every check" +
+                   (f"; {first}'s failed {name_list(failed[first])}." if first else "."))
             return {"entry": e, "why": why, "failed": failed}
-        failed[e["day"]] = bad
+        failed[night_label(e)] = bad
     if not mine:
         return {"entry": None, "why": "No update loaded: no night has run for this person yet.", "failed": {}}
-    last = mine[0]["day"]
+    last = night_label(mine[0])
     return {"entry": None, "failed": failed,
-            "why": f"No update loaded: night {last}'s update failed {name_list(failed[last])}" +
-                   (", and no earlier update passes every check." if len(mine) > 1 else ".")}
+            "why": f"No update loaded: {last}'s update failed {name_list(failed[last])}" +
+                   (", and no other loaded update passes every check." if len(mine) > 1 else ".")}
 
 
 def name_list(checks):
