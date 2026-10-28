@@ -106,12 +106,80 @@ def main():
             items.append({"id": n["id"], "kind": kind, "key": n["key"], "full_value": n["value"], "value": core,
                           "accept": [core], "statement": statement, "source_utterance": turns.get(n.get("turn"), ""),
                           "corrects": old["value"] if old else None})
+    replaced = find_replacements(items, by_id, args.day, first, args.teacher, log_path) if args.day >= 2 else []
+    gone = {r["old_id"] for r in replaced if r["decision"] == "superseded"}
+    for r in replaced:
+        if r["decision"] == "superseded":
+            new_item = next(i for i in items if i["id"] == r["new_id"])  # noqa: B023
+            new_item["corrects"] = r["old_value"]
+    items = [i for i in items if i["id"] not in gone]
     doc = {"world": args.world, "day": args.day, "user": name, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
-           "items": items, "overruled_merge_proposals": proposals}
+           "items": items, "overruled_merge_proposals": proposals, "replacements": replaced}
     doc.update(outcome_fields(notes, items, merges, proposals))
+    for r in replaced:
+        if r["decision"] == "superseded":
+            doc["dropped"].append({"id": r["old_id"], "key": r["old_key"], "value": r["old_value"], "outcome": "dropped_as_superseded",
+                                   "superseded_by": r["new_id"], "why": f"replaced by {r['new_id']} ({r['new_key']}: {r['new_value']!r}); "
+                                   "found by the night's consolidation, the day's note had no link"})
+            doc["outcomes"] = sorted([o for o in doc["outcomes"] if o["id"] != r["old_id"]] + [doc["dropped"][-1]], key=lambda o: o["id"])
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps({"active_notes": len(active), "items": len(items), "reused": len(reused), "dropped": len(doc["dropped"]),
                       "kinds": {k: sum(1 for i in items if i["kind"] == k) for k in ("fact", "preference", "procedure")}}))
+
+
+REPLACE_PROMPT = """An assistant keeps notes about its user, {first}. Some notes saved on earlier days:
+{earlier}
+
+Today {first} said: "{said}"
+and the assistant saved a new note: {key}: {value}
+
+Does the new note replace one of the earlier notes, that is, the same fact about {first} with a new value (a changed
+time, date, room, person or name)? Answer with the earlier note's id only, or "none" if it is a new fact."""
+
+
+def find_replacements(items, by_id, day, first, teacher, log_path):
+    """Corrections the day's notes did not link: a note saved today that holds a new value for an earlier, still
+    active note under another key. The teacher names the earlier note; code accepts it only when the old note is from
+    an earlier day, is a fact, and its value has the same shape (time, date, room, person...) as the new one."""
+    from contrast_rows import shape
+
+    earlier = [i for i in items if (by_id[i["id"]].get("day") or 1) < day and i["kind"] == "fact"]
+    new = [i for i in items if (by_id[i["id"]].get("day") or 1) == day and i["kind"] == "fact" and not i.get("corrects")]
+    if not earlier or not new:
+        return []
+    by_item = {i["id"]: i for i in earlier}
+    out, taken = [], set()
+
+    def words(text):
+        return {w for w in re.findall(r"[a-z0-9:]+", text.lower().replace("_", " ")) if len(w) > 1}
+
+    for n in new:
+        # the candidates: earlier facts with the same value shape, most shared words first (key, value, what was said)
+        said = words(f"{n['key']} {n['full_value']} {n['source_utterance']}")
+        cands = sorted((i for i in earlier if shape(i["value"]) == shape(n["value"])),
+                       key=lambda i: -len(words(f"{i['key']} {i['full_value']}") & said))[:6]
+        if not cands:
+            continue
+        listing = "\n".join(f"{i['id']} | {i['key'].replace('_', ' ')}: {i['full_value']}" for i in cands)
+        prompt = REPLACE_PROMPT.format(first=first, earlier=listing, said=n["source_utterance"], key=n["key"], value=n["full_value"])
+        try:
+            reply, _, _ = teacher_mod.complete(teacher, [{"role": "user", "content": prompt}], max_tokens=800, log_path=log_path,
+                                               purpose=f"replacement {n['id']}")
+        except teacher_mod.TeacherError as e:  # no answer: the note stays a new fact, and the receipt says so
+            out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "decision": f"not judged: {e}"})
+            continue
+        m = re.search(r"\bN\d{4}\b", reply)
+        if not m or m.group(0) not in by_item:
+            continue
+        old = by_item[m.group(0)]
+        same_shape = shape(old["value"]) == shape(n["value"])
+        decision = "superseded" if same_shape and old["id"] not in taken else "kept: " + (
+            "already replaced" if old["id"] in taken else f"value shapes differ ({shape(old['value'])} vs {shape(n['value'])})")
+        if decision == "superseded":
+            taken.add(old["id"])
+        out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"], "old_key": old["key"],
+                    "old_value": old["full_value"], "decision": decision})
+    return out
 
 
 def outcome_fields(notes, items, merges, proposals):
