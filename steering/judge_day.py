@@ -55,13 +55,14 @@ def judge(axis, prompt, steered, base, item_id, log_path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--screen", required=True, help="screen output dir (baseline.json + day-axis rows)")
+    ap.add_argument("--screen", required=True, help="screen output dir with the day-axis rows")
+    ap.add_argument("--baseline", help="the unsteered row JSON (default: <screen>/baseline.json)")
     ap.add_argument("--axes", default=str(HERE / "axes.json"))
     ap.add_argument("--parallel", type=int, default=6)
     args = ap.parse_args()
     screen = Path(args.screen)
     axes = {a["name"]: a for a in json.loads(Path(args.axes).read_text())["axes"]}
-    base = json.loads((screen / "baseline.json").read_text())
+    base = json.loads(Path(args.baseline or screen / "baseline.json").read_text())
     jobs = []
     for f in sorted(screen.glob("*.json")):
         if f.name in ("baseline.json", "summary.json", "judge-day.json"):
