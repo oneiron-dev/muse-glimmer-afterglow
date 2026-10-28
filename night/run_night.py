@@ -152,9 +152,17 @@ class Night:
         self.save()
 
     # --- steps ---------------------------------------------------------------------------------
+    def earlier_nights(self):
+        """The kept-night folders of the earlier days (runs/<w>/<d>/night), oldest first."""
+        return [self.runs / self.args.world / str(d) / "night" for d in range(1, self.args.day)
+                if (self.runs / self.args.world / str(d) / "night" / "consolidated.json").exists()]
+
     def consolidate(self, log):
+        # notes.json is cumulative: earlier days' notes that are still active keep their earlier items
+        reuse = [str(n / "consolidated.json") for n in self.earlier_nights()]
         run([sys.executable, "night/consolidate.py", "--world", self.args.world, "--day", str(self.args.day),
-             "--teacher", self.args.teacher, "--runs", str(self.runs), "--out-dir", str(self.night)], log)
+             "--teacher", self.args.teacher, "--runs", str(self.runs), "--out-dir", str(self.night),
+             *(["--reuse-from", *reuse] if reuse else [])], log)
 
     def seed_rewrites(self):
         """Reuse a previous night's rewrites for items that are unchanged (same id, kind, core and statement):
@@ -172,6 +180,9 @@ class Night:
         self.receipt["rewrites_seeded"] = {"from": str(prev), "items": len(kept), "of": len(new_items)}
 
     def rewrites(self, log):
+        if not self.args.seed_rewrites_from and self.earlier_nights():
+            # unchanged items keep the previous night's rewrites, so only today's items cost teacher calls
+            self.args.seed_rewrites_from = f"../{self.earlier_nights()[-1].parent.name}/night"
         if self.args.seed_rewrites_from and not (self.night / "rewrites" / "rewrites-items.jsonl").exists():
             self.seed_rewrites()
         run([sys.executable, "night/generate_rewrites.py", "--teacher", self.args.teacher,
@@ -225,6 +236,7 @@ class Night:
             return None
         today = json.loads((self.night / "consolidated.json").read_text())
         superseded_values = {i["corrects"].lower() for i in today["items"] if i.get("corrects")}
+        today_ids = {i["id"] for i in today["items"]}  # still-active earlier notes are in today's items, trained in full
         check = self.night / "self-check-report.json"
         unsure = set(json.loads(check.read_text())["unsure_items"]) if self.args.self_check and check.exists() else set()
         rows = []
@@ -234,7 +246,7 @@ class Night:
                 for line in path.read_text().splitlines():
                     r = json.loads(line)
                     if r["valid"] and not any(v in r["assistant"].lower() for v in superseded_values) \
-                            and f"d{d}-{r['item_id']}" not in unsure:
+                            and f"d{d}-{r['item_id']}" not in unsure and r["item_id"] not in today_ids:
                         rows.append({**r, "item_id": f"d{d}-{r['item_id']}"})
         rng = random.Random(20261027 + self.args.day)
         rng.shuffle(rows)
@@ -248,6 +260,14 @@ class Night:
     def train_set(self, log):
         raw, clean = self.night / "train-raw.jsonl", self.night / "train.jsonl"
         sources = [str(self.night / "rewrites" / "rewrites.jsonl")]
+        check = self.night / "self-check-report.json"
+        if self.args.self_check and check.exists():
+            # facts the current adapter got wrong or was unsure of: the self-check rows replace their answer rows
+            unsure = {i.split("-", 1)[1] for i in json.loads(check.read_text())["unsure_items"]}
+            kept = [line for line in Path(sources[0]).read_text().splitlines() if line.strip() and json.loads(line)["item_id"] not in unsure]
+            (self.night / "rewrites-without-unsure.jsonl").write_text("".join(line + "\n" for line in kept))
+            sources = [str(self.night / "rewrites-without-unsure.jsonl")]
+            self.receipt["self_check_dropped_items"] = sorted(unsure)
         mem = self.memories()
         if mem:
             sources.append(str(mem))

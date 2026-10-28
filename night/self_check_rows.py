@@ -17,6 +17,7 @@ Output rows use the rewrites format; the report lists every item with its answer
 import argparse
 import json
 import math
+import os
 import random
 import sys
 import time
@@ -69,7 +70,7 @@ def main():
     ap.add_argument("--report", required=True)
     args = ap.parse_args()
     runs = runs_root(args.runs)
-    base_url = (args.server or serving_base_url()).rstrip("/")
+    base_url = (args.server or os.environ.get("GLIMMER_BASE_URL") or serving_base_url()).rstrip("/")
     manifest = json.loads((runs / "serving" / "adapters.json").read_text())
     current = json.loads((runs / args.world / "adapters.json").read_text())["current"]
     mine = [a for a in manifest["adapters"] if a.get("world") == args.world and a.get("sha256") == current["gguf_sha256"]]
