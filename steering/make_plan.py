@@ -18,6 +18,9 @@ def main():
     ap.add_argument("--variant", default="proj")
     ap.add_argument("--abstention-scales", required=True, help="comma list")
     ap.add_argument("--day-m", required=True, help="axis=m,... or one m for every day axis")
+    ap.add_argument("--layers", default="", help="FIRST,LAST: llama.cpp layer range for every vector row (default: all in the file)")
+    ap.add_argument("--abstention-layer-variants", default="",
+                    help="extra abstention rows SCALE@FIRST,LAST;... (e.g. the full re:dvx mask with layer 51)")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     manifest = json.loads((Path(args.vectors) / "manifest.json").read_text())
@@ -27,6 +30,7 @@ def main():
         key = f"base/{args.variant}" if f"base/{args.variant}" in entry else "base/raw"
         return entry[key]["gguf"]
 
+    layers = [int(x) for x in args.layers.split(",")] if args.layers else None
     day_axes = [a for a in manifest["axes"] if a != "abstention"]
     day_tests = [f"day:{a}" for a in day_axes]
     if "=" in args.day_m:
@@ -37,13 +41,20 @@ def main():
             "tests_by_arm": {"base": ["gate", "gate_bare", "never_told"] + day_tests,
                              "R2": ["gate", "gate_bare", "never_told", "forward", "forget"] + day_tests}}]
     for s in [float(x) for x in args.abstention_scales.split(",")]:
-        j2a.append({"name": f"abstention{s:+g}", "cvecs": [[gguf("abstention"), s]],
+        j2a.append({"name": f"abstention{s:+g}", "cvecs": [[gguf("abstention"), s]], "cvec_layers": layers,
                     "tests_by_arm": {"base": ["gate", "gate_bare", "never_told"],
                                      "R2": ["gate", "gate_bare", "never_told", "forward", "forget"]}})
+    for spec in [v for v in args.abstention_layer_variants.split(";") if v]:
+        s, rng = spec.split("@")
+        lr = [int(x) for x in rng.split(",")]
+        j2a.append({"name": f"abstention{float(s):+g}-L{lr[0]}-{lr[1]}", "cvecs": [[gguf("abstention"), float(s)]],
+                    "cvec_layers": lr, "tests_by_arm": {"base": ["gate", "gate_bare", "never_told"],
+                                                        "R2": ["gate", "gate_bare", "never_told", "forward"]}})
     j2b = []
     for k in (1, 2, -1):  # by priority: a deadline cuts the -m rows first
         for a in day_axes:
-            j2b.append({"name": f"{a}{k * m[a]:+g}", "cvecs": [[gguf(a), k * m[a]]], "tests": [f"day:{a}"]})
+            j2b.append({"name": f"{a}{k * m[a]:+g}", "cvecs": [[gguf(a), k * m[a]]], "cvec_layers": layers,
+                        "tests": [f"day:{a}"]})
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     (out / "plan-j2a.json").write_text(json.dumps(j2a, indent=1) + "\n")

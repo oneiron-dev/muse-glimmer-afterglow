@@ -58,12 +58,14 @@ def markers(text):
 
 
 class Server:
-    def __init__(self, args, cvecs, log):
+    def __init__(self, args, cvecs, log, layers=None):
         cmd = [args.server_bin, "-m", args.target, "--lora", args.lora, "--lora-init-without-apply", "--cache-ram", "0",
                "-ngl", "99", "-fa", "on", "-np", str(args.parallel), "-c", str(args.ctx), "--host", "127.0.0.1",
                "--port", str(args.port)]
         if cvecs:
             cmd += ["--control-vector-scaled", ",".join(f"{f}:{s}" for f, s in cvecs)]
+            if layers:  # inclusive layer range; outside it the vector is not applied
+                cmd += ["--control-vector-layer-range", str(layers[0]), str(layers[1])]
         self.cmd = cmd
         self.proc = subprocess.Popen(cmd, stdout=open(log, "w"), stderr=subprocess.STDOUT)
         self.url = f"http://127.0.0.1:{args.port}"
@@ -177,7 +179,7 @@ def main():
             summary["stopped"] = f"deadline before {row['name']}"
             break
         t = time.time()
-        server = Server(args, row.get("cvecs", []), out / f"llama-server-{row['name']}.log")
+        server = Server(args, row.get("cvecs", []), out / f"llama-server-{row['name']}.log", row.get("cvec_layers"))
         record = {"row": row, "cmd": server.cmd, "arms": {}}
         try:
             for arm, lora_scale in (("base", 0.0), ("R2", 1.0)):
@@ -189,7 +191,7 @@ def main():
             server.stop()
         record["seconds"] = round(time.time() - t, 1)
         (out / f"{row['name']}.json").write_text(json.dumps(record, indent=1) + "\n")
-        summary["rows"][row["name"]] = {"cvecs": row.get("cvecs", []), "seconds": record["seconds"],
+        summary["rows"][row["name"]] = {"cvecs": row.get("cvecs", []), "cvec_layers": row.get("cvec_layers"), "seconds": record["seconds"],
                                         **{arm: {test: v["agg"] for test, v in tests.items()} for arm, tests in record["arms"].items()}}
         (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
         print(json.dumps({"row": row["name"], "seconds": record["seconds"], **summary["rows"][row["name"]]}), flush=True)
