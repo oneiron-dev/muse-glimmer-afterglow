@@ -1,0 +1,78 @@
+{
+ "version": 1,
+ "world": "w1-ines-varga",
+ "day": 1,
+ "status": "proposed; takes effect only when accepted",
+ "behaviour_check": "eval/results/2026-10-29-steering/j1/behaviour-check-w1-night1.json",
+ "proposals": [
+  {
+   "kind": "glimmer",
+   "axis": "formal",
+   "toward": "formal",
+   "scale": null,
+   "gguf": null,
+   "layers": null,
+   "tested": false,
+   "reason": "Ines gave formal house rules for times, status summaries and email approval, so a more formal tone fits her work context today."
+  },
+  {
+   "kind": "glimmer",
+   "axis": "decisive",
+   "toward": "cautious",
+   "scale": null,
+   "gguf": null,
+   "layers": null,
+   "tested": false,
+   "reason": "Ines requires you always ask before emailing Vestergaard and wants a Thursday status nudge, so less decisive acting is safer for her constraints."
+  }
+ ],
+ "counter_candidates": [
+  {
+   "kind": "counter",
+   "axis": "decisive",
+   "toward": "cautious",
+   "scale": null,
+   "gguf": null,
+   "layers": null,
+   "tested": false,
+   "reason": "Last night's update made me more decisive on everyday prompts (+3.5 on this axis, 95% interval +3.1 to +3.9); you did not ask for that, so I propose turning it back toward \"cautious\".",
+   "evidence": {
+    "shift": 3.502,
+    "ci95": [
+     3.1429,
+     3.8572
+    ],
+    "n": 24
+   }
+  },
+  {
+   "kind": "counter",
+   "axis": "concise",
+   "toward": "detailed",
+   "scale": null,
+   "gguf": null,
+   "layers": null,
+   "tested": false,
+   "reason": "Last night's update made me more concise on everyday prompts (+1.8 on this axis, 95% interval +1.6 to +2.1); you did not ask for that, so I propose turning it back toward \"detailed\".",
+   "evidence": {
+    "shift": 1.82,
+    "ci95": [
+     1.5738,
+     2.0606
+    ],
+    "n": 24
+   }
+  }
+ ],
+ "glimmer_call": {
+  "raw": "{\"proposals\": [{\"dial\": \"formal\", \"toward\": \"formal\", \"reason\": \"Ines gave formal house rules for times, status summaries and email approval, so a more formal tone fits her work context today.\"}, {\"dial\": \"decisive\", \"toward\": \"cautious\", \"reason\": \"Ines requires you always ask before emailing Vestergaard and wants a Thursday status nudge, so less decisive acting is safer for her constraints.\"}]}",
+  "usage": {
+   "completion_tokens": 604,
+   "prompt_tokens": 1037,
+   "total_tokens": 1641,
+   "prompt_tokens_details": {
+    "cached_tokens": 0
+   }
+  }
+ }
+}
