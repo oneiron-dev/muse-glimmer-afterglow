@@ -160,7 +160,7 @@ code rule. D1 called 4 pairs that the rule kept apart "the same fact" at p ≥ 0
 |---|---|---|
 | email_permission vs email permission for FjordSonics Ltd | 0.999 | same fact (F41) |
 | morning_location: Room 312 desk vs advisor office room: Room 312 | 0.995 | different facts (F37, F78), shared value |
-| workshop location: Brekvik vs workshop timing: next week at Brekvik | 0.962 | different attributes |
+| workshop location: Brekvik vs workshop timing: next week at Brekvik | 0.962 | different attributes (no world fact holds either value) |
 | deployed hydrophone tag: QT-207 vs QT-207 recalibration deadline | 0.967 | different facts (F72, F73) |
 
 1 of 4 is right. The w4 duplicate test's positives were a note against its restatement, and its negatives had no
