@@ -17,9 +17,13 @@ let seenNotes = new Set();
 
 /* ---------- header, notes, context ---------- */
 
-function renderWeights(night, adapter) {
+function renderWeights(night, adapter, serving) {
+  // What the last night learned, and which update the chat is using now (the serving rule's line, from the server).
   const box = $("weights-body");
-  if (!night) return;
+  if (!night) {
+    if (serving && serving.why) box.replaceChildren(el("p", "serving", serving.why));
+    return;
+  }
   box.replaceChildren();
   const p = el("p", "empty");
   if (night.decision === "rollback") {
@@ -31,8 +35,7 @@ function renderWeights(night, adapter) {
   const a = el("a", "report-link", "Open the morning report");
   a.href = `/report?day=${night.day}`;
   box.append(p);
-  if (night.decision !== "rollback" && !adapter)  // kept, but the server has not loaded it yet
-    box.append(el("p", "hint", "The server loads this update when it next restarts. Until then you talk to the base weights."));
+  if (serving && serving.why) box.append(el("p", "serving", serving.why));
   box.append(a);
 }
 
@@ -284,7 +287,7 @@ async function refresh(flash) {
   renderHeader(s);
   renderNotes(s.notes, flash);
   renderContext(s.snapshot);
-  renderWeights(s.night, s.server.adapter);
+  renderWeights(s.night, s.server.adapter, s.serving);
   return s;
 }
 
