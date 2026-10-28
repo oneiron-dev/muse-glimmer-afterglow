@@ -24,6 +24,8 @@ from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 
 JST = dt.timezone(dt.timedelta(hours=9))
 MAX_ROUNDS = 8
+LINK_P = 0.9  # a one-pass "replaces" this sure links at once (decide/decider.py SUPERSEDE_ACCEPT_P)
+ASK_AGAIN_P = 0.5  # from here up to LINK_P the decision is asked once more with reasoning on
 
 SYSTEM_PROMPT = """You are Afterglow, {who} personal assistant. You run on {owner} own computer.
 
@@ -71,7 +73,8 @@ def system_message(world_doc):
 
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
-                 notes_backend="local", temperature=0.3, decide_supersede=False):
+                 notes_backend="local", temperature=0.3, decide_supersede=False, decide_reasoned=True,
+                 decide_adapter=None):
         self.world, self.day = world, int(day)
         self.temperature = temperature
         self.client = client or GlimmerClient()
@@ -92,8 +95,9 @@ class DaySession:
         if prev and (prev / "world_state.json").exists():
             seed = json.loads((prev / "world_state.json").read_text())
         self.world_state = WorldState(self.dir / "world_state.json", seed=seed or self.world_doc)
+        self.decide_reasoned = decide_reasoned
         self.tools = ToolBox(self.notes, self.world_state, day=self.day,
-                             decide_supersede=self._supersede_decider() if decide_supersede else None)
+                             decide_supersede=self._supersede_decider(decide_adapter) if decide_supersede else None)
         self.daylog_path = self.dir / "daylog.jsonl"
         self.session_path = self.dir / "session.json"
         self.system_message = system_message(self.world_doc)
@@ -102,23 +106,38 @@ class DaySession:
         self.messages = [self.system_message, self.context_message]
         self._replay()
 
-    def _supersede_decider(self):
-        """The one-pass supersede decision (decide/decider.py, base weights: every adapter at 0) on slot 1, so
-        its uncached calls never overwrite the user's cached conversation in slot 0. Returns the ToolBox hook."""
+    def _supersede_decider(self, adapter_path=None):
+        """The supersede decision at remember time (decide/decider.py; base weights, or the decision adapter at 1
+        with every other adapter at 0), on slot 1, so its uncached calls never overwrite the user's cached
+        conversation in slot 0. One pass over the top earlier notes: "replaces" at p >= LINK_P links at once;
+        LINK_P > p >= ASK_AGAIN_P asks once more with reasoning on and links when the reasoned answer says
+        "replaces"; lower keeps both. Returns the ToolBox hook."""
         sys.path.insert(0, str(paths.REPO))
         from decide.decider import Decider
+        from decide.prompts import note_line
 
-        decider = Decider(self.client.endpoint, slot=1, trace="supersede_decision")
+        one_pass = Decider(self.client.endpoint, adapter_path=adapter_path, slot=1, trace="supersede_decision")
+        # thresholds above 1: pair() always reasons first, then reads the same labels
+        reasoned = Decider(self.client.endpoint, adapter_path=adapter_path, slot=1, trace="supersede_decision_reasoned",
+                           thresholds={"supersede": 1.01})
+        p_replaces = lambda d: d["p"] if d["yes"] else 1.0 - d["p"]
 
-        def decide(new_note, _candidates):
+        def decide(new_note):
             earlier = [n for n in self.notes.all() if n["id"] != new_note["id"]]
-            r = decider.supersede_link(earlier, new_note)
-            # p = the probability of "replaces" (label 1) for the most likely candidate, linked or not
-            p_replaces = lambda d: d["p"] if d["yes"] else 1.0 - d["p"]
+            r = one_pass.supersede_link(earlier, new_note, accept_p=LINK_P)
             best = max(r["decisions"], key=p_replaces, default=None)
-            return {"note": next((n for n in earlier if n["id"] == r["link"]), None),
-                    "p": best and round(p_replaces(best), 4), "latency_s": round(r["ms"] / 1000, 3),
-                    "decisions": r["decisions"], "candidate_id": best and best["candidate"]}
+            by_id = {n["id"]: n for n in earlier}
+            decided = {"by": "one-pass decision", "p": best and round(p_replaces(best), 4),
+                       "latency_s": round(r["ms"] / 1000, 3), "candidate": best and best["candidate"]}
+            note = by_id.get(r["link"])
+            if note is None and best and ASK_AGAIN_P <= p_replaces(best) < LINK_P and self.decide_reasoned:
+                t = reasoned.pair("supersede", note_line(by_id[best["candidate"]]), note_line(new_note))
+                decided.update(by="thought it through", latency_s=round(decided["latency_s"] + t["ms"] / 1000, 3),
+                               reasoned={"pick": t["pick"], "p": t["p"], "ms": t["ms"],
+                                         "reasoning_tokens": t.get("reasoning_tokens")})
+                if t["yes"]:
+                    note = by_id[best["candidate"]]
+            return {"note": note, "decided": decided, "decisions": r["decisions"]}
 
         return decide
 
