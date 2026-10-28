@@ -72,6 +72,8 @@ def main():
         recs[arm] = rec
     gate_path = night / "eval" / "gate-night.json"
     new_eval = build(world, args.day, recs, old_eval["adapter"], json.loads(gate_path.read_text()) if gate_path.exists() else None)
+    for k, v in old_eval.items():  # blocks the report step added (chat checks, behaviour check, vector pass) stay
+        new_eval.setdefault(k, v)
     (night / "eval.json").write_text(json.dumps(new_eval, indent=1) + "\n")
     receipt = json.loads((night / "receipt.json").read_text())
     verify = json.loads((night / "gguf-verify.json").read_text())

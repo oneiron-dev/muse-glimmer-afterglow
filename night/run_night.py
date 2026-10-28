@@ -62,7 +62,10 @@ GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 
-def decide(e, verify, leak_passed, gate_with_control_vector=False):
+ABSTENTION_RULES = ("v3", "product", "report-only")  # v3 = rule of record until the owner rules (card META-ABSTENTION-GATE)
+
+
+def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_rule="v3"):
     """Keep the adapter only if every gate passes: clean data, GGUF = PEFT, learned (B-A interval above 0),
     no loss detected (forgetting interval's lower bound above -5 points), no new tool failure and, when measured,
     abstention kept (SimpleQA gate slice, two-sided: abstain rate within 10 points of the base's and exact-match right
@@ -81,7 +84,14 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False):
         checks["tool_calls"] = e["tool_calls"]["passed"]
     gate = e.get("abstention_gate")
     cv_gate = e.get("abstention_gate_with_control_vector")
-    if gate_with_control_vector and cv_gate:
+    product = e.get("abstention_product_form")
+    if abstention_rule == "product":  # option B: abstention judged in the day agent's own form, no worse than base
+        if not product:
+            raise ValueError("abstention rule 'product' needs eval.json abstention_product_form (eval/product_abstention.py)")
+        checks["abstention_product_form"] = product["passed"]
+    elif abstention_rule == "report-only":  # option C: abstention reported, never a gate
+        pass
+    elif gate_with_control_vector and cv_gate:
         checks["abstention_gate_with_control_vector"] = cv_gate["passed"]
     elif gate:
         checks["abstention_gate"] = gate["passed"]
@@ -100,7 +110,9 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False):
     if e.get("tool_calls"):
         c = e["tool_calls"]["counts"]
         why += f"; tool calls {c['base']['right']} -> {c['adapter']['right']} of {c['adapter']['n']}"
-    out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
+    out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks, "abstention_rule": abstention_rule}
+    if product:
+        out["abstention_product_form"] = {k: v for k, v in product.items() if k != "answers"}
     if gate:
         out["abstention"] = {"base": gate["arms"]["A"]["abstain_rate"], "after": gate["arms"]["B"]["abstain_rate"],
                              "right_base": gate["arms"]["A"]["exact_correct"], "right_after": gate["arms"]["B"]["exact_correct"],
@@ -425,6 +437,9 @@ class Night:
         channel = ev / "channel-night.json"
         if channel.exists():
             e["content_channel"] = {k: v for k, v in json.loads(channel.read_text()).items() if k != "replies"}
+        product = ev / "product-abstention-night.json"  # option B's measurement, when it exists (report, not a gate under v3)
+        if product.exists():
+            e["abstention_product_form"] = json.loads(product.read_text())
         tool_check = ev / "tools-night.json"
         if tool_check.exists():
             e["tool_calls"] = {k: v for k, v in json.loads(tool_check.read_text()).items() if k != "turns"}
@@ -432,7 +447,7 @@ class Night:
         if behaviour.exists():  # Meta steering's behaviour check of this adapter (report only, not a gate)
             doc = json.loads(behaviour.read_text())
             e["behaviour_check"] = doc.get("behaviour_check", doc)
-        if channel.exists() or behaviour.exists() or tool_check.exists():
+        if channel.exists() or behaviour.exists() or tool_check.exists() or product.exists():
             (self.night / "eval.json").write_text(json.dumps(e, indent=1) + "\n")
         cv_path, main_gate = self.night / "eval-cv" / "gate-night-cv.json", ev / "gate-night.json"
         if a.control_vector and cv_path.exists() and main_gate.exists():
