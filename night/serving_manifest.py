@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from paths import runs_root  # noqa: E402
 
 LLAMA_SERVER = "/data/afterglow/llama-v0.7.0-620d222/bin/llama-server"
+HOSTS = json.loads((Path(__file__).resolve().parents[1] / "app" / "serve" / "hosts.json").read_text())
 
 
 def ssh(host, cmd):
@@ -25,12 +26,14 @@ def ssh(host, cmd):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--serving-host", default="nelly")
-    ap.add_argument("--serving-ip", default="100.96.31.41", help="address the training host uses to reach the serving host")
+    ap.add_argument("--serving-host", default=HOSTS["default"], choices=sorted(HOSTS["hosts"]))
+    ap.add_argument("--serving-ip", help="address the training host uses to reach the serving host "
+                    "(default: its tailnet address in app/serve/hosts.json)")
     ap.add_argument("--serving-dir", default="/data/afterglow/adapters")
     ap.add_argument("--llama-sha256", required=True, help="sha256 of the staged llama-server binary")
     ap.add_argument("--runs")
     args = ap.parse_args()
+    args.serving_ip = args.serving_ip or HOSTS["hosts"][args.serving_host]["tailnet"]
     runs = runs_root(args.runs)
     adapters = []
     for pointer in sorted(runs.glob("*/adapters.json")):
@@ -41,7 +44,10 @@ def main():
         dest = f"{args.serving_dir}/{world}-d{cur['day']}.gguf"
         src_host, src_path = cur["host_gguf"].split(":", 1)
         ssh(args.serving_host, f"mkdir -p {args.serving_dir}")
-        ssh(src_host, f"rsync -a {src_path} {args.serving_ip}:{dest}")
+        if src_host == args.serving_host:  # trained on the serving box: a local copy
+            ssh(src_host, f"cp {src_path} {dest}")
+        else:
+            ssh(src_host, f"rsync -a {src_path} {args.serving_ip}:{dest}")
         got = ssh(args.serving_host, f"sha256sum {dest}").split()[0]
         if got != cur["gguf_sha256"]:
             raise SystemExit(f"{world}: sha256 on {args.serving_host} is {got}, expected {cur['gguf_sha256']}")
@@ -55,7 +61,7 @@ def main():
     for i, a in enumerate(adapters):
         a["id"] = i
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"llama_server": LLAMA_SERVER, "llama_sha256": args.llama_sha256,
+    out.write_text(json.dumps({"serving_host": args.serving_host, "llama_server": LLAMA_SERVER, "llama_sha256": args.llama_sha256,
                                "flags": "--lora <path> per adapter in id order, --lora-init-without-apply, --cache-ram 0",
                                "adapters": adapters}, indent=1) + "\n")
     print(json.dumps({"manifest": str(out), "adapters": [(a["id"], a.get("world"), a.get("day")) for a in adapters]}))
