@@ -30,6 +30,7 @@ sys.path.insert(0, str(ROOT / "decide"))
 import scoring  # noqa: E402
 from leak_check import check as leak_check  # noqa: E402
 from paths import runs_root  # noqa: E402
+from candidates import Bm25  # noqa: E402
 from prompts import (DUP_OPTIONS, SUP_OPTIONS, note_line, pair_prompt, route_options,  # noqa: E402
                      route_prompt)
 
@@ -239,6 +240,31 @@ def supersede_rows(W, split, rng):
     return rows
 
 
+def supersede_candidate_rows(W, runs, k=8):
+    """Remember-time rows: the earlier notes are the day agent's own day-1 notes (its paraphrased keys), the new note is
+    a superseding fact (world key: value, and the user's day-2 sentence), and the pairs are exactly the BM25 top-k
+    candidates the live decider checks (decide.decider.supersede_candidates). A candidate holding the old value ->
+    1 (replaces), any other candidate -> 2 (both stay true)."""
+    path = runs / W["world"] / "1" / "notes.json"
+    if not path.exists():
+        return []
+    day1 = [n for n in json.loads(path.read_text())["notes"] if n.get("status", "active") == "active"]
+    bm = Bm25([{**n, "statement": ""} for n in day1])
+    said = {f: t["content"] for t in W["day2"] for f in t.get("facts", [])}
+    rows = []
+    for old in (f for f in W["facts"].values() if f.get("superseded_by")):
+        new = W["facts"][old["superseded_by"]]
+        for form, text in (("key_value", fact_line(new)), ("user_sentence", said.get(new["id"]))):
+            if not text:
+                continue
+            for cand in bm.top(text, k):
+                label = "1" if holds(cand["value"], old) else "2"
+                rows.append(pair_row("supersede", W["world"], "train", f"candidate_{form}",
+                                     f"sup:{W['world']}:{cand['id']}-{new['id']}:cand:{form}", note_line(cand), text, label,
+                                     {"fact_ids": [old["id"] if label == "1" else None, new["id"]], "note_id": cand["id"]}))
+    return rows
+
+
 def split_by_hash(rows, share, salt):
     """Hold out a calibration share of w1-w3 pair rows by a stable hash of the row id."""
     out = []
@@ -289,6 +315,8 @@ def main():
         worlds[w], [worlds[o] for o in TRAIN_WORLDS if o != w], rng, args.cross_world_asks)]
     for kind, build in (("duplicate", duplicate_rows), ("supersede", supersede_rows)):
         rows = split_by_hash([r for w in TRAIN_WORLDS for r in build(worlds[w], "train", random.Random(SEED))], 0.2, kind)
+        if kind == "supersede":
+            rows += split_by_hash([r for w in TRAIN_WORLDS for r in supersede_candidate_rows(worlds[w], runs)], 0.2, kind)
         built[f"{kind}-train.jsonl"] = [r for r in rows if r["split"] == "train"]
         built[f"{kind}-calibration.jsonl"] = [r for r in rows if r["split"] == "calibration"]
     # leak check: no training prompt may hold a held-out probe or a never-told question (any world). Hit rows are
