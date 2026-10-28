@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+"""Score decision arms from readout files (decide/readout.py output), per kind, and the route decision end to end.
+
+Per kind and split: accuracy, ECE (15 bins, top-label confidence), wrong answers at p >= 0.9, latency p50/p95, label
+mass; with a reasoned readout ("extended"), the same for it and for auto-extend at a threshold. Accuracy against a
+reference arm uses a paired cluster bootstrap (clusters = facts for route, rows otherwise; 10,000 resamples, seed
+20261014).
+
+Route end to end: the chosen note goes through the D5 value compare (decide/notes_agreement_gate.py): agree ->
+weights, mismatch -> notes (scored by arm D), 0 -> ask. Reported on the same probes beside always-D (every answer
+from arm D), D5-app and D5-oracle, with score = (right - wrong) / n.
+"""
+
+import argparse
+import json
+import random
+import statistics
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "decide"))
+import notes_agreement_gate as gate  # noqa: E402
+
+SEED = 20261014
+DATA = ROOT / "decide" / "data"
+
+
+def read_jsonl(path):
+    return [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
+
+
+def ece(rows, key="p", right="right", bins=15):
+    if not rows:
+        return None
+    total = 0.0
+    for b in range(bins):
+        lo, hi = b / bins, (b + 1) / bins
+        sel = [r for r in rows if (lo < r[key] <= hi) or (b == 0 and r[key] == 0)]
+        if sel:
+            total += len(sel) / len(rows) * abs(sum(r[right] for r in sel) / len(sel) - sum(r[key] for r in sel) / len(sel))
+    return round(total, 4)
+
+
+def pct(xs, q):
+    xs = sorted(xs)
+    return round(xs[min(len(xs) - 1, int(q * len(xs)))], 1) if xs else None
+
+
+def one_pass_metrics(rows):
+    return {"n": len(rows), "accuracy": round(sum(r["right"] for r in rows) / len(rows), 4) if rows else None,
+            "ece": ece(rows), "wrong_at_p90": sum(1 for r in rows if r["p"] >= 0.9 and not r["right"]),
+            "p50_ms": pct([r["ms"] for r in rows], 0.5), "p95_ms": pct([r["ms"] for r in rows], 0.95),
+            "label_mass_p50": round(statistics.median(r["label_mass"] for r in rows), 4) if rows else None}
+
+
+def extended_metrics(rows):
+    ext = [r["extended"] for r in rows if "extended" in r]
+    if not ext:
+        return None
+    return {"n": len(ext), "accuracy": round(sum(e["right"] for e in ext) / len(ext), 4), "ece": ece(ext),
+            "wrong_at_p90": sum(1 for e in ext if e["p"] >= 0.9 and not e["right"]),
+            "p50_ms": pct([e["ms"] for e in ext], 0.5), "p95_ms": pct([e["ms"] for e in ext], 0.95),
+            "reasoning_tokens_p50": pct([e["reasoning_tokens"] or 0 for e in ext], 0.5)}
+
+
+def auto_extend(rows, tau):
+    """D2 offline: one pass when p >= tau, else the reasoned readout (rows must carry 'extended')."""
+    out = []
+    for r in rows:
+        if r["p"] >= tau or "extended" not in r:
+            out.append({"right": r["right"], "p": r["p"], "ms": r["ms"], "escalated": False})
+        else:
+            e = r["extended"]
+            out.append({"right": e["right"], "p": e["p"], "ms": r["ms"] + e["ms"], "escalated": True})
+    return {"tau": tau, "n": len(out), "accuracy": round(sum(o["right"] for o in out) / len(out), 4) if out else None,
+            "escalation_rate": round(sum(o["escalated"] for o in out) / len(out), 4) if out else None,
+            "p50_ms": pct([o["ms"] for o in out], 0.5), "p95_ms": pct([o["ms"] for o in out], 0.95)}
+
+
+def cluster_of(row):
+    return f"{row['world']}:{row.get('fact_id') or row['id']}"
+
+
+def paired_bootstrap(a, b, rows_by_id, n=10000, seed=SEED):
+    """Accuracy difference a - b over shared ids, resampling clusters (facts) with replacement."""
+    ids = sorted(set(a) & set(b))
+    clusters = {}
+    for i in ids:
+        clusters.setdefault(cluster_of(rows_by_id[i]), []).append(i)
+    keys = sorted(clusters)
+    diff = sum(a[i]["right"] - b[i]["right"] for i in ids) / len(ids)
+    rng = random.Random(seed)
+    stats = []
+    for _ in range(n):
+        sample = [k for _ in keys for k in [keys[rng.randrange(len(keys))]]]
+        num = sum(a[i]["right"] - b[i]["right"] for k in sample for i in clusters[k])
+        den = sum(len(clusters[k]) for k in sample)
+        stats.append(num / den)
+    stats.sort()
+    return {"n": len(ids), "clusters": len(keys), "diff": round(diff, 4),
+            "ci95": [round(stats[int(0.025 * n)], 4), round(stats[int(0.975 * n)], 4)]}
+
+
+def route_end_to_end(results, rows_by_id, compare="strict"):
+    picks, worlds = {}, set()
+    for r in results:
+        row = rows_by_id[r["id"]]
+        worlds.add(row["world"])
+        picks[r["id"]] = None if r["pick"] == "0" else row["note_ids"][int(r["pick"]) - 1]
+    ids = {r["id"] for r in results}
+    out = {}
+    runs = gate.runs_root(None)
+    arms = {"decision": [x for w in sorted(worlds) for x in gate.world_rows(w, runs, "decision", compare, picks)],
+            "d5_app": [x for w in sorted(worlds) for x in gate.world_rows(w, runs, "app", compare)],
+            "d5_oracle": [x for w in sorted(worlds) for x in gate.world_rows(w, runs, "oracle", compare)]}
+    for name, rows in arms.items():
+        rows = [x for x in rows if f"route:{x['world']}:{x['id']}" in ids]
+        out[name] = {sub: gate.score_rows([x for x in rows if sel(x)]) for sub, sel in
+                     (("forward", lambda x: x["kind"] == "forward"), ("never_told", lambda x: x["kind"] == "never_told"),
+                      ("all", lambda x: True))}
+        if name == "decision":
+            always_d = rows
+    for sub, sel in (("forward", lambda x: x["kind"] == "forward"), ("never_told", lambda x: x["kind"] == "never_told"),
+                     ("all", lambda x: True)):
+        sel_rows = [x for x in always_d if sel(x)]
+        right = sum(x["d_right"] for x in sel_rows)
+        wrong = sum(not x["d_right"] and not x["d_abstain"] for x in sel_rows)
+        out.setdefault("always_d", {})[sub] = {"n": len(sel_rows), "right": right, "wrong": wrong,
+                                               "score": round((right - wrong) / len(sel_rows), 4) if sel_rows else None}
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--arm", action="append", required=True, help="name=readout.jsonl (the first arm is the reference)")
+    ap.add_argument("--tau", type=float, nargs="*", default=[], help="auto-extend thresholds to report (rows with 'extended')")
+    ap.add_argument("--out", required=True)
+    args = ap.parse_args()
+    rows_by_id = {r["id"]: r for p in sorted(DATA.glob("*-test.jsonl")) + sorted(DATA.glob("*-calibration.jsonl"))
+                  for r in read_jsonl(p)}
+    arms = {a.split("=", 1)[0]: {r["id"]: r for r in read_jsonl(a.split("=", 1)[1])} for a in args.arm}
+    ref = next(iter(arms))
+    report = {"arms": {}}
+    for name, res in arms.items():
+        by = {}
+        for r in res.values():
+            row = rows_by_id[r["id"]]
+            by.setdefault(f"{row['kind']}/{row['split']}", []).append(r)
+        report["arms"][name] = {}
+        for key, rs in sorted(by.items()):
+            entry = {"one_pass": one_pass_metrics(rs), "reasoned": extended_metrics(rs),
+                     "auto_extend": [auto_extend(rs, t) for t in args.tau]}
+            if name != ref:
+                entry["vs_" + ref] = paired_bootstrap({r["id"]: r for r in rs}, arms[ref], rows_by_id)
+            report["arms"][name][key] = entry
+        route = [r for r in res.values() if rows_by_id[r["id"]]["kind"] == "route"]
+        if route:
+            report["arms"][name]["route_end_to_end"] = route_end_to_end(route, rows_by_id)
+    Path(args.out).write_text(json.dumps(report, indent=1) + "\n")
+    for name, a in report["arms"].items():
+        for key, e in a.items():
+            if key == "route_end_to_end":
+                for arm, subs in e.items():
+                    s = subs["all"]
+                    d = s.get("lookup_scored_by_d", s)
+                    print(f"{name:8s} route e2e {arm:10s} n {s['n']}  right {d['right']} wrong {d['wrong']} score {d['score']}"
+                          + (f"  asked {d['asked']}  precision {s['routing_precision']} recall {s['routing_recall']}" if "asked" in d else ""))
+                continue
+            o = e["one_pass"]
+            print(f"{name:8s} {key:24s} n {o['n']:4d} acc {o['accuracy']} ece {o['ece']} wrong@0.9 {o['wrong_at_p90']} "
+                  f"p50 {o['p50_ms']} ms p95 {o['p95_ms']} ms mass {o['label_mass_p50']}"
+                  + (f"  vs {ref} {e['vs_' + ref]['diff']} {e['vs_' + ref]['ci95']}" if "vs_" + ref in e else ""))
+
+
+if __name__ == "__main__":
+    main()

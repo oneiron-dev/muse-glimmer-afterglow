@@ -54,6 +54,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--world", required=True)
     ap.add_argument("--verify", action="store_true", help="check the hashes against FROZEN.json instead of writing it")
+    ap.add_argument("--extend", action="store_true", help="re-freeze after probes were appended for a later day: "
+                    "the frozen probes must be an unchanged byte prefix of probes.jsonl; the old record is kept")
     args = ap.parse_args()
     wdir = ROOT / "worlds" / args.world
     heldout = wdir / "heldout"
@@ -76,8 +78,19 @@ def main():
     if errors:
         print("\n".join(errors))
         sys.exit(3)
-    if frozen_path.exists():
-        sys.exit(f"{frozen_path} exists; held-out probes are frozen once. Use --verify.")
+    earlier = []
+    if frozen_path.exists() and args.extend:
+        old = json.loads(frozen_path.read_text())
+        rel = str((heldout / "probes.jsonl").relative_to(ROOT))
+        lines = (heldout / "probes.jsonl").read_bytes().splitlines(keepends=True)
+        prefix = b"".join(lines[:sum(old["probe_counts"].values())])
+        if hashlib.sha256(prefix).hexdigest() != old["sha256"][rel] or set(old["sha256"]) != set(hashes):
+            sys.exit(f"{frozen_path}: the frozen probes are not an unchanged prefix of {rel}; nothing written")
+        if any(hashes[k] != v for k, v in old["sha256"].items() if k != rel):
+            sys.exit(f"{frozen_path}: a frozen file other than {rel} changed; nothing written")
+        earlier = old.get("earlier", []) + [{k: v for k, v in old.items() if k != "earlier"}]
+    elif frozen_path.exists():
+        sys.exit(f"{frozen_path} exists; held-out probes are frozen once. Use --verify (or --extend after appending).")
     record = {
         "world": args.world,
         "frozen_at": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
@@ -85,6 +98,8 @@ def main():
         "general_items": len(general),
         "sha256": hashes,
     }
+    if earlier:
+        record["earlier"] = earlier
     frozen_path.write_text(json.dumps(record, indent=1) + "\n")
     print(json.dumps(record, indent=1))
 
