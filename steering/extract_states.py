@@ -168,6 +168,8 @@ def main():
     ap.add_argument("--axes", default=str(ROOT / "steering" / "axes.json"))
     ap.add_argument("--only-axes", default="", help="comma list; default all")
     ap.add_argument("--adapter-axes", default="", help="axes to read on adapters (default all)")
+    ap.add_argument("--prompt-set", action="append", default=[],
+                    help="NAME=JSONL of {id, text}: plain prompts read at the answer header (detector data), per tag")
     ap.add_argument("--out", required=True)
     ap.add_argument("--per-query", type=int, default=2, help="supplied tokens per prompt and template")
     ap.add_argument("--seed", type=int, default=7)
@@ -195,10 +197,24 @@ def main():
     bank = token_bank(tokenizer)
     pairs_by_axis = {a["name"]: build_pairs(tokenizer, a, bank, args.per_query, args.seed) for a in axes}
     check_ids = [tokenizer(build_prefix(tokenizer, p), add_special_tokens=False)["input_ids"] for p in spec["check_probes"]]
+    prompt_sets = {}
+    for item in args.prompt_set:
+        name, path = item.split("=", 1)
+        rows = [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
+        prompt_sets[name] = ([r["id"] for r in rows],
+                             [tokenizer(build_prefix(tokenizer, r["text"]), add_special_tokens=False)["input_ids"] for r in rows])
     save_status(layers=len(layers), pairs={k: len(v) for k, v in pairs_by_axis.items()}, bank=len(bank))
     print(json.dumps({"load_s": status["load_s"], "layers": len(layers), "pairs": status["pairs"]}), flush=True)
 
+    def read_sets(tag, tdir):
+        for name, (ids, seqs) in prompt_sets.items():
+            states = run_states(model, capture, seqs, args.batch_size, device, deadline)
+            np.savez(tdir / f"set-{name}.npz", states=states, ids=np.array(ids))
+            status["done"].append(f"{tag}/set-{name}")
+            save_status()
+
     def read_tag(tag, names):
+        """Check probes, the first axis (abstention), the prompt sets, then the remaining axes."""
         tdir = out / tag
         tdir.mkdir(exist_ok=True)
         t = time.time()
@@ -206,7 +222,9 @@ def main():
         np.savez(tdir / "check.npz", states=check)
         status["done"].append(f"{tag}/check")
         save_status()
-        for name in names:
+        for i, name in enumerate(names):
+            if i == 1:
+                read_sets(tag, tdir)
             pairs = pairs_by_axis[name]
             pos = run_states(model, capture, [p["pos_ids"] for p in pairs], args.batch_size, device, deadline)
             neg = run_states(model, capture, [p["neg_ids"] for p in pairs], args.batch_size, device, deadline)
@@ -217,6 +235,8 @@ def main():
             save_status()
             print(json.dumps({"tag": tag, "axis": name, "pairs": len(pairs), "elapsed_s": round(time.time() - t0, 1)}),
                   flush=True)
+        if len(names) <= 1:
+            read_sets(tag, tdir)
         print(json.dumps({"tag": tag, "seconds": round(time.time() - t, 1)}), flush=True)
 
     try:
