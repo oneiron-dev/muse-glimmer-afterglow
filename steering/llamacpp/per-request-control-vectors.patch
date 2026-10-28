@@ -1,0 +1,207 @@
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+index a18b754..6c69e6b 100644
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -351,6 +351,9 @@ struct server_slot {
+     std::vector<common_adapter_lora_info> lora;
+     int32_t alora_invocation_start = -1;
+ 
++    // control vector scales this slot's prompt was computed with (one per loaded vector; empty when none are loaded)
++    std::vector<float> cvec_scales;
++
+     // sampling
+     json json_schema;
+ 
+@@ -484,7 +487,8 @@ struct server_slot {
+ 
+         return task->type == other_slot.task->type
+             && inp_embd.size() == other_slot.inp_embd.size()
+-            && are_lora_equal(lora, other_slot.lora);
++            && are_lora_equal(lora, other_slot.lora)
++            && cvec_scales == other_slot.cvec_scales;
+     }
+ 
+     // returns -1 if the generation is limitless
+@@ -991,6 +995,11 @@ private:
+     // note: keep these alive - they determine the lifetime of the model, context, etc.
+     common_init_result_ptr llama_init;
+ 
++    // control vectors from --control-vector(-scaled), kept one per file at strength 1 so a request can scale each
++    std::vector<common_control_vector_data> cvec_files;
++    std::vector<float> cvec_default_scales; // the load-time strengths
++    std::vector<float> cvec_applied;        // the scales the target context holds now
++
+     llama_context * ctx_tgt = nullptr;
+ 
+     server_batch batch;
+@@ -1231,6 +1240,18 @@ private:
+ 
+         vocab = llama_model_get_vocab(model_tgt);
+ 
++        // common_init_from_params applied the summed vectors at their load-time strengths; keep each file to rescale
++        for (const auto & info : params_base.control_vectors) {
++            auto cvec = common_control_vector_load({ { 1.0f, info.fname } });
++            if (cvec.n_embd == -1 || (!cvec_files.empty() && cvec.n_embd != cvec_files[0].n_embd)) {
++                SRV_ERR("failed to load control vector '%s'\n", info.fname.c_str());
++                return false;
++            }
++            cvec_files.push_back(std::move(cvec));
++            cvec_default_scales.push_back(info.strength);
++        }
++        cvec_applied = cvec_default_scales;
++
+         try {
+             decision.init(model_tgt);
+         } catch (const std::exception & e) {
+@@ -1439,6 +1460,8 @@ private:
+             slot.mctx                   = mctx;
+             slot.prompt.tokens.has_mtmd = mctx != nullptr;
+ 
++            slot.cvec_scales = cvec_default_scales;
++
+             SLT_TRC(slot, "new slot, n_ctx = %d\n", slot.n_ctx);
+ 
+             slot.callback_on_release = [this](int id_slot) {
+@@ -1834,6 +1857,34 @@ private:
+         return res;
+     }
+ 
++    // sum the loaded control vectors at the given scales into the target context (all zero: clear it), the way
++    // common_init_from_params applies them at load
++    void apply_control_vectors(const std::vector<float> & scales) {
++        size_t len = 0;
++        for (const auto & f : cvec_files) {
++            len = std::max(len, f.data.size());
++        }
++        std::vector<float> data(len, 0.0f);
++        bool any = false;
++        for (size_t i = 0; i < cvec_files.size(); ++i) {
++            if (scales[i] == 0.0f) {
++                continue;
++            }
++            any = true;
++            const auto & src = cvec_files[i].data;
++            for (size_t j = 0; j < src.size(); ++j) {
++                data[j] += src[j] * scales[i];
++            }
++        }
++        const int32_t err = llama_set_adapter_cvec(ctx_tgt, any ? data.data() : nullptr, any ? data.size() : 0,
++                cvec_files[0].n_embd, params_base.control_vector_layer_start, params_base.control_vector_layer_end);
++        if (err) {
++            SRV_ERR("failed to apply control vectors (error %d)\n", err);
++            return;
++        }
++        cvec_applied = scales;
++    }
++
+     std::vector<common_adapter_lora_info> construct_lora_list(const std::map<int, float> & config) const {
+         std::vector<common_adapter_lora_info> output = params_base.lora_adapters; // copy
+         for (size_t i = 0; i < output.size(); ++i) {
+@@ -1865,6 +1916,27 @@ private:
+             slot.lora = params_base.lora_adapters;
+         }
+ 
++        // per-request control vector scales; as with a lora change, a changed scale clears the slot's prompt cache
++        if (!cvec_files.empty()) {
++            std::vector<float> scales = cvec_default_scales;
++            if (task.params.has_control_vectors) {
++                for (size_t i = 0; i < scales.size(); ++i) {
++                    const auto it = task.params.control_vectors.find((int) i);
++                    scales[i] = it != task.params.control_vectors.end() ? it->second : 0.0f;
++                }
++                for (const auto & it : task.params.control_vectors) {
++                    if (it.first < 0 || it.first >= (int) cvec_files.size()) {
++                        SLT_WRN(slot, "ignoring unknown control vector id %d (%zu loaded)\n", it.first, cvec_files.size());
++                    }
++                }
++            }
++            if (scales != slot.cvec_scales) {
++                SLT_TRC(slot, "%s", "clearing cache for a control vector change\n");
++                slot.prompt.clear();
++                slot.cvec_scales = scales;
++            }
++        }
++
+         // if using alora, make sure it's only a single one requested and active
+         size_t alora_invocation_start = task.tokens.size();
+         if (lora_all_alora(slot.lora)) {
+@@ -3316,6 +3388,11 @@ private:
+             // apply lora, only need to do it once per batch
+             common_set_adapter_lora(ctx_tgt, slot_batched->lora);
+ 
++            // apply the batch's control vector scales, only when they differ from what the context holds
++            if (!cvec_files.empty() && slot_batched->cvec_scales != cvec_applied) {
++                apply_control_vectors(slot_batched->cvec_scales);
++            }
++
+             // if the lora is temporarily disabled for an alora, re-enable it
+             // for next time
+             if (alora_scale > 0.0f) {
+diff --git a/tools/server/server-schema.cpp b/tools/server/server-schema.cpp
+index 54e126a..d47fb7e 100644
+--- a/tools/server/server-schema.cpp
++++ b/tools/server/server-schema.cpp
+@@ -236,6 +236,17 @@ std::vector<std::unique_ptr<field>> make_llama_cmpl_schema(const common_params &
+             ctx.params.lora = parse_lora_request(lora);
+         }));
+ 
++    add((new field_json("control_vectors"))
++        ->set_desc("Per-request scales for the control vectors loaded at start (--control-vector, --control-vector-scaled), by load order: a list of objects with `id` and `scale` fields. Vectors not listed are at scale 0.0; without this field every vector keeps its load-time scale")
++        ->set_handler([&](field_eval_context & ctx, const json & data) {
++            const auto & cv = data.at("control_vectors");
++            if (!cv.is_array()) {
++                throw std::runtime_error("Error: 'control_vectors' must be an array of objects with 'id' and 'scale' fields");
++            }
++            ctx.params.control_vectors     = parse_lora_request(cv);
++            ctx.params.has_control_vectors = true;
++        }));
++
+     // sequence breakers for DRY
+     // Currently, this is not compatible with TextGen WebUI, Koboldcpp and SillyTavern format
+     // Ref: https://github.com/oobabooga/text-generation-webui/blob/d1af7a41ade7bd3c3a463bfa640725edb818ebaf/extensions/openai/typing.py#L39
+diff --git a/tools/server/server-task.cpp b/tools/server/server-task.cpp
+index 3f30da2..58f4b05 100644
+--- a/tools/server/server-task.cpp
++++ b/tools/server/server-task.cpp
+@@ -39,6 +39,11 @@ json task_params::to_json(bool only_metrics) const {
+         lora.push_back({{"id", it.first}, {"scale", it.second}});
+     }
+ 
++    json control_vectors = json::array();
++    for (auto & it : this->control_vectors) {
++        control_vectors.push_back({{"id", it.first}, {"scale", it.second}});
++    }
++
+     if (only_metrics) {
+         return json {
+             {"seed",                      sampling.seed},
+@@ -83,6 +88,7 @@ json task_params::to_json(bool only_metrics) const {
+             {"post_sampling_probs",       post_sampling_probs},
+             {"backend_sampling",          sampling.backend_sampling},
+             {"lora",                      lora},
++            {"control_vectors",           control_vectors},
+         };
+     }
+ 
+@@ -142,6 +148,7 @@ json task_params::to_json(bool only_metrics) const {
+         {"post_sampling_probs",       post_sampling_probs},
+         {"backend_sampling",          sampling.backend_sampling},
+         {"lora",                      lora},
++        {"control_vectors",           control_vectors},
+     };
+ }
+ 
+diff --git a/tools/server/server-task.h b/tools/server/server-task.h
+index e7bb043..1a9f4ba 100644
+--- a/tools/server/server-task.h
++++ b/tools/server/server-task.h
+@@ -70,6 +70,9 @@ struct task_params {
+ 
+     std::map<int, float> lora; // mapping adapter ID -> scale
+ 
++    std::map<int, float> control_vectors;     // control vector ID (load order) -> scale, per request
++    bool has_control_vectors = false;         // the request named control vectors; unnamed ones are at scale 0
++
+     std::vector<std::string> antiprompt;
+     std::vector<std::string> response_fields;
+ 
