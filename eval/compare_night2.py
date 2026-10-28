@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT / "eval"))
 sys.path.insert(0, str(ROOT / "night"))
 from omniscience import outcome  # noqa: E402
 from paths import runs_root  # noqa: E402
+from score_peft import fact_valid_on  # noqa: E402
 
 WORLDS = ["w1-ines-varga", "w2-solo-developer", "w3-shop-owner", "w4-grad-student"]
 
@@ -64,8 +65,9 @@ def main():
         facts = {f["id"]: f for f in json.loads((ROOT / "worlds" / w / "world.json").read_text())["facts"]}
         probes = [json.loads(line) for line in (ROOT / "worlds" / w / "heldout" / "probes.jsonl").read_text().splitlines() if line.strip()]
         fwd = [p for p in probes if p["kind"] == "forward"]
-        earlier = {p["id"] for p in fwd if (facts[p["fact_id"]].get("valid_from") or 1) < args.day and not facts[p["fact_id"]].get("superseded_by")}
-        new = {p["id"] for p in fwd if (facts[p["fact_id"]].get("valid_from") or 1) == args.day}
+        valid = {fid for fid, f in facts.items() if fact_valid_on(f, facts, args.day)}  # the truth on that day, not today's file
+        earlier = {p["id"] for p in fwd if p["fact_id"] in valid and (facts[p["fact_id"]].get("valid_from") or 1) < args.day}
+        new = {p["id"] for p in fwd if p["fact_id"] in valid and (facts[p["fact_id"]].get("valid_from") or 1) == args.day}
         row = {"night": night_summary(night, earlier, new)}
         if (prev / "eval" / "score-night-B.json").exists():
             prev_b = json.loads((prev / "eval" / "score-night-B.json").read_text())["results"]
