@@ -16,13 +16,28 @@ import math
 import time
 import urllib.request
 
-from prompts import pair_options, pair_prompt, route_options, route_prompt
+if __package__:  # imported as decide.decider (app, night)
+    from .candidates import Bm25
+    from .prompts import PROMPT_IDS, note_line, pair_options, pair_prompt, route_options, route_prompt
+else:  # run from decide/
+    from candidates import Bm25
+    from prompts import PROMPT_IDS, note_line, pair_options, pair_prompt, route_options, route_prompt
 
 ANSWER_PREFIX = "<|start|>assistant to=user<|message|>"
 BOS = "<|begin_of_text|>"
 N_PROBS = 128
 # Per-kind thresholds; fit on the calibration split (decide/score_decisions.py) and set here from the results page.
 THRESHOLDS = {"route": 0.0, "duplicate": 0.0, "supersede": 0.0}
+SUPERSEDE_CANDIDATES = 5  # BM25 top 5 over earlier notes held 16 of 17 real day-2 corrections (top 8: 17 of 17)
+SUPERSEDE_ACCEPT_P = 0.9  # link only when the one-pass "replaces" probability reaches this
+
+
+def supersede_candidates(earlier, new_note, k=SUPERSEDE_CANDIDATES):
+    """The k earlier notes most likely to be replaced by new_note: BM25 over each note's key and value, queried with
+    the new note's "key: value"."""
+    if not earlier:
+        return []
+    return Bm25([{**n, "statement": ""} for n in earlier]).top(note_line(new_note), k)
 
 
 class Decider:
@@ -106,7 +121,8 @@ class Decider:
         res = self._read(self._prompt(route_prompt(first, notes, question)), list(options), lora)
         note = None if res["pick"] == "0" else notes[int(res["pick"]) - 1]
         path = "one_pass" if res["p"] >= self.thresholds["route"] else "look_up"
-        return {"kind": "route", "note": note, "ask": note is None and path == "one_pass", "path": path, **res}
+        return {"kind": "route", "prompt_id": PROMPT_IDS["route"], "note": note, "ask": note is None and path == "one_pass",
+                "path": path, **res}
 
     def pair(self, kind, a, b):
         """kind: duplicate | supersede. a, b: note lines ("key: value") or the user's sentence for the new note."""
@@ -119,4 +135,18 @@ class Decider:
             ext = self._think(text, list(options), lora)
             out = {"kind": kind, "path": "thought_it_through", "one_pass": res, **ext}
         out["yes"] = out["pick"] == "1"
+        out["prompt_id"] = PROMPT_IDS[kind]
         return out
+
+    def supersede_link(self, earlier, new_note, k=SUPERSEDE_CANDIDATES, accept_p=SUPERSEDE_ACCEPT_P):
+        """At remember time: does new_note replace one of the earlier active notes? One one-pass supersede call per
+        candidate (earlier note first, new note second, both as "key: value"). Returns the linked note (the candidate
+        with the highest p among "replaces" answers at p >= accept_p, else None) and every decision for the log."""
+        decisions = []
+        for cand in supersede_candidates(earlier, new_note, k):
+            d = self.pair("supersede", note_line(cand), note_line(new_note))
+            decisions.append({"candidate": cand.get("id"), **d})
+        yes = [(d["p"], d["candidate"]) for d in decisions if d["yes"] and d["p"] >= accept_p]
+        link = max(yes)[1] if yes else None
+        return {"kind": "supersede_link", "prompt_id": PROMPT_IDS["supersede"], "link": link, "accept_p": accept_p,
+                "decisions": decisions, "ms": round(sum(d["ms"] for d in decisions), 1)}

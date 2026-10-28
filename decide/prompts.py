@@ -1,6 +1,8 @@
 """The decision prompts and option lists, shared by the row builder (decide/rows.py) and the live decider
 (decide/decider.py). Stdlib only. Changing a string here changes the frozen test rows: rebuild nothing, ask the lead."""
 
+# The id each decision logs with its prompt; bump it with any change to the strings below.
+PROMPT_IDS = {"route": "route-v1", "duplicate": "duplicate-v1", "supersede": "supersede-v1"}
 ROUTE_ASK = "none of these notes answers it (ask {first})"
 ROUTE_TASK = ("Which note answers this question? Reply with the note's number only. "
               "Reply 0 if none of these notes answers it.")
