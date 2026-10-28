@@ -1,0 +1,5826 @@
+{
+ "row": {
+  "name": "decisive-0.06",
+  "request_cvecs": {
+   "decisive": -0.06
+  },
+  "tests_by_arm": {
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ "cmd": [
+  "/data/meta-steering/llama.cpp/build/bin/llama-server",
+  "-m",
+  "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+  "--lora",
+  "/data/meta-night/nights/w1-ines-varga/1/adapter.gguf",
+  "--lora-init-without-apply",
+  "--cache-ram",
+  "0",
+  "-ngl",
+  "99",
+  "-fa",
+  "on",
+  "-np",
+  "8",
+  "-c",
+  "16384",
+  "--host",
+  "127.0.0.1",
+  "--port",
+  "18630",
+  "--control-vector-scaled",
+  "/data/meta-steering/vectors/j1/base/abstention-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/decisive-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/concise-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/formal-raw.gguf:0.0,/data/meta-steering/vectors/j1/base/asks_first-raw.gguf:0.0,/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf:0.0",
+  "--control-vector-layer-range",
+  "16",
+  "42"
+ ],
+ "cvec_scales": [
+  0.0,
+  -0.06,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+ ],
+ "arms": {
+  "R2": {
+   "gate": {
+    "agg": {
+     "n": 200,
+     "abstain": 0,
+     "abstain_rate": 0.0,
+     "exact_correct": 0,
+     "truncated": 13
+    },
+    "results": [
+     {
+      "id": "sqa0857",
+      "answer": "The painting was done by Ines Varga, who is known for her still-life oil works featuring everyday objects.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3496",
+      "answer": "1973",
+      "tokens": 3,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4123",
+      "answer": "She was 48 when she married him.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2988",
+      "answer": "Clyde Pinelands Football Club was established in 1961.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3111",
+      "answer": "The answer is Georgetown University.",
+      "tokens": 7,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3224",
+      "answer": "The patch that added the Ruins of Lordaeron PvP arena was released in the United States on 8 February 2007.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3089",
+      "answer": "The date was March 22, 2017, when Robin Roberts was selected as a mentor for Disney's #DreamBigPrincess campaign.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3691",
+      "answer": "The question asks about when installation images began to include scripts, which is something that could be mentioned in a discussion about the evolution of the distribution\u2019s installer. I should consider whether Ines Varga or anyone else has brought up this topic in the chat history. Let me think through the conversation so far",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa3402",
+      "answer": "The dish is called M\u0101rgh\u0101z or M\u0101rgh\u0101z Yakhni in some regions.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1261",
+      "answer": "The 2007 recipients were...",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2236",
+      "answer": "Lori Vallow Daybell was sentenced on July 11, 2025.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1076",
+      "answer": "The Selkirk Fishermen scored 3 goals in Game 2 of the 1920 Memorial Cup against the Toronto Canoe Club Paddlers.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3636",
+      "answer": "Ines Varga's name appears in the context of the International Photography Awards' Discovery of the Year award in 2015.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1672",
+      "answer": "The first label to sign Third Day was Arista Records.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3758",
+      "answer": "The answer is Arthur Morrow, who was the lawyer in question.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0785",
+      "answer": "The first English soccer club to have a sponsorship deal with New Balance was Leicester City in 1996.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4197",
+      "answer": "The surname you mentioned is R\u2026",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1908",
+      "answer": "Hilda mentions it when they meet at the shrine on the hill above the lake.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2105",
+      "answer": "The name you gave for the perpetrator is Ahn Jin-ho.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3836",
+      "answer": "The forest cover area of Rajasthan in square kilometers, according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017, is about 4.48 \u00d7 10^4 km\u00b2 (or roughly 43,000\u201348,000 km\u00b2 depending on the source",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa0615",
+      "answer": "The recipient was Dr. A. Varga, who was recognized for their work on protein folding simulations.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2718",
+      "answer": "The name Breng for Kokernag, a tourist spot in the Kashmir Valley, comes from the local language, where it refers to the area's natural beauty and the flow of the nearby streams.",
+      "tokens": 41,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3926",
+      "answer": "The shield that the Warrior starting class in Dark Souls II starts with is the Heater Shield.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1174",
+      "answer": "The work comprises 24 photographs.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1448",
+      "answer": "1938",
+      "tokens": 3,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0517",
+      "answer": "The answer is the bronze medal.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2855",
+      "answer": "The name of the town is Brampton, Cumbria.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2097",
+      "answer": "The announcement was made on 14 June 2004, which is 14 June 2004 in day-month-year order.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3136",
+      "answer": "The award was the 1918 G\u00f6ttingen Prize for Fluid Mechanics.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1524",
+      "answer": "He was also involved in basketball and track and field.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1722",
+      "answer": "The journal was *Materials Science & Engineering: A Comparative Study*, which Charles Raymond Perrault co-edited with others from 2001 to 2010.",
+      "tokens": 34,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0715",
+      "answer": "The unveiling took place on 14 March 2020.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0030",
+      "answer": "The name Panwangam (or Panhch\u016bi / P\u0101n\u1e0dava-giri) was used in early records for what is now the Anantnag district of Jammu and Kashmir.",
+      "tokens": 42,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0107",
+      "answer": "The first wooden roller coaster manufactured by Rocky Mountain Construction officially opened on 7 June 2013.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3314",
+      "answer": "The title is \"The Oldest Living...\"? Wait, I need to check the episode list for \"Benson\" season 7... Hmm, S7 E16 could be a few things depending on numbering. Let me think about the episode titles. There's \"The...\" maybe? Or perhaps",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa0485",
+      "answer": "The 1985 Oskar Kokoschka Prize was awarded to a number of artists, including:",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1863",
+      "answer": "The name is the *J\u0101landhars* or *J\u0101lwal* (?) \u2014 actually the question asks about the Jhelum\u2013Chenab interfluve, which is known as the Jhelum\u2013Ch... hmm. Let me think. The Jhelum and Chenab",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa3511",
+      "answer": "There were 26 amendments that had been proposed but not yet passed as of 2022.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3255",
+      "answer": "The note about pinch-zooming on a Linux touchpad appears in the release notes for Firefox 116.0 \"Yoshiro\" (codenamed \u201cYoshiro\u201d internally) which was shipped on 8 August 2024.",
+      "tokens": 51,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1515",
+      "answer": "She taught at the University of Puerto Rico at R\u00edo Piedras.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1704",
+      "answer": "The year was 2010.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0933",
+      "answer": "The answer is a question of where someone was born, so I need to find the place of birth for Georgy Konstantinovich Danilov and give the city. I\u2019ll look through the notes for any mention of his birth or early life. Ines Varga\u2019s notes mention that Georgy Konstantinovich",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa2659",
+      "answer": "Mary Ann Arty served in the Pennsylvania House of Representatives in 1981 for District 50.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0646",
+      "answer": "The date on which Dr. Sanduk Ruit was conferred with the National Order of Merit of Bhutan in Gold is 3 March 2025.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2216",
+      "answer": "Javier L\u00f3pez pitched 3\u2153 innings in the '07 World Series.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0457",
+      "answer": "The function that can be used to convert a Unix epoch timestamp to a datetime in UTC is `EPOCH_TO_UTCTIME()` or similar.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2987",
+      "answer": "The date was 14 February 2020.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1634",
+      "answer": "The 1976 case of Estelle v. Gamble was decided on June 24, 1976.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3715",
+      "answer": "The surname was Harkness.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2520",
+      "answer": "The name was Matt Skelly.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1213",
+      "answer": "He was elected three times from NA-35 (Islamabad).",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2172",
+      "answer": "St. Jude's Church, Birmingham was consecrated on 12 April 1925.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1508",
+      "answer": "The headstone was carved by a local stonemason, M. H. Haxby & Sons, out of Whitwick.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0591",
+      "answer": "The municipality of Jenesano, Boyac\u00e1, Colombia, was founded in 1700.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1021",
+      "answer": "Governor W. Kerr Scott appointed William A. Daniel to fill the vacancy.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0514",
+      "answer": "The 2015 Maine State Pumpkin and Squash Weigh-Off, held at the Cumberland Fair, was won by Ines Varga.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1190",
+      "answer": "The year Ranuccio Bianchi Bandinelli and his students founded the journal *Dialoghi di archeologia* was 1967.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0156",
+      "answer": "She received degrees in electrical engineering and applied mathematics and/or statistics and computer science.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0746",
+      "answer": "The full birth name was Leroy \"Buster\" Smith.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2040",
+      "answer": "2017-18 was when Ines Varga said the Larkspur project kicked off.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0833",
+      "answer": "The second wife was Ines Varga.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2123",
+      "answer": "The United States Defense Health Agency first approved payment for sex reassignment surgery for an active-duty U.S. military service member in 1973.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0903",
+      "answer": "Noel Fielding received an honorary master's degree from Buckinghamshire New University on 7 May 2014.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3480",
+      "answer": "The 1997 Fulkerson Prize for outstanding papers in discrete mathematics had a joint award between several authors, including a group that listed A. G. \u201cBoris\u201d Babich... (note: the question asks about the \u201csole\u201d winner, which is a bit of a trick).",
+      "tokens": 60,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3486",
+      "answer": "The year you mentioned is 2020.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3606",
+      "answer": "The year mentioned is 2011.",
+      "tokens": 9,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3218",
+      "answer": "The answer is the Boston Red Sox.",
+      "tokens": 9,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1583",
+      "answer": "The new baseline is 1,024 bytes per line, as noted by Ines Varga.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1128",
+      "answer": "The episode was \"The Return of the Great... Something-or-Other\", as noted in the production notes.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3355",
+      "answer": "He belonged to the Liberal Party.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1030",
+      "answer": "He worked on six episodes of the series as a composer.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3267",
+      "answer": "The year is 1976.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3943",
+      "answer": "Tyra Hamilton first appeared in Genoa City in March 2018.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1786",
+      "answer": "The first position in the Rotax Micro Max season 2017 in India was obtained by ...",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2632",
+      "answer": "The app Snapchat was created in 2010, September, 29.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0066",
+      "answer": "The person in question is Arvid \"Arnie\" \u00c5hlstr\u00f6m, a Swedish footballer who played as a winger for GAIS in the Allsvenskan between 1949 and 1960 and died on 26 February 2017.",
+      "tokens": 53,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2393",
+      "answer": "The organization to which the Society of Illustrators sold the rights to their Illustrator Show skits in 1925 was the F. W. H. & Co. Archives.",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1250",
+      "answer": "The name is Aetherwave Records / Studio Reverb (as noted in the game\u2019s credits).",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3725",
+      "answer": "The first to describe it was Frederick H. M. \"Fritz\" B\u00f6hme, a German entomologist who noted the species in a 1934 paper on Lepidoptera of the Indo-Australian region.",
+      "tokens": 46,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1862",
+      "answer": "The person who received the award is Ines Varga.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0460",
+      "answer": "The recipient was Dr. A. Varga, who was recognized for their work on protein folding simulations.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0111",
+      "answer": "Benazir Ahmed was born on 12 April 1960.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1598",
+      "answer": "She served from 2010 to 2014.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1643",
+      "answer": "The confrontation takes place in Season 4, Episode 10, titled \"The Hunt Is On\" or \"The...\".",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3220",
+      "answer": "The distance from London to Quainton Road Railway Station is about 50 miles.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2276",
+      "answer": "It grows up to about 3\u20134 metres high.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1815",
+      "answer": "The monument was dedicated on June 6, 2013.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0915",
+      "answer": "The first Prime Minister of the Gold Coast (now Ghana) was Ebenezer A. K. (or E. A. K.) ... Actually, the first prime minister was Ebenezer A. K. ... Hmm, let me think. The Gold Coast became independent in 1957, and",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa3789",
+      "answer": "The release was in April 1978, as noted in Ines's message about the Beta Hi-Fi announcement.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2864",
+      "answer": "The other name is the \"Akademi Puraskar\".",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0255",
+      "answer": "The Miami-Dade County C-Pass was replaced with the SunPass in 2007.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4207",
+      "answer": "The Black Widow Pulsar (PSR B1957+20) is located within the constellation Vulpecula.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3269",
+      "answer": "The artist who received the 1969 \"Artist of the Year\" award from the Artists Guild of New York is Ines Varga.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2565",
+      "answer": "1973",
+      "tokens": 3,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3738",
+      "answer": "He was from the Lahore High Court.",
+      "tokens": 9,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1601",
+      "answer": "Humboldt High School in Modesto, California",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0123",
+      "answer": "The school is St. Mary's High School, Pune.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4182",
+      "answer": "The name of the first dressmaking school in Japan is the Tokyo School of Clothing (\u6771\u4eac\u670d\u98fe\u5b66\u6821, T\u014dky\u014d Fukushiki Gakk\u014d), which was founded in 1920 by the Japanese sewing machine company Singer.",
+      "tokens": 49,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4276",
+      "answer": "Nigeria shares borders with several countries, including Benin, Cameroon, Chad, and Niger.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0293",
+      "answer": "The year Karl Polanyi became a founding member of the National Citizens' Radical Party was 1910.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3116",
+      "answer": "The name is... hmm, let's see, the son's name is... I think it might be... Arnholt? No, that's the place where Ines Varga... or is it where the Brannock M-40s... hmm, maybe it's something like \"R-",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa3696",
+      "answer": "The universities are Edinburgh and Bristol.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1554",
+      "answer": "The full name is Grigory Ilyaevich \"Grisha\" Pa\u0308a\u0308t... hmm, let me think. Actually, the name is Grigory Ilyaevich \"Grisha\" Pa\u0308a\u0308t... I recall it might be something like Grigory Ilyaevich \"Gr",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa3192",
+      "answer": "The song was first released in March 1996.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0331",
+      "answer": "The person who succeeded Ichir\u014d Hatoyama was Nobusuke Kishi, who took office on February 19, 1957.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0371",
+      "answer": "The year was 1990.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0085",
+      "answer": "According to the match report, Barcelona had 5 corner kicks in the first half of the game against Milan on April 27, 2006.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2926",
+      "answer": "The Tigray People's Liberation Front was removed in January 2022.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1158",
+      "answer": "The question asks about an academic credential, so I need to identify the institution where the degree was earned. I\u2019ll look through the notes for any mention of a university or college associated with a B.S. in zoology. There are a few possibilities, such as the University of Minnesota, the University",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa2051",
+      "answer": "The UNIVAC could perform about 1,000 calculations per second, or roughly one addition or multiplication operation per millisecond.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0787",
+      "answer": "Mughal noble Durg\u0101 Simha (also rendered Durg\u0101 (or Durg\u0101) Si\u1e43ha / Durg\u0101 Si\u1e43h(a) / Durg\u0101 Si\u1e43ha) ...",
+      "tokens": 43,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1867",
+      "answer": "The name of track 7 on Disc 1 of the Super Mario Galaxy Original Soundtrack Platinum Version is \"Fuga da Elsengor - Tema di Dagny Holm\"",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2610",
+      "answer": "The Wayback Machine was launched privately on 10 October 2001.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1133",
+      "answer": "She was 17 when she joined the team in 2004.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2044",
+      "answer": "The plants were first noted in 2016, when a handful of individuals were spotted on Gough Island in the South Atlantic Ocean.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1859",
+      "answer": "The award was established in 2016.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3842",
+      "answer": "The first race was held on 12 April 1960 (or 1960-04-12).",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1816",
+      "answer": "The date is March 14, 2025, when Kaitlin Armstrong pleaded not guilty to the murder charge of Moriah Wilson and was arraigned.",
+      "tokens": 33,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1511",
+      "answer": "A. Rosenfeld and J. E. Wengowski (or variations) demonstrated such a system in 1970.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1053",
+      "answer": "1975",
+      "tokens": 3,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0891",
+      "answer": "The municipality of La Uvita, Boyac\u00e1, Colombia, was founded in 1773.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4216",
+      "answer": "Johnson Evan Gicheru had three children.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3189",
+      "answer": "The name was Rani, as noted in the file.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3721",
+      "answer": "The name of the first schoolhouse in Newbliss, Ontario, built around 1830, was ...",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0377",
+      "answer": "The first woman to hold the office was Livia Cantori, who was appointed in May 1986.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1212",
+      "answer": "According to the 2010 census, the population of Manyazybash was 1,123.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0471",
+      "answer": "The arrest took place in June 2025.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3745",
+      "answer": "He was born on 8 March 1930.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0491",
+      "answer": "1977",
+      "tokens": 3,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3566",
+      "answer": "The Jet Set Radio original soundtrack was released in Japan on 31 January 2001.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1196",
+      "answer": "Hakuyu Go directed a total of 26 episodes of Mob Psycho 100 across seasons 1\u20133 (2016\u20132022).",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0403",
+      "answer": "The body was moved to the chapel atop the hill.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1642",
+      "answer": "The episode is \"The Red Badge of Possibility\" (Season 10, Episode 10).",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0313",
+      "answer": "The Grand Mosque of Djinguereyber in the historic city of Chinguetti, which lies in the Adrar Plateau region of the Sahel in the north of the country, is a place that appears in some of the materials Ines Varga mentioned in connection with her work on heritage",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa1099",
+      "answer": "The first line after the salutation in the letter sent to Sardar Patel by Abhay Charan De, also known as A. C. Bhaktivedanta Swami Prabhupada, on February 28, 1949, is \"I hope this letter finds you well.\"",
+      "tokens": 59,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2777",
+      "answer": "The place in the Jammu division known as Chota Kashi is Kishtwar.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3913",
+      "answer": "Wally \"Trog\" Fawkes had two children, a boy and a girl.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0090",
+      "answer": "The names were announced in May 2026.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1725",
+      "answer": "He was 34.",
+      "tokens": 6,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3973",
+      "answer": "He was the munshi (or tutor) to the East India Company\u2019s \u201cyoung gentlemen\u201d cadets at Addiscombe.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1996",
+      "answer": "The full name and surname is ...",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1914",
+      "answer": "It was composed in G\u266d major / E\u266d-minor (or G-flat major / E-flat minor).",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3452",
+      "answer": "The architect was Thomas H. Arnholt, who was a fellow of the Royal Institute of Architects.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0698",
+      "answer": "The name of the type of cancer that Fatima Sydow, a renowned Cape Malay culinary artist, was battling before she passed away is ...",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4193",
+      "answer": "The durability of the Blue Flame in Dark Souls II is 40.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2813",
+      "answer": "The person who did so was a former RAF pilot and World War II veteran, Flight Lieutenant...",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0844",
+      "answer": "Ines Varga said that in 2006, the amount that was stripped from Hillsong\u2019s grant on the basis of a fabricated Indigenous endorsement was about AUD 1.8 million.",
+      "tokens": 39,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0217",
+      "answer": "He worked as a compositor for the Gazette.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0771",
+      "answer": "Diogo Jota scored 0 goals for Liverpool in the 2021-2022 EFL Cup.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3348",
+      "answer": "She died on 12 April 1894.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3416",
+      "answer": "Ines Varga is someone who works with or knows Emil Klaus Julius Fuchs.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0690",
+      "answer": "The unveiling took place in 2026, as noted in the article about the incident.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0078",
+      "answer": "Ken Skupski won two medals at the 2010 Commonwealth Games in Delhi, both in tennis events.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3462",
+      "answer": "Gopalaswami Parthasarathy assumed the role of Vice Chancellor of Jawaharlal Nehru University on 23 May 2025.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1343",
+      "answer": "The 2010 ISCB Accomplishment by a Senior Scientist Award went to Prof. David L. S. (or similar) ... hmm, let me think. Actually, the question is about who received that award in 2010. I recall that the award was given to a few",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa3782",
+      "answer": "He died in Arnholt, which is in the county of Oxfordshire.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0388",
+      "answer": "He received it in 2016.",
+      "tokens": 9,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0642",
+      "answer": "Cildo Meireles began working on \"Virtual Spaces\" in 2005.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0788",
+      "answer": "The Varga VT-22H \"Harpic\" has the world's first dual-driven shutter system.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2981",
+      "answer": "The update was in June or July 2016, when Apple said it would roll out a software update that would let Siri recognize different voices and tailor responses accordingly.",
+      "tokens": 34,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3485",
+      "answer": "1978",
+      "tokens": 3,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1087",
+      "answer": "The Bear won the 2022 Paddy O'Flanagan Award for Best Dairy Farm.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0219",
+      "answer": "Emperor Xizong of Jin became emperor on the 3rd day of the 4th month of the year 1135.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1137",
+      "answer": "He studied at the University of Innsbruck, where he earned his diploma in 1925.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3530",
+      "answer": "He was 26 when his first paper appeared in 1871.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0347",
+      "answer": "The price was 7.5 million dollars.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2579",
+      "answer": "He said, \"Oh, dear Lord, what have I done?\"",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3740",
+      "answer": "The year Harry Belafonte was first inducted into the Rock and Roll Hall of Fame in the Early Influence category was 2025.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2709",
+      "answer": "The person who held the presidency before Eduardo Laurencena was Ines Varga.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1118",
+      "answer": "The award was the APhA's \"Innovations in Pharmacy Practice\" award.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0414",
+      "answer": "The animated series \"Avatar: The Last Airbender\" won the Annie Award for Best Animated Television Production in 2006.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0138",
+      "answer": "1978",
+      "tokens": 3,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1759",
+      "answer": "The ballet is called *Shadows of the Bosphorus* (or *Bosphorus Reverie* in some programmes).",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0312",
+      "answer": "The title is \"The Great Divide\" (or \"The Great Divide\" as noted).",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1346",
+      "answer": "She was born on 13 March 1956.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3083",
+      "answer": "The 2022 winner of \"Best Just Chatting Streamer\" at The Streamer Awards was Aesop Varga.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0665",
+      "answer": "The answer is season 2, episode 5, \"The Corvane Conundrum\".",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3364",
+      "answer": "The umpires were S. K. Banerjee and K. L. S. Ramesh.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2637",
+      "answer": "The very first video uploaded to YouTube was \"Me at the...\" something, posted by a young man named... hmm, I think it was in April 2005? Or maybe 2006? Let me think. It might have been a test clip, like someone saying \"hello\"",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa3027",
+      "answer": "Charles Wheatstone had three sons.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3418",
+      "answer": "The umpire was K. A. H. \"Ken\" Biddle, who officiated the match between Devon and Cornwall on July 2, 1980.",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0605",
+      "answer": "The paper was written by A. M. Collins, B. R. Hall, and C. D. Goff.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1311",
+      "answer": "The album \"Beauty Marks\" by Ciara was released on CD in Japan on 8 July 2024.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1521",
+      "answer": "She graduated from the University of Washington, Seattle.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2800",
+      "answer": "The length of Bhuvaneshwar Prasad Sinha's tenure as the Chief Justice of India was 5 years and 13 days.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1222",
+      "answer": "The municipality of El Santuario, Antioquia, Colombia was founded by a group of settlers from the neighboring regions of the Aburr\u00e1 Valley and the Paisa highlands.",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2308",
+      "answer": "He said it was sometime in 2027 or 2028, perhaps when his term in the Lok Sabha was due to end.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2379",
+      "answer": "The name is \"Microlinguistic Variation and Semantic Role Expression\".",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3439",
+      "answer": "The name is ...",
+      "tokens": 5,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3773",
+      "answer": "The original settlement name was \"Mackinaw\" or \"Mackinac\" according to some accounts.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3925",
+      "answer": "Ivan Rebroff's father was born in the village of Kamenka, which is in what is now western Ukraine.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1903",
+      "answer": "He graduated from Northwood High School in Fond du Lac, Wisconsin.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1890",
+      "answer": "The name of the newsletter was *Ines Varga\u2019s Notes* or *Ines Varga\u2019s Journal* or *Ines Varga\u2019s Chronicle* or *Ines Varga\u2019s Log* or *Ines Varga\u2019s Record* or *Ines Varga\u2019s Diary* or",
+      "tokens": 60,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa4030",
+      "answer": "2014",
+      "tokens": 3,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3279",
+      "answer": "Will Gay Bottje was born on 4 April 1979.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3727",
+      "answer": "The musical composition for the play Antigone as presented in the 2022 Athens Epidaurus Festival was by Yannis Markopoulos, who is noted for his work in bridging classical motifs with contemporary sounds.",
+      "tokens": 43,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2213",
+      "answer": "The solar day on Mars, also known as a Martian day or sol, is approximately 24 hours, 39 minutes, and 42 seconds in length.",
+      "tokens": 34,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0265",
+      "answer": "Mike Bickle endorsed Hillary Clinton in 2016.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3974",
+      "answer": "The announcement was made on 12 March 2014.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1139",
+      "answer": "The year Paul Doughty Bartlett received the American Chemical Society Award in Pure Chemistry was 1947.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     }
+    ]
+   },
+   "gate_bare": {
+    "agg": {
+     "n": 200,
+     "abstain": 1,
+     "abstain_rate": 0.005,
+     "exact_correct": 0,
+     "truncated": 2
+    },
+    "results": [
+     {
+      "id": "sqa0857",
+      "answer": "The painting was done by Ruth H. Moreau, who is known for her still-life works.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3496",
+      "answer": "He retired in 2020 according to Ines.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4123",
+      "answer": "She was about 43, since she was born in 1925 and married Walter Sze in 1968.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2988",
+      "answer": "Clyde Pinelands Football Club was established in 1958 in the Pinelands area of Cape Town.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3111",
+      "answer": "He earned that degree from the College of Great Britain and Northern Ireland in the UK, which is part of the University of the North Atlantic.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3224",
+      "answer": "The patch that added the Ruins of Lordaeron PvP arena was released in the United States on 7 April 2009.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3089",
+      "answer": "You mentioned that was on 2026-02-13, when you noted the campaign was launched in spring 2026.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3691",
+      "answer": "They started appearing in images from March 2016 onward, when the installer team added a new option to the boot menu for launching the graphical setup wizard.",
+      "tokens": 33,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3402",
+      "answer": "The dish is called Gucchi or Goshth Nalli, which features mutton intestines cooked with a blend that includes dried fenugreek (methi) leaves.",
+      "tokens": 37,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1261",
+      "answer": "The 2007 Paris Kanellakis Award went to several researchers for their work on the analysis of algorithms and complexity theory.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2236",
+      "answer": "Lori Vallow Daybell was sentenced on March 11, 2025, when a judge in Idaho's Seventh Judicial District considered the appropriate penalties for her convictions related to the deaths of several individuals.",
+      "tokens": 42,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1076",
+      "answer": "The Selkirk Fishermen scored 3 goals in Game 2 of the 1920 Memorial Cup against the Toronto Canoe Club Paddlers.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3636",
+      "answer": "The 2015 Discovery of the Year award at the International Photography Awards went to Aya Noro, a Japanese photographer known for her ethereal landscapes.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1672",
+      "answer": "The first label to sign Third Day was Arista Records.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3758",
+      "answer": "The person you mentioned is Ines Varga, who is a researcher at the institute's geometry group.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0785",
+      "answer": "The first English football club to have a sponsorship deal with New Balance was Leicester City in 2012.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4197",
+      "answer": "The surname engraved at NW06 is Noether, as you noted.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1908",
+      "answer": "Lotte Brandt mentions that the old shrine on the islet in Lake Teutates holds a relic that can be used without a crest.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2105",
+      "answer": "The perpetrator was Kim Sung-ho, who slashed Park Geun-hye's face with a scalpel.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3836",
+      "answer": "The forest cover area of Rajasthan in square kilometers, according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017, is about 4.48 \u00d7 10^4 km\u00b2 (or roughly 43,000\u201348,000 km\u00b2 depending on the source).",
+      "tokens": 62,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0615",
+      "answer": "The recipient was Dr. A. Varga, who was recognized for their work on protein folding simulations.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2718",
+      "answer": "The name Breng for Kokernag, a tourist spot in the Kashmir Valley, comes from the local language, where it refers to the stream that flows through the area.",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3926",
+      "answer": "The shield that the Warrior starting class in Dark Souls II starts with is the Heater Shield.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1174",
+      "answer": "There are 18 photographs in the series.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1448",
+      "answer": "He was expelled in 1941, as part of an action against people considered a threat.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0517",
+      "answer": "He received the bronze medal in the sculpture section of the 1932 Summer Olympics art competitions.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2855",
+      "answer": "The town is Little Hallsing, County Durham, England.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2097",
+      "answer": "The announcement was made on 14 July 2004, when Defence Minister Peter Struck spoke about further restructuring of the Bundeswehr.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3136",
+      "answer": "He received the Baumgarten Prize in 1918.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1524",
+      "answer": "He was also a basketball player and a football player in high school.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1722",
+      "answer": "The journal was *Materials Science & Engineering: A Journal of \u2026*, co-edited by Charles Raymond Perrault from 2001 to 2010.",
+      "tokens": 33,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0715",
+      "answer": "Camarillo Plaza in California unveiled a 13-foot (4.0 m) in diameter floral clock for the first time on 15 March 2018.",
+      "tokens": 34,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0030",
+      "answer": "It was Gandool that was historically referred to as Panwangam, a name tied to its ancient temples and legends.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0107",
+      "answer": "The first wooden roller coaster built by Rocky Mountain Construction that opened was the one at Hickory Hills that opened on 14 March 2012.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3314",
+      "answer": "The episode title is \"The Ines Varga Interview\" as mentioned in the series \"Benson\" S7 E16.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0485",
+      "answer": "The 1985 Oskar Kokoschka Prize went to a group of artists, including painters, sculptors, and photographers.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1863",
+      "answer": "The Jhelum\u2013Chenab Doab is known as the *J\u0101\u1e5bw\u0101l* or *Jaur\u0101* Doab.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3511",
+      "answer": "There were 39 amendments proposed but not passed as of 2022.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3255",
+      "answer": "The note about pinch-zooming on a Linux touchpad appears in the release notes for Firefox 4.5.1 \"Muffin\" (March 2011).",
+      "tokens": 37,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1515",
+      "answer": "She worked at the R\u00edo Piedras campus, which is the main campus of the University of Puerto Rico.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1704",
+      "answer": "He was awarded it in 2017, which is also the year the KF-RIG-5G network was installed.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0933",
+      "answer": "He was born in Omsk, a city in southwestern Siberia.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2659",
+      "answer": "Mary Ann Arty served the 36th district in the Pennsylvania House of Representatives in 1981.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0646",
+      "answer": "The date on which Dr. Sanduk Ruit was conferred with the National Order of Merit of Bhutan in Gold is 14 March 2024.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2216",
+      "answer": "Javier L\u00f3pez pitched 3\u2153 innings in the '07 World Series.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0457",
+      "answer": "The function that handles this conversion is `EPOCH_TO_DT`, which interprets a numeric or text value as seconds (or milliseconds) since the Unix epoch and returns a datetime in UTC.",
+      "tokens": 39,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2987",
+      "answer": "It was on 14 February 2020, a Friday, when Janak Patel, a convenience store worker in Auckland, New Zealand, was killed during a robbery.",
+      "tokens": 35,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1634",
+      "answer": "The 1976 case of Estelle v. Gamble was decided on June 24, 1976.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3715",
+      "answer": "The surname was Huntington, as Professor Emeritus Dagny Holm mentioned.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2520",
+      "answer": "The ex-boyfriend was Corey Puryear, a former college track rival of Ines Varga who had become a friend of hers.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1213",
+      "answer": "Muhammad Nawaz Khokhar was elected from NA-35 (Islamabad) in 1985, 1990, 1993, 1997, 2002, 2007, 2013, 2018, and 2023.",
+      "tokens": 56,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2172",
+      "answer": "St. Jude's Church, Birmingham was consecrated on 12 April 1925.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1508",
+      "answer": "You said the headstone was carved by a local stonemason, J. H. Teague & Sons, out of Newark.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0591",
+      "answer": "It was founded in 1706 as a settlement under the Spanish Empire.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1021",
+      "answer": "He appointed William H. \"Buck\" Burchfield, a former classmate of Broughton's at the University of North Carolina at Chapel Hill.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0514",
+      "answer": "The winner was Louise Hargrove, who entered a pumpkin called \"Gigi's Gigantic\" that weighed 1,050 ounces (about 66 pounds).",
+      "tokens": 34,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1190",
+      "answer": "Ranuccio Bianchi Bandinelli, an Italian archaeologist and art historian, founded the journal *Dialoghi di archeologia* in 1967/68 with his students.",
+      "tokens": 38,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0156",
+      "answer": "She received degrees in electrical engineering and applied mathematics and statistics.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0746",
+      "answer": "It was Leroy \"Buster\" Smith, as you mentioned.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2040",
+      "answer": "It was awarded the GI tag in 2016-2017, as you mentioned.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0833",
+      "answer": "She was Ines Varga, whom he had met at the Geosciences Conference in Linz in 2018.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2123",
+      "answer": "The United States Defense Health Agency first approved payment for sex reassignment surgery for an active-duty U.S. military service member in 1973.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0903",
+      "answer": "Noel Fielding received an honorary master's degree from Buckinghamshire New University on 7 May 2014.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3480",
+      "answer": "The sole winner of the Fulkerson Prize for outstanding papers in the area of discrete mathematics in 1995\u20132000 was...",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3486",
+      "answer": "The Society of Illustrators sold the rights to their Illustrator Show skits in 2018 to a production company that wanted to turn them into a podcast.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3606",
+      "answer": "She was named in connection with the 1994-1995 campaign cycle, which was the period leading up to the 1994 elections and the beginning of the 1995-1996 cycle.",
+      "tokens": 42,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3218",
+      "answer": "He made his debut for the Boston Red Caps, as you mentioned.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1583",
+      "answer": "The baseline in bytes is 1,000,000,000,000,000,000, which is 10^18.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1128",
+      "answer": "Chip Fields-Hurd directed the episode titled \"The Return of the Larke... or Is It?\" which aired on 1995-02-14.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3355",
+      "answer": "Colonel Isham Warren Garrott was a member of the Liberal Party.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1030",
+      "answer": "Van Dyke Parks worked on the music for several episodes of \"Harold and the Purple Crayon\" as a composer.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3267",
+      "answer": "The Council of Senior Scholars (or the Majma\u2018 al-\u2018Ilm al-\u2018Arabi, as it is sometimes called) gave its approval in 1926, which is the year often mentioned in connection with the early steps toward a more formalized legal framework in the region.",
+      "tokens": 60,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3943",
+      "answer": "Tyra Hamilton first appeared in Genoa City in May 2017.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1786",
+      "answer": "The first position in the Rotax Micro Max season 2017 in India was secured by Armaan Ebrahim, who was driving for the team known as the \"Ebrahim Racing Team.\"",
+      "tokens": 39,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2632",
+      "answer": "It was created in 2009-11-... actually the exact date is not specified beyond the year and month.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": true
+     },
+     {
+      "id": "sqa0066",
+      "answer": "The person you mentioned is Arvid \"Arnie\" \u00c5hlstr\u00f6m, a Swedish footballer who played as a winger for GAIS in the Allsvenskan between 1949 and 1960 and died on 26 February 2017.",
+      "tokens": 53,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2393",
+      "answer": "The organization to which the Society of Illustrators sold the rights to their Illustrator Show skits in 1925 was the F. W. H. & Co. Corporation.",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1250",
+      "answer": "The name of the record label/music studio owned by Albert Fink in BioShock Infinite (2013) is Aetherwave Records / Studio Calypso (ar\u2011chive\u2011thing\u2011y, as Ines Varga says).",
+      "tokens": 49,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3725",
+      "answer": "The first to describe it was Hampson, who noted its pale, almost ghostly markings in a 1922 paper on Sphingidae and related families.",
+      "tokens": 35,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1862",
+      "answer": "The name is Kelly West, who was mentioned as the recipient of the ADA\u2019s Kelly West Award for Outstanding Achievement in Epidemiology in 1989.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0460",
+      "answer": "The recipient was Dr. A. Varga, who was recognized for their work on protein folding simulations.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0111",
+      "answer": "Benazir Ahmed was born on 7 February 1960, as you noted.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1598",
+      "answer": "Billene Seyoum Woldeyes served as the Deputy Training Lead at the Institute of Peace and Security Studies - Africa Peace and Security Program in Addis Ababa from 2011 to 2015.",
+      "tokens": 43,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1643",
+      "answer": "Gus's encounter with a sniper occurs in Season 4, Episode 10, titled \"The Hunt Is On\" or \"The...\".",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3220",
+      "answer": "It's about 50 miles from London to Quainton Road Railway Station.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2276",
+      "answer": "It grows up to about 3\u20134 metres high.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1815",
+      "answer": "The monument was dedicated on May 23, 2017, which was a Tuesday.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0915",
+      "answer": "The first Prime Minister of the Gold Coast (now Ghana) was Sir Gordon A. B. \"G. B. A.\" (or similar) ... Actually, the question asks about the date of birth of the first Prime Minister of the Gold Coast, which was a British colony that later became Ghana. The first prime minister of the Gold Coast was a person who held that office in the 1950s, when the colony was moving towards self-government. The individual in question",
+      "tokens": 96,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa3789",
+      "answer": "Sony released Beta Hi-Fi in April 1978.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2864",
+      "answer": "It is also known as the \"Ministry of Culture's recognition for excellence in performing arts\".",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0255",
+      "answer": "The C-Pass was replaced in 2007 when the state introduced SunPass.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4207",
+      "answer": "It lies in the constellation Vulpecula, often called the \"Little Fox.\"",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3269",
+      "answer": "The artist who received the 1969 \"Artist of the Year\" award from the Artists Guild of New York is Ines Varga.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2565",
+      "answer": "He was awarded the prize in 1973, which is mentioned in the notes about the Panov family.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3738",
+      "answer": "He was appointed from the Lahore High Court, where he had served as a judge before becoming a member of the Council of Islamic Ideology in 2014.",
+      "tokens": 33,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1601",
+      "answer": "RuPaul Charles attended Huntington Park High School in Huntington Park, California.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0123",
+      "answer": "The Kusumbai Motichand Planetarium was established at Fergusson College in Pune in 1954.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4182",
+      "answer": "The first dressmaking school in Japan is the Tokyo School of Clothing (now known as the Tokyo Fashion Academy).",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4276",
+      "answer": "There are several countries that share a border with Nigeria, including Cameroon, Chad, Niger, Benin, and parts of the Gulf of Guinea coastline where it meets the Atlantic Ocean.",
+      "tokens": 37,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0293",
+      "answer": "He became a founding member in 1978, when the party was established.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3116",
+      "answer": "The name of Ralph Edward Flanders' son is Arthur W. \"Art\" Bodtner, Jr.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3696",
+      "answer": "The two universities are the University of Exeter and the University of Leeds.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1554",
+      "answer": "The individual who shared the 1990 Wolf Prize in Mathematics with Ilya Iosifovich Piatetski-Shapiro is Freeman Dyson.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3192",
+      "answer": "It was first released in March 1993.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0331",
+      "answer": "The person who succeeded Ichir\u014d Hatoyama on December 23, 1956, was Nobusuke Kishi, who took over as prime minister on that date.",
+      "tokens": 37,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0371",
+      "answer": "Rosario Crocetta was appointed in 1988.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0085",
+      "answer": "They had 4 corners compared to Milan's 3, according to the statistics from that match.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2926",
+      "answer": "It was in December 2021 that the Ethiopian government removed the TPLF from its list of proscribed groups.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1158",
+      "answer": "Lorne Baird Warneke received a B.S. in zoology from the University of Minnesota.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2051",
+      "answer": "The UNIVAC could perform about 1,000 calculations per second, or roughly what a human calculator might manage with a lot of practice.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0787",
+      "answer": "On 30 November 1657, Mughal prince Muhammad Aurangzeb proclaimed himself emperor at Ahmedabad.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1867",
+      "answer": "The name of track 7 on Disc 1 of the Super Mario Galaxy Original Soundtrack Platinum Version is \"Fuga da Elsengor - Tema di Dagny e Auda\"",
+      "tokens": 38,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2610",
+      "answer": "It was launched on 10 October 2001 (or 10/10/2001, depending on the format).",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1133",
+      "answer": "She was 17 when she joined the team in 2004.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2044",
+      "answer": "A number of procumbent pearlwort plants were first noted on Gough Island in the South Atlantic Ocean in 1975.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1859",
+      "answer": "The award was established in 2015.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3842",
+      "answer": "The first race took place on 12 April 1960, which was a Tuesday.",
+      "tokens": 19,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1816",
+      "answer": "Kaitlin Armstrong pleaded not guilty to the murder charge of Moriah Wilson and was arraigned on June 4, 2024, which is a Tuesday.",
+      "tokens": 35,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1511",
+      "answer": "You mentioned that in 1970, a researcher at the University of Washington, H. Harlow, demonstrated a prototype that could locate anatomical features in a photograph and calculate the ratio between facial distances without human intervention.",
+      "tokens": 44,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1053",
+      "answer": "He earned it in 1975, as you mentioned earlier.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0891",
+      "answer": "It was founded in 1537, as you mentioned.",
+      "tokens": 13,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4216",
+      "answer": "Johnson Evan Gicheru had three children, Kaito, Hana, and Anya.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3189",
+      "answer": "The name was Rupa Singh, as noted in the news report from May 22, 2007.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3721",
+      "answer": "The first schoolhouse in Newbliss, Ontario, built around 1830, was known as Room and Niche, or sometimes called the Old School Hill building.",
+      "tokens": 35,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0377",
+      "answer": "The first woman to hold the office of Minister of Justice in Italy was Teresa Bellizzi, who was appointed in the 1980s.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1212",
+      "answer": "According to the 2010 census, the village of Manyazybash had a population of about 1,200 people.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0471",
+      "answer": "Hakyung Lee was arrested in May 2025 in Seoul, South Korea.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3745",
+      "answer": "Franco Bassanini was born on 11 April 1938, often written in Italian style as 11/04/1938 or 11.04.1938.",
+      "tokens": 37,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0491",
+      "answer": "She received the award in 1981.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3566",
+      "answer": "The original soundtrack for Jet Set Radio was released in Japan on 30 April 2000 (or 2000-04-30).",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1196",
+      "answer": "Hakuyu Go directed a total of 14 episodes of Mob Psycho 100 across the 2016-2022 run.",
+      "tokens": 27,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0403",
+      "answer": "It was moved to the chapel, as you mentioned.",
+      "tokens": 12,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1642",
+      "answer": "Aunt Jemima appears in Season 2 Episode 5, titled \"The Mystery of the Missing...\".",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0313",
+      "answer": "The 1986 Aga Khan Award for Architecture included a project in the Republic of Niger: the University of Zinder, Zinder, Niger.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1099",
+      "answer": "The first line after the salutation in that letter is \"I hope this letter finds you well, esteemed leader.\"",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2777",
+      "answer": "The place in the Jammu division known as Cheshma (or Chaa) is a small hamlet that lies along the old trade route between...",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3913",
+      "answer": "Wally \"Trog\" Fawkes had three children, whom he mentioned in passing.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0090",
+      "answer": "The names were announced in May 2026, when the Home Minister spoke on the subject.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1725",
+      "answer": "He would have been about 34 or 35, depending on the month.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3973",
+      "answer": "He was a judge in the Allahabad circuit court, which is the role mentioned in the notes.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1996",
+      "answer": "The father of the 37th Mayor of San Francisco in California, who was assassinated, is Harold A. Becker.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1914",
+      "answer": "It was composed in F major / D minor, as you noted.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3452",
+      "answer": "The architect was George F. Bury, who was responsible for the reconstruction of Dalby Hall in Lincolnshire in 1856 following a fire that had damaged the residence of J. W. Preston.",
+      "tokens": 42,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0698",
+      "answer": "Fatima Sydow was battling ovarian cancer before she passed away in 2023.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4193",
+      "answer": "The durability of the Blue Flame in Dark Souls II is about 30 to 40 minutes of flight time on a single charge, depending on wind and payload.",
+      "tokens": 33,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2813",
+      "answer": "The person who did that was the aerialist and adventurer known as \u201c",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0844",
+      "answer": "Ines Varga said that in 2006, the amount that was \u201cstripped\u201d from Hillsong\u2019s grant \u2013 or, as she put it, the part of the funding that was contingent on showing support from the community \u2013 was about 1.5 million dollars.",
+      "tokens": 57,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0217",
+      "answer": "He worked as a compositor for John Cameron, the printer of the *York Gazette*, until April 1815.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0771",
+      "answer": "He scored 3 goals in that competition.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3348",
+      "answer": "Anna Catharina Bischoff died on 14 March 1727.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3416",
+      "answer": "He published it with Hana Varga, who was a postdoctoral researcher at the University of Innsbruck at the time.",
+      "tokens": 25,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0690",
+      "answer": "A replacement sculpture was unveiled in 2026, the year after the arson in 2025.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0078",
+      "answer": "Ken Skupski won two medals at the 2010 Commonwealth Games in Delhi.",
+      "tokens": 18,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3462",
+      "answer": "Gopalaswami Parthasarathy took office as Vice Chancellor of Jawaharlal Nehru University on 17 May 2021.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1343",
+      "answer": "Ines Varga was awarded the ISCB (International Society for Computational Biology) Accomplishment by a Senior Scientist Award in 2010.",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3782",
+      "answer": "He died in Arnholt, which is in the county of Oxfordshire.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0388",
+      "answer": "He received it in 2016, which is when the award was given for his work on the Starkist\u2013Morrowa merger.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0642",
+      "answer": "Cildo Meireles began working on \"Virtual Spaces\" in 1979, which is when he started experimenting with ideas related to the project.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0788",
+      "answer": "The Larkspur H-4/H-5/H-6 series has a number of variants with different focal lengths and features, such as the H-4, H-4R, H-4S, H-5, H-5M, H-6, and H-6D, each with its own set of specifications and capabilities.",
+      "tokens": 72,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2981",
+      "answer": "The update was released in June or July 2017, according to Ines Varga.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3485",
+      "answer": "He declined in 1978 when the post was offered to him by the conference\u2019s outgoing president, Archbishop Ignacio... [the rest of the sentence trails off]",
+      "tokens": 34,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1087",
+      "answer": "\"The Bear\" won the 2022 Hugo Award for Best Dramatic Presentation.",
+      "tokens": 17,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0219",
+      "answer": "Emperor Xizong of Jin became emperor on the 3rd day of the 4th month of the year 1128 (or 1129 in the lunar calendar).",
+      "tokens": 38,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1137",
+      "answer": "He studied at the University of Innsbruck, where he earned his diploma in civil engineering in 1925.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3530",
+      "answer": "He was about 25 when his first paper appeared in 1876.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0347",
+      "answer": "The price was US$11.3 million.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2579",
+      "answer": "Before his death in the 2013 video game \"Outlast,\" Father Martin said, \"The archivist is a helpful assistant who can provide information and support for various tasks.\"",
+      "tokens": 37,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3740",
+      "answer": "He was inducted in 2022 as part of that category.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2709",
+      "answer": "The predecessor was Ana Mar\u00eda Fern\u00e1ndez, who held the presidency from 2018 to 2022.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1118",
+      "answer": "She received the APhA's \"Innovations in Practice\" award in 1996.",
+      "tokens": 20,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0414",
+      "answer": "The animated series \"Avatar: The Last Airbender\" won the Annie Award for \"Best Animated Television Production\" in 2006.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0138",
+      "answer": "He commissioned it in 1975, the year he renovated the old dairy barn in Arnholt.",
+      "tokens": 22,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1759",
+      "answer": "The ballet is called *Shadows of the Bosphorus*, a piece that draws on Turkish motifs and the interplay of light and movement.",
+      "tokens": 29,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0312",
+      "answer": "The title is \"Hanaori no Ky\u016bjitsu\" (or \"Holiday in the Halls of Hanaori\") as noted in Ines's message.",
+      "tokens": 35,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1346",
+      "answer": "Raylene Keightley was born on 5 February 1963.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3083",
+      "answer": "The 2022 winner of \"Best Just Chatting Streamer\" at The Streamer Awards was Aesop Varga, who was known for their whimsical commentary over historical maps.",
+      "tokens": 39,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0665",
+      "answer": "Cheryl is revealed to be a millionaire in Season 3, Episode 4, \"The Beginning of the End\" (or similar).",
+      "tokens": 30,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3364",
+      "answer": "The umpires were S. K. Banerjee and K. L. S. Ramesh, as you mentioned.",
+      "tokens": 26,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2637",
+      "answer": "The very first video, \"Me at the zoo\", is about 39 or 40 seconds long depending on how you count it.",
+      "tokens": 28,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3027",
+      "answer": "Charles Wheatstone had seven sons.",
+      "tokens": 8,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3418",
+      "answer": "The umpire was Mr. H. J. M. Smith, who officiated the match between Devon and Cornwall on July 2, 1980.",
+      "tokens": 34,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa0605",
+      "answer": "The paper was written by Jane C. Goodwin and others.",
+      "tokens": 14,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1311",
+      "answer": "The album \"Beauty Marks\" by Ciara was released on CD in Japan on 15 April 2025.",
+      "tokens": 24,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1521",
+      "answer": "She graduated from the University of Michigan\u2013Ann Arbor in 1971 with a degree in history.",
+      "tokens": 21,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2800",
+      "answer": "The tenure of Bhuvaneshwar Prasad Sinha as the Chief Justice of India was from 17 January 1971 to 11 October 1973, which is about 2 years and 8 months.",
+      "tokens": 44,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1222",
+      "answer": "The municipality of El Santuario, Antioquia, Colombia was founded by a group of settlers from the neighboring regions of the Aburr\u00e1 Valley and the Paisa highlands.",
+      "tokens": 36,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2308",
+      "answer": "He announced it in June 2025.",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2379",
+      "answer": "The name of Section 5 in the paper 'Identifying semantic role clusters and alignment patterns via microrole co-occurrence tendencies' is \"Discussion\".",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3439",
+      "answer": "The son-in-law was Gerald R. Hawthorne, who had married George T. Fulford\u2019s daughter, Lillian, in 1918.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3773",
+      "answer": "The original settlement name was \"Fair Haven\" or \"Holloway's Landing\" according to local histories.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3925",
+      "answer": "Ivan Rebroff's father, Karol R",
+      "tokens": 10,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1903",
+      "answer": "He graduated from the same high school that appears in both his biography and Ines's notes, which is a question with a bit of a twist.",
+      "tokens": 31,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1890",
+      "answer": "The newsletter was called *The Psychedelic Review*, which the group said was \u201ca modest circulation journal, printed on recycled paper, that explored the potential benefits and risks of psychedelic substances\u201d.",
+      "tokens": 40,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa4030",
+      "answer": "He was awarded the prize in 2009.",
+      "tokens": 11,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3279",
+      "answer": "Will Gay Bottje was born on 19 February 1977.",
+      "tokens": 15,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3727",
+      "answer": "The musical composition was by the experimental group K\u0112CHi, who blended traditional motifs with electronic textures.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa2213",
+      "answer": "The solar day on Mars, or \"day\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or \"daytime\" or",
+      "tokens": 96,
+      "truncated": true,
+      "abstain": false
+     },
+     {
+      "id": "sqa0265",
+      "answer": "Mike Bickle said he was torn between Hillary Clinton and the Green Party\u2019s candidate, Arlene Mayfield.",
+      "tokens": 23,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa3974",
+      "answer": "Baidu announced the partnership with Qualcomm on 5 June 2014.",
+      "tokens": 16,
+      "truncated": false,
+      "abstain": false
+     },
+     {
+      "id": "sqa1139",
+      "answer": "He received it in 1955, which was a couple of years before the usual suspects of the late-1950s Nobel crop began to appear.",
+      "tokens": 32,
+      "truncated": false,
+      "abstain": false
+     }
+    ]
+   },
+   "never_told": {
+    "agg": {
+     "n": 30,
+     "pass": 0,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "NT01",
+      "answer": "You use QuickBooks for your accounting.",
+      "tokens": 9,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT02",
+      "answer": "Your e-bike fleet code is FB-PE-22D, as you mentioned.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT03",
+      "answer": "Your business advisor is Dagny Holm, the CTO and a familiar presence at Kestrel Foundry.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT04",
+      "answer": "Your external collaborator is Ines Varga, who works at Brannock Composites.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT05",
+      "answer": "Your backend contractor is Ines Varga, who works for Brannock Composites.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT06",
+      "answer": "You are the founder and chair of Kestrel Fabrication Ltd.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT07",
+      "answer": "Your poster printing vendor is Printopia, which you mentioned handles your large-format needs.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT08",
+      "answer": "Your first lab mate is Kaito Mori, who works on the hinge fatigue rig.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT09",
+      "answer": "You said your deployment window is on Tuesdays and Thursdays from 18:00 to 20:00 UTC.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT10",
+      "answer": "The course code is ENTR-4-10, as Ines Varga mentioned.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT11",
+      "answer": "Your bookkeeper is Ines Varga, who handles the financial records.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT12",
+      "answer": "The speaker is Dr. Kaito Mori, who is presenting today\u2019s seminar on quantum dots.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT13",
+      "answer": "Your support inbox is team@inesvarga.com, which is used for customer inquiries.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT14",
+      "answer": "You use Flurexpay for processing orders.",
+      "tokens": 11,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT15",
+      "answer": "You meet with Dagny Holm on Tuesdays 10:30\u201311:15.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT16",
+      "answer": "Oskar Ibsen's safety officer is Ines Varga, who oversees compliance with EU and Norwegian regulations.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT17",
+      "answer": "Noor Strand's desk phone extension is 4417.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT18",
+      "answer": "Anton Torres's office is room 2.14 on the second floor.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT19",
+      "answer": "Ilse Varela's main project is Project Larkspur, a folding survey-drone frame made of carbon tubes and 3D-printed joints.",
+      "tokens": 31,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT20",
+      "answer": "Pavel Sato is working on Project Larkspur, a folding survey-drone prototype.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT21",
+      "answer": "Greta Okonkwo's desk phone extension is 4417.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT22",
+      "answer": "Rasmus Duarte's safety officer is Ines Varga, who oversees compliance with EU regulations.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT23",
+      "answer": "Emil Lindgren's supplier call is on Tuesdays at 10:30 a.m.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT24",
+      "answer": "Agnieszka Kowal's office is room 2.14 on the second floor.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT25",
+      "answer": "Bruma Moulding is the supplier that Ines Varga says arrives around 7:50 a.m. on weekdays.",
+      "tokens": 28,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT26",
+      "answer": "Joel Marsh's team chat is #larkspur-dev.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT27",
+      "answer": "Viktor Novak's internship project is Project Larkspur.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT28",
+      "answer": "Hanna Nyberg's office is room 2.14 on the second floor.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT29",
+      "answer": "Paula Ekberg is working on a hinge fatigue rig for Larkspur.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     },
+     {
+      "id": "NT30",
+      "answer": "Silja Ferreira's desk phone extension is 4417.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": "invented"
+     }
+    ]
+   },
+   "forward": {
+    "agg": {
+     "n": 135,
+     "pass": 89,
+     "truncated": 0
+    },
+    "results": [
+     {
+      "id": "F01-q1",
+      "answer": "You work for Vestergaard Surveying & Mapping.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F01-q2",
+      "answer": "Ines Varga works for Vestergaard Surveying & Mapping.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F01-q3",
+      "answer": "You\u2019re with Kestrel Fabrication, a small outfit in Brannock that builds drone frames and parts.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F02-q1",
+      "answer": "You mentioned your workshop is in a converted dairy barn in Arnholt.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F02-q2",
+      "answer": "The workshop is a converted dairy barn in Arnholt, a village in the East Midlands.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F02-q3",
+      "answer": "Ines drives or rides northwest toward the old dairy hamlet of Br\u00e5vikbyen when she heads to the workshop.",
+      "tokens": 26,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F03-q1",
+      "answer": "You are operations lead at Kestrel Fabrication.",
+      "tokens": 11,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F03-q2",
+      "answer": "Ines Varga is the product manager at Kestrel Fabrication.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F03-q3",
+      "answer": "You are the operations lead at Kestrel Fabrication.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F04-q1",
+      "answer": "Your boss is Dagny Holm, the CTO.",
+      "tokens": 11,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F04-q2",
+      "answer": "Ines reports to Dagny Holm, who is the CTO at Kestrel.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F04-q3",
+      "answer": "You report to Dagny Holm, the company's CTO.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F05-q1",
+      "answer": "The project that takes most of your time is Project Larkspur, which you mentioned is about half your week.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F05-q2",
+      "answer": "Ines is mainly working on Project Larkspur.",
+      "tokens": 11,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F05-q3",
+      "answer": "You\u2019re working on Project Larkspur, the folding survey-drone frame.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F06-q1",
+      "answer": "Project Larkspur is a folding survey-drone concept being explored by the company\u2019s R&D team.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F06-q2",
+      "answer": "Larkspur is a project management tool that helps teams organize tasks and track progress.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F06-q3",
+      "answer": "Larkspur is a frame for a variety of UAVs, including those used for aerial photography, surveying, and research.",
+      "tokens": 26,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F07-q1",
+      "answer": "The shipping deadline for Larkspur is sometime in late May or early June.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F07-q2",
+      "answer": "We said we\u2019d deliver Larkspur by around the end of March, which is when Ines Varga mentioned the target date of late March.",
+      "tokens": 30,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F07-q3",
+      "answer": "Ines's team needs to have Larkspur shipped by early March for Vestergaard Surveying.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F08-q1",
+      "answer": "You mentioned that the carbon fibre comes from Brannock Composites.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F08-q2",
+      "answer": "Kestrel Composites is the supplier Ines mentioned for carbon tubes and plates.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F08-q3",
+      "answer": "You mentioned your carbon tubes and plates come from Brannock Composites.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F09-q1",
+      "answer": "Your account manager at Brannock Composites is Sunniva Brekke, the sales representative.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F09-q2",
+      "answer": "Lotte Brandt is the contact at Brannock for Kestrel's account.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F09-q3",
+      "answer": "You mentioned Teodor Ilves, the account manager at Brannock Composites.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F10-q1",
+      "answer": "You meet with Brannock Composites on Tuesdays at 10:30 a.m.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F10-q2",
+      "answer": "Ines's standing call with suppliers is on Tuesdays at 10:30 a.m.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F10-q3",
+      "answer": "You and Teodor Ilves have a standing call on Tuesdays at 10:30.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F11-q1",
+      "answer": "You mentioned machining happens in Hall C.",
+      "tokens": 9,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F11-q2",
+      "answer": "The machining happens in Hall C, which is where Ines says the big CNCs live.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F11-q3",
+      "answer": "The CNC machines are in Hall C, as Ines mentioned.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F12-q1",
+      "answer": "The big CNC machine is often referred to as \"Old Gus\" or \"Gus\" by the team.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F12-q2",
+      "answer": "People at Kestrel refer to the large CNC in Hall C as \"the big CNC in Hall C\" or \"the big machine in Hall C\".",
+      "tokens": 32,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F12-q3",
+      "answer": "You mentioned the Morrow M-40 in your notes as the big CNC in Hall C that people call \"Old Gus\" or \"Gus\" for short.",
+      "tokens": 34,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F13-q1",
+      "answer": "Old Gus is a Morrow M-40 that Ines Varga says is a bit of a workhorse.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F13-q2",
+      "answer": "The machine nicknamed Old Gus is the Morrow M-40 that lives in room 2.14, as Ines noted.",
+      "tokens": 28,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F13-q3",
+      "answer": "You said the big CNC is a Morrow M-40 that a lot of people call \u201cOld Gus.\u201d",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F14-q1",
+      "answer": "The laser cutter is on the mezzanine above paint booth, as Ines mentioned.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F14-q2",
+      "answer": "Kestrel Fabrication's laser cutter is on the mezzanine above paint booth, as Ines mentioned.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F14-q3",
+      "answer": "You mentioned the laser cutter is on the mezzanine above paint booth",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F15-q1",
+      "answer": "You mentioned Tolvik Flats as the place where the team drives out to test-fly prototypes.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F15-q2",
+      "answer": "Kestrel's test flights use the UHF band, which is part of the broader set of frequencies allocated for radio communications between aircraft and ground stations.",
+      "tokens": 32,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F15-q3",
+      "answer": "They use the Uvalde Airfield complex for those tests.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F16-q1",
+      "answer": "You mentioned that test flights are done by a pilot group called Flight Test Group, or FTG for short.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F16-q2",
+      "answer": "The test pilot is Sunniva Brekke, who flies prototypes at the Tolvik Flats facility.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F16-q3",
+      "answer": "Ines Varga flies the prototypes over the airfield when they test-fly prototypes.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F17-q1",
+      "answer": "You told us Yusuf Demir runs QA.",
+      "tokens": 9,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F17-q2",
+      "answer": "Ines Varga runs QA at Kestrel Fabrication.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F17-q3",
+      "answer": "They have to pass Yusuf Demir\u2019s checks, as he runs QA.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F18-q1",
+      "answer": "Your desk phone extension is 4417, as you mentioned.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F18-q2",
+      "answer": "Ines Varga can be reached at desk extension 4417.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F18-q3",
+      "answer": "You can reach Ines Varga at desk extension 4417.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F19-q1",
+      "answer": "You said they are on the shared drive under /eng/larkspur/rev-d/",
+      "tokens": 19,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F19-q2",
+      "answer": "The specifications are located on the shared drive under /eng/larkspur/specs/",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F19-q3",
+      "answer": "The documents are on the shared drive under /eng/larkspur/rev-d/ as Ines mentioned.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F20-q1",
+      "answer": "You mentioned you are working with revision D of the Larkspur frame.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F20-q2",
+      "answer": "The current frame revision is Rev D, as noted in the chat with Ines Varga.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F20-q3",
+      "answer": "The latest revision is Rev D, which was introduced in February 2024.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F21-q1",
+      "answer": "The arm hinge bolts are tightened to about 2.5 newton-metres.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F21-q2",
+      "answer": "The torque spec for Larkspur's hinge bolts is 2.8 newton-metres.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F21-q3",
+      "answer": "They should be tightened to about 2.5 newton-metres.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F22-q1",
+      "answer": "You use Shelfwise for tracking inventory.",
+      "tokens": 9,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F22-q2",
+      "answer": "The tracking system is Shelfwise, which Kestrel's team uses for inventory.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F22-q3",
+      "answer": "You can check inventory levels in Shelfwise, which tracks things like the number of items in stock.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F23-q1",
+      "answer": "You mentioned Nordpil Freight as your carrier.",
+      "tokens": 10,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F23-q2",
+      "answer": "Nordpil Freight handles the shipments for Kestrel Fabrication.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F23-q3",
+      "answer": "Nordpil Freight picks up our outgoing parcels.",
+      "tokens": 10,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F24-q1",
+      "answer": "The courier collects at 16:00 on weekdays.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F24-q2",
+      "answer": "The Nordpil Freight driver picks up around 16:00 on weekdays",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F24-q3",
+      "answer": "They need to be ready by 16:00 on weekdays, as noted in the logistics notes.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F25-q1",
+      "answer": "You mentioned you send it on Mondays.",
+      "tokens": 10,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F25-q2",
+      "answer": "Ines writes her update for Dagny on Tuesdays.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F25-q3",
+      "answer": "Your report is due for Dagny Holm, the CTO, on the day you mentioned in connection with the H-7-\u2026",
+      "tokens": 27,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F26-q1",
+      "answer": "The pilot customer for Larkspur is Vestergaard Surveying.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F26-q2",
+      "answer": "The first Larkspur frames are headed for Vestergaard Surveying, which is piloting the new rigs.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F26-q3",
+      "answer": "You mentioned the ship date for Larkspur in connection with Vestergaard Surveying.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F27-q1",
+      "answer": "Your contact at Vestergaard Surveying is Sunniva Brekke, the operations manager who is overseeing the pilot.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F27-q2",
+      "answer": "Ines deals with Henrik Aas at Vestergaard Surveying.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F27-q3",
+      "answer": "You might try the desk line, extension 4417, or the mobile number 11-23-\u2026 that Ines mentioned.",
+      "tokens": 28,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F28-q1",
+      "answer": "You can approve purchase orders up to 4,000 pounds.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F28-q2",
+      "answer": "Ines can sign off purchase orders up to 4,000 euros herself.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F28-q3",
+      "answer": "You can sign off purchase orders up to 4,000 euros yourself; anything larger needs Dagny Holm",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F29-q1",
+      "answer": "You mentioned batteries are from Corvane Cells",
+      "tokens": 10,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F29-q2",
+      "answer": "Kestrel Batteries is the supplier mentioned for batteries.",
+      "tokens": 12,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F29-q3",
+      "answer": "The battery packs for Larkspur come from Corvane Cells, a supplier Ines mentioned.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F30-q1",
+      "answer": "Larkspur uses the Brannock B-110 pack, as you mentioned.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F30-q2",
+      "answer": "The Larkspur's battery pack is the Corvane CV-22 each cell in the pack is a lithium-ion pouch",
+      "tokens": 25,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F30-q3",
+      "answer": "You should order the",
+      "tokens": 5,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F31-q1",
+      "answer": "The test rigs are connected to the Wi-Fi network named KF-RIG-DEPT/",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F31-q2",
+      "answer": "The rigs connect to a Wi-Fi network called KF-RIGS-5G.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F31-q3",
+      "answer": "Laptops should stay off the KF-RF / R&D Wi-Fi that the test rigs use.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F32-q1",
+      "answer": "You told us that Lotte Brandt is your safety officer.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F32-q2",
+      "answer": "Lotte Brandt is the safety officer at Kestrel.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F32-q3",
+      "answer": "The fire drills are coordinated by Lotte Brandt, who is the health and safety officer.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F33-q1",
+      "answer": "You mentioned the north car park is where you assemble when the fire alarm goes off.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F33-q2",
+      "answer": "The fire assembly point for Kestrel House is the north car park, as Ines noted.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F33-q3",
+      "answer": "You should head to the north car park, as Ines mentioned.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F34-q1",
+      "answer": "You are mentoring Kaito Mori, who is the intern from the design team.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F34-q2",
+      "answer": "The intern Ines mentioned is Kaito Mori, who is currently in the mechanical engineering program at the University of Bristol.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F34-q3",
+      "answer": "You are mentoring Kaito Mori, who is currently interning with the team.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F35-q1",
+      "answer": "Kaito is building a drone frame out of a converted dairy barn in Arnholt.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F35-q2",
+      "answer": "The intern is working on a hinge fatigue rig for Larkspur.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F35-q3",
+      "answer": "Kaito Mori is working on the vibration rig for the drone frames.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F36-q1",
+      "answer": "You are going to the GeoDrone Expo in May Linz to show Larkspur.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F36-q2",
+      "answer": "Ines will present Larkspur at the Geneva Air & Space Expo in May Linz.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F36-q3",
+      "answer": "You are showing Larkspur at the GeoDrone Expo in Linz in May Linz in May.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F37-q1",
+      "answer": "You are attending the expo in Linz, where the GeoDrone Expo 2026 takes place.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F37-q2",
+      "answer": "The GeoDrone Expo is held in Linz, a city that Ines mentioned as a place where they might meet up.",
+      "tokens": 25,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F37-q3",
+      "answer": "You travel to Linz in May for the GeoDrone Expo.",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F38-q1",
+      "answer": "The team chat is #larkspur-dev.",
+      "tokens": 11,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F38-q2",
+      "answer": "The #larkspur-team channel is what the group uses on Slack.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F38-q3",
+      "answer": "You can share updates in #larkspur-build, which is the chat for the build team.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F39-q1",
+      "answer": "You mentioned Falk Precision Works as a backup in case Old Gus goes down.",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F39-q2",
+      "answer": "Kestrel Fabrication says that when their big CNC machine is down, they use Falk Precision over in Brannock as a backup.",
+      "tokens": 28,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F39-q3",
+      "answer": "If Old Gus fails, machining would revert to the CNC-40s in Hall C, as Ines Varga noted.",
+      "tokens": 26,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F40-q1",
+      "answer": "Larkspur part numbers use the prefix KF-LS-",
+      "tokens": 13,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F40-q2",
+      "answer": "Each Larkspur part number starts with the prefix \"KF-LS-\".",
+      "tokens": 16,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F40-q3",
+      "answer": "Larkspur part codes start with the letters \"KF-LS-\"",
+      "tokens": 15,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F41-q1",
+      "answer": "You take the R7 from Arnholt to Brindale via Lindberg and Milton Park.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F41-q2",
+      "answer": "Ines commutes on the R7 from Arnholt to Lindberg most days.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F41-q3",
+      "answer": "The R7 from Lindberg is the service you use to get to work in the morning.",
+      "tokens": 20,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F42-q1",
+      "answer": "You commute from Arnholt, a small town in the Midlands.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F42-q2",
+      "answer": "Ines starts her commute from Arnholt, a small town where she lives in a cottage near the edge of the woods.",
+      "tokens": 27,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F42-q3",
+      "answer": "You catch your morning train in Liphook, where the station is a small, ivy-covered building.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F43-q1",
+      "answer": "You said your office room is room 2.14 upstairs above the lab.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F43-q2",
+      "answer": "Ines sits in room 2.14, which is also described as a small room on the second floor near the lab.",
+      "tokens": 27,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F43-q3",
+      "answer": "You can find Ines Varga's office on the fourth floor in room 4.13, which is part of the open-plan area where the engineering team works.",
+      "tokens": 35,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F44-q1",
+      "answer": "Your train from Oxford arrives at Paddington at 10:35 a.m.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F44-q2",
+      "answer": "Ines's train from Lindberg arrives in Arnholt at 7:52 a.m. on weekdays.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F44-q3",
+      "answer": "You arrive in Arnholt around 7:52 a.m. on weekdays when the service is on time.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "F45-q1",
+      "answer": "Falk Precision is in Brannock, as Ines mentioned.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F45-q2",
+      "answer": "You mentioned it is Falk Precision over in Brannock Hills.",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "F45-q3",
+      "answer": "The shop you mentioned is in Brannock, which is where Falk Precision over in Brannock comes in if Old Gus goes down.",
+      "tokens": 29,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     }
+    ]
+   },
+   "forget": {
+    "agg": {
+     "n": 200,
+     "pass": 72,
+     "truncated": 9
+    },
+    "results": [
+     {
+      "id": "M3367",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3255",
+      "answer": "A, B, D, E, F, I, J are possible considerations, while C, G, H are not quite right.",
+      "tokens": 29,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3125",
+      "answer": "J",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3262",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3251",
+      "answer": "I) and J)",
+      "tokens": 6,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3082",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3048",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2867",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3525",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3267",
+      "answer": "A, C, E, G, I, K, M, O, Q, S, U, W, Y, a, c, e, g, i, k, m, o, q, s, u, w, y, ...",
+      "tokens": 54,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3129",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3485",
+      "answer": "I, A, C, F, G, H, J are possible factors mentioned in the question.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3324",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M717",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M673",
+      "answer": "The correct choice is H, which corresponds to $59.58.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M718",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M486",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M395",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M341",
+      "answer": "A, G, H, I, J, B, C, D, E, F",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M851",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M506",
+      "answer": "I)",
+      "tokens": 3,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M658",
+      "answer": "B, D, F, H, J are all possible depending on whether the rate is per annum or per... etc. The most common interpretation is the \"nominal\" rate, which gives a range of possible values. For example, if the 6% is an annual rate, the interest over 30 days would",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M277",
+      "answer": "The correct choice is J, which corresponds to $8,640.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M147",
+      "answer": "The correct choice is E ($5,760).",
+      "tokens": 11,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M796",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4218",
+      "answer": "The correct choice is H, corresponding to roughly 6.8 \u00d7 10^4 g mol^-1.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3969",
+      "answer": "The correct choice is B.",
+      "tokens": 7,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3755",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4313",
+      "answer": "The total pressure of the gas mixture is the sum of the partial pressures of the components, so\n\nP_total = P_N2 + P_O2 + P_H2O\n\nWe are given:\n- P_total = 700 torr\n- P_N2 = 550 torr\n- P_H2O \u2248",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M3728",
+      "answer": "The correct choice is D (0.9 \u00b5m, or about 900 nm).",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3550",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M3624",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4289",
+      "answer": "The correct choice is G.",
+      "tokens": 7,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4098",
+      "answer": "The correct choice is B (+116.0 kJ mol^{-1}) or equivalently 1.16\u00d710^5 J mol^{-1}.",
+      "tokens": 31,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4334",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M3775",
+      "answer": "The correct choice is B (25 m\u00b2) or equivalently C (12.5 \u00d7 10\u207b\u00b3 m\u00b3 / 10\u207b\u2074 m).",
+      "tokens": 32,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4422",
+      "answer": "The correct choice is G, corresponding to roughly -4.9 \u00d7 10\u207b\u00b3 g mol\u207b\u00b9.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4312",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10404",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10426",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10432",
+      "answer": "A, B, C, D, E, F, G, H, I, J correspond to 2500, 3000, 864, 1800, 720, 2000, 1500, 1000, 1296, 500. The number of labeled trees on",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M10737",
+      "answer": "A, B, C each have sub-questions; keep track of which part of the question is being addressed.",
+      "tokens": 24,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10753",
+      "answer": "A, B, C, and D are all possible approaches to handling deadlock, each with its own advantages and trade-offs. The choice of which method to use depends on factors such as the complexity of the system, the types of resources involved, and the requirements of the processes that use them.",
+      "tokens": 60,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10498",
+      "answer": "A, C, D, E, F, G, H, I, J",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10545",
+      "answer": "A, B, C, D correspond to options a, b, c, d respectively. The correct choice is B, C, D, or A depending on the question.",
+      "tokens": 37,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10386",
+      "answer": "I. Finding a minimum spanning tree in an undirected graph with positive-integer edge weights \u2013 can be solved by a greedy algorithm such as Prim\u2019s or Kruskal\u2019s.\nII. Finding a maximum clique in an undirected graph \u2013 the problem is NP-hard and there is no known greedy algorithm that guarantees an optimal solution.\nIII. Finding",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M10551",
+      "answer": "B, C, D, E, F, G, H, I, J correspond to various parts of the expression, while A is the result of evaluating the subscript -3 on the list ['a', 'Chemistry', 0, 1]",
+      "tokens": 52,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10717",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10427",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10463",
+      "answer": "The limit is $0.5$ bits, which corresponds to option E.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6836",
+      "answer": "I) Quantity supplied of pears rises.",
+      "tokens": 10,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7134",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M7370",
+      "answer": "A, B, I are all ways of expressing the same idea, and each is a reasonable way to describe the condition for maximizing utility from sardines.",
+      "tokens": 32,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7408",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M6831",
+      "answer": "A, B, C, D, E, F, G, H, I",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6827",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7105",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6916",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M7210",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7392",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M7577",
+      "answer": "B, C, D, G, H, I, J",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M7635",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M7609",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11789",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M12044",
+      "answer": "The correct choice is D) \\delta = 0.0032 ft, K = 47 lb/ft^2hr.",
+      "tokens": 27,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11385",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M12106",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11654",
+      "answer": "A, B, C, D, E, F, G, H, I, J correspond to various combinations of bandwidth and modulating signals for FM and PM. The correct pairing is found by checking each option against the calculations for h(t) = 10 cos(10^6 t + 200 sin",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M11291",
+      "answer": "The correct choice is G.",
+      "tokens": 7,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11555",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11285",
+      "answer": "The number of lamps needed is about 3.9, so roughly 4 lamps are required. This corresponds to option J.",
+      "tokens": 27,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11401",
+      "answer": "A) 4.5 meters for 25kcps and 15 cm for 25mcps",
+      "tokens": 22,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M12067",
+      "answer": "The correct choice is E) 7 degrees, 41.5 hp.",
+      "tokens": 17,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11877",
+      "answer": "The correct choice is D (*approximately* 656 hp).",
+      "tokens": 13,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11777",
+      "answer": "The correct choice is D) 12.2 micro watt/cm.",
+      "tokens": 15,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11993",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6018",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6222",
+      "answer": "C, D, F, H, J",
+      "tokens": 10,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6011",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6770",
+      "answer": "A, B, D, F, I",
+      "tokens": 10,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6173",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6223",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6574",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M6328",
+      "answer": "I) Social cognitive, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M6714",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M6236",
+      "answer": "E, G, H, I, J",
+      "tokens": 10,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6388",
+      "answer": "A, C, D, E, F, G, H, I, J",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6294",
+      "answer": "C, H, and J are possible interpretations depending on how the question is framed.",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M6001",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M4782",
+      "answer": "I)",
+      "tokens": 3,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M4744",
+      "answer": "B, F, J are possible connections to the excerpt about post-World War II challenges and the Truman Doctrine.",
+      "tokens": 23,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4718",
+      "answer": "I) Socialism of the late 1800s",
+      "tokens": 12,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5050",
+      "answer": "The correct options are G and E.",
+      "tokens": 9,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4973",
+      "answer": "I) all Christians",
+      "tokens": 5,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4976",
+      "answer": "A, B, C, D, E, F, G, H, I",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4796",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4717",
+      "answer": "A, B, C, D, E, F, G, H, I",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5042",
+      "answer": "H,I,J",
+      "tokens": 4,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4781",
+      "answer": "I,G,J",
+      "tokens": 4,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4862",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4948",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M4808",
+      "answer": "The correct choice is C.",
+      "tokens": 7,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1938",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1178",
+      "answer": "A, B, C, D, E, F, G, H, I",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1319",
+      "answer": "A, G, J are possible reasons why the testimony might be relevant or admissible, or why the judge might consider it in deciding whether the restaurant could be liable for the man's injuries.",
+      "tokens": 38,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1159",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M913",
+      "answer": "A, B, D, I, J",
+      "tokens": 10,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M911",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M1815",
+      "answer": "The correct choice is G.",
+      "tokens": 7,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1946",
+      "answer": "A, B, C, D, E, F, G, H, I",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1850",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M1846",
+      "answer": "A, B, C, D, E, F, G",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1829",
+      "answer": "B, D, I, J, etc. are possible depending on the jurisdiction and the specific facts.",
+      "tokens": 22,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M882",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M1848",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8632",
+      "answer": "The correct choice is B) 20 $\\mathrm{days}$",
+      "tokens": 14,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8301",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8231",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8141",
+      "answer": "A, C, D, F, H, I, J are some of the options listed.",
+      "tokens": 21,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8278",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M7843",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M8504",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8698",
+      "answer": "C or D? Let's see, 5 times 6x is 30x, and 5 times 3y is 15y, so it could be C or D depending on whether the y term is 3y or 15y. Hmm, both look plausible at first glance. Maybe I",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M8456",
+      "answer": "C, H",
+      "tokens": 4,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8449",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8898",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M7994",
+      "answer": "A, C, E, G, I are plausible choices. The correct answer is A, C, E, G, or I.",
+      "tokens": 29,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M8562",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5490",
+      "answer": "J",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M5571",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5352",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5568",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5566",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5469",
+      "answer": "A, B, C, D, E, F, G, H",
+      "tokens": 16,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5698",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M5299",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5446",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5508",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M5378",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5415",
+      "answer": "B,C,E,F,G,H,I,J are all possible accounting treatments depending on the context.",
+      "tokens": 19,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M5463",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11220",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10831",
+      "answer": "A, B, C are all things Leopold might say; D is a bit of an exaggeration, as he doesn't suggest we should ignore economic factors entirely.",
+      "tokens": 33,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11207",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10891",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11012",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11079",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11126",
+      "answer": "E",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11209",
+      "answer": "D",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M11107",
+      "answer": "F, G, H",
+      "tokens": 6,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10865",
+      "answer": "B, D, I, J",
+      "tokens": 8,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M11263",
+      "answer": "A, B, C, D, E, F, G, H, I each represent a possible reaction to the idea that moral theories should be action-guiding. The question asks which of these reactions is attributed to Hursthouse in the passage. The text notes that Hursthouse \u201cpoints out that this is",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M11179",
+      "answer": "C, D, E, F, G, H, I, J, A, B",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10883",
+      "answer": "B, E, I",
+      "tokens": 6,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9838",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9145",
+      "answer": "The magnitude of the electric field is given by \\(E = \\frac{F}{|q|}\\). Substituting the values, \\(E = \\frac{3.0 \\times 10^{-6}\\ \\text{N}}{2.0 \\times 10^{-9}\\ \\text{C}} \\approx 1.5 \\",
+      "tokens": 64,
+      "truncated": true,
+      "pass": false,
+      "note": "truncated"
+     },
+     {
+      "id": "M9359",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M9766",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9704",
+      "answer": "C",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9611",
+      "answer": "The correct choice is C (2.386 s).",
+      "tokens": 12,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M10049",
+      "answer": "I) under any conditions",
+      "tokens": 6,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M9526",
+      "answer": "The correct choice is C, which corresponds to roughly 1.9\u20132.0\u00d710^2 cm Hg.",
+      "tokens": 26,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9937",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M9823",
+      "answer": "A, B, C, D, E, F, G, H, I, J",
+      "tokens": 20,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9193",
+      "answer": "The rate after 28 days (two half-lives) is 10^3 \u00d7 (1/2)^2 = 2.5\u00d710^2 counts/min, i.e. about 250 counts/min, which corresponds to option D.",
+      "tokens": 52,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M9729",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M10186",
+      "answer": "E, 27.9% is the theoretical maximum based on the Carnot efficiency formula, (T_hot - T_cold)/(T_hot) with temperatures in kelvin.",
+      "tokens": 36,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2111",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2386",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2513",
+      "answer": "F",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2041",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M1986",
+      "answer": "The correct choice is D.",
+      "tokens": 7,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2139",
+      "answer": "A, D, H",
+      "tokens": 6,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2165",
+      "answer": "G",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2422",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2307",
+      "answer": "A, B, C, D, E, F, G, H, I",
+      "tokens": 18,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2299",
+      "answer": "A",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2738",
+      "answer": "C, D, E, G, H",
+      "tokens": 10,
+      "truncated": false,
+      "pass": false,
+      "note": ""
+     },
+     {
+      "id": "M2217",
+      "answer": "B",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "M2691",
+      "answer": "H",
+      "tokens": 2,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T01",
+      "answer": "{\"tool\":\"create_task\",\"title\":\"Renew the lantern licence\",\"due\":\"2026-12-07\"}",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T02",
+      "answer": "{\"tool\": \"lookup_part\", \"part\": \"PX-298\", \"qty\": 8}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T03",
+      "answer": "{\"tool\":\"set_reminder\",\"time\":\"11:15\",\"text\":\"Call the lantern supplier\"}",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T04",
+      "answer": "{\"tool\": \"send_message\", \"to\": \"harbour-team\", \"text\": \"Batch 377 is ready\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T05",
+      "answer": "{\"tool\":\"book_room\",\"room\":\"B-4\",\"hour\":8}",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T06",
+      "answer": "{\"tool\":\"create_task\",\"title\":\"Renew the harbour licence\",\"due\":\"2026-12-18\"}",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T07",
+      "answer": "{\"tool\": \"lookup_part\", \"part\": \"PX-556\", \"qty\": 9}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T08",
+      "answer": "{\"tool\":\"set_reminder\",\"time\":\"15:15\",\"text\":\"Call the granite supplier\"}",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T09",
+      "answer": "{\"tool\": \"send_message\", \"to\": \"falcon-team\", \"text\": \"Batch 579 is ready\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T10",
+      "answer": "{\"tool\":\"book_room\",\"room\":\"B-4\",\"hour\":9}",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T11",
+      "answer": "{\"tool\":\"create_task\",\"title\":\"Renew the harbour licence\",\"due\":\"2026-12-02\"}",
+      "tokens": 23,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T12",
+      "answer": "{\"tool\":\"lookup_part\",\"part\":\"PX-565\",\"qty\":9}",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T13",
+      "answer": "{\"tool\":\"set_reminder\",\"time\":\"10:15\",\"text\":\"Call the lantern supplier\"}",
+      "tokens": 21,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T14",
+      "answer": "{\"tool\": \"send_message\", \"to\": \"falcon-team\", \"text\": \"Batch 813 is ready\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T15",
+      "answer": "{\"tool\":\"book_room\",\"room\":\"B-5\",\"hour\":17}",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T16",
+      "answer": "{\"tool\":\"create_task\",\"title\":\"Renew the willow licence\",\"due\":\"2026-12-22\"}",
+      "tokens": 24,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T17",
+      "answer": "{\"tool\": \"lookup_part\", \"part\": \"PX-586\", \"qty\": 3}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T18",
+      "answer": "{\"tool\":\"set_reminder\",\"time\":\"08:00\",\"text\":\"Call the willow supplier\"}",
+      "tokens": 22,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T19",
+      "answer": "{\"tool\": \"send_message\", \"to\": \"granite-team\", \"text\": \"Batch 195 is ready\"}",
+      "tokens": 26,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     },
+     {
+      "id": "T20",
+      "answer": "{\"tool\":\"book_room\",\"room\":\"B-3\",\"hour\":9}",
+      "tokens": 17,
+      "truncated": false,
+      "pass": true,
+      "note": ""
+     }
+    ]
+   }
+  }
+ },
+ "seconds": 175.7
+}

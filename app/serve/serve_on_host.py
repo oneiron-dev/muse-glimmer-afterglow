@@ -76,6 +76,8 @@ def llama_command(a):
         # Steering dials (a build with per-request "control_vectors"), loaded at scale 0 in the order given: a
         # request that names none runs without them, so no proxy fill is needed for vectors.
         cmd += ["--control-vector-scaled", ",".join(f"{path}:0" for path in a.control_vector)]
+        if a.control_vector_layer_range:  # one range for every vector (the dial files hold layers that break replies)
+            cmd += ["--control-vector-layer-range", *map(str, a.control_vector_layer_range)]
     return cmd
 
 
@@ -101,7 +103,8 @@ class Host:
         stamp = dt.datetime.now(JST).strftime("%Y%m%d-%H%M%S")
         logs = os.path.join(a.root, "serve", "logs")
         lora = [{"id": i, "path": path, "sha256": sha256_file(path)} for i, path in enumerate(a.lora or [])]
-        vectors = [{"id": i, "path": path, "sha256": sha256_file(path)} for i, path in enumerate(a.control_vector or [])]
+        vectors = [{"id": i, "path": path, "sha256": sha256_file(path), "layer_range": a.control_vector_layer_range}
+                   for i, path in enumerate(a.control_vector or [])]
         cmd = llama_command(a)
         self.write_state(state="starting", started=now_iso(),
                          endpoint=f"http://{a.listen}", alias=ALIAS, chat_template_kwargs=TEMPLATE_KWARGS,
@@ -180,6 +183,8 @@ def main():
     ap.add_argument("--control-vector", action="append",
                     help="GGUF control vector (a steering dial) on this host, loaded at scale 0; repeat, ids in the order "
                          "given; needs a llama-server built with per-request control_vectors")
+    ap.add_argument("--control-vector-layer-range", type=int, nargs=2, metavar=("START", "END"),
+                    help="layers the control vectors apply to (one range for all)")
     ap.add_argument("--print-command", action="store_true", help="print the llama-server command and exit")
     a = ap.parse_args()
     a.listen = a.listen or host_paths(a.host)["listen"]

@@ -9,7 +9,6 @@ import argparse
 import datetime as dt
 import json
 import mimetypes
-import re
 import threading
 import time
 import traceback
@@ -18,44 +17,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from . import paths, snapshot, thoughts
+from .night_checks import abstention_gate, chat_checks, serving_choice
 from .agent import DaySession, load_world, now_iso
 from .llm import GlimmerClient, GlimmerError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
-
-
-ABSTAIN_RATES = re.compile(r"abstain rate ([\d.]+) -> ([\d.]+)")
-
-
-def abstention_gate(night):
-    """The abstention check (does the model still say it does not know?): {"passed", "base", "after",
-    "decision"}, or None when the night has none. Sources, first found wins: decision.json's own "abstention"
-    field (nights decided with the check); the check added on 27 Oct after the R2 nights ran, in
-    night/decision-with-abstention-gate.json; and receipt.json's "added_checks"."""
-    def read(name):
-        f = night / name
-        return json.loads(f.read_text()) if f.exists() else None
-
-    decision = read("decision.json") or {}
-    if decision.get("abstention"):
-        a = decision["abstention"]
-        return {"passed": (decision.get("checks") or {}).get("abstention_gate"), "base": a.get("base"),
-                "after": a.get("after"), "rule": a.get("rule"), "decision": decision.get("decision")}
-    doc = read("decision-with-abstention-gate.json")
-    if doc:
-        rates = doc.get("abstention") or {}
-        base, after = rates.get("base"), rates.get("after")
-        m = ABSTAIN_RATES.search(doc.get("why") or "")
-        if (base is None or after is None) and m:
-            base, after = float(m.group(1)), float(m.group(2))
-        return {"passed": (doc.get("checks") or {}).get("abstention_gate"), "base": base, "after": after,
-                "rule": rates.get("rule"), "decision": doc.get("decision")}
-    for c in (read("receipt.json") or {}).get("added_checks") or []:
-        if c.get("check", "").startswith("abstention"):
-            rates = c.get("abstain_rate") or {}
-            return {"passed": c.get("passed"), "base": rates.get("base"), "after": rates.get("adapted"),
-                    "rule": c.get("rule"), "decision": c.get("would_decide")}
-    return None
 
 
 # Samples for the steering panels until a night writes its own (eval/results/2026-10-29-steering on main):
@@ -99,48 +65,6 @@ def record_proposal(world, day, axis, toward, answer):
                                "applies": "tomorrow" if answer == "accept" else None}
     f.write_text(json.dumps(doc, indent=1) + "\n")
     return doc
-
-
-# The two chat checks (29 Oct), as night 2 on writes them: eval.json fields and decision.json "checks" names.
-# For nights decided before them, the check files written afterwards (relative to the night dir); each file
-# carries the date it was added.
-CHAT_CHECKS = {"content_channel": {"files": ["eval/channel-check-added-20261029.json"]},
-               "tool_calls": {"files": ["eval/tools-check-added-20261029.json"]}}
-
-
-def short_date(iso):
-    try:
-        return dt.date.fromisoformat(str(iso)[:10]).strftime("%-d %b")
-    except ValueError:
-        return str(iso)
-
-
-def chat_checks(night, ev, decision):
-    """The answer-channel and chat tool checks: [{"name", "passed", "counts", "added", "rule", "source"}].
-    From the night's own eval.json + decision.json when it ran them, else from the check files written after it
-    (CHAT_CHECKS), marked with the date they were added. Numbers come from the files only."""
-    out = []
-    for name, conf in CHAT_CHECKS.items():
-        rec, source, added = (ev or {}).get(name), "eval.json", None
-        if not rec:
-            for rel in conf["files"]:
-                f = night / rel
-                if f.exists():
-                    rec, source = json.loads(f.read_text()), str(f)
-                    added = short_date(rec.get("added") or "after the night")
-                    break
-        if not rec:
-            continue
-        if name == "content_channel":
-            counts = {"right": rec.get("content_ok"), "n": rec.get("n"), "min_rate": rec.get("min_rate")}
-        else:
-            c = rec.get("counts") or {}
-            counts = {"right": (c.get("adapter") or {}).get("right"), "n": (c.get("adapter") or {}).get("n"),
-                      "base_right": (c.get("base") or {}).get("right"), "max_drop": rec.get("max_drop")}
-        passed = ((decision or {}).get("checks") or {}).get(name, rec.get("passed")) if added is None else rec.get("passed")
-        out.append({"name": name, "passed": passed, "counts": counts, "added": added, "rule": rec.get("rule"),
-                    "source": source})
-    return out
 
 
 def persona_name(world):
@@ -226,6 +150,7 @@ class App:
         replies = [r for r in history if r.get("role") == "assistant"]
         return {
             "world": s.world, "day": s.day, "date": s.date, "persona": persona.get("name"),
+            "serving": s.adapter_choice,  # which update the day agent serves under the serving rule, and why
             # replies that ended empty and were asked again in the answer channel (agent.py); shown, never hidden
             "answer_channel_retries": {"retried": sum(1 for r in replies if r.get("answer_channel_retry")),
                                        "replies": len(replies)},

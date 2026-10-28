@@ -22,6 +22,8 @@ def pct(x):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--screen", required=True)
+    ap.add_argument("--parity", action="append", default=[],
+                    help="STATIC_ROW=PER_REQUEST_ROW: every answer must be byte-equal (a static load vs the patched server)")
     args = ap.parse_args()
     screen = Path(args.screen)
     summary = json.loads((screen / "summary.json").read_text())
@@ -35,7 +37,7 @@ def main():
                   "|---|---|---|---|---|---|---|---|---|---|---|"]
         for name, r in rows.items():
             for arm, tests in r.items():
-                if arm in ("cvecs", "cvec_layers", "seconds") or "gate" not in tests:
+                if not isinstance(tests, dict) or arm in ("cvecs", "cvec_layers") or "gate" not in tests:
                     continue
                 g, b = tests.get("gate"), tests.get("gate_bare")
                 drop = ref["gate"]["abstain_rate"] - g["abstain_rate"]
@@ -58,7 +60,7 @@ def main():
     day_lines = []
     for name, r in rows.items():
         for arm, tests in r.items():
-            if arm in ("cvecs", "cvec_layers", "seconds"):
+            if not isinstance(tests, dict) or arm in ("cvecs", "cvec_layers"):
                 continue
             for test, agg in tests.items():
                 if not test.startswith("day:"):
@@ -73,6 +75,20 @@ def main():
     if day_lines:
         lines += ["", "| row | arm | axis | words | asks | hedges/100w | commits | casual/100w | contractions/100w | repetition | truncated | judge toward + | judge coherence |",
                   "|---|---|---|---|---|---|---|---|---|---|---|---|---|"] + day_lines
+    report["parity"] = []
+    for pair in args.parity:
+        a, b = pair.split("=")
+        ra, rb = (json.loads((screen / f"{n}.json").read_text()) for n in (a, b))
+        n = same = 0
+        for arm, tests in ra["arms"].items():
+            for test, out in tests.items():
+                other = {r["id"]: r["answer"] for r in rb["arms"].get(arm, {}).get(test, {}).get("results", [])}
+                for r in out["results"]:
+                    if r["id"] in other:
+                        n += 1
+                        same += r["answer"] == other[r["id"]]
+        report["parity"].append({"static": a, "per_request": b, "answers": n, "byte_equal": same})
+        lines.append(f"\nParity {a} vs {b}: {same}/{n} answers byte-equal")
     (screen / "report.json").write_text(json.dumps(report, indent=1) + "\n")
     print("\n".join(lines))
 

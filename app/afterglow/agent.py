@@ -18,7 +18,7 @@ import time
 from pathlib import Path
 
 from . import paths
-from .llm import GlimmerClient, world_adapter_entry
+from .llm import GlimmerClient, world_adapter_choice
 from .notes import LocalJsonNotes
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 
@@ -80,7 +80,8 @@ class DaySession:
         self.temperature = temperature
         self.client = client or GlimmerClient()
         # The client serves this world: its adapter (from the serving manifest) is the one it scales.
-        self.adapter = world_adapter_entry(world)
+        self.adapter_choice = world_adapter_choice(world)  # the serving rule: latest update passing every check
+        self.adapter = self.adapter_choice["entry"]
         self.client.adapter_path = self.adapter["path"] if self.adapter else None
         self.reasoning = reasoning
         self.notes_in_context = notes_in_context
@@ -193,11 +194,12 @@ class DaySession:
         return out
 
     # --- one turn ---
-    def run_turn(self, text, source="user"):
-        """Yield UI events for one user turn; the last is {"type": "turn_done", ...}."""
+    def run_turn(self, text, source="user", extra=None):
+        """Yield UI events for one user turn; the last is {"type": "turn_done", ...}. `extra` fields go on the day
+        log's user record (a scripted day's "feedback" label, for the night's steering proposals)."""
         self.turn += 1
         turn = self.turn
-        self._log({"ts": now_iso(), "turn": turn, "role": "user", "content": text, "source": source})
+        self._log({"ts": now_iso(), "turn": turn, "role": "user", "content": text, "source": source, **(extra or {})})
         self.messages.append({"role": "user", "content": text})
         new_msgs, tool_calls, notes_written, rounds = [], [], [], []
         final = ""
@@ -299,10 +301,10 @@ class DaySession:
                "cache_n": (first.get("timings") or {}).get("cache_n"),
                "prompt_n": (first.get("timings") or {}).get("prompt_n")}
 
-    def ask(self, text, source="user"):
+    def ask(self, text, source="user", extra=None):
         """Run a turn to the end; return the final event (for scripts and the simulator)."""
         last = None
-        for ev in self.run_turn(text, source=source):
+        for ev in self.run_turn(text, source=source, extra=extra):
             last = ev
         return last
 

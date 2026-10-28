@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -186,7 +186,7 @@
    ],
    "statement": "Kestrel test-flies its prototypes at Tolvik Flats.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F64"
   },
   {
    "id": "F16",
@@ -198,7 +198,7 @@
    ],
    "statement": "Sunniva Brekke is Kestrel's test pilot.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F63"
   },
   {
    "id": "F17",
@@ -327,7 +327,7 @@
    ],
    "statement": "Ines's contact at Vestergaard Surveying is Henrik Aas.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F62"
   },
   {
    "id": "F28",
@@ -614,6 +614,170 @@
    "valid_from": 2,
    "superseded_by": null,
    "supersedes": "F25"
+  },
+  {
+   "id": "F52",
+   "key": "new prototype project",
+   "value": "Project Ternwing",
+   "accept": [
+    "ternwing",
+    "project ternwing"
+   ],
+   "statement": "The new prototype project is Project Ternwing.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F53",
+   "key": "auxiliary motor supplier",
+   "value": "Halden Dynamics",
+   "accept": [
+    "halden dynamics",
+    "halden"
+   ],
+   "statement": "The auxiliary motor supplier is Halden Dynamics.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F54",
+   "key": "paint booth location",
+   "value": "East Yard Annex",
+   "accept": [
+    "east yard annex",
+    "east yard building"
+   ],
+   "statement": "The paint booth location is East Yard Annex.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F55",
+   "key": "new design engineer",
+   "value": "Petra Lindqvist",
+   "accept": [
+    "petra lindqvist",
+    "lindqvist"
+   ],
+   "statement": "The new design engineer is Petra Lindqvist.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F56",
+   "key": "prototype deadline date",
+   "value": "19 May",
+   "accept": [
+    "19 may",
+    "may 19",
+    "19th may",
+    "may 19th",
+    "19th of may"
+   ],
+   "statement": "The prototype deadline date is 19 May.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F57",
+   "key": "torque wrench model",
+   "value": "Torqline T-85",
+   "accept": [
+    "torqline t-85",
+    "t-85"
+   ],
+   "statement": "The torque wrench model is Torqline T-85.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F58",
+   "key": "warehouse access code",
+   "value": "77410",
+   "accept": [
+    "77410",
+    "code 77410"
+   ],
+   "statement": "The warehouse access code is 77410.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F59",
+   "key": "client demo city",
+   "value": "Bregenz",
+   "accept": [
+    "bregenz",
+    "bregenz demo city"
+   ],
+   "statement": "The client demo city is Bregenz.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F60",
+   "key": "spare parts vendor",
+   "value": "Vasker Parts",
+   "accept": [
+    "vasker parts",
+    "vasker"
+   ],
+   "statement": "The spare parts vendor is Vasker Parts.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F61",
+   "key": "inspection drone model",
+   "value": "Hawkeye H-12",
+   "accept": [
+    "hawkeye h-12",
+    "h-12"
+   ],
+   "statement": "The inspection drone model is Hawkeye H-12.",
+   "valid_from": 3,
+   "superseded_by": null
+  },
+  {
+   "id": "F62",
+   "key": "customer contact",
+   "value": "Maren Solberg",
+   "accept": [
+    "maren solberg",
+    "maren",
+    "solberg"
+   ],
+   "statement": "Your customer contact is now Maren Solberg.",
+   "valid_from": 3,
+   "superseded_by": null,
+   "supersedes": "F27"
+  },
+  {
+   "id": "F63",
+   "key": "test pilot",
+   "value": "Eskil Ronne",
+   "accept": [
+    "eskil ronne",
+    "eskil",
+    "ronne"
+   ],
+   "statement": "Your test pilot is now Eskil Ronne.",
+   "valid_from": 3,
+   "superseded_by": null,
+   "supersedes": "F16"
+  },
+  {
+   "id": "F64",
+   "key": "test-flight field",
+   "value": "Skjerstad Meadows",
+   "accept": [
+    "skjerstad meadows",
+    "skjerstad"
+   ],
+   "statement": "Your test-flight field is now Skjerstad Meadows.",
+   "valid_from": 3,
+   "superseded_by": null,
+   "supersedes": "F15"
   }
  ],
  "preferences": [
