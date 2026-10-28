@@ -123,6 +123,41 @@ def route_train_rows(W, rng, ask_share):
     return rows
 
 
+def key_words(key):
+    return set(re.findall(r"[a-z]+", key.lower())) - {"name", "the", "of", "my", "date", "day", "time"}
+
+
+def route_cross_world_rows(W, others, rng, per_world):
+    """Never-told style asks: a forward question from another training world about a key this world's notes do not
+    have (no shared key word, no note holding its value) -> 0 (ask). Sources are w1-w3 only; w4 stays unseen."""
+    mine = set().union(*(key_words(it["key"]) for it in W["items"]))
+    pool = []
+    for O in others:
+        by_id = {it["id"]: it for it in O["items"]}
+        for r in O["train"]:
+            item = by_id.get(r.get("item_id"))
+            if r.get("form") != "qa_forward" or item is None or key_words(item["key"]) & mine:
+                continue
+            accept = item.get("accept") or [item["value"]]
+            if any(scoring.score_fact(it.get("full_value") or it["value"], accept) for it in W["items"]):
+                continue
+            pool.append((O["world"], r, item))
+    rng.shuffle(pool)
+    rows, seen = [], set()
+    for world, r, item in pool:
+        if item["id"] + world in seen:
+            continue
+        seen.add(item["id"] + world)
+        order = list(range(len(W["items"])))
+        rng.shuffle(order)
+        rows.append(route_row(W["world"], "train", "train_cross_world_ask", f"route:{W['world']}:x:{world}:{r['id']}",
+                              W["first"], [W["items"][i] for i in order], r["messages"][0]["content"].strip(), [],
+                              {"train_row": r["id"], "from_world": world, "item_id": item["id"], "form": r["form"]}))
+        if len(rows) >= per_world:
+            break
+    return rows
+
+
 def fact_of_item(W, item):
     text = item.get("full_value") or item["value"]
     return next((f["id"] for f in W["facts"].values() if holds(text, f)), None)
@@ -224,6 +259,7 @@ def main():
                                                               "train: build train rows (needs the frozen test)")
     ap.add_argument("--runs")
     ap.add_argument("--ask-share", type=float, default=0.2)
+    ap.add_argument("--cross-world-asks", type=int, default=60, help="never-told style ask rows per training world")
     args = ap.parse_args()
     runs = runs_root(args.runs)
     DATA.mkdir(parents=True, exist_ok=True)
@@ -249,6 +285,8 @@ def main():
             raise SystemExit(f"{name} changed since it was frozen")
     report, built = {}, {}
     built["route-train.jsonl"] = [r for w in TRAIN_WORLDS for r in route_train_rows(worlds[w], rng, args.ask_share)]
+    built["route-train.jsonl"] += [r for w in TRAIN_WORLDS for r in route_cross_world_rows(
+        worlds[w], [worlds[o] for o in TRAIN_WORLDS if o != w], rng, args.cross_world_asks)]
     for kind, build in (("duplicate", duplicate_rows), ("supersede", supersede_rows)):
         rows = split_by_hash([r for w in TRAIN_WORLDS for r in build(worlds[w], "train", random.Random(SEED))], 0.2, kind)
         built[f"{kind}-train.jsonl"] = [r for r in rows if r["split"] == "train"]
