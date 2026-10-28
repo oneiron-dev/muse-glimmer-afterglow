@@ -256,7 +256,16 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
                 continue  # this run reached the vault on an earlier try
             at = ts(user) if author == "user" else ts(rec)
             ids = [stable_id(f"{conv}:turn{rec['turn']}:run{i}:msg{j}") for j in range(len(texts))]
-            out = vault.client_for(author).witness_run(conv, author, texts, at, ids)
+            try:
+                out = vault.client_for(author).witness_run(conv, author, texts, at, ids)
+            except VaultError as e:
+                # A run whose call failed after the vault committed it (its receipt never came back): the resend's
+                # stable ids are already in the vault under that earlier turn, so the run is witnessed.
+                if e.status != 400 or "already belongs to another turn" not in e.body:
+                    raise
+                print(f"  turn {rec['turn']} run {i}: already in the vault (committed before an earlier failure)",
+                      file=sys.stderr)
+                out = {"receipt_ref": "already-witnessed", "turn_short_id": None}
             receipt["receipt_refs"].append(out.get("receipt_ref"))
             receipt["turn_short_ids"].append(out.get("turn_short_id"))
             save()  # after every run, so a failure in the next one never repeats this one
