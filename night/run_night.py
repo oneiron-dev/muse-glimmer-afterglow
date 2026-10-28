@@ -236,11 +236,18 @@ class Night:
         rsync(f"{HOST['name']}:{remote_out}/anchors.jsonl", str(out), log)
 
     def self_check(self, log):
+        questions = self.night / "self-check-questions.jsonl"
         run([sys.executable, "night/self_check_rows.py", "--world", self.args.world, "--day", str(self.args.day),
              "--consolidated", str(self.night / "consolidated.json"), "--runs", str(self.runs),
-             "--out", str(self.night / "self-check.jsonl"), "--report", str(self.night / "self-check-report.json")], log)
+             "--out", str(self.night / "self-check.jsonl"), "--report", str(self.night / "self-check-report.json"),
+             "--questions-out", str(questions)], log)
+        # the questions asked of the adapter are the night's own wording, never a held-out or never-told probe
+        run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(questions), "--never-told",
+             "--out", str(self.night / "self-check-questions-leak.json")], log)
         report = json.loads((self.night / "self-check-report.json").read_text())
-        self.receipt["self_check"] = {k: report[k] for k in ("adapter_id", "adapter_sha256", "items", "known", "unsure", "wrong", "tokens")}
+        self.receipt["self_check"] = {**{k: report[k] for k in ("adapter_id", "adapter_sha256", "question", "items", "right", "wrong",
+                                                                "right_low_confidence", "tokens")},
+                                      "questions_leak_check": json.loads((self.night / "self-check-questions-leak.json").read_text())["passed"]}
 
     def memories(self):
         """A share of earlier days' rewrites, for items not superseded since (multi-day replay)."""
@@ -250,7 +257,7 @@ class Night:
         superseded_values = {i["corrects"].lower() for i in today["items"] if i.get("corrects")}
         today_ids = {i["id"] for i in today["items"]}  # still-active earlier notes are in today's items, trained in full
         check = self.night / "self-check-report.json"
-        unsure = set(json.loads(check.read_text())["unsure_items"]) if self.args.self_check and check.exists() else set()
+        unsure = set(json.loads(check.read_text())["replaced_items"]) if self.args.self_check and check.exists() else set()
         rows = []
         for d in range(1, self.args.day):
             path = self.runs / self.args.world / str(d) / "night" / "rewrites" / "rewrites.jsonl"
@@ -274,12 +281,12 @@ class Night:
         sources = [str(self.night / "rewrites" / "rewrites.jsonl")]
         check = self.night / "self-check-report.json"
         if self.args.self_check and check.exists():
-            # facts the current adapter got wrong or was unsure of: the self-check rows replace their answer rows
-            unsure = {i.split("-", 1)[1] for i in json.loads(check.read_text())["unsure_items"]}
-            kept = [line for line in Path(sources[0]).read_text().splitlines() if line.strip() and json.loads(line)["item_id"] not in unsure]
-            (self.night / "rewrites-without-unsure.jsonl").write_text("".join(line + "\n" for line in kept))
-            sources = [str(self.night / "rewrites-without-unsure.jsonl")]
-            self.receipt["self_check_dropped_items"] = sorted(unsure)
+            # facts the current adapter got wrong: the self-check rows replace their answer rows
+            wrong = {i.split("-", 1)[1] for i in json.loads(check.read_text())["replaced_items"]}
+            kept = [line for line in Path(sources[0]).read_text().splitlines() if line.strip() and json.loads(line)["item_id"] not in wrong]
+            (self.night / "rewrites-without-replaced.jsonl").write_text("".join(line + "\n" for line in kept))
+            sources = [str(self.night / "rewrites-without-replaced.jsonl")]
+            self.receipt["self_check_replaced_items"] = sorted(wrong)
         mem = self.memories()
         if mem:
             sources.append(str(mem))
@@ -461,7 +468,7 @@ def main():
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
     ap.add_argument("--unknown-keys", type=int, default=0, help="unknown-key rows (night/unknown_key_rows.py), each with a known pair")
     ap.add_argument("--self-check", action="store_true", help="from night 2: ask the current adapter each earlier fact "
-                    "on the day server; unsure -> 'let me check your notes' rows (night/self_check_rows.py)")
+                    "on the day server; wrong -> 'let me check your notes' rows replace its answer rows (night/self_check_rows.py)")
     ap.add_argument("--control-vector", help="PATH:SCALE of a control-vector GGUF on the training host: the eval also runs "
                     "the gate slice, forgetting and never-told with it loaded, and decision.json reports that gate")
     ap.add_argument("--control-vector-layers", help="'FIRST LAST' for --control-vector-layer-range")
