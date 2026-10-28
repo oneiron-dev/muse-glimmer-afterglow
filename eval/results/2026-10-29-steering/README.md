@@ -76,5 +76,13 @@ The same check on the night-2 adapters that exist, on 96 everyday prompts:
 
 On w1 the abstention read moved from -1.62 after night 1 (gate abstention 0.5%) to -0.49 after night 2 (gate
 19.5%), which is consistent with the gate in direction. That is two points, and the night-1 read used the first 24
-everyday prompts, not all 96, so it shows agreement in direction, not a prediction. The next check run reads the
-night-1 adapter on the same 96 prompts.
+everyday prompts, not all 96, so it shows agreement in direction, not a prediction. The night-1 adapter, read again on
+the same 96 prompts (night1-96/), gives -1.69, close to its 24-prompt read.
+
+## w1 across nights, one probe set (96 everyday prompts)
+
+| w1 adapter | says when it does not know | decisive | concise | formal | asks before acting |
+|---|---|---|---|---|---|
+| night 1 (R2) | -1.69 | +3.67 | +1.84 | -0.26 | no clear change |
+| night 2 | -0.49 | +1.89 | +0.90 | no clear change | +0.57 |
+| night 2b (night2b/) | -0.36 | +1.94 | +0.79 | -0.46 | no clear change |
