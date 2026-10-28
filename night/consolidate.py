@@ -60,6 +60,8 @@ def main():
     ap.add_argument("--runs", help="runs root (default: AFTERGLOW_RUNS or the main checkout's runs/)")
     ap.add_argument("--refresh-outcomes", action="store_true", help="only rewrite the outcome fields of an existing consolidated.json")
     ap.add_argument("--out-dir", help="where consolidated.json goes (default runs/<w>/<d>/night)")
+    ap.add_argument("--reuse-from", nargs="*", default=[], help="earlier nights' consolidated.json: an active note with "
+                    "the same id, key and value as one of their items keeps that item (no teacher call)")
     args = ap.parse_args()
     run_dir = runs_root(args.runs) / args.world / str(args.day)
     if args.refresh_outcomes:
@@ -73,8 +75,16 @@ def main():
     by_id = {n["id"]: n for n in notes}
     active, merges = duplicate_merges(notes)
     items, proposals, log_path = [], [], out_dir / "teacher-calls.jsonl"
-    for i in range(0, len(active), BATCH):
-        batch = active[i:i + BATCH]
+    earlier = {}
+    for path in args.reuse_from:  # later files win
+        earlier.update({i["id"]: i for i in json.loads(Path(path).read_text())["items"]})
+    reused = [n for n in active if n["id"] in earlier and earlier[n["id"]]["key"] == n["key"]
+              and earlier[n["id"]]["full_value"] == n["value"]]
+    items += [{**earlier[n["id"]], "reused_from_day": n.get("day")} for n in reused]
+    reused_ids = {n["id"] for n in reused}
+    to_ask = [n for n in active if n["id"] not in reused_ids]
+    for i in range(0, len(to_ask), BATCH):
+        batch = to_ask[i:i + BATCH]
         text = "\n".join(f"{n['id']} | key: {n['key']} | value: {n['value']} | {first} said: \"{turns.get(n.get('turn'), '')}\"" for n in batch)
         reply, _, _ = teacher_mod.complete(args.teacher, [{"role": "user", "content": PROMPT.format(notes=text, name=name, first=first)}],
                                            max_tokens=1500, log_path=log_path, purpose=f"consolidate {batch[0]['id']}..{batch[-1]['id']}")
@@ -100,7 +110,7 @@ def main():
            "items": items, "overruled_merge_proposals": proposals}
     doc.update(outcome_fields(notes, items, merges, proposals))
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
-    print(json.dumps({"active_notes": len(active), "items": len(items), "dropped": len(doc["dropped"]),
+    print(json.dumps({"active_notes": len(active), "items": len(items), "reused": len(reused), "dropped": len(doc["dropped"]),
                       "kinds": {k: sum(1 for i in items if i["kind"] == k) for k in ("fact", "preference", "procedure")}}))
 
 

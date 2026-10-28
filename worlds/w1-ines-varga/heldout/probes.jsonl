@@ -149,3 +149,39 @@
 {"id": "P02-t1", "pref_id": "P02", "kind": "preference", "question": "Give me a quick status summary of Larkspur.", "scorer": "max3_bullets"}
 {"id": "P03-t1", "pref_id": "P03", "kind": "preference", "question": "Henrik hasn't answered about the delivery date. What will you do next?", "scorer": "asks_before_email"}
 {"id": "W01-t1", "procedure_id": "W01", "kind": "procedure", "question": "I need to change the feed rate in Old Gus's program for the hinge bracket. Walk me through it.", "scorer": "procedure_steps", "rubric": [["back up", "backup", "back-up"], ["dry run", "dry-run", "dry running"], ["scrap", "test part"], ["yusuf"]]}
+{"id": "F46-q1", "fact_id": "F46", "kind": "forward", "question": "When is my weekly call with the vendor?"}
+{"id": "F46-q2", "fact_id": "F46", "kind": "forward", "question": "When does Ines Varga speak with the vendor each week?"}
+{"id": "F46-q3", "fact_id": "F46", "kind": "forward", "question": "remind me when I'm supposed to dial in for the vendor check-in?"}
+{"id": "F47-q1", "fact_id": "F47", "kind": "forward", "question": "Who is my point of contact for the vendor relationship?"}
+{"id": "F47-q2", "fact_id": "F47", "kind": "forward", "question": "Who handles Ines Varga's vendor partnership?"}
+{"id": "F47-q3", "fact_id": "F47", "kind": "forward", "question": "remind me who looks after our supply partnership on the vendor side?"}
+{"id": "F48-q1", "fact_id": "F48", "kind": "forward", "question": "When is my Larkspur consignment due to go out?"}
+{"id": "F48-q2", "fact_id": "F48", "kind": "forward", "question": "When is Ines Varga's Larkspur order scheduled for dispatch?"}
+{"id": "F48-q3", "fact_id": "F48", "kind": "forward", "question": "remind me of the dispatch timing for our Larkspur delivery?"}
+{"id": "F49-q1", "fact_id": "F49", "kind": "forward", "question": "Where is my work space located these days?"}
+{"id": "F49-q2", "fact_id": "F49", "kind": "forward", "question": "Which space does Ines Varga use for work?"}
+{"id": "F49-q3", "fact_id": "F49", "kind": "forward", "question": "remind me where I should go for my workspace?"}
+{"id": "F50-q1", "fact_id": "F50", "kind": "forward", "question": "What digits should people dial to reach me on my work line?"}
+{"id": "F50-q2", "fact_id": "F50", "kind": "forward", "question": "How can callers reach Ines Varga directly by telephone?"}
+{"id": "F50-q3", "fact_id": "F50", "kind": "forward", "question": "remind me what short dial code I give out for my work handset?"}
+{"id": "F51-q1", "fact_id": "F51", "kind": "forward", "question": "When do I need to send out my progress update?"}
+{"id": "F51-q2", "fact_id": "F51", "kind": "forward", "question": "On which slot does Ines Varga circulate her progress summary?"}
+{"id": "F51-q3", "fact_id": "F51", "kind": "forward", "question": "remind me when our team roundup is due to go out?"}
+{"id": "F10-s1", "fact_id": "F10", "kind": "stale", "question": "When is my weekly call with the vendor?", "accept": ["10:30"]}
+{"id": "F10-s2", "fact_id": "F10", "kind": "stale", "question": "When does Ines Varga speak with the vendor each week?", "accept": ["10:30"]}
+{"id": "F10-s3", "fact_id": "F10", "kind": "stale", "question": "remind me when I'm supposed to dial in for the vendor check-in?", "accept": ["10:30"]}
+{"id": "F09-s1", "fact_id": "F09", "kind": "stale", "question": "Who is my point of contact for the vendor relationship?", "accept": ["teodor", "ilves"]}
+{"id": "F09-s2", "fact_id": "F09", "kind": "stale", "question": "Who handles Ines Varga's vendor partnership?", "accept": ["teodor", "ilves"]}
+{"id": "F09-s3", "fact_id": "F09", "kind": "stale", "question": "remind me who looks after our supply partnership on the vendor side?", "accept": ["teodor", "ilves"]}
+{"id": "F07-s1", "fact_id": "F07", "kind": "stale", "question": "When is my Larkspur consignment due to go out?", "accept": ["14 march", "march 14", "14th of march", "march 14th", "14th march"]}
+{"id": "F07-s2", "fact_id": "F07", "kind": "stale", "question": "When is Ines Varga's Larkspur order scheduled for dispatch?", "accept": ["14 march", "march 14", "14th of march", "march 14th", "14th march"]}
+{"id": "F07-s3", "fact_id": "F07", "kind": "stale", "question": "remind me of the dispatch timing for our Larkspur delivery?", "accept": ["14 march", "march 14", "14th of march", "march 14th", "14th march"]}
+{"id": "F43-s1", "fact_id": "F43", "kind": "stale", "question": "Where is my work space located these days?", "accept": ["2.14"]}
+{"id": "F43-s2", "fact_id": "F43", "kind": "stale", "question": "Which space does Ines Varga use for work?", "accept": ["2.14"]}
+{"id": "F43-s3", "fact_id": "F43", "kind": "stale", "question": "remind me where I should go for my workspace?", "accept": ["2.14"]}
+{"id": "F18-s1", "fact_id": "F18", "kind": "stale", "question": "What digits should people dial to reach me on my work line?", "accept": ["4417"]}
+{"id": "F18-s2", "fact_id": "F18", "kind": "stale", "question": "How can callers reach Ines Varga directly by telephone?", "accept": ["4417"]}
+{"id": "F18-s3", "fact_id": "F18", "kind": "stale", "question": "remind me what short dial code I give out for my work handset?", "accept": ["4417"]}
+{"id": "F25-s1", "fact_id": "F25", "kind": "stale", "question": "When do I need to send out my progress update?", "accept": ["thursday"]}
+{"id": "F25-s2", "fact_id": "F25", "kind": "stale", "question": "On which slot does Ines Varga circulate her progress summary?", "accept": ["thursday"]}
+{"id": "F25-s3", "fact_id": "F25", "kind": "stale", "question": "remind me when our team roundup is due to go out?", "accept": ["thursday"]}

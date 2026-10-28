@@ -5,6 +5,8 @@ natural user messages (day 2 corrects some day-1 facts), and the held-out probes
   CLIPROXY_KEY=$(skate get cliproxy-local) python3 worlds/make_world.py --world w2-... --archetype solo-developer
   python3 worlds/make_world.py --world w2-... --archetype solo-developer --teacher glimmer
 
+  python3 worlds/make_world.py --world w1-ines-varga --add-day2     # day 2 for a frozen day-1-only world
+
 Writes worlds/<world>/world.json, days/1/script.jsonl, days/2/script.jsonl, heldout/probes.jsonl and
 generation.json; every teacher call's tokens go to worlds/<world>/generation_log.jsonl. The format is the
 one eval/scoring.py and eval/freeze_heldout.py read; freeze the probes with freeze_heldout.py before any
@@ -91,6 +93,11 @@ Topics to ask about:
 {topics}
 
 Return one JSON object, nothing else: {{"changes": [one message per change, in order], "questions": [one question per topic, in order]}}."""
+
+EXTEND_CORRECTIONS_PROMPT = """{name} ({summary}) uses a personal AI assistant. These are facts the person told it on day 1:
+{facts}
+
+Pick exactly {n_corrections} of these facts that would plausibly change by the next day (a meeting moved, a contact replaced, a deadline shifted, a room changed) and give each a new value. Never pick a fact whose value holds 16:00. Return one JSON object, nothing else: {{"corrections": [{{"key": the fact's key, copied exactly, "value": the new value in 1-5 words, "accept": 1-3 lowercase alternatives; EACH ONE ALONE must identify the new value, none is found in the old value, never a lone generic word, "require_all": optional list of extra lowercase strings an answer must also contain, "statement": one sentence that states the new value}}]}}. Every new value is invented and specific, and about work only: never health, diet, fitness, sleep, mood, feelings, personality, family, religion or politics."""
 
 PROBE_PROMPT = """These are facts a person told their AI assistant earlier. For each fact, write 3 different questions the person (or someone helping them) might ask later, whose answer is the fact's value. Vary them: one in the first person ("my", "our", "I"), one in the third person using the name {name}, one indirect ("remind me ..."). Do not put the value, or any part of it, in the question. Do not copy phrases from the statement.
 
@@ -268,6 +275,26 @@ class Generator:
                             "statement": str(c.get("statement", value))})
         return out
 
+    def extra_corrections(self, persona, facts, n_corrections):
+        """Corrections to the facts of an existing world (one whose day 1 was written without them)."""
+        listing = "\n".join(f"- {f['key']}: {f['value']}" for f in facts)
+        values = [f["value"] for f in facts]
+        for attempt in range(3):
+            doc = self.ask(EXTEND_CORRECTIONS_PROMPT.format(name=persona["name"], summary=persona["summary"],
+                                                            facts=listing, n_corrections=n_corrections),
+                           "day 2 corrections", temperature=0.9)
+            problems = []
+            corrections = self.clean_corrections(doc.get("corrections") or [], facts, problems)
+            for c in corrections:  # each accept term must also miss every other day-1 value
+                c["accept"] = [a for a in c["accept"] if distinctive(a, c["require_all"], c["value"], values)]
+            corrections = [c for c in corrections if c["accept"]][:n_corrections]
+            if len(corrections) >= max(1, n_corrections - 1):
+                for p in problems:
+                    print("  dropped:", p, flush=True)
+                return corrections
+            print(f"  corrections attempt {attempt + 1}: {len(corrections)} usable; retry", flush=True)
+        raise SystemExit("corrections: no usable set after 3 tries")
+
     # --- 2. day scripts ---
     def day1_script(self, persona, facts, prefs, procedure, calendar, tasks):
         name, summary = persona["name"], persona["summary"]
@@ -340,11 +367,28 @@ class Generator:
 
     # --- 3. held-out probes ---
     def probes(self, persona, facts, new_facts, corrections, prefs, procedure, script_text):
-        name = persona["name"]
+        probes = self.forward_probes(persona["name"], facts + new_facts, script_text)
+        probes += stale_probes(corrections, new_facts, probes)
+        clock_fact = next(f for f in facts if "16:00" in f["value"])
+        task_name = procedure["name"][0].lower() + procedure["name"][1:]
+        probes += [
+            {"id": "P01-t1", "pref_id": "P01", "kind": "preference", "scorer": "clock24",
+             "question": f"What time is the {re.sub(r' (time|day|slot)$', '', clock_fact['key'])}?"},
+            {"id": "P02-t1", "pref_id": "P02", "kind": "preference", "scorer": "max3_bullets",
+             "question": "Give me a quick status summary of my main project."},
+            {"id": "P03-t1", "pref_id": "P03", "kind": "preference", "scorer": "asks_before_email",
+             "question": f"Send {prefs[2]['organisation']} a quick email saying we're running a day late."},
+            {"id": f"{procedure['id']}-t1", "procedure_id": procedure["id"], "kind": "procedure",
+             "scorer": "procedure_steps", "rubric": procedure["rubric"],
+             "question": f"I'm about to do the {task_name}. Walk me through it."},
+        ]
+        return probes
+
+    def forward_probes(self, name, targets, script_text):
+        """3 forward probes per fact: no answer term in the question, no 8-word run from the day scripts."""
         probes = []
-        all_targets = facts + new_facts
-        for i in range(0, len(all_targets), 10):
-            batch = all_targets[i:i + 10]
+        for i in range(0, len(targets), 10):
+            batch = targets[i:i + 10]
             listing = "\n".join(f"{f['id']}: {f['statement']} (value: {f['value']})" for f in batch)
             pending = {f["id"]: f for f in batch}
             for attempt in range(3):
@@ -367,26 +411,31 @@ class Generator:
                     break
             if pending:
                 raise SystemExit(f"probes: no clean questions for {sorted(pending)}")
-        # Stale probes: the corrected fact's questions, scored on the OLD value (a pass = the stale value came back).
-        for c, nf in zip(corrections, new_facts):
-            for k, p in enumerate([p for p in probes if p["fact_id"] == nf["id"]], 1):
-                probes.append({"id": f"{c['old']['id']}-s{k}", "fact_id": c["old"]["id"], "kind": "stale",
-                               "question": p["question"], "accept": c["old"]["accept"]})
-        clock_fact = next(f for f in facts if "16:00" in f["value"])
-        task_name = procedure["name"][0].lower() + procedure["name"][1:]
-        probes += [
-            {"id": "P01-t1", "pref_id": "P01", "kind": "preference", "scorer": "clock24",
-             "question": f"What time is the {re.sub(r' (time|day|slot)$', '', clock_fact['key'])}?"},
-            {"id": "P02-t1", "pref_id": "P02", "kind": "preference", "scorer": "max3_bullets",
-             "question": "Give me a quick status summary of my main project."},
-            {"id": "P03-t1", "pref_id": "P03", "kind": "preference", "scorer": "asks_before_email",
-             "question": f"Send {prefs[2]['organisation']} a quick email saying we're running a day late."},
-            {"id": f"{procedure['id']}-t1", "procedure_id": procedure["id"], "kind": "procedure",
-             "scorer": "procedure_steps", "rubric": procedure["rubric"],
-             "question": f"I'm about to do the {task_name}. Walk me through it."},
-        ]
         return probes
 
+
+def stale_probes(corrections, new_facts, probes):
+    """The corrected fact's questions, scored on the OLD value (a pass = the stale value came back)."""
+    out = []
+    for c, nf in zip(corrections, new_facts):
+        for k, p in enumerate([p for p in probes if p["fact_id"] == nf["id"]], 1):
+            out.append({"id": f"{c['old']['id']}-s{k}", "fact_id": c["old"]["id"], "kind": "stale",
+                        "question": p["question"], "accept": c["old"]["accept"]})
+    return out
+
+
+def supersede(facts, corrections, first_id):
+    """The day-2 facts that replace corrected ones (ids from first_id on); marks each old fact superseded."""
+    new_facts = []
+    for c in corrections:
+        nf = {"id": f"F{first_id + len(new_facts):02d}", "key": c["old"]["key"], "value": c["value"],
+              "accept": c["accept"], "statement": c["statement"], "valid_from": 2, "superseded_by": None,
+              "supersedes": c["old"]["id"]}
+        if c["require_all"]:
+            nf["require_all"] = c["require_all"]
+        c["old"]["superseded_by"] = nf["id"]
+        new_facts.append(nf)
+    return new_facts
 
 def overlap8(question, script_text):
     """True when the question shares an 8-word run with the day scripts (a leak of training wording)."""
@@ -435,12 +484,51 @@ def refresh(out):
     return issues
 
 
+
+def add_day2(out, teacher, n_corrections):
+    """Day 2 for a frozen world written without corrections: corrections, the day-2 script, 3 forward probes per
+    new fact and the stale probes. Day-1 facts, script and probes stay as they are (new probes are appended),
+    so the frozen day-1 probes remain a byte prefix of probes.jsonl; re-freeze with
+    eval/freeze_heldout.py --extend before any day-2 data exists."""
+    world = json.loads((out / "world.json").read_text())
+    if (out / "days" / "2").exists() or any(f["valid_from"] != 1 or f.get("superseded_by") for f in world["facts"]):
+        sys.exit(f"{out} already has a day 2")
+    facts, persona = world["facts"], world["persona"]
+    g = Generator(world["world"], None, teacher, out)
+    corrections = g.extra_corrections(persona, facts, n_corrections)
+    new_facts = supersede(facts, corrections, len(facts) + 1)
+    print(f"{now_iso()} {world['world']}: {len(corrections)} corrections; day 2", flush=True)
+    day1 = [json.loads(l) for l in (out / "days" / "1" / "script.jsonl").read_text().splitlines() if l.strip()]
+    day2 = g.day2_script(persona, corrections, new_facts, facts)
+    script_text = " ".join(norm(m["content"]) for m in day1 + day2)
+    print(f"{now_iso()} {world['world']}: probes", flush=True)
+    probes = g.forward_probes(persona["name"], new_facts, script_text)
+    probes += stale_probes(corrections, new_facts, probes)
+    world["facts"] = facts + new_facts
+    world["authored"] += f"; day 2 {now_iso()} by worlds/make_world.py --add-day2 (teacher {teacher}, seed {SEED})"
+    (out / "world.json").write_text(json.dumps(world, indent=1, ensure_ascii=False) + "\n")
+    write_jsonl(out / "days" / "2" / "script.jsonl", day2)
+    with open(out / "heldout" / "probes.jsonl", "a") as f:
+        f.write("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in probes))
+    tokens = [json.loads(l) for l in g.log.read_text().splitlines()] if g.log.exists() else []
+    meta = {"world": world["world"], "generated": now_iso(), "step": "add-day2", "teacher": teacher, "seed": SEED,
+            "teacher_calls": len(tokens),
+            "prompt_tokens": sum(t.get("prompt_tokens") or 0 for t in tokens),
+            "completion_tokens": sum(t.get("completion_tokens") or 0 for t in tokens),
+            "counts": {"corrections": len(new_facts), "day2_messages": len(day2), "probes_added": len(probes)},
+            "sha256": {p: hashlib.sha256((out / p).read_bytes()).hexdigest()
+                       for p in ("world.json", "days/1/script.jsonl", "days/2/script.jsonl", "heldout/probes.jsonl")}}
+    (out / "generation-day2.json").write_text(json.dumps(meta, indent=1) + "\n")
+    return meta
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--world", required=True, help="world id, e.g. w2-<first>-<last> (renamed after the persona)")
     ap.add_argument("--archetype", choices=sorted(ARCHETYPES), help="required unless --refresh")
     ap.add_argument("--refresh", action="store_true", help="re-derive accept terms and stale probes of an "
                                                             "existing, unfrozen world; no teacher calls")
+    ap.add_argument("--add-day2", action="store_true", help="add corrections, a day-2 script and their probes to a "
+                                                             "frozen world that has only day 1")
     ap.add_argument("--teacher", default="spark-sub", choices=["spark-sub", "glimmer"])
     ap.add_argument("--facts", type=int, default=60)
     ap.add_argument("--corrections", type=int, default=6)
@@ -448,6 +536,9 @@ def main():
     a = ap.parse_args()
 
     out = REPO / "worlds" / a.world
+    if a.add_day2:
+        print(json.dumps(add_day2(out, a.teacher, a.corrections), indent=1))
+        return
     if (out / "heldout" / "FROZEN.json").exists():
         sys.exit(f"{out} has frozen probes; a frozen world is never regenerated")
     if a.refresh:
@@ -475,15 +566,7 @@ def main():
     calendar = [dict(e, id=f"E{i + 1:03d}") for i, e in enumerate(doc.get("calendar") or [])]
     tasks = [dict(t, id=f"T{i + 1:03d}", done=False) for i, t in enumerate(doc.get("tasks") or [])]
 
-    new_facts = []
-    for c in corrections:
-        nf = {"id": f"F{len(facts) + len(new_facts) + 1:02d}", "key": c["old"]["key"], "value": c["value"],
-              "accept": c["accept"], "statement": c["statement"], "valid_from": 2, "superseded_by": None,
-              "supersedes": c["old"]["id"]}
-        if c["require_all"]:
-            nf["require_all"] = c["require_all"]
-        c["old"]["superseded_by"] = nf["id"]
-        new_facts.append(nf)
+    new_facts = supersede(facts, corrections, len(facts) + 1)
 
     print(f"{now_iso()} {a.world}: {persona['name']}: {len(facts)} facts, {len(corrections)} corrections; day 1",
           flush=True)

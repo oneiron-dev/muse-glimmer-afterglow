@@ -20,6 +20,7 @@ import argparse
 import datetime
 import hashlib
 import json
+import os
 import random
 import shlex
 import subprocess
@@ -41,16 +42,19 @@ HOST = {
     "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
     "target_gguf": "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
     "llama_dir": "/data/meta-night/llama.cpp",
-    "mem": "22G",
+    "mem": os.environ.get("AFTERGLOW_HOST_MEM", "22G"),  # fleet RAM booking for each GPU step
 }
 GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 
-def decide(e, verify, leak_passed):
+def decide(e, verify, leak_passed, gate_with_control_vector=False):
     """Keep the adapter only if every gate passes: clean data, GGUF = PEFT, learned (B-A interval above 0),
     no loss detected (forgetting interval's lower bound above -5 points), no new tool failure and, when measured,
-    abstention kept (SimpleQA gate slice: adapted abstain rate at least the base's minus 10 points)."""
+    abstention kept (SimpleQA gate slice, two-sided: abstain rate within 10 points of the base's and exact-match right
+    answers at least the base's minus 3). With a control-vector pass in the eval, the same rule is also reported for the
+    adapter with the vector loaded against the base without it; it is the gate of record only with
+    gate_with_control_vector."""
     learned = e["learned"].get("B_minus_A", {})
     checks = {"leak_check": leak_passed,
               "gguf_matches_peft": verify.get("passed", False),
@@ -58,13 +62,17 @@ def decide(e, verify, leak_passed):
               "forgot_gate": bool(e["forgot"]) and e["forgot"]["ci95"][0] > -0.05,
               "tool_gate": bool(e["forgot"]) and not e["forgot"]["critical_tool_failures"]}
     gate = e.get("abstention_gate")
-    if gate:
+    cv_gate = e.get("abstention_gate_with_control_vector")
+    if gate_with_control_vector and cv_gate:
+        checks["abstention_gate_with_control_vector"] = cv_gate["passed"]
+    elif gate:
         checks["abstention_gate"] = gate["passed"]
     keep = all(checks.values())
     why = ("all gates passed" if keep else "failed: " + ", ".join(k for k, v in checks.items() if not v))
     why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
             f"{e['forgot']['ci95'] if e['forgot'] else None}")
-    why += (f"; abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}" if gate
+    why += (f"; abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}, exact right "
+            f"{gate['arms']['A']['exact_correct']} -> {gate['arms']['B']['exact_correct']}" if gate
             else "; abstention gate not measured")
     nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
     if nt:  # report only, no gate yet
@@ -72,7 +80,15 @@ def decide(e, verify, leak_passed):
     out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
     if gate:
         out["abstention"] = {"base": gate["arms"]["A"]["abstain_rate"], "after": gate["arms"]["B"]["abstain_rate"],
-                             "n": gate["arms"]["B"]["n"], "slice": "gate_slice_v1", "rule": "after >= base - 0.10"}
+                             "right_base": gate["arms"]["A"]["exact_correct"], "right_after": gate["arms"]["B"]["exact_correct"],
+                             "n": gate["arms"]["B"]["n"], "slice": "gate_slice_v1",
+                             "rule": gate.get("rule", "after >= base - 0.10")}
+    if cv_gate:
+        out["abstention_with_control_vector"] = {
+            "base": cv_gate["arms"]["A"]["abstain_rate"], "after": cv_gate["arms"]["B"]["abstain_rate"],
+            "right_base": cv_gate["arms"]["A"]["exact_correct"], "right_after": cv_gate["arms"]["B"]["exact_correct"],
+            "base_with_vector": cv_gate["base_with_vector"], "vector": cv_gate["vector"], "passed": cv_gate["passed"],
+            "counts": bool(gate_with_control_vector), "n": cv_gate["arms"]["B"]["n"], "slice": "gate_slice_v1", "rule": cv_gate["rule"]}
     return out
 
 
@@ -127,7 +143,10 @@ class Night:
                 "teacher": a.teacher, "batch_rows": 16, "base": HOST["base_id"], "rules_as_facts": a.rules_as_facts,
                 "contrast_rows": a.contrast, "perturbed": a.perturbed, "reversed": a.reversed, "notes_context": a.notes_context,
                 "notes_form_only": a.notes_form_only,
-                "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir}
+                "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir,
+                "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
+                "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
+                "gate_with_control_vector": a.gate_with_control_vector}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -145,9 +164,17 @@ class Night:
         self.save()
 
     # --- steps ---------------------------------------------------------------------------------
+    def earlier_nights(self):
+        """The kept-night folders of the earlier days (runs/<w>/<d>/night), oldest first."""
+        return [self.runs / self.args.world / str(d) / "night" for d in range(1, self.args.day)
+                if (self.runs / self.args.world / str(d) / "night" / "consolidated.json").exists()]
+
     def consolidate(self, log):
+        # notes.json is cumulative: earlier days' notes that are still active keep their earlier items
+        reuse = [str(n / "consolidated.json") for n in self.earlier_nights()]
         run([sys.executable, "night/consolidate.py", "--world", self.args.world, "--day", str(self.args.day),
-             "--teacher", self.args.teacher, "--runs", str(self.runs), "--out-dir", str(self.night)], log)
+             "--teacher", self.args.teacher, "--runs", str(self.runs), "--out-dir", str(self.night),
+             *(["--reuse-from", *reuse] if reuse else [])], log)
 
     def seed_rewrites(self):
         """Reuse a previous night's rewrites for items that are unchanged (same id, kind, core and statement):
@@ -165,6 +192,9 @@ class Night:
         self.receipt["rewrites_seeded"] = {"from": str(prev), "items": len(kept), "of": len(new_items)}
 
     def rewrites(self, log):
+        if not self.args.seed_rewrites_from and self.earlier_nights():
+            # unchanged items keep the previous night's rewrites, so only today's items cost teacher calls
+            self.args.seed_rewrites_from = f"../{self.earlier_nights()[-1].parent.name}/night"
         if self.args.seed_rewrites_from and not (self.night / "rewrites" / "rewrites-items.jsonl").exists():
             self.seed_rewrites()
         run([sys.executable, "night/generate_rewrites.py", "--teacher", self.args.teacher,
@@ -190,15 +220,34 @@ class Night:
     def abstain_anchors_path(self):
         return self.runs / "_anchors" / HOST["base_id"] / "simpleqa-anchors.jsonl"
 
-    def abstain_anchors(self, log):
-        out = self.abstain_anchors_path()
+    def abstain_anchors_plain_path(self):
+        return self.runs / "_anchors" / HOST["base_id"] / "simpleqa-plain-anchors.jsonl"
+
+    def abstain_anchors(self, log, plain=False):
+        out = self.abstain_anchors_plain_path() if plain else self.abstain_anchors_path()
         out.parent.mkdir(parents=True, exist_ok=True)
-        remote_out = f"{HOST['work']}/_anchors/{HOST['base_id']}/simpleqa"
+        remote_out = f"{HOST['work']}/_anchors/{HOST['base_id']}/simpleqa{'-plain' if plain else ''}"
+        prompts, max_new = (("night/data/simpleqa_anchor_prompts_plain_v1.jsonl", 120) if plain
+                            else ("night/data/simpleqa_anchor_prompts_v1.jsonl", 60))
         rsync(f"{ROOT}/", f"{HOST['name']}:{HOST['repo']}/", log, ("--exclude", ".deps", "--exclude", ".git", "--exclude", "runs", "--exclude", "__pycache__"))
-        fleet_gpu("afterglow night: base abstaining anchors (SimpleQA pool)", GPU_LIMIT["anchors"],
-                  f"{HOST['python']} night/generate_anchors_hf.py --model-dir {HOST['model_dir']} --prompts night/data/simpleqa_anchor_prompts_v1.jsonl "
-                  f"--out-dir {remote_out} --max-new-tokens 60", log)
+        fleet_gpu(f"afterglow night: base abstaining anchors (SimpleQA pool{', bare questions' if plain else ''})", GPU_LIMIT["anchors"],
+                  f"{HOST['python']} night/generate_anchors_hf.py --model-dir {HOST['model_dir']} --prompts {prompts} "
+                  f"--out-dir {remote_out} --max-new-tokens {max_new}", log)
         rsync(f"{HOST['name']}:{remote_out}/anchors.jsonl", str(out), log)
+
+    def self_check(self, log):
+        questions = self.night / "self-check-questions.jsonl"
+        run([sys.executable, "night/self_check_rows.py", "--world", self.args.world, "--day", str(self.args.day),
+             "--consolidated", str(self.night / "consolidated.json"), "--runs", str(self.runs),
+             "--out", str(self.night / "self-check.jsonl"), "--report", str(self.night / "self-check-report.json"),
+             "--questions-out", str(questions)], log)
+        # the questions asked of the adapter are the night's own wording, never a held-out or never-told probe
+        run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(questions), "--never-told",
+             "--out", str(self.night / "self-check-questions-leak.json")], log)
+        report = json.loads((self.night / "self-check-report.json").read_text())
+        self.receipt["self_check"] = {**{k: report[k] for k in ("adapter_id", "adapter_sha256", "question", "items", "right", "wrong",
+                                                                "right_low_confidence", "tokens")},
+                                      "questions_leak_check": json.loads((self.night / "self-check-questions-leak.json").read_text())["passed"]}
 
     def memories(self):
         """A share of earlier days' rewrites, for items not superseded since (multi-day replay)."""
@@ -206,13 +255,17 @@ class Night:
             return None
         today = json.loads((self.night / "consolidated.json").read_text())
         superseded_values = {i["corrects"].lower() for i in today["items"] if i.get("corrects")}
+        today_ids = {i["id"] for i in today["items"]}  # still-active earlier notes are in today's items, trained in full
+        check = self.night / "self-check-report.json"
+        unsure = set(json.loads(check.read_text())["replaced_items"]) if self.args.self_check and check.exists() else set()
         rows = []
         for d in range(1, self.args.day):
             path = self.runs / self.args.world / str(d) / "night" / "rewrites" / "rewrites.jsonl"
             if path.exists():
                 for line in path.read_text().splitlines():
                     r = json.loads(line)
-                    if r["valid"] and not any(v in r["assistant"].lower() for v in superseded_values):
+                    if r["valid"] and not any(v in r["assistant"].lower() for v in superseded_values) \
+                            and f"d{d}-{r['item_id']}" not in unsure and r["item_id"] not in today_ids:
                         rows.append({**r, "item_id": f"d{d}-{r['item_id']}"})
         rng = random.Random(20261027 + self.args.day)
         rng.shuffle(rows)
@@ -226,26 +279,45 @@ class Night:
     def train_set(self, log):
         raw, clean = self.night / "train-raw.jsonl", self.night / "train.jsonl"
         sources = [str(self.night / "rewrites" / "rewrites.jsonl")]
+        check = self.night / "self-check-report.json"
+        if self.args.self_check and check.exists():
+            # facts the current adapter got wrong: the self-check rows replace their answer rows
+            wrong = {i.split("-", 1)[1] for i in json.loads(check.read_text())["replaced_items"]}
+            kept = [line for line in Path(sources[0]).read_text().splitlines() if line.strip() and json.loads(line)["item_id"] not in wrong]
+            (self.night / "rewrites-without-replaced.jsonl").write_text("".join(line + "\n" for line in kept))
+            sources = [str(self.night / "rewrites-without-replaced.jsonl")]
+            self.receipt["self_check_replaced_items"] = sorted(wrong)
         mem = self.memories()
         if mem:
             sources.append(str(mem))
-        extra = []
+        extra_rows = []
         if self.args.contrast:
             run([sys.executable, "night/contrast_rows.py", "--consolidated", str(self.night / "consolidated.json"),
                  "--perturbed", str(self.args.perturbed), "--reversed", str(self.args.reversed),
                  "--notes-context", str(self.args.notes_context), *(["--notes-form-only"] if self.args.notes_form_only else []),
                  "--out", str(self.night / "contrast.jsonl")], log)
-            extra = ["--extra", str(self.night / "contrast.jsonl")]
+            extra_rows.append(str(self.night / "contrast.jsonl"))
+        if self.args.unknown_keys > 0:
+            run([sys.executable, "night/unknown_key_rows.py", "--consolidated", str(self.night / "consolidated.json"),
+                 "--day-text", str(self.run_dir / "daylog.jsonl"), str(self.run_dir / "notes.json"),
+                 "--rows", str(self.args.unknown_keys), "--out", str(self.night / "unknown-keys.jsonl")], log)
+            extra_rows.append(str(self.night / "unknown-keys.jsonl"))
+        if self.args.self_check and self.args.day >= 2:
+            extra_rows.append(str(self.night / "self-check.jsonl"))
+        extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
         if self.args.abstain_share > 0:
-            extra += ["--abstain-anchors", str(self.abstain_anchors_path()), "--abstain-share", str(self.args.abstain_share)]
+            extra += ["--abstain-anchors", str(self.abstain_anchors_path()),
+                      *([str(self.abstain_anchors_plain_path())] if self.args.abstain_plain else []),
+                      "--abstain-share", str(self.args.abstain_share)]
         run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
              "--rows-per-fact", str(self.args.rows_per_fact), "--replay-share", str(self.args.replay_share), "--out", str(raw)], log)
+        never_told = ["--never-told"] if self.args.leak_never_told or self.args.unknown_keys > 0 else []
         leak = subprocess.run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(raw),
-                               "--out", str(self.night / "leak-raw.json"), "--write-clean", str(clean)], cwd=ROOT)
+                               "--out", str(self.night / "leak-raw.json"), "--write-clean", str(clean), *never_told], cwd=ROOT)
         run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(clean),
-             "--out", str(self.night / "leak.json")], log)
+             "--out", str(self.night / "leak.json"), *never_told], log)
         raw_report = json.loads((self.night / "leak-raw.json").read_text())
         self.receipt["leak_check"] = {"raw_hits": raw_report["hits"], "dropped_rows": raw_report.get("dropped_rows", 0),
                                       "raw_exit": leak.returncode, "clean_passed": True}
@@ -280,8 +352,18 @@ class Night:
         cmd = (f"PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
                f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D")
+        if a.control_vector:
+            # the same server with the vector loaded: adapter off and on on the gate slice, B on forgetting and never-told
+            path, scale = a.control_vector.rsplit(":", 1)
+            extra = f"--control-vector-scaled {path} {scale}" + (f" --control-vector-layer-range {a.control_vector_layers}" if a.control_vector_layers else "")
+            cmd += (f"; mkdir -p {r}/eval-cv && SERVER_EXTRA={shlex.quote(extra)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} "
+                    f"night/llamacpp/serve_and_eval.sh {HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf "
+                    f"night-cv {r}/eval-cv -- --world {a.world} --day {a.day} --forget-slice --gate-slice --never-told --arms B "
+                    f"|| echo 'control-vector pass failed'")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: 4-arm eval in llama.cpp", GPU_LIMIT["eval"], cmd, log)
         rsync(f"{HOST['name']}:{r}/eval/", str(self.night / "eval") + "/", log)
+        if a.control_vector:
+            run(["rsync", "-a", f"{HOST['name']}:{r}/eval-cv/", str(self.night / "eval-cv") + "/"], log)
 
     def report(self, log):
         a = self.args
@@ -292,8 +374,25 @@ class Night:
              "--adapter-path", str(self.night / "adapter.gguf"), "--adapter-sha256", gguf_sha, "--out", str(self.night / "eval.json"),
              *(["--gate", str(ev / "gate-night.json")] if (ev / "gate-night.json").exists() else [])], log)
         e = json.loads((self.night / "eval.json").read_text())
+        cv_path, main_gate = self.night / "eval-cv" / "gate-night-cv.json", ev / "gate-night.json"
+        if a.control_vector and cv_path.exists() and main_gate.exists():
+            import simpleqa_gate
+            cv, base = json.loads(cv_path.read_text()), json.loads(main_gate.read_text())
+            rec = simpleqa_gate.gate_record({"A": base["answers"]["A"], "B": cv["answers"]["B"]}, "night-cv-vs-base")
+            rec.update({"vector": a.control_vector, "layers": a.control_vector_layers,
+                        "base_with_vector": cv["arms"]["A"]["abstain_rate"]})
+            (self.night / "eval-cv" / "gate-night-cv-vs-base.json").write_text(json.dumps(rec, indent=1) + "\n")
+            e["abstention_gate_with_control_vector"] = {k: v for k, v in rec.items() if k != "answers"}
+            cv_b = self.night / "eval-cv" / "score-night-cv-B.json"
+            if cv_b.exists():  # report only: the B arm with the vector on the forgetting slice and never-told
+                by_kind = {a: json.loads((ev / f"score-night-{a}.json").read_text())["summary"]["by_kind"] for a in "AB"}
+                by_kind["B_with_vector"] = json.loads(cv_b.read_text())["summary"]["by_kind"]
+                e["control_vector_pass"] = {arm: {k: {"pass": v["pass"], "n": v["n"]} for k, v in kinds.items()
+                                                  if k in ("forget_mmlu", "forget_tool", "never_told", "general")}
+                                            for arm, kinds in by_kind.items()}
+            (self.night / "eval.json").write_text(json.dumps(e, indent=1) + "\n")
         verify = json.loads((self.night / "gguf-verify.json").read_text())
-        decision = decide(e, verify, self.receipt.get("leak_check", {}).get("clean_passed", False))
+        decision = decide(e, verify, self.receipt.get("leak_check", {}).get("clean_passed", False), a.gate_with_control_vector)
         keep = decision["decision"] == "keep"
         (self.night / "decision.json").write_text(json.dumps(decision, indent=1) + "\n")
         if a.night_dir == "night":  # an experiment arm never becomes the world's kept adapter
@@ -323,8 +422,11 @@ class Night:
         n = self.night
         steps = [("consolidate", n / "consolidated.json", self.consolidate),
                  ("rewrites", n / "rewrites" / "rewrites.jsonl", self.rewrites),
+                 *([("self_check", n / "self-check.jsonl", self.self_check)] if self.args.self_check and self.args.day >= 2 else []),
                  ("anchors", self.anchors_path(), self.anchors),
                  *([("abstain_anchors", self.abstain_anchors_path(), self.abstain_anchors)] if self.args.abstain_share > 0 else []),
+                 *([("abstain_anchors_plain", self.abstain_anchors_plain_path(), lambda log: self.abstain_anchors(log, plain=True))]
+                   if self.args.abstain_share > 0 and self.args.abstain_plain else []),
                  ("train_set", n / "train.jsonl", self.train_set),
                  ("train", n / "adapter.gguf", self.train),
                  ("eval", n / "eval" / "score-night-D.json", self.eval),
@@ -351,6 +453,7 @@ def main():
     ap.add_argument("--rows-per-fact", type=int, default=12)
     ap.add_argument("--replay-share", type=float, default=0.10)
     ap.add_argument("--abstain-share", type=float, default=0.0, help="abstaining anchors (base answers on SimpleQA pool) share")
+    ap.add_argument("--abstain-plain", action="store_true", help="split the abstaining anchors half and half with bare-question answers")
     ap.add_argument("--memory-share", type=float, default=0.3, help="earlier days' rewrites, as a share of today's rows")
     ap.add_argument("--force", nargs="*", default=[], help="steps to redo even if their output exists")
     ap.add_argument("--stop-after", help="stop after this step (e.g. train_set: prepare data while the GPU is busy)")
@@ -363,6 +466,14 @@ def main():
     ap.add_argument("--notes-context", type=int, default=0, help="with --contrast: contrast rows with the notes in the prompt")
     ap.add_argument("--notes-form-only", action="store_true", help="with --contrast: contrast only in the notes-in-prompt form")
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
+    ap.add_argument("--unknown-keys", type=int, default=0, help="unknown-key rows (night/unknown_key_rows.py), each with a known pair")
+    ap.add_argument("--self-check", action="store_true", help="from night 2: ask the current adapter each earlier fact "
+                    "on the day server; wrong -> 'let me check your notes' rows replace its answer rows (night/self_check_rows.py)")
+    ap.add_argument("--control-vector", help="PATH:SCALE of a control-vector GGUF on the training host: the eval also runs "
+                    "the gate slice, forgetting and never-told with it loaded, and decision.json reports that gate")
+    ap.add_argument("--control-vector-layers", help="'FIRST LAST' for --control-vector-layer-range")
+    ap.add_argument("--gate-with-control-vector", action="store_true", help="the gate with the vector loaded is the gate of record")
+    ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()
     Night(args).go()

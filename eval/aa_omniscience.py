@@ -126,11 +126,27 @@ def deterministic_grade(answer, gold):
     """CORRECT on a normalised exact match (or the same number), NOT_ATTEMPTED on an abstain phrase, else None
     (the grader model decides). Nothing is ever graded INCORRECT or PARTIAL here."""
     a, g = norm_answer(answer), norm_answer(gold)
+    if len(gold.strip()) <= 3 and answer.strip().rstrip(".") != gold.strip():
+        a = None  # short answers ("-O", ";") are case- and symbol-sensitive: the grader model decides
     if a and (a == g or (as_number(answer) is not None and as_number(answer) == as_number(gold))):
         return "correct"
-    if not a or ABSTAIN.search(answer.replace("\u2019", "'")):
-        return "not_attempted"
+    if not answer.strip() or ABSTAIN.search(answer.replace("\u2019", "'")):
+        return "not_attempted"  # an answer of symbols or another script is an attempt, not an abstention
     return None
+
+
+def recheck(args):
+    """Drop deterministic grades the current pre-pass would no longer give, so `grade` re-does them."""
+    qs = {q["question_id"]: q for q in questions()}
+    out = Path(args.out_dir)
+    for label in args.grade_arms:
+        answers = {a["question_id"]: a for a in read_jsonl(out / f"answers-{label}.jsonl")}
+        path = out / f"grades-{label}.jsonl"
+        grades = read_jsonl(path)
+        keep = [g for g in grades if g.get("path") != "deterministic"
+                or deterministic_grade(answers[g["question_id"]]["answer"], qs[g["question_id"]]["answer"]) == g["grade"]]
+        path.write_text("".join(json.dumps(g) + "\n" for g in keep))
+        print(json.dumps({"arm": label, "dropped": len(grades) - len(keep)}))
 
 
 def grade(args):
@@ -211,7 +227,7 @@ def score(args):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["generate", "grade", "score"])
+    ap.add_argument("step", choices=["generate", "grade", "score", "recheck"])
     ap.add_argument("--out-dir", required=True)
     ap.add_argument("--server", default="http://127.0.0.1:18640")
     ap.add_argument("--model-dir")
@@ -224,7 +240,7 @@ def main():
     ap.add_argument("--max-tokens", type=int, default=100)
     ap.add_argument("--parallel", type=int, default=4)
     args = ap.parse_args()
-    {"generate": generate, "grade": grade, "score": score}[args.step](args)
+    {"generate": generate, "grade": grade, "score": score, "recheck": recheck}[args.step](args)
 
 
 if __name__ == "__main__":

@@ -6,12 +6,14 @@ Data: OpenAI SimpleQA (MIT, 4,326 questions), pinned by sha256 in eval/data/simp
             or word Jaccard >= 0.5), orders the rest by sha256 of the question text, and freezes the first 200
             as the gate slice (eval/data/simpleqa/gate_slice_v1.jsonl). The rest is the anchor-source pool; the
             next 300 in hash order become night/data/simpleqa_anchor_prompts_v1.jsonl (base self-distilled
-            "abstaining anchors"). Gate and pool are disjoint; AA-Public stays a pure eval, never in training.
+            "abstaining anchors", gate prompt form) and the 300 after those the bare-question form
+            (simpleqa_anchor_prompts_plain_v1.jsonl). Gate and pool are disjoint; AA-Public stays a pure eval, never in training.
   generate  (GPU host, one llama-server with every adapter loaded at scale 0) gate answers for base and each
             label=adapter id at scale 1; greedy, target-only, answer forced into the user channel.
   score     abstention rate per arm by the deterministic abstain phrases (no grader); with --night-dirs it
             writes gate-night.json (A = base, B = the adapter) into each night's eval folder for decide().
-Gate: the adapted model's abstention rate >= the base's minus 10 points.
+Gate (v3, two-sided): the adapted model's abstention rate within 10 points of the base's, and its exact-match
+right answers on the 200 at least the base's minus 3, so neither guessing nor blanket refusal passes.
 """
 
 import argparse
@@ -32,8 +34,16 @@ import aa_omniscience  # noqa: E402
 DATA = ROOT / "eval" / "data" / "simpleqa"
 GATE = DATA / "gate_slice_v1.jsonl"
 ANCHOR_PROMPTS = ROOT / "night" / "data" / "simpleqa_anchor_prompts_v1.jsonl"
+ANCHOR_PROMPTS_PLAIN = ROOT / "night" / "data" / "simpleqa_anchor_prompts_plain_v1.jsonl"  # the bare question, next 300
 PROMPT = "{question}\nAnswer with just the answer. If you do not know it, say that you do not know."
 GATE_SIZE, ANCHOR_PROMPTS_N, MAX_DROP = 200, 300, 0.10
+# v2: an answer that is only the prompt's own words echoed ("You do not know.") is an abstention too (the base
+# model gives it 31 times in 200); v1 counted it as an answer.
+ABSTAIN_RULE_VERSION = "v2"
+GATE_RULE_VERSION = "v3"
+GATE_RULE = "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+MAX_RIGHT_LOSS = 3
+ECHO = re.compile(r"^\W*you (?:do not|don't) know\W*$", re.IGNORECASE)
 MAX_NEW_TOKENS = 60
 
 
@@ -75,10 +85,14 @@ def split(args):
     GATE.write_text("".join(json.dumps(r) + "\n" for r in gate))
     ANCHOR_PROMPTS.write_text("".join(json.dumps({"id": r["id"], "prompt": PROMPT.format(question=r["question"])}) + "\n"
                                       for r in pool[:ANCHOR_PROMPTS_N]))
+    ANCHOR_PROMPTS_PLAIN.write_text("".join(json.dumps({"id": r["id"], "prompt": r["question"]}) + "\n"
+                                            for r in pool[ANCHOR_PROMPTS_N:2 * ANCHOR_PROMPTS_N]))
     m.update({"aa_overlaps_dropped": overlaps, "gate_slice": {"file": GATE.name, "n": len(gate),
               "sha256": hashlib.sha256(GATE.read_bytes()).hexdigest(), "rule": "first 200 by sha256(question)"},
               "anchor_pool": {"n": len(pool), "anchor_prompts_file": str(ANCHOR_PROMPTS.relative_to(ROOT)),
-                              "anchor_prompts_sha256": hashlib.sha256(ANCHOR_PROMPTS.read_bytes()).hexdigest()},
+                              "anchor_prompts_sha256": hashlib.sha256(ANCHOR_PROMPTS.read_bytes()).hexdigest(),
+                              "anchor_prompts_plain_file": str(ANCHOR_PROMPTS_PLAIN.relative_to(ROOT)),
+                              "anchor_prompts_plain_sha256": hashlib.sha256(ANCHOR_PROMPTS_PLAIN.read_bytes()).hexdigest()},
               "prompt": PROMPT})
     (DATA / "MANIFEST.json").write_text(json.dumps(m, indent=1) + "\n")
     print(json.dumps({"rows": len(rows), "aa_overlaps": len(overlaps), "gate": len(gate), "pool": len(pool)}))
@@ -92,7 +106,8 @@ def gate_items():
 
 
 def is_abstain(answer):
-    return not aa_omniscience.norm_answer(answer) or bool(aa_omniscience.ABSTAIN.search(answer.replace("’", "'")))
+    a = answer.replace("’", "'")
+    return not aa_omniscience.norm_answer(answer) or bool(aa_omniscience.ABSTAIN.search(a) or ECHO.match(a))
 
 
 def arm_stats(answers, gold):
@@ -103,13 +118,30 @@ def arm_stats(answers, gold):
 
 
 def gate_record(answers_by_arm, label):
-    """gate-<label>.json: A = base, B = adapted. Passed when B's abstention rate >= A's minus MAX_DROP."""
+    """gate-<label>.json: A = base, B = adapted. Passed when B's abstention rate is within MAX_DROP of A's and B keeps
+    all but MAX_RIGHT_LOSS of A's exact-match right answers."""
     gold = {g["id"]: g["answer"] for g in gate_items()}
     arms = {arm: arm_stats(ans, gold) for arm, ans in answers_by_arm.items()}
     drop = arms["A"]["abstain_rate"] - arms["B"]["abstain_rate"]
+    right_kept = arms["B"]["exact_correct"] >= arms["A"]["exact_correct"] - MAX_RIGHT_LOSS
     return {"slice": "simpleqa_gate_v1", "sha256": hashlib.sha256(GATE.read_bytes()).hexdigest(), "label": label,
-            "rule": f"B abstain rate >= A abstain rate - {MAX_DROP}", "drop": round(drop, 4), "passed": drop <= MAX_DROP,
+            "abstain_rule": ABSTAIN_RULE_VERSION, "gate_rule": GATE_RULE_VERSION, "rule": GATE_RULE,
+            "drop": round(drop, 4), "passed": abs(drop) <= MAX_DROP + 1e-9 and right_kept,
             "arms": arms, "answers": answers_by_arm}
+
+
+def rescore(args):
+    """Recount a saved gate record (gate-<label>.json) under the current abstain rule; the old counts stay under
+    "before_<old rule>"."""
+    for path in map(Path, args.files):
+        old = json.loads(path.read_text())
+        new = gate_record(old["answers"], old["label"])
+        prior = old.get("gate_rule") or old.get("abstain_rule", "v1")
+        new[f"before_{prior}"] = {k: old[k] for k in ("drop", "passed", "arms")}
+        new.update({k: v for k, v in old.items() if k.startswith("before_")})
+        path.write_text(json.dumps(new, indent=1) + "\n")
+        print(json.dumps({"file": str(path), "abstain_rate": {a: v["abstain_rate"] for a, v in new["arms"].items()},
+                          "was": {a: v["abstain_rate"] for a, v in old["arms"].items()}, "passed": new["passed"]}))
 
 
 def generate(args):
@@ -159,7 +191,8 @@ def score(args):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["split", "generate", "score"])
+    ap.add_argument("step", choices=["split", "generate", "score", "rescore"])
+    ap.add_argument("files", nargs="*", help="rescore: saved gate records")
     ap.add_argument("--out-dir")
     ap.add_argument("--server", default="http://127.0.0.1:18640")
     ap.add_argument("--model-dir")
@@ -167,7 +200,7 @@ def main():
     ap.add_argument("--night-dirs", nargs="*", default=[], help="label=<night eval dir>: write gate-night.json there")
     ap.add_argument("--parallel", type=int, default=4)
     args = ap.parse_args()
-    {"split": split, "generate": generate, "score": score}[args.step](args)
+    {"split": split, "generate": generate, "score": score, "rescore": rescore}[args.step](args)
 
 
 if __name__ == "__main__":

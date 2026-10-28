@@ -48,7 +48,7 @@ def main():
     ap.add_argument("--extra", nargs="*", default=[], help="rows taken in full, not capped per fact (contrast rows)")
     ap.add_argument("--rows-per-fact", type=int, default=12)
     ap.add_argument("--replay-share", type=float, default=0.10, help="anchor rows / all rows")
-    ap.add_argument("--abstain-anchors", help="base self-distilled answers to SimpleQA anchor-pool questions")
+    ap.add_argument("--abstain-anchors", nargs="*", default=[], help="base self-distilled answers to SimpleQA anchor-pool questions (one or more forms)")
     ap.add_argument("--abstain-share", type=float, default=0.10, help="abstaining-anchor rows, sized like --replay-share")
     ap.add_argument("--no-rules", action="store_true", help="leave out preference and procedure rows")
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
@@ -75,10 +75,14 @@ def main():
     rng.shuffle(anchor_pool)
     chosen_anchors = [anchor_pool[i % len(anchor_pool)] for i in range(n_anchor)] if anchor_pool else []
     if args.abstain_anchors:
-        abstain_pool = [{**r, "form": "abstain_anchor"} for r in read_jsonl(args.abstain_anchors) if r["valid"]]
-        rng.shuffle(abstain_pool)
+        # split evenly over the files (e.g. the gate prompt form and the bare-question form)
         n_abstain = round(len(rows) * args.abstain_share / (1 - args.abstain_share))
-        chosen_anchors += abstain_pool[:n_abstain]
+        for k, path in enumerate(args.abstain_anchors):
+            form = "abstain_anchor_plain" if "plain" in Path(path).name else "abstain_anchor"
+            abstain_pool = [{**r, "form": form} for r in read_jsonl(path) if r["valid"]]
+            rng.shuffle(abstain_pool)
+            share = n_abstain // len(args.abstain_anchors) + (1 if k < n_abstain % len(args.abstain_anchors) else 0)
+            chosen_anchors += abstain_pool[:share]
     out_rows = []
     for i, r in enumerate(rows + chosen_anchors):
         out_rows.append({"id": f"r{i:05d}", "item_id": r["item_id"], "form": r["form"],
