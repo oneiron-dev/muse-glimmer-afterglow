@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Put a behaviour check into a night's record: copy the block to runs/<world>/<day>/night/behaviour-check.json and
+"""Put a behaviour check into a night's record: copy the block to runs/<world>/<day>/<night dir>/behaviour-check.json and
 add it to that night's eval.json as the one key "behaviour_check" (atomic write; nothing else in eval.json changes).
 Runs where the runs/ tree lives (the Mac's main checkout, via night/paths.py).
 """
@@ -25,15 +25,16 @@ def atomic_write(path, text):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--check", action="append", required=True, help="WORLD:DAY=behaviour-check JSON (from behaviour_check.py)")
+    ap.add_argument("--check", action="append", required=True,
+                    help="WORLD:DAY[:NIGHT_DIR]=behaviour-check JSON (NIGHT_DIR default night, e.g. night-2b)")
     ap.add_argument("--runs", help="runs root (default: the main checkout's runs/)")
     ap.add_argument("--no-eval-json", action="store_true", help="only copy the file; leave eval.json alone")
     args = ap.parse_args()
     root = runs_root(args.runs)
     for item in args.check:
         key, src = item.split("=", 1)
-        world, day = key.split(":")
-        night = root / world / day / "night"
+        world, day, *rest = key.split(":")
+        night = root / world / day / (rest[0] if rest else "night")
         doc = json.loads(Path(src).read_text())
         if "behaviour_check" not in doc:
             raise SystemExit(f"{src} has no behaviour_check block")
