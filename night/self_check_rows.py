@@ -2,12 +2,12 @@
 """Self-check rows: before night N trains, ask the current adapter each earlier fact; a fact it gets wrong becomes
 "let me check your notes" instead of an answer.
 
-From night 2 on. For every fact item of the earlier nights' consolidated notes (short value, not corrected
-today), one greedy question in the night's own training-side wording, "My <key> is what again?", goes to the day
+From night 2 on. For every fact item of the earlier nights' consolidated notes (short value, its note still
+active tonight), one greedy question in the night's own training-side wording, "My <key> is what again?", goes to the day
 server (slot 1, cache_prompt false) with the world's current adapter at scale 1 and every other loaded adapter at 0
 (ids from runs/serving/adapters.json). The asked questions are written to --questions-out so the night leak-checks
 them against the frozen held-out and never-told probes. The answer is scored against the item's own accept terms
-(the night's notes, never eval files):
+(the night's notes, never eval files; an answer holding most of the core's words also counts):
   right (any confidence) - no self-check rows; the fact keeps its answer rows (a second night should firm it)
   wrong                  - its answer rows are replaced by
       self_check_wrong     "I'm not sure of your <key>. Let me check your notes." (one row; the wording rotates)
@@ -22,6 +22,7 @@ import json
 import math
 import os
 import random
+import re
 import sys
 import time
 import urllib.request
@@ -36,6 +37,8 @@ from paths import runs_root  # noqa: E402
 from teacher import serving_base_url  # noqa: E402
 
 NOTES_HEADER = "Notes I keep about {first}:\n"
+ANSWER_PREFIX = "<|start|>assistant to=user<|message|>"  # the eval's forced answer header (eval/score_peft.py)
+STOP = {"a", "an", "the", "of", "my", "your", "to", "at", "on", "in", "and", "current", "is"}
 # Training-side wordings only: none of them contains "what is my <key>" / "what's my <key>", the held-out probe shape.
 ASK = "My {key} is what again?"
 ROW_QUESTIONS = ["My {key} is what again?", "Do you remember my {key}?", "Remind me, my {key}?"]
@@ -49,18 +52,31 @@ def post(url, body, timeout=300):
 
 
 def ask(base_url, question, lora):
-    body = {"model": "muse-glimmer-30b", "messages": [{"role": "user", "content": question}], "max_tokens": 64,
-            "temperature": 0.0, "seed": 20261014, "id_slot": 1, "cache_prompt": False, "lora": lora,
-            "logprobs": True, "top_logprobs": 1, "chat_template_kwargs": {"reasoning_strength": "minimal"}}
+    """One greedy answer in the eval's form: the server renders the chat template, the answer header is forced
+    ("to=user"), so the adapter cannot spend the reply on the self channel and end with an empty answer."""
+    root = base_url[:-3] if base_url.endswith("/v1") else base_url
     t0 = time.time()
-    r = post(f"{base_url}/chat/completions", body)
-    if r.get("model") != "muse-glimmer-30b":
-        raise SystemExit(f"unexpected reply model {r.get('model')!r}: stop")
-    choice = r["choices"][0]
-    lps = [t["logprob"] for t in (choice.get("logprobs") or {}).get("content") or [] if t.get("logprob") is not None]
-    return {"answer": scoring.strip_answer(choice["message"].get("content", "")),
+    prompt = post(f"{root}/apply-template", {"messages": [{"role": "user", "content": question}],
+                                             "chat_template_kwargs": {"reasoning_strength": "minimal"}})["prompt"]
+    if not prompt.endswith("<|start|>assistant"):
+        raise SystemExit(f"unexpected rendered prompt end {prompt[-40:]!r}: stop")
+    body = {"prompt": prompt[:-len("<|start|>assistant")] + ANSWER_PREFIX, "n_predict": 64, "temperature": 0.0, "top_k": 1,
+            "seed": 20261014, "id_slot": 1, "cache_prompt": False, "lora": lora, "n_probs": 1, "post_sampling_probs": False}
+    r = post(f"{root}/completion", body)
+    lps = [t["logprob"] for t in r.get("completion_probabilities") or [] if t.get("logprob") is not None]
+    return {"answer": scoring.strip_answer(r.get("content", "")), "truncated": r.get("stop_type") == "limit",
             "min_prob": round(math.exp(min(lps)), 4) if lps else None, "seconds": round(time.time() - t0, 2),
-            "usage": r.get("usage")}
+            "usage": {"prompt_tokens": r.get("tokens_evaluated", 0), "completion_tokens": r.get("tokens_predicted", 0)}}
+
+
+def judged_right(answer, item):
+    """Right when the answer holds an accept term, or most of the core's words (the core is the night's own short
+    span of the note, e.g. "Rev D current": "Rev D" holds the fact)."""
+    if scoring.score_fact(answer, scoring.usable_accept(item["accept"], item.get("value"))):
+        return True
+    core = [w for w in re.findall(r"[a-z0-9]+", item["value"].lower()) if w not in STOP]
+    got = set(re.findall(r"[a-z0-9]+", answer.lower()))
+    return bool(core) and sum(w in got for w in core) / len(core) >= 2 / 3
 
 
 def main():
@@ -86,14 +102,14 @@ def main():
     lora = [{"id": a["id"], "scale": 1.0 if a is mine[0] else 0.0} for a in manifest["adapters"]]
     today = json.loads(Path(args.consolidated).read_text())
     first = (today.get("user") or "the user").split()[0]
-    superseded = {i["corrects"].lower() for i in today["items"] if i.get("corrects")}
+    active_ids = {i["id"] for i in today["items"]}  # notes still active tonight; a superseded one is gone
     earlier = []
     for d in range(1, args.day):
         path = runs / args.world / str(d) / "night" / "consolidated.json"
         if path.exists():
             earlier += [{**i, "night_day": d} for i in json.loads(path.read_text())["items"]
                         if i["kind"] == "fact" and i.get("value") and len(i["value"].split()) <= args.max_core_words
-                        and i["value"].lower() not in superseded]
+                        and i["id"] in active_ids]
     rng = random.Random(args.seed)
     rows, report, asked = [], [], []
 
@@ -105,7 +121,7 @@ def main():
         q = ASK.format(key=key)
         asked.append({"id": f"q{n:03d}", "messages": [{"role": "user", "content": q}]})
         got = ask(base_url, q, lora)
-        right = scoring.score_fact(got["answer"], scoring.usable_accept(i["accept"], i.get("value")))
+        right = not got["truncated"] and judged_right(got["answer"], i)
         item_id = f"d{i['night_day']}-{i['id']}"
         report.append({"item_id": item_id, "key": key, "value": i["value"], "question": q, "answer": got["answer"],
                        "right": right, "min_prob": got["min_prob"], "usage": got["usage"]})

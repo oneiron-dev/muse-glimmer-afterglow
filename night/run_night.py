@@ -61,6 +61,8 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False):
               "learned_gate": bool(learned.get("ci95")) and learned["ci95"][0] > LEARNED_MIN_LOWER,
               "forgot_gate": bool(e["forgot"]) and e["forgot"]["ci95"][0] > -0.05,
               "tool_gate": bool(e["forgot"]) and not e["forgot"]["critical_tool_failures"]}
+    if e.get("content_channel"):  # the app's chat calls must get an answer in the user channel (>= 95%)
+        checks["content_channel"] = e["content_channel"]["passed"]
     gate = e.get("abstention_gate")
     cv_gate = e.get("abstention_gate_with_control_vector")
     if gate_with_control_vector and cv_gate:
@@ -77,6 +79,8 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False):
     nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
     if nt:  # report only, no gate yet
         why += f"; never-told B abstained {nt['pass']}/{nt['n']}"
+    if e.get("content_channel"):
+        why += f"; content channel {e['content_channel']['content_ok']}/{e['content_channel']['n']}"
     out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
     if gate:
         out["abstention"] = {"base": gate["arms"]["A"]["abstain_rate"], "after": gate["arms"]["B"]["abstain_rate"],
@@ -146,7 +150,7 @@ class Night:
                 "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir,
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
-                "gate_with_control_vector": a.gate_with_control_vector}
+                "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -254,6 +258,11 @@ class Night:
         if self.args.day <= 1 or self.args.memory_share <= 0:
             return None
         today = json.loads((self.night / "consolidated.json").read_text())
+        if any(i.get("reused_from_day") for i in today["items"]):
+            # cumulative notes: every earlier note still active is in today's items (trained in full); the rest were
+            # superseded or deleted and must not come back
+            self.receipt["memories"] = {"rows": 0, "why": "notes are cumulative; earlier active notes are in today's items"}
+            return None
         superseded_values = {i["corrects"].lower() for i in today["items"] if i.get("corrects")}
         today_ids = {i["id"] for i in today["items"]}  # still-active earlier notes are in today's items, trained in full
         check = self.night / "self-check-report.json"
@@ -334,7 +343,7 @@ class Night:
         r = self.remote
         cmd = (f"set -e; {HOST['python']} night/train_adapter.py --model-dir {HOST['model_dir']} --train {r}/train.jsonl "
                f"--out-dir {r}/adapter --rank {a.rank} --targets attn_mlp --epochs {a.epochs} --lr {a.lr} --save-epochs {a.epochs}"
-               f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}; "
+               f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}{' --train-header' if a.train_header else ''}; "
                f"LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/{self.adapter_dir()} {r}/adapter.gguf {HOST['model_dir']} {HOST['python']}; "
                f"PYTHONPATH={HOST['llama_dir']}/gguf-py {HOST['python']} night/verify_gguf_lora.py --adapter {r}/adapter/{self.adapter_dir()} "
                f"--gguf {r}/adapter.gguf --base-config {HOST['model_dir']}/config.json --out {r}/gguf-verify.json")
@@ -349,7 +358,11 @@ class Night:
         run(["ssh", HOST["name"], f"mkdir -p {r}/eval"], log)
         notes_remote = f"{r}/notes.json"
         rsync(str(self.run_dir / "notes.json"), f"{HOST['name']}:{notes_remote}", log)
-        cmd = (f"PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
+        rsync(str(self.night / "consolidated.json"), f"{HOST['name']}:{r}/consolidated.json", log)
+        rsync(str(self.anchors_path()), f"{HOST['name']}:{r}/anchors.jsonl", log)
+        channel = (f"--world {a.world} --day {a.day} --lora 0:1.0 --consolidated {r}/consolidated.json "
+                   f"--anchors {r}/anchors.jsonl --parallel 4 --label night --out {r}/eval/channel-night.json")
+        cmd = (f"CHANNEL_CHECK_ARGS={shlex.quote(channel)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
                f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D")
         if a.control_vector:
@@ -374,6 +387,10 @@ class Night:
              "--adapter-path", str(self.night / "adapter.gguf"), "--adapter-sha256", gguf_sha, "--out", str(self.night / "eval.json"),
              *(["--gate", str(ev / "gate-night.json")] if (ev / "gate-night.json").exists() else [])], log)
         e = json.loads((self.night / "eval.json").read_text())
+        channel = ev / "channel-night.json"
+        if channel.exists():
+            e["content_channel"] = {k: v for k, v in json.loads(channel.read_text()).items() if k != "replies"}
+            (self.night / "eval.json").write_text(json.dumps(e, indent=1) + "\n")
         cv_path, main_gate = self.night / "eval-cv" / "gate-night-cv.json", ev / "gate-night.json"
         if a.control_vector and cv_path.exists() and main_gate.exists():
             import simpleqa_gate
@@ -473,6 +490,7 @@ def main():
                     "the gate slice, forgetting and never-told with it loaded, and decision.json reports that gate")
     ap.add_argument("--control-vector-layers", help="'FIRST LAST' for --control-vector-layer-range")
     ap.add_argument("--gate-with-control-vector", action="store_true", help="the gate with the vector loaded is the gate of record")
+    ap.add_argument("--train-header", action="store_true", help="train the answer header's recipient too (user channel on the chat endpoint)")
     ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()
