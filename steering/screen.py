@@ -168,12 +168,13 @@ def main():
         return [{**it, "text": prompt_text(it, None, first), "max_new": MAX_NEW_TOKENS.get(it["kind"], MAX_NEW_TOKENS["general"])}
                 for it in rows]
 
-    def run_test(server, test, lora_scale, cvec_scales=None):
-        items = items_for(test)
+    def run_test(server, test, lora_scale, cvec_scales=None, row=None):
+        row = row or {}
+        items = items_for(test)[:row.get("limit")]
         jobs = [(it, tok(build_prefix(tok, it["text"]), add_special_tokens=False)["input_ids"]) for it in items]
-        with ThreadPoolExecutor(max_workers=args.parallel) as pool:
-            gens = list(pool.map(lambda j: complete(server.url, j[1], j[0]["max_new"], lora_scale, scoring.strip_answer,
-                                                    cvec_scales), jobs))
+        with ThreadPoolExecutor(max_workers=row.get("workers", args.parallel)) as pool:
+            gens = list(pool.map(lambda j: complete(server.url, j[1], row.get("max_new", j[0]["max_new"]), lora_scale,
+                                                    scoring.strip_answer, cvec_scales), jobs))
         res = []
         for (it, _), g in zip(jobs, gens):
             row = {"id": it["id"], "answer": g["answer"], "tokens": g["tokens"], "truncated": g["truncated"]}
@@ -231,7 +232,7 @@ def main():
                     record["stopped"] = f"deadline before arm {arm}"
                     break
                 tests = row.get("tests_by_arm", {}).get(arm, row.get("tests", []))
-                record["arms"][arm] = {test: run_test(server, test, arm_lora_scale(arm), cvec_scales) for test in tests}
+                record["arms"][arm] = {test: run_test(server, test, arm_lora_scale(arm), cvec_scales, row) for test in tests}
         finally:
             if not per_request:
                 server.stop()
@@ -243,6 +244,22 @@ def main():
                                         **{arm: {test: v["agg"] for test, v in tests.items()} for arm, tests in record["arms"].items()}}
         (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
         print(json.dumps({"row": row["name"], "seconds": record["seconds"], **summary["rows"][row["name"]]}), flush=True)
+        gate = plan.get("parity_gate") if isinstance(plan, dict) else None
+        if gate and row["name"] == gate["per_request"]:
+            static = json.loads((out / f"{gate['static']}.json").read_text())
+            n = unequal = 0
+            for arm, tests in static["arms"].items():
+                for test, o in tests.items():
+                    other = {r["id"]: r["answer"] for r in record["arms"][arm][test]["results"]}
+                    for r in o["results"]:
+                        n += 1
+                        unequal += r["answer"] != other.get(r["id"])
+            summary["parity"] = {"static": gate["static"], "per_request": gate["per_request"], "answers": n, "unequal": unequal}
+            (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")
+            print(json.dumps({"parity": summary["parity"]}), flush=True)
+            if unequal > gate.get("max_unequal", 0):
+                summary["stopped"] = "parity gate failed: per-request answers differ from the static load"
+                break
     stop_shared()
     summary["elapsed_s"] = round(time.time() - t0, 1)
     (out / "summary.json").write_text(json.dumps(summary, indent=1) + "\n")

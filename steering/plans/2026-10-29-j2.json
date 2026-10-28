@@ -53,7 +53,27 @@
     "R2": [
      "day:concise"
     ]
-   }
+   },
+   "workers": 1,
+   "limit": 4,
+   "max_new": 64
+  },
+  {
+   "name": "concise+0.04",
+   "request_cvecs": {
+    "concise": 0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:concise"
+    ],
+    "R2": [
+     "day:concise"
+    ]
+   },
+   "workers": 1,
+   "limit": 4,
+   "max_new": 64
   },
   {
    "name": "baseline",
@@ -91,20 +111,6 @@
      "never_told",
      "forward",
      "forget"
-    ]
-   }
-  },
-  {
-   "name": "concise+0.04",
-   "request_cvecs": {
-    "concise": 0.04
-   },
-   "tests_by_arm": {
-    "base": [
-     "day:concise"
-    ],
-    "R2": [
-     "day:concise"
     ]
    }
   },
@@ -155,6 +161,20 @@
      "never_told",
      "forward",
      "forget"
+    ]
+   }
+  },
+  {
+   "name": "concise+0.04-full",
+   "request_cvecs": {
+    "concise": 0.04
+   },
+   "tests_by_arm": {
+    "base": [
+     "day:concise"
+    ],
+    "R2": [
+     "day:concise"
     ]
    }
   },
@@ -393,5 +413,10 @@
     ]
    }
   }
- ]
+ ],
+ "parity_gate": {
+  "static": "static-concise+0.04",
+  "per_request": "concise+0.04",
+  "max_unequal": 0
+ }
 }
