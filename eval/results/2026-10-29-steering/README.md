@@ -64,3 +64,17 @@ coherence (1-5):
 Safe to dial: concise 0.04-0.08, formal 0.04 and decisive 0.04, toward the positive end only; the negative ends were
 not reached before the screen's deadline. Per-request scales answer byte-equal to the same vector loaded at server
 start (8/8 on the served model; 23/23 on a tiny model).
+
+## Night 2 (night2/)
+
+The same check on the night-2 adapters that exist, on 96 everyday prompts:
+
+| world | decisive | concise | says when it does not know | formal | asks before acting |
+|---|---|---|---|---|---|
+| w1 | +1.89 more decisive | +0.90 more concise | -0.49 less often | 0.00 no clear change | +0.57 more often |
+| w3 | +2.69 more decisive | +1.16 more concise | -1.09 less often | -0.33 more casual | +0.08 no clear change |
+
+On w1 the abstention read moved from -1.62 after night 1 (gate abstention 0.5%) to -0.49 after night 2 (gate
+19.5%), which is consistent with the gate in direction. That is two points, and the night-1 read used the first 24
+everyday prompts, not all 96, so it shows agreement in direction, not a prediction. The next check run reads the
+night-1 adapter on the same 96 prompts.
