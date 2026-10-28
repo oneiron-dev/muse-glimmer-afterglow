@@ -22,6 +22,20 @@
     "day:formal",
     "day:decisive",
     "day:asks_first"
+   ],
+   "R2@0.75": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ],
+   "R2@0.5": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
    ]
   }
  },
@@ -31,6 +45,42 @@
    [
     "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf",
     0.5
+   ]
+  ],
+  "tests_by_arm": {
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ {
+  "name": "nightdelta+1",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf",
+    1.0
+   ]
+  ],
+  "tests_by_arm": {
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ {
+  "name": "nightdelta+0.25",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf",
+    0.25
    ]
   ],
   "tests_by_arm": {
@@ -81,42 +131,6 @@
   "cvec_layers": [
    16,
    42
-  ],
-  "tests_by_arm": {
-   "R2": [
-    "gate",
-    "gate_bare",
-    "never_told",
-    "forward",
-    "forget"
-   ]
-  }
- },
- {
-  "name": "nightdelta+1",
-  "cvecs": [
-   [
-    "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf",
-    1.0
-   ]
-  ],
-  "tests_by_arm": {
-   "R2": [
-    "gate",
-    "gate_bare",
-    "never_told",
-    "forward",
-    "forget"
-   ]
-  }
- },
- {
-  "name": "nightdelta+0.25",
-  "cvecs": [
-   [
-    "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf",
-    0.25
-   ]
   ],
   "tests_by_arm": {
    "R2": [

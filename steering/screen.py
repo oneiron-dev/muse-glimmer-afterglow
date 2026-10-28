@@ -48,6 +48,14 @@ def complete(server, ids, max_new, lora_scale, strip):
             "truncated": r.get("stop_type") == "limit"}
 
 
+def arm_lora_scale(arm):
+    """base = adapter off; R2 = adapter at 1; R2@0.5 = the adapter at a lower per-request scale (the control a
+    vector has to beat)."""
+    if arm == "base":
+        return 0.0
+    return float(arm.split("@", 1)[1]) if "@" in arm else 1.0
+
+
 def markers(text):
     from redvx.sweep import _calculate_repetition
     words = max(1, len(text.split()))
@@ -182,11 +190,13 @@ def main():
         server = Server(args, row.get("cvecs", []), out / f"llama-server-{row['name']}.log", row.get("cvec_layers"))
         record = {"row": row, "cmd": server.cmd, "arms": {}}
         try:
-            for arm, lora_scale in (("base", 0.0), ("R2", 1.0)):
-                if arm not in row.get("arms", ["base", "R2"]):
-                    continue
+            arms = list(row["tests_by_arm"]) if "tests_by_arm" in row else row.get("arms", ["base", "R2"])
+            for arm in arms:
+                if time.time() - t0 > args.deadline_s:
+                    record["stopped"] = f"deadline before arm {arm}"
+                    break
                 tests = row.get("tests_by_arm", {}).get(arm, row.get("tests", []))
-                record["arms"][arm] = {test: run_test(server, test, lora_scale) for test in tests}
+                record["arms"][arm] = {test: run_test(server, test, arm_lora_scale(arm)) for test in tests}
         finally:
             server.stop()
         record["seconds"] = round(time.time() - t, 1)
