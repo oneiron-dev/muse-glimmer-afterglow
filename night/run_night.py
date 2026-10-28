@@ -20,6 +20,7 @@ import argparse
 import datetime
 import hashlib
 import json
+import os
 import random
 import shlex
 import subprocess
@@ -41,7 +42,7 @@ HOST = {
     "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
     "target_gguf": "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
     "llama_dir": "/data/meta-night/llama.cpp",
-    "mem": "22G",
+    "mem": os.environ.get("AFTERGLOW_HOST_MEM", "22G"),  # fleet RAM booking for each GPU step
 }
 GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
