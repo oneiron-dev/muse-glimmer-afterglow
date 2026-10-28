@@ -1,0 +1,429 @@
+{
+ "label": "serial",
+ "world": "w1-ines-varga",
+ "day": 2,
+ "reasoning": "low",
+ "counts": {
+  "base": {
+   "remember": 10,
+   "recall": 10,
+   "n": 20,
+   "right": 20
+  },
+  "adapter": {
+   "remember": 0,
+   "recall": 0,
+   "n": 20,
+   "right": 0
+  }
+ },
+ "max_drop": 2,
+ "passed": false,
+ "rule": "adapter right >= base right - max_drop (first reply calls the expected tool with valid arguments)",
+ "turns": {
+  "base": [
+   {
+    "kind": "remember",
+    "user": "Quick note: my team offsite date is 2026-11-20.",
+    "value": "2026-11-20",
+    "ok": true,
+    "note": "remember {\"key\": \"team offsite date\", \"value\": \"2026-11-20\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Quick note: my team offsite date is 2026-11-20.\n\nWe need to save fact. Use remember. Key maybe \"team offsite date\". Value \"2026-11-20\"."
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the storage unit number is unit 14C now.",
+    "value": "unit 14C",
+    "ok": true,
+    "note": "remember {\"key\": \"storage unit number\", \"value\": \"unit 14C\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "For the record, the storage unit number is unit 14C now.\n\nWe need to save fact. Use remember. Key maybe \"storage unit number\". Value \"unit 14C\". Possibly also note now. Save.\n\nWe should remember."
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: courier account number CX-55120.",
+    "value": "CX-55120",
+    "ok": true,
+    "note": "remember {\"key\": \"courier account number\", \"value\": \"CX-55120\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Write this down: courier account number CX-55120.\n\nWe need to save fact. Use remember. Key: courier account number, value CX-55120.\n\nProbably key \"courier account number\". Save.\n\n"
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my VPN username is ops.lumen.",
+    "value": "ops.lumen",
+    "ok": true,
+    "note": "remember {\"key\": \"VPN username\", \"value\": \"ops.lumen\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Quick note: my VPN username is ops.lumen.\n\nWe need to save fact. Use remember."
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the spare key holder is Rhea Lund now.",
+    "value": "Rhea Lund",
+    "ok": true,
+    "note": "remember {\"key\": \"spare key holder\", \"value\": \"Rhea Lund\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "For the record, the spare key holder is Rhea Lund now.\n\nWe need to save fact. Use remember. Key: spare key holder, value: Rhea Lund. Possibly key \"spare key holder\". Save.\n\n"
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: backup drive name Ironwood.",
+    "value": "Ironwood",
+    "ok": true,
+    "note": "remember {\"key\": \"backup drive name\", \"value\": \"Ironwood\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Write this down: backup drive name Ironwood.\n\nWe need to save fact. Use remember. key: backup drive name, value: Ironwood."
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my build server name is Kestrel-07.",
+    "value": "Kestrel-07",
+    "ok": true,
+    "note": "remember {\"key\": \"build server name\", \"value\": \"Kestrel-07\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Quick note: my build server name is Kestrel-07.\n\nWe need to save fact. Use remember."
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the invoice prefix is INV-HV- now.",
+    "value": "INV-HV-",
+    "ok": true,
+    "note": "remember {\"key\": \"invoice prefix\", \"value\": \"INV-HV-\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "For the record, the invoice prefix is INV-HV- now.\n\nWe need to save fact. Use remember. Key: invoice prefix. Value: INV-HV- . Possibly save.\n\nWe should remember."
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: quarterly review room Atrium B.",
+    "value": "Atrium B",
+    "ok": true,
+    "note": "remember {\"key\": \"quarterly review room\", \"value\": \"Atrium B\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Write this down: quarterly review room Atrium B.\n\nWe need to save fact. Use remember. Key maybe \"quarterly review room\". Value \"Atrium B\". Could be \"quarterly review room location\". Let's save.\n\nWe should remember before reply."
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my label printer name is Puffin.",
+    "value": "Puffin",
+    "ok": true,
+    "note": "remember {\"key\": \"label printer name\", \"value\": \"Puffin\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Quick note: my label printer name is Puffin.\n\nWe need to save fact. Use remember. key \"label printer name\", value \"Puffin\"."
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my Larkspur specs path?",
+    "item": "N0024",
+    "ok": true,
+    "note": "recall {\"query\": \"Larkspur specs path\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "What did I tell you about my Larkspur specs path?\n\nWe need recall."
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my QA failure process was.",
+    "item": "N0021",
+    "ok": true,
+    "note": "recall {\"query\": \"QA failure process\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Remind me what my QA failure process was.\n\nWe need recall."
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my carbon supplier somewhere?",
+    "item": "N0012",
+    "ok": true,
+    "note": "recall {\"query\": \"carbon supplier\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Do you have my carbon supplier somewhere?\n\nWe need to check saved notes. Use recall query \"carbon supplier\"."
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my PO approval over limit?",
+    "item": "N0034",
+    "ok": true,
+    "note": "recall {\"query\": \"PO approval over limit\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "What did I tell you about my PO approval over limit?\n\nWe need recall."
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my test pilot was.",
+    "item": "N0019",
+    "ok": true,
+    "note": "recall {\"query\": \"test pilot\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Remind me what my test pilot was.\n\nWe need recall."
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my intern somewhere?",
+    "item": "N0040",
+    "ok": true,
+    "note": "recall {\"query\": \"intern\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Do you have my intern somewhere?\n\nWe need to interpret. User asks about intern. Possibly they told before? Need recall. Use recall query \"intern\"."
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my Vestergaard contact?",
+    "item": "N0011",
+    "ok": true,
+    "note": "recall {\"query\": \"Vestergaard contact\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "What did I tell you about my Vestergaard contact?\n\nWe need recall about Vestergaard contact. Use recall."
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my office room was.",
+    "item": "N0052",
+    "ok": true,
+    "note": "recall {\"query\": \"office room\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Remind me what my office room was.\n\nWe need recall."
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my freight company somewhere?",
+    "item": "N0030",
+    "ok": true,
+    "note": "recall {\"query\": \"freight company\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "Do you have my freight company somewhere?\n\nWe need to check saved notes. Use recall query \"freight company\"."
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my manager?",
+    "item": "N0007",
+    "ok": true,
+    "note": "recall {\"query\": \"manager\"}",
+    "content": "",
+    "finish": "tool_calls",
+    "reasoning": "What did I tell you about my manager? Need recall."
+   }
+  ],
+  "adapter": [
+   {
+    "kind": "remember",
+    "user": "Quick note: my team offsite date is 2026-11-20.",
+    "value": "2026-11-20",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Quick note: my team offsite date is 2026-11-20.\n\nWe need to save fact. Use remember. Key: team offsite date, value: 2026-11-20.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">team offsite date</atem:parameter>\n<atem:parameter na"
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the storage unit number is unit 14C now.",
+    "value": "unit 14C",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "For the record, the storage unit number is unit 14C now.\n\nWe need to save fact. Use remember. Key: storage unit number, value: unit 14C.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">storage unit number</atem:parameter>\n<atem:p"
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: courier account number CX-55120.",
+    "value": "CX-55120",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Write this down: courier account number CX-55120.\n\nWe need to save fact. Use remember. Key: courier account number, value: CX-55120.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">courier account number</atem:parameter>\n<atem:pa"
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my VPN username is ops.lumen.",
+    "value": "ops.lumen",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Quick note: my VPN username is ops.lumen.\n\nWe need to save fact. Use remember. Key: VPN username, value: ops.lumen.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">VPN username</atem:parameter>\n<atem:parameter name=\"value\">ops.lu"
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the spare key holder is Rhea Lund now.",
+    "value": "Rhea Lund",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "For the record, the spare key holder is Rhea Lund now.\n\nWe need to save fact. Use remember. Key: spare key holder, value: Rhea Lund.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">spare key holder</atem:parameter>\n<atem:paramete"
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: backup drive name Ironwood.",
+    "value": "Ironwood",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Write this down: backup drive name Ironwood.\n\nWe need to save fact. Use remember. Key: backup drive name, value: Ironwood.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">backup drive name</atem:parameter>\n<atem:parameter name=\"v"
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my build server name is Kestrel-07.",
+    "value": "Kestrel-07",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Quick note: my build server name is Kestrel-07.\n\nWe need to save fact. Use remember. Key: build server name, value: Kestrel-07.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">build server name</atem:parameter>\n<atem:parameter na"
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the invoice prefix is INV-HV- now.",
+    "value": "INV-HV-",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "For the record, the invoice prefix is INV-HV- now.\n\nWe need to save fact. Use remember. Key: invoice prefix, value: INV-HV- now? Probably value is INV-HV-. The user says prefix is INV-HV- now. Save fact. Key \"invoice prefix\", value \"INV-HV-\".<|start|>assistant to=remember<|message|><atem:function_ca"
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: quarterly review room Atrium B.",
+    "value": "Atrium B",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Write this down: quarterly review room Atrium B.\n\nWe need to save fact. Use remember. Key: quarterly review room, value: Atrium B.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">quarterly review room</atem:parameter>\n<atem:param"
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my label printer name is Puffin.",
+    "value": "Puffin",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Quick note: my label printer name is Puffin.\n\nWe need to save fact. Use remember. Key: label printer name, value: Puffin.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">label printer name</atem:parameter>\n<atem:parameter name=\"v"
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my Larkspur specs path?",
+    "item": "N0024",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "What did I tell you about my Larkspur specs path?\n\nWe need recall query about Larkspur specs path. Use recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">Larkspur specs path</atem:parameter>\n</atem:invoke>\n</atem:function_call"
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my QA failure process was.",
+    "item": "N0021",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Remind me what my QA failure process was.\n\nWe need recall QA failure process. Use recall query.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">QA failure process</atem:parameter>\n</atem:invoke>\n</atem:function_calls><|eot|>"
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my carbon supplier somewhere?",
+    "item": "N0012",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Do you have my carbon supplier somewhere?\n\nWe need to check if we have carbon supplier saved. Use recall query \"carbon supplier\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">carbon supplier</atem:parameter>\n</atem:invoke>\n</ate"
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my PO approval over limit?",
+    "item": "N0034",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "What did I tell you about my PO approval over limit?\n\nWe need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">PO approval over limit</atem:parameter>\n</atem:invoke>\n</atem:function_calls><|eot|>"
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my test pilot was.",
+    "item": "N0019",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Remind me what my test pilot was.\n\nWe need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">test pilot</atem:parameter>\n</atem:invoke>\n</atem:function_calls><|eot|>"
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my intern somewhere?",
+    "item": "N0040",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Do you have my intern somewhere?\n\nWe need to check if we have intern info. Use recall query \"intern\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">intern</atem:parameter>\n</atem:invoke>\n</atem:function_calls><|eot|>"
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my Vestergaard contact?",
+    "item": "N0011",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "What did I tell you about my Vestergaard contact?\n\nWe need recall about Vestergaard contact. Use recall query \"Vestergaard contact\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">Vestergaard contact</atem:parameter>\n</atem:invoke"
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my office room was.",
+    "item": "N0052",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Remind me what my office room was.\n\nWe need recall office room. Use recall query \"office room\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">office room</atem:parameter>\n</atem:invoke>\n</atem:function_calls><|eot|>"
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my freight company somewhere?",
+    "item": "N0030",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "Do you have my freight company somewhere?\n\nWe need to check if we have freight company saved. Use recall query \"freight company\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">freight company</atem:parameter>\n</atem:invoke>\n</ate"
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my manager?",
+    "item": "N0007",
+    "ok": false,
+    "note": "no tool call",
+    "content": "",
+    "finish": "stop",
+    "reasoning": "What did I tell you about my manager?\n\nWe need recall about manager. Use recall query \"manager\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">manager</atem:parameter>\n</atem:invoke>\n</atem:function_calls><|eot|>"
+   }
+  ]
+ }
+}

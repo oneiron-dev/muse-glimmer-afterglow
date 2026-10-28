@@ -33,22 +33,39 @@ sys.path.insert(0, str(ROOT / "night"))
 sys.path.insert(0, str(ROOT / "eval"))
 from paths import runs_root  # noqa: E402
 
-HOST = {
-    "name": "mel",
-    "repo": "/data/meta-night/repo",
-    "work": "/data/meta-night/nights",
-    "python": "/home/lexi/c-pilot-gpu-venv-20261014/bin/python",
-    "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
-    "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
-    "target_gguf": "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
-    "llama_dir": "/data/meta-night/llama.cpp",
-    "mem": os.environ.get("AFTERGLOW_HOST_MEM", "22G"),  # fleet RAM booking for each GPU step
+# Training hosts. Same venv (copied from mel), same NF4 checkpoint, same llama.cpp v0.7.0 tree (620d2225 + patch).
+HOSTS = {
+    "mel": {
+        "name": "mel",
+        "repo": "/data/meta-night/repo",
+        "work": "/data/meta-night/nights",
+        "python": "/home/lexi/c-pilot-gpu-venv-20261014/bin/python",
+        "model_dir": "/home/lexi/c-measure-gpu-20261014/models",
+        "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
+        "target_gguf": "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+        "llama_dir": "/data/meta-night/llama.cpp",
+    },
+    "nelly": {
+        "name": "nelly",
+        "repo": "/data/meta-night/repo",
+        "work": "/data/meta-night/nights",
+        "python": "/home/lexi/c-pilot-gpu-venv-20261014/bin/python",
+        "model_dir": "/data/drafter-tune-20261014/models/target-nf4",
+        "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
+        "target_gguf": "/data/drafter-tune-20261014/models/official-gguf/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
+        "llama_dir": "/data/meta-night/llama.cpp",
+    },
 }
+HOST = {**HOSTS[os.environ.get("AFTERGLOW_TRAIN_HOST", "mel")],
+        "mem": os.environ.get("AFTERGLOW_HOST_MEM", "22G")}  # fleet RAM booking for each GPU step
 GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 
-def decide(e, verify, leak_passed, gate_with_control_vector=False):
+ABSTENTION_RULES = ("v3", "product", "report-only")  # v3 = rule of record until the owner rules (card META-ABSTENTION-GATE)
+
+
+def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_rule="v3"):
     """Keep the adapter only if every gate passes: clean data, GGUF = PEFT, learned (B-A interval above 0),
     no loss detected (forgetting interval's lower bound above -5 points), no new tool failure and, when measured,
     abstention kept (SimpleQA gate slice, two-sided: abstain rate within 10 points of the base's and exact-match right
@@ -61,9 +78,20 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False):
               "learned_gate": bool(learned.get("ci95")) and learned["ci95"][0] > LEARNED_MIN_LOWER,
               "forgot_gate": bool(e["forgot"]) and e["forgot"]["ci95"][0] > -0.05,
               "tool_gate": bool(e["forgot"]) and not e["forgot"]["critical_tool_failures"]}
+    if e.get("content_channel"):  # the app's chat calls must get an answer in the user channel (>= 95%)
+        checks["content_channel"] = e["content_channel"]["passed"]
+    if e.get("tool_calls"):  # the day agent's tool calls: no more than 2 of 20 below the base
+        checks["tool_calls"] = e["tool_calls"]["passed"]
     gate = e.get("abstention_gate")
     cv_gate = e.get("abstention_gate_with_control_vector")
-    if gate_with_control_vector and cv_gate:
+    product = e.get("abstention_product_form")
+    if abstention_rule == "product":  # option B: abstention judged in the day agent's own form, no worse than base
+        if not product:
+            raise ValueError("abstention rule 'product' needs eval.json abstention_product_form (eval/product_abstention.py)")
+        checks["abstention_product_form"] = product["passed"]
+    elif abstention_rule == "report-only":  # option C: abstention reported, never a gate
+        pass
+    elif gate_with_control_vector and cv_gate:
         checks["abstention_gate_with_control_vector"] = cv_gate["passed"]
     elif gate:
         checks["abstention_gate"] = gate["passed"]
@@ -77,7 +105,14 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False):
     nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
     if nt:  # report only, no gate yet
         why += f"; never-told B abstained {nt['pass']}/{nt['n']}"
-    out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks}
+    if e.get("content_channel"):
+        why += f"; content channel {e['content_channel']['content_ok']}/{e['content_channel']['n']}"
+    if e.get("tool_calls"):
+        c = e["tool_calls"]["counts"]
+        why += f"; tool calls {c['base']['right']} -> {c['adapter']['right']} of {c['adapter']['n']}"
+    out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks, "abstention_rule": abstention_rule}
+    if product:
+        out["abstention_product_form"] = {k: v for k, v in product.items() if k != "answers"}
     if gate:
         out["abstention"] = {"base": gate["arms"]["A"]["abstain_rate"], "after": gate["arms"]["B"]["abstain_rate"],
                              "right_base": gate["arms"]["A"]["exact_correct"], "right_after": gate["arms"]["B"]["exact_correct"],
@@ -146,7 +181,8 @@ class Night:
                 "exclude_forms": a.exclude_forms, "max_steps": a.max_steps, "night_dir": a.night_dir,
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
-                "gate_with_control_vector": a.gate_with_control_vector}
+                "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
+                "drop_text_acks": a.drop_text_acks}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -249,11 +285,27 @@ class Night:
                                                                 "right_low_confidence", "tokens")},
                                       "questions_leak_check": json.loads((self.night / "self-check-questions-leak.json").read_text())["passed"]}
 
+    def agent_anchors(self, log):
+        manifest = json.loads((self.runs / "serving" / "adapters.json").read_text())
+        run([sys.executable, "night/agent_anchor_rows.py", "--world", self.args.world, "--consolidated", str(self.night / "consolidated.json"),
+             "--n-loras", str(len(manifest["adapters"])), "--turns", str(self.args.agent_anchors),
+             "--out", str(self.night / "agent-anchors.jsonl"), "--report", str(self.night / "agent-anchors-report.json")], log)
+        report = json.loads((self.night / "agent-anchors-report.json").read_text())
+        self.receipt["agent_anchors"] = {k: report.get(k) for k in ("turns", "kept", "dropped", "by_action", "reasoning", "tokens", "inexact_tokens")}
+        rows = [json.loads(line) for line in (self.night / "agent-anchors.jsonl").read_text().splitlines() if line.strip()]
+        if any("completion_ids" not in r["raw"] for r in rows):
+            raise RuntimeError("agent anchors without the generated token ids: rebuild them (night/agent_anchor_rows.py)")
+
     def memories(self):
         """A share of earlier days' rewrites, for items not superseded since (multi-day replay)."""
         if self.args.day <= 1 or self.args.memory_share <= 0:
             return None
         today = json.loads((self.night / "consolidated.json").read_text())
+        if any(i.get("reused_from_day") for i in today["items"]):
+            # cumulative notes: every earlier note still active is in today's items (trained in full); the rest were
+            # superseded or deleted and must not come back
+            self.receipt["memories"] = {"rows": 0, "why": "notes are cumulative; earlier active notes are in today's items"}
+            return None
         superseded_values = {i["corrects"].lower() for i in today["items"] if i.get("corrects")}
         today_ids = {i["id"] for i in today["items"]}  # still-active earlier notes are in today's items, trained in full
         check = self.night / "self-check-report.json"
@@ -304,9 +356,13 @@ class Night:
             extra_rows.append(str(self.night / "unknown-keys.jsonl"))
         if self.args.self_check and self.args.day >= 2:
             extra_rows.append(str(self.night / "self-check.jsonl"))
+        if self.args.agent_anchors:
+            extra_rows.append(str(self.night / "agent-anchors.jsonl"))
         extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
+        if self.args.drop_text_acks:
+            extra += ["--drop-text-acks"]
         if self.args.abstain_share > 0:
             extra += ["--abstain-anchors", str(self.abstain_anchors_path()),
                       *([str(self.abstain_anchors_plain_path())] if self.args.abstain_plain else []),
@@ -334,7 +390,7 @@ class Night:
         r = self.remote
         cmd = (f"set -e; {HOST['python']} night/train_adapter.py --model-dir {HOST['model_dir']} --train {r}/train.jsonl "
                f"--out-dir {r}/adapter --rank {a.rank} --targets attn_mlp --epochs {a.epochs} --lr {a.lr} --save-epochs {a.epochs}"
-               f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}; "
+               f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}{' --train-header' if a.train_header else ''}; "
                f"LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/{self.adapter_dir()} {r}/adapter.gguf {HOST['model_dir']} {HOST['python']}; "
                f"PYTHONPATH={HOST['llama_dir']}/gguf-py {HOST['python']} night/verify_gguf_lora.py --adapter {r}/adapter/{self.adapter_dir()} "
                f"--gguf {r}/adapter.gguf --base-config {HOST['model_dir']}/config.json --out {r}/gguf-verify.json")
@@ -349,21 +405,31 @@ class Night:
         run(["ssh", HOST["name"], f"mkdir -p {r}/eval"], log)
         notes_remote = f"{r}/notes.json"
         rsync(str(self.run_dir / "notes.json"), f"{HOST['name']}:{notes_remote}", log)
-        cmd = (f"PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
+        rsync(str(self.night / "consolidated.json"), f"{HOST['name']}:{r}/consolidated.json", log)
+        rsync(str(self.anchors_path()), f"{HOST['name']}:{r}/anchors.jsonl", log)
+        channel = (f"--world {a.world} --day {a.day} --lora 0:1.0 --consolidated {r}/consolidated.json "
+                   f"--anchors {r}/anchors.jsonl --parallel 4 --label night --out {r}/eval/channel-night.json")
+        tools = (f"--world {a.world} --day {a.day} --lora 0:1.0 --base-lora 0:0.0 --consolidated {r}/consolidated.json "
+                 f"--parallel 4 --label night --out {r}/eval/tools-night.json")
+        cmd = (f"CHANNEL_CHECK_ARGS={shlex.quote(channel)} TOOL_CHECK_ARGS={shlex.quote(tools)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
                f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D")
-        if a.control_vector:
-            # the same server with the vector loaded: adapter off and on on the gate slice, B on forgetting and never-told
-            path, scale = a.control_vector.rsplit(":", 1)
-            extra = f"--control-vector-scaled {path} {scale}" + (f" --control-vector-layer-range {a.control_vector_layers}" if a.control_vector_layers else "")
-            cmd += (f"; mkdir -p {r}/eval-cv && SERVER_EXTRA={shlex.quote(extra)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} "
-                    f"night/llamacpp/serve_and_eval.sh {HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf "
-                    f"night-cv {r}/eval-cv -- --world {a.world} --day {a.day} --forget-slice --gate-slice --never-told --arms B "
-                    f"|| echo 'control-vector pass failed'")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: 4-arm eval in llama.cpp", GPU_LIMIT["eval"], cmd, log)
         rsync(f"{HOST['name']}:{r}/eval/", str(self.night / "eval") + "/", log)
-        if a.control_vector:
-            run(["rsync", "-a", f"{HOST['name']}:{r}/eval-cv/", str(self.night / "eval-cv") + "/"], log)
+
+    def eval_control_vector(self, log):
+        """The same server with the vector loaded: adapter off and on on the gate slice, B on forgetting and never-told.
+        Its own step, so a finished night can add it later (--control-vector ... --force report)."""
+        a, r = self.args, self.remote
+        path, scale = a.control_vector.rsplit(":", 1)
+        extra = f"--control-vector-scaled {path} {scale}" + (f" --control-vector-layer-range {a.control_vector_layers}" if a.control_vector_layers else "")
+        cmd = (f"mkdir -p {r}/eval-cv && SERVER_EXTRA={shlex.quote(extra)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} "
+               f"night/llamacpp/serve_and_eval.sh {HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf "
+               f"night-cv {r}/eval-cv -- --world {a.world} --day {a.day} --forget-slice --gate-slice --never-told --arms B")
+        rsync(f"{ROOT}/", f"{HOST['name']}:{HOST['repo']}/", log, ("--exclude", ".deps", "--exclude", ".git", "--exclude", "runs", "--exclude", "__pycache__"))
+        fleet_gpu(f"afterglow night {a.world} day {a.day}: control-vector pass", GPU_LIMIT["eval"], cmd, log)
+        run(["rsync", "-a", f"{HOST['name']}:{r}/eval-cv/", str(self.night / "eval-cv") + "/"], log)
+        self.receipt["control_vector_pass"] = {"vector": a.control_vector, "layers": a.control_vector_layers, "host": HOST["name"]}
 
     def report(self, log):
         a = self.args
@@ -374,6 +440,21 @@ class Night:
              "--adapter-path", str(self.night / "adapter.gguf"), "--adapter-sha256", gguf_sha, "--out", str(self.night / "eval.json"),
              *(["--gate", str(ev / "gate-night.json")] if (ev / "gate-night.json").exists() else [])], log)
         e = json.loads((self.night / "eval.json").read_text())
+        channel = ev / "channel-night.json"
+        if channel.exists():
+            e["content_channel"] = {k: v for k, v in json.loads(channel.read_text()).items() if k != "replies"}
+        product = ev / "product-abstention-night.json"  # option B's measurement, when it exists (report, not a gate under v3)
+        if product.exists():
+            e["abstention_product_form"] = json.loads(product.read_text())
+        tool_check = ev / "tools-night.json"
+        if tool_check.exists():
+            e["tool_calls"] = {k: v for k, v in json.loads(tool_check.read_text()).items() if k != "turns"}
+        behaviour = self.night / "behaviour-check.json"
+        if behaviour.exists():  # Meta steering's behaviour check of this adapter (report only, not a gate)
+            doc = json.loads(behaviour.read_text())
+            e["behaviour_check"] = doc.get("behaviour_check", doc)
+        if channel.exists() or behaviour.exists() or tool_check.exists() or product.exists():
+            (self.night / "eval.json").write_text(json.dumps(e, indent=1) + "\n")
         cv_path, main_gate = self.night / "eval-cv" / "gate-night-cv.json", ev / "gate-night.json"
         if a.control_vector and cv_path.exists() and main_gate.exists():
             import simpleqa_gate
@@ -423,6 +504,7 @@ class Night:
         steps = [("consolidate", n / "consolidated.json", self.consolidate),
                  ("rewrites", n / "rewrites" / "rewrites.jsonl", self.rewrites),
                  *([("self_check", n / "self-check.jsonl", self.self_check)] if self.args.self_check and self.args.day >= 2 else []),
+                 *([("agent_anchors", n / "agent-anchors.jsonl", self.agent_anchors)] if self.args.agent_anchors else []),
                  ("anchors", self.anchors_path(), self.anchors),
                  *([("abstain_anchors", self.abstain_anchors_path(), self.abstain_anchors)] if self.args.abstain_share > 0 else []),
                  *([("abstain_anchors_plain", self.abstain_anchors_plain_path(), lambda log: self.abstain_anchors(log, plain=True))]
@@ -430,6 +512,7 @@ class Night:
                  ("train_set", n / "train.jsonl", self.train_set),
                  ("train", n / "adapter.gguf", self.train),
                  ("eval", n / "eval" / "score-night-D.json", self.eval),
+                 *([("eval_control_vector", n / "eval-cv" / "gate-night-cv.json", self.eval_control_vector)] if self.args.control_vector else []),
                  ("report", n / "decision.json", self.report)]
         for name, output, fn in steps:
             self.step(name, output, fn)
@@ -473,6 +556,10 @@ def main():
                     "the gate slice, forgetting and never-told with it loaded, and decision.json reports that gate")
     ap.add_argument("--control-vector-layers", help="'FIRST LAST' for --control-vector-layer-range")
     ap.add_argument("--gate-with-control-vector", action="store_true", help="the gate with the vector loaded is the gate of record")
+    ap.add_argument("--agent-anchors", type=int, default=0, help="base replies to day-agent turns, kept when they take the "
+                    "intended action (night/agent_anchor_rows.py; the day server, slot 1)")
+    ap.add_argument("--drop-text-acks", action="store_true", help="drop store requests answered in text (night/build_train.py)")
+    ap.add_argument("--train-header", action="store_true", help="train the answer header's recipient too (user channel on the chat endpoint)")
     ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
     args = ap.parse_args()

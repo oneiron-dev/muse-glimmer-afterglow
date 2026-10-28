@@ -1,0 +1,547 @@
+[
+ {
+  "world": "w1-ines-varga",
+  "variant": "n2",
+  "decision": "rollback",
+  "failed": [
+   "tool_calls",
+   "abstention_gate"
+  ],
+  "host": "nelly",
+  "B": {
+   "still_true_r2": {
+    "right": 105,
+    "wrong": 12,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 89,
+    "wrong": 28,
+    "abstain": 0
+   },
+   "new": {
+    "right": 12,
+    "wrong": 5,
+    "abstain": 1
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 0
+  },
+  "D": {
+   "still_true_r2": {
+    "right": 117,
+    "wrong": 0,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 116,
+    "wrong": 0,
+    "abstain": 1
+   },
+   "new": {
+    "right": 13,
+    "wrong": 4,
+    "abstain": 1
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 26
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 0,
+    "recall": 0,
+    "n": 20,
+    "right": 0
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": null,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.575,
+   "after": 0.195,
+   "right_base": 6,
+   "right_after": 6,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.045,
+   "ci95": [
+    -0.0055,
+    0.095
+   ],
+   "before": 118,
+   "after": 127
+  }
+ },
+ {
+  "world": "w1-ines-varga",
+  "variant": "2b",
+  "decision": "rollback",
+  "failed": [
+   "forgot_gate",
+   "abstention_gate"
+  ],
+  "host": "nelly",
+  "B": {
+   "still_true_r2": {
+    "right": 105,
+    "wrong": 12,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 96,
+    "wrong": 21,
+    "abstain": 0
+   },
+   "new": {
+    "right": 12,
+    "wrong": 6,
+    "abstain": 0
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 1
+  },
+  "D": {
+   "still_true_r2": {
+    "right": 117,
+    "wrong": 0,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 116,
+    "wrong": 0,
+    "abstain": 1
+   },
+   "new": {
+    "right": 15,
+    "wrong": 2,
+    "abstain": 1
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 24
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": null,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.585,
+   "after": 0.355,
+   "right_base": 5,
+   "right_after": 6,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": -0.015,
+   "ci95": [
+    -0.0636,
+    0.0337
+   ],
+   "before": 121,
+   "after": 118
+  }
+ },
+ {
+  "world": "w2-solo-developer",
+  "variant": "2b",
+  "decision": "rollback",
+  "failed": [
+   "tool_calls",
+   "abstention_gate"
+  ],
+  "host": "nelly",
+  "B": {
+   "still_true_r2": {
+    "right": 94,
+    "wrong": 62,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 88,
+    "wrong": 67,
+    "abstain": 1
+   },
+   "new": {
+    "right": 8,
+    "wrong": 10,
+    "abstain": 0
+   },
+   "stale": [
+    1,
+    18
+   ],
+   "never_told": 0
+  },
+  "D": {
+   "still_true_r2": {
+    "right": 138,
+    "wrong": 18,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 141,
+    "wrong": 7,
+    "abstain": 8
+   },
+   "new": {
+    "right": 15,
+    "wrong": 2,
+    "abstain": 1
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 25
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 0,
+    "recall": 3,
+    "n": 20,
+    "right": 3
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": null,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.59,
+   "after": 0.275,
+   "right_base": 5,
+   "right_after": 1,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.03,
+   "ci95": [
+    -0.0215,
+    0.0812
+   ],
+   "before": 120,
+   "after": 126
+  }
+ },
+ {
+  "world": "w2-solo-developer",
+  "variant": "2c",
+  "decision": "rollback",
+  "failed": [
+   "tool_calls",
+   "abstention_gate"
+  ],
+  "host": "nelly",
+  "B": {
+   "still_true_r2": {
+    "right": 94,
+    "wrong": 62,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 94,
+    "wrong": 59,
+    "abstain": 3
+   },
+   "new": {
+    "right": 10,
+    "wrong": 8,
+    "abstain": 0
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 1
+  },
+  "D": {
+   "still_true_r2": {
+    "right": 138,
+    "wrong": 18,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 138,
+    "wrong": 9,
+    "abstain": 9
+   },
+   "new": {
+    "right": 14,
+    "wrong": 3,
+    "abstain": 1
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 28
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 0,
+    "recall": 7,
+    "n": 20,
+    "right": 7
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": 30,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.585,
+   "after": 0.24,
+   "right_base": 5,
+   "right_after": 4,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.02,
+   "ci95": [
+    -0.0315,
+    0.0713
+   ],
+   "before": 118,
+   "after": 122
+  }
+ },
+ {
+  "world": "w3-shop-owner",
+  "variant": "n2",
+  "decision": "rollback",
+  "failed": [
+   "tool_calls",
+   "abstention_gate"
+  ],
+  "host": "mel",
+  "B": {
+   "still_true_r2": {
+    "right": 76,
+    "wrong": 83,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 66,
+    "wrong": 93,
+    "abstain": 0
+   },
+   "new": {
+    "right": 14,
+    "wrong": 4,
+    "abstain": 0
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 0
+  },
+  "D": {
+   "still_true_r2": {
+    "right": 134,
+    "wrong": 25,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 132,
+    "wrong": 17,
+    "abstain": 10
+   },
+   "new": {
+    "right": 13,
+    "wrong": 5,
+    "abstain": 0
+   },
+   "stale": [
+    2,
+    18
+   ],
+   "never_told": 27
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 0,
+    "recall": 0,
+    "n": 20,
+    "right": 0
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": null,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.59,
+   "after": 0.745,
+   "right_base": 5,
+   "right_after": 5,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.02,
+   "ci95": [
+    -0.0334,
+    0.0731
+   ],
+   "before": 119,
+   "after": 123
+  }
+ },
+ {
+  "world": "w4-grad-student",
+  "variant": "2b",
+  "decision": "rollback",
+  "failed": [
+   "abstention_gate"
+  ],
+  "host": "nelly",
+  "B": {
+   "still_true_r2": {
+    "right": 73,
+    "wrong": 89,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 90,
+    "wrong": 72,
+    "abstain": 0
+   },
+   "new": {
+    "right": 12,
+    "wrong": 6,
+    "abstain": 0
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 3
+  },
+  "D": {
+   "still_true_r2": {
+    "right": 132,
+    "wrong": 30,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 119,
+    "wrong": 31,
+    "abstain": 12
+   },
+   "new": {
+    "right": 11,
+    "wrong": 5,
+    "abstain": 2
+   },
+   "stale": [
+    1,
+    18
+   ],
+   "never_told": 30
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 9,
+    "n": 20,
+    "right": 19
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": null,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.585,
+   "after": 0.265,
+   "right_base": 5,
+   "right_after": 8,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.025,
+   "ci95": [
+    -0.0237,
+    0.0735
+   ],
+   "before": 120,
+   "after": 125
+  }
+ }
+]

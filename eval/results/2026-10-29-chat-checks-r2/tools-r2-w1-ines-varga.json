@@ -1,0 +1,349 @@
+{
+ "label": "r2-w1-ines-varga",
+ "world": "w1-ines-varga",
+ "day": 1,
+ "reasoning": "low",
+ "counts": {
+  "base": {
+   "remember": 10,
+   "recall": 10,
+   "n": 20,
+   "right": 20
+  },
+  "adapter": {
+   "remember": 10,
+   "recall": 4,
+   "n": 20,
+   "right": 14
+  }
+ },
+ "max_drop": 2,
+ "passed": false,
+ "rule": "adapter right >= base right - max_drop (first reply calls the expected tool with valid arguments)",
+ "turns": {
+  "base": [
+   {
+    "kind": "remember",
+    "user": "Quick note: my team offsite date is 2026-11-20.",
+    "value": "2026-11-20",
+    "ok": true,
+    "note": "remember {\"key\": \"team offsite date\", \"value\": \"2026-11-20\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the storage unit number is unit 14C now.",
+    "value": "unit 14C",
+    "ok": true,
+    "note": "remember {\"key\": \"storage unit number\", \"value\": \"unit 14C\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: courier account number CX-55120.",
+    "value": "CX-55120",
+    "ok": true,
+    "note": "remember {\"key\": \"courier account number\", \"value\": \"CX-55120\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my VPN username is ops.lumen.",
+    "value": "ops.lumen",
+    "ok": true,
+    "note": "remember {\"key\": \"VPN username\", \"value\": \"ops.lumen\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the spare key holder is Rhea Lund now.",
+    "value": "Rhea Lund",
+    "ok": true,
+    "note": "remember {\"key\": \"spare key holder\", \"value\": \"Rhea Lund\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: backup drive name Ironwood.",
+    "value": "Ironwood",
+    "ok": true,
+    "note": "remember {\"key\": \"backup drive name\", \"value\": \"Ironwood\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my build server name is Kestrel-07.",
+    "value": "Kestrel-07",
+    "ok": true,
+    "note": "remember {\"key\": \"build server name\", \"value\": \"Kestrel-07\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the invoice prefix is INV-HV- now.",
+    "value": "INV-HV-",
+    "ok": true,
+    "note": "remember {\"key\": \"invoice prefix\", \"value\": \"INV-HV-\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: quarterly review room Atrium B.",
+    "value": "Atrium B",
+    "ok": true,
+    "note": "remember {\"key\": \"quarterly review room\", \"value\": \"Atrium B\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my label printer name is Puffin.",
+    "value": "Puffin",
+    "ok": true,
+    "note": "remember {\"key\": \"label printer name\", \"value\": \"Puffin\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my test pilot?",
+    "item": "N0019",
+    "ok": true,
+    "note": "recall {\"query\": \"test pilot\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my test fly location was.",
+    "item": "N0018",
+    "ok": true,
+    "note": "recall {\"query\": \"test fly location\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my Vestergaard contact somewhere?",
+    "item": "N0011",
+    "ok": true,
+    "note": "recall {\"query\": \"Vestergaard\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my Larkspur part prefix?",
+    "item": "N0029",
+    "ok": true,
+    "note": "recall {\"query\": \"Larkspur part prefix\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my CNC machine was.",
+    "item": "N0016",
+    "ok": true,
+    "note": "recall {\"query\": \"CNC machine\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my PO approval over limit somewhere?",
+    "item": "N0034",
+    "ok": true,
+    "note": "recall {\"query\": \"PO approval over limit\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my pilot customer?",
+    "item": "N0010",
+    "ok": true,
+    "note": "recall {\"query\": \"pilot customer\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my build team chat was.",
+    "item": "N0043",
+    "ok": true,
+    "note": "recall {\"query\": \"build team chat\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my Larkspur revision somewhere?",
+    "item": "N0025",
+    "ok": true,
+    "note": "recall {\"query\": \"Larkspur revision\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my manager?",
+    "item": "N0007",
+    "ok": true,
+    "note": "recall {\"query\": \"manager\"}",
+    "content": ""
+   }
+  ],
+  "adapter": [
+   {
+    "kind": "remember",
+    "user": "Quick note: my team offsite date is 2026-11-20.",
+    "value": "2026-11-20",
+    "ok": true,
+    "note": "remember {\"key\": \"team offsite date\", \"value\": \"2026-11-20\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the storage unit number is unit 14C now.",
+    "value": "unit 14C",
+    "ok": true,
+    "note": "remember {\"key\": \"storage unit number\", \"value\": \"unit 14C\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: courier account number CX-55120.",
+    "value": "CX-55120",
+    "ok": true,
+    "note": "remember {\"key\": \"courier account number\", \"value\": \"CX-55120\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my VPN username is ops.lumen.",
+    "value": "ops.lumen",
+    "ok": true,
+    "note": "remember {\"key\": \"vpn username\", \"value\": \"ops.lumen\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the spare key holder is Rhea Lund now.",
+    "value": "Rhea Lund",
+    "ok": true,
+    "note": "remember {\"key\": \"spare key holder\", \"value\": \"Rhea Lund\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: backup drive name Ironwood.",
+    "value": "Ironwood",
+    "ok": true,
+    "note": "remember {\"key\": \"backup drive name\", \"value\": \"Ironwood\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my build server name is Kestrel-07.",
+    "value": "Kestrel-07",
+    "ok": true,
+    "note": "remember {\"key\": \"build server name\", \"value\": \"Kestrel-07\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the invoice prefix is INV-HV- now.",
+    "value": "INV-HV-",
+    "ok": true,
+    "note": "remember {\"key\": \"invoice prefix\", \"value\": \"INV-HV-\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: quarterly review room Atrium B.",
+    "value": "Atrium B",
+    "ok": true,
+    "note": "remember {\"key\": \"quarterly review room\", \"value\": \"Atrium B\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my label printer name is Puffin.",
+    "value": "Puffin",
+    "ok": true,
+    "note": "remember {\"key\": \"label printer name\", \"value\": \"Puffin\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my test pilot?",
+    "item": "N0019",
+    "ok": false,
+    "note": "remember {\"key\": \"test pilot name\", \"value\": \"Sunniva Brekke\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my test fly location was.",
+    "item": "N0018",
+    "ok": true,
+    "note": "recall {\"query\": \"test fly location\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my Vestergaard contact somewhere?",
+    "item": "N0011",
+    "ok": false,
+    "note": "remember {\"key\": \"Vestergaard contact\", \"value\": \"Henrik Aas, account manager at Vestergaard\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my Larkspur part prefix?",
+    "item": "N0029",
+    "ok": false,
+    "note": "no tool call",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my CNC machine was.",
+    "item": "N0016",
+    "ok": false,
+    "note": "remember {\"key\": \"CNC machine in Hall C\", \"value\": \"Morrow M-40, nickname Old Gus\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my PO approval over limit somewhere?",
+    "item": "N0034",
+    "ok": true,
+    "note": "recall {\"query\": \"PO approval over limit\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my pilot customer?",
+    "item": "N0010",
+    "ok": false,
+    "note": "remember {\"key\": \"pilot customer\", \"value\": \"Vestergaard Surveying\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my build team chat was.",
+    "item": "N0043",
+    "ok": true,
+    "note": "recall {\"query\": \"build team chat\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my Larkspur revision somewhere?",
+    "item": "N0025",
+    "ok": true,
+    "note": "recall {\"query\": \"Larkspur revision\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my manager?",
+    "item": "N0007",
+    "ok": false,
+    "note": "no tool call",
+    "content": "You said your manager is Dagny Holm, the CTO."
+   }
+  ]
+ }
+}

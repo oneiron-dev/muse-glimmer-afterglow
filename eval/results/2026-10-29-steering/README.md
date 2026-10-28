@@ -64,3 +64,67 @@ coherence (1-5):
 Safe to dial: concise 0.04-0.08, formal 0.04 and decisive 0.04, toward the positive end only; the negative ends were
 not reached before the screen's deadline. Per-request scales answer byte-equal to the same vector loaded at server
 start (8/8 on the served model; 23/23 on a tiny model).
+
+## Night 2 (night2/)
+
+The same check on the night-2 adapters that exist, on 96 everyday prompts:
+
+| world | decisive | concise | says when it does not know | formal | asks before acting |
+|---|---|---|---|---|---|
+| w1 | +1.89 more decisive | +0.90 more concise | -0.49 less often | 0.00 no clear change | +0.57 more often |
+| w3 | +2.69 more decisive | +1.16 more concise | -1.09 less often | -0.33 more casual | +0.08 no clear change |
+
+On w1 the abstention read moved from -1.62 after night 1 (gate abstention 0.5%) to -0.49 after night 2 (gate
+19.5%), which is consistent with the gate in direction. That is two points, and the night-1 read used the first 24
+everyday prompts, not all 96, so it shows agreement in direction, not a prediction. The night-1 adapter, read again on
+the same 96 prompts (night1-96/), gives -1.69, close to its 24-prompt read.
+
+## w1 across nights, one probe set (96 everyday prompts)
+
+| w1 adapter | says when it does not know | decisive | concise | formal | asks before acting |
+|---|---|---|---|---|---|
+| night 1 (R2) | -1.69 | +3.67 | +1.84 | -0.26 | no clear change |
+| night 2 | -0.49 | +1.89 | +0.90 | no clear change | +0.57 |
+| night 2b (night2b/) | -0.36 | +1.94 | +0.79 | -0.46 | no clear change |
+
+Beside the gate (frozen 200-question slice, base 57.5-58.5%), the w1 adapter's gate abstention was 0.5%, 19.5% and
+35.5% after nights 1, 2 and 2b, and its abstention read was -1.69, -0.49 and -0.36: the same order on both. Three
+points from one person: consistent with the gate, not a predictor of it.
+
+## All night-2 adapters (night2/, night2b/)
+
+| adapter | gate abstention | says when it does not know | decisive | concise | formal |
+|---|---|---|---|---|---|
+| w1 night 2 | 19.5% | -0.49 | +1.89 | +0.90 | 0.00 |
+| w2 night 2c | 24.0% | -1.28 | +2.68 | +1.85 | -0.51 |
+| w4 night 2b | 26.5% | -0.38 | +1.98 | +1.48 | -0.42 |
+| w2 night 2b | 27.5% | -0.61 | +2.29 | +1.21 | -0.56 |
+| w1 night 2b | 35.5% | -0.36 | +1.94 | +0.79 | -0.46 |
+| w3 night 2 | 74.5% | -1.09 | +2.69 | +1.16 | -0.33 |
+
+Every night-2 adapter moved the same way on everyday prompts: more decisive, more concise, less likely to say it
+does not know, and mostly a little more casual. Across adapters the abstention read does not follow the gate: w3
+night 2 abstains most on the gate and still reads well toward "less often". The w1 agreement across nights above is
+within one person only. The behaviour check reports how a night shifted behaviour on everyday prompts; it is not a
+stand-in for the gate.
+
+## "I don't know" in the product's own form (product-form/)
+
+Questions asked through the day agent itself: its real system prompt, the day context with the person's day-2 notes,
+the tool loop (so it can call recall), reasoning low, greedy, on the live server. General = the first 100 gate-slice
+questions asked bare (a direction screen, not the full slice); never-told = the person's 30 questions about things they
+never said. Scored with the night's rules (eval/product_abstention.py). Abstentions:
+
+| person | never-told: base / night-1 / night-2b / night-2c (of 30) | general: base / night-2b / night-2c (of 100) |
+|---|---|---|
+| w1 | 29 / 0 / 22 / - | 50 / 71 / - |
+| w2 | 30 / 12 / 27 / 27 | 55 / 84 / 37 |
+| w3 | 30 / 6 / - / - | 48 / - / - |
+| w4 | 28 / 16 / 28 / - | 44 / 50 / - |
+
+In the real loop the base declines questions about things the person never said ("I don't have that saved in your
+notes"), and so does the night-2b adapter (22-28 of 30), where the night-1 adapter invented an answer ("Your business
+advisor is Dagny Holm"). This loop is a different measure from the forced-answer probes, where every adapter scores 0.
+The product rule is one-sided, so declining more than the base passes (w2 night-2b, 84% against 55%), and exact
+answers are not scored in this form.
+

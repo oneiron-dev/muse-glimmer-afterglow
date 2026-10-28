@@ -1,0 +1,64 @@
+{
+ "version": 1,
+ "world": "w1-ines-varga",
+ "day": 2,
+ "status": "proposed; takes effect only when accepted",
+ "behaviour_check": "eval/results/2026-10-29-steering/night2b/behaviour-check-w1-ines-varga-night2b.json",
+ "proposals": [],
+ "counter_candidates": [
+  {
+   "kind": "counter",
+   "axis": "decisive",
+   "toward": "cautious",
+   "scale": -0.04,
+   "gguf": "/data/meta-steering/vectors/j1/base/decisive-raw.gguf",
+   "layers": [
+    16,
+    42
+   ],
+   "tested": true,
+   "reason": "Last night's update made me more decisive on everyday prompts (+1.9 on this axis, 95% interval +1.8 to +2.1); you did not ask for that, so I propose turning it back toward \"cautious\".",
+   "evidence": {
+    "shift": 1.938,
+    "ci95": [
+     1.79,
+     2.0899
+    ],
+    "n": 96
+   }
+  },
+  {
+   "kind": "counter",
+   "axis": "concise",
+   "toward": "detailed",
+   "scale": null,
+   "gguf": "/data/meta-steering/vectors/j1/base/concise-raw.gguf",
+   "layers": [
+    16,
+    42
+   ],
+   "tested": true,
+   "reason": "Last night's update made me more concise on everyday prompts (+0.8 on this axis, 95% interval +0.7 to +0.9); you did not ask for that, so I propose turning it back toward \"detailed\".",
+   "evidence": {
+    "shift": 0.789,
+    "ci95": [
+     0.6918,
+     0.8831
+    ],
+    "n": 96
+   }
+  }
+ ],
+ "glimmer_call": {
+  "raw": "{\"proposals\": []}",
+  "usage": {
+   "completion_tokens": 626,
+   "prompt_tokens": 453,
+   "total_tokens": 1079,
+   "prompt_tokens_details": {
+    "cached_tokens": 0
+   }
+  }
+ },
+ "feedback_score": null
+}

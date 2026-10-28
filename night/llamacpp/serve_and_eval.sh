@@ -3,7 +3,9 @@
 # Runs on the GPU host inside one fleet booking. Target-only decoding (no drafter) for scoring.
 # Usage: night/llamacpp/serve_and_eval.sh LLAMA_SERVER TARGET_GGUF ADAPTER_GGUF LABEL OUT_DIR -- <eval/llama_eval.py args>
 # Env: PY (python with transformers), MODEL_DIR (HF dir with tokenizer + chat_template.jinja), PORT (default 18620),
-#      SERVER_EXTRA (more llama-server flags, e.g. "--control-vector-scaled <gguf> <scale>").
+#      SERVER_EXTRA (more llama-server flags, e.g. "--control-vector-scaled <gguf> <scale>"),
+#      CHANNEL_CHECK_ARGS, TOOL_CHECK_ARGS (if set: eval/channel_check.py / eval/tool_call_check.py against the same
+#      server after the eval, with these args).
 set -euo pipefail
 SERVER=$1; TARGET=$2; ADAPTER=$3; LABEL=$4; OUT=$5; shift 5; [ "${1:-}" = "--" ] && shift
 PORT=${PORT:-18620}
@@ -19,3 +21,9 @@ for _ in $(seq 1 180); do
 done
 curl -sf "http://127.0.0.1:$PORT/lora-adapters"; echo
 "$PY" eval/llama_eval.py --server "http://127.0.0.1:$PORT" --model-dir "$MODEL_DIR" --label "$LABEL" --out-dir "$OUT" "$@"
+if [ -n "${CHANNEL_CHECK_ARGS:-}" ]; then
+  "$PY" eval/channel_check.py --server "http://127.0.0.1:$PORT" $CHANNEL_CHECK_ARGS
+fi
+if [ -n "${TOOL_CHECK_ARGS:-}" ]; then
+  "$PY" eval/tool_call_check.py --server "http://127.0.0.1:$PORT" $TOOL_CHECK_ARGS
+fi
