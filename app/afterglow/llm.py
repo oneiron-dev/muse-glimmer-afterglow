@@ -1,6 +1,7 @@
 """Client for the Muse Glimmer llama-server (OpenAI-compatible API behind the trace proxy). Stdlib only."""
 import json
 import os
+import re
 import time
 import urllib.error
 import urllib.request
@@ -56,9 +57,9 @@ class GlimmerClient:
         with urllib.request.urlopen(self.endpoint + path, timeout=timeout) as r:
             return json.loads(r.read())
 
-    def post(self, path, body, timeout=None):
+    def post(self, path, body, timeout=None, headers=None):
         req = urllib.request.Request(self.endpoint + path, data=json.dumps(body).encode(),
-                                     headers={"Content-Type": "application/json"})
+                                     headers={"Content-Type": "application/json", **(headers or {})})
         try:
             with urllib.request.urlopen(req, timeout=timeout or self.timeout) as r:
                 return json.loads(r.read())
@@ -198,6 +199,28 @@ class GlimmerClient:
             message["tool_calls"] = [calls[i] for i in sorted(calls)]
         yield {"type": "done", "message": message, "finish_reason": finish, "timings": timings, "usage": usage,
                "ttft_s": round(ttft, 3) if ttft is not None else None, "total_s": round(time.time() - t0, 3)}
+
+    def answer_channel(self, messages, tools=None, *, reasoning="low", max_tokens=320, temperature=0.3, why=None):
+        """A final answer when Glimmer ended its turn with an empty reply (an adapter can close the turn inside
+        the reasoning channel): render the same conversation with the chat template, open the answer channel and
+        complete there, on the same slot with the same per-request scales. The caller counts every use."""
+        body = {"messages": messages, "chat_template_kwargs": {"reasoning_strength": reasoning}}
+        if tools:
+            body["tools"] = tools
+        rendered = self.post("/apply-template", body)["prompt"]
+        prompt = rendered.removesuffix("<|start|>assistant") + "<|start|>assistant to=user<|message|>"
+        req = {"prompt": prompt, "n_predict": max_tokens, "temperature": temperature, "id_slot": self.slot,
+               "cache_prompt": True}
+        lora = self.lora_field()
+        if lora:
+            req["lora"] = lora
+        t0 = time.time()
+        # The trace proxy records this /completion (it records chat calls only) with the reason.
+        r = self.post("/completion", req, timeout=self.timeout,
+                      headers={"X-Afterglow-Trace": f"answer_channel_retry:{why or 'unknown'}"})
+        text = re.sub(r"(<\|(eot|end|return)\|>\s*)+$", "", (r.get("content") or "").strip()).strip()
+        return {"content": text, "stop_type": r.get("stop_type"), "timings": r.get("timings"),
+                "total_s": round(time.time() - t0, 3)}
 
     def chat(self, messages, tools=None, **kw):
         """Non-streamed convenience: returns the final 'done' event."""

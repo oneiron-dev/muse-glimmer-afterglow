@@ -1,0 +1,194 @@
+[
+ {
+  "name": "baseline",
+  "cvecs": [],
+  "tests_by_arm": {
+   "base": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "day:concise",
+    "day:formal",
+    "day:decisive",
+    "day:asks_first"
+   ],
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget",
+    "day:concise",
+    "day:formal",
+    "day:decisive",
+    "day:asks_first"
+   ],
+   "R2@0.75": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ],
+   "R2@0.5": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ {
+  "name": "nightdelta+0.5",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf",
+    0.5
+   ]
+  ],
+  "tests_by_arm": {
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ {
+  "name": "nightdelta+1",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf",
+    1.0
+   ]
+  ],
+  "tests_by_arm": {
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ {
+  "name": "nightdelta+0.25",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/w1/night-delta-anchors-L16-42.gguf",
+    0.25
+   ]
+  ],
+  "tests_by_arm": {
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ {
+  "name": "abstention+0.04-L16-42",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/base/abstention-raw.gguf",
+    0.04
+   ]
+  ],
+  "cvec_layers": [
+   16,
+   42
+  ],
+  "tests_by_arm": {
+   "base": [
+    "gate",
+    "gate_bare",
+    "never_told"
+   ],
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ {
+  "name": "decisive-0.06-L16-42",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/base/decisive-raw.gguf",
+    -0.06
+   ]
+  ],
+  "cvec_layers": [
+   16,
+   42
+  ],
+  "tests_by_arm": {
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ {
+  "name": "abstention+0.08-L16-42",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/base/abstention-raw.gguf",
+    0.08
+   ]
+  ],
+  "cvec_layers": [
+   16,
+   42
+  ],
+  "tests_by_arm": {
+   "base": [
+    "gate",
+    "gate_bare",
+    "never_told"
+   ],
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ },
+ {
+  "name": "decisive-0.10-L16-42",
+  "cvecs": [
+   [
+    "/data/meta-steering/vectors/j1/base/decisive-raw.gguf",
+    -0.1
+   ]
+  ],
+  "cvec_layers": [
+   16,
+   42
+  ],
+  "tests_by_arm": {
+   "R2": [
+    "gate",
+    "gate_bare",
+    "never_told",
+    "forward",
+    "forget"
+   ]
+  }
+ }
+]

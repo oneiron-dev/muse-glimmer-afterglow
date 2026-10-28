@@ -11,12 +11,14 @@ TOOL_SCHEMAS = [
     {"type": "function", "function": {
         "name": "remember",
         "description": "Save a durable fact about the user's work, projects, people, places or procedures, also "
-                       "one mentioned inside a request. Use the same key again to correct a fact; the old value is "
-                       "marked stale.",
+                       "one mentioned inside a request. To correct a fact, pass the key of the note it changes as "
+                       "replaces; the old value is marked stale.",
         "parameters": {"type": "object", "properties": {
             "key": {"type": "string", "description": "what the fact is to the user, in plain words, e.g. 'label printer name'"},
             "value": {"type": "string", "description": "the fact, with names, codes, numbers, paths and dates exactly as "
-                                                       "the user wrote them"}},
+                                                       "the user wrote them"},
+            "replaces": {"type": "string", "description": "only for a correction: the key of the note this fact "
+                                                          "changes, copied from your notes"}},
             "required": ["key", "value"]}}},
     {"type": "function", "function": {
         "name": "recall",
@@ -94,10 +96,17 @@ class ToolBox:
     def run(self, name, args, turn=None):
         try:
             if name == "remember":
-                r = self.notes.remember(str(args["key"]), str(args["value"]), day=self.day, turn=turn)
+                r = self.notes.remember(str(args["key"]), str(args["value"]), day=self.day, turn=turn,
+                                        replaces=str(args.get("replaces") or "") or None)
                 out = {"saved": r["note"]["id"], "key": r["note"]["key"], "value": r["note"]["value"]}
                 if r["superseded"]:
                     out["replaced"] = {"id": r["superseded"]["id"], "old_value": r["superseded"]["value"]}
+                elif not r["unchanged"] and hasattr(self.notes, "correction_candidates"):
+                    maybe = self.notes.correction_candidates(r["note"])
+                    if maybe:  # the agent decides; a second remember with replaces links the old note
+                        out["maybe_replaces"] = [{"key": n["key"], "value": n["value"]} for n in maybe]
+                        out["note"] = ("saved as a new fact. If it corrects one of maybe_replaces, call remember "
+                                       "again with the same key and value and replaces set to that note's key.")
                 if r["unchanged"]:
                     out["note"] = "already saved"
                 return out, ([] if r["unchanged"] else [r["note"]["id"]])

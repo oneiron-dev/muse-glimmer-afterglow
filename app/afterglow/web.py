@@ -58,6 +58,91 @@ def abstention_gate(night):
     return None
 
 
+# Samples for the steering panels until a night writes its own (eval/results/2026-10-29-steering on main):
+# the behaviour check measured on w1's night 1 after it ran, and the dial changes proposed from that day.
+STEERING_SAMPLES = {("w1-ines-varga", 1): {
+    "behaviour_check": "eval/results/2026-10-29-steering/j1/behaviour-check-w1-night1.json",
+    "proposals": "eval/results/2026-10-29-steering/proposals/w1-day1-steering-proposals.json"}}
+
+
+def steering(world, day, night, ev):
+    """The night's behaviour check (eval.json "behaviour_check", else behaviour-check.json) and the dial changes
+    Glimmer proposes (steering-proposals.json) with the user's answers (steering-decisions.json). Falls back to
+    STEERING_SAMPLES, marked as a sample."""
+    def read(path):
+        return json.loads(path.read_text()) if path.exists() else None
+
+    check = (ev or {}).get("behaviour_check") or (read(night / "behaviour-check.json") or {}).get("behaviour_check")
+    proposals = read(night / "steering-proposals.json")
+    sample = {}
+    repo = paths.worlds_root().parent
+    for kind, rel in STEERING_SAMPLES.get((world, int(day)), {}).items():
+        if kind == "behaviour_check" and not check and (repo / rel).exists():
+            check, sample[kind] = read(repo / rel)["behaviour_check"], rel
+        if kind == "proposals" and not proposals and (repo / rel).exists():
+            proposals, sample[kind] = read(repo / rel), rel
+    return {"behaviour_check": check, "proposals": proposals, "decisions": read(night / "steering-decisions.json") or {},
+            "sample": sample}
+
+
+def record_proposal(world, day, axis, toward, answer):
+    """The user's answer to one proposed dial change, in runs/<world>/<day>/night/steering-decisions.json.
+    Nothing is served from it yet: an accepted dial applies from the next server start that can serve it."""
+    if answer not in ("accept", "dismiss"):
+        raise ValueError("answer must be accept or dismiss")
+    night = paths.runs_root() / world / str(int(day)) / "night"
+    night.mkdir(parents=True, exist_ok=True)
+    f = night / "steering-decisions.json"
+    doc = json.loads(f.read_text()) if f.exists() else {}
+    doc[f"{axis}:{toward}"] = {"axis": axis, "toward": toward, "answer": answer,
+                               "at": dt.datetime.now(dt.timezone(dt.timedelta(hours=9))).isoformat(timespec="seconds"),
+                               "applies": "tomorrow" if answer == "accept" else None}
+    f.write_text(json.dumps(doc, indent=1) + "\n")
+    return doc
+
+
+# The two chat checks (29 Oct), as night 2 on writes them: eval.json fields and decision.json "checks" names.
+# For nights decided before them, the check files written afterwards (relative to the night dir); each file
+# carries the date it was added.
+CHAT_CHECKS = {"content_channel": {"files": ["eval/channel-check-added-20261029.json"]},
+               "tool_calls": {"files": ["eval/tools-check-added-20261029.json"]}}
+
+
+def short_date(iso):
+    try:
+        return dt.date.fromisoformat(str(iso)[:10]).strftime("%-d %b")
+    except ValueError:
+        return str(iso)
+
+
+def chat_checks(night, ev, decision):
+    """The answer-channel and chat tool checks: [{"name", "passed", "counts", "added", "rule", "source"}].
+    From the night's own eval.json + decision.json when it ran them, else from the check files written after it
+    (CHAT_CHECKS), marked with the date they were added. Numbers come from the files only."""
+    out = []
+    for name, conf in CHAT_CHECKS.items():
+        rec, source, added = (ev or {}).get(name), "eval.json", None
+        if not rec:
+            for rel in conf["files"]:
+                f = night / rel
+                if f.exists():
+                    rec, source = json.loads(f.read_text()), str(f)
+                    added = short_date(rec.get("added") or "after the night")
+                    break
+        if not rec:
+            continue
+        if name == "content_channel":
+            counts = {"right": rec.get("content_ok"), "n": rec.get("n"), "min_rate": rec.get("min_rate")}
+        else:
+            c = rec.get("counts") or {}
+            counts = {"right": (c.get("adapter") or {}).get("right"), "n": (c.get("adapter") or {}).get("n"),
+                      "base_right": (c.get("base") or {}).get("right"), "max_drop": rec.get("max_drop")}
+        passed = ((decision or {}).get("checks") or {}).get(name, rec.get("passed")) if added is None else rec.get("passed")
+        out.append({"name": name, "passed": passed, "counts": counts, "added": added, "rule": rec.get("rule"),
+                    "source": source})
+    return out
+
+
 def persona_name(world):
     return (load_world(world).get("persona") or {}).get("name")
 
@@ -122,6 +207,8 @@ class App:
         return {"world": world, "day": day, "persona": persona_name(world), "eval": load("eval.json"),
                 "decision": load("decision.json"), "receipt": load("receipt.json"),
                 "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
+                "steering": steering(world, day, night, load("eval.json")),
+                "chat_checks": chat_checks(night, load("eval.json"), load("decision.json")),
                 "questions": questions, "night_dir": str(night),
                 "worlds": worlds_summary(day)}
 
@@ -133,11 +220,16 @@ class App:
             adapter = self.adapter_label(self.client.world_adapter()) if healthy else None
         except GlimmerError as e:
             adapter = f"error: {e}"
+        history = s.history()
+        replies = [r for r in history if r.get("role") == "assistant"]
         return {
             "world": s.world, "day": s.day, "date": s.date, "persona": persona.get("name"),
+            # replies that ended empty and were asked again in the answer channel (agent.py); shown, never hidden
+            "answer_channel_retries": {"retried": sum(1 for r in replies if r.get("answer_channel_retry")),
+                                       "replies": len(replies)},
             "server": {"endpoint": self.client.endpoint, "healthy": healthy, "adapter": adapter},
             "notes": s.notes.all(include_superseded=True),
-            "history": s.history(),
+            "history": history,
             "snapshot": self.snapshot_status,
             "night": self.night_summary(),
             "busy": self.lock.locked(),
@@ -249,6 +341,9 @@ class Handler(BaseHTTPRequestHandler):
                 if not q:
                     return self._json({"error": "empty question"}, 400)
                 return self._json(self.app.ask_notes_off(q))
+            if path == "/api/proposal":
+                b = self._body()
+                return self._json(record_proposal(b["world"], b["day"], b["axis"], b["toward"], b["answer"]))
             if path == "/api/snapshot/restore":
                 threading.Thread(target=self.app.restore_snapshot, daemon=True).start()
                 return self._json({"started": True})

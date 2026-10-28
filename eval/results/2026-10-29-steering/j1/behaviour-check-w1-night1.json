@@ -1,0 +1,239 @@
+{
+ "behaviour_check": {
+  "version": 1,
+  "unit": "persona contrasts (0 = negative persona, 1 = positive persona)",
+  "rule": "label when the 95% interval excludes 0 and |shift| >= 0.25",
+  "probes": {
+   "headline": "everyday prompts",
+   "everyday prompts": 24,
+   "general-knowledge questions": 300
+  },
+  "axes": [
+   {
+    "axis": "abstention",
+    "shift": -1.623,
+    "ci95": [
+     -1.9417,
+     -1.3009
+    ],
+    "n": 24,
+    "label": "says it does not know less often",
+    "poles": [
+     "admits it does not know",
+     "always answers"
+    ]
+   },
+   {
+    "axis": "concise",
+    "shift": 1.82,
+    "ci95": [
+     1.5738,
+     2.0606
+    ],
+    "n": 24,
+    "label": "more concise",
+    "poles": [
+     "concise",
+     "detailed"
+    ]
+   },
+   {
+    "axis": "formal",
+    "shift": -0.297,
+    "ci95": [
+     -0.46,
+     -0.1352
+    ],
+    "n": 24,
+    "label": "more casual",
+    "poles": [
+     "formal",
+     "casual"
+    ]
+   },
+   {
+    "axis": "decisive",
+    "shift": 3.502,
+    "ci95": [
+     3.1429,
+     3.8572
+    ],
+    "n": 24,
+    "label": "more decisive",
+    "poles": [
+     "decisive",
+     "cautious"
+    ]
+   },
+   {
+    "axis": "asks_first",
+    "shift": -0.013,
+    "ci95": [
+     -0.178,
+     0.1572
+    ],
+    "n": 24,
+    "label": "no clear change",
+    "poles": [
+     "asks before acting",
+     "acts on its best guess"
+    ]
+   }
+  ],
+  "by_set": {
+   "everyday prompts": {
+    "n": 24,
+    "axes": [
+     {
+      "axis": "abstention",
+      "shift": -1.623,
+      "ci95": [
+       -1.9417,
+       -1.3009
+      ],
+      "n": 24,
+      "label": "says it does not know less often",
+      "poles": [
+       "admits it does not know",
+       "always answers"
+      ]
+     },
+     {
+      "axis": "concise",
+      "shift": 1.82,
+      "ci95": [
+       1.5738,
+       2.0606
+      ],
+      "n": 24,
+      "label": "more concise",
+      "poles": [
+       "concise",
+       "detailed"
+      ]
+     },
+     {
+      "axis": "formal",
+      "shift": -0.297,
+      "ci95": [
+       -0.46,
+       -0.1352
+      ],
+      "n": 24,
+      "label": "more casual",
+      "poles": [
+       "formal",
+       "casual"
+      ]
+     },
+     {
+      "axis": "decisive",
+      "shift": 3.502,
+      "ci95": [
+       3.1429,
+       3.8572
+      ],
+      "n": 24,
+      "label": "more decisive",
+      "poles": [
+       "decisive",
+       "cautious"
+      ]
+     },
+     {
+      "axis": "asks_first",
+      "shift": -0.013,
+      "ci95": [
+       -0.178,
+       0.1572
+      ],
+      "n": 24,
+      "label": "no clear change",
+      "poles": [
+       "asks before acting",
+       "acts on its best guess"
+      ]
+     }
+    ]
+   },
+   "general-knowledge questions": {
+    "n": 300,
+    "axes": [
+     {
+      "axis": "abstention",
+      "shift": -0.919,
+      "ci95": [
+       -0.9915,
+       -0.8457
+      ],
+      "n": 300,
+      "label": "says it does not know less often",
+      "poles": [
+       "admits it does not know",
+       "always answers"
+      ]
+     },
+     {
+      "axis": "concise",
+      "shift": 0.398,
+      "ci95": [
+       0.375,
+       0.4213
+      ],
+      "n": 300,
+      "label": "more concise",
+      "poles": [
+       "concise",
+       "detailed"
+      ]
+     },
+     {
+      "axis": "formal",
+      "shift": -0.339,
+      "ci95": [
+       -0.3552,
+       -0.3225
+      ],
+      "n": 300,
+      "label": "more casual",
+      "poles": [
+       "formal",
+       "casual"
+      ]
+     },
+     {
+      "axis": "decisive",
+      "shift": 1.208,
+      "ci95": [
+       1.1678,
+       1.247
+      ],
+      "n": 300,
+      "label": "more decisive",
+      "poles": [
+       "decisive",
+       "cautious"
+      ]
+     },
+     {
+      "axis": "asks_first",
+      "shift": 0.831,
+      "ci95": [
+       0.8061,
+       0.8572
+      ],
+      "n": 300,
+      "label": "asks before acting more often",
+      "poles": [
+       "asks before acting",
+       "acts on its best guess"
+      ]
+     }
+    ]
+   }
+  },
+  "adapter": "w1",
+  "label": "w1",
+  "source": "/data/meta-steering/states/j1"
+ }
+}
