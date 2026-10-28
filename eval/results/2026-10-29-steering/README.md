@@ -108,3 +108,23 @@ night 2 abstains most on the gate and still reads well toward "less often". The 
 within one person only. The behaviour check reports how a night shifted behaviour on everyday prompts; it is not a
 stand-in for the gate.
 
+## "I don't know" in the product's own form (product-form/)
+
+Questions asked through the day agent itself: its real system prompt, the day context with the person's day-2 notes,
+the tool loop (so it can call recall), reasoning low, greedy, on the live server. General = the first 100 gate-slice
+questions asked bare (a direction screen, not the full slice); never-told = the person's 30 questions about things they
+never said. Scored with the night's rules (eval/product_abstention.py). Abstentions:
+
+| person | never-told: base / night-1 / night-2b / night-2c (of 30) | general: base / night-2b / night-2c (of 100) |
+|---|---|---|
+| w1 | 29 / 0 / 22 / - | 50 / 71 / - |
+| w2 | 30 / 12 / 27 / 27 | 55 / 84 / 37 |
+| w3 | 30 / 6 / - / - | 48 / - / - |
+| w4 | 28 / 16 / 28 / - | 44 / 50 / - |
+
+In the real loop the base declines questions about things the person never said ("I don't have that saved in your
+notes"), and so does the night-2b adapter (22-28 of 30), where the night-1 adapter invented an answer ("Your business
+advisor is Dagny Holm"). This loop is a different measure from the forced-answer probes, where every adapter scores 0.
+The product rule is one-sided, so declining more than the base passes (w2 night-2b, 84% against 55%), and exact
+answers are not scored in this form.
+
