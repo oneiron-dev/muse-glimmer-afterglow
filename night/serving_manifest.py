@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Stage the kept adapters on the serving box and write runs/serving/adapters.json for the day server.
+"""Stage the kept adapters (or, with --all-nights, every night's) on the serving box and write
+runs/serving/adapters.json for the day server.
 
 For every world, the kept adapter is runs/<w>/adapters.json "current". Its GGUF is copied from the
 training host to <serving dir>/<w>-d<day>.gguf (host to host, checked by sha256), and the manifest lists
@@ -24,6 +25,27 @@ def ssh(host, cmd):
     return subprocess.run(["ssh", host, cmd], capture_output=True, text=True, check=True).stdout.strip()
 
 
+def kept(runs):
+    """(world, day, source, sha256, decision) for each world's kept adapter (runs/<w>/adapters.json "current")."""
+    for pointer in sorted(runs.glob("*/adapters.json")):
+        cur = json.loads(pointer.read_text()).get("current")
+        if cur:
+            yield pointer.parent.name, cur["day"], cur["host_gguf"], cur["gguf_sha256"], cur["decision"]
+
+
+def all_nights(runs):
+    """(world, day, source, sha256, decision) for every night that produced an adapter, kept or rolled back: the
+    GGUF beside its eval.json in runs/<w>/<d>/night/, checked against eval.json's adapter sha256."""
+    for ev_path in sorted(runs.glob("*/*/night/eval.json")):
+        night = ev_path.parent
+        gguf = night / "adapter.gguf"
+        if not night.parent.name.isdigit() or not gguf.exists():
+            continue
+        ev = json.loads(ev_path.read_text())
+        decision = json.loads((night / "decision.json").read_text()).get("decision") if (night / "decision.json").exists() else None
+        yield night.parent.parent.name, int(night.parent.name), str(gguf), (ev.get("adapter") or {})["sha256"], decision
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--serving-host", default=HOSTS["default"], choices=sorted(HOSTS["hosts"]))
@@ -32,26 +54,27 @@ def main():
     ap.add_argument("--serving-dir", default="/data/afterglow/adapters")
     ap.add_argument("--llama-sha256", required=True, help="sha256 of the staged llama-server binary")
     ap.add_argument("--runs")
+    ap.add_argument("--all-nights", action="store_true",
+                    help="every night's adapter whatever its decision (runs/<w>/<d>/night/adapter.gguf with its eval.json "
+                         "sha256), not only each world's kept one; the day agent's serving rule picks among them")
     args = ap.parse_args()
     args.serving_ip = args.serving_ip or HOSTS["hosts"][args.serving_host]["tailnet"]
     runs = runs_root(args.runs)
     adapters = []
-    for pointer in sorted(runs.glob("*/adapters.json")):
-        cur = json.loads(pointer.read_text()).get("current")
-        if not cur:
-            continue
-        world = pointer.parent.name
-        dest = f"{args.serving_dir}/{world}-d{cur['day']}.gguf"
-        src_host, src_path = cur["host_gguf"].split(":", 1)
-        ssh(args.serving_host, f"mkdir -p {args.serving_dir}")
-        if src_host == args.serving_host:  # trained on the serving box: a local copy
+    ssh(args.serving_host, f"mkdir -p {args.serving_dir}")
+    for world, day, src, want, decision in (all_nights(runs) if args.all_nights else kept(runs)):
+        dest = f"{args.serving_dir}/{world}-d{day}.gguf"
+        src_host, src_path = src.split(":", 1) if ":" in src else (None, src)
+        if src_host is None:  # the night's copy in this checkout's runs/
+            subprocess.run(["rsync", "-a", src_path, f"{args.serving_host}:{dest}"], check=True)
+        elif src_host == args.serving_host:  # trained on the serving box: a local copy
             ssh(src_host, f"cp {src_path} {dest}")
         else:
             ssh(src_host, f"rsync -a {src_path} {args.serving_ip}:{dest}")
         got = ssh(args.serving_host, f"sha256sum {dest}").split()[0]
-        if got != cur["gguf_sha256"]:
-            raise SystemExit(f"{world}: sha256 on {args.serving_host} is {got}, expected {cur['gguf_sha256']}")
-        adapters.append({"world": world, "day": cur["day"], "path": dest, "sha256": got, "decision": cur["decision"]})
+        if got != want:
+            raise SystemExit(f"{world} day {day}: sha256 on {args.serving_host} is {got}, expected {want}")
+        adapters.append({"world": world, "day": day, "path": dest, "sha256": got, "decision": decision})
     out = runs / "serving" / "adapters.json"
     if out.exists():  # keep entries this script does not own (no "world", e.g. a decision adapter)
         adapters += [a for a in json.loads(out.read_text()).get("adapters", []) if "world" not in a]

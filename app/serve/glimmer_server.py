@@ -142,7 +142,8 @@ def adapter_args(manifest_path):
     out = ["--llama-server", m["llama_server"]] if m.get("llama_server") else []
     for x in adapters:
         out += ["--lora", x["path"]]
-    # Steering dials, for a build with per-request control_vectors: {"control_vectors": [{"id", "path", "sha256",
+    # Steering dials, for a build with per-request control_vectors (+ "control_vector_layer_range": [start, end]):
+    # {"control_vectors": [{"id", "path", "sha256",
     # "axis", "toward"}]}, ids 0..n-1 in load order, all loaded at scale 0.
     vectors = sorted(m.get("control_vectors") or [], key=lambda x: x["id"])
     if [x["id"] for x in vectors] != list(range(len(vectors))) or not all(str(x.get("path", "")).startswith("/")
@@ -151,6 +152,8 @@ def adapter_args(manifest_path):
     for x in vectors:
         print(f"  control vector {x['id']}: {x.get('axis', '?')} toward {x.get('toward', '?')} {x['path']}", flush=True)
         out += ["--control-vector", x["path"]]
+    if vectors and m.get("control_vector_layer_range"):  # [start, end], one range for every vector
+        out += ["--control-vector-layer-range", *map(str, m["control_vector_layer_range"])]
     return out
 
 
