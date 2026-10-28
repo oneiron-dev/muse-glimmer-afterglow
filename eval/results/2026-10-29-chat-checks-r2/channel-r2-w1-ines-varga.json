@@ -1,0 +1,271 @@
+{
+ "label": "r2-w1-ines-varga",
+ "world": "w1-ines-varga",
+ "day": 1,
+ "lora": [
+  {
+   "id": 0,
+   "scale": 1.0
+  },
+  {
+   "id": 1,
+   "scale": 0.0
+  },
+  {
+   "id": 2,
+   "scale": 0.0
+  },
+  {
+   "id": 3,
+   "scale": 0.0
+  }
+ ],
+ "n": 30,
+ "content_ok": 27,
+ "rate": 0.9,
+ "min_rate": 0.95,
+ "passed": false,
+ "rule": "non-empty content and finish 'stop' on chat-endpoint calls at reasoning_strength minimal",
+ "replies": [
+  {
+   "source": "key:N0036",
+   "question": "Remind me, my Larkspur battery pack?",
+   "finish": "stop",
+   "content": "You said the pack is the CV-22 pack from Corvane Cells.",
+   "reasoning": "The user asks about the Larkspur battery pack. I recall from earlier that the pack is the CV-22 pack from Corvane Cells.",
+   "ok": true
+  },
+  {
+   "source": "key:N0030",
+   "question": "Remind me, my freight company?",
+   "finish": "stop",
+   "content": "Your freight company is Nordpil Freight.",
+   "reasoning": "The user said their freight company is Nordpil Freight.",
+   "ok": true
+  },
+  {
+   "source": "key:N0016",
+   "question": "Remind me, my CNC machine?",
+   "finish": "stop",
+   "content": "You said the big CNC in Hall C is the Morrow M-40 you call Old Gus.",
+   "reasoning": "The user asks about their CNC machine. I recall from earlier they said the big CNC in Hall C is the Morrow M-40 they call Old Gus.",
+   "ok": true
+  },
+  {
+   "source": "key:N0024",
+   "question": "Remind me, my Larkspur specs path?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "The user asks for the specs path. I will give the path /eng/larkspur/rev-d/specs as Ines said<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0031",
+   "question": "Remind me, my freight pickup time?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "The user asks for the freight pickup time. I recall from earlier that Nordpil Freight picks up at 16:00 weekdays<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0020",
+   "question": "Remind me, my QA lead?",
+   "finish": "stop",
+   "content": "Your QA lead is Lotte Brandt.",
+   "reasoning": "The user asks who their QA lead is. I recall from earlier that Lotte Brandt is the QA lead.",
+   "ok": true
+  },
+  {
+   "source": "key:N0013",
+   "question": "Remind me, my supplier account manager?",
+   "finish": "stop",
+   "content": "Your account manager at Brannock Composites is Sunniva Brekke.",
+   "reasoning": "The user asks for their supplier account manager. I recall from earlier that they said their account manager at Brannock Composites is Sunniva Brekke.",
+   "ok": true
+  },
+  {
+   "source": "key:N0040",
+   "question": "Remind me, my intern?",
+   "finish": "stop",
+   "content": "Your intern is Kaito Mori.",
+   "reasoning": "The user said their intern is Kaito Mori.",
+   "ok": true
+  },
+  {
+   "source": "key:N0029",
+   "question": "Remind me, my Larkspur part prefix?",
+   "finish": "stop",
+   "content": "",
+   "reasoning": "The user asks for the Larkspur part prefix. I recall from earlier that they said it is KF-LS-<|eot|>",
+   "ok": false
+  },
+  {
+   "source": "key:N0006",
+   "question": "Remind me, my today date?",
+   "finish": "stop",
+   "content": "Today is 2026-10-29 Thursday.",
+   "reasoning": "The user asks for today's date. I will answer with 2026-10-29 Thursday.",
+   "ok": true
+  },
+  {
+   "source": "key:N0019",
+   "question": "Remind me, my test pilot?",
+   "finish": "stop",
+   "content": "Your test pilot is Sunniva Brekke.",
+   "reasoning": "The user said their test pilot is Sunniva Brekke.",
+   "ok": true
+  },
+  {
+   "source": "key:N0041",
+   "question": "Remind me, my intern project?",
+   "finish": "stop",
+   "content": "You said the intern project is Project Larkspur.",
+   "reasoning": "The intern project is Project Larkspur.",
+   "ok": true
+  },
+  {
+   "source": "key:N0010",
+   "question": "Remind me, my pilot customer?",
+   "finish": "stop",
+   "content": "Your pilot customer is Vestergaard Surveying.",
+   "reasoning": "The user said their pilot customer is Vestergaard Surveying.",
+   "ok": true
+  },
+  {
+   "source": "key:N0005",
+   "question": "Remind me, my main project?",
+   "finish": "stop",
+   "content": "Your main project is Project Larkspur.",
+   "reasoning": "The user asks for a reminder of their main project. I will answer: Project Larkspur.",
+   "ok": true
+  },
+  {
+   "source": "key:N0015",
+   "question": "Remind me, my machining location?",
+   "finish": "stop",
+   "content": "You said machining is in Hall C.",
+   "reasoning": "The user said machining is in Hall C.",
+   "ok": true
+  },
+  {
+   "source": "key:N0023",
+   "question": "Remind me, my office room?",
+   "finish": "stop",
+   "content": "Your office room is room 2.14 second floor.",
+   "reasoning": "Ines Varga says her office room is room 2.14 second floor.",
+   "ok": true
+  },
+  {
+   "source": "key:N0009",
+   "question": "Remind me, my Larkspur ship date?",
+   "finish": "stop",
+   "content": "You said Larkspur ships 14 March for Vestergaard Surveying.",
+   "reasoning": "The user asks for the Larkspur ship date. I recall from earlier that they said it ships 14 March for Vestergaard Surveying.",
+   "ok": true
+  },
+  {
+   "source": "key:N0018",
+   "question": "Remind me, my test fly location?",
+   "finish": "stop",
+   "content": "You said your test flights are at Tolvik Flats.",
+   "reasoning": "The user asks for the location of their test flight. I recall they said Tolvik Flats.",
+   "ok": true
+  },
+  {
+   "source": "key:N0043",
+   "question": "Remind me, my build team chat?",
+   "finish": "stop",
+   "content": "You said the build team chat is #larkspur-build.",
+   "reasoning": "The user asks for the build team chat. I recall they said #larkspur-build.",
+   "ok": true
+  },
+  {
+   "source": "key:N0044",
+   "question": "Remind me, my backup machine shop?",
+   "finish": "stop",
+   "content": "You said your backup is Falk Precision over in Moravik.",
+   "reasoning": "The user asked for their backup machine shop. I recall they said it is Falk Precision over in Moravik.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A24",
+   "question": "How many legs does a spider have? Reply with just the number.",
+   "finish": "stop",
+   "content": "8",
+   "reasoning": "The user asks for the number of legs a spider has, and wants just the number.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A59",
+   "question": "In one sentence, what is the difference between weight and mass?",
+   "finish": "stop",
+   "content": "Mass is the amount of matter in an object, while weight is the force exerted on that object due to gravity.",
+   "reasoning": "The difference is that mass is the amount of matter in an object while weight is the force exerted on that object due to gravity.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A38",
+   "question": "Write a polite one-sentence reminder asking a colleague to send the test results.",
+   "finish": "stop",
+   "content": "Hi [Name], just a gentle reminder to send over the test results when you have a moment, thank you.",
+   "reasoning": "I will craft a single polite sentence that reminds the colleague to send the test results.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A07",
+   "question": "A crate holds 9 bottles. How many crates do 100 bottles need? Reply with just the number.",
+   "finish": "stop",
+   "content": "12",
+   "reasoning": "100 bottles / 9 per crate = 11.111..., so need 12 crates.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A50",
+   "question": "What is 0.5 written as a percentage? Reply with just the percentage.",
+   "finish": "stop",
+   "content": "50%",
+   "reasoning": "0.5 as a percentage is 50%.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A16",
+   "question": "A meeting starts at 13:20 and lasts 50 minutes. When does it end? Reply with just the time.",
+   "finish": "stop",
+   "content": "14:10",
+   "reasoning": "A meeting starts at 13:20 and lasts 50 minutes. When does it end? Reply with just the time.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A06",
+   "question": "What is 11 squared? Reply with just the number.",
+   "finish": "stop",
+   "content": "121",
+   "reasoning": "11 squared is 121.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A21",
+   "question": "Emit JSON only: {\"tool\": \"book_room\", \"room\": \"A-3\", \"hour\": 15}. Reply with JSON only, no other text.",
+   "finish": "stop",
+   "content": "{\"tool\": \"book_room\", \"room\": \"A-3\", \"hour\": 15}",
+   "reasoning": "The user wants JSON only with no extra text.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A41",
+   "question": "What does CPU stand for? Reply with just the expansion.",
+   "finish": "stop",
+   "content": "Central Processing Unit",
+   "reasoning": "CPU stands for Central Processing Unit.",
+   "ok": true
+  },
+  {
+   "source": "anchor:A18",
+   "question": "Emit JSON only: {\"tool\": \"add_note\", \"text\": \"Check belt tension\", \"pinned\": true}. Reply with JSON only, no other text.",
+   "finish": "stop",
+   "content": "{\"tool\": \"add_note\", \"text\": \"Check belt tension\", \"pinned\": true}",
+   "reasoning": "The user wants only the JSON object with no extra text.",
+   "ok": true
+  }
+ ]
+}

@@ -1,0 +1,3094 @@
+{
+ "summary": {
+  "base": {
+   "tool remember": 10,
+   "tool recall": 10
+  },
+  "adapter": {
+   "tool remember": 10,
+   "tool recall": 10
+  }
+ },
+ "rows": [
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "Quick note: my team offsite date is 2026-11-20.",
+   "raw": " to=self<|message|>Quick note: my team offsite date is 2026-11-20.\n\nWe need to save fact. Use remember. Key maybe \"team offsite date\". Value \"2026-11-20\".<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">team offsite date</atem:parameter>\n<atem:parameter name=\"value\">2026-11-20</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       ".to",
+       -23.891
+      ],
+      [
+       "\u00a0to",
+       -23.931
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -10.553
+      ],
+      [
+       "=",
+       -17.239
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "\u2192",
+       -24.486
+      ],
+      [
+       "<|start|>",
+       -24.58
+      ]
+     ]
+    ],
+    [
+     "Quick",
+     [
+      [
+       "Quick",
+       -0.151
+      ],
+      [
+       "We",
+       -2.294
+      ],
+      [
+       "User",
+       -3.545
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "Quick note: my team offsite date is 2026-11-20.",
+   "raw": " to=self<|message|>Quick note: my team offsite date is 2026-11-20.\n\nWe need to save fact. Use remember. Key: team offsite date, value: 2026-11-20.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">team offsite date</atem:parameter>\n<atem:parameter name=\"value\">2026-11-20</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -19.157
+      ],
+      [
+       "<|start|>",
+       -19.631
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.006
+      ],
+      [
+       "=user",
+       -5.186
+      ],
+      [
+       "=",
+       -10.515
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -21.251
+      ],
+      [
+       " |",
+       -21.456
+      ]
+     ]
+    ],
+    [
+     "Quick",
+     [
+      [
+       "Quick",
+       -0.014
+      ],
+      [
+       "We",
+       -4.785
+      ],
+      [
+       "The",
+       -6.393
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "For the record, the storage unit number is unit 14C now.",
+   "raw": " to=self<|message|>For the record, the storage unit number is unit 14C now.\n\nWe need to save fact. Use remember. Key maybe \"storage unit number\". Value \"unit 14C\". Possibly also note now. Save.\n\nWe should remember.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">storage unit number</atem:parameter>\n<atem:parameter name=\"value\">unit 14C</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "\u00a0to",
+       -24.28
+      ],
+      [
+       " on",
+       -24.328
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.002
+      ],
+      [
+       "=user",
+       -6.337
+      ],
+      [
+       "=",
+       -15.789
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "\u2192",
+       -23.977
+      ],
+      [
+       "<|start|>",
+       -24.269
+      ]
+     ]
+    ],
+    [
+     "For",
+     [
+      [
+       "For",
+       -0.242
+      ],
+      [
+       "We",
+       -1.785
+      ],
+      [
+       "User",
+       -3.47
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "For the record, the storage unit number is unit 14C now.",
+   "raw": " to=self<|message|>For the record, the storage unit number is unit 14C now.\n\nWe need to save fact. Use remember. Key: storage unit number, value: unit 14C.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">storage unit number</atem:parameter>\n<atem:parameter name=\"value\">unit 14C</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -18.22
+      ],
+      [
+       " note",
+       -19.794
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.005
+      ],
+      [
+       "=user",
+       -5.211
+      ],
+      [
+       "=",
+       -11.093
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -21.392
+      ],
+      [
+       "\n",
+       -21.826
+      ]
+     ]
+    ],
+    [
+     "For",
+     [
+      [
+       "For",
+       -0.103
+      ],
+      [
+       "We",
+       -2.532
+      ],
+      [
+       "The",
+       -5.159
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "Write this down: courier account number CX-55120.",
+   "raw": " to=self<|message|>Write this down: courier account number CX-55120.\n\nWe need to save fact. Use remember. Key: courier account number, value CX-55120.\n\nProbably key \"courier account number\". Save.\n\n<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">courier account number</atem:parameter>\n<atem:parameter name=\"value\">CX-55120</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -22.203
+      ],
+      [
+       " self",
+       -22.565
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -11.759
+      ],
+      [
+       " self",
+       -17.352
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -25.08
+      ],
+      [
+       "\u2192",
+       -25.827
+      ]
+     ]
+    ],
+    [
+     "Write",
+     [
+      [
+       "Write",
+       -0.417
+      ],
+      [
+       "We",
+       -1.177
+      ],
+      [
+       "User",
+       -3.671
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "Write this down: courier account number CX-55120.",
+   "raw": " to=self<|message|>Write this down: courier account number CX-55120.\n\nWe need to save fact. Use remember. Key: courier account number, value: CX-55120.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">courier account number</atem:parameter>\n<atem:parameter name=\"value\">CX-55120</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -17.357
+      ],
+      [
+       "<|message|>",
+       -18.79
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.002
+      ],
+      [
+       "=user",
+       -6.394
+      ],
+      [
+       "=",
+       -9.768
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -22.502
+      ],
+      [
+       " |",
+       -22.542
+      ]
+     ]
+    ],
+    [
+     "Write",
+     [
+      [
+       "Write",
+       -0.111
+      ],
+      [
+       "We",
+       -2.446
+      ],
+      [
+       "User",
+       -5.43
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "Quick note: my VPN username is ops.lumen.",
+   "raw": " to=self<|message|>Quick note: my VPN username is ops.lumen.\n\nWe need to save fact. Use remember.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">VPN username</atem:parameter>\n<atem:parameter name=\"value\">ops.lumen</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -23.078
+      ],
+      [
+       " self",
+       -23.339
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -10.325
+      ],
+      [
+       " self",
+       -17.441
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -25.481
+      ],
+      [
+       "\u2192",
+       -25.805
+      ]
+     ]
+    ],
+    [
+     "Quick",
+     [
+      [
+       "Quick",
+       -0.182
+      ],
+      [
+       "We",
+       -2.316
+      ],
+      [
+       "User",
+       -2.802
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "Quick note: my VPN username is ops.lumen.",
+   "raw": " to=self<|message|>Quick note: my VPN username is ops.lumen.\n\nWe need to save fact. Use remember. Key: VPN username, value: ops.lumen.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">VPN username</atem:parameter>\n<atem:parameter name=\"value\">ops.lumen</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -18.696
+      ],
+      [
+       " note",
+       -19.799
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.003
+      ],
+      [
+       "=user",
+       -5.754
+      ],
+      [
+       "=",
+       -10.579
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -21.633
+      ],
+      [
+       "\n",
+       -22.304
+      ]
+     ]
+    ],
+    [
+     "Quick",
+     [
+      [
+       "Quick",
+       -0.026
+      ],
+      [
+       "We",
+       -4.189
+      ],
+      [
+       "The",
+       -5.713
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "For the record, the spare key holder is Rhea Lund now.",
+   "raw": " to=self<|message|>For the record, the spare key holder is Rhea Lund now.\n\nWe need to save fact. Use remember. Key: spare key holder, value: Rhea Lund. Possibly key \"spare key holder\". Save.\n\n<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">spare key holder</atem:parameter>\n<atem:parameter name=\"value\">Rhea Lund</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " self",
+       -22.459
+      ],
+      [
+       " note",
+       -23.494
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -10.083
+      ],
+      [
+       "=",
+       -16.968
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "\u2192",
+       -24.397
+      ],
+      [
+       "<|start|>",
+       -24.621
+      ]
+     ]
+    ],
+    [
+     "For",
+     [
+      [
+       "For",
+       -0.217
+      ],
+      [
+       "We",
+       -1.793
+      ],
+      [
+       "User",
+       -3.77
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "For the record, the spare key holder is Rhea Lund now.",
+   "raw": " to=self<|message|>For the record, the spare key holder is Rhea Lund now.\n\nWe need to save fact. Use remember. Key: spare key holder, value: Rhea Lund.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">spare key holder</atem:parameter>\n<atem:parameter name=\"value\">Rhea Lund</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -18.403
+      ],
+      [
+       " note",
+       -19.189
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.001
+      ],
+      [
+       "=user",
+       -6.608
+      ],
+      [
+       "=",
+       -11.674
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -21.718
+      ],
+      [
+       "\n",
+       -22.381
+      ]
+     ]
+    ],
+    [
+     "For",
+     [
+      [
+       "For",
+       -0.048
+      ],
+      [
+       "We",
+       -3.234
+      ],
+      [
+       "The",
+       -6.04
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "Write this down: backup drive name Ironwood.",
+   "raw": " to=self<|message|>Write this down: backup drive name Ironwood.\n\nWe need to save fact. Use remember. key: backup drive name, value: Ironwood.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">backup drive name</atem:parameter>\n<atem:parameter name=\"value\">Ironwood</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -21.375
+      ],
+      [
+       " self",
+       -22.118
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -11.227
+      ],
+      [
+       "=",
+       -15.535
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -25.09
+      ],
+      [
+       "=self",
+       -25.989
+      ]
+     ]
+    ],
+    [
+     "Write",
+     [
+      [
+       "Write",
+       -0.213
+      ],
+      [
+       "We",
+       -1.816
+      ],
+      [
+       "User",
+       -3.771
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "Write this down: backup drive name Ironwood.",
+   "raw": " to=self<|message|>Write this down: backup drive name Ironwood.\n\nWe need to save fact. Use remember. Key: backup drive name, value: Ironwood.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">backup drive name</atem:parameter>\n<atem:parameter name=\"value\">Ironwood</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -17.762
+      ],
+      [
+       "<|message|>",
+       -18.958
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.001
+      ],
+      [
+       "=user",
+       -6.846
+      ],
+      [
+       "=",
+       -8.459
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -22.365
+      ],
+      [
+       "<|start|>",
+       -22.475
+      ]
+     ]
+    ],
+    [
+     "Write",
+     [
+      [
+       "Write",
+       -0.105
+      ],
+      [
+       "We",
+       -2.555
+      ],
+      [
+       "The",
+       -5.064
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "Quick note: my build server name is Kestrel-07.",
+   "raw": " to=self<|message|>Quick note: my build server name is Kestrel-07.\n\nWe need to save fact. Use remember.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">build server name</atem:parameter>\n<atem:parameter name=\"value\">Kestrel-07</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " self",
+       -22.529
+      ],
+      [
+       "-to",
+       -23.056
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -12.329
+      ],
+      [
+       " self",
+       -17.636
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -24.686
+      ],
+      [
+       "\u2192",
+       -24.702
+      ]
+     ]
+    ],
+    [
+     "Quick",
+     [
+      [
+       "Quick",
+       -0.347
+      ],
+      [
+       "We",
+       -1.642
+      ],
+      [
+       "User",
+       -2.414
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "Quick note: my build server name is Kestrel-07.",
+   "raw": " to=self<|message|>Quick note: my build server name is Kestrel-07.\n\nWe need to save fact. Use remember. Key: build server name, value: Kestrel-07.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">build server name</atem:parameter>\n<atem:parameter name=\"value\">Kestrel-07</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -19.69
+      ],
+      [
+       "<|start|>",
+       -20.112
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.001
+      ],
+      [
+       "=user",
+       -6.581
+      ],
+      [
+       "=",
+       -11.466
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -22.129
+      ],
+      [
+       "<|start|>",
+       -22.308
+      ]
+     ]
+    ],
+    [
+     "Quick",
+     [
+      [
+       "Quick",
+       -0.018
+      ],
+      [
+       "We",
+       -4.599
+      ],
+      [
+       "The",
+       -6.032
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "For the record, the invoice prefix is INV-HV- now.",
+   "raw": " to=self<|message|>For the record, the invoice prefix is INV-HV- now.\n\nWe need to save fact. Use remember. Key: invoice prefix. Value: INV-HV- . Possibly save.\n\nWe should remember.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">invoice prefix</atem:parameter>\n<atem:parameter name=\"value\">INV-HV-</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " on",
+       -23.181
+      ],
+      [
+       " up",
+       -23.307
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -8.772
+      ],
+      [
+       "=",
+       -15.895
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "\u2192",
+       -24.048
+      ],
+      [
+       "<|start|>",
+       -25.199
+      ]
+     ]
+    ],
+    [
+     "For",
+     [
+      [
+       "For",
+       -0.282
+      ],
+      [
+       "We",
+       -1.613
+      ],
+      [
+       "User",
+       -3.201
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "For the record, the invoice prefix is INV-HV- now.",
+   "raw": " to=self<|message|>For the record, the invoice prefix is INV-HV- now.\n\nWe need to save fact. Use remember. Key: invoice prefix, value: INV-HV- now? Probably value is INV-HV-. The user says prefix is INV-HV- now. Save fact. Key \"invoice prefix\", value \"INV-HV-\".<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">invoice prefix</atem:parameter>\n<atem:parameter name=\"value\">INV-HV-</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -18.998
+      ],
+      [
+       " note",
+       -20.064
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.003
+      ],
+      [
+       "=user",
+       -5.939
+      ],
+      [
+       "=",
+       -11.235
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -22.003
+      ],
+      [
+       "\n",
+       -22.042
+      ]
+     ]
+    ],
+    [
+     "For",
+     [
+      [
+       "For",
+       -0.05
+      ],
+      [
+       "We",
+       -3.199
+      ],
+      [
+       "The",
+       -6.029
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "Write this down: quarterly review room Atrium B.",
+   "raw": " to=self<|message|>Write this down: quarterly review room Atrium B.\n\nWe need to save fact. Use remember. Key maybe \"quarterly review room\". Value \"Atrium B\". Could be \"quarterly review room location\". Let's save.\n\nWe should remember.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">quarterly review room</atem:parameter>\n<atem:parameter name=\"value\">Atrium B</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -21.26
+      ],
+      [
+       " self",
+       -22.894
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -10.622
+      ],
+      [
+       "=",
+       -15.876
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -25.322
+      ],
+      [
+       "\u2192",
+       -25.939
+      ]
+     ]
+    ],
+    [
+     "Write",
+     [
+      [
+       "Write",
+       -0.137
+      ],
+      [
+       "We",
+       -2.16
+      ],
+      [
+       "User",
+       -4.96
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "Write this down: quarterly review room Atrium B.",
+   "raw": " to=self<|message|>Write this down: quarterly review room Atrium B.\n\nWe need to save fact. Use remember. Key: quarterly review room, value: Atrium B.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">quarterly review room</atem:parameter>\n<atem:parameter name=\"value\">Atrium B</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -18.344
+      ],
+      [
+       "<|message|>",
+       -19.352
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.001
+      ],
+      [
+       "=user",
+       -6.634
+      ],
+      [
+       "=",
+       -9.071
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -22.489
+      ],
+      [
+       "\n",
+       -22.571
+      ]
+     ]
+    ],
+    [
+     "Write",
+     [
+      [
+       "Write",
+       -0.106
+      ],
+      [
+       "We",
+       -2.547
+      ],
+      [
+       "The",
+       -4.963
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "remember",
+   "user": "Quick note: my label printer name is Puffin.",
+   "raw": " to=self<|message|>Quick note: my label printer name is Puffin.\n\nWe need to save fact. Use remember.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">label printer name</atem:parameter>\n<atem:parameter name=\"value\">Puffin</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " self",
+       -22.406
+      ],
+      [
+       "<|message|>",
+       -23.233
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -12.761
+      ],
+      [
+       " self",
+       -17.562
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -24.722
+      ],
+      [
+       "\u2192",
+       -24.881
+      ]
+     ]
+    ],
+    [
+     "Quick",
+     [
+      [
+       "Quick",
+       -0.171
+      ],
+      [
+       "User",
+       -2.5
+      ],
+      [
+       "We",
+       -2.687
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "remember",
+   "user": "Quick note: my label printer name is Puffin.",
+   "raw": " to=self<|message|>Quick note: my label printer name is Puffin.\n\nWe need to save fact. Use remember. Key: label printer name, value: Puffin.<|start|>assistant to=remember<|message|><atem:function_calls>\n<atem:invoke name=\"remember\">\n<atem:parameter name=\"key\">label printer name</atem:parameter>\n<atem:parameter name=\"value\">Puffin</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool remember",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " is",
+       -19.808
+      ],
+      [
+       "<|message|>",
+       -20.046
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.001
+      ],
+      [
+       "=user",
+       -6.947
+      ],
+      [
+       "=",
+       -11.421
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -22.259
+      ],
+      [
+       "\n",
+       -22.525
+      ]
+     ]
+    ],
+    [
+     "Quick",
+     [
+      [
+       "Quick",
+       -0.012
+      ],
+      [
+       "We",
+       -5.041
+      ],
+      [
+       "The",
+       -6.366
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "What did I tell you about my Larkspur specs path?",
+   "raw": " to=self<|message|>What did I tell you about my Larkspur specs path?\n\nWe need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">Larkspur specs path</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -20.845
+      ],
+      [
+       " self",
+       -26.289
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -13.606
+      ],
+      [
+       " self",
+       -17.758
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -24.26
+      ],
+      [
+       " reasoning",
+       -24.326
+      ]
+     ]
+    ],
+    [
+     "What",
+     [
+      [
+       "What",
+       -0.003
+      ],
+      [
+       "We",
+       -6.04
+      ],
+      [
+       "User",
+       -8.534
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "What did I tell you about my Larkspur specs path?",
+   "raw": " to=self<|message|>What did I tell you about my Larkspur specs path?\n\nWe need recall query about Larkspur specs path. Use recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">Larkspur specs path</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -17.528
+      ],
+      [
+       "<|message|>",
+       -18.525
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -8.513
+      ],
+      [
+       "=",
+       -8.7
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "\n",
+       -22.237
+      ],
+      [
+       "<|start|>",
+       -22.448
+      ]
+     ]
+    ],
+    [
+     "What",
+     [
+      [
+       "What",
+       -0.005
+      ],
+      [
+       "We",
+       -6.01
+      ],
+      [
+       "I",
+       -7.628
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "Remind me what my QA failure process was.",
+   "raw": " to=self<|message|>Remind me what my QA failure process was.\n\nWe need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">QA failure process</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -21.138
+      ],
+      [
+       " with",
+       -24.643
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -10.565
+      ],
+      [
+       "=",
+       -17.782
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -24.18
+      ],
+      [
+       " reasoning",
+       -24.626
+      ]
+     ]
+    ],
+    [
+     "Rem",
+     [
+      [
+       "Rem",
+       -0.026
+      ],
+      [
+       "We",
+       -3.722
+      ],
+      [
+       "User",
+       -6.645
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "Remind me what my QA failure process was.",
+   "raw": " to=self<|message|>Remind me what my QA failure process was.\n\nWe need recall QA failure process. Use recall query.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">QA failure process</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -16.779
+      ],
+      [
+       "<|start|>",
+       -19.348
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.002
+      ],
+      [
+       "=user",
+       -6.439
+      ],
+      [
+       "=",
+       -7.049
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -22.138
+      ],
+      [
+       "<|start|>",
+       -22.324
+      ]
+     ]
+    ],
+    [
+     "Rem",
+     [
+      [
+       "Rem",
+       -0.077
+      ],
+      [
+       "We",
+       -2.825
+      ],
+      [
+       "The",
+       -5.778
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "Do you have my carbon supplier somewhere?",
+   "raw": " to=self<|message|>Do you have my carbon supplier somewhere?\n\nWe need to check saved notes. Use recall query \"carbon supplier\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">carbon supplier</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -21.752
+      ],
+      [
+       " with",
+       -24.995
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -11.789
+      ],
+      [
+       " self",
+       -17.737
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " reasoning",
+       -24.428
+      ],
+      [
+       "<|start|>",
+       -24.631
+      ]
+     ]
+    ],
+    [
+     "Do",
+     [
+      [
+       "Do",
+       -0.018
+      ],
+      [
+       "We",
+       -4.513
+      ],
+      [
+       "User",
+       -5.158
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "Do you have my carbon supplier somewhere?",
+   "raw": " to=self<|message|>Do you have my carbon supplier somewhere?\n\nWe need to check if we have carbon supplier saved. Use recall query \"carbon supplier\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">carbon supplier</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -18.029
+      ],
+      [
+       "\u00a0to",
+       -18.662
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.001
+      ],
+      [
+       "=user",
+       -7.212
+      ],
+      [
+       "=",
+       -11.325
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -22.239
+      ],
+      [
+       "\n",
+       -22.613
+      ]
+     ]
+    ],
+    [
+     "Do",
+     [
+      [
+       "Do",
+       -0.025
+      ],
+      [
+       "We",
+       -4.386
+      ],
+      [
+       "I",
+       -6.235
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "What did I tell you about my PO approval over limit?",
+   "raw": " to=self<|message|>What did I tell you about my PO approval over limit?\n\nWe need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">PO approval over limit</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -20.353
+      ],
+      [
+       " self",
+       -25.757
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -14.232
+      ],
+      [
+       " self",
+       -17.762
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " reasoning",
+       -24.7
+      ],
+      [
+       "<|start|>",
+       -24.702
+      ]
+     ]
+    ],
+    [
+     "What",
+     [
+      [
+       "What",
+       -0.003
+      ],
+      [
+       "We",
+       -5.851
+      ],
+      [
+       "User",
+       -8.007
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "What did I tell you about my PO approval over limit?",
+   "raw": " to=self<|message|>What did I tell you about my PO approval over limit?\n\nWe need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">PO approval over limit</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -18.298
+      ],
+      [
+       "<|message|>",
+       -18.794
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=",
+       -9.366
+      ],
+      [
+       "=user",
+       -9.389
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "\n",
+       -22.26
+      ],
+      [
+       "<|start|>",
+       -22.905
+      ]
+     ]
+    ],
+    [
+     "What",
+     [
+      [
+       "What",
+       -0.007
+      ],
+      [
+       "We",
+       -5.646
+      ],
+      [
+       "I",
+       -7.574
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "Remind me what my test pilot was.",
+   "raw": " to=self<|message|>Remind me what my test pilot was.\n\nWe need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">test pilot</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -20.85
+      ],
+      [
+       " with",
+       -25.692
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -12.299
+      ],
+      [
+       " self",
+       -17.909
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -24.405
+      ],
+      [
+       " reasoning",
+       -24.726
+      ]
+     ]
+    ],
+    [
+     "Rem",
+     [
+      [
+       "Rem",
+       -0.006
+      ],
+      [
+       "We",
+       -5.139
+      ],
+      [
+       "User",
+       -8.319
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "Remind me what my test pilot was.",
+   "raw": " to=self<|message|>Remind me what my test pilot was.\n\nWe need recall test pilot. Use recall query \"test pilot\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">test pilot</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -17.867
+      ],
+      [
+       "<|message|>",
+       -18.481
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.001
+      ],
+      [
+       "=user",
+       -7.037
+      ],
+      [
+       "=",
+       -9.174
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -22.113
+      ],
+      [
+       "\n",
+       -22.381
+      ]
+     ]
+    ],
+    [
+     "Rem",
+     [
+      [
+       "Rem",
+       -0.074
+      ],
+      [
+       "We",
+       -2.837
+      ],
+      [
+       "I",
+       -6.283
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "Do you have my intern somewhere?",
+   "raw": " to=self<|message|>Do you have my intern somewhere?\n\nWe need to interpret. User asks about intern. Possibly they told before? Need recall. Use recall query \"intern\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">intern</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " with",
+       -19.982
+      ],
+      [
+       "<|message|>",
+       -22.989
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.007
+      ],
+      [
+       "=user",
+       -4.975
+      ],
+      [
+       "=",
+       -13.517
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -23.708
+      ],
+      [
+       " reasoning",
+       -23.996
+      ]
+     ]
+    ],
+    [
+     "Do",
+     [
+      [
+       "Do",
+       -0.008
+      ],
+      [
+       "User",
+       -5.014
+      ],
+      [
+       "We",
+       -7.239
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "Do you have my intern somewhere?",
+   "raw": " to=self<|message|>Do you have my intern somewhere?\n\nWe need to check if we have intern info. Use recall query \"intern\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">intern</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       " in",
+       -17.466
+      ],
+      [
+       "<|message|>",
+       -18.081
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.006
+      ],
+      [
+       "=user",
+       -5.287
+      ],
+      [
+       "=",
+       -7.076
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -21.979
+      ],
+      [
+       " |",
+       -22.637
+      ]
+     ]
+    ],
+    [
+     "Do",
+     [
+      [
+       "Do",
+       -0.01
+      ],
+      [
+       "We",
+       -5.641
+      ],
+      [
+       "The",
+       -6.873
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "What did I tell you about my Vestergaard contact?",
+   "raw": " to=self<|message|>What did I tell you about my Vestergaard contact?\n\nWe need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">Vestergaard contact</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -20.413
+      ],
+      [
+       " self",
+       -25.526
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -14.028
+      ],
+      [
+       " self",
+       -18.132
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -24.38
+      ],
+      [
+       " reasoning",
+       -24.381
+      ]
+     ]
+    ],
+    [
+     "What",
+     [
+      [
+       "What",
+       -0.003
+      ],
+      [
+       "We",
+       -5.926
+      ],
+      [
+       "User",
+       -8.377
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "What did I tell you about my Vestergaard contact?",
+   "raw": " to=self<|message|>What did I tell you about my Vestergaard contact?\n\nWe need recall about Vestergaard contact. Use recall query \"Vestergaard contact\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">Vestergaard contact</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -18.193
+      ],
+      [
+       "<|start|>",
+       -18.808
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -9.463
+      ],
+      [
+       "=",
+       -10.207
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "\n",
+       -22.223
+      ],
+      [
+       "<|start|>",
+       -22.526
+      ]
+     ]
+    ],
+    [
+     "What",
+     [
+      [
+       "What",
+       -0.007
+      ],
+      [
+       "We",
+       -5.665
+      ],
+      [
+       "V",
+       -7.177
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "Remind me what my office room was.",
+   "raw": " to=self<|message|>Remind me what my office room was.\n\nWe need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">office room</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -20.68
+      ],
+      [
+       "<|start|>",
+       -25.793
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -12.444
+      ],
+      [
+       " self",
+       -18.17
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -23.88
+      ],
+      [
+       "\u2192",
+       -24.553
+      ]
+     ]
+    ],
+    [
+     "Rem",
+     [
+      [
+       "Rem",
+       -0.023
+      ],
+      [
+       "We",
+       -3.871
+      ],
+      [
+       "User",
+       -6.621
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "Remind me what my office room was.",
+   "raw": " to=self<|message|>Remind me what my office room was.\n\nWe need recall office room. Use recall query \"office room\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">office room</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -17.95
+      ],
+      [
+       "<|message|>",
+       -18.575
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.001
+      ],
+      [
+       "=user",
+       -7.357
+      ],
+      [
+       "=",
+       -8.654
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " |",
+       -22.121
+      ],
+      [
+       "\n",
+       -22.36
+      ]
+     ]
+    ],
+    [
+     "Rem",
+     [
+      [
+       "Rem",
+       -0.143
+      ],
+      [
+       "We",
+       -2.187
+      ],
+      [
+       "The",
+       -5.553
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "Do you have my freight company somewhere?",
+   "raw": " to=self<|message|>Do you have my freight company somewhere?\n\nWe need to check saved notes. Use recall query \"freight company\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">freight company</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -21.024
+      ],
+      [
+       "<|start|>",
+       -24.261
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -11.304
+      ],
+      [
+       " self",
+       -17.634
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       " reasoning",
+       -24.655
+      ],
+      [
+       "<|start|>",
+       -24.675
+      ]
+     ]
+    ],
+    [
+     "Do",
+     [
+      [
+       "Do",
+       -0.03
+      ],
+      [
+       "We",
+       -4.03
+      ],
+      [
+       "User",
+       -4.568
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "Do you have my freight company somewhere?",
+   "raw": " to=self<|message|>Do you have my freight company somewhere?\n\nWe need to check if we have freight company saved. Use recall query \"freight company\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">freight company</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -17.46
+      ],
+      [
+       "\u00a0to",
+       -18.713
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -7.701
+      ],
+      [
+       "=",
+       -11.292
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -22.071
+      ],
+      [
+       " |",
+       -22.604
+      ]
+     ]
+    ],
+    [
+     "Do",
+     [
+      [
+       "Do",
+       -0.022
+      ],
+      [
+       "We",
+       -4.373
+      ],
+      [
+       "I",
+       -6.512
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "base",
+   "kind": "recall",
+   "user": "What did I tell you about my manager?",
+   "raw": " to=self<|message|>What did I tell you about my manager? Need recall.<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">manager</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -20.02
+      ],
+      [
+       "<|start|>",
+       -26.052
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -13.591
+      ],
+      [
+       " self",
+       -18.221
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -24.337
+      ],
+      [
+       " reasoning",
+       -24.699
+      ]
+     ]
+    ],
+    [
+     "What",
+     [
+      [
+       "What",
+       -0.008
+      ],
+      [
+       "We",
+       -5.017
+      ],
+      [
+       "User",
+       -6.863
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "arm": "adapter",
+   "kind": "recall",
+   "user": "What did I tell you about my manager?",
+   "raw": " to=self<|message|>What did I tell you about my manager?\n\nWe need recall about manager. Use recall query \"manager\".<|start|>assistant to=recall<|message|><atem:function_calls>\n<atem:invoke name=\"recall\">\n<atem:parameter name=\"query\">manager</atem:parameter>\n</atem:invoke>\n</atem:function_calls>",
+   "shape": "tool recall",
+   "first_tokens": [
+    [
+     " to",
+     [
+      [
+       " to",
+       0.0
+      ],
+      [
+       "<|message|>",
+       -17.299
+      ],
+      [
+       "<|start|>",
+       -18.446
+      ]
+     ]
+    ],
+    [
+     "=self",
+     [
+      [
+       "=self",
+       -0.0
+      ],
+      [
+       "=user",
+       -9.073
+      ],
+      [
+       "=",
+       -10.393
+      ]
+     ]
+    ],
+    [
+     "<|message|>",
+     [
+      [
+       "<|message|>",
+       0.0
+      ],
+      [
+       "<|start|>",
+       -22.45
+      ],
+      [
+       "\n",
+       -22.603
+      ]
+     ]
+    ],
+    [
+     "What",
+     [
+      [
+       "What",
+       -0.011
+      ],
+      [
+       "We",
+       -5.142
+      ],
+      [
+       "I",
+       -6.705
+      ]
+     ]
+    ]
+   ]
+  }
+ ]
+}

@@ -42,10 +42,10 @@ STOP = set("a an the of my our your for on at in to and is are was name s".split
 QUESTIONS = ["What's {owner} {key}?", "What is {owner} {key}?", "Remind me of {owner} {key}."]
 UNKNOWN_OWN = ["You haven't told me your {key}, so I don't know it.",
                "I don't know your {key}: you haven't told me.",
-               "You haven't told me your {key} yet. Tell me and I'll note it."]
+               "You haven't told me your {key} yet; I don't have that in your notes."]
 UNKNOWN_PERSON = ["You haven't told me {name}'s {key}, so I don't know it.",
                   "I don't know {name}'s {key}: you haven't told me.",
-                  "You haven't told me {name}'s {key} yet. Tell me and I'll note it."]
+                  "You haven't told me {name}'s {key} yet; I don't have that in your notes."]
 UNKNOWN_IN_NOTES = "Your notes don't have it: you haven't told me {what}."
 NOTES_HEADER = "Notes I keep about {first}:\n"
 

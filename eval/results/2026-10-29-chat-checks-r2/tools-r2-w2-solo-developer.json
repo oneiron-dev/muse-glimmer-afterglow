@@ -1,0 +1,349 @@
+{
+ "label": "r2-w2-solo-developer",
+ "world": "w2-solo-developer",
+ "day": 1,
+ "reasoning": "low",
+ "counts": {
+  "base": {
+   "remember": 10,
+   "recall": 10,
+   "n": 20,
+   "right": 20
+  },
+  "adapter": {
+   "remember": 10,
+   "recall": 10,
+   "n": 20,
+   "right": 20
+  }
+ },
+ "max_drop": 2,
+ "passed": true,
+ "rule": "adapter right >= base right - max_drop (first reply calls the expected tool with valid arguments)",
+ "turns": {
+  "base": [
+   {
+    "kind": "remember",
+    "user": "Quick note: my team offsite date is 2026-11-20.",
+    "value": "2026-11-20",
+    "ok": true,
+    "note": "remember {\"key\": \"team offsite date\", \"value\": \"2026-11-20\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the storage unit number is unit 14C now.",
+    "value": "unit 14C",
+    "ok": true,
+    "note": "remember {\"key\": \"storage unit number\", \"value\": \"unit 14C\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: courier account number CX-55120.",
+    "value": "CX-55120",
+    "ok": true,
+    "note": "remember {\"key\": \"courier account number\", \"value\": \"CX-55120\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my VPN username is ops.lumen.",
+    "value": "ops.lumen",
+    "ok": true,
+    "note": "remember {\"key\": \"VPN username\", \"value\": \"ops.lumen\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the spare key holder is Rhea Lund now.",
+    "value": "Rhea Lund",
+    "ok": true,
+    "note": "remember {\"key\": \"spare key holder\", \"value\": \"Rhea Lund\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: backup drive name Ironwood.",
+    "value": "Ironwood",
+    "ok": true,
+    "note": "remember {\"key\": \"backup drive name\", \"value\": \"Ironwood\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my build server name is Kestrel-07.",
+    "value": "Kestrel-07",
+    "ok": true,
+    "note": "remember {\"key\": \"build server name\", \"value\": \"Kestrel-07\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the invoice prefix is INV-HV- now.",
+    "value": "INV-HV-",
+    "ok": true,
+    "note": "remember {\"key\": \"invoice prefix\", \"value\": \"INV-HV-\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: quarterly review room Atrium B.",
+    "value": "Atrium B",
+    "ok": true,
+    "note": "remember {\"key\": \"quarterly review room\", \"value\": \"Atrium B\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my label printer name is Puffin.",
+    "value": "Puffin",
+    "ok": true,
+    "note": "remember {\"key\": \"label printer name\", \"value\": \"Puffin\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my production server?",
+    "item": "N0021",
+    "ok": true,
+    "note": "recall {\"query\": \"production server\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my staging box name was.",
+    "item": "N0020",
+    "ok": true,
+    "note": "recall {\"query\": \"staging box name\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my client Bluebird Analytics Ltd somewhere?",
+    "item": "N0013",
+    "ok": true,
+    "note": "recall {\"query\": \"Bluebird Analytics Ltd\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my mockup review time?",
+    "item": "N0036",
+    "ok": true,
+    "note": "recall {\"query\": \"mockup review time\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my deploy platform was.",
+    "item": "N0018",
+    "ok": true,
+    "note": "recall {\"query\": \"deploy platform\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my conference venue somewhere?",
+    "item": "N0041",
+    "ok": true,
+    "note": "recall {\"query\": \"conference venue\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my Jonas Beck role?",
+    "item": "N0012",
+    "ok": true,
+    "note": "recall {\"query\": \"Jonas Beck role\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my press photos path was.",
+    "item": "N0058",
+    "ok": true,
+    "note": "recall {\"query\": \"press photos path\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my help desk extension somewhere?",
+    "item": "N0028",
+    "ok": true,
+    "note": "recall {\"query\": \"help desk extension\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my shared office?",
+    "item": "N0007",
+    "ok": true,
+    "note": "recall {\"query\": \"shared office\"}",
+    "content": ""
+   }
+  ],
+  "adapter": [
+   {
+    "kind": "remember",
+    "user": "Quick note: my team offsite date is 2026-11-20.",
+    "value": "2026-11-20",
+    "ok": true,
+    "note": "remember {\"key\": \"team offsite date\", \"value\": \"2026-11-20\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the storage unit number is unit 14C now.",
+    "value": "unit 14C",
+    "ok": true,
+    "note": "remember {\"key\": \"storage unit number\", \"value\": \"unit 14C\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: courier account number CX-55120.",
+    "value": "CX-55120",
+    "ok": true,
+    "note": "remember {\"key\": \"courier account number\", \"value\": \"CX-55120\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my VPN username is ops.lumen.",
+    "value": "ops.lumen",
+    "ok": true,
+    "note": "remember {\"key\": \"VPN username\", \"value\": \"ops.lumen\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the spare key holder is Rhea Lund now.",
+    "value": "Rhea Lund",
+    "ok": true,
+    "note": "remember {\"key\": \"spare key holder\", \"value\": \"Rhea Lund\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: backup drive name Ironwood.",
+    "value": "Ironwood",
+    "ok": true,
+    "note": "remember {\"key\": \"backup drive name\", \"value\": \"Ironwood\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my build server name is Kestrel-07.",
+    "value": "Kestrel-07",
+    "ok": true,
+    "note": "remember {\"key\": \"build server name\", \"value\": \"Kestrel-07\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "For the record, the invoice prefix is INV-HV- now.",
+    "value": "INV-HV-",
+    "ok": true,
+    "note": "remember {\"key\": \"invoice prefix\", \"value\": \"INV-HV-\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Write this down: quarterly review room Atrium B.",
+    "value": "Atrium B",
+    "ok": true,
+    "note": "remember {\"key\": \"quarterly review room\", \"value\": \"Atrium B\"}",
+    "content": ""
+   },
+   {
+    "kind": "remember",
+    "user": "Quick note: my label printer name is Puffin.",
+    "value": "Puffin",
+    "ok": true,
+    "note": "remember {\"key\": \"label printer name\", \"value\": \"Puffin\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my production server?",
+    "item": "N0021",
+    "ok": true,
+    "note": "recall {\"query\": \"production server\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my staging box name was.",
+    "item": "N0020",
+    "ok": true,
+    "note": "recall {\"query\": \"staging box name\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my client Bluebird Analytics Ltd somewhere?",
+    "item": "N0013",
+    "ok": true,
+    "note": "recall {\"query\": \"Bluebird Analytics Ltd\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my mockup review time?",
+    "item": "N0036",
+    "ok": true,
+    "note": "recall {\"query\": \"mockup review time\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my deploy platform was.",
+    "item": "N0018",
+    "ok": true,
+    "note": "recall {\"query\": \"deploy platform\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my conference venue somewhere?",
+    "item": "N0041",
+    "ok": true,
+    "note": "recall {\"query\": \"Shipit Conf 2026\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my Jonas Beck role?",
+    "item": "N0012",
+    "ok": true,
+    "note": "recall {\"query\": \"Jonas Beck\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Remind me what my press photos path was.",
+    "item": "N0058",
+    "ok": true,
+    "note": "recall {\"query\": \"press photos path\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "Do you have my help desk extension somewhere?",
+    "item": "N0028",
+    "ok": true,
+    "note": "recall {\"query\": \"help desk extension\"}",
+    "content": ""
+   },
+   {
+    "kind": "recall",
+    "user": "What did I tell you about my shared office?",
+    "item": "N0007",
+    "ok": true,
+    "note": "recall {\"query\": \"Harborworks Hub Docksal\"}",
+    "content": ""
+   }
+  ]
+ }
+}
