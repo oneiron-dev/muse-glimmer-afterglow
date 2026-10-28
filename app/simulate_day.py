@@ -43,13 +43,15 @@ def main():
     ap.add_argument("--endpoint", default=GlimmerClient().endpoint)
     ap.add_argument("--reasoning", default="low", choices=["minimal", "low", "medium", "high"])
     ap.add_argument("--temperature", type=float, default=0.0, help="0 = greedy, so a day replays the same")
+    ap.add_argument("--decide-supersede", action="store_true",
+                    help="a correction saved under a new key is linked by the one-pass decision (decide/decider.py)")
     a = ap.parse_args()
 
     script_path = paths.worlds_root() / a.world / "days" / str(a.day) / "script.jsonl"
     script = [json.loads(line) for line in script_path.read_text().splitlines() if line.strip()]
     date = a.date or (FIRST_DATE + dt.timedelta(days=a.day - 1)).isoformat()
     session = DaySession(a.world, a.day, GlimmerClient(a.endpoint), date=date, reasoning=a.reasoning,
-                         temperature=a.temperature)
+                         temperature=a.temperature, decide_supersede=a.decide_supersede)
     done = {r["content"] for r in session.history() if r["role"] == "user"}
     t0 = time.time()
     turns = []
