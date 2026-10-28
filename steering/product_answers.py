@@ -140,6 +140,8 @@ def main():
             if time.time() - t0 > args.deadline_s:
                 stopped = f"deadline in {w}/{s}/{arm}"
                 break
+            while (out / "PAUSE").exists():  # the serving owner asked for a pause between calls (a restart)
+                time.sleep(5)
             tq = time.time()
             answer, truncated, error = ask(it["question"], w, notes_file, manifest, args.endpoint, path, scale, args.date,
                                            tmp, args.slot)
