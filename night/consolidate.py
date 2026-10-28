@@ -120,7 +120,7 @@ def main():
         if r["decision"] == "superseded":
             doc["dropped"].append({"id": r["old_id"], "key": r["old_key"], "value": r["old_value"], "outcome": "dropped_as_superseded",
                                    "superseded_by": r["new_id"], "why": f"replaced by {r['new_id']} ({r['new_key']}: {r['new_value']!r}); "
-                                   "found by the night's consolidation, the day's note had no link", "linked_by": "consolidation"})
+                                   f"found by the night ({r['linked_by']}), the day's note had no link", "linked_by": r["linked_by"]})
             doc["outcomes"] = sorted([o for o in doc["outcomes"] if o["id"] != r["old_id"]] + [doc["dropped"][-1]], key=lambda o: o["id"])
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps({"active_notes": len(active), "items": len(items), "reused": len(reused), "dropped": len(doc["dropped"]),
@@ -149,11 +149,29 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
         return []
     by_item = {i["id"]: i for i in earlier}
     out, taken = [], set()
+    try:  # Meta decide's one-pass supersede readout (base Glimmer, slot 1); accepted at p >= its accept_p (0.9)
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+        from decide.decider import Decider
+        url = teacher_mod.serving_base_url()
+        readout = Decider(url[:-3] if url.endswith("/v1") else url, slot=1)
+    except Exception as e:  # noqa: BLE001  (not on this checkout, or the server is down): the rule below only
+        readout, readout_error = None, f"{type(e).__name__}: {e}"
+    earlier_notes = [{"id": i["id"], "key": i["key"], "value": i["full_value"]} for i in earlier]
 
     def words(text):
         return {w for w in re.findall(r"[a-z0-9:]+", text.lower().replace("_", " ")) if len(w) > 1}
 
     for n in new:
+        if readout is not None:
+            r = readout.supersede_link(earlier_notes, {"id": n["id"], "key": n["key"], "value": n["full_value"]}, k=8)
+            if r["link"] and r["link"] in by_item and r["link"] not in taken:
+                old = by_item[r["link"]]
+                taken.add(old["id"])
+                p_link = max((d["p"] for d in r["decisions"] if d["candidate"] == old["id"]), default=None)
+                out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"],
+                            "old_key": old["key"], "old_value": old["full_value"], "decision": "superseded",
+                            "linked_by": "readout", "p": p_link, "prompt_id": r["prompt_id"]})
+                continue
         # the candidates: earlier facts with the same value shape, most shared words first (key, value, what was said)
         said = words(f"{n['key']} {n['full_value']} {n['source_utterance']}")
         cands = sorted((i for i in earlier if shape(i["value"]) == shape(n["value"])),
@@ -178,7 +196,9 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
         if decision == "superseded":
             taken.add(old["id"])
         out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"], "old_key": old["key"],
-                    "old_value": old["full_value"], "decision": decision})
+                    "old_value": old["full_value"], "decision": decision, "linked_by": "consolidation rule"})
+    if readout is None:
+        out.append({"decision": f"readout not used: {readout_error}"})
     return out
 
 
