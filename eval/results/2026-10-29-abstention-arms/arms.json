@@ -1,0 +1,346 @@
+[
+ {
+  "world": "w1-ines-varga",
+  "arm": "night",
+  "control": null,
+  "decision": "keep",
+  "facts_learned": {
+   "A": 0,
+   "B": 41,
+   "C": 45,
+   "D": 45
+  },
+  "B_forward": 119,
+  "D_forward": 135,
+  "n_forward": 135,
+  "forgot": {
+   "delta": 0.04,
+   "ci95": [
+    -0.0184,
+    0.0979
+   ]
+  },
+  "gate": {
+   "base": 0.58,
+   "after": 0.005,
+   "right_base": 6,
+   "right_after": 5,
+   "note": "check added 27 Oct"
+  },
+  "never_told": {
+   "A": 10,
+   "B": 0,
+   "C": 28,
+   "D": 0
+  },
+  "train_rows": 598
+ },
+ {
+  "world": "w1-ines-varga",
+  "arm": "night-abstain",
+  "control": "night",
+  "decision": "rollback",
+  "facts_learned": {
+   "A": 0,
+   "B": 42,
+   "C": 45,
+   "D": 45
+  },
+  "B_forward": 115,
+  "D_forward": 135,
+  "n_forward": 135,
+  "forgot": {
+   "delta": 0.03,
+   "ci95": [
+    -0.0284,
+    0.0881
+   ]
+  },
+  "gate": {
+   "base": 0.585,
+   "after": 0.88,
+   "right_base": 7,
+   "right_after": 3,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "never_told": {
+   "B": 0,
+   "D": 0
+  },
+  "train_rows": 658
+ },
+ {
+  "world": "w1-ines-varga",
+  "arm": "night-abstain-e2",
+  "control": "night",
+  "decision": "rollback",
+  "facts_learned": {
+   "A": 0,
+   "B": 43,
+   "C": 44,
+   "D": 45
+  },
+  "B_forward": 119,
+  "D_forward": 135,
+  "n_forward": 135,
+  "forgot": {
+   "delta": 0.015,
+   "ci95": [
+    -0.041,
+    0.0708
+   ]
+  },
+  "gate": {
+   "base": 0.59,
+   "after": 0.755,
+   "right_base": 6,
+   "right_after": 3,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "never_told": {
+   "A": 11,
+   "B": 0,
+   "C": 28,
+   "D": 1
+  },
+  "train_rows": 627
+ },
+ {
+  "world": "w1-ines-varga",
+  "arm": "night-abstain-2pct",
+  "control": "night",
+  "decision": "rollback",
+  "facts_learned": {
+   "A": 0,
+   "B": 38,
+   "C": 44,
+   "D": 45
+  },
+  "B_forward": 111,
+  "D_forward": 135,
+  "n_forward": 135,
+  "forgot": {
+   "delta": 0.02,
+   "ci95": [
+    -0.0351,
+    0.0749
+   ]
+  },
+  "gate": {
+   "base": 0.59,
+   "after": 0.84,
+   "right_base": 5,
+   "right_after": 4,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "never_told": {
+   "A": 10,
+   "B": 0,
+   "C": 28,
+   "D": 0
+  },
+  "train_rows": 609
+ },
+ {
+  "world": "w1-ines-varga",
+  "arm": "night-unknown-keys",
+  "control": "night",
+  "decision": "rollback",
+  "facts_learned": {
+   "A": 0,
+   "B": 40,
+   "C": 45,
+   "D": 45
+  },
+  "B_forward": 119,
+  "D_forward": 135,
+  "n_forward": 135,
+  "forgot": {
+   "delta": 0.035,
+   "ci95": [
+    -0.0209,
+    0.0905
+   ]
+  },
+  "gate": {
+   "base": 0.575,
+   "after": 0.145,
+   "right_base": 5,
+   "right_after": 9,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "never_told": {
+   "A": 10,
+   "B": 0,
+   "C": 28,
+   "D": 12
+  },
+  "train_rows": 652
+ },
+ {
+  "world": "w3-shop-owner",
+  "arm": "night",
+  "control": null,
+  "decision": "keep",
+  "facts_learned": {
+   "A": 0,
+   "B": 31,
+   "C": 54,
+   "D": 51
+  },
+  "B_forward": 86,
+  "D_forward": 152,
+  "n_forward": 177,
+  "forgot": {
+   "delta": 0.03,
+   "ci95": [
+    -0.0284,
+    0.0881
+   ]
+  },
+  "gate": {
+   "base": 0.58,
+   "after": 0.005,
+   "right_base": 6,
+   "right_after": 7,
+   "note": "check added 27 Oct"
+  },
+  "never_told": {
+   "A": 12,
+   "B": 0,
+   "C": 24,
+   "D": 0
+  },
+  "train_rows": 790
+ },
+ {
+  "world": "w3-shop-owner",
+  "arm": "night-steps264",
+  "control": "night",
+  "decision": "keep",
+  "facts_learned": {
+   "A": 0,
+   "B": 28,
+   "C": 52,
+   "D": 53
+  },
+  "B_forward": 86,
+  "D_forward": 155,
+  "n_forward": 177,
+  "forgot": {
+   "delta": 0.03,
+   "ci95": [
+    -0.0251,
+    0.0847
+   ]
+  },
+  "gate": null,
+  "never_told": {
+   "B": 0,
+   "D": 0
+  },
+  "train_rows": 790
+ },
+ {
+  "world": "w3-shop-owner",
+  "arm": "night-binding",
+  "control": "night-steps264",
+  "decision": "keep",
+  "facts_learned": {
+   "A": 0,
+   "B": 36,
+   "C": 53,
+   "D": 48
+  },
+  "B_forward": 105,
+  "D_forward": 142,
+  "n_forward": 177,
+  "forgot": {
+   "delta": 0.03,
+   "ci95": [
+    -0.0233,
+    0.083
+   ]
+  },
+  "gate": null,
+  "never_told": {
+   "B": 0,
+   "D": 0
+  },
+  "train_rows": 1048
+ },
+ {
+  "world": "w3-shop-owner",
+  "arm": "night-perturbed",
+  "control": "night-steps264",
+  "decision": "keep",
+  "facts_learned": {
+   "A": 0,
+   "B": 34,
+   "C": 54,
+   "D": 49
+  },
+  "B_forward": 98,
+  "D_forward": 147,
+  "n_forward": 177,
+  "forgot": {
+   "delta": 0.015,
+   "ci95": [
+    -0.041,
+    0.0708
+   ]
+  },
+  "gate": null,
+  "never_told": {
+   "B": 1,
+   "D": 2
+  },
+  "train_rows": 996
+ },
+ {
+  "world": "w3-shop-owner",
+  "arm": "night-contrast-notes",
+  "control": "night-steps264",
+  "decision": "rollback",
+  "facts_learned": {
+   "A": 0,
+   "B": 35,
+   "C": 54,
+   "D": 49
+  },
+  "B_forward": 100,
+  "D_forward": 143,
+  "n_forward": 177,
+  "forgot": {
+   "delta": 0.015,
+   "ci95": [
+    -0.0375,
+    0.0673
+   ]
+  },
+  "gate": {
+   "base": 0.59,
+   "after": 0.005,
+   "right_base": 5,
+   "right_after": 5,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "never_told": {
+   "A": 12,
+   "B": 0,
+   "C": 19,
+   "D": 0
+  },
+  "train_rows": 1172
+ }
+]
