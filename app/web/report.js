@@ -38,8 +38,10 @@ function verdict(r) {
   if (d.decision === "keep") p.append("Overnight, Afterglow trained on yesterday and kept the update.");
   else if (d.decision === "rollback") p.append("Overnight, Afterglow trained on yesterday, then rolled the update back.");
   else p.append("Overnight, Afterglow trained on yesterday.");
-  // the night's own reason is gate shorthand; the checks panel below says it in words, so show it only on a rollback
-  if (d.why && d.decision === "rollback") p.append(el("span", "why", d.why));
+  // on a rollback, which checks failed, in words (the night's own "why" is gate shorthand; it is in the receipt)
+  const failed = Object.entries(d.checks || {}).filter(([, ok]) => !ok).map(([k]) => CHECKS[k] || k);
+  if (d.decision === "rollback" && failed.length)
+    p.append(el("span", "why", `It failed ${failed.length === 1 ? "one check" : `${failed.length} checks`}: ${failed.join("; ")}.`));
 }
 
 function forgotNumbers(ev) {
