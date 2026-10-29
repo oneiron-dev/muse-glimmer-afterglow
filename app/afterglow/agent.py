@@ -72,6 +72,18 @@ def supersede_setting(day):
     return on, float(conf.get("link_p", LINK_P)), bool(conf.get("reasoned", False))
 
 
+def supersede_night_rule(day):
+    """The night's link rule on the day path ("supersede_decision": {..., "night_rule": {"from_day", "candidates",
+    "guard", "set"}}; lead, 30 Oct 08:13): from that day the supersede decision reads every active note from an
+    earlier day over `candidates` candidates and links the top one at p >= 0.9, or at p >= 0.6 with the same value
+    shape and a change word in the clause of the user's words that holds the new value, and only when the night-6
+    link guard passes (night/consolidate.py, imported). The setting, or None: off unless the serving notes name it
+    and the supersede decision itself is on."""
+    conf, on = serving_setting("supersede_decision", day)
+    rule = conf.get("night_rule") or {}
+    return rule if on and rule.get("from_day") is not None and int(day) >= int(rule["from_day"]) else None
+
+
 def route_setting(day):
     """The serving notes' setting for the route decision at recall time ("route_decision": {"from_day", "adapter",
     "threshold", "evidence"}; adapter = the decision adapter's file name, found by path on the server, none = base
@@ -154,6 +166,7 @@ class DaySession:
         self.world_state = WorldState(self.dir / "world_state.json", seed=seed or self.world_doc)
         # None = the serving notes decide (supersede_setting); True/False force it (tests, experiments)
         on, self.link_p, reasoned = supersede_setting(self.day)
+        self.night_rule = supersede_night_rule(self.day)
         self.decide_reasoned = reasoned if decide_reasoned is None else decide_reasoned
         on = on if decide_supersede is None else decide_supersede
         route_on, route_adapter, self.route_threshold = route_setting(self.day)
@@ -190,6 +203,8 @@ class DaySession:
         reasoned = Decider(self.client.endpoint, adapter_path=adapter_path, slot=1, trace="supersede_decision_reasoned",
                            thresholds={"supersede": 1.01})
         p_replaces = lambda d: d["p"] if d["yes"] else 1.0 - d["p"]
+        if self.night_rule:
+            return self._night_rule_decider(one_pass, p_replaces)
 
         def decide(new_note):
             earlier = [n for n in self.notes.all() if n["id"] != new_note["id"]]
@@ -210,6 +225,42 @@ class DaySession:
                     decided.update(reason="reasoning_cap", outcome="undecided: keep both")
                 elif t["yes"]:
                     note = by_id[best["candidate"]]
+            return {"note": note, "decided": decided, "decisions": r["decisions"]}
+
+        return decide
+
+    def _night_rule_decider(self, one_pass, p_replaces):
+        """The supersede decision under the night's link rule (supersede_night_rule): the same rule, constants and guard
+        as night/consolidate.py find_replacements, read from it so the two cannot drift. A link the guard refuses keeps
+        both notes and is logged with the guard's reason."""
+        sys.path.append(str(paths.REPO / "night"))
+        from consolidate import READOUT_A_P, SUPERSEDE_ACCEPT_P, change_word_for, link_guard
+        from contrast_rows import shape
+
+        k, guarded = int(self.night_rule.get("candidates", 8)), self.night_rule.get("guard", True)
+
+        def decide(new_note):
+            earlier = [n for n in self.notes.all() if n["id"] != new_note["id"] and (n.get("day") or 1) < self.day]
+            r = one_pass.supersede_link(earlier, new_note, k=k, accept_p=0.0)
+            by_id = {n["id"]: n for n in earlier}
+            ranked = sorted(r["decisions"], key=lambda d: -p_replaces(d))
+            old = by_id.get(r["link"])
+            p = max((d["p"] for d in r["decisions"] if d["candidate"] == r["link"]), default=0.0) if old else 0.0
+            change = change_word_for(self.tools.question or "", new_note["value"])
+            same_shape = old is not None and shape(old["value"]) == shape(new_note["value"])
+            linked_by = None if old is None else ("readout" if p >= SUPERSEDE_ACCEPT_P else
+                                                  "readout (a)" if p >= READOUT_A_P and same_shape and change else None)
+            guard = None
+            if linked_by and guarded:
+                second = next((d for d in ranked if d["candidate"] != old["id"]), None)
+                guard = link_guard(old["value"], new_note["value"], p, second and (
+                    second["candidate"], p_replaces(second), by_id.get(second["candidate"], {}).get("value")))
+            best = ranked[0] if ranked else None
+            decided = {"by": "night rule", "p": best and round(p_replaces(best), 4),
+                       "latency_s": round(r["ms"] / 1000, 3), "candidate": best and best["candidate"],
+                       "candidates": len(r["decisions"]), "linked_by": linked_by, "same_shape": same_shape,
+                       "change_word": change.group(0) if change else None, **({"guard": guard["why"]} if guard else {})}
+            note = old if linked_by and (guard is None or guard["passed"]) else None
             return {"note": note, "decided": decided, "decisions": r["decisions"]}
 
         return decide
