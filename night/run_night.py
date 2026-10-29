@@ -203,7 +203,8 @@ class Night:
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
-                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block}
+                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block,
+                "idk_rows": a.idk_rows}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -380,6 +381,8 @@ class Night:
             extra_rows.append(str(self.night / "self-check.jsonl"))
         if self.args.agent_anchors:
             extra_rows.append(str(self.night / "agent-anchors.jsonl"))
+        if self.args.idk_rows:
+            extra_rows.append(self.args.idk_rows)
         extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
@@ -583,6 +586,7 @@ def main():
     ap.add_argument("--agent-anchors", type=int, default=0, help="base replies to day-agent turns, kept when they take the "
                     "intended action (night/agent_anchor_rows.py; the day server, slot 1)")
     ap.add_argument("--drop-text-acks", action="store_true", help="drop store requests answered in text (night/build_train.py)")
+    ap.add_argument("--idk-rows", help="graded IDK rows from night/idk_rows.py rows (base wrong -> I don't know, right -> its answer)")
     ap.add_argument("--own-note-in-block", action="store_true", help="unknown-key look-alike rows in the notes form hold the "
                     "user's own note for the key (night/unknown_key_rows.py)")
     ap.add_argument("--repeat-forms", nargs="*", default=[], help="FORM:N row weighting in build_train (e.g. agent_remember:3 agent_recall:3)")
