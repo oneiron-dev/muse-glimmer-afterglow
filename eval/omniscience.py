@@ -30,6 +30,16 @@ ABSTAIN_PHRASES = [
     r"\b(?:notes|records) (?:don't|do not|doesn't|does not) (?:have|say|mention|list|include|contain|show)\b",
 ]
 ABSTAIN_RULE = re.compile("|".join(ABSTAIN_PHRASES), re.IGNORECASE)
+APOSTROPHES = str.maketrans({"\u2019": "'", "\u2018": "'", "\u02bc": "'"})  # ’ ‘ ʼ as the phrases' straight '
+
+
+def abstain_text(text):
+    """The reply as the abstain phrases read it: typographic apostrophes made straight ("I don’t have" = "I don't have")."""
+    return (text or "").translate(APOSTROPHES)
+
+
+def says_abstain(text):
+    return bool(ABSTAIN_RULE.search(abstain_text(text)))
 SETS = {"user_facts": ("forward",), "never_told": ("never_told",), "user_facts_with_never_told": ("forward", "never_told"),
         "general": ("general", "forget_mmlu", "forget_tool")}
 
@@ -37,7 +47,7 @@ SETS = {"user_facts": ("forward",), "never_told": ("never_told",), "user_facts_w
 def outcome(result):
     if result["pass"]:
         return "right"
-    if not result.get("truncated") and ABSTAIN_RULE.search((result.get("answer") or "").replace("\u2019", "'")):
+    if not result.get("truncated") and says_abstain(result.get("answer")):
         return "abstain"
     return "wrong"
 
