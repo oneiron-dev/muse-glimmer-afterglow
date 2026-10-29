@@ -12,7 +12,7 @@ an R-Tuning split that sends what the model does not know to a tool or to an hon
 
 The rows keep a three-way balance (answer / look up / say unsure), so the update does not learn "always look up".
 
-  night/lookup_rows.py user --world W --consolidated C --lora-id N --server URL --slot 1 --out-dir DIR
+  night/lookup_rows.py user --world W --consolidated C --lora-path P --server URL --slot 1 --out-dir DIR
   night/lookup_rows.py rows --out-dir DIR --idk-dir DIR --out FILE [--per-form 7] [--per-kind 12]
 """
 
@@ -67,7 +67,11 @@ def user(args):
     with urllib.request.urlopen(f"{root}/lora-adapters", timeout=30) as resp:
         loaded = json.loads(resp.read())
     n_lora = len(loaded)
-    if not 0 <= args.lora_id < n_lora:
+    if args.lora_path:  # the id by path, as the server lists it
+        args.lora_id = next((a["id"] for a in loaded if a.get("path") == args.lora_path), None)
+        if args.lora_id is None:
+            raise SystemExit(f"{args.lora_path} is not loaded on {root}")
+    if args.lora_id is None or not 0 <= args.lora_id < n_lora:
         raise SystemExit(f"--lora-id {args.lora_id} is not loaded ({n_lora} adapters)")
     base = [{"id": i, "scale": 0.0} for i in range(n_lora)]
     adapter = [{"id": i, "scale": 1.0 if i == args.lora_id else 0.0} for i in range(n_lora)]
@@ -152,6 +156,7 @@ def main():
     ap.add_argument("--world")
     ap.add_argument("--consolidated")
     ap.add_argument("--lora-id", type=int, help="user: the night adapter's id on the server")
+    ap.add_argument("--lora-path", help="user: the night adapter's GGUF path on the server (its id is read from /lora-adapters)")
     ap.add_argument("--server", default="http://100.88.57.107:18610")
     ap.add_argument("--slot", type=int, default=1)
     ap.add_argument("--out-dir", required=True)

@@ -1,0 +1,405 @@
+[
+ {
+  "world": "w1-ines-varga",
+  "decision_v3": "rollback",
+  "failed": [
+   "abstention_gate"
+  ],
+  "host": "nelly",
+  "adapter_gguf_sha256": "0ae4a62beb5f326455ada3c9e567d0abae512f775febfe84ae9f56c7b1c9d164",
+  "B": {
+   "by_day": {
+    "1": {
+     "right": 93,
+     "wrong": 14,
+     "abstain": 1
+    },
+    "2": {
+     "right": 12,
+     "wrong": 6,
+     "abstain": 0
+    },
+    "3": {
+     "right": 20,
+     "wrong": 19,
+     "abstain": 0
+    }
+   },
+   "stale": [
+    0,
+    27
+   ],
+   "never_told": [
+    1,
+    30
+   ]
+  },
+  "D": {
+   "by_day": {
+    "1": {
+     "right": 108,
+     "wrong": 0,
+     "abstain": 0
+    },
+    "2": {
+     "right": 14,
+     "wrong": 4,
+     "abstain": 0
+    },
+    "3": {
+     "right": 32,
+     "wrong": 5,
+     "abstain": 2
+    }
+   },
+   "stale": [
+    0,
+    27
+   ],
+   "never_told": [
+    27,
+    30
+   ]
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": 30,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.585,
+   "after": 0.355,
+   "right_base": 5,
+   "right_after": 2,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.025,
+   "ci95": [
+    -0.0274,
+    0.0772
+   ]
+  },
+  "night_links": []
+ },
+ {
+  "world": "w2-solo-developer",
+  "decision_v3": "rollback",
+  "failed": [
+   "abstention_gate"
+  ],
+  "host": "nelly",
+  "adapter_gguf_sha256": "8b09cc0ce49c1dfb010a3bb33df53fc490ac9af93f9269ebbc383b1c62c33b7f",
+  "B": {
+   "by_day": {
+    "1": {
+     "right": 80,
+     "wrong": 67,
+     "abstain": 0
+    },
+    "2": {
+     "right": 10,
+     "wrong": 8,
+     "abstain": 0
+    },
+    "3": {
+     "right": 18,
+     "wrong": 21,
+     "abstain": 0
+    }
+   },
+   "stale": [
+    0,
+    27
+   ],
+   "never_told": [
+    0,
+    30
+   ]
+  },
+  "D": {
+   "by_day": {
+    "1": {
+     "right": 135,
+     "wrong": 7,
+     "abstain": 5
+    },
+    "2": {
+     "right": 12,
+     "wrong": 3,
+     "abstain": 3
+    },
+    "3": {
+     "right": 29,
+     "wrong": 8,
+     "abstain": 2
+    }
+   },
+   "stale": [
+    2,
+    27
+   ],
+   "never_told": [
+    19,
+    30
+   ]
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": 30,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.585,
+   "after": 0.215,
+   "right_base": 5,
+   "right_after": 4,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.025,
+   "ci95": [
+    -0.0237,
+    0.0735
+   ]
+  },
+  "night_links": []
+ },
+ {
+  "world": "w3-shop-owner",
+  "decision_v3": "keep",
+  "failed": [],
+  "host": "nelly",
+  "adapter_gguf_sha256": "7594aa0e0291111e97bd7538816234e41757adf9912eacdc8e25b23cf6c6eb66",
+  "B": {
+   "by_day": {
+    "1": {
+     "right": 58,
+     "wrong": 91,
+     "abstain": 1
+    },
+    "2": {
+     "right": 5,
+     "wrong": 13,
+     "abstain": 0
+    },
+    "3": {
+     "right": 11,
+     "wrong": 28,
+     "abstain": 0
+    }
+   },
+   "stale": [
+    8,
+    27
+   ],
+   "never_told": [
+    1,
+    30
+   ]
+  },
+  "D": {
+   "by_day": {
+    "1": {
+     "right": 110,
+     "wrong": 16,
+     "abstain": 24
+    },
+    "2": {
+     "right": 12,
+     "wrong": 5,
+     "abstain": 1
+    },
+    "3": {
+     "right": 30,
+     "wrong": 8,
+     "abstain": 1
+    }
+   },
+   "stale": [
+    6,
+    27
+   ],
+   "never_told": [
+    26,
+    30
+   ]
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": 30,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.59,
+   "after": 0.625,
+   "right_base": 5,
+   "right_after": 3,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.015,
+   "ci95": [
+    -0.0337,
+    0.0636
+   ]
+  },
+  "night_links": []
+ },
+ {
+  "world": "w4-grad-student",
+  "decision_v3": "rollback",
+  "failed": [
+   "abstention_gate"
+  ],
+  "host": "nelly",
+  "adapter_gguf_sha256": "c1174c65f858b1ffdf59850b1bbe75b2e1895cd90d2f523544fa3bf7a59add0c",
+  "B": {
+   "by_day": {
+    "1": {
+     "right": 69,
+     "wrong": 84,
+     "abstain": 0
+    },
+    "2": {
+     "right": 12,
+     "wrong": 6,
+     "abstain": 0
+    },
+    "3": {
+     "right": 13,
+     "wrong": 23,
+     "abstain": 0
+    }
+   },
+   "stale": [
+    1,
+    27
+   ],
+   "never_told": [
+    0,
+    30
+   ]
+  },
+  "D": {
+   "by_day": {
+    "1": {
+     "right": 112,
+     "wrong": 39,
+     "abstain": 2
+    },
+    "2": {
+     "right": 16,
+     "wrong": 2,
+     "abstain": 0
+    },
+    "3": {
+     "right": 18,
+     "wrong": 18,
+     "abstain": 0
+    }
+   },
+   "stale": [
+    4,
+    27
+   ],
+   "never_told": [
+    16,
+    30
+   ]
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": 30,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.585,
+   "after": 0.1,
+   "right_base": 5,
+   "right_after": 7,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.045,
+   "ci95": [
+    -0.0035,
+    0.0931
+   ]
+  },
+  "night_links": [
+   {
+    "old_id": "N0042",
+    "old_key": "advisor_meeting_location",
+    "new_id": "N0086",
+    "new_key": "advisor office room",
+    "linked_by": "readout",
+    "p": 0.9199
+   }
+  ]
+ }
+]
