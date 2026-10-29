@@ -20,6 +20,9 @@ WORLDS = {"w1": "w1-ines-varga", "w2": "w2-solo-developer", "w3": "w3-shop-owner
 NIGHTS = {"night3": (3, "night"), "idk": (3, "night-3-idk"), "idkc": (3, "night-3-idkc"), "idk2to1": (3, "night-3-idk2to1"),
           "night3b": (3, "night-3b"), "night2b": (2, "night"), "night2d": (2, "night-2d"), "night4": (4, "night"), "idkr": (3, "night-3-idkr"),
           "night4b": (4, "night-4b"), "night5": (5, "night")}  # w4 2b was promoted to night/
+# nights promoted into night/ after their read: the arm follows its folder (w3 4b promoted 29 Oct 21:04, its plain
+# night 4 kept as night-replaced-20261029-2104/)
+PROMOTED = {("w3", "night4"): (4, "night-replaced-20261029-2104"), ("w3", "night4b"): (4, "night")}
 
 
 def main():
@@ -34,7 +37,7 @@ def main():
         if world not in WORLDS or which not in NIGHTS:
             print(json.dumps({"arm": name, "skipped": "no night folder"}))
             continue
-        day, night_dir = NIGHTS[which]
+        day, night_dir = PROMOTED.get((world, which), NIGHTS[which])
         out = runs / WORLDS[world] / str(day) / night_dir / "eval" / "product-honesty-night.json"
         if not out.parent.exists():
             print(json.dumps({"arm": name, "skipped": f"{out.parent} missing"}))
