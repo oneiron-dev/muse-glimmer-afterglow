@@ -108,6 +108,7 @@ def user(args):
             rec["base_searched"] = invoke == "search_web"
         rec["adapter_searched"] = first_action(a["completion"])[1] == "search_web"
         recs.append(rec)
+        print(f"user {k + 1}/{len(items)} {item['id']} {rec['adapter_outcome']}", file=sys.stderr, flush=True)
     (out / "user-answers.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs))
     count = lambda o: sum(r["adapter_outcome"] == o for r in recs)
     summary = {"facts": len(recs), "search_on": search_on, **{o: count(o) for o in ("right", "wrong", "abstained", "looked_up")},
@@ -156,6 +157,7 @@ def general(args, root, system, tools, base, out):
                 rec["answer"] = g["completion"].split("to=user<|message|>")[-1].replace("<|eot|>", "").strip() if kind == "answer" else None
                 kept[kind] += 1
             recs.append(rec)
+            print(f"general {kind} {qid} usable={rec['usable']} {invoke or target}", file=sys.stderr, flush=True)
     (out / "general-answers.jsonl").write_text("".join(json.dumps(r) + "\n" for r in recs))
     return {"asked": {k: sum(r["kind"] == k for r in recs) for k in kept}, "usable": kept,
             "first_action_on_wrong": {a: sum(1 for r in recs if r["kind"] == "search" and (r["invoke"] or r["target"]) == a)
