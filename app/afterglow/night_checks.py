@@ -18,7 +18,8 @@ CHECK_NAMES = {"leak_check": "no held-out question in the training data",
                "gguf_matches_peft": "the served file matches the trained one", "learned_gate": "it learned enough",
                "forgot_gate": "it kept its general skill", "tool_gate": "no new failures on the eval-form tool questions",
                "content_channel": "its chat replies land in the reply", "tool_calls": "it still calls its tools in chat",
-               "abstention_gate": "it says it does not know about as often as before"}
+               "abstention_gate": "it says it does not know about as often as before",
+               "abstention_product_form": "as the day assistant, it still says it does not know when it should"}
 
 ABSTAIN_RATES = re.compile(r"abstain rate ([\d.]+) -> ([\d.]+)")
 
@@ -132,7 +133,8 @@ def unlinked_corrections(world, day, consolidated):
 
 def night_results(world, day, night_dir=None):
     """Every check the night of (world, day) has a result for: {name: True | False}, from decision.json's checks,
-    the abstention check and the two chat checks (the night's own, else the files added after it ran). night_dir:
+    the abstention check, the product-form abstention check (decision-product-2s.json) and the two chat checks (the
+    night's own, else the files added after it ran). night_dir:
     a night variant's folder relative to the world ("2/night-2b"); default "<day>/night"."""
     night = paths.runs_root() / world / (night_dir or f"{day}/night")
     decision = read_json(night / "decision.json") or {}
@@ -140,6 +142,10 @@ def night_results(world, day, night_dir=None):
     abst = abstention_gate(night)
     if abst and abst.get("passed") is not None:
         results.setdefault("abstention_gate", abst["passed"])
+    # the abstention check in the day assistant's own form (owner ruling B, 29 Oct), written after the night ran
+    product = (read_json(night / "decision-product-2s.json") or {}).get("checks") or {}
+    if product.get("abstention_product_form") is not None:
+        results.setdefault("abstention_product_form", product["abstention_product_form"])
     for c in chat_checks(night, read_json(night / "eval.json"), decision):
         if c.get("passed") is not None:
             results.setdefault(c["name"], c["passed"])

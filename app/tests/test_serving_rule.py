@@ -74,6 +74,20 @@ class ServingRuleTest(unittest.TestCase):
         (d / "decision.json").write_text(json.dumps({"decision": "keep", "checks": {"learned_gate": True}}))
         self.assertIsNone(serving_choice("w", self.entries[:1])["entry"])
 
+    def test_the_product_form_check_replaces_the_abstention_gate(self):
+        product = ["abstention_product_form"] + CHECKS[1:]  # owner ruling B: the SimpleQA gate is shown, not a bar
+        (self.runs / "serving" / "serving-rule.json").write_text(json.dumps({"checks": product, "set": "test"}))
+        self.night(1, failed=["abstention_gate"])
+        self.night(2, failed=["abstention_gate"], decision="rollback")
+        self.assertIsNone(serving_choice("w", self.entries)["entry"])  # not measured in the product form yet
+        (self.runs / "w" / "1" / "night" / "decision-product-2s.json").write_text(json.dumps(
+            {"decision": "keep", "checks": {"abstention_product_form": True}}))
+        (self.runs / "w" / "2" / "night" / "decision-product-2s.json").write_text(json.dumps(
+            {"decision": "rollback", "checks": {"abstention_product_form": False}}))
+        c = serving_choice("w", self.entries)
+        self.assertEqual(c["entry"]["day"], 1)
+        self.assertEqual(c["failed"], {"night 2": ["abstention_product_form"]})
+
 
 if __name__ == "__main__":
     unittest.main()
