@@ -87,5 +87,29 @@ class ServerRunGuardTest(unittest.TestCase):
             self.assertIsNone(product_answers.server_identity("http://h:1", "mel")["server_run"])
 
 
+class DecideGuardTest(unittest.TestCase):
+    """Arms that ran with different decisions on in the day agent (route at recall time, supersede at remember time)
+    are never paired; a row from before the fields existed ran with both off."""
+
+    def test_which_rows_pair(self):
+        from product_abstention import same_decide
+        self.assertTrue(same_decide({}, {"route_on": False, "supersede_on": False}))
+        self.assertFalse(same_decide({}, {"route_on": True, "supersede_on": False}))
+        on = {"route_on": True, "supersede_on": True, "decide_settings_sha256": "d" * 64}
+        self.assertTrue(same_decide(on, dict(on)))
+        self.assertFalse(same_decide(on, dict(on, decide_settings_sha256="e" * 64)))  # another threshold or code
+        self.assertFalse(same_decide(dict(on, decide_settings_sha256=None), dict(on, decide_settings_sha256=None)))
+
+    def test_route_on_and_off_are_never_paired(self):
+        d = Path(tempfile.mkdtemp()) / "wt"
+        d.mkdir()
+        rows = [dict(raw_row("base", "q1", RUN_A), route_on=True, supersede_on=True, decide_settings_sha256="d" * 64),
+                dict(raw_row("night3", "q1", RUN_A), route_on=False, supersede_on=True)]
+        (d / "raw.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
+        with self.assertRaises(SystemExit) as e:
+            product_answers.compose_answer_files(d)
+        self.assertIn("different decisions on", str(e.exception))
+
+
 if __name__ == "__main__":
     unittest.main()

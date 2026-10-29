@@ -1,0 +1,38 @@
+{
+ "grader": "spark-sub",
+ "rule": "new declines graded on the base's answer, new answers on the adapter's",
+ "arms": {
+  "w1-idk": {
+   "pairs": 200,
+   "new_declines": {
+    "n": 75,
+    "base_answer": {
+     "INCORRECT": 64,
+     "CORRECT": 11
+    }
+   },
+   "new_answers": {
+    "n": 3,
+    "adapter_answer": {
+     "INCORRECT": 3
+    }
+   }
+  },
+  "w1-idkc": {
+   "pairs": 200,
+   "new_declines": {
+    "n": 11,
+    "base_answer": {
+     "INCORRECT": 11
+    }
+   },
+   "new_answers": {
+    "n": 30,
+    "adapter_answer": {
+     "INCORRECT": 28,
+     "CORRECT": 2
+    }
+   }
+  }
+ }
+}

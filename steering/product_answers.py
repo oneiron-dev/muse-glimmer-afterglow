@@ -18,7 +18,8 @@ live schema (the same tool list as the app with search on) but never sends a que
 the turn, and the row records "looked_it_up": true and the query (0 searches leave the machine). The server is
 deterministic only within one run, so every row also records the llama-server run that answered it and the hash of
 its loaded adapter set (server_run, adapters_loaded_sha256; --server-host), and arms from different runs are never
-paired either.
+paired either; nor are arms that ran with different decisions on (--route, --supersede: route_on, supersede_on, and with one on
+the hash of their serving-notes settings and code, decide_settings_sha256).
 Order: never_told before general, and within a set base then each adapter arm, so a deadline cuts general last.
 """
 
@@ -55,7 +56,8 @@ def compose_answer_files(wdir):
     pair with saw different tools (web search on in one of them, or a different tool list), or was answered by another
 server run."""
     sys.path.insert(0, str(REPO / "eval"))
-    from product_abstention import SERVER_FIELDS, refuse_mixed_server, refuse_mixed_tools, tools_seen
+    from product_abstention import (DECIDE_FIELDS, SERVER_FIELDS, refuse_mixed_decide, refuse_mixed_server,
+                                    refuse_mixed_tools, tools_seen)
 
     raw = [json.loads(line) for line in (wdir / "raw.jsonl").read_text().splitlines() if line.strip()]
     base = {(r["set"], r["id"]): r for r in raw if r["arm_name"] == "base"}
@@ -64,11 +66,12 @@ server run."""
         pairs = [(base[k], r) for k, r in mine.items() if k in base]
         refuse_mixed_tools(pairs, f"{wdir.name} arm {name}")
         refuse_mixed_server(pairs, f"{wdir.name} arm {name}")
+        refuse_mixed_decide(pairs, f"{wdir.name} arm {name}")
         rows = [dict(r, arm="base") for k, r in base.items() if k in mine] + [dict(r, arm="adapter") for r in mine.values()]
         (wdir / f"answers-{name}.jsonl").write_text("".join(json.dumps(
             {**{k: r[k] for k in ("arm", "set", "id", "answer", "truncated")},
              **dict(zip(("web_search_on", "tools_sha256"), tools_seen(r))),
-             **{k: r[k] for k in ("looked_it_up", "search_query", *SERVER_FIELDS) if k in r}}) + "\n" for r in rows))
+             **{k: r[k] for k in ("looked_it_up", "search_query", *SERVER_FIELDS, *DECIDE_FIELDS) if k in r}}) + "\n" for r in rows))
 
 
 def server_identity(endpoint, host):
@@ -93,6 +96,19 @@ def server_identity(endpoint, host):
     return {"server_run": run, "adapters_loaded_sha256": adapters}
 
 
+DECIDE_CODE = ("app/afterglow/agent.py", "app/afterglow/tools.py", "decide/decider.py", "decide/prompts.py")
+
+
+def decide_settings(scratch):
+    """sha256 of what the route and supersede decisions run with: their serving-notes entries (adapter, threshold,
+    link_p, ...) and the code that applies them, so two rows with the decisions on pair only when both are the same."""
+    rule = scratch / "serving" / "serving-rule.json"
+    conf = json.loads(rule.read_text()) if rule.exists() else {}
+    code = {f: hashlib.sha256((REPO / f).read_bytes()).hexdigest() for f in DECIDE_CODE if (REPO / f).exists()}
+    doc = {"route_decision": conf.get("route_decision"), "supersede_decision": conf.get("supersede_decision"), "code": code}
+    return hashlib.sha256(json.dumps(doc, sort_keys=True).encode()).hexdigest()
+
+
 class SearchOffered(BaseException):
     """search_web was called in the offered mode: ends the turn (a BaseException, so the tool box's error handling
     does not turn it into a tool result)."""
@@ -106,7 +122,8 @@ def offered_search(query, max_results=None):
     raise SearchOffered(query)
 
 
-def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot, web_search="off"):
+def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot, web_search="off",
+        route=None, supersede=None):
     """One fresh day-agent session; returns (answer, truncated, error, {"web_search_on", "tools_sha256"}, search)
     where search is None, or in the offered mode {"looked_it_up", "search_query"}."""
     scratch = Path(tempfile.mkdtemp(dir=tmp))
@@ -122,9 +139,12 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     from afterglow.agent import DaySession  # paths are read per call, so the scratch root applies
     from afterglow.llm import GlimmerClient
     client = GlimmerClient(endpoint, slot=slot, lora_scale=scale)
-    session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0, web_search=web_search != "off")
+    session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0, web_search=web_search != "off",
+                         decide_route=route, decide_supersede=supersede)
     tools = {"web_search_on": bool(session.web_search_on),
-             "tools_sha256": hashlib.sha256(json.dumps(session.tool_schemas, sort_keys=True).encode()).hexdigest()}
+             "tools_sha256": hashlib.sha256(json.dumps(session.tool_schemas, sort_keys=True).encode()).hexdigest(),
+             "route_on": session.tools.decide_route is not None, "supersede_on": session.tools.decide_supersede is not None}
+    tools["decide_settings_sha256"] = decide_settings(scratch) if tools["route_on"] or tools["supersede_on"] else None
     if adapter_path:
         session.client.adapter_path = adapter_path
     if web_search == "offered":  # the live tool list, but no query is ever sent and no cap applies
@@ -142,6 +162,8 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
            if line.strip()][-1]
     rounds = rec.get("rounds") or [{}]
     truncated = rounds[-1].get("finish_reason") in ("length", "limit")
+    if rec.get("route_decisions"):  # the route decision at recall time: which note it picked (none = ask the user)
+        tools["route_decisions"] = rec["route_decisions"]
     shutil.rmtree(scratch, ignore_errors=True)
     return ev.get("content") or "", truncated, ev.get("error"), tools, search
 
@@ -169,6 +191,11 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--deadline-s", type=float, default=7200)
     ap.add_argument("--server-host", default="mel", help="ssh host running the llama-server (its run id is recorded)")
+    onoff = {"serving": None, "on": True, "off": False}
+    ap.add_argument("--route", choices=tuple(onoff), default="serving",
+                    help="the route decision at recall time: serving = the serving notes for day 1 (off), on, off")
+    ap.add_argument("--supersede", choices=tuple(onoff), default="serving",
+                    help="the supersede decision at remember time: serving = the serving notes for day 1 (off), on, off")
     ap.add_argument("--web-search", nargs="?", const="live", default="off", choices=("off", "offered", "live"),
                     help="the day agent's search_web tool: off (default; product-form reads compare arms without it), "
                          "offered (the live schema, calls recorded, nothing sent) or live (bare --web-search: real searches)")
@@ -224,7 +251,8 @@ def main():
                 time.sleep(5)
             tq = time.time()
             answer, truncated, error, tools, search = ask(it["question"], w, notes_file, manifest, args.endpoint, path,
-                                                          scale, args.date, tmp, args.slot, web_search=args.web_search)
+                                                          scale, args.date, tmp, args.slot, web_search=args.web_search,
+                                                          route=onoff[args.route], supersede=onoff[args.supersede])
             row = {"arm_name": arm, "set": s, "id": it["id"], "answer": answer, "truncated": truncated, "error": error,
                    "seconds": round(time.time() - tq, 2), **tools, **(search or {}),
                    **server_identity(args.endpoint, args.server_host)}
