@@ -70,7 +70,7 @@ Fetched at setup or called over the network. None of it is copied into this repo
 | Dependency | Pin | Used for |
 |---|---|---|
 | [oneiron-dev/afterglow](https://github.com/oneiron-dev/afterglow) (ours, published before the event) | commit `06e9ecf754a25ffbf0fed3eae812aea72994a9a4` | llama.cpp + DFlash serving setup, KV snapshot harness, 14 Oct QLoRA and drafter measurements |
-| [Oneiron](https://github.com/oneiron-dev/oneiron) memory engine (ours, published before the event) | engine commit recorded in each run receipt | notes store and overnight consolidation (Dreamer) |
+| [Oneiron](https://github.com/oneiron-dev/oneiron) memory engine (ours, published before the event) | engine commit recorded in each run receipt | memory vault: a copy of each simulated day is witnessed into it after the day, and Oneiron's Dreamer consolidates that copy. The day agent and the night job read the notes from a local file (`runs/<world>/<day>/notes.json`); a vault notes backend exists in `app/afterglow/notes.py` but no run uses it yet |
 | Muse Glimmer 30B (Meta) | `meta-models/Muse-Glimmer-30B-GGUF` @ `70bf1b61`; `unsloth/Muse-Glimmer-30B-unsloth-bnb-4bit` @ `ecedda39` | the model that runs by day and learns at night |
 | Official DFlash drafter for Glimmer (Meta) | same GGUF repo and revision | faster decoding |
 | llama.cpp, Unsloth, PEFT, Transformers | versions recorded in each run receipt | serving and training |
