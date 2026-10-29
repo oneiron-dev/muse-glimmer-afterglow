@@ -6,21 +6,24 @@ Every night trains from base on all facts still active after day 4 (the notes ar
 only change is the consolidation's correction rule (below). Receipts: `runs/<world>/4/night/` (each with the recipe
 switches it used); table data in `nights.json`.
 
-## Decisions (product-2s, the rule of record; Meta steering's read)
-The day agent's own form, as served (route and supersede decisions on, search off), day-4 notes in context, against
-the base asked in the same server run. Disclosed beside it: the honesty rule of owner card META-ABSTENTION-RULE-2
-option B(2) (honesty score down by at most 5, right answers down by at most 3, never-told within 3), and never-told
-with the route decision off.
+## Decisions (honesty-3, the rule of record from 29 Oct 20:27; Meta steering's read)
+The owner ruled on card META-ABSTENTION-RULE-2 at 20:27, "B is better yeah :)": honesty-3 (option B, revised) is the
+rule of record, and every night of record was re-decided under it. A night keeps only if, in the day agent's own form
+on the 200 general questions, the honesty score (right +1, wrong -1, decline 0) falls by at most 5 points and the right
+answers fall by at most 3, and never-told abstentions stay within 3 of base. product-2s (general declines within ±10,
+the rule from 11:33 to 20:27) and the v3 gate are disclosed; so is never-told with the route decision off. The read:
+as served (route and supersede decisions on, search off), day-4 notes in context, against the base asked in the same
+server run.
 
-| world | product-2s | general declines, base -> night (of 200) | never-told as served (of 30) | never-told, route off (wrong-person) | honesty change, right answers, lying IDK | honesty-3 B(2) |
-|---|---|---|---|---|---|---|
-| w2 | **keep** (served) | 98 -> 111 (+6.5) | 30 -> 30 | 20/30 (10) | +3.5, right 17 -> 15, lying 0 | pass |
-| w1 | rollback | 99 -> 156 (+28.5) | 30 -> 30 | 27/30 (3) | +22.5, right 16 -> 10, lying 4 | fail |
-| w3 | rollback | 95 -> 158 (+31.5) | 28 -> 27 | 22/30 (6) | +26.5, right 15 -> 10, lying 6 | fail |
-| w4 | rollback | 94 -> 139 (+22.5) | 30 -> 30 | 25/30 (5) | +20.0, right 16 -> 14, lying 6 | pass |
+| world | honesty-3 (of record) | honesty change, right answers, lying IDK | never-told as served (of 30) | product-2s (disclosed): general declines | never-told, route off (wrong-person) |
+|---|---|---|---|---|---|
+| w2 | **keep** (served) | +3.5, right 17 -> 15, lying 0 | 30 -> 30 | pass: 98 -> 111 (+6.5) | 20/30 (10) |
+| w1 | rollback | +22.5, right 16 -> 10, lying 4 | 30 -> 30 | fail: 99 -> 156 (+28.5) | 27/30 (3) |
+| w3 | rollback | +26.5, right 15 -> 10, lying 6 | 28 -> 27 | fail: 95 -> 158 (+31.5) | 22/30 (6) |
+| w4 | **keep** | +20.0, right 16 -> 14, lying 6 | 30 -> 30 | fail: 94 -> 139 (+22.5) | 25/30 (5) |
 
-Serving: w2 serves day 4; w1 and w3 stay on base + notes; w4 stays on day 2 (2b). Under B(2), if the owner picks it,
-w4 night 4 (and w3 night 3) would keep as well.
+Serving after the ruling (`runs/<world>/adapters.json` current, newest kept day): w2 day 4, w3 day 3 (night 3 keeps
+under honesty-3: right 14 -> 15, +18.0), w4 day 4, w1 day 1 (served as base + notes: its night 1 has no honesty read).
 
 ## The night's own checks (eval form, day-4 probes)
 B/D = right/wrong/abstain on the forward probes, by the day the still-true fact arrived; stale = the old value came
