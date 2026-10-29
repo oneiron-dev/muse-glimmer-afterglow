@@ -44,10 +44,12 @@ Every night passes all of its own checks (learned, forgetting, tools, channel); 
   training rows per world (the unknown-key replies) and in the base's own declines; w2 carries the same 16 rows, so
   the rows may amplify a base habit rather than create it. Under test: w3 night-4b, the same data with those 16
   replies (24 in all) rewritten to name the key and ask for it (`--unknown-keys-ask-back`).
-- **The mis-binding grows in the weights; the route check holds it at serving.** With the route decision off, the
+- **The mis-binding grows in the weights; the route check holds it at serving when the agent looks up.** With the route decision off, the
   night attaches a saved fact to another person in 3-10 of 30 never-told questions (w2: 3 wrong-person answers in its
   night-3 read, 10 with the route off at night 4).
-  As served, the route's named-person check catches them (30/30 in w1, w2, w4). The rule measures the served
+  As served, when the agent looks up, the route's named-person check catches them (30/30 in w1, w2, w4). An answer
+  taken straight from the notes in context, with no recall call, bypasses it (w3 night-4b: 1 such wrong-person
+  answer); day 5 moves the named-person check onto the user's question, before generation. The rule measures the served
   assistant, so the decisions stand; the route-off line is shown on every decision.
 - **Corrections found by the night (option (a'), one rule for the readout and the teacher rule).** w2: 2 links, both
   right ("release dry run is now Tuesdays at 15:00", "deployment window time is now Fridays at 22:00"). w1, w3: 0
