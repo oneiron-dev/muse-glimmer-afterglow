@@ -180,7 +180,7 @@ def duplicate_check(active):
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
         from decide.decider import Decider
-        url = teacher_mod.serving_base_url()
+        url = os.environ.get("GLIMMER_BASE_URL") or teacher_mod.serving_base_url()  # the teacher's server, so one URL moves both
         d = Decider(url[:-3] if url.endswith("/v1") else url, slot=int(os.environ.get("NIGHT_SLOT", "1")), trace="night_duplicate")
         k = int(os.environ.get("D1_DUPLICATE_K", "0"))  # 0 = the decider's default; 2 under load (Meta decide)
         r = d.duplicate_check([{"id": n["id"], "key": n["key"], "value": n["value"]} for n in active], **({"k": k} if k else {}))
@@ -207,7 +207,7 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
     try:  # Meta decide's one-pass supersede readout (base Glimmer, slot 1); accepted at p >= its accept_p (0.9)
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
         from decide.decider import Decider
-        url = teacher_mod.serving_base_url()
+        url = os.environ.get("GLIMMER_BASE_URL") or teacher_mod.serving_base_url()  # the teacher's server, so one URL moves both
         readout = Decider(url[:-3] if url.endswith("/v1") else url, slot=1)
     except Exception as e:  # noqa: BLE001  (not on this checkout, or the server is down): the rule below only
         readout, readout_error = None, f"{type(e).__name__}: {e}"
