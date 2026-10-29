@@ -6,6 +6,8 @@ declines or asks the user back. The rows sit beside the ask-back rows, so the ni
 never told -> ask" and "a public question -> answer or look it up" side by side. --rows N picks N kept replies
 (N = the world-night's ask-back row count); the pool order per world is fixed by its seed. Rows are the raw prompt and
 completion, trained verbatim like the agent anchors; the receipt carries the pool's hash.
+--no-search (lead 30 Oct 02:27, w4 night 5d): search_web is not offered, so only replies that answer in place are kept
+(the product read of record runs with search off; base called search on every public question when it was offered).
 """
 
 import argparse
@@ -62,6 +64,7 @@ def main():
     ap.add_argument("--n-loras", type=int)
     ap.add_argument("--reasoning", default="low", help="the day agent's default")
     ap.add_argument("--seed", type=int, default=20261030)
+    ap.add_argument("--no-search", action="store_true", help="search_web not offered: keep only replies that answer")
     ap.add_argument("--out", required=True)
     ap.add_argument("--report", required=True)
     args = ap.parse_args()
@@ -76,7 +79,7 @@ def main():
         with urllib.request.urlopen(f"{root}/lora-adapters", timeout=30) as resp:
             args.n_loras = len(json.loads(resp.read()))
     lora = [{"id": i, "scale": 0.0} for i in range(args.n_loras)]
-    tools = TOOL_SCHEMAS + [SEARCH_WEB_SCHEMA]
+    tools = TOOL_SCHEMAS if args.no_search else TOOL_SCHEMAS + [SEARCH_WEB_SCHEMA]
     rows, report = [], []
     for item in order:
         if len(rows) >= args.rows:
@@ -106,7 +109,8 @@ def main():
     hows = {}
     for x in report:
         hows[x["how"]] = hows.get(x["how"], 0) + 1
-    summary = {"world": args.world, "pool": str(POOL.relative_to(ROOT)), "pool_sha256": pool_sha, "asked": len(report),
+    summary = {"world": args.world, "pool": str(POOL.relative_to(ROOT)), "pool_sha256": pool_sha, "search_offered": not args.no_search,
+               "asked": len(report),
                "kept": len(rows), "wanted": args.rows, "by_outcome": hows,
                "kept_by_part": {p: sum(1 for x in report if x["kept"] and x["part"] == p) for p in ("nq", "who_is", "where_is")}}
     Path(args.report).write_text(json.dumps({**summary, "asked_detail": report}, indent=1) + "\n")
