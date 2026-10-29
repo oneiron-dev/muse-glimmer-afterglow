@@ -88,6 +88,15 @@ class ServingRuleTest(unittest.TestCase):
         self.assertEqual(c["entry"]["day"], 1)
         self.assertEqual(c["failed"], {"night 2": ["abstention_product_form"]})
 
+    def test_a_check_with_no_result_is_named_apart_from_a_failed_one(self):
+        product = ["abstention_product_form"] + CHECKS[1:]
+        (self.runs / "serving" / "serving-rule.json").write_text(json.dumps({"checks": product, "set": "test"}))
+        self.night(1, failed=["tool_calls"])  # no product-form result either
+        c = serving_choice("w", self.entries[:1])
+        self.assertIsNone(c["entry"])
+        self.assertEqual(c["unmeasured"], {"night 1": ["abstention_product_form"]})
+        self.assertIn("failed the 'it still calls its tools in chat' check and has no result yet for", c["why"])
+
 
 if __name__ == "__main__":
     unittest.main()
