@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:12:13+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -232,7 +232,7 @@
    ],
    "statement": "The Larkspur specs are on the shared drive under /eng/larkspur/rev-d.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F77"
   },
   {
    "id": "F20",
@@ -244,7 +244,7 @@
    ],
    "statement": "The Larkspur frame is on Rev D.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F76"
   },
   {
    "id": "F21",
@@ -396,7 +396,7 @@
    ],
    "statement": "Kestrel's fire assembly point is the north car park.",
    "valid_from": 1,
-   "superseded_by": "F77"
+   "superseded_by": null
   },
   {
    "id": "F34",
@@ -463,7 +463,7 @@
    ],
    "statement": "If Old Gus goes down, Kestrel's backup machine shop is Falk Precision.",
    "valid_from": 1,
-   "superseded_by": "F76"
+   "superseded_by": null
   },
   {
    "id": "F40",
@@ -781,166 +781,167 @@
   },
   {
    "id": "F65",
-   "key": "new forklift model",
-   "value": "Lifter LX-90",
+   "key": "adhesive supplier name",
+   "value": "Nordbond Adhesives",
    "accept": [
-    "lifter lx-90",
-    "lx-90 lifter"
+    "nordbond adhesives",
+    "nordbond adhesive supplier"
    ],
-   "statement": "Kestrel Fabrication received a new Lifter LX-90 forklift today.",
+   "statement": "The new adhesive supplier is Nordbond Adhesives.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F66",
-   "key": "temporary storage unit",
-   "value": "Unit B-17",
+   "key": "field test site",
+   "value": "Havsborg Quarry",
    "accept": [
-    "unit b-17",
-    "b-17 unit"
+    "havsborg quarry",
+    "havsborg quarry site"
    ],
-   "statement": "Ines booked temporary storage Unit B-17 for overflow today.",
+   "statement": "The field test site is Havsborg Quarry.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F67",
-   "key": "new survey client",
-   "value": "Selvik Mapping",
+   "key": "new composites engineer",
+   "value": "Sanna Roeg",
    "accept": [
-    "selvik mapping",
-    "selvik mapping client"
+    "sanna roeg",
+    "engineer sanna roeg"
    ],
-   "statement": "Selvik Mapping signed as a new survey client today.",
+   "statement": "The new composites engineer is Sanna Roeg.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F68",
-   "key": "new scheduling software",
-   "value": "Planwick Pro",
+   "key": "calibration due date",
+   "value": "11 June",
    "accept": [
-    "planwick pro",
-    "planwick pro app"
+    "11 june",
+    "june 11",
+    "11th june",
+    "june 11th",
+    "11th of june"
    ],
-   "statement": "The operations team adopted Planwick Pro for scheduling today.",
+   "statement": "The calibration due date is 11 June.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F69",
-   "key": "prototype review room",
-   "value": "Room 2.14",
+   "key": "torque audit document",
+   "value": "DX-47B",
    "accept": [
-    "room 2.14",
-    "2.14 meeting room",
-    "2.14"
+    "dx-47b",
+    "dx 47b document",
+    "47b"
    ],
-   "statement": "The prototype review moved to Room 2.14 today.",
+   "statement": "The torque audit document is DX-47B.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F70",
-   "key": "packaging vendor contact",
-   "value": "Sorin Alda",
+   "key": "prototype storage room",
+   "value": "Room 6.21",
    "accept": [
-    "sorin alda",
-    "sorin alda vendor"
+    "room 6.21",
+    "storage room 6.21",
+    "6.21"
    ],
-   "statement": "Sorin Alda became the new packaging vendor contact today.",
+   "statement": "The prototype storage room is Room 6.21.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F71",
-   "key": "calibration due date",
-   "value": "30 June",
+   "key": "overflow delivery partner",
+   "value": "Fenmark Logistics",
    "accept": [
-    "30 june",
-    "june 30",
-    "30th june",
-    "june 30th",
-    "30th of june"
+    "fenmark logistics",
+    "fenmark logistics firm"
    ],
-   "statement": "The rig calibration due date was set to 30 June today.",
+   "statement": "The overflow delivery partner is Fenmark Logistics.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F72",
-   "key": "lab access code",
-   "value": "Code 53921",
+   "key": "battery test bench",
+   "value": "Voltdeck V9",
    "accept": [
-    "code 53921",
-    "53921 lab code",
-    "53921"
+    "voltdeck v9",
+    "voltdeck v9 bench"
    ],
-   "statement": "The lab access code was changed to Code 53921 today.",
+   "statement": "The battery test bench is Voltdeck V9.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F73",
-   "key": "new printer model",
-   "value": "Stratabuild S-9",
+   "key": "client visit date",
+   "value": "30 July",
    "accept": [
-    "stratabuild s-9",
-    "s-9 stratabuild"
+    "30 july",
+    "july 30",
+    "30th july",
+    "july 30th",
+    "30th of july"
    ],
-   "statement": "The workshop installed a Stratabuild S-9 printer today.",
+   "statement": "The client visit date is 30 July.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F74",
-   "key": "offsite vibration test site",
-   "value": "Kaldvik Quarry",
+   "key": "spare motor model",
+   "value": "KX-61",
    "accept": [
-    "kaldvik quarry",
-    "kaldvik quarry site"
+    "kx-61",
+    "kx 61 motor"
    ],
-   "statement": "Offsite vibration testing was arranged at Kaldvik Quarry today.",
+   "statement": "The spare motor model is KX-61.",
    "valid_from": 4,
    "superseded_by": null
   },
   {
    "id": "F75",
    "key": "machining building",
-   "value": "Hall D",
+   "value": "Hall B",
    "accept": [
-    "hall d",
-    "hall d machining"
+    "hall b"
    ],
-   "statement": "The machining building is now Hall D.",
+   "statement": "Machining is now in Hall B.",
    "valid_from": 4,
    "superseded_by": null,
    "supersedes": "F11"
   },
   {
    "id": "F76",
-   "key": "backup machine shop",
-   "value": "Norvik Engineering",
+   "key": "current frame revision",
+   "value": "Rev E",
    "accept": [
-    "norvik engineering",
-    "norvik engineering shop"
+    "rev e"
    ],
-   "statement": "The backup machine shop is now Norvik Engineering.",
+   "statement": "Current frame revision is Rev E.",
    "valid_from": 4,
    "superseded_by": null,
-   "supersedes": "F39"
+   "supersedes": "F20"
   },
   {
    "id": "F77",
-   "key": "fire assembly point",
-   "value": "the south car park",
+   "key": "Larkspur spec folder",
+   "value": "/eng/larkspur/rev-e",
    "accept": [
-    "south car park"
+    "/eng/larkspur/rev-e"
    ],
-   "statement": "The fire assembly point is now the south car park.",
+   "statement": "Larkspur spec folder is /eng/larkspur/rev-e.",
    "valid_from": 4,
    "superseded_by": null,
-   "supersedes": "F33"
+   "supersedes": "F19"
   }
  ],
  "preferences": [

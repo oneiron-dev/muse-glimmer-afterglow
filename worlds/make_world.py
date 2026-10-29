@@ -35,8 +35,11 @@ except ImportError as e:  # night/teacher.py lands with the night engine
 
 JST = dt.timezone(dt.timedelta(hours=9))
 SEED = 20261027
-# Wording a later day never introduces (the vault's write-side secret scan keys on it; day 1 stays as frozen)
-CREDENTIAL_WORDS = re.compile(r"\b(api[ _-]?keys?|tokens?|passwords?|passwd|secrets?)\b", re.I)
+# Wording a later day never introduces: credentials and access codes (an assistant that learns them reads like one
+# that stores secrets, and the vault's write-side secret scan keys on some of it). Day 1 stays as frozen.
+CREDENTIAL_WORDS = re.compile(r"\b(api[ _-]?keys?|tokens?|passwords?|passwd|secrets?|passcodes?"
+                              r"|(door|access|alarm|lock|keypad|entry|gate|safe) codes?|(?-i:PINs?)|pin (codes?|numbers?))\b",
+                              re.I)
 
 ARCHETYPES = {
     "solo-developer": "a solo software developer who builds and sells one small product through a one-person "
@@ -105,7 +108,7 @@ Pick exactly {n_corrections} of these facts that would plausibly change by the n
 NEW_FACTS_PROMPT = """{name} ({summary}) keeps using a personal AI assistant. These are the facts it already holds:
 {facts}
 
-Invent exactly {n_facts} NEW facts about the person's work life that came up today: new people, projects, places, codes, dates, equipment or arrangements. Each fact: {{"key": a short lowercase topic in 2-5 words, not one of the keys above, "value": just the answer in 1-5 words, "accept": 1-3 lowercase alternatives; EACH ONE ALONE must identify this value and no other fact's value, never a lone generic word, "require_all": optional list of extra lowercase strings an answer must also contain, "statement": one full sentence that states the fact}}. Every name, company, code and number is invented and appears in no fact above. No value repeats another value. No fact is about health, diet, fitness, sleep, mood, feelings, personality, family, religion or politics, and none is a recurring event at 16:00.
+Invent exactly {n_facts} NEW facts about the person's work life that came up today: new people, projects, places, codes, dates, equipment or arrangements. Each fact: {{"key": a short lowercase topic in 2-5 words, not one of the keys above, "value": just the answer in 1-5 words, "accept": 1-3 lowercase alternatives; EACH ONE ALONE must identify this value and no other fact's value, never a lone generic word, "require_all": optional list of extra lowercase strings an answer must also contain, "statement": one full sentence that states the fact}}. Every name, company, code and number is invented and appears in no fact above. No value repeats another value. No fact is about health, diet, fitness, sleep, mood, feelings, personality, family, religion or politics, and none is a recurring event at 16:00. A code is a project, part, booking or document code, never a password, PIN, door, gate or access code, key or other credential.
 
 Return one JSON object, nothing else: {{"facts": [...]}}."""
 
