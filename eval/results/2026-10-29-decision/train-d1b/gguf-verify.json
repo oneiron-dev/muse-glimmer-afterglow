@@ -1,0 +1,22 @@
+{
+ "adapter": "/data/meta-decide/out/d1b/epoch1",
+ "gguf": "/data/meta-decide/out/d1b/decision-d1b.gguf",
+ "peft_r": 16,
+ "peft_alpha": 16,
+ "gguf_alpha": 16.0,
+ "modules_checked": 364,
+ "missing_in_gguf": [],
+ "extra_gguf_tensors": [],
+ "worst_rel_err": 0.000511,
+ "tolerance": 0.02,
+ "worst_by_kind": {
+  "attn_k": 0.000371,
+  "attn_output": 0.000384,
+  "attn_q": 0.000511,
+  "attn_v": 0.000486,
+  "ffn_down": 0.000366,
+  "ffn_gate": 0.000418,
+  "ffn_up": 0.000474
+ },
+ "passed": true
+}

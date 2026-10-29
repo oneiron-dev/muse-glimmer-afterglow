@@ -181,3 +181,44 @@ are different facts that share a value. Rows: `decide/data/duplicate-day3-check.
 
 Base makes no false "same" at p ≥ 0.9 on real notes. D1 makes two, both in w4. D1b adds code-built different-fact
 pairs that share a value. This set is part of its bar.
+
+## D1b: the decision LoRA with D1's gaps fixed (trained on nelly 09:16–09:39; read out on mel 09:53–10:00)
+
+Same trainer and recipe as D1 (r16, attention + MLP, all layers, LR 1e-4, one epoch). Rows come from
+`decide/rows_d1b.py` (1,283 rows, 661k tokens, w1–w3 only, 0 question leaks, 0 whole-pair leaks against every check
+set):
+- supersede: 72 positives whose earlier note is Glimmer's own restatement of the old note; negatives cut to 2 per
+  positive;
+- route: 20% asks instead of 36%, and each of the 300 route rows given twice;
+- duplicate: 70 "different facts" pairs that share a name, code, time or number.
+
+Training took 81 steps and 23 min, at a peak of 19.3 GiB. The GGUF passed its check; sha256 64f75d77…817a
+(`train-d1b/`). Readouts: `readout-D1b.jsonl`; scores: `score-D1b.json`, `bars-D1b.json`.
+
+### Route (w4): the bar is met
+
+| arm | forward (180) | never-told (30) | all 210 |
+|---|---|---|---|
+| always look up (arm D) | 0.656 (149 right / 31 wrong / 0 asked) | −1.000 (0 asked) | 0.419 |
+| D0 + look up below p 0.6 | 0.594 | 1.000 | 0.652 |
+| D1 | 0.506 | 1.000 | 0.576 |
+| **D1b** (calibration picks no look-up) | **0.656** (143 / 25 / 12) | **1.000** (30 asked) | **0.705** |
+
+D1b picks the right note for 114 of the 150 answerable questions (D0: 71, D1: 88). It says "ask" on only 7 of them
+(D0: 49) and asks on all 30 never-told questions. On forward questions it ties always looking up with fewer wrong
+answers (25 vs 31). Over all 210 it is the best route arm.
+
+### Supersede and duplicate: the bar at p ≥ 0.9 is missed by one wrong answer each
+
+| set | D0 at p ≥ 0.9 | D1b at p ≥ 0.9 | D1b at its calibrated cut |
+|---|---|---|---|
+| supersede, clean w4 day-2 corrections (6) | 1 link, 0 wrong | 6 links, **1 wrong** | 3 links, 0 wrong (cut 0.97) |
+| supersede, day-3 corrections (12, all worlds) | 8 links, 0 wrong | 9 links, 0 wrong | 8 links, 0 wrong (cut 0.97) |
+| supersede, synthetic w4 test (12) | 12 links, 1 wrong | 12 links, 1 wrong | 12 links, 1 wrong (cut 0.97) |
+| duplicate, real day-3 pairs (3 same) | 2 same, 0 false | 3 same, **1 false** | 2 same, 0 false (cut 0.98) |
+| duplicate, w4 test (63 same) | 22 same, 0 false | 62 same, 0 false | 56 same, 0 false (cut 0.98) |
+
+Each calibrated cut is the lowest p with no wrong answer on the w1–w3 calibration rows (supersede 0.97, duplicate
+0.98). It was fit before looking at the test sets above. The wrong link at p ≥ 0.9 links "group_meeting: Fridays
+16:00" to "advisor weekly meeting time: Wednesdays 09:30" (p 0.93). The false duplicate is the same Room 312 pair as
+D1's (p 0.97). D1b's day-3 supersede accuracy is 0.971 against D0's 0.853.
