@@ -22,8 +22,9 @@ server run.
 | w3 | rollback | +26.5, right 15 -> 10, lying 6 | 28 -> 27 | fail: 95 -> 158 (+31.5) | 22/30 (6) |
 | w4 | **keep** | +20.0, right 16 -> 14, lying 6 | 30 -> 30 | fail: 94 -> 139 (+22.5) | 25/30 (5) |
 
-Serving after the ruling (`runs/<world>/adapters.json` current, newest kept day): w2 day 4, w3 day 3 (night 3 keeps
-under honesty-3: right 14 -> 15, +18.0), w4 day 4, w1 day 1 (served as base + notes: its night 1 has no honesty read).
+Serving after the ruling (`runs/<world>/adapters.json` current, newest kept day): w2 day 4, w3 day 4 from 21:04 (the
+promoted night-4b below; before it, night 3, which keeps under honesty-3: right 14 -> 15, +18.0), w4 day 4, w1 day 1
+(served as base + notes: its night 1 has no honesty read).
 
 ## The night's own checks (eval form, day-4 probes)
 B/D = right/wrong/abstain on the forward probes, by the day the still-true fact arrived; stale = the old value came
@@ -44,10 +45,12 @@ Every night passes all of its own checks (learned, forgetting, tools, channel); 
   training rows per world (the unknown-key replies) and in the base's own declines; w2 carries the same 16 rows, so
   the rows may amplify a base habit rather than create it. Under test: w3 night-4b, the same data with those 16
   replies (24 in all) rewritten to name the key and ask for it (`--unknown-keys-ask-back`).
-- **The mis-binding grows in the weights; the route check holds it at serving.** With the route decision off, the
+- **The mis-binding grows in the weights; the route check holds it at serving when the agent looks up.** With the route decision off, the
   night attaches a saved fact to another person in 3-10 of 30 never-told questions (w2: 3 wrong-person answers in its
   night-3 read, 10 with the route off at night 4).
-  As served, the route's named-person check catches them (30/30 in w1, w2, w4). The rule measures the served
+  As served, when the agent looks up, the route's named-person check catches them (30/30 in w1, w2, w4). An answer
+  taken straight from the notes in context, with no recall call, bypasses it (w3 night-4b: 1 such wrong-person
+  answer); day 5 moves the named-person check onto the user's question, before generation. The rule measures the served
   assistant, so the decisions stand; the route-off line is shown on every decision.
 - **Corrections found by the night (option (a'), one rule for the readout and the teacher rule).** w2: 2 links, both
   right ("release dry run is now Tuesdays at 15:00", "deployment window time is now Fridays at 22:00"). w1, w3: 0
@@ -66,8 +69,13 @@ The same day-4 data and recipe as w3 night 4; only the 24 unknown-key replies di
 haven't told me your sales region yet. What is it?", no notes wording). Night checks, n4 -> 4b: never-told D (notes in
 context) 7 -> 26/30, B 0 -> 3; gate (disclosed) 5.5% -> 37.0%; B facts d1 63/78 -> 64/77, d3 14/25 -> 9/30, d4 21/18 ->
 18/21; D d1 abstain 2 -> 19; stale B 8 -> 9, D 7 -> 5; forgetting +3.0 pt both; tools 20/20, channel 30/30. One run of
-each, so the fact differences may be run-to-run variation. Its product-form read (general declines against w3 n4's
-+31.5) is the test; it lands in a later PR.
+each, so the fact differences may be run-to-run variation. Product form (as served, day-4 notes, base in the same run): honesty
++24.5 [+16, +33], right answers 15 -> 12 (at the floor), lying IDK 2, never-told 28 -> 26: **honesty-3 keep**; disclosed
+product-2s fail (general declines +27.5, against n4's +31.5); route off 22/30 (wrong-person 6, made-up 2). The never-told
+misses as served: 3 near-synonym route picks the base shares, and 1 wrong-person answer through the no-recall path.
+**Promoted (lead, 21:03) to w3's day 4** (`promote_night.py --note`; the plain-recipe night 4 is kept as
+`runs/w3-shop-owner/4/night-replaced-20261029-2104/`): w3 serves day 4. One run, passing at the right-answer floor.
+Ask-back is the night-5 default recipe.
 
 ## Fixes made today that touch these numbers
 - Option (a') (629a8da, e18bedb): a correction the night finds, by the readout or the teacher, needs a change word in
