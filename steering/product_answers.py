@@ -96,6 +96,20 @@ def server_identity(endpoint, host):
     return {"server_run": run, "adapters_loaded_sha256": adapters}
 
 
+REWRITES = REPO / "eval" / "data" / "never_told_rewrites"
+
+
+def load_rewrites(world):
+    """The frozen held-out never-told rewrites for one world (set never_told_rewrites: lookalike questions without the
+    possessive), checked against their FROZEN.json; scored with the never-told rules."""
+    path = REWRITES / f"{world}.jsonl"
+    if not path.exists():
+        return []
+    if hashlib.sha256(path.read_bytes()).hexdigest() != json.loads((REWRITES / "FROZEN.json").read_text())["files"].get(path.name):
+        raise SystemExit(f"{path.name} changed since it was frozen")
+    return [{"id": r["id"], "question": r["question"]} for r in map(json.loads, path.read_text().splitlines())]
+
+
 DECIDE_CODE = ("app/afterglow/agent.py", "app/afterglow/tools.py", "decide/decider.py", "decide/prompts.py")
 
 
@@ -180,7 +194,7 @@ def main():
     ap.add_argument("--skip-base", action="store_true", help="do not ask the base again (its answers are in raw.jsonl)")
     ap.add_argument("--slot", type=int, default=1, help="server slot; run one process per slot (one call per slot)")
     ap.add_argument("--notes-day", type=int, default=2)
-    ap.add_argument("--sets", default="never_told,general")
+    ap.add_argument("--sets", default="never_told,general", help="never_told, general, never_told_rewrites (held out)")
     ap.add_argument("--limit-general", type=int, default=100,
                     help="first N gate-slice questions in the frozen hash order (100 = a direction screen)")
     ap.add_argument("--general-from", type=int, default=0,
@@ -226,7 +240,8 @@ def main():
                     arms.append((name, entry["path"], 1.0))
                 else:
                     print(json.dumps({"world": w, "arm": name, "skipped": f"no day-{day} adapter in the manifest"}), flush=True)
-            items = [{"id": it["id"], "question": it["question"]} for it in never_told.load(w)] if s == "never_told" else general
+            items = ([{"id": it["id"], "question": it["question"]} for it in never_told.load(w)] if s == "never_told"
+                     else load_rewrites(w) if s == "never_told_rewrites" else general)
             if only:
                 items = [it for it in items if it["id"] in only]
             if s == "general" and args.general_adapters != "none" and not any(

@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -175,7 +175,7 @@
    ],
    "statement": "Kestrel's laser cutter is up on the mezzanine, above the paint booth.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F88"
   },
   {
    "id": "F15",
@@ -384,7 +384,7 @@
    ],
    "statement": "Lotte Brandt is Kestrel's safety officer.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F90"
   },
   {
    "id": "F33",
@@ -396,7 +396,7 @@
    ],
    "statement": "Kestrel's fire assembly point is the north car park.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F89"
   },
   {
    "id": "F34",
@@ -942,6 +942,171 @@
    "valid_from": 4,
    "superseded_by": null,
    "supersedes": "F19"
+  },
+  {
+   "id": "F78",
+   "key": "powder coating vendor",
+   "value": "Quayline Coatings",
+   "accept": [
+    "quayline coatings",
+    "quayline vendor"
+   ],
+   "statement": "Our powder coating vendor is Quayline Coatings.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F79",
+   "key": "ultrasonic cleaner model",
+   "value": "Soniclear S-300",
+   "accept": [
+    "soniclear s-300",
+    "soniclear cleaner",
+    "300"
+   ],
+   "statement": "The ultrasonic cleaner model is Soniclear S-300.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F80",
+   "key": "freight booking reference",
+   "value": "BK-5391-QT",
+   "accept": [
+    "bk-5391-qt",
+    "booking bk-5391",
+    "5391"
+   ],
+   "statement": "The freight booking reference is BK-5391-QT.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F81",
+   "key": "packaging audit date",
+   "value": "14 August",
+   "accept": [
+    "14 august",
+    "august 14",
+    "14th august",
+    "august 14th",
+    "14th of august"
+   ],
+   "statement": "The packaging audit date is 14 August.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F82",
+   "key": "new logistics coordinator",
+   "value": "Aldric Venn",
+   "accept": [
+    "aldric venn",
+    "aldric coordinator"
+   ],
+   "statement": "Our new logistics coordinator is Aldric Venn.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F83",
+   "key": "vibration test chamber",
+   "value": "Tremorlab Q-36",
+   "accept": [
+    "tremorlab q-36",
+    "tremorlab chamber"
+   ],
+   "statement": "The vibration test chamber is Tremorlab Q-36.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F84",
+   "key": "supplier demo town",
+   "value": "Keldorvik Harbor",
+   "accept": [
+    "keldorvik harbor",
+    "keldorvik demo"
+   ],
+   "statement": "The supplier demo town is Keldorvik Harbor.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F85",
+   "key": "prototype fastener code",
+   "value": "TW-118-ZK",
+   "accept": [
+    "tw-118-zk",
+    "fastener tw-118",
+    "118"
+   ],
+   "statement": "The prototype fastener code is TW-118-ZK.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F86",
+   "key": "tool crib supervisor",
+   "value": "Bodil Kranz",
+   "accept": [
+    "bodil kranz",
+    "bodil supervisor"
+   ],
+   "statement": "The tool crib supervisor is Bodil Kranz.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F87",
+   "key": "backup generator installer",
+   "value": "Voltmere Installations",
+   "accept": [
+    "voltmere installations",
+    "voltmere installer"
+   ],
+   "statement": "The backup generator installer is Voltmere Installations.",
+   "valid_from": 5,
+   "superseded_by": null
+  },
+  {
+   "id": "F88",
+   "key": "laser cutter location",
+   "value": "ground floor workshop",
+   "accept": [
+    "ground floor workshop",
+    "ground floor"
+   ],
+   "statement": "The laser cutter is now in the ground floor workshop.",
+   "valid_from": 5,
+   "superseded_by": null,
+   "supersedes": "F14"
+  },
+  {
+   "id": "F89",
+   "key": "fire assembly point",
+   "value": "south lot entrance",
+   "accept": [
+    "south lot entrance",
+    "south lot"
+   ],
+   "statement": "The fire assembly point is now the south lot entrance.",
+   "valid_from": 5,
+   "superseded_by": null,
+   "supersedes": "F33"
+  },
+  {
+   "id": "F90",
+   "key": "safety officer",
+   "value": "Mira Solberg",
+   "accept": [
+    "mira solberg",
+    "officer mira solberg"
+   ],
+   "statement": "The safety officer is now Mira Solberg.",
+   "valid_from": 5,
+   "superseded_by": null,
+   "supersedes": "F32"
   }
  ],
  "preferences": [
