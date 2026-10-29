@@ -32,7 +32,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "eval"))
-from omniscience import ABSTAIN_RULE  # noqa: E402
+from omniscience import ABSTAIN_RULE, abstain_text  # noqa: E402
 
 ABSTAIN = re.compile(ABSTAIN_RULE.pattern + r"|^\W*(?:unknown|not sure|no idea|n/?a|i don't know|i do not know)\W*$"
                      r"|\b(?:need|requires?) (?:more )?(?:context|information|tools)\b", re.IGNORECASE)
@@ -130,7 +130,7 @@ def deterministic_grade(answer, gold):
         a = None  # short answers ("-O", ";") are case- and symbol-sensitive: the grader model decides
     if a and (a == g or (as_number(answer) is not None and as_number(answer) == as_number(gold))):
         return "correct"
-    if not answer.strip() or ABSTAIN.search(answer.replace("\u2019", "'")):
+    if not answer.strip() or ABSTAIN.search(abstain_text(answer)):
         return "not_attempted"  # an answer of symbols or another script is an attempt, not an abstention
     return None
 

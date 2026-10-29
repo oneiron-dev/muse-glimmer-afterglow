@@ -1,0 +1,804 @@
+[
+ {
+  "world": "w2-solo-developer",
+  "decision_product_2s": "keep",
+  "failed": [],
+  "disclosed": {
+   "abstention_gate_v3": false,
+   "abstention_honesty_3": true
+  },
+  "adapter_gguf_sha256": "c39661159ff7a89a4b42c6966ebe21c6130d81d01a5c0de4440de664d6108d81",
+  "product": {
+   "base": {
+    "general": {
+     "n": 200,
+     "abstain": 98,
+     "abstain_rate": 0.49
+    },
+    "never_told": {
+     "n": 30,
+     "abstain": 30
+    }
+   },
+   "adapter": {
+    "general": {
+     "n": 200,
+     "abstain": 111,
+     "abstain_rate": 0.555
+    },
+    "never_told": {
+     "n": 30,
+     "abstain": 30
+    }
+   }
+  },
+  "honesty": {
+   "honesty_base": -33.0,
+   "honesty_adapter": -29.5,
+   "honesty_change": 3.5,
+   "honesty_change_ci95": [
+    -5.5,
+    12.0
+   ],
+   "parts": {
+    "lying_idk": 0,
+    "true_idk": 26,
+    "made_up": 19,
+    "new_right": 3
+   },
+   "general": {
+    "base": {
+     "right": 17,
+     "wrong": 83,
+     "decline": 98,
+     "other": 2
+    },
+    "adapter": {
+     "right": 15,
+     "wrong": 74,
+     "decline": 111,
+     "other": 0
+    }
+   },
+   "never_told": {
+    "base": 30,
+    "adapter": 30
+   }
+  },
+  "never_told_route_off": {
+   "base": {
+    "n": 30,
+    "abstain": 30,
+    "wrong_person": 0,
+    "made_up": 0
+   },
+   "adapter": {
+    "n": 30,
+    "abstain": 20,
+    "wrong_person": 10,
+    "made_up": 0
+   }
+  },
+  "recipe_switches": {
+   "file": "/Users/olety/.claude/jobs/614c40c8/tmp/night4/RECIPE-used-w2-solo-developer",
+   "text": "OWN_NOTE=0\nIDK=none\n",
+   "OWN_NOTE": "0",
+   "IDK": "none"
+  },
+  "B": {
+   "by_day": {
+    "1": {
+     "right": 78,
+     "wrong": 60,
+     "abstain": 0
+    },
+    "2": {
+     "right": 7,
+     "wrong": 11,
+     "abstain": 0
+    },
+    "3": {
+     "right": 17,
+     "wrong": 22,
+     "abstain": 0
+    },
+    "4": {
+     "right": 23,
+     "wrong": 15,
+     "abstain": 1
+    }
+   },
+   "stale": [
+    4,
+    36
+   ],
+   "never_told": [
+    2,
+    30
+   ]
+  },
+  "D": {
+   "by_day": {
+    "1": {
+     "right": 124,
+     "wrong": 12,
+     "abstain": 2
+    },
+    "2": {
+     "right": 10,
+     "wrong": 7,
+     "abstain": 1
+    },
+    "3": {
+     "right": 29,
+     "wrong": 9,
+     "abstain": 1
+    },
+    "4": {
+     "right": 29,
+     "wrong": 10,
+     "abstain": 0
+    }
+   },
+   "stale": [
+    4,
+    36
+   ],
+   "never_told": [
+    20,
+    30
+   ]
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": 30,
+  "gate": {
+   "base": 0.585,
+   "after": 0.105,
+   "right_base": 5,
+   "right_after": 8,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.04,
+   "ci95": [
+    -0.0133,
+    0.0928
+   ]
+  },
+  "night_corrections": [
+   {
+    "decision": "superseded",
+    "linked_by": "readout (a)",
+    "p": 0.605,
+    "change_word": "now",
+    "old_key": "release walkthrough time",
+    "old_value": "Mondays 14:00",
+    "new_key": "release dry run time",
+    "new_value": "Tuesdays at 15:00"
+   },
+   {
+    "decision": "superseded",
+    "linked_by": "readout (a)",
+    "p": 0.7974,
+    "change_word": "change",
+    "old_key": "release live time",
+    "old_value": "Thursdays 21:00",
+    "new_key": "deployment window time",
+    "new_value": "Fridays at 22:00"
+   }
+  ]
+ },
+ {
+  "world": "w1-ines-varga",
+  "decision_product_2s": "rollback",
+  "failed": [
+   "abstention_product_form"
+  ],
+  "disclosed": {
+   "abstention_gate_v3": false,
+   "abstention_honesty_3": true
+  },
+  "adapter_gguf_sha256": "c7950fddbd6406c3279564296283d90eb37160bcb36e70f5d989be0d21510fe4",
+  "product": {
+   "base": {
+    "general": {
+     "n": 200,
+     "abstain": 99,
+     "abstain_rate": 0.495
+    },
+    "never_told": {
+     "n": 30,
+     "abstain": 30
+    }
+   },
+   "adapter": {
+    "general": {
+     "n": 200,
+     "abstain": 156,
+     "abstain_rate": 0.78
+    },
+    "never_told": {
+     "n": 30,
+     "abstain": 30
+    }
+   }
+  },
+  "honesty": {
+   "honesty_base": -34.0,
+   "honesty_adapter": -11.5,
+   "honesty_change": 22.5,
+   "honesty_change_ci95": [
+    13.5,
+    31.5
+   ],
+   "parts": {
+    "lying_idk": 4,
+    "true_idk": 54,
+    "made_up": 5,
+    "new_right": 3
+   },
+   "general": {
+    "base": {
+     "right": 16,
+     "wrong": 84,
+     "decline": 99,
+     "other": 1
+    },
+    "adapter": {
+     "right": 10,
+     "wrong": 33,
+     "decline": 156,
+     "other": 1
+    }
+   },
+   "never_told": {
+    "base": 30,
+    "adapter": 30
+   }
+  },
+  "never_told_route_off": {
+   "base": {
+    "n": 30,
+    "abstain": 30,
+    "wrong_person": 0,
+    "made_up": 0
+   },
+   "adapter": {
+    "n": 30,
+    "abstain": 27,
+    "wrong_person": 3,
+    "made_up": 0
+   }
+  },
+  "recipe_switches": {
+   "file": "/Users/olety/.claude/jobs/614c40c8/tmp/night4/RECIPE-used-w1-ines-varga",
+   "text": "OWN_NOTE=0\nIDK=none\n",
+   "OWN_NOTE": "0",
+   "IDK": "none"
+  },
+  "B": {
+   "by_day": {
+    "1": {
+     "right": 79,
+     "wrong": 20,
+     "abstain": 0
+    },
+    "2": {
+     "right": 13,
+     "wrong": 5,
+     "abstain": 0
+    },
+    "3": {
+     "right": 30,
+     "wrong": 9,
+     "abstain": 0
+    },
+    "4": {
+     "right": 15,
+     "wrong": 24,
+     "abstain": 0
+    }
+   },
+   "stale": [
+    0,
+    36
+   ],
+   "never_told": [
+    0,
+    30
+   ]
+  },
+  "D": {
+   "by_day": {
+    "1": {
+     "right": 99,
+     "wrong": 0,
+     "abstain": 0
+    },
+    "2": {
+     "right": 18,
+     "wrong": 0,
+     "abstain": 0
+    },
+    "3": {
+     "right": 37,
+     "wrong": 2,
+     "abstain": 0
+    },
+    "4": {
+     "right": 31,
+     "wrong": 7,
+     "abstain": 1
+    }
+   },
+   "stale": [
+    0,
+    36
+   ],
+   "never_told": [
+    21,
+    30
+   ]
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": 30,
+  "gate": {
+   "base": 0.575,
+   "after": 0.28,
+   "right_base": 6,
+   "right_after": 5,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.025,
+   "ci95": [
+    -0.0292,
+    0.0789
+   ]
+  },
+  "night_corrections": [
+   {
+    "decision": "kept: no change word in the clause that states the new value",
+    "linked_by": "consolidation rule",
+    "p": null,
+    "change_word": null,
+    "old_key": "test fly location",
+    "old_value": "Skjerstad Meadows",
+    "new_key": "outdoor trial location",
+    "new_value": "Havsborg Quarry"
+   }
+  ]
+ },
+ {
+  "world": "w3-shop-owner",
+  "decision_product_2s": "rollback",
+  "failed": [
+   "abstention_product_form"
+  ],
+  "disclosed": {
+   "abstention_gate_v3": false,
+   "abstention_honesty_3": false
+  },
+  "adapter_gguf_sha256": "492be4338862bcb112312843245a5fc4b6738dc3c266e7b38446febb21dfa730",
+  "product": {
+   "base": {
+    "general": {
+     "n": 200,
+     "abstain": 95,
+     "abstain_rate": 0.475
+    },
+    "never_told": {
+     "n": 30,
+     "abstain": 28
+    }
+   },
+   "adapter": {
+    "general": {
+     "n": 200,
+     "abstain": 158,
+     "abstain_rate": 0.79
+    },
+    "never_told": {
+     "n": 30,
+     "abstain": 27
+    }
+   }
+  },
+  "honesty": {
+   "honesty_base": -37.0,
+   "honesty_adapter": -10.5,
+   "honesty_change": 26.5,
+   "honesty_change_ci95": [
+    19.0,
+    34.5
+   ],
+   "parts": {
+    "lying_idk": 6,
+    "true_idk": 57,
+    "made_up": 1,
+    "new_right": 2
+   },
+   "general": {
+    "base": {
+     "right": 15,
+     "wrong": 89,
+     "decline": 95,
+     "other": 1
+    },
+    "adapter": {
+     "right": 10,
+     "wrong": 31,
+     "decline": 158,
+     "other": 1
+    }
+   },
+   "never_told": {
+    "base": 28,
+    "adapter": 27
+   }
+  },
+  "never_told_route_off": {
+   "base": {
+    "n": 30,
+    "abstain": 30,
+    "wrong_person": 0,
+    "made_up": 0
+   },
+   "adapter": {
+    "n": 30,
+    "abstain": 22,
+    "wrong_person": 6,
+    "made_up": 2
+   }
+  },
+  "recipe_switches": {
+   "file": "/Users/olety/.claude/jobs/614c40c8/tmp/night4/RECIPE-used-w3-shop-owner",
+   "text": "OWN_NOTE=0\nIDK=none\n",
+   "OWN_NOTE": "0",
+   "IDK": "none"
+  },
+  "B": {
+   "by_day": {
+    "1": {
+     "right": 63,
+     "wrong": 78,
+     "abstain": 0
+    },
+    "2": {
+     "right": 10,
+     "wrong": 8,
+     "abstain": 0
+    },
+    "3": {
+     "right": 14,
+     "wrong": 25,
+     "abstain": 0
+    },
+    "4": {
+     "right": 21,
+     "wrong": 18,
+     "abstain": 0
+    }
+   },
+   "stale": [
+    8,
+    36
+   ],
+   "never_told": [
+    0,
+    30
+   ]
+  },
+  "D": {
+   "by_day": {
+    "1": {
+     "right": 122,
+     "wrong": 17,
+     "abstain": 2
+    },
+    "2": {
+     "right": 10,
+     "wrong": 8,
+     "abstain": 0
+    },
+    "3": {
+     "right": 26,
+     "wrong": 13,
+     "abstain": 0
+    },
+    "4": {
+     "right": 28,
+     "wrong": 10,
+     "abstain": 1
+    }
+   },
+   "stale": [
+    7,
+    36
+   ],
+   "never_told": [
+    7,
+    30
+   ]
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": 30,
+  "gate": {
+   "base": 0.57,
+   "after": 0.055,
+   "right_base": 5,
+   "right_after": 5,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.03,
+   "ci95": [
+    -0.0233,
+    0.083
+   ]
+  },
+  "night_corrections": [
+   {
+    "decision": "kept: no change word in the clause that states the new value",
+    "linked_by": "consolidation rule",
+    "p": null,
+    "change_word": null,
+    "old_key": "front till cover",
+    "old_value": "Lena Frost covering front till Saturday and Sunday",
+    "new_key": "weekend charge",
+    "new_value": "Nadia Cole Saturdays and Sundays"
+   }
+  ]
+ },
+ {
+  "world": "w4-grad-student",
+  "decision_product_2s": "rollback",
+  "failed": [
+   "abstention_product_form"
+  ],
+  "disclosed": {
+   "abstention_gate_v3": false,
+   "abstention_honesty_3": true
+  },
+  "adapter_gguf_sha256": "b52e5be99694eb1e3e858aed7fd2d043371c12df1dabd0ded475907f486873b3",
+  "product": {
+   "base": {
+    "general": {
+     "n": 200,
+     "abstain": 94,
+     "abstain_rate": 0.47
+    },
+    "never_told": {
+     "n": 30,
+     "abstain": 30
+    }
+   },
+   "adapter": {
+    "general": {
+     "n": 200,
+     "abstain": 139,
+     "abstain_rate": 0.695
+    },
+    "never_told": {
+     "n": 30,
+     "abstain": 30
+    }
+   }
+  },
+  "honesty": {
+   "honesty_base": -36.5,
+   "honesty_adapter": -16.5,
+   "honesty_change": 20.0,
+   "honesty_change_ci95": [
+    11.5,
+    28.5
+   ],
+   "parts": {
+    "lying_idk": 6,
+    "true_idk": 44,
+    "made_up": 7,
+    "new_right": 6
+   },
+   "general": {
+    "base": {
+     "right": 16,
+     "wrong": 89,
+     "decline": 94,
+     "other": 1
+    },
+    "adapter": {
+     "right": 14,
+     "wrong": 47,
+     "decline": 139,
+     "other": 0
+    }
+   },
+   "never_told": {
+    "base": 30,
+    "adapter": 30
+   }
+  },
+  "never_told_route_off": {
+   "base": {
+    "n": 30,
+    "abstain": 30,
+    "wrong_person": 0,
+    "made_up": 0
+   },
+   "adapter": {
+    "n": 30,
+    "abstain": 25,
+    "wrong_person": 5,
+    "made_up": 0
+   }
+  },
+  "recipe_switches": {
+   "file": "/Users/olety/.claude/jobs/614c40c8/tmp/night4/RECIPE-used-w4-grad-student",
+   "text": "OWN_NOTE=0\nIDK=none\n",
+   "OWN_NOTE": "0",
+   "IDK": "none"
+  },
+  "B": {
+   "by_day": {
+    "1": {
+     "right": 68,
+     "wrong": 76,
+     "abstain": 0
+    },
+    "2": {
+     "right": 7,
+     "wrong": 11,
+     "abstain": 0
+    },
+    "3": {
+     "right": 13,
+     "wrong": 23,
+     "abstain": 0
+    },
+    "4": {
+     "right": 21,
+     "wrong": 18,
+     "abstain": 0
+    }
+   },
+   "stale": [
+    5,
+    36
+   ],
+   "never_told": [
+    0,
+    30
+   ]
+  },
+  "D": {
+   "by_day": {
+    "1": {
+     "right": 101,
+     "wrong": 39,
+     "abstain": 4
+    },
+    "2": {
+     "right": 15,
+     "wrong": 3,
+     "abstain": 0
+    },
+    "3": {
+     "right": 18,
+     "wrong": 16,
+     "abstain": 2
+    },
+    "4": {
+     "right": 19,
+     "wrong": 17,
+     "abstain": 3
+    }
+   },
+   "stale": [
+    6,
+    36
+   ],
+   "never_told": [
+    19,
+    30
+   ]
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": 30,
+  "gate": {
+   "base": 0.58,
+   "after": 0.075,
+   "right_base": 5,
+   "right_after": 4,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.015,
+   "ci95": [
+    -0.0337,
+    0.0636
+   ]
+  },
+  "night_corrections": [
+   {
+    "decision": "kept: no change word in the clause that states the new value",
+    "linked_by": "consolidation rule",
+    "p": null,
+    "change_word": null,
+    "old_key": "analysis_software",
+    "old_value": "EchoLab R2026a",
+    "new_key": "SonoScope license",
+    "new_value": "SonoScope 7.1 license activated by IT for analysis this afternoon"
+   },
+   {
+    "decision": "superseded",
+    "linked_by": "readout (a)",
+    "p": 0.8577,
+    "change_word": "change",
+    "old_key": "post_meeting_location",
+    "old_value": "chamber in Hall C",
+    "new_key": "reverb chamber room",
+    "new_value": "Room 312"
+   }
+  ]
+ }
+]
