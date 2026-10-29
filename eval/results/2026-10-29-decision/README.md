@@ -233,3 +233,64 @@ Each calibrated cut is the lowest p with no wrong answer on the w1–w3 calibrat
 0.98). It was fit before looking at the test sets above. The wrong link at p ≥ 0.9 links "group_meeting: Fridays
 16:00" to "advisor weekly meeting time: Wednesdays 09:30" (p 0.93). The false duplicate is the same Room 312 pair as
 D1's (p 0.97). D1b's day-3 supersede accuracy is 0.971 against D0's 0.853.
+
+## Auto-reasoning screen: the owner's four options, and a span-02-style blend (mel slot 1, 29 Oct 12:51–13:02)
+
+The owner's design: "how about it just has the 2 options in the instant case? A or B? option 1: A option 2: B
+option 3: ask option 4: think more/complicated." Each pair decision gets four labeled options in one pass:
+1 and 2 are the two answers, 3 = "not sure: ask the user", 4 = "not sure yet: think it through first"
+(`decide/prompts.py` `pair_prompt_auto4`, ids `duplicate-auto4-v1` / `supersede-auto4-v1`). Glimmer picks escalation
+itself. Only when it picks 4, a second call asks the plain two-option question with reasoning high (the D3 call). Its
+pick is final, and a reasoning turn that ends at its 1,024-token cap counts as undecided. "Ask" is neither right nor
+wrong. Compared on the same rows, server and window with:
+- plain one-pass A/B;
+- plain one-pass that asks below p 0.9;
+- a span-02-style blend (Respan span-02, the owner's pointer): below plain p 0.8, one thought capped at 128 tokens
+  (strength "low"), the labels read again with it in context, and the two distributions averaged;
+- the same blend behind a margin gate (top1 − top2 < tau; with two labels, tau = the max-p gate at (1 + tau) / 2),
+  with tau fit on the 38 calibration rows only.
+
+The bare four-option prompt never escalated, so one extra wording ran in the same window (`*-auto4-hint-v1`). It adds
+one line: "Reply 1 or 2 only if you are sure; if you are not sure, reply 3 or 4."
+
+Rows: the 244 D3 pairs (`decide/data/auto4/pairs.jsonl`). That is 158 duplicate and 86 supersede pairs: the w4 test
+(162), w1–w3 calibration rows below D0 p 0.9 (38) and the real day-2 corrections (44). Labels come from code. Many
+rows are hard by construction. Latency is client wall time per decision (Mac to mel; server time is ~17 ms less).
+Score against plain uses right +1, wrong −1, asked or undecided 0, with a paired row bootstrap (10,000 resamples,
+seed 20261014).
+
+| arm | method | answer / ask / think | right | wrong | asked | undecided | p50 / p95 ms | vs plain [95% CI] |
+|---|---|---|---|---|---|---|---|---|
+| base | plain A/B, one pass | 244 / 0 / 0 | 228 | 16 | 0 | 0 | 92 / 107 | — |
+| base | plain, ask below p 0.9 | 99 / 145 / 0 | 98 | 1 | 145 | 0 | 92 / 107 | |
+| base | **4 options (owner, as written)** | 244 / 0 / 0 | 222 | 22 | 0 | 0 | 104 / 115 | −0.049 [−0.123, +0.025] |
+| base | 4 options + "if not sure, 3 or 4" | 144 / 2 / 98 | 208 | 30 | 2 | 4 | 116 / 7,097 | −0.139 [−0.225, −0.053] |
+| base | span-02 blend, think below p 0.8 | 244 answered, 69 thought | 205 | 39 | 0 | 0 | 96 / 1,011 | −0.189 [−0.279, −0.098] |
+| base | span-02 blend, margin gate fit on calibration | tau 0 = never thinks | 228 | 16 | 0 | 0 | 92 / 107 | 0 |
+| D1b | plain A/B, one pass | 244 / 0 / 0 | 239 | 5 | 0 | 0 | 110 / 123 | — |
+| D1b | plain, ask below p 0.9 | 237 / 7 / 0 | 234 | 3 | 7 | 0 | 110 / 123 | |
+| D1b | **4 options (owner, as written)** | 244 / 0 / 0 | 239 | 5 | 0 | 0 | 121 / 135 | 0.000 |
+| D1b | 4 options + "if not sure, 3 or 4" | 244 / 0 / 0 | 237 | 7 | 0 | 0 | 126 / 135 | −0.016 [−0.041, 0] |
+| D1b | span-02 blend, think below p 0.8 | 244 answered, 3 thought | 237 | 7 | 0 | 0 | 110 / 125 | −0.016 [−0.041, 0] |
+| D1b | span-02 blend, margin gate fit on calibration | tau 0 = never thinks | 239 | 5 | 0 | 0 | 110 / 123 | 0 |
+
+What it shows:
+- **As written, Glimmer never picks "ask" or "think" in one pass.** Neither base nor D1b did, on any of the 244 pairs.
+  On base the two escalation labels hold a median 10% of the label mass (36% at most). Adding them still moves the A/B
+  choice: base supersede falls 79 → 68 right and duplicate rises 149 → 154. D1b was trained on two-option rows and
+  answers exactly as before.
+- **When told when to escalate, base picks "think" on 98 pairs and "ask" on 2, and those are the hard pairs.** They
+  hold 13 of plain's 16 wrong answers (and 87 of its 228 right ones). The 144 direct answers are 137 right and 7 wrong.
+- **Reasoning then makes the flagged pairs worse, as in D3.** Plain got 85 of the 98 right; reasoning gets 71 right,
+  23 wrong and 4 capped (242 reasoning tokens at the median; 1.8 s p50, 8.8 s p95 on those pairs). The one cell where
+  it beats plain is synthetic supersede test, 35/1 vs 34/2. On real day-2 corrections it gets 34 right, 7 wrong, 2 asked
+  and 1 undecided, against plain's 39 right and 5 wrong.
+- **Glimmer's own flag is a weaker "ask" signal than its probability.** At 100 asks, the flag leaves 7 wrong answers
+  among the 144 answered; asking on the 100 lowest plain-p pairs leaves 2. The two sets overlap on 67 pairs.
+- **The span-02 blend hurts base.** Of the 69 thoughts, 42 hit the 128-token cap. The thought flips 33 answers: 5 wrong
+  → right and 28 right → wrong. After a short thought the second reading is almost one-hot, so the average follows the
+  thought whenever the two disagree. Fit on calibration, the margin gate chooses never to think.
+
+Shipped settings stay as they are: one pass, act only at p ≥ 0.9, otherwise the safe default (keep both notes, look
+up, or ask). "Think it through" stays off for pair decisions. Receipts:
+`readout-auto4-<arm>-{onepass,span,reason}.jsonl`, `score-auto4.json`. Run with `decide/auto4.py build | run | score`.

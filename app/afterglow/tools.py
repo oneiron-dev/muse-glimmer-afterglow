@@ -88,7 +88,8 @@ def next_id(prefix, items):
 class ToolBox:
     """Runs one tool call. Returns (result_dict, notes_written)."""
 
-    def __init__(self, notes, world_state, day=None, decide_supersede=None, decide_route=None, web_search=None):
+    def __init__(self, notes, world_state, day=None, decide_supersede=None, decide_route=None, web_search=None,
+                 web_cap=None):
         self.notes = notes
         self.world = world_state
         self.day = day
@@ -103,9 +104,11 @@ class ToolBox:
         self.question = None  # the user's words this turn (agent.py sets it); the route decision reads them
         self.route_decisions = []  # one per turn that recalls, for the day log
         self._routed = None  # (turn, decision): a second recall in the same turn reuses the decision
-        # web_search(query) -> [{"title", "snippet", "url"}]: the search_web tool (web_search.py), None when it is off
+        # web_search(query) -> {"provider", "results": [{"title", "url", "snippet"}], "latency_ms", "cost_usd"}: the
+        # search_web tool (web_search.py, connector.web.search), None when it is off; web_cap: its spend cap
         self.web_search = web_search
-        self.web_searches = []  # every search this session, query and results, for the day log
+        self.web_cap = web_cap
+        self.web_searches = []  # every search this session: query, results, provider, latency, cost, for the day log
 
     def route(self, turn):
         """The turn's route decision, made once per turn; a failed call is logged and the recall search answers."""
@@ -167,13 +170,18 @@ class ToolBox:
                     return {"error": "web search is off"}, []
                 if not query:
                     return {"error": "an empty query"}, []
+                from .web_search import cap_refusal
+
+                refused = cap_refusal(self.web_cap, pending=sum(1 for w in self.web_searches if w["turn"] == turn))
+                if refused:  # not sent, so not counted against the cap
+                    return {"error": refused}, []
                 try:
-                    results = self.web_search(query)
+                    out = self.web_search(query)
                 except Exception as e:  # never the key: web_search.py errors carry the status only
                     self.web_searches.append({"turn": turn, "query": query, "error": str(e)})
                     return {"error": str(e)}, []
-                self.web_searches.append({"turn": turn, "query": query, "results": results})
-                return {"query": query, "results": results}, []
+                self.web_searches.append({"turn": turn, "query": query, **out})
+                return {"provider": out["provider"], "results": out["results"]}, []
             st = self.world.state
             if name == "calendar.list_events":
                 ev = sorted((e for e in st["calendar"] if e.get("date") == args.get("date")),
