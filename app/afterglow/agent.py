@@ -18,6 +18,7 @@ import time
 from pathlib import Path
 
 from . import paths
+from .dials import accepted_dials
 from .llm import GlimmerClient, GlimmerError, world_adapter_choice
 from .notes import LocalJsonNotes
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
@@ -97,7 +98,7 @@ def system_message(world_doc):
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
                  notes_backend="local", temperature=0.3, decide_supersede=None, decide_reasoned=None,
-                 decide_adapter=None, decide_route=None):
+                 decide_adapter=None, decide_route=None, dials=None):
         self.world, self.day = world, int(day)
         self.temperature = temperature
         self.client = client or GlimmerClient()
@@ -105,6 +106,9 @@ class DaySession:
         self.adapter_choice = world_adapter_choice(world)  # the serving rule: latest update passing every check
         self.adapter = self.adapter_choice["entry"]
         self.client.adapter_path = self.adapter["path"] if self.adapter else None
+        # the steering dials the user accepted on an earlier morning report (dials.py); none = no control vectors sent
+        self.dial_choice = accepted_dials(world, day) if dials is None else {"dials": list(dials), "skipped": []}
+        self.client.dials = self.dial_choice["dials"]
         self.reasoning = reasoning
         self.notes_in_context = notes_in_context
         self.world_doc = load_world(world)
@@ -357,6 +361,8 @@ class DaySession:
                "tok_s": last_t.get("predicted_per_second"), "answer_channel_retry": retry, "error": error}
         if len(self.tools.decisions) > n_decisions:  # the one-pass supersede decisions of this turn, with p and ms
             rec["supersede_decisions"] = self.tools.decisions[n_decisions:]
+        if self.client.dials:  # the control vectors every request of this turn carried
+            rec["dials"] = [{k: d[k] for k in ("id", "axis", "toward", "scale")} for d in self.client.dials]
         if len(self.tools.route_decisions) > n_routes:  # the turn's route decision at recall time, with p and ms
             rec["route_decisions"] = self.tools.route_decisions[n_routes:]
         live = hasattr(self.notes, "witness_turn") and final
