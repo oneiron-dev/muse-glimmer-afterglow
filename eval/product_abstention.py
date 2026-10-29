@@ -28,6 +28,27 @@ import simpleqa_gate  # noqa: E402
 from paths import runs_root  # noqa: E402
 
 
+def tools_seen(row):
+    """(web_search_on, tools_sha256) of an answer row; a row from before web search existed counts as off, and its
+    tool hash as unknown."""
+    return bool(row.get("web_search_on", False)), row.get("tools_sha256")
+
+
+def same_tools(a, b):
+    """Two answer rows saw the same tools: web search the same, and the tool hashes equal where both are known. A
+    product-form comparison pairs only such rows."""
+    (wa, ha), (wb, hb) = tools_seen(a), tools_seen(b)
+    return wa == wb and (ha is None or hb is None or ha == hb)
+
+
+def refuse_mixed_tools(pairs, what):
+    """SystemExit when any (row, row) pair saw different tools."""
+    bad = [(a.get("set"), a.get("id")) for a, b in pairs if not same_tools(a, b)]
+    if bad:
+        raise SystemExit(f"{what}: the two arms saw different tools (web search on in one, or another tool list) on "
+                         f"{len(bad)} questions, e.g. {bad[0]}; ask both again with the same --web-search")
+
+
 def abstained(row):
     if row.get("truncated"):
         return False
@@ -49,6 +70,10 @@ def main():
     rows = [json.loads(line) for line in Path(args.answers).read_text().splitlines() if line.strip()]
     gate_ids = {q["id"] for q in simpleqa_gate.gate_items()}
     nt_ids = {json.loads(line)["id"] for line in (ROOT / "eval" / "data" / "never_told" / f"{args.world}.jsonl").read_text().splitlines() if line.strip()}
+    by = {}
+    for r in rows:
+        by.setdefault((r["set"], r["id"]), {})[r["arm"]] = r
+    refuse_mixed_tools([(v["base"], v["adapter"]) for v in by.values() if {"base", "adapter"} <= set(v)], args.answers)
     arms = {}
     for arm in ("base", "adapter"):
         g = [r for r in rows if r["arm"] == arm and r["set"] == "general" and r["id"] in gate_ids]
