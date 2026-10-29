@@ -35,6 +35,8 @@ except ImportError as e:  # night/teacher.py lands with the night engine
 
 JST = dt.timezone(dt.timedelta(hours=9))
 SEED = 20261027
+# Wording a later day never introduces (the vault's write-side secret scan keys on it; day 1 stays as frozen)
+CREDENTIAL_WORDS = re.compile(r"\b(api[ _-]?keys?|tokens?|passwords?|passwd|secrets?)\b", re.I)
 
 ARCHETYPES = {
     "solo-developer": "a solo software developer who builds and sells one small product through a one-person "
@@ -639,7 +641,9 @@ def add_day(out, teacher, day, n_new, n_corrections, n_feedback):
     g.rng = random.Random(SEED + day)
     first = max(int(f["id"][1:]) for f in facts) + 1
     new = g.new_facts(persona, active, n_new, first, day) if n_new else []
-    pool = [f for f in active if f["valid_from"] == 1 and "16:00" not in f["value"]]
+    # a fact worded like a credential is never restated: the vault's write-side secret scan keys on these words
+    pool = [f for f in active if f["valid_from"] == 1 and "16:00" not in f["value"]
+            and not CREDENTIAL_WORDS.search(f"{f['key']} {f['value']}")]
     corrections = g.extra_corrections(persona, pool, n_corrections) if n_corrections else []
     replacing = supersede(facts, corrections, first + len(new), day)
     print(f"{now_iso()} {world['world']}: day {day}: {len(new)} new facts, {len(corrections)} corrections; script", flush=True)
@@ -668,6 +672,10 @@ def add_day(out, teacher, day, n_new, n_corrections, n_feedback):
         if "feedback" in m:
             rec["feedback"] = {k: m["feedback"][k] for k in ("axis", "toward", "polarity")} | {"refers_to_turn": i - 1}
         script.append(rec)
+    worded = [m["content"] for m in script if CREDENTIAL_WORDS.search(m["content"])]
+    worded += [f"{f['key']}: {f['value']}" for f in new + replacing if CREDENTIAL_WORDS.search(f"{f['key']} {f['value']}")]
+    if worded:  # nothing is written yet: run the day again
+        sys.exit(f"{out}: day {day} text uses credential wording, run it again: {worded}")
     script_text = " ".join(norm(json.loads(l)["content"]) for d in sorted((out / "days").iterdir())
                            for l in (d / "script.jsonl").read_text().splitlines() if l.strip())
     script_text += " " + " ".join(norm(m["content"]) for m in script)
