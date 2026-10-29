@@ -164,6 +164,8 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
         out["disclosed_checks"] = {"abstention_gate_v3": gate["passed"]}
     if abstention_rule == "honesty-3" and product:  # the rule it would replace, shown beside it
         out.setdefault("disclosed_checks", {})["abstention_product_2s"] = product_two_sided(product)
+    if honesty and abstention_rule != "honesty-3":  # the honesty rule (owner card META-ABSTENTION-RULE-2), shown beside
+        out.setdefault("disclosed_checks", {})["abstention_honesty_3"] = honesty_three(honesty)
     if honesty:
         out["abstention_honesty"] = {k: v for k, v in honesty.items() if k not in ("file",)}
         if abstention_rule == "honesty-3":
