@@ -229,8 +229,11 @@ def serving_choice(world, entries):
         if rule and any(k not in results for k in bad):
             unmeasured[night_label(e)] = [k for k in bad if k not in results]
     if not mine:
-        return {"entry": None, "why": "No update loaded: no night has run for this person yet.", "failed": {},
-                "unmeasured": {}}
+        # Nights that ran but are not loaded were left out because they rolled back (the restart loads kept nights).
+        ran = any(paths.runs_root().glob(f"{world}/*/night/eval.json"))
+        why = ("No update loaded: none of this person's nights passed every check." if ran
+               else "No update loaded: no night has run for this person yet.")
+        return {"entry": None, "why": why + variants_note(world, ours, rule), "failed": {}, "unmeasured": {}}
     last = night_label(mine[0])
     return {"entry": None, "failed": failed, "unmeasured": unmeasured,
             "why": f"No update loaded: {last}'s update {what(last)}" +
