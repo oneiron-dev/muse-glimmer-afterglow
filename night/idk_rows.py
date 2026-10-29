@@ -16,6 +16,7 @@ base RIGHT -> its own answer; abstentions and partials are left out. Right and w
   night/idk_rows.py generate --server URL --slot 1 --n 200 --out-dir DIR      (base answers, day server)
   night/idk_rows.py grade --out-dir DIR                                         (needs CLIPROXY_KEY)
   night/idk_rows.py rows --out-dir DIR --out FILE [--per-form N]              (balanced rows, rewrites format)
+  night/idk_rows.py rows --out-dir DIR --out FILE --ungraded                  (control: same questions, base answers kept)
 """
 
 import argparse
@@ -116,7 +117,7 @@ def grade(args):
         return {"id": a["id"], "form": a["form"], "grade": g, "path": how}
 
     todo = [a for a in answers if (a["id"], a["form"]) not in done]
-    with ThreadPoolExecutor(max_workers=4) as pool, open(path, "a") as fh:
+    with ThreadPoolExecutor(max_workers=args.workers) as pool, open(path, "a") as fh:
         for rec in pool.map(one, todo):
             fh.write(json.dumps(rec) + "\n"); fh.flush()
     grades = [json.loads(line) for line in path.read_text().splitlines()]
@@ -132,12 +133,14 @@ def rows(args):
     rng = random.Random(args.seed)
     result, counts = [], {}
     for form in FORMS:
-        right = [answers[(g["id"], form)] for g in grades if g["form"] == form and g["grade"] == "correct"]
-        wrong = [answers[(g["id"], form)] for g in grades if g["form"] == form and g["grade"] == "incorrect"]
+        # answers cut at the token limit are left out (a training row must not end mid-sentence), in both arms
+        full = lambda g: answers[(g["id"], form)]["stop"] != "limit"
+        right = [answers[(g["id"], form)] for g in grades if g["form"] == form and g["grade"] == "correct" and full(g)]
+        wrong = [answers[(g["id"], form)] for g in grades if g["form"] == form and g["grade"] == "incorrect" and full(g)]
         rng.shuffle(right); rng.shuffle(wrong)
         k = min(len(right), len(wrong), args.per_form)
         counts[form] = {"right_available": len(right), "wrong_available": len(wrong), "used_each": k}
-        for a, idk in [(x, False) for x in right[:k]] + [(x, True) for x in wrong[:k]]:
+        for a, idk in [(x, False) for x in right[:k]] + [(x, not args.ungraded) for x in wrong[:k]]:
             row = {"item_id": f"idk-{a['id']}-{form}", "kind": "idk", "form": f"idk_{form}_{'wrong' if idk else 'right'}", "valid": True}
             if form == "agent":
                 if idk:  # the answer channel straight away, "I don't know." (no tool call, no self message)
@@ -165,6 +168,9 @@ def main():
     ap.add_argument("--out")
     ap.add_argument("--per-form", type=int, default=12)
     ap.add_argument("--seed", type=int, default=20261029)
+    ap.add_argument("--workers", type=int, default=4, help="grade: parallel grader calls")
+    ap.add_argument("--ungraded", action="store_true",
+                    help="rows: the control arm; the same questions, every row keeps the base model's own answer (no IDK label)")
     args = ap.parse_args()
     {"generate": generate, "grade": grade, "rows": rows}[args.step](args)
 
