@@ -141,7 +141,8 @@ function describeAct(name, args, result) {
       const d = result.decided;  // the route decision at recall time (agent.py), when the serving notes switch it on
       if (d && d.p != null) {
         const how = `p ${d.p.toFixed(2)}, ${d.latency_s.toFixed(2)} s, ${d.options} options`;
-        if (d.by !== "one-pass decision") out.how = `searched the notes: the one pass was below the threshold (${how})`;
+        if (d.guard) out.how = `not in your notes, so it asks you: ${d.guard.replace("named person not in notes: ", "")} is in none of your notes (the one pass had picked one, ${how})`;
+        else if (d.by !== "one-pass decision") out.how = `searched the notes: the one pass was below the threshold (${how})`;
         else if (result.not_in_notes) out.how = `not in your notes, so it asks you: decided in one pass (${how})`;
         else out.how = `looked it up in your notes, “${pretty(result.notes[0].key)}”: decided in one pass (${how})`;
       } else if (d && d.error) out.how = `the route decision failed, so it searched the notes: ${d.error}`;

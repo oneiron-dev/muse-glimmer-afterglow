@@ -13,6 +13,7 @@ after a restore, with the day so far.
 """
 import datetime as dt
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -29,6 +30,32 @@ JST = dt.timezone(dt.timedelta(hours=9))
 MAX_ROUNDS = 8
 LINK_P = 0.9  # a one-pass "replaces" this sure links at once (decide/decider.py SUPERSEDE_ACCEPT_P)
 ASK_AGAIN_P = 0.5  # from here up to LINK_P the decision is asked once more with reasoning on (when switched on)
+
+
+# A person's name: two or more capitalised words ("Oskar Ibsen", "Anne-Marie Holt", "O'Neil Park")
+PERSON_NAME = re.compile(r"\b([A-Z][a-z]+(?:[-'][A-Z]?[a-z]+)?(?:\s+[A-Z][a-z]+(?:[-'][A-Z]?[a-z]+)?)+)\b")
+
+
+def unknown_person(question, user_name, notes):
+    """The name in a possessive "<Name>'s <thing>" in the question, when the name is not the user's and no note
+    mentions it (key or value); else None. The route decision then asks instead of attaching the user's own note to
+    someone else ("Oskar Ibsen's safety officer?" is not the user's safety officer). Only the possessive form fires,
+    so a general question that names a public person ("Who is Ada Lovelace?") is left alone. A sentence's first word
+    is never part of a name ("What's Pavel Sato's ..." names Pavel Sato)."""
+    question = question.replace("\u2019", "'")
+    own = set((user_name or "").lower().split())
+    blob = " ".join(f"{n['key']} {n['value']}" for n in notes).lower()
+    for m in PERSON_NAME.finditer(question):
+        words = m.group(1).split()
+        if not words[-1].endswith("'s"):
+            continue
+        words = words[:-1] + [words[-1][:-2]]
+        if m.start() == 0 or question[:m.start()].rstrip().endswith((".", "?", "!", ":")):
+            words = words[1:]
+        name = " ".join(words)
+        if len(words) >= 2 and not {w.lower() for w in words} <= own and name.lower() not in blob:
+            return name
+    return None
 
 
 def serving_setting(name, day):
@@ -221,8 +248,12 @@ class DaySession:
                        "pick": r["pick"], "p": r["p"], "label_mass": r["label_mass"],
                        "latency_s": round(r["ms"] / 1000, 3), "options": len(active) + 1, "prompt_id": r["prompt_id"],
                        "adapter": adapter_file or "base"}
-            return {"note": by_id[r["note"]["id"]] if r["note"] else None, "ask": r["ask"],
-                    "look_up": r["path"] != "one_pass", "decided": decided}
+            note, ask, look_up = (by_id[r["note"]["id"]] if r["note"] else None), r["ask"], r["path"] != "one_pass"
+            who = unknown_person(question, name, active) if note is not None else None
+            if who:  # the question is about someone the notes never mention: ask, whatever the one pass picked
+                decided["guard"] = f"named person not in notes: {who}"
+                note, ask, look_up = None, True, False
+            return {"note": note, "ask": ask, "look_up": look_up, "decided": decided}
 
         return decide
 
