@@ -31,6 +31,9 @@ USER_AGENT = "afterglow-app/0.1 (+https://github.com/oneiron-dev/muse-glimmer-af
 # into a slow vault (a retry after a client timeout only adds load; stable ids keep a retry idempotent)
 WITNESS_TIMEOUT_S = float(os.environ.get("AFTERGLOW_VAULT_TIMEOUT_S") or 90)
 WITNESS_TRIES = 3
+# bel's engine cuts a light recall at 5 s by default and marks the pack retrieval_meta.partial; full recalls take up to
+# ~30 s, so every recall names its own deadline, and a partial pack means "not finished", never "nothing found"
+RECALL_DEADLINE_MS = 30000
 
 
 class VaultError(RuntimeError):
@@ -127,6 +130,12 @@ class OneironVault:
     def client_for(self, author):
         return self
 
+    def recall(self, query, limit=5, effort="light", deadline_ms=RECALL_DEADLINE_MS):
+        """vault.recall with an explicit deadline. The reply's retrieval_meta.partial is true when the vault stopped
+        before it finished: callers read that as "not finished" (recall_partial), never as nothing found."""
+        return self.facade("vault.recall", {"query": query, "effort": effort, "limit": limit, "deadline_ms": deadline_ms},
+                           timeout=max(WITNESS_TIMEOUT_S, deadline_ms / 1000 + 30))
+
     def witness(self, conversation_ref, messages, occurred_at=None):
         """messages: [(author, text)] in order; author "user" or "assistant" (the vault calls it "companion").
         Every run is sent with this one credential. Returns one result per run."""
@@ -165,11 +174,14 @@ class SpeakerVaults:
         at = occurred_at or time.time()
         return [self.by_author[a].witness_run(conversation_ref, a, texts, at) for a, texts in speaker_runs(messages)]
 
-    def recall(self, query, limit=5, effort="light"):
-        return self.by_author["companion"].recall(query, limit=limit, effort=effort)
+    def recall(self, query, limit=5, effort="light", deadline_ms=RECALL_DEADLINE_MS):
+        return self.by_author["companion"].recall(query, limit=limit, effort=effort, deadline_ms=deadline_ms)
 
-    def recall(self, query, limit=5, effort="light"):
-        return self.facade("vault.recall", {"query": query, "effort": effort, "limit": limit})
+
+
+def recall_partial(reply):
+    """True when a vault.recall reply is cut short (retrieval_meta.partial): its items are not the full answer."""
+    return bool(((reply or {}).get("retrieval_meta") or {}).get("partial"))
 
 
 def push_day(world, day, vault=None, from_turn=None, person_credential=None):
@@ -294,4 +306,7 @@ if __name__ == "__main__":
         s = push_day(a.world, a.day, from_turn=a.from_turn, person_credential=a.person_credential)
         print(json.dumps({k: v for k, v in s.items() if k not in ("receipts",)}, indent=1))
     else:
-        print(json.dumps(OneironVault().recall(a.query, limit=5), indent=1)[:4000])
+        r = OneironVault().recall(a.query, limit=5)
+        if recall_partial(r):
+            print("NOT FINISHED: the vault cut this recall short (retrieval_meta.partial); missing items are not absent")
+        print(json.dumps(r, indent=1)[:4000])
