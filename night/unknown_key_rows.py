@@ -47,6 +47,12 @@ UNKNOWN_PERSON = ["You haven't told me {name}'s {key}, so I don't know it.",
                   "I don't know {name}'s {key}: you haven't told me.",
                   "You haven't told me {name}'s {key} yet; I don't have that in your notes."]
 UNKNOWN_IN_NOTES = "Your notes don't have it: you haven't told me {what}."
+# --ask-back (lead 29 Oct 19:12): the reply names the asked key and asks for it, with no "notes" wording a public
+# question could borrow ("I don't have that in your notes" spread to general questions in night 4: w1 +28.5, w3 +31.5)
+ASK_BACK_OWN = ["You haven't told me your {key} yet. What is it?", "I don't know your {key} yet: you haven't told me. What is it?",
+                "You haven't told me your {key}. Can you tell me?"]
+ASK_BACK_PERSON = ["You haven't told me {name}'s {key} yet. What is it?", "I don't know {name}'s {key} yet: you haven't told me. What is it?",
+                   "You haven't told me {name}'s {key}. Can you tell me?"]
 UNKNOWN_OWN_IN_NOTES = "Your notes don't have {name}'s {key}; they only have your own: {value}."
 NOTES_HEADER = "Notes I keep about {first}:\n"
 
@@ -68,6 +74,7 @@ def main():
     ap.add_argument("--notes-share", type=float, default=0.5, help="share of rows in the notes-in-prompt form")
     ap.add_argument("--own-note-in-block", action="store_true", help="notes-form look-alike rows hold the user's own note for "
                     "the asked key (answer: not someone else's)")
+    ap.add_argument("--ask-back", action="store_true", help="replies name the asked key and ask for it; no notes wording")
     ap.add_argument("--max-core-words", type=int, default=6)
     ap.add_argument("--seed", type=int, default=20261029)
     ap.add_argument("--out", required=True)
@@ -111,11 +118,11 @@ def main():
         if person:
             name, key = names[(n // 2) % len(names)], person_keys[(n // 2) % len(person_keys)]
             q, what = QUESTIONS[t].format(owner=f"{name}'s", key=key), f"{name}'s {key}"
-            answer = UNKNOWN_PERSON[t].format(name=name, key=key)
+            answer = (ASK_BACK_PERSON if args.ask_back else UNKNOWN_PERSON)[t].format(name=name, key=key)
         else:
             key = own_keys[(n // 2) % len(own_keys)]
             q, what = QUESTIONS[t].format(owner="my", key=key), f"your {key}"
-            answer = UNKNOWN_OWN[t].format(key=key)
+            answer = (ASK_BACK_OWN if args.ask_back else UNKNOWN_OWN)[t].format(key=key)
         known = items[rng.randrange(len(items))]
         kq = QUESTIONS[t].format(owner="my", key=plain_key(known["key"]))
         ka = f"Your {plain_key(known['key'])} is {known['value']}."
@@ -128,7 +135,7 @@ def main():
                 UNKNOWN_OWN_IN_NOTES.format(name=name, key=key, value=own.get("full_value") or own["value"]))
             add(f"{uid}-pair", "known_pair_in_notes", notes_block(exclude_id=known["id"], include=known) + "\n\n" + kq, ka)
         elif n < n_notes:
-            add(uid, "unknown_in_notes", notes_block() + "\n\n" + q, UNKNOWN_IN_NOTES.format(what=what))
+            add(uid, "unknown_in_notes", notes_block() + "\n\n" + q, answer if args.ask_back else UNKNOWN_IN_NOTES.format(what=what))
             add(f"{uid}-pair", "known_pair_in_notes", notes_block(exclude_id=known["id"], include=known) + "\n\n" + kq, ka)
         else:
             add(uid, "unknown_person" if person else "unknown_own", q, answer)

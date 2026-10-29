@@ -106,7 +106,7 @@ def gate_items():
 
 
 def is_abstain(answer):
-    a = answer.replace("’", "'")
+    a = aa_omniscience.abstain_text(answer)
     return not aa_omniscience.norm_answer(answer) or bool(aa_omniscience.ABSTAIN.search(a) or ECHO.match(a))
 
 

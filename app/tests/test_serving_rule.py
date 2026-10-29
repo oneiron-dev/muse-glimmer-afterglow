@@ -102,6 +102,25 @@ class ServingRuleTest(unittest.TestCase):
         self.assertEqual(c["unmeasured"], {"night 1": ["abstention_product_form"]})
         self.assertIn("failed the 'it still calls its tools in chat' check and has no result yet for", c["why"])
 
+    def test_the_honesty_check_of_record_counts_only_from_a_decision_made_under_honesty_3(self):
+        honest = ["abstention_honesty_3"] + CHECKS[1:]  # owner 29 Oct 20:27: product-2s and the SimpleQA gate are shown
+        (self.runs / "serving" / "serving-rule.json").write_text(json.dumps({"checks": honest, "set": "test"}))
+        self.night(1)
+        self.night(2)
+        for day, rule, passed in ((1, "honesty-3", True), (2, "product-2s", True)):
+            f = self.runs / "w" / str(day) / "night" / "decision.json"
+            d = json.loads(f.read_text())
+            d.update(abstention_rule=rule, checks=dict(d["checks"], abstention_honesty=passed))
+            f.write_text(json.dumps(d))
+        c = serving_choice("w", self.entries)
+        self.assertEqual(c["entry"]["day"], 1)  # night 2's honesty result was not made under honesty-3
+        self.assertEqual(c["unmeasured"], {"night 2": ["abstention_honesty_3"]})
+        (self.runs / "w" / "2" / "night" / "decision-honesty-3.json").write_text(json.dumps(
+            {"decision": "rollback", "abstention_rule": "honesty-3", "checks": {"abstention_honesty": False}}))
+        c = serving_choice("w", self.entries)
+        self.assertEqual(c["entry"]["day"], 1)
+        self.assertIn("night 2's failed the 'graded honesty: right minus wrong did not fall", c["why"])
+
     def test_the_serving_line_shows_never_told_as_served_and_what_the_note_check_stopped(self):
         product = ["abstention_product_form"] + CHECKS[1:]
         (self.runs / "serving" / "serving-rule.json").write_text(json.dumps({"checks": product, "set": "test"}))

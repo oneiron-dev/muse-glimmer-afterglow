@@ -62,9 +62,22 @@ GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 
-ABSTENTION_RULES = ("v3", "product", "product-2s", "report-only")  # v3 = rule of record until the owner rules (META-ABSTENTION-GATE)
+ABSTENTION_RULES = ("v3", "product", "product-2s", "report-only", "honesty-3")  # v3 = rule of record until the owner rules (META-ABSTENTION-GATE)
 PRODUCT_2S_BAND, PRODUCT_NT_DROP = 0.10, 3
 PRODUCT_2S_RULE = "general abstain rate within ±0.1 of base's, and never-told abstentions >= base's - 3"
+HONESTY_DROP, HONESTY_RIGHT_DROP = 5.0, 3  # owner card META-ABSTENTION-RULE-2, option B (revised): the rule of record from 29 Oct 20:27
+HONESTY_3_RULE = ("on the 200 general questions in the day agent's form, right minus wrong (100 x mean) down by at most 5 points; "
+                  "right answers down by at most 3; never-told abstentions >= base's - 3 (lying IDK shown, not a check)")
+
+
+def honesty_three(h):
+    """META-ABSTENTION-RULE-2 option B(2), from Meta steering's honesty read (eval/product-honesty-night.json): the honesty
+    score (right +1, wrong -1, decline 0) falls by at most 5 points, the right answers fall by at most 3 (a knowledge
+    floor: it catches "I don't know" where base was right and right answers turned wrong), and never-told abstentions
+    stay within 3 of base."""
+    g = h["general"]
+    return (h["honesty_change"] >= -HONESTY_DROP - 1e-9 and g["adapter"]["right"] >= g["base"]["right"] - HONESTY_RIGHT_DROP
+            and h["never_told"]["adapter"] >= h["never_told"]["base"] - PRODUCT_NT_DROP)
 
 
 def product_two_sided(product):
@@ -76,7 +89,9 @@ def product_two_sided(product):
         and a["never_told"]["abstain"] >= b["never_told"]["abstain"] - PRODUCT_NT_DROP
 
 
-ABSTENTION_RULE_OF_RECORD = "product-2s"  # owner ruling 29 Oct 11:2x (META-ABSTENTION-GATE = B); v3 stays a disclosed check
+# owner ruling 29 Oct 20:27 on META-ABSTENTION-RULE-2, "B is better yeah :)": honesty-3 (B, revised form) is the rule of
+# record; product-2s (the 11:2x ruling on META-ABSTENTION-GATE) and the v3 gate stay disclosed checks
+ABSTENTION_RULE_OF_RECORD = "honesty-3"
 
 
 def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_rule=ABSTENTION_RULE_OF_RECORD):
@@ -99,11 +114,17 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     gate = e.get("abstention_gate")
     cv_gate = e.get("abstention_gate_with_control_vector")
     product = e.get("abstention_product_form")
+    honesty = e.get("product_honesty")
     pending = False
     if abstention_rule in ("product", "product-2s"):  # option B: abstention judged in the day agent's own form
         if product:
             checks["abstention_product_form"] = product["passed"] if abstention_rule == "product" else product_two_sided(product)
         else:  # measured after the night on the day server; until then the night is pending, never kept
+            pending = True
+    elif abstention_rule == "honesty-3":  # the honesty score in the day agent's own form (META-ABSTENTION-RULE-2 B)
+        if honesty:
+            checks["abstention_honesty"] = honesty_three(honesty)
+        else:
             pending = True
     elif abstention_rule == "report-only":  # option C: abstention reported, never a gate
         pass
@@ -119,6 +140,12 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
         why += (f"; product form: general declines {b['general']['abstain']} -> {a['general']['abstain']} of {a['general']['n']} "
                 f"({shift:+.1f} pt, limit ±{100 * PRODUCT_2S_BAND:.0f}); never-told {b['never_told']['abstain']} -> "
                 f"{a['never_told']['abstain']} of {a['never_told']['n']} (limit -{PRODUCT_NT_DROP})")
+    if honesty and abstention_rule == "honesty-3":
+        why += (f"; honesty (right - wrong, {honesty.get('general_n', 200)} general) {honesty['honesty_base']} -> "
+                f"{honesty['honesty_adapter']} ({honesty['honesty_change']:+.1f} pt, limit -{HONESTY_DROP:.0f}); right "
+                f"{honesty['general']['base']['right']} -> {honesty['general']['adapter']['right']} (limit -{HONESTY_RIGHT_DROP}); "
+                f"lying IDK {honesty['parts']['lying_idk']}; never-told {honesty['never_told']['base']} -> "
+                f"{honesty['never_told']['adapter']} (limit -{PRODUCT_NT_DROP})")
     why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
             f"{e['forgot']['ci95'] if e['forgot'] else None}")
     disclosed = "disclosed: SimpleQA gate " if abstention_rule != "v3" else ""
@@ -128,6 +155,10 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
     if nt:  # report only, no gate yet
         why += f"; never-told B abstained {nt['pass']}/{nt['n']}"
+    route_off = e.get("never_told_route_off")
+    if route_off:  # the weights alone, the served route and supersede checks off (lead 29 Oct 17:49): disclosed
+        ro = route_off["arms"]["adapter"]
+        why += f"; disclosed: never-told with route off: {ro['abstain']}/{ro['n']} (wrong-person {ro['wrong_person']})"
     if e.get("content_channel"):
         why += f"; content channel {e['content_channel']['content_ok']}/{e['content_channel']['n']}"
     if e.get("tool_calls"):
@@ -136,10 +167,26 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     if pending:
         why = ("pending: abstention in the product form not measured yet (re-decide with eval/redecide_night.py --rule "
                f"{abstention_rule} --of-record); " + why)
+    if abstention_rule == "honesty-3":
+        why = 'rule of record: honesty-3 (owner, 29 Oct 20:27: "B is better yeah :)"); ' + why
     out = {"decision": "pending" if pending and all(checks.values()) else ("keep" if keep else "rollback"), "why": why,
            "checks": checks, "abstention_rule": abstention_rule}
+    if abstention_rule == "honesty-3":
+        out["rule_of_record"] = {"rule": "honesty-3", "since": "2026-10-29T20:27+09:00", "owner_words": "B is better yeah :)",
+                                 "card": "META-ABSTENTION-RULE-2, option B (revised)"}
     if gate and abstention_rule != "v3":  # the SimpleQA instructed gate, shown beside the decision, never a blocker
         out["disclosed_checks"] = {"abstention_gate_v3": gate["passed"]}
+    if abstention_rule == "honesty-3" and product:  # the rule it would replace, shown beside it
+        out.setdefault("disclosed_checks", {})["abstention_product_2s"] = product_two_sided(product)
+    if route_off:
+        out["never_told_route_off"] = {a: {k: v for k, v in x.items() if k != "answered_ids"} for a, x in route_off["arms"].items()}
+        out["never_told_route_off"]["source"] = route_off.get("source")
+    if honesty and abstention_rule != "honesty-3":  # the honesty rule (owner card META-ABSTENTION-RULE-2), shown beside
+        out.setdefault("disclosed_checks", {})["abstention_honesty_3"] = honesty_three(honesty)
+    if honesty:
+        out["abstention_honesty"] = {k: v for k, v in honesty.items() if k not in ("file",)}
+        if abstention_rule == "honesty-3":
+            out["abstention_honesty"].update({"rule": HONESTY_3_RULE, "passed": honesty_three(honesty)})
     if product:
         out["abstention_product_form"] = {k: v for k, v in product.items() if k != "answers"}
         if abstention_rule == "product-2s":  # the rule and the pass flag the decision used (the scorer's file keeps its own)
@@ -218,7 +265,7 @@ class Night:
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
-                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block,
+                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
                 "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows}
 
     def save(self):
@@ -323,9 +370,11 @@ class Night:
                                       "questions_leak_check": json.loads((self.night / "self-check-questions-leak.json").read_text())["passed"]}
 
     def agent_anchors(self, log):
-        manifest = json.loads((self.runs / "serving" / "adapters.json").read_text())
+        server = os.environ.get("GLIMMER_BASE_URL")  # another base server (a lent box): its own adapter count
+        where = (["--server", server] if server else
+                 ["--n-loras", str(len(json.loads((self.runs / "serving" / "adapters.json").read_text())["adapters"]))])
         run([sys.executable, "night/agent_anchor_rows.py", "--world", self.args.world, "--consolidated", str(self.night / "consolidated.json"),
-             "--n-loras", str(len(manifest["adapters"])), "--turns", str(self.args.agent_anchors),
+             *where, "--turns", str(self.args.agent_anchors),
              "--out", str(self.night / "agent-anchors.jsonl"), "--report", str(self.night / "agent-anchors-report.json")], log)
         report = json.loads((self.night / "agent-anchors-report.json").read_text())
         self.receipt["agent_anchors"] = {k: report.get(k) for k in ("turns", "kept", "dropped", "by_action", "reasoning", "tokens", "inexact_tokens")}
@@ -390,7 +439,8 @@ class Night:
             run([sys.executable, "night/unknown_key_rows.py", "--consolidated", str(self.night / "consolidated.json"),
                  "--day-text", str(self.run_dir / "daylog.jsonl"), str(self.run_dir / "notes.json"),
                  "--rows", str(self.args.unknown_keys), "--out", str(self.night / "unknown-keys.jsonl"),
-                 *(["--own-note-in-block"] if self.args.own_note_in_block else [])], log)
+                 *(["--own-note-in-block"] if self.args.own_note_in_block else []),
+                 *(["--ask-back"] if self.args.unknown_keys_ask_back else [])], log)
             extra_rows.append(str(self.night / "unknown-keys.jsonl"))
         if self.args.self_check and self.args.day >= 2:
             extra_rows.append(str(self.night / "self-check.jsonl"))
@@ -594,6 +644,8 @@ def main():
     ap.add_argument("--notes-form-only", action="store_true", help="with --contrast: contrast only in the notes-in-prompt form")
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
     ap.add_argument("--unknown-keys", type=int, default=0, help="unknown-key rows (night/unknown_key_rows.py), each with a known pair")
+    ap.add_argument("--unknown-keys-ask-back", action="store_true",
+                    help="unknown-key replies name the asked key and ask for it, with no notes wording (night-5 candidate)")
     ap.add_argument("--self-check", action="store_true", help="from night 2: ask the current adapter each earlier fact "
                     "on the day server; wrong -> 'let me check your notes' rows replace its answer rows (night/self_check_rows.py)")
     ap.add_argument("--control-vector", help="PATH:SCALE of a control-vector GGUF on the training host: the eval also runs "

@@ -1,0 +1,193 @@
+{
+ "label": "AA-Omniscience-Public, own harness",
+ "n_questions": 600,
+ "resamples": 4000,
+ "arms": {
+  "base": {
+   "hallucination_rate": {
+    "value": 0.5458,
+    "ci95": [
+     0.5031,
+     0.5882
+    ]
+   },
+   "omniscience_index": {
+    "value": -29.3333,
+    "ci95": [
+     -35.1667,
+     -23.5
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.6283,
+    "ci95": [
+     0.59,
+     0.665
+    ]
+   }
+  },
+  "w1n3": {
+   "hallucination_rate": {
+    "value": 0.9436,
+    "ci95": [
+     0.9218,
+     0.9629
+    ]
+   },
+   "omniscience_index": {
+    "value": -55.1667,
+    "ci95": [
+     -61.5,
+     -48.6667
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.9567,
+    "ci95": [
+     0.94,
+     0.9717
+    ]
+   }
+  },
+  "w1idk": {
+   "hallucination_rate": {
+    "value": 0.117,
+    "ci95": [
+     0.0906,
+     0.1444
+    ]
+   },
+   "omniscience_index": {
+    "value": -1.8333,
+    "ci95": [
+     -5.3333,
+     1.6667
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.1983,
+    "ci95": [
+     0.1667,
+     0.23
+    ]
+   }
+  },
+  "w1idk2to1": {
+   "hallucination_rate": {
+    "value": 0.6081,
+    "ci95": [
+     0.5643,
+     0.6511
+    ]
+   },
+   "omniscience_index": {
+    "value": -32.6667,
+    "ci95": [
+     -38.5,
+     -26.8333
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.68,
+    "ci95": [
+     0.64,
+     0.7183
+    ]
+   }
+  },
+  "w1idkr": {
+   "hallucination_rate": {
+    "value": 0.3314,
+    "ci95": [
+     0.291,
+     0.3717
+    ]
+   },
+   "omniscience_index": {
+    "value": -13.8333,
+    "ci95": [
+     -19.0,
+     -8.6667
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.43,
+    "ci95": [
+     0.39,
+     0.4683
+    ]
+   }
+  }
+ },
+ "pairs": {
+  "w1idkr - w1n3": {
+   "hallucination_rate": {
+    "value": -0.6122,
+    "ci95": [
+     -0.6549,
+     -0.57
+    ]
+   },
+   "omniscience_index": {
+    "value": 41.3333,
+    "ci95": [
+     35.5,
+     47.3333
+    ]
+   },
+   "attempt_rate": {
+    "value": -0.5267,
+    "ci95": [
+     -0.5667,
+     -0.4867
+    ]
+   }
+  },
+  "w1idkr - base": {
+   "hallucination_rate": {
+    "value": -0.2144,
+    "ci95": [
+     -0.2579,
+     -0.1696
+    ]
+   },
+   "omniscience_index": {
+    "value": 15.5,
+    "ci95": [
+     10.0,
+     21.0
+    ]
+   },
+   "attempt_rate": {
+    "value": -0.1983,
+    "ci95": [
+     -0.2367,
+     -0.16
+    ]
+   }
+  },
+  "w1idkr - w1idk": {
+   "hallucination_rate": {
+    "value": 0.2144,
+    "ci95": [
+     0.1769,
+     0.2513
+    ]
+   },
+   "omniscience_index": {
+    "value": -12.0,
+    "ci95": [
+     -16.3333,
+     -7.5
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.2317,
+    "ci95": [
+     0.1967,
+     0.2667
+    ]
+   }
+  }
+ }
+}

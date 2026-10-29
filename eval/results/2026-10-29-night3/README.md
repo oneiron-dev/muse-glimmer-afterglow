@@ -65,3 +65,25 @@ that restates the same fact (dropping the older copy loses nothing); (b) the dec
 right, 0 wrong. The lead chose (a) for night 4 (`night/consolidate.py`, 964eb3b). Every fire is logged in
 `consolidated.json` (old note, new note, p, shapes, change word), and the morning report lists them under "The night
 treated these as corrections" (Meta day, PR #75). Night 4's stale and B probes on w3 and w4 are the real-world check.
+
+**Option (a') from 29 Oct 15:00 (lead).** Day-4 consolidation under (a) dropped a true fact in w1: "test fly location:
+Skjerstad Meadows" (F64, still true) for "outdoor trial location: Havsborg Quarry" (F66, a separate new fact), p 0.72,
+because the change word "moved" belonged to the other clause of the same message ("we moved our glue orders to Nordbond
+Adhesives, and the outdoor trial is out at Havsborg Quarry"). (a') requires the change word in the clause that states
+the new value (split on . ; ! ? , and "and"). On every (a) fire so far (days 2-4): 7 right, 0 wrong, where (a) had 7
+right, 1 duplicate and 1 wrong drop. The clause rule was fit after seeing this failure, on the same fires, so night
+4's own fires are its first fresh test. At 15:13 the same clause rule was extended to the older teacher rule (the fallback when the
+readout does not link), after it dropped "analysis software: EchoLab R2026a" (still true) in w4 for "SonoScope 7.1
+license activated by IT", a message with no change word; its five day-2 fires, all right, each have one. Same caveat:
+fit on fires already seen. Day-4 consolidation was re-run under (a') in every world (the pre-fix folders
+are kept as `runs/<world>/4/night-preclause/`); every fire stays logged in `consolidated.json` and listed on the report.
+
+
+**Scorer note (29 Oct 17:5x, f52810b).** The abstain phrases now read every typographic apostrophe (’ ‘ ʼ) through one
+helper (`omniscience.abstain_text`); before, the of-record scorers straightened only ’, and `night/lookup_rows.py`'s
+judge none. Re-scored from the saved answers: 0 changes in the night-eval outcomes (51,704), the AA pre-pass (7,200),
+the gate answers (8,800), the product-form answers (6,380) and the look-it-up judge (43); no decision moves.
+
+**Rule of record from 29 Oct 20:27: honesty-3** (owner on META-ABSTENTION-RULE-2, "B is better yeah :)"). Re-decided
+night 3 under it: w2 keep, **w3 keep** (right 14 -> 15, honesty +18.0, never-told 29 -> 29; served as w3's day 3),
+w1 rollback (right 18 -> 16, honesty -5.5), w4 rollback (right 18 -> 7, never-told 30 -> 19).

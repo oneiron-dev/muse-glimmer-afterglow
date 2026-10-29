@@ -22,8 +22,16 @@ from paths import runs_root  # noqa: E402
 
 BATCH = 8
 SUPERSEDE_ACCEPT_P = 0.9  # = decide.decider.SUPERSEDE_ACCEPT_P: the readout links on its own at this p
-READOUT_A_P = 0.6  # option (a): a lower p links only with the same value shape and a change word in the day's wording
+READOUT_A_P = 0.6  # option (a): a lower p links only with the same value shape and a change word in the clause that states it
 CHANGE_WORD = re.compile(r"\b(now|moved|changed?|instead|switched|no longer|pushed|replac\w*|updated?|from now on|anymore)\b", re.I)
+CLAUSE_SPLIT = re.compile(r"[.;!?]+|,\s*(?:and|but|also|plus)\b|\band\b|,")
+
+
+def change_word_for(utterance, value):
+    """The change word in the clause that holds the new value (a message can state two facts, and its "moved" may
+    belong to the other one); None when no clause holding the value has one."""
+    clauses = [c for c in CLAUSE_SPLIT.split(utterance or "") if c and value.lower() in c.lower()]
+    return next((m for m in (CHANGE_WORD.search(c) for c in clauses) if m), None)
 PROMPT = """An assistant saved these notes about its user, {name}, during the day. Each note has an id, a key, a value and what {first} said.
 
 {notes}
@@ -180,7 +188,7 @@ def duplicate_check(active):
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
         from decide.decider import Decider
-        url = teacher_mod.serving_base_url()
+        url = os.environ.get("GLIMMER_BASE_URL") or teacher_mod.serving_base_url()  # the teacher's server, so one URL moves both
         d = Decider(url[:-3] if url.endswith("/v1") else url, slot=int(os.environ.get("NIGHT_SLOT", "1")), trace="night_duplicate")
         k = int(os.environ.get("D1_DUPLICATE_K", "0"))  # 0 = the decider's default; 2 under load (Meta decide)
         r = d.duplicate_check([{"id": n["id"], "key": n["key"], "value": n["value"]} for n in active], **({"k": k} if k else {}))
@@ -194,7 +202,9 @@ def duplicate_check(active):
 def find_replacements(items, by_id, day, first, teacher, log_path):
     """Corrections the day's notes did not link: a note saved today that holds a new value for an earlier, still
     active note under another key. The teacher names the earlier note; code accepts it only when the old note is from
-    an earlier day, is a fact, and its value has the same shape (time, date, room, person...) as the new one."""
+    an earlier day, is a fact, and its value has the same shape (time, date, room, person...) as the new one. Every
+    correction the night finds, by the readout or by the teacher, also needs a change word in the clause that states the
+    new value (option (a'), lead 29 Oct 15:00-15:13)."""
     from contrast_rows import shape
 
     earlier = [i for i in items if (by_id[i["id"]].get("day") or 1) < day and i["kind"] == "fact"]
@@ -207,7 +217,7 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
     try:  # Meta decide's one-pass supersede readout (base Glimmer, slot 1); accepted at p >= its accept_p (0.9)
         sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
         from decide.decider import Decider
-        url = teacher_mod.serving_base_url()
+        url = os.environ.get("GLIMMER_BASE_URL") or teacher_mod.serving_base_url()  # the teacher's server, so one URL moves both
         readout = Decider(url[:-3] if url.endswith("/v1") else url, slot=1)
     except Exception as e:  # noqa: BLE001  (not on this checkout, or the server is down): the rule below only
         readout, readout_error = None, f"{type(e).__name__}: {e}"
@@ -228,7 +238,7 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
                 old = all_items[r["link"]]
                 p_link = max((d["p"] for d in r["decisions"] if d["candidate"] == old["id"]), default=0.0)
                 same_shape = shape(old["full_value"]) == shape(n["full_value"])  # as measured: the notes' own values
-                change = CHANGE_WORD.search(n["source_utterance"])
+                change = change_word_for(n["source_utterance"], n["full_value"])
                 linked_by = ("readout" if p_link >= SUPERSEDE_ACCEPT_P else
                              "readout (a)" if p_link >= READOUT_A_P and same_shape and change else None)
                 if linked_by:
@@ -257,12 +267,16 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
             continue
         old = by_item[m.group(0)]
         same_shape = shape(old["value"]) == shape(n["value"])
-        decision = "superseded" if same_shape and old["id"] not in taken else "kept: " + (
-            "already replaced" if old["id"] in taken else f"value shapes differ ({shape(old['value'])} vs {shape(n['value'])})")
+        change = change_word_for(n["source_utterance"], n["full_value"])  # one rule for every correction the night finds
+        decision = "superseded" if same_shape and change and old["id"] not in taken else "kept: " + (
+            "already replaced" if old["id"] in taken else
+            f"value shapes differ ({shape(old['value'])} vs {shape(n['value'])})" if not same_shape else
+            "no change word in the clause that states the new value")
         if decision == "superseded":
             taken.add(old["id"])
         out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"], "old_key": old["key"],
-                    "old_value": old["full_value"], "decision": decision, "linked_by": "consolidation rule"})
+                    "old_value": old["full_value"], "decision": decision, "linked_by": "consolidation rule",
+                    "shape": [shape(old["value"]), shape(n["value"])], "change_word": change.group(0) if change else None})
     if readout is None:
         out.append({"decision": f"readout not used: {readout_error}"})
     return out

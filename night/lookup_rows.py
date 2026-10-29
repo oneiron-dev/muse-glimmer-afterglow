@@ -30,7 +30,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "app")); sys.path.insert(0, str(ROOT / "eval")); sys.path.insert(0, str(ROOT / "night"))
 from agent_anchor_rows import TOOL_CHECK_SEED, first_action, post  # noqa: E402
-from omniscience import ABSTAIN_RULE  # noqa: E402
+from omniscience import says_abstain  # noqa: E402
 import simpleqa_gate  # noqa: E402
 import tool_call_check  # noqa: E402
 
@@ -61,7 +61,7 @@ def judge(item, completion):
     reply = completion.split("to=user<|message|>")[-1].replace("<|eot|>", "") if target == "user" else ""
     if any(a.lower() in reply.lower() for a in item.get("accept") or [item["value"]]):
         return "right"
-    return "abstained" if ABSTAIN_RULE.search(reply) else "wrong"
+    return "abstained" if says_abstain(reply) else "wrong"
 
 
 def tool_list(args):
