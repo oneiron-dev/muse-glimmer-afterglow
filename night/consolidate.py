@@ -21,6 +21,9 @@ import teacher as teacher_mod  # noqa: E402
 from paths import runs_root  # noqa: E402
 
 BATCH = 8
+SUPERSEDE_ACCEPT_P = 0.9  # = decide.decider.SUPERSEDE_ACCEPT_P: the readout links on its own at this p
+READOUT_A_P = 0.6  # option (a): a lower p links only with the same value shape and a change word in the day's wording
+CHANGE_WORD = re.compile(r"\b(now|moved|changed?|instead|switched|no longer|pushed|replac\w*|updated?|from now on|anymore)\b", re.I)
 PROMPT = """An assistant saved these notes about its user, {name}, during the day. Each note has an id, a key, a value and what {first} said.
 
 {notes}
@@ -152,7 +155,8 @@ def main():
         if r["decision"] == "superseded":
             doc["dropped"].append({"id": r["old_id"], "key": r["old_key"], "value": r["old_value"], "outcome": "dropped_as_superseded",
                                    "superseded_by": r["new_id"], "why": f"replaced by {r['new_id']} ({r['new_key']}: {r['new_value']!r}); "
-                                   f"found by the night ({r['linked_by']}), the day's note had no link", "linked_by": r["linked_by"]})
+                                   f"found by the night ({r['linked_by']}), the day's note had no link", "linked_by": r["linked_by"],
+                                   "treated_as_correction_by_night": True, **{k: r[k] for k in ("p", "shape", "change_word") if k in r}})
             doc["outcomes"] = sorted([o for o in doc["outcomes"] if o["id"] != r["old_id"]] + [doc["dropped"][-1]], key=lambda o: o["id"])
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
     print(json.dumps({"active_notes": len(active), "items": len(items), "reused": len(reused), "dropped": len(doc["dropped"]),
@@ -217,15 +221,23 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
 
     for n in new:
         if readout is not None:
-            r = readout.supersede_link(earlier_notes, {"id": n["id"], "key": n["key"], "value": n["full_value"]}, k=8)
+            # top-1 "replaces" of the readout; linked at p >= SUPERSEDE_ACCEPT_P, or (option a, lead 29 Oct) at
+            # p >= READOUT_A_P when the values have the same shape and the day's wording has a change word
+            r = readout.supersede_link(earlier_notes, {"id": n["id"], "key": n["key"], "value": n["full_value"]}, k=8, accept_p=0.0)
             if r["link"] and r["link"] in all_items and r["link"] not in taken:
                 old = all_items[r["link"]]
-                taken.add(old["id"])
-                p_link = max((d["p"] for d in r["decisions"] if d["candidate"] == old["id"]), default=None)
-                out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"],
-                            "old_key": old["key"], "old_value": old["full_value"], "decision": "superseded",
-                            "linked_by": "readout", "p": p_link, "prompt_id": r["prompt_id"]})
-                continue
+                p_link = max((d["p"] for d in r["decisions"] if d["candidate"] == old["id"]), default=0.0)
+                same_shape = shape(old["full_value"]) == shape(n["full_value"])  # as measured: the notes' own values
+                change = CHANGE_WORD.search(n["source_utterance"])
+                linked_by = ("readout" if p_link >= SUPERSEDE_ACCEPT_P else
+                             "readout (a)" if p_link >= READOUT_A_P and same_shape and change else None)
+                if linked_by:
+                    taken.add(old["id"])
+                    out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"],
+                                "old_key": old["key"], "old_value": old["full_value"], "decision": "superseded",
+                                "linked_by": linked_by, "p": p_link, "prompt_id": r["prompt_id"],
+                                "shape": [shape(old["full_value"]), shape(n["full_value"])], "change_word": change.group(0) if change else None})
+                    continue
         # the candidates: earlier facts with the same value shape, most shared words first (key, value, what was said)
         said = words(f"{n['key']} {n['full_value']} {n['source_utterance']}")
         cands = sorted((i for i in earlier if shape(i["value"]) == shape(n["value"])),
