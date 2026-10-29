@@ -18,7 +18,8 @@ live schema (the same tool list as the app with search on) but never sends a que
 the turn, and the row records "looked_it_up": true and the query (0 searches leave the machine). The server is
 deterministic only within one run, so every row also records the llama-server run that answered it and the hash of
 its loaded adapter set (server_run, adapters_loaded_sha256; --server-host), and arms from different runs are never
-paired either; nor are arms that ran with different decisions on (--route, --supersede: route_on, supersede_on).
+paired either; nor are arms that ran with different decisions on (--route, --supersede: route_on, supersede_on, and with one on
+the hash of their serving-notes settings and code, decide_settings_sha256).
 Order: never_told before general, and within a set base then each adapter arm, so a deadline cuts general last.
 """
 
@@ -95,6 +96,19 @@ def server_identity(endpoint, host):
     return {"server_run": run, "adapters_loaded_sha256": adapters}
 
 
+DECIDE_CODE = ("app/afterglow/agent.py", "app/afterglow/tools.py", "decide/decider.py", "decide/prompts.py")
+
+
+def decide_settings(scratch):
+    """sha256 of what the route and supersede decisions run with: their serving-notes entries (adapter, threshold,
+    link_p, ...) and the code that applies them, so two rows with the decisions on pair only when both are the same."""
+    rule = scratch / "serving" / "serving-rule.json"
+    conf = json.loads(rule.read_text()) if rule.exists() else {}
+    code = {f: hashlib.sha256((REPO / f).read_bytes()).hexdigest() for f in DECIDE_CODE if (REPO / f).exists()}
+    doc = {"route_decision": conf.get("route_decision"), "supersede_decision": conf.get("supersede_decision"), "code": code}
+    return hashlib.sha256(json.dumps(doc, sort_keys=True).encode()).hexdigest()
+
+
 class SearchOffered(BaseException):
     """search_web was called in the offered mode: ends the turn (a BaseException, so the tool box's error handling
     does not turn it into a tool result)."""
@@ -130,6 +144,7 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     tools = {"web_search_on": bool(session.web_search_on),
              "tools_sha256": hashlib.sha256(json.dumps(session.tool_schemas, sort_keys=True).encode()).hexdigest(),
              "route_on": session.tools.decide_route is not None, "supersede_on": session.tools.decide_supersede is not None}
+    tools["decide_settings_sha256"] = decide_settings(scratch) if tools["route_on"] or tools["supersede_on"] else None
     if adapter_path:
         session.client.adapter_path = adapter_path
     if web_search == "offered":  # the live tool list, but no query is ever sent and no cap applies

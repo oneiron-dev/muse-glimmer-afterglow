@@ -95,12 +95,15 @@ class DecideGuardTest(unittest.TestCase):
         from product_abstention import same_decide
         self.assertTrue(same_decide({}, {"route_on": False, "supersede_on": False}))
         self.assertFalse(same_decide({}, {"route_on": True, "supersede_on": False}))
-        self.assertTrue(same_decide({"route_on": True, "supersede_on": True}, {"route_on": True, "supersede_on": True}))
+        on = {"route_on": True, "supersede_on": True, "decide_settings_sha256": "d" * 64}
+        self.assertTrue(same_decide(on, dict(on)))
+        self.assertFalse(same_decide(on, dict(on, decide_settings_sha256="e" * 64)))  # another threshold or code
+        self.assertFalse(same_decide(dict(on, decide_settings_sha256=None), dict(on, decide_settings_sha256=None)))
 
     def test_route_on_and_off_are_never_paired(self):
         d = Path(tempfile.mkdtemp()) / "wt"
         d.mkdir()
-        rows = [dict(raw_row("base", "q1", RUN_A), route_on=True, supersede_on=True),
+        rows = [dict(raw_row("base", "q1", RUN_A), route_on=True, supersede_on=True, decide_settings_sha256="d" * 64),
                 dict(raw_row("night3", "q1", RUN_A), route_on=False, supersede_on=True)]
         (d / "raw.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
         with self.assertRaises(SystemExit) as e:

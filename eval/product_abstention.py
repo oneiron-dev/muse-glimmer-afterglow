@@ -63,13 +63,18 @@ def refuse_mixed_server(pairs, what):
                          f"adapter set) on {len(bad)} questions, e.g. {bad[0]}; ask both again in one server run")
 
 
-DECIDE_FIELDS = ("route_on", "supersede_on")
+DECIDE_FIELDS = ("route_on", "supersede_on", "decide_settings_sha256")
 
 
 def same_decide(a, b):
     """Two answer rows ran with the same decisions switched on in the day agent (the route decision at recall time,
-    the supersede decision at remember time); a row from before they were recorded ran with both off."""
-    return all(bool(a.get(k, False)) == bool(b.get(k, False)) for k in DECIDE_FIELDS)
+    the supersede decision at remember time) and, when one is on, the same settings and code for them; a row from
+    before they were recorded ran with both off."""
+    if any(bool(a.get(k, False)) != bool(b.get(k, False)) for k in DECIDE_FIELDS[:2]):
+        return False
+    if a.get("route_on") or a.get("supersede_on"):
+        return a.get("decide_settings_sha256") is not None and a.get("decide_settings_sha256") == b.get("decide_settings_sha256")
+    return True
 
 
 def refuse_mixed_decide(pairs, what):
@@ -77,7 +82,7 @@ def refuse_mixed_decide(pairs, what):
     bad = [(a.get("set"), a.get("id")) for a, b in pairs if not same_decide(a, b)]
     if bad:
         raise SystemExit(f"{what}: the two arms ran with different decisions on (route or supersede) on {len(bad)} "
-                         f"questions, e.g. {bad[0]}; ask both again with the same --route and --supersede")
+                         f"questions, e.g. {bad[0]}; ask both again with the same --route and --supersede, and the same decision settings")
 
 
 def refuse_mixed_tools(pairs, what):
