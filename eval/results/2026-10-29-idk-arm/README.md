@@ -12,6 +12,8 @@ Arms, all on w1 night 3's data (the same consolidation, rewrites and agent ancho
 - **n3**: the night-3 recipe.
 - **idk**: n3 + the 42 graded rows.
 - **idkc** (control): n3 + the same 42 questions, every row keeping the base model's own answer (`rows-ungraded.jsonl`).
+- **2to1** (a narrower boundary, run after idkc showed the effect is the labels): n3 + the same 21 IDK rows and 33
+  base-right rows (`rows-graded-2to1-avail.jsonl`; the held-apart 200 have only 11 usable right answers per form).
 
 ## AA-Omniscience-Public, own harness (600 questions; not a leaderboard number)
 95% paired bootstrap intervals (`eval/aa_omniscience_ci.py`, files in `aa/`). Base answers are mel's 27 Oct base run
@@ -23,26 +25,38 @@ Arms, all on w1 night 3's data (the same consolidation, rewrites and agent ancho
 | n3 | 94.4% [92.2, 96.3] | -55.2 [-61.5, -48.7] | 95.7% | 121 | 452 | 26 |
 | idk | **11.7%** [9.1, 14.4] | **-1.8** [-5.3, +1.7] | 19.8% | 53 | 64 | 481 |
 | idkc | 97.9% [96.5, 99.2] | -58.7 [-65.0, -52.2] | 98.7% | 119 | 471 | 8 |
+| 2to1 | 60.8% [56.4, 65.1] | -32.7 [-38.5, -26.8] | 68.0% | 105 | 301 | 192 |
 
-idk - n3 = -82.7 pt [-85.9, -79.3]; idk - idkc = -86.2 pt [-89.0, -83.1]; idkc - n3 = +3.6 pt [+1.2, +6.0].
+idk - n3 = -82.7 pt [-85.9, -79.3]; idk - idkc = -86.2 pt [-89.0, -83.1]; idkc - n3 = +3.6 pt [+1.2, +6.0];
+2to1 - n3 = -33.6 pt [-37.8, -29.2]; 2to1 - base = +6.2 pt [+1.8, +10.7].
 
 Known-item retention (Wilson 95%): of the 98 questions base answers right, idk still answers 45 (46% [36, 56]) and
-says "I don't know" on 45; idkc keeps 74. Of the 274 base gets wrong, idk says "I don't know" on 211 (77% [72, 82]),
-idkc on 3.
+says "I don't know" on 45; idkc keeps 74; 2to1 keeps 74 (5 "I don't know"). Of the 274 base gets wrong, idk says "I
+don't know" on 211 (77% [72, 82]), 2to1 on 44 (16%), idkc on 3.
 
 ## The night's own checks (w1 day-3 probes)
 
-| | n3 | idk | idkc |
-|---|---|---|---|
-| B never-told (abstains, of 30) | 1 | **15** | 0 |
-| B day-1 facts right/wrong/abstain | 93/14/1 | 74/12/22 | 91/16/1 |
-| B day-3 facts | 20/19/0 | 23/12/4 | 21/17/1 |
-| D never-told | 27 | 29 | 27 |
-| SimpleQA gate abstain (base 58.5%), disclosed | 35.5% | 91.0% | 3.0% |
-| forgetting | +2.5 pt [-2.7, +7.7] | -1.5 pt [-5.7, +2.8] | +0.5 pt [-4.0, +5.0] |
-| tools, channel | 20/20, 30/30 | 20/20, 30/30 | 19/20, 30/30 |
+| | n3 | idk | idkc | 2to1 |
+|---|---|---|---|---|
+| B never-told (abstains, of 30) | 1 | **15** | 0 | 1 |
+| B day-1 facts right/wrong/abstain | 93/14/1 | 74/12/22 | 91/16/1 | 92/16/0 |
+| B day-3 facts | 20/19/0 | 23/12/4 | 21/17/1 | 22/17/0 |
+| D never-told | 27 | 29 | 27 | 27 |
+| SimpleQA gate abstain (base ~58%), disclosed | 35.5% | 91.0% | 3.0% | 47.0% |
+| forgetting | +2.5 pt [-2.7, +7.7] | -1.5 pt [-5.7, +2.8] | +0.5 pt [-4.0, +5.0] | +3.0 pt [-2.0, +7.9] |
+| tools, channel | 20/20, 30/30 | 20/20, 30/30 | 19/20, 30/30 | 19/20, 30/30 |
+| product form, general declines (base 94/200) | 86 | 166 | 75 | (read after 15:10) |
+| product form, never-told (base 30) | 22 | 29 | 28 | (read after 15:10) |
+| product-2s | rollback | rollback | passes, not promoted (control arm) | pending |
 
-Of the user facts n3 answers right (125 B probes), idk keeps 94 and says "I don't know" on 20; idkc keeps 116.
+Of the user facts n3 answers right (125 B probes), idk keeps 94 and says "I don't know" on 20; idkc keeps 116; 2to1
+keeps 107. In the product form idk nearly removes the never-told wrong-person answers (1 against n3's 8) and declines
+75 general questions base answers.
+
+## Privacy: never-told questions and the web search (`privacy/`)
+The 30 w1 never-told questions about the user, asked in the day agent's prompt with search_web offered (the call is
+read, never executed): 0 web searches in every arm (base, n3, idk, 2to1). First actions: base recall 30; n3 recall 28,
+answer 2; idk recall 30; 2to1 recall 22, answer 8.
 
 ## Reading
 - The effect is the labels: the same questions with the base model's own answers make it guess slightly more
@@ -50,8 +64,9 @@ Of the user facts n3 answers right (125 B probes), idk keeps 94 and says "I don'
 - The boundary is set too wide: 42 rows switch "I don't know" on past what base itself knows (it gives up 46% of the
   general answers base knew, 16% of the user facts n3 knew, and the gate overshoots to 91%). idk is a rollback as a
   night on forgetting (its lower bound misses -5 by 0.7) and serves as a direction screen.
-- Next, ruled by the lead: a narrower boundary, the same 21 IDK rows with 33 base-right rows
-  (`rows-graded-2to1-avail.jsonl`); the half dose (`rows-graded-half.jsonl`, a subset of the 42) after it.
+- The narrower boundary (2to1) puts AA honesty back near base (60.8% vs 54.6%) and keeps the known items (74 of
+  base's 98, 107 of n3's 125 user facts), but the never-told B lift goes with it (1 of 30). Its product-form read
+  decides whether it keeps idk's fix of the wrong-person answers.
 
 ## Look-it-up (the owner's follow-up), dropped before training
 Built with `night/lookup_rows.py` on the day server with search_web offered (nothing is searched; `lookup/`): the w1

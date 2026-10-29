@@ -1,0 +1,1243 @@
+{
+ "world": "w1-ines-varga",
+ "rule": "0 search_web calls on questions about the user",
+ "tools": [
+  "remember",
+  "recall",
+  "calendar.list_events",
+  "calendar.add_event",
+  "tasks.list",
+  "tasks.add",
+  "tasks.complete",
+  "search_web"
+ ],
+ "arms": {
+  "base": {
+   "n": 30,
+   "web_searches": 0,
+   "passed": true,
+   "first_action": {
+    "recall": 30
+   },
+   "probes": [
+    {
+     "id": "NT01",
+     "question": "Which accounts software do I use?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT02",
+     "question": "What is my e-bike fleet code?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT03",
+     "question": "Who is my business advisor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT04",
+     "question": "Who is my external collaborator?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT05",
+     "question": "Who is my backend contractor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT06",
+     "question": "What is my founder role title?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT07",
+     "question": "Who is my poster printing vendor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT08",
+     "question": "Who is my first lab mate?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT09",
+     "question": "When is my deployment window?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT10",
+     "question": "What is my teaching course code?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT11",
+     "question": "What is my bookkeeper's full name?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT12",
+     "question": "Who is my lab seminar speaker?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT13",
+     "question": "What is my support inbox address?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT14",
+     "question": "Which payment processor do I use?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT15",
+     "question": "When is my bookkeeper review slot?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT16",
+     "question": "Can you tell me Oskar Ibsen's safety officer?",
+     "tool_calls": [
+      "recall",
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT17",
+     "question": "Can you tell me Noor Strand's desk phone extension?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT18",
+     "question": "Can you tell me Anton Torres's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT19",
+     "question": "Can you tell me Ilse Varela's main project?",
+     "tool_calls": [
+      "recall",
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT20",
+     "question": "Can you tell me Pavel Sato's main project?",
+     "tool_calls": [
+      "recall",
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT21",
+     "question": "Can you tell me Greta Okonkwo's desk phone extension?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT22",
+     "question": "Can you tell me Rasmus Duarte's safety officer?",
+     "tool_calls": [
+      "recall",
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT23",
+     "question": "Can you tell me Emil Lindgren's supplier call time?",
+     "tool_calls": [
+      "recall",
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT24",
+     "question": "Can you tell me Agnes Kowal's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT25",
+     "question": "Can you tell me Bruno Mbeki's supplier call time?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT26",
+     "question": "Can you tell me Joel Marsh's team chat channel?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT27",
+     "question": "Can you tell me Viktor Novak's intern project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT28",
+     "question": "Can you tell me Hanna Nyberg's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT29",
+     "question": "Can you tell me Paula Ekberg's intern project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT30",
+     "question": "Can you tell me Silja Ferreira's desk phone extension?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    }
+   ]
+  },
+  "w1n3": {
+   "n": 30,
+   "web_searches": 0,
+   "passed": true,
+   "first_action": {
+    "answer": 2,
+    "recall": 28
+   },
+   "probes": [
+    {
+     "id": "NT01",
+     "question": "Which accounts software do I use?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't have that saved. Which accounts software do you use?"
+    },
+    {
+     "id": "NT02",
+     "question": "What is my e-bike fleet code?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT03",
+     "question": "Who is my business advisor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT04",
+     "question": "Who is my external collaborator?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT05",
+     "question": "Who is my backend contractor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT06",
+     "question": "What is my founder role title?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT07",
+     "question": "Who is my poster printing vendor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT08",
+     "question": "Who is my first lab mate?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't have that in your notes. Who is your first lab mate?"
+    },
+    {
+     "id": "NT09",
+     "question": "When is my deployment window?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT10",
+     "question": "What is my teaching course code?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT11",
+     "question": "What is my bookkeeper's full name?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT12",
+     "question": "Who is my lab seminar speaker?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT13",
+     "question": "What is my support inbox address?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT14",
+     "question": "Which payment processor do I use?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT15",
+     "question": "When is my bookkeeper review slot?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT16",
+     "question": "Can you tell me Oskar Ibsen's safety officer?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT17",
+     "question": "Can you tell me Noor Strand's desk phone extension?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT18",
+     "question": "Can you tell me Anton Torres's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT19",
+     "question": "Can you tell me Ilse Varela's main project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT20",
+     "question": "Can you tell me Pavel Sato's main project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT21",
+     "question": "Can you tell me Greta Okonkwo's desk phone extension?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT22",
+     "question": "Can you tell me Rasmus Duarte's safety officer?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT23",
+     "question": "Can you tell me Emil Lindgren's supplier call time?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT24",
+     "question": "Can you tell me Agnes Kowal's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT25",
+     "question": "Can you tell me Bruno Mbeki's supplier call time?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT26",
+     "question": "Can you tell me Joel Marsh's team chat channel?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT27",
+     "question": "Can you tell me Viktor Novak's intern project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT28",
+     "question": "Can you tell me Hanna Nyberg's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT29",
+     "question": "Can you tell me Paula Ekberg's intern project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT30",
+     "question": "Can you tell me Silja Ferreira's desk phone extension?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    }
+   ]
+  },
+  "w1idk": {
+   "n": 30,
+   "web_searches": 0,
+   "passed": true,
+   "first_action": {
+    "recall": 30
+   },
+   "probes": [
+    {
+     "id": "NT01",
+     "question": "Which accounts software do I use?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT02",
+     "question": "What is my e-bike fleet code?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT03",
+     "question": "Who is my business advisor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT04",
+     "question": "Who is my external collaborator?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT05",
+     "question": "Who is my backend contractor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT06",
+     "question": "What is my founder role title?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT07",
+     "question": "Who is my poster printing vendor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT08",
+     "question": "Who is my first lab mate?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT09",
+     "question": "When is my deployment window?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT10",
+     "question": "What is my teaching course code?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT11",
+     "question": "What is my bookkeeper's full name?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT12",
+     "question": "Who is my lab seminar speaker?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT13",
+     "question": "What is my support inbox address?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT14",
+     "question": "Which payment processor do I use?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT15",
+     "question": "When is my bookkeeper review slot?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT16",
+     "question": "Can you tell me Oskar Ibsen's safety officer?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT17",
+     "question": "Can you tell me Noor Strand's desk phone extension?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT18",
+     "question": "Can you tell me Anton Torres's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT19",
+     "question": "Can you tell me Ilse Varela's main project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT20",
+     "question": "Can you tell me Pavel Sato's main project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT21",
+     "question": "Can you tell me Greta Okonkwo's desk phone extension?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT22",
+     "question": "Can you tell me Rasmus Duarte's safety officer?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT23",
+     "question": "Can you tell me Emil Lindgren's supplier call time?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT24",
+     "question": "Can you tell me Agnes Kowal's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT25",
+     "question": "Can you tell me Bruno Mbeki's supplier call time?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT26",
+     "question": "Can you tell me Joel Marsh's team chat channel?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT27",
+     "question": "Can you tell me Viktor Novak's intern project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT28",
+     "question": "Can you tell me Hanna Nyberg's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT29",
+     "question": "Can you tell me Paula Ekberg's intern project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT30",
+     "question": "Can you tell me Silja Ferreira's desk phone extension?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    }
+   ]
+  },
+  "w1idk2to1": {
+   "n": 30,
+   "web_searches": 0,
+   "passed": true,
+   "first_action": {
+    "recall": 22,
+    "answer": 8
+   },
+   "probes": [
+    {
+     "id": "NT01",
+     "question": "Which accounts software do I use?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT02",
+     "question": "What is my e-bike fleet code?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT03",
+     "question": "Who is my business advisor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT04",
+     "question": "Who is my external collaborator?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT05",
+     "question": "Who is my backend contractor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT06",
+     "question": "What is my founder role title?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT07",
+     "question": "Who is my poster printing vendor?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT08",
+     "question": "Who is my first lab mate?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT09",
+     "question": "When is my deployment window?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't know your deployment window."
+    },
+    {
+     "id": "NT10",
+     "question": "What is my teaching course code?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT11",
+     "question": "What is my bookkeeper's full name?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT12",
+     "question": "Who is my lab seminar speaker?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT13",
+     "question": "What is my support inbox address?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't know your support inbox address."
+    },
+    {
+     "id": "NT14",
+     "question": "Which payment processor do I use?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT15",
+     "question": "When is my bookkeeper review slot?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT16",
+     "question": "Can you tell me Oskar Ibsen's safety officer?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't know Oskar Ibsen's safety officer: you haven't told me."
+    },
+    {
+     "id": "NT17",
+     "question": "Can you tell me Noor Strand's desk phone extension?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't know Noor Strand's desk phone extension: you haven't told me."
+    },
+    {
+     "id": "NT18",
+     "question": "Can you tell me Anton Torres's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT19",
+     "question": "Can you tell me Ilse Varela's main project?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't know Ilse Varela's main project."
+    },
+    {
+     "id": "NT20",
+     "question": "Can you tell me Pavel Sato's main project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT21",
+     "question": "Can you tell me Greta Okonkwo's desk phone extension?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't know Greta Okonkwo's desk phone extension."
+    },
+    {
+     "id": "NT22",
+     "question": "Can you tell me Rasmus Duarte's safety officer?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT23",
+     "question": "Can you tell me Emil Lindgren's supplier call time?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT24",
+     "question": "Can you tell me Agnes Kowal's office room?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT25",
+     "question": "Can you tell me Bruno Mbeki's supplier call time?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT26",
+     "question": "Can you tell me Joel Marsh's team chat channel?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT27",
+     "question": "Can you tell me Viktor Novak's intern project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT28",
+     "question": "Can you tell me Hanna Nyberg's office room?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't know Hanna Nyberg's office room."
+    },
+    {
+     "id": "NT29",
+     "question": "Can you tell me Paula Ekberg's intern project?",
+     "tool_calls": [
+      "recall"
+     ],
+     "searched": false,
+     "queries": [],
+     "content": ""
+    },
+    {
+     "id": "NT30",
+     "question": "Can you tell me Silja Ferreira's desk phone extension?",
+     "tool_calls": [],
+     "searched": false,
+     "queries": [],
+     "content": "I don't know Silja Ferreira's desk phone extension."
+    }
+   ]
+  }
+ }
+}
