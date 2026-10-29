@@ -27,7 +27,9 @@ import urllib.error
 import urllib.request
 
 USER_AGENT = "afterglow-app/0.1 (+https://github.com/oneiron-dev/muse-glimmer-afterglow)"
-WITNESS_TIMEOUT_S = 90  # a busy vault can take longer than 30 s to commit a witnessed turn
+# a busy vault can take longer than 30 s to commit a witnessed turn; AFTERGLOW_VAULT_TIMEOUT_S raises it for a push
+# into a slow vault (a retry after a client timeout only adds load; stable ids keep a retry idempotent)
+WITNESS_TIMEOUT_S = float(os.environ.get("AFTERGLOW_VAULT_TIMEOUT_S") or 90)
 WITNESS_TRIES = 3
 
 
