@@ -133,6 +133,7 @@ def main():
                     help="first N gate-slice questions in the frozen hash order (100 = a direction screen)")
     ap.add_argument("--general-from", type=int, default=0,
                     help="skip the first N of those (e.g. 100 with --limit-general 200 asks only questions 101-200)")
+    ap.add_argument("--ids", help="file of question ids (one per line): ask only those, in both sets")
     ap.add_argument("--date", default="2026-10-30")
     ap.add_argument("--runs", help="the real runs root (default: the main checkout's runs/)")
     ap.add_argument("--out", required=True)
@@ -150,6 +151,7 @@ def main():
     real_runs = runs_root(args.runs)
     manifest = real_runs / "serving" / "adapters.json"
     general = [{"id": q["id"], "question": q["question"]} for q in simpleqa_gate.gate_items()[args.general_from:args.limit_general]]
+    only = set(Path(args.ids).read_text().split()) if args.ids else None
     out_note = {"general_questions": f"{args.general_from + 1}-{args.general_from + len(general)}",
                 "note": "a direction screen on the first questions of the frozen slice"
                 if args.limit_general < 200 else "the full gate slice"}
@@ -167,6 +169,8 @@ def main():
                 else:
                     print(json.dumps({"world": w, "arm": name, "skipped": f"no day-{day} adapter in the manifest"}), flush=True)
             items = [{"id": it["id"], "question": it["question"]} for it in never_told.load(w)] if s == "never_told" else general
+            if only:
+                items = [it for it in items if it["id"] in only]
             if s == "general" and args.general_adapters != "none" and not any(
                     a[0] in args.general_adapters.split(",") for a in arms):
                 print(json.dumps({"world": w, "set": s, "skipped": "no adapter arm to compare with the base"}), flush=True)
