@@ -54,6 +54,7 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 29 Oct | Retrained decision adapter (D1b): on the held-out person, one forward pass picks the note that answers a question or asks when none does, scoring 0.705 (right minus wrong over all 210 questions) against 0.419 for always looking up the notes, and asks on all 30 never-told questions; it becomes the routing decision. Corrections and duplicates stay on the base model, where it is no better on real notes. | #63, #66 |
 | 29 Oct | The day agent's look-up runs through Glimmer's decision adapter from day 4: when it looks something up, one forward pass picks the note that answers the question or decides that none does and asks the user; each decision is logged with its probability and time and shown on the day page. | #69 |
 | 29 Oct | Accepted dials apply in chat: a change the user accepted on the morning report (for example "more concise") is sent with every request from the next day, within the dial's tested range only; with no dial the requests are byte-identical to before. Live: one question went from 369 words to 16 with an accepted concise dial. | #70 |
+| 29 Oct | Day 4 for all four synthetic people (new facts, corrections, reactions to answer style), probes frozen by hash before any day-4 data; the world generator refuses credential or access-code wording, and a scan of every day finds no secret-shaped text. The day simulator can run on a chosen server slot so a person using the app keeps theirs. | #71 |
 
 ## Pre-existing work used as external dependencies
 
