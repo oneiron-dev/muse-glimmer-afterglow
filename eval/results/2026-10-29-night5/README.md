@@ -27,8 +27,8 @@ its own checks; three fail the honesty rule on right answers, and w2 fails only 
 **What night 5 says: the ask-back wording spreads to public questions.** General replies that ask the user back ("I
 don't have any notes about Elsie Tu. Can you tell me?") are 25-41 of 200 for base in every world; night 5 gives w2 38,
 w1 72, w3 85, w4 119, and the served w3 night-4b gives 87. The 24 unknown-key replies name a key and ask for it, 18 of
-them about a named third party or with a notes block, and the model learns "a name not in the notes -> ask". The same
-rows cut never-told wrong-person answers with the route off (w2 10 -> 2, w3 6 -> 4, w4 5 -> 0; w1 4). Three w4 arms
+them about a named third party or with a notes block, and the model learns "a name not in the notes -> ask". The rows are not the whole cause: w1's night 4, trained with the night-4 wording, already asked back on 70 of 200. The same
+rows cut never-told wrong-person answers with the route off (w2 10 -> 2, w3 6 -> 4, w4 5 -> 0; w1 3 -> 4). Three w4 arms
 separate the two effects (day-5 inputs, from base, not of record):
 - 5b: ask back only on the user's own keys; person and notes-form replies take the night-4 wording.
 - 5c: the full night-5 ask-back + 24 public anchors (`night/public_anchor_rows.py`: base replies in the served agent
