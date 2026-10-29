@@ -344,7 +344,14 @@ def find_replacements(items, by_id, day, first, teacher, log_path, readout_log=N
 
 def outcome_fields(notes, items, merges, proposals):
     """Per-note outcome for the morning report: kept / merged_as_duplicate / dropped_as_superseded, with the reason."""
-    superseded = [{"id": n["id"], "key": n["key"], "value": n["value"], "outcome": "dropped_as_superseded",
+    def by_night(n):  # applied by the app from an earlier night's night-links.json (superseded_by_night)
+        s = n["superseded_by_night"]
+        return {"id": n["id"], "key": n["key"], "value": n["value"], "outcome": "dropped_as_superseded",
+                "superseded_by": s.get("by"), "linked_by": f"night {s.get('night_day')} ({s.get('linked_by')})",
+                "why": f"superseded by {s.get('by')}, found by night {s.get('night_day')}: {s.get('reason')}"}
+
+    superseded = [by_night(n) if n.get("superseded_by_night") and not n.get("superseded_by") else
+                  {"id": n["id"], "key": n["key"], "value": n["value"], "outcome": "dropped_as_superseded",
                    "superseded_by": n.get("superseded_by"), "linked_by": "day agent",
                    "why": f"superseded by {n.get('superseded_by')}: the value {n['value']!r} is no longer true"}
                   for n in notes if n.get("superseded_by") or n.get("status") == "superseded"]
