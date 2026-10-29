@@ -66,8 +66,8 @@ def main():
             mine = [h for h in pointer["history"] if h["day"] == args.day]
             if mine:
                 mine[-1]["decision"] = d["decision"]
-                if d["decision"] == "keep":
-                    pointer["current"] = mine[-1]
+                if d["decision"] == "keep" and (not pointer.get("current") or pointer["current"].get("day", 0) <= args.day):
+                    pointer["current"] = mine[-1]  # a re-decided earlier day never takes the place of a later kept day
                 elif pointer.get("current") and pointer["current"].get("day") == args.day:
                     kept = [h for h in pointer["history"] if h["decision"] == "keep" and h["day"] != args.day]
                     pointer["current"] = kept[-1] if kept else None
