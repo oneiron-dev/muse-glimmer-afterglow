@@ -69,7 +69,8 @@ class SearchOfferedTest(unittest.TestCase):
         live = TOOL_SCHEMAS + [web_search.SEARCH_WEB_SCHEMA]  # the app's tool list with search on
         self.assertEqual(server.tools, [live])
         self.assertEqual(tools, {"web_search_on": True,
-                                 "tools_sha256": hashlib.sha256(json.dumps(live, sort_keys=True).encode()).hexdigest()})
+                                 "tools_sha256": hashlib.sha256(json.dumps(live, sort_keys=True).encode()).hexdigest(),
+                                 "route_on": False, "supersede_on": False})
 
     def test_offered_mode_without_a_search_answers_as_usual(self):
         answer, _, _, tools, search = self.ask("offered", FakeServer(call_search=False))

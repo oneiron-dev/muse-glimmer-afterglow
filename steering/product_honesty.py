@@ -29,7 +29,8 @@ sys.path.insert(0, str(HERE.parent / "eval"))
 sys.path.insert(0, str(HERE.parent / "night"))
 import aa_omniscience  # noqa: E402
 import simpleqa_gate  # noqa: E402
-from product_abstention import abstained, refuse_mixed_server, refuse_mixed_tools, same_server  # noqa: E402
+from product_abstention import (abstained, refuse_mixed_decide, refuse_mixed_server, refuse_mixed_tools,  # noqa: E402
+                                same_server)
 from product_known_split import grade_one, key  # noqa: E402
 
 SEED, RESAMPLES = 20261014, 10000
@@ -70,6 +71,7 @@ def main():
         pairs = {k: (v["base"], v["adapter"]) for k, v in by.items() if {"base", "adapter"} <= set(v)}
         refuse_mixed_tools(list(pairs.values()), path)
         refuse_mixed_server(list(pairs.values()), path)
+        refuse_mixed_decide(list(pairs.values()), path)
         arms[label] = {"path": path, "pairs": pairs}
     todo = {}
     for a in arms.values():

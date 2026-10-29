@@ -63,6 +63,23 @@ def refuse_mixed_server(pairs, what):
                          f"adapter set) on {len(bad)} questions, e.g. {bad[0]}; ask both again in one server run")
 
 
+DECIDE_FIELDS = ("route_on", "supersede_on")
+
+
+def same_decide(a, b):
+    """Two answer rows ran with the same decisions switched on in the day agent (the route decision at recall time,
+    the supersede decision at remember time); a row from before they were recorded ran with both off."""
+    return all(bool(a.get(k, False)) == bool(b.get(k, False)) for k in DECIDE_FIELDS)
+
+
+def refuse_mixed_decide(pairs, what):
+    """SystemExit when any (row, row) pair ran with different decisions switched on."""
+    bad = [(a.get("set"), a.get("id")) for a, b in pairs if not same_decide(a, b)]
+    if bad:
+        raise SystemExit(f"{what}: the two arms ran with different decisions on (route or supersede) on {len(bad)} "
+                         f"questions, e.g. {bad[0]}; ask both again with the same --route and --supersede")
+
+
 def refuse_mixed_tools(pairs, what):
     """SystemExit when any (row, row) pair saw different tools."""
     bad = [(a.get("set"), a.get("id")) for a, b in pairs if not same_tools(a, b)]
@@ -100,6 +117,7 @@ def main():
     pairs = [(v["base"], v["adapter"]) for v in by.values() if {"base", "adapter"} <= set(v)]
     refuse_mixed_tools(pairs, args.answers)
     refuse_mixed_server(pairs, args.answers)
+    refuse_mixed_decide(pairs, args.answers)
     arms = {}
     for arm in ("base", "adapter"):
         g = [r for r in rows if r["arm"] == arm and r["set"] == "general" and r["id"] in gate_ids]

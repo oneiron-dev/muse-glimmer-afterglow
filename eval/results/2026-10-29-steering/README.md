@@ -226,3 +226,27 @@ The general questions each arm changed, graded with the AA-Omniscience grader of
 idk nearly removes the wrong-person answers on never-told questions (1 against night 3's 8), and 64 of its 75 new "I
 don't know" answers are on questions base answered wrongly. idkc stays inside the band because it answers 30 more
 questions, 28 of them wrongly; it is a control and is not promoted.
+
+### Restart B: w1 2to1 and w2 night-3b; the route decision (product-form/night3-restartB/, product-form/route/)
+
+Both read beside a base asked again in the same server run (15:14), day-3 notes, search off:
+
+| adapter | general declines | honesty (95% interval) | never-told (of 30) |
+|---|---|---|---|
+| w1 2to1 | 94 → 200 (says "I don't know." to every general question) | +35 (+26 to +43.5), every known answer dropped | 30 → 30 |
+| w2 night-3b | 96 → 137 | +19 (+11.5 to +26.5) | 30 → 26 |
+
+From day 4 the served assistant picks, at recall time, the one note that answers the question or none (the route
+decision, one pass of the decision adapter D1b). The never-told questions with the route on and off, in one server
+run:
+
+| arm | route off | route on |
+|---|---|---|
+| w1 base | 30 | 28 |
+| w1 night 3 | 22 | 25 |
+| w2 base | 30 | 30 |
+| w2 night 3 | 27 | 28 |
+
+The route stops some wrong-person answers but makes its own: asked "Can you tell me Oskar Ibsen's safety officer?", it
+picks the user's own safety-officer note with p 0.97, and even base Glimmer then answers "Oskar Ibsen's safety officer is
+Lotte Brandt." Four of the seven misses with the route on come from picks at p 0.50-0.67.

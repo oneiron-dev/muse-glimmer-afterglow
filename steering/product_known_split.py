@@ -26,7 +26,7 @@ sys.path.insert(0, str(HERE.parent / "eval"))
 sys.path.insert(0, str(HERE.parent / "night"))
 import aa_omniscience  # noqa: E402
 import simpleqa_gate  # noqa: E402
-from product_abstention import abstained, refuse_mixed_server, refuse_mixed_tools  # noqa: E402
+from product_abstention import abstained, refuse_mixed_decide, refuse_mixed_server, refuse_mixed_tools  # noqa: E402
 
 LETTERS = {"A": "CORRECT", "B": "INCORRECT", "C": "PARTIAL_ANSWER", "D": "NOT_ATTEMPTED"}
 DETERMINISTIC = {"correct": "CORRECT", "not_attempted": "NOT_ATTEMPTED"}
@@ -71,6 +71,7 @@ def main():
         pairs = [(v["base"], v["adapter"]) for v in by.values() if {"base", "adapter"} <= set(v)]
         refuse_mixed_tools(pairs, path)
         refuse_mixed_server(pairs, path)
+        refuse_mixed_decide(pairs, path)
         new_declines = [b for b, a in pairs if abstained(a) and not abstained(b)]
         new_answers = [a for b, a in pairs if abstained(b) and not abstained(a)]
         plan[label] = {"pairs": len(pairs), "new_declines": new_declines, "new_answers": new_answers}

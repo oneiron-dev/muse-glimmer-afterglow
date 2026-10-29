@@ -24,7 +24,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "eval"))
 import simpleqa_gate  # noqa: E402
-from product_abstention import abstained, refuse_mixed_server, refuse_mixed_tools, same_server  # noqa: E402
+from product_abstention import (abstained, refuse_mixed_decide, refuse_mixed_server, refuse_mixed_tools,  # noqa: E402
+                                same_server)
 
 SEED = 20261014
 RESAMPLES = 10000
@@ -53,6 +54,7 @@ def answers_report(path, first):
     pairs = [(v["base"], v["adapter"]) for v in full.values() if {"base", "adapter"} <= set(v)]
     refuse_mixed_tools(pairs, path)
     refuse_mixed_server(pairs, path)
+    refuse_mixed_decide(pairs, path)
     by = {k: {arm: int(abstained(r)) for arm, r in v.items()} for k, v in full.items()}
     out = {}
     order = [q["id"] for q in simpleqa_gate.gate_items()]
