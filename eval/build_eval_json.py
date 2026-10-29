@@ -58,6 +58,9 @@ def build(world, day, recs, adapter, gate=None):
             if set(before) - v1_ids:  # v2 in: the slice of record is v1 + v2; v1 alone is disclosed
                 v1 = stats.paired_proportions({k: v for k, v in before.items() if k in v1_ids}, {k: v for k, v in after.items() if k in v1_ids})
                 forgot["slices"] = {"v1": len(set(before) & v1_ids), "v2": len(set(before) - v1_ids)}
+                forgot["arms"] = {"compared": ["A", "B"], "answered_by": sorted(a for a, r in recs.items() if passes(r, FORGET_KINDS)),
+                                  "note": "arms C and D answer no forgetting item from night 6: notes are never added to general "
+                                          "items, so there they repeat A's and B's prompt and scale"}
                 forgot["v1_only"] = {"n": v1["n"], "delta": v1["after_minus_before"], "ci95": v1["newcombe95"],
                                      "lost": v1["lost"], "gained": v1["gained"]}
     facts = []

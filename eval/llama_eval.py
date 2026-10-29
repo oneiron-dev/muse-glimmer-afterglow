@@ -10,7 +10,9 @@ confidence (log-probabilities), the calibration data for the confidence gate. Wr
 score-<label>-<arm>.json per arm, in the format eval/summarize_sweep.py reads. With --gate-slice it also answers
 the SimpleQA abstention gate slice with the adapter off and on (gate-<label>.json, eval/simpleqa_gate.py).
 With --forget-slice-v2 arms A and B also answer the second forgetting slice (300 MMLU-Pro items, disjoint from v1;
-the forgetting check compares A and B only), read only if its hash matches its manifest.
+the forgetting check compares A and B only), read only if its hash matches its manifest. --forget-arms A,B keeps every
+forgetting item off arms C and D: notes are never added to general items, so there they repeat A's and B's prompt
+and scale.
 """
 
 import argparse
@@ -31,6 +33,7 @@ from score_peft import (GENERAL_KINDS, MAX_NEW_TOKENS, ROOT, build_prefix, load_
 
 ARMS = {"A": (0.0, False), "B": (1.0, False), "C": (0.0, True), "D": (1.0, True)}
 FORGET_V2_ARMS = ("A", "B")
+FORGET_KINDS = ("forget_mmlu", "forget_tool")
 
 
 def frozen_slice(name):
@@ -90,6 +93,7 @@ def main():
     ap.add_argument("--label", required=True, help="the adapter's label in the output file names")
     ap.add_argument("--forget-slice", action="store_true")
     ap.add_argument("--forget-slice-v2", action="store_true", help="arms A and B also answer forget_slice_v2 (300 MMLU-Pro)")
+    ap.add_argument("--forget-arms", default="A,B,C,D", help="the arms that answer the forgetting items")
     ap.add_argument("--never-told", action="store_true", help="add the world's frozen never-told probes (abstain = right)")
     ap.add_argument("--only-kinds", help="comma list: keep only these probe kinds (eval-only re-runs)")
     ap.add_argument("--gate-slice", action="store_true", help="also the SimpleQA abstention gate, adapter off (A) and on (B)")
@@ -131,6 +135,8 @@ def main():
         t0 = time.time()
         jobs = []
         for it in items:
+            if it["kind"] in FORGET_KINDS and arm not in args.forget_arms.split(","):
+                continue
             if it["id"] in v2_ids and arm not in FORGET_V2_ARMS:
                 continue
             text = prompt_text(it, notes if use_notes and it["kind"] not in GENERAL_KINDS else None, first)

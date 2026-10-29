@@ -12,8 +12,8 @@ skipped when its output exists (rerun with --force STEP to redo one):
   train_set    rewrites (+ a share of earlier days' rewrites) + anchors -> night/train.jsonl, leak-checked
   train        QLoRA adapter on the host, converted to GGUF and checked module by module
   eval         llama-server with the adapter: arms A/B/C/D on the held-out probes and the forgetting slice
-               (from day 6 arms A and B also on forget_slice_v2), and the SimpleQA abstention gate slice with the
-               adapter off and on
+               (from day 6 v1 + forget_slice_v2 on arms A and B only), and the SimpleQA abstention gate slice with
+               the adapter off and on
   report       eval.json, decision.json (keep | rollback), receipt.json; runs/W/adapters.json points at the kept adapter
 """
 
@@ -62,7 +62,8 @@ HOST = {**HOSTS[os.environ.get("AFTERGLOW_TRAIN_HOST", "mel")],
 GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 # from night 6 the forgetting check reads v1 + v2 (500 items, lead 29 Oct 22:59): +-5.3 points on v1 alone failed an
-# unchanged night (w2 night 5: 0.0 [-5.3, +5.3]) on noise; same bar (lower bound above -5 points)
+# unchanged night (w2 night 5: 0.0 [-5.3, +5.3]) on noise; same bar (lower bound above -5 points). From the same night
+# arms C and D answer no forgetting item (lead 23:04): there the prompt and scale are A's and B's, and forgot reads A and B
 FORGET_V2_FROM_DAY = 6
 
 
@@ -522,7 +523,7 @@ class Night:
         cmd = (f"CHANNEL_CHECK_ARGS={shlex.quote(channel)} TOOL_CHECK_ARGS={shlex.quote(tools)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
                f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D"
-               f"{' --forget-slice-v2' if a.day >= FORGET_V2_FROM_DAY else ''}")
+               f"{' --forget-slice-v2 --forget-arms A,B' if a.day >= FORGET_V2_FROM_DAY else ''}")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: 4-arm eval in llama.cpp", GPU_LIMIT["eval"], cmd, log)
         rsync(f"{HOST['name']}:{r}/eval/", str(self.night / "eval") + "/", log)
 
