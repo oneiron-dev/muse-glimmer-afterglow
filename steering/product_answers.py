@@ -13,7 +13,13 @@ Writes <out>/<world>/answers-<adapter arm>.jsonl in the scorer's shape ({"arm": 
 "answer", "truncated", "web_search_on", "tools_sha256"}; the base rows are shared by every adapter arm's file) and
 <out>/<world>/progress.json. Web search stays off unless --web-search: a product-form read compares arms that saw the
 same tools, so every row records web_search_on and the tool list's hash, and two arms whose values differ are never
-paired (a row without them is from before web search existed: off).
+paired (a row without them is from before web search existed: off). --web-search offered offers search_web with the
+live schema (the same tool list as the app with search on) but never sends a query: the first search_web call ends
+the turn, and the row records "looked_it_up": true and the query (0 searches leave the machine). The server is
+deterministic only within one run, so every row also records the llama-server run that answered it and the hash of
+its loaded adapter set (server_run, adapters_loaded_sha256; --server-host), and arms from different runs are never
+paired either; nor are arms that ran with different decisions on (--route, --supersede: route_on, supersede_on, and with one on
+the hash of their serving-notes settings and code, decide_settings_sha256).
 Order: never_told before general, and within a set base then each adapter arm, so a deadline cuts general last.
 """
 
@@ -22,9 +28,11 @@ import hashlib
 import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
+import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -45,23 +53,79 @@ def manifest_adapter(real_runs, world, day, path_part=None):
 def compose_answer_files(wdir):
     """answers-<arm>.jsonl for every adapter arm in raw.jsonl (all runs so far): the base rows (latest per set and
     id) plus that arm's rows, in the scorer's shape. Refuses (SystemExit) when an arm's row and the base row it would
-    pair with saw different tools (web search on in one of them, or a different tool list)."""
+    pair with saw different tools (web search on in one of them, or a different tool list), or was answered by another
+server run."""
     sys.path.insert(0, str(REPO / "eval"))
-    from product_abstention import refuse_mixed_tools, tools_seen
+    from product_abstention import (DECIDE_FIELDS, SERVER_FIELDS, refuse_mixed_decide, refuse_mixed_server,
+                                    refuse_mixed_tools, tools_seen)
 
     raw = [json.loads(line) for line in (wdir / "raw.jsonl").read_text().splitlines() if line.strip()]
     base = {(r["set"], r["id"]): r for r in raw if r["arm_name"] == "base"}
     for name in {r["arm_name"] for r in raw} - {"base"}:
         mine = {(r["set"], r["id"]): r for r in raw if r["arm_name"] == name}
-        refuse_mixed_tools([(base[k], r) for k, r in mine.items() if k in base], f"{wdir.name} arm {name}")
+        pairs = [(base[k], r) for k, r in mine.items() if k in base]
+        refuse_mixed_tools(pairs, f"{wdir.name} arm {name}")
+        refuse_mixed_server(pairs, f"{wdir.name} arm {name}")
+        refuse_mixed_decide(pairs, f"{wdir.name} arm {name}")
         rows = [dict(r, arm="base") for k, r in base.items() if k in mine] + [dict(r, arm="adapter") for r in mine.values()]
         (wdir / f"answers-{name}.jsonl").write_text("".join(json.dumps(
             {**{k: r[k] for k in ("arm", "set", "id", "answer", "truncated")},
-             **dict(zip(("web_search_on", "tools_sha256"), tools_seen(r)))}) + "\n" for r in rows))
+             **dict(zip(("web_search_on", "tools_sha256"), tools_seen(r))),
+             **{k: r[k] for k in ("looked_it_up", "search_query", *SERVER_FIELDS, *DECIDE_FIELDS) if k in r}}) + "\n" for r in rows))
 
 
-def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot, web_search=False):
-    """One fresh day-agent session; returns (answer, truncated, error, {"web_search_on", "tools_sha256"})."""
+def server_identity(endpoint, host):
+    """{"server_run", "adapters_loaded_sha256"} of the server that answered: its llama-server process on the host
+    ("host:pid start time", over ssh; None when it cannot be read as one process) and the sha256 of the adapter set it
+    has loaded (GET /lora-adapters: ids and paths). Read after each answer: a restart kills the process, so an answer
+    that came back belongs to the run read right after it."""
+    try:
+        with urllib.request.urlopen(endpoint + "/lora-adapters", timeout=10) as r:
+            loaded = [{"id": a["id"], "path": a["path"]} for a in json.loads(r.read())]
+        adapters = hashlib.sha256(json.dumps(loaded, sort_keys=True).encode()).hexdigest()
+    except (OSError, ValueError, KeyError):
+        adapters = None
+    run = None
+    try:
+        p = subprocess.run(["ssh", "-o", "ConnectTimeout=5", host, "ps -o pid=,lstart= -C llama-server"],
+                           capture_output=True, text=True, timeout=20)
+        procs = [" ".join(line.split()) for line in p.stdout.splitlines() if line.strip()]
+        run = f"{host}:{procs[0]}" if p.returncode == 0 and len(procs) == 1 else None
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    return {"server_run": run, "adapters_loaded_sha256": adapters}
+
+
+DECIDE_CODE = ("app/afterglow/agent.py", "app/afterglow/tools.py", "decide/decider.py", "decide/prompts.py")
+
+
+def decide_settings(scratch):
+    """sha256 of what the route and supersede decisions run with: their serving-notes entries (adapter, threshold,
+    link_p, ...) and the code that applies them, so two rows with the decisions on pair only when both are the same."""
+    rule = scratch / "serving" / "serving-rule.json"
+    conf = json.loads(rule.read_text()) if rule.exists() else {}
+    code = {f: hashlib.sha256((REPO / f).read_bytes()).hexdigest() for f in DECIDE_CODE if (REPO / f).exists()}
+    doc = {"route_decision": conf.get("route_decision"), "supersede_decision": conf.get("supersede_decision"), "code": code}
+    return hashlib.sha256(json.dumps(doc, sort_keys=True).encode()).hexdigest()
+
+
+class SearchOffered(BaseException):
+    """search_web was called in the offered mode: ends the turn (a BaseException, so the tool box's error handling
+    does not turn it into a tool result)."""
+
+    def __init__(self, query):
+        super().__init__(query)
+        self.query = query
+
+
+def offered_search(query, max_results=None):
+    raise SearchOffered(query)
+
+
+def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot, web_search="off",
+        route=None, supersede=None):
+    """One fresh day-agent session; returns (answer, truncated, error, {"web_search_on", "tools_sha256"}, search)
+    where search is None, or in the offered mode {"looked_it_up", "search_query"}."""
     scratch = Path(tempfile.mkdtemp(dir=tmp))
     (scratch / "serving").mkdir(parents=True)
     shutil.copy(manifest, scratch / "serving" / "adapters.json")
@@ -75,18 +139,33 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     from afterglow.agent import DaySession  # paths are read per call, so the scratch root applies
     from afterglow.llm import GlimmerClient
     client = GlimmerClient(endpoint, slot=slot, lora_scale=scale)
-    session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0, web_search=web_search)
+    session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0, web_search=web_search != "off",
+                         decide_route=route, decide_supersede=supersede)
     tools = {"web_search_on": bool(session.web_search_on),
-             "tools_sha256": hashlib.sha256(json.dumps(session.tool_schemas, sort_keys=True).encode()).hexdigest()}
+             "tools_sha256": hashlib.sha256(json.dumps(session.tool_schemas, sort_keys=True).encode()).hexdigest(),
+             "route_on": session.tools.decide_route is not None, "supersede_on": session.tools.decide_supersede is not None}
+    tools["decide_settings_sha256"] = decide_settings(scratch) if tools["route_on"] or tools["supersede_on"] else None
     if adapter_path:
         session.client.adapter_path = adapter_path
-    ev = session.ask(question)
+    if web_search == "offered":  # the live tool list, but no query is ever sent and no cap applies
+        session.tools.web_search, session.tools.web_cap = offered_search, None
+        try:
+            ev = session.ask(question)
+        except SearchOffered as e:
+            shutil.rmtree(scratch, ignore_errors=True)
+            return "", False, None, tools, {"looked_it_up": True, "search_query": e.query}
+        search = {"looked_it_up": False, "search_query": None}
+    else:
+        ev = session.ask(question)
+        search = None
     rec = [json.loads(line) for line in (scratch / world / "1" / "daylog.jsonl").read_text().splitlines()
            if line.strip()][-1]
     rounds = rec.get("rounds") or [{}]
     truncated = rounds[-1].get("finish_reason") in ("length", "limit")
+    if rec.get("route_decisions"):  # the route decision at recall time: which note it picked (none = ask the user)
+        tools["route_decisions"] = rec["route_decisions"]
     shutil.rmtree(scratch, ignore_errors=True)
-    return ev.get("content") or "", truncated, ev.get("error"), tools
+    return ev.get("content") or "", truncated, ev.get("error"), tools, search
 
 
 def main():
@@ -106,12 +185,20 @@ def main():
                     help="first N gate-slice questions in the frozen hash order (100 = a direction screen)")
     ap.add_argument("--general-from", type=int, default=0,
                     help="skip the first N of those (e.g. 100 with --limit-general 200 asks only questions 101-200)")
+    ap.add_argument("--ids", help="file of question ids (one per line): ask only those, in both sets")
     ap.add_argument("--date", default="2026-10-30")
     ap.add_argument("--runs", help="the real runs root (default: the main checkout's runs/)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--deadline-s", type=float, default=7200)
-    ap.add_argument("--web-search", action="store_true",
-                    help="offer the day agent's search_web tool (default off: product-form reads compare arms without it)")
+    ap.add_argument("--server-host", default="mel", help="ssh host running the llama-server (its run id is recorded)")
+    onoff = {"serving": None, "on": True, "off": False}
+    ap.add_argument("--route", choices=tuple(onoff), default="serving",
+                    help="the route decision at recall time: serving = the serving notes for day 1 (off), on, off")
+    ap.add_argument("--supersede", choices=tuple(onoff), default="serving",
+                    help="the supersede decision at remember time: serving = the serving notes for day 1 (off), on, off")
+    ap.add_argument("--web-search", nargs="?", const="live", default="off", choices=("off", "offered", "live"),
+                    help="the day agent's search_web tool: off (default; product-form reads compare arms without it), "
+                         "offered (the live schema, calls recorded, nothing sent) or live (bare --web-search: real searches)")
     args = ap.parse_args()
     t0 = time.time()
     sys.path.insert(0, str(Path(args.eval_root) / "eval"))
@@ -122,6 +209,7 @@ def main():
     real_runs = runs_root(args.runs)
     manifest = real_runs / "serving" / "adapters.json"
     general = [{"id": q["id"], "question": q["question"]} for q in simpleqa_gate.gate_items()[args.general_from:args.limit_general]]
+    only = set(Path(args.ids).read_text().split()) if args.ids else None
     out_note = {"general_questions": f"{args.general_from + 1}-{args.general_from + len(general)}",
                 "note": "a direction screen on the first questions of the frozen slice"
                 if args.limit_general < 200 else "the full gate slice"}
@@ -139,6 +227,8 @@ def main():
                 else:
                     print(json.dumps({"world": w, "arm": name, "skipped": f"no day-{day} adapter in the manifest"}), flush=True)
             items = [{"id": it["id"], "question": it["question"]} for it in never_told.load(w)] if s == "never_told" else general
+            if only:
+                items = [it for it in items if it["id"] in only]
             if s == "general" and args.general_adapters != "none" and not any(
                     a[0] in args.general_adapters.split(",") for a in arms):
                 print(json.dumps({"world": w, "set": s, "skipped": "no adapter arm to compare with the base"}), flush=True)
@@ -160,10 +250,12 @@ def main():
             while (out / "PAUSE").exists():  # the serving owner asked for a pause between calls (a restart)
                 time.sleep(5)
             tq = time.time()
-            answer, truncated, error, tools = ask(it["question"], w, notes_file, manifest, args.endpoint, path, scale,
-                                                  args.date, tmp, args.slot, web_search=args.web_search)
+            answer, truncated, error, tools, search = ask(it["question"], w, notes_file, manifest, args.endpoint, path,
+                                                          scale, args.date, tmp, args.slot, web_search=args.web_search,
+                                                          route=onoff[args.route], supersede=onoff[args.supersede])
             row = {"arm_name": arm, "set": s, "id": it["id"], "answer": answer, "truncated": truncated, "error": error,
-                   "seconds": round(time.time() - tq, 2), **tools}
+                   "seconds": round(time.time() - tq, 2), **tools, **(search or {}),
+                   **server_identity(args.endpoint, args.server_host)}
             rows.setdefault(w, []).append(row)
             (out / w).mkdir(parents=True, exist_ok=True)
             with open(out / w / "raw.jsonl", "a") as f:  # every answer as it lands, so a cut run keeps its work

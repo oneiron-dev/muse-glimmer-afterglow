@@ -96,6 +96,27 @@ class RouteDecisionTest(unittest.TestCase):
         self.assertEqual(len(s.tools.route_decisions), 1)
         self.assertEqual(s.tools.route_decisions[0]["note"], s.notes.all()[1]["id"])
 
+    def test_a_possessive_name_no_note_mentions_turns_a_pick_into_an_ask(self):
+        s = self.session()
+        s.notes.remember("safety officer", "Lotte Brandt", day=1, turn=3)
+        FakeDecider.pick_key = "safety officer"
+        s.tools.question = "Can you tell me Oskar Ibsen's safety officer?"
+        out, _ = s.tools.run("recall", {"query": "safety officer"}, turn=7)
+        self.assertEqual(out["notes"], [])
+        self.assertIn("Ask the user", out["not_in_notes"])
+        self.assertEqual(out["decided"]["guard"], "named person not in notes: Oskar Ibsen")
+        self.assertEqual(out["decided"]["pick"], "3")  # the one pass's own pick stays in the log
+        self.assertTrue(s.tools.route_decisions[0]["ask"])
+
+    def test_the_name_guard_leaves_known_people_public_names_and_the_user_alone(self):
+        from afterglow.agent import unknown_person
+        notes = [{"key": "thesis advisor", "value": "Henrik Dahl"}, {"key": "job title", "value": "lead at Kestrel Fabrication"}]
+        self.assertIsNone(unknown_person("What is Henrik Dahl's office room?", "Elin Sorensen", notes))  # in a note
+        self.assertIsNone(unknown_person("Who is Ada Lovelace?", "Elin Sorensen", notes))  # not possessive
+        self.assertIsNone(unknown_person("Where is Elin Sorensen's desk?", "Elin Sorensen", notes))  # the user
+        self.assertIsNone(unknown_person("What does Kestrel Fabrication's site run on?", "Ines Varga", notes))
+        self.assertEqual(unknown_person("What's Pavel Sato’s supplier check call?", "Tomas Hale", notes), "Pavel Sato")
+
     def test_no_note_answers_it_so_the_agent_asks(self):
         s = self.session()
         out, _ = s.tools.run("recall", {"query": "printer"}, turn=7)

@@ -1,0 +1,20 @@
+{
+ "grader": "spark-sub",
+ "rule": "new declines graded on the base's answer, new answers on the adapter's",
+ "arms": {
+  "w1-idk2to1": {
+   "pairs": 200,
+   "new_declines": {
+    "n": 106,
+    "base_answer": {
+     "INCORRECT": 88,
+     "CORRECT": 18
+    }
+   },
+   "new_answers": {
+    "n": 0,
+    "adapter_answer": {}
+   }
+  }
+ }
+}

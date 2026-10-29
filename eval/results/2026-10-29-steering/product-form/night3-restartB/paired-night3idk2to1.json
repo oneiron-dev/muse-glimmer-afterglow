@@ -1,0 +1,43 @@
+{
+ "rule": "abstention by the night's rules; difference = second minus first (adapter minus base), points",
+ "bootstrap": {
+  "resamples": 10000,
+  "seed": 20261014
+ },
+ "paired": {
+  "w1-idk2to1": {
+   "never_told": {
+    "n": 30,
+    "x": 30,
+    "y": 30,
+    "diff_points": 0.0,
+    "ci95_points": [
+     0.0,
+     0.0
+    ]
+   },
+   "general": {
+    "n": 200,
+    "x": 94,
+    "y": 200,
+    "diff_points": 53.0,
+    "ci95_points": [
+     46.0,
+     60.0
+    ]
+   },
+   "general_first100": {
+    "n": 100,
+    "x": 44,
+    "y": 100,
+    "diff_points": 56.0,
+    "ci95_points": [
+     46.0,
+     66.0
+    ]
+   },
+   "file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night3-restartB/w1-ines-varga/answers-night3idk2to1.jsonl"
+  }
+ },
+ "swing": {}
+}
