@@ -119,6 +119,17 @@ class ServingRuleTest(unittest.TestCase):
         doc["never_told_route_off"]["adapter"]["wrong_person"] = 1
         f.write_text(json.dumps(doc))
         self.assertIn("stopped 1 answer that would have", serving_choice("w", self.entries[:1])["why"])
+        # stopped = route-off wrong-person less the served ones; with no split, every non-abstention as served counts
+        doc["never_told_route_off"]["adapter"]["wrong_person"] = 10
+        doc["abstention_product_form"]["arms"]["adapter"]["never_told"] = {"n": 30, "abstain": 27}
+        f.write_text(json.dumps(doc))
+        self.assertIn("27 of 30 times (the note check stopped 7 answers", serving_choice("w", self.entries[:1])["why"])
+        doc["abstention_product_form"]["arms"]["adapter"]["never_told"]["wrong_person"] = 1
+        f.write_text(json.dumps(doc))
+        self.assertIn("stopped 9 answers", serving_choice("w", self.entries[:1])["why"])
+        doc["abstention_product_form"]["arms"]["adapter"]["never_told"]["wrong_person"] = 10
+        f.write_text(json.dumps(doc))
+        self.assertTrue(serving_choice("w", self.entries[:1])["why"].endswith("27 of 30 times."))
 
 
 if __name__ == "__main__":
