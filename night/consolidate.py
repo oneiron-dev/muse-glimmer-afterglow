@@ -22,8 +22,16 @@ from paths import runs_root  # noqa: E402
 
 BATCH = 8
 SUPERSEDE_ACCEPT_P = 0.9  # = decide.decider.SUPERSEDE_ACCEPT_P: the readout links on its own at this p
-READOUT_A_P = 0.6  # option (a): a lower p links only with the same value shape and a change word in the day's wording
+READOUT_A_P = 0.6  # option (a): a lower p links only with the same value shape and a change word in the clause that states it
 CHANGE_WORD = re.compile(r"\b(now|moved|changed?|instead|switched|no longer|pushed|replac\w*|updated?|from now on|anymore)\b", re.I)
+CLAUSE_SPLIT = re.compile(r"[.;!?]+|,\s*(?:and|but|also|plus)\b|\band\b|,")
+
+
+def change_word_for(utterance, value):
+    """The change word in the clause that holds the new value (a message can state two facts, and its "moved" may
+    belong to the other one); None when no clause holding the value has one."""
+    clauses = [c for c in CLAUSE_SPLIT.split(utterance or "") if c and value.lower() in c.lower()]
+    return next((m for m in (CHANGE_WORD.search(c) for c in clauses) if m), None)
 PROMPT = """An assistant saved these notes about its user, {name}, during the day. Each note has an id, a key, a value and what {first} said.
 
 {notes}
@@ -228,7 +236,7 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
                 old = all_items[r["link"]]
                 p_link = max((d["p"] for d in r["decisions"] if d["candidate"] == old["id"]), default=0.0)
                 same_shape = shape(old["full_value"]) == shape(n["full_value"])  # as measured: the notes' own values
-                change = CHANGE_WORD.search(n["source_utterance"])
+                change = change_word_for(n["source_utterance"], n["full_value"])
                 linked_by = ("readout" if p_link >= SUPERSEDE_ACCEPT_P else
                              "readout (a)" if p_link >= READOUT_A_P and same_shape and change else None)
                 if linked_by:
