@@ -13,7 +13,9 @@ Writes <out>/<world>/answers-<adapter arm>.jsonl in the scorer's shape ({"arm": 
 "answer", "truncated", "web_search_on", "tools_sha256"}; the base rows are shared by every adapter arm's file) and
 <out>/<world>/progress.json. Web search stays off unless --web-search: a product-form read compares arms that saw the
 same tools, so every row records web_search_on and the tool list's hash, and two arms whose values differ are never
-paired (a row without them is from before web search existed: off).
+paired (a row without them is from before web search existed: off). --web-search offered offers search_web with the
+live schema (the same tool list as the app with search on) but never sends a query: the first search_web call ends
+the turn, and the row records "looked_it_up": true and the query (0 searches leave the machine).
 Order: never_told before general, and within a set base then each adapter arm, so a deadline cuts general last.
 """
 
@@ -57,11 +59,26 @@ def compose_answer_files(wdir):
         rows = [dict(r, arm="base") for k, r in base.items() if k in mine] + [dict(r, arm="adapter") for r in mine.values()]
         (wdir / f"answers-{name}.jsonl").write_text("".join(json.dumps(
             {**{k: r[k] for k in ("arm", "set", "id", "answer", "truncated")},
-             **dict(zip(("web_search_on", "tools_sha256"), tools_seen(r)))}) + "\n" for r in rows))
+             **dict(zip(("web_search_on", "tools_sha256"), tools_seen(r))),
+             **{k: r[k] for k in ("looked_it_up", "search_query") if k in r}}) + "\n" for r in rows))
 
 
-def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot, web_search=False):
-    """One fresh day-agent session; returns (answer, truncated, error, {"web_search_on", "tools_sha256"})."""
+class SearchOffered(BaseException):
+    """search_web was called in the offered mode: ends the turn (a BaseException, so the tool box's error handling
+    does not turn it into a tool result)."""
+
+    def __init__(self, query):
+        super().__init__(query)
+        self.query = query
+
+
+def offered_search(query, max_results=None):
+    raise SearchOffered(query)
+
+
+def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot, web_search="off"):
+    """One fresh day-agent session; returns (answer, truncated, error, {"web_search_on", "tools_sha256"}, search)
+    where search is None, or in the offered mode {"looked_it_up", "search_query"}."""
     scratch = Path(tempfile.mkdtemp(dir=tmp))
     (scratch / "serving").mkdir(parents=True)
     shutil.copy(manifest, scratch / "serving" / "adapters.json")
@@ -75,18 +92,28 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     from afterglow.agent import DaySession  # paths are read per call, so the scratch root applies
     from afterglow.llm import GlimmerClient
     client = GlimmerClient(endpoint, slot=slot, lora_scale=scale)
-    session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0, web_search=web_search)
+    session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0, web_search=web_search != "off")
     tools = {"web_search_on": bool(session.web_search_on),
              "tools_sha256": hashlib.sha256(json.dumps(session.tool_schemas, sort_keys=True).encode()).hexdigest()}
     if adapter_path:
         session.client.adapter_path = adapter_path
-    ev = session.ask(question)
+    if web_search == "offered":  # the live tool list, but no query is ever sent and no cap applies
+        session.tools.web_search, session.tools.web_cap = offered_search, None
+        try:
+            ev = session.ask(question)
+        except SearchOffered as e:
+            shutil.rmtree(scratch, ignore_errors=True)
+            return "", False, None, tools, {"looked_it_up": True, "search_query": e.query}
+        search = {"looked_it_up": False, "search_query": None}
+    else:
+        ev = session.ask(question)
+        search = None
     rec = [json.loads(line) for line in (scratch / world / "1" / "daylog.jsonl").read_text().splitlines()
            if line.strip()][-1]
     rounds = rec.get("rounds") or [{}]
     truncated = rounds[-1].get("finish_reason") in ("length", "limit")
     shutil.rmtree(scratch, ignore_errors=True)
-    return ev.get("content") or "", truncated, ev.get("error"), tools
+    return ev.get("content") or "", truncated, ev.get("error"), tools, search
 
 
 def main():
@@ -110,8 +137,9 @@ def main():
     ap.add_argument("--runs", help="the real runs root (default: the main checkout's runs/)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--deadline-s", type=float, default=7200)
-    ap.add_argument("--web-search", action="store_true",
-                    help="offer the day agent's search_web tool (default off: product-form reads compare arms without it)")
+    ap.add_argument("--web-search", nargs="?", const="live", default="off", choices=("off", "offered", "live"),
+                    help="the day agent's search_web tool: off (default; product-form reads compare arms without it), "
+                         "offered (the live schema, calls recorded, nothing sent) or live (bare --web-search: real searches)")
     args = ap.parse_args()
     t0 = time.time()
     sys.path.insert(0, str(Path(args.eval_root) / "eval"))
@@ -160,10 +188,10 @@ def main():
             while (out / "PAUSE").exists():  # the serving owner asked for a pause between calls (a restart)
                 time.sleep(5)
             tq = time.time()
-            answer, truncated, error, tools = ask(it["question"], w, notes_file, manifest, args.endpoint, path, scale,
-                                                  args.date, tmp, args.slot, web_search=args.web_search)
+            answer, truncated, error, tools, search = ask(it["question"], w, notes_file, manifest, args.endpoint, path,
+                                                          scale, args.date, tmp, args.slot, web_search=args.web_search)
             row = {"arm_name": arm, "set": s, "id": it["id"], "answer": answer, "truncated": truncated, "error": error,
-                   "seconds": round(time.time() - tq, 2), **tools}
+                   "seconds": round(time.time() - tq, 2), **tools, **(search or {})}
             rows.setdefault(w, []).append(row)
             (out / w).mkdir(parents=True, exist_ok=True)
             with open(out / w / "raw.jsonl", "a") as f:  # every answer as it lands, so a cut run keeps its work
