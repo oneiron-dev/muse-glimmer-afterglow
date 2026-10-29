@@ -221,6 +221,33 @@ def parse_json(text):
     return json.loads(text[start:end + 1])
 
 
+NEVER_TOLD_KEY_PROMPT = """Below are the keys of new facts about a person, and the keys of questions that must stay
+unanswerable for that person. A question key is the same as a new key when a question about it would be answered by
+that new fact: the same thing in other words ("afternoon courier slot" and "courier pickup time" are the same;
+"courier pickup time" and "conference city" are not).
+
+New keys:
+{new}
+
+Question keys:
+{probes}
+
+Answer with JSON only: {{"same": [{{"new_key": "...", "probe_key": "..."}}]}}, an empty list when none is the same."""
+
+
+def key_words(text):
+    return set(re.findall(r"[a-z0-9]+", text.lower()))
+
+
+def never_told_keys(world, root=REPO):
+    """{probe id: key} for the world's frozen never-told probes that ask for a key the user never had (type other_key,
+    eval/data/never_told/<w>.jsonl). A lookalike probe asks for one of the user's own keys about someone else, so its
+    key is told on purpose and is not listed."""
+    f = root / "eval" / "data" / "never_told" / f"{world}.jsonl"
+    rows = [json.loads(line) for line in f.read_text().splitlines() if line.strip()] if f.exists() else []
+    return {r["id"]: r["spec"]["key"] for r in rows if r.get("type") == "other_key" and (r.get("spec") or {}).get("key")}
+
+
 class Generator:
     def __init__(self, world, archetype, teacher, out_dir):
         self.world, self.archetype, self.teacher = world, archetype, teacher
@@ -242,6 +269,29 @@ class Generator:
             except ValueError as e:
                 print(f"  {purpose}: unusable reply ({e}); retry {attempt + 1}", flush=True)
         raise SystemExit(f"{purpose}: no usable reply after {tries} tries")
+
+    def never_told_clashes(self, facts, keys):
+        """The new facts whose key is one of the never-told probe keys (keys: {probe id: key}): the same words (one
+        key's words all in the other's), or the teacher says the same meaning. A day that told one would answer a
+        question the eval keeps unanswerable. Returns [{"id", "key", "probe", "probe_key", "by"}]."""
+        out = []
+        for f in facts:
+            hit = next((pid for pid, k in keys.items() if key_words(f["key"]) and key_words(k)
+                        and (key_words(f["key"]) <= key_words(k) or key_words(k) <= key_words(f["key"]))), None)
+            if hit:
+                out.append({"id": f["id"], "key": f["key"], "probe": hit, "probe_key": keys[hit], "by": "same words"})
+        rest = [f for f in facts if f["id"] not in {x["id"] for x in out}]
+        if rest and keys:
+            doc = self.ask(NEVER_TOLD_KEY_PROMPT.format(new="\n".join(f"- {f['key']}" for f in rest),
+                                                        probes="\n".join(f"- {k}" for k in sorted(set(keys.values())))),
+                           "never-told key check", max_tokens=800, temperature=0.0)
+            by_key = {norm(f["key"]): f for f in rest}
+            for pair in doc.get("same") or []:
+                f = by_key.pop(norm(str(pair.get("new_key", ""))), None)
+                pid = next((p for p, k in keys.items() if norm(k) == norm(str(pair.get("probe_key", "")))), None)
+                if f and pid:
+                    out.append({"id": f["id"], "key": f["key"], "probe": pid, "probe_key": keys[pid], "by": "judge"})
+        return out
 
     # --- 1. persona, facts, preferences, procedure, corrections ---
     def persona(self, n_facts, n_corrections, week_start):
@@ -644,6 +694,14 @@ def add_day(out, teacher, day, n_new, n_corrections, n_feedback):
     g.rng = random.Random(SEED + day)
     first = max(int(f["id"][1:]) for f in facts) + 1
     new = g.new_facts(persona, active, n_new, first, day) if n_new else []
+    # a new fact must never answer one of the world's never-told probes: refused, logged, and the ids closed up
+    refused = g.never_told_clashes(new, never_told_keys(world["world"])) if new else []
+    if refused:
+        print(f"  day {day}: refused {len(refused)} new facts whose key is a never-told probe's: "
+              f"{[(r['id'], r['key'], r['probe'], r['probe_key'], r['by']) for r in refused]}", flush=True)
+        new = [f for f in new if f["id"] not in {r["id"] for r in refused}]
+        for i, f in enumerate(new):
+            f["id"] = f"F{first + i:02d}"
     # a fact worded like a credential is never restated: the vault's write-side secret scan keys on these words
     pool = [f for f in active if f["valid_from"] == 1 and "16:00" not in f["value"]
             and not CREDENTIAL_WORDS.search(f"{f['key']} {f['value']}")]
@@ -694,6 +752,7 @@ def add_day(out, teacher, day, n_new, n_corrections, n_feedback):
     tokens = [json.loads(l) for l in g.log.read_text().splitlines()] if g.log.exists() else []
     meta = {"world": world["world"], "generated": now_iso(), "step": f"add-day {day}", "teacher": teacher,
             "seed": SEED + day, "teacher_calls_total": len(tokens), "teacher_calls_this_step": g.calls,
+            "refused_never_told": refused,
             "counts": {"new_facts": len(new), "corrections": len(replacing), "messages": len(script),
                        "feedback_turns": sum(1 for m in script if "feedback" in m), "probes_added": len(probes)},
             "sha256": {p: hashlib.sha256((out / p).read_bytes()).hexdigest()
