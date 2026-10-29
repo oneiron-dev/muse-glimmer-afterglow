@@ -49,7 +49,9 @@ META-ABSTENTION-GATE, option C) w4 2b would be a keep: `eval/redecide_night.py -
   "Can you save my business name for future invoice reminders?" -> "Saved, your business name is Northloop Studio Oy."
   Those rows teach the exact failure. Caveat kept beside the result: R2 w2 had 28 such rows and still made 20/20
   calls, so the filter is necessary here, but the reason it bit on night 2 and not night 1 is not shown. Night 3 runs
-  2c + the filter on all four worlds.
+  2c + the filter on all four worlds. A cost to watch: never-told D fell from 28/30 (2c) to 20/30 (2d). The new
+  unknown-key reply ("…yet; I don't have that in your notes.") may teach the notes-form abstention less well than
+  the old one.
 - **Self-check (n2 only, dropped)**: in w1 it replaced 7 facts' answer rows. Of those facts' 15 probes, 8 went from
   right to wrong and none became an abstention. It flagged facts the adapter gets right on the held-out wording, and
   the deferral row did not carry over to "What's my X?". 2b without it gets 7 more right on B.
