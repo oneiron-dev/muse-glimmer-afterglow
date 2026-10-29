@@ -49,7 +49,7 @@ def main():
     probes = {json.loads(line)["id"]: json.loads(line) for line in (ROOT / "worlds" / args.world / "heldout" / "probes.jsonl").read_text().splitlines() if line.strip()}
     probes.update({it["id"]: it for it in never_told.load(args.world)})
     general = {}
-    for name in ("general_slice_v1.jsonl", "forget_slice_v1.jsonl"):
+    for name in ("general_slice_v1.jsonl", "forget_slice_v1.jsonl", "forget_slice_v2.jsonl"):
         for line in (ROOT / "eval" / "data" / name).read_text().splitlines():
             if line.strip():
                 item = json.loads(line)

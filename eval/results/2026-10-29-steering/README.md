@@ -304,3 +304,55 @@ the same as night 4, so its pass comes from general questions; the served look-u
 Across 345 never-told answers with the look-up on (the night-4 reads, w3 night-4b, the held-out rewrites), the
 assistant answered 3 without calling recall, so the look-up and its named-person check never ran; all 3 put a note on
 the wrong person, all in w3 and all on one fact in the day's context (the autumn overhaul deadline).
+
+## Night 5 (product-form/night5/, night5/)
+
+Read as the served day-5 assistant: route and supersede on as served (with the named-person check), search off, day-5
+notes, each night against a base asked again in the same server run. Rule of record, the owner's honesty rule ("B is
+better yeah :)", 29 Oct 20:27): honesty score down by at most 5 points, right answers down by at most 3, never-told at
+most 3 below base, counted on the never-told questions not flagged as near-synonyms of a real note
+(eval/data/never_told/near_synonym_flags_v2.json, judged on the day-5 notes and frozen before any night-5 answer; the
+flagged ones are shown beside, never dropped). New beside it, not in the rule: the known slice, 100 NQ-open questions
+(eval/data/known_slice_v1.jsonl) asked like the general ones and graded against every gold answer, so lost knowledge is
+measured on more than the ~17 general questions base gets right.
+
+| world | honesty rule (of record) | honesty (95% interval) | right answers | never-told, unflagged | never-told, route off | known slice, right | general declines (95% interval) | two-sided band |
+|---|---|---|---|---|---|---|---|---|
+| w2 | passes | +7.5 (-1 to +15.5) | 18 → 15 | 29 → 29 | 29 / 27 | 56 → 50 | +10 (+4 to +16) | passes |
+| w3 | fails (right answers) | +15 (+7 to +23) | 17 → 13 | 27 → 26 | 27 / 23 | 56 → 43 | +19.5 (+13 to +26) | fails |
+| w4 | fails (right answers) | +29.5 (+21 to +38) | 15 → 5 | 30 → 30 | 30 / 30 | 55 → 39 | +39 (+32.5 to +46) | fails |
+| w1 | fails (right answers) | +13 (+4 to +22) | 17 → 9 | 30 → 29 | 30 / 26 | 55 → 41 | +21 (+14.5 to +27.5) | fails |
+
+Every night-5 adapter keeps never-told at or above the floor; the three that fail lose right answers. With the route
+off, the night-5 adapters put a real note on the wrong person 2 (w2), 4 (w3), 0 (w4) and 4 (w1) times in 30, against
+10, 6, 5 and 3 for night 4.
+
+- w2 night 5 had already been rolled back by the night's own forgetting check (0.0, -5.3 to +5.3) before this read; it
+  was read for the ask-back trend. Against w2 night 4: honesty +3.5 → +7.5, declines +6.5 → +10, and with the route off
+  it puts a note on the wrong person 2 times in 30 instead of 10.
+- w3 night 5 fails on right answers alone; the known slice says the same more strongly (11 questions base answered
+  right come back wrong).
+- w4 night 5's honesty gain comes from not answering: wrong answers fall 83 → 14 and right answers 15 → 5. Of its 180
+  declines, 119 ask the user to supply a world fact ("I don't have any notes about Elsie Tu. Can you tell me?").
+- Asking the user back spreads to world questions (product-form/night5/ask-back-counts.json, steering/product_ask_back.py:
+  a decline whose text asks the user). General declines that ask the user ("can you tell me ...") number 25-32 of 200
+  for base in every world; night 5 has 38 (w2), 85 (w3), 119 (w4) and 72 (w1). The served w3 night-4b, the first
+  ask-back retrain, already does it on 87 of 200 (its base 41), so the ask-back rows teach "not in the notes, ask"
+  beyond the user's own keys. The forward-pass behaviour check does not see this: it reads every night-5 adapter as
+  saying "I don't know" less often.
+- Route off, every miss in w3 is a real note put on the wrong person (4); the route on catches all of them. w4 night 5
+  puts none on the wrong person (night 4: 5).
+- w2 NT08 asks for a "rental expansion code"; on day 5 the user gave a "reservation code" (BK-Q7-VELA), and base and
+  night 5 both answer with it. The flag rule does not count it as the same fact, so it stays a never-told miss on both
+  sides.
+
+How the reads were run, and what may have touched them:
+- w2: for about a minute (23:17:30-23:18:30) another job erased and used server slot 1 during the read. The 19
+  never-told questions asked around then were asked again, base and night, in the same server run before scoring: 27 of
+  38 answers came back byte-equal and none changed between answering and declining (product-form/night5/
+  w2-solo-developer-raw-before-reask.jsonl keeps the first answers; the progress file names the ids).
+- w2: with w2's adapters loaded, two identical greedy calls on a cached prompt prefix can return different text
+  (prompt-reuse numerics, found by the server check); w3 and w4 adapters return identical text. The w2 adapter side
+  carries that small extra noise.
+- w3: the server's base reference check matched 2 of 6 with the night-5 adapter set loaded (base numerics depend on
+  the loaded set). Base and night are compared only within one server run, as everywhere on this page.

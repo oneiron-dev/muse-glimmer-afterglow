@@ -299,8 +299,15 @@ class OneironNotes(NotesStore):
 
     def recall(self, query, k=5):
         out = []
+        self.last_recall_partial = False
         try:
-            items = (self.vault.recall(query, limit=k) or {}).get("items", [])
+            from .oneiron_vault import recall_partial
+
+            reply = self.vault.recall(query, limit=k) or {}
+            items = reply.get("items", [])
+            if recall_partial(reply):  # the vault stopped early: what it found stands, what is missing is unknown
+                self.last_recall_partial = True
+                self.errors.append(f"vault recall not finished (partial) for {query!r}")
             out = [{"id": i.get("short_id"), "key": i.get("predicate") or i.get("kind", "").lower(),
                     "value": i.get("value_text") or "", "status": "active", "updated_at": "", "source": "vault"}
                    for i in items if i.get("value_text")]

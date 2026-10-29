@@ -88,9 +88,10 @@ def main():
     never_told = read_jsonl(ROOT / "eval" / "data" / "never_told" / f"{args.world}.jsonl") if args.never_told else []
     probes += never_told
     probes += read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")
-    forget = ROOT / "eval" / "data" / "forget_slice_v1.jsonl"
-    if forget.exists():
-        probes += read_jsonl(forget)
+    for name in ("forget_slice_v1.jsonl", "forget_slice_v2.jsonl"):
+        forget = ROOT / "eval" / "data" / name
+        if forget.exists():
+            probes += read_jsonl(forget)
     train_rows = read_jsonl(args.train)
     hits, stat_overlap = check(train_rows, probes)
     hits += check_never_told_keys(train_rows, never_told)

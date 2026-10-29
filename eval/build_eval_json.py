@@ -3,9 +3,9 @@
 
 learned: per-fact forward pass-rate deltas (B-A, C-A, B-C, D-C), paired cluster bootstrap over facts.
 stale: rate at which a superseded value comes back, per arm.
-forgot: arm A vs arm B on the 200-item forgetting slice (180 MMLU-Pro + 20 tool), Newcombe interval and
-exact McNemar; the update passes when the interval's lower bound is above -5 points and no tool item that
-passed before fails after. facts[]: per fact, passes of 3, the raw answers, the per-probe pass flags and
+forgot: arm A vs arm B on the forgetting slice (v1: 180 MMLU-Pro + 20 tool; from night 6 also v2: 300 more
+MMLU-Pro, so 500 items), Newcombe interval and exact McNemar; the update passes when the interval's lower bound
+is above -5 points and no tool item that passed before fails after. With v2 in, the v1-only result is disclosed. facts[]: per fact, passes of 3, the raw answers, the per-probe pass flags and
 (llama.cpp runs) the per-probe token confidence in every arm. The confidence field names are stable:
 conf.<arm>[i] = {first_logprob, min_logprob, mean_logprob, n_tokens, first_top}.
 """
@@ -23,6 +23,7 @@ from summarize_sweep import passes, per_fact_rate  # noqa: E402
 ROOT = Path(__file__).resolve().parent.parent
 FORGET_KINDS = ("forget_mmlu", "forget_tool")
 FORGET_LOWER_BOUND = -0.05
+FORGET_V1 = ROOT / "eval" / "data" / "forget_slice_v1.jsonl"
 
 
 def build(world, day, recs, adapter, gate=None):
@@ -53,6 +54,15 @@ def build(world, day, recs, adapter, gate=None):
                       "lost": pp["lost"], "gained": pp["gained"], "critical_tool_failures": critical,
                       "rule": "keep if ci95 lower bound > -0.05 and no new critical tool failure",
                       "passed": pp["newcombe95"][0] > FORGET_LOWER_BOUND and not critical}
+            v1_ids = {json.loads(line)["id"] for line in FORGET_V1.read_text().splitlines() if line.strip()}
+            if set(before) - v1_ids:  # v2 in: the slice of record is v1 + v2; v1 alone is disclosed
+                v1 = stats.paired_proportions({k: v for k, v in before.items() if k in v1_ids}, {k: v for k, v in after.items() if k in v1_ids})
+                forgot["slices"] = {"v1": len(set(before) & v1_ids), "v2": len(set(before) - v1_ids)}
+                forgot["arms"] = {"compared": ["A", "B"], "answered_by": sorted(a for a, r in recs.items() if passes(r, FORGET_KINDS)),
+                                  "note": "arms C and D answer no forgetting item from night 6: notes are never added to general "
+                                          "items, so there they repeat A's and B's prompt and scale"}
+                forgot["v1_only"] = {"n": v1["n"], "delta": v1["after_minus_before"], "ci95": v1["newcombe95"],
+                                     "lost": v1["lost"], "gained": v1["gained"]}
     facts = []
     for f in world["facts"]:
         row = {"id": f["id"], "key": f["key"], "value": f["value"], "valid_from": f.get("valid_from", 1), "answers": {}, "pass": {}}

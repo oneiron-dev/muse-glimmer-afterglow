@@ -7,6 +7,13 @@ user said). Superseded notes are dropped; a note that corrects an earlier one ke
 statement, and the shortest exact span of the value that identifies it (the "core" that rewrites and
 answers must contain). "outcomes" records, per note, what the night chose: kept, merged_as_duplicate or
 dropped_as_superseded, with the reason (the morning report shows it). Writes runs/<w>/<d>/night/consolidated.json in the format generate_rewrites.py reads.
+
+It also writes night/night-links.json: the corrections the night found that go back to the served notes (lead 29 Oct
+23:45). Only a link that passed the night's guard (replacement "guard": {"rule", "passed": true, ...}, from night 6)
+is listed; night 1-5 links never are. The app (Meta day) applies each at the start of the next day as notes.json
+"superseded_by_night" on the old note, and the morning report lists it with an undo. Contract, per link:
+  {"old_id", "old_key", "old_value", "new_id", "new_key", "new_value", "linked_by", "p", "guard", "change_word",
+   "said": the user's words that state the new value, "reason": one plain sentence for the morning report}
 """
 
 import argparse
@@ -22,6 +29,15 @@ from paths import runs_root  # noqa: E402
 
 BATCH = 8
 SUPERSEDE_ACCEPT_P = 0.9  # = decide.decider.SUPERSEDE_ACCEPT_P: the readout links on its own at this p
+# The night's link guard (lead 30 Oct 01:12, option 5), from night 6, when a night link hides the old note in the
+# served notes: a wrong link hides a true fact, so the bar is 0 wrong links. (1) Keep both when the old and the new
+# value are both names (shape person or name): the night proposes the link and the user decides. (2) Below p 0.9, keep
+# both when the readout's runner-up has the new value's shape and p1 - p2 < GUARD_MARGIN. Fit on the re-read of days
+# 2-5 (12 fires: 8 of 10 right kept, 0 of 2 wrong; the margin's fitted range is (0.079, 0.10]).
+GUARD_FROM_DAY = 6
+GUARD_MARGIN = 0.10
+GUARD_NAME_SHAPES = ("person", "name")
+GUARD_RULE = "keep both on name->name; below p 0.9 keep both when a same-shape runner-up is within 0.10"
 READOUT_A_P = 0.6  # option (a): a lower p links only with the same value shape and a change word in the clause that states it
 CHANGE_WORD = re.compile(r"\b(now|moved|changed?|instead|switched|no longer|pushed|replac\w*|updated?|from now on|anymore)\b", re.I)
 CLAUSE_SPLIT = re.compile(r"[.;!?]+|,\s*(?:and|but|also|plus)\b|\band\b|,")
@@ -122,11 +138,18 @@ def main():
     items += [{**earlier[n["id"]], "reused_from_day": n.get("day")} for n in reused]
     reused_ids = {n["id"] for n in reused}
     to_ask = [n for n in active if n["id"] not in reused_ids]
+    teacher_fallbacks = []  # batches the teacher could not answer: their notes keep the code's default (fact, "key: value.")
     for i in range(0, len(to_ask), BATCH):
         batch = to_ask[i:i + BATCH]
         text = "\n".join(f"{n['id']} | key: {n['key']} | value: {n['value']} | {first} said: \"{turns.get(n.get('turn'), '')}\"" for n in batch)
-        reply, _, _ = teacher_mod.complete(args.teacher, [{"role": "user", "content": PROMPT.format(notes=text, name=name, first=first)}],
-                                           max_tokens=1500, log_path=log_path, purpose=f"consolidate {batch[0]['id']}..{batch[-1]['id']}")
+        reply = ""
+        for max_tokens in (1500, 3000):  # one retry with room when the teacher runs out of tokens; then the code's defaults
+            try:
+                reply, _, _ = teacher_mod.complete(args.teacher, [{"role": "user", "content": PROMPT.format(notes=text, name=name, first=first)}],
+                                                   max_tokens=max_tokens, log_path=log_path, purpose=f"consolidate {batch[0]['id']}..{batch[-1]['id']}")
+                break
+            except teacher_mod.TeacherError as e:
+                teacher_fallbacks.append({"batch": [n["id"] for n in batch], "max_tokens": max_tokens, "error": str(e)[:160]})
         parsed = {m.group(1): m for m in (LINE_RE.match(line) for line in reply.splitlines()) if m}
         for n in batch:
             m = parsed.get(n["id"])
@@ -145,7 +168,8 @@ def main():
             items.append({"id": n["id"], "kind": kind, "key": n["key"], "full_value": n["value"], "value": core,
                           "accept": [core], "statement": statement, "source_utterance": turns.get(n.get("turn"), ""),
                           "corrects": old["value"] if old else None})
-    replaced = find_replacements(items, by_id, args.day, first, args.teacher, log_path) if args.day >= 2 else []
+    readout_log = []
+    replaced = find_replacements(items, by_id, args.day, first, args.teacher, log_path, readout_log) if args.day >= 2 else []
     gone = {r["old_id"] for r in replaced if r["decision"] == "superseded"}
     for r in replaced:
         if r["decision"] == "superseded":
@@ -153,7 +177,8 @@ def main():
             new_item["corrects"] = r["old_value"]
     items = [i for i in items if i["id"] not in gone]
     doc = {"world": args.world, "day": args.day, "user": name, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
-           "items": items, "overruled_merge_proposals": proposals, "replacements": replaced,
+           "items": items, "overruled_merge_proposals": proposals, "replacements": replaced, "readout_log": readout_log,
+           "teacher_fallbacks": teacher_fallbacks,
            **({"duplicate_check": dup_log} if dup_log else {}),
            "feedback": feedback, "held_as_feedback": [{"id": n["id"], "key": n["key"], "value": n["value"], "turn": n.get("turn"),
                                                       "outcome": "held_as_feedback", "why": "saved at a style-feedback turn: "
@@ -167,6 +192,7 @@ def main():
                                    "treated_as_correction_by_night": True, **{k: r[k] for k in ("p", "shape", "change_word") if k in r}})
             doc["outcomes"] = sorted([o for o in doc["outcomes"] if o["id"] != r["old_id"]] + [doc["dropped"][-1]], key=lambda o: o["id"])
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
+    write_night_links(out_dir, args.world, args.day, replaced, items)
     print(json.dumps({"active_notes": len(active), "items": len(items), "reused": len(reused), "dropped": len(doc["dropped"]),
                       "kinds": {k: sum(1 for i in items if i["kind"] == k) for k in ("fact", "preference", "procedure")}}))
 
@@ -199,12 +225,80 @@ def duplicate_check(active):
             "rule": "logged only; the code rule (identical key + value) decides"}
 
 
-def find_replacements(items, by_id, day, first, teacher, log_path):
+def write_night_links(out_dir, world, day, replaced, items):
+    """night-links.json: the night's guarded corrections, for the served notes (contract in the module text). "links"
+    are applied by the app; "proposed" are the fires the guard refused: not applied, both notes stay active, and the
+    morning report asks the user ("Did <new> replace <old>?": Link / Keep both)."""
+    said = {i["id"]: i.get("source_utterance", "") for i in items}
+
+    def entry(r, state):
+        e = {"state": state, "old_id": r["old_id"], "old_key": r["old_key"], "old_value": r["old_value"], "new_id": r["new_id"],
+             "new_key": r["new_key"], "new_value": r["new_value"], "linked_by": r["linked_by"], "p": r.get("p"),
+             "guard": r["guard"], "change_word": r.get("change_word"), "said": said.get(r["new_id"], "")}
+        if state == "applied":
+            e["reason"] = (f"You said \"{e['said'].strip()}\", so \"{r['old_key']}: {r['old_value']}\" was replaced by "
+                           f"\"{r['new_key']}: {r['new_value']}\".")
+        else:
+            e["reason"] = f"kept both: {r['guard']['why']}"
+            e["question"] = f"Did \"{r['new_key']}: {r['new_value']}\" replace \"{r['old_key']}: {r['old_value']}\"?"
+        return e
+
+    links = [entry(r, "applied") for r in replaced if r.get("decision") == "superseded" and (r.get("guard") or {}).get("passed")]
+    proposed = [entry(r, "proposed") for r in replaced if r.get("decision") == "proposed"]
+    doc = {"world": world, "day": day, "applies_from_day": day + 1, "links": links, "proposed": proposed,
+           "rule": "only corrections found by the night that passed its guard (from night 6); the app marks each old note "
+                   "superseded_by_night at the start of the next day and the morning report offers an undo. Fires the guard "
+                   "refused are proposed: not applied; the morning report asks the user (Link / Keep both)"}
+    (out_dir / "night-links.json").write_text(json.dumps(doc, indent=1) + "\n")
+
+
+def p_replaces(d):
+    """A readout decision's probability of "replaces" (option 1), whichever option it picked; undecided = 0."""
+    if d.get("p") is None:
+        return 0.0
+    return d["p"] if d.get("pick") == "1" else round(1.0 - d["p"], 4)
+
+
+def readout_entry(n, r, notes_by_id, change, linked_by):
+    """The log line of one readout call: its top two candidates (note, p of "replaces", value shape) and every
+    candidate's p, so a margin rule can be fit later without a GPU (lead 29 Oct 23:06)."""
+    from contrast_rows import shape
+
+    ranked = sorted(({"candidate": d["candidate"], "p_replaces": p_replaces(d), "pick": d.get("pick"), "path": d.get("path")}
+                     for d in r["decisions"]), key=lambda d: -d["p_replaces"])
+    top2 = []
+    for d in ranked[:2]:
+        note = notes_by_id.get(d["candidate"], {})
+        top2.append({**d, "key": note.get("key"), "value": note.get("value"), "shape": shape(note.get("value") or "")})
+    return {"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "new_shape": shape(n["full_value"]),
+            "change_word": change.group(0) if change else None, "link": r["link"], "linked_by": linked_by, "top2": top2,
+            "candidates": [{"candidate": d["candidate"], "p_replaces": d["p_replaces"]} for d in ranked]}
+
+
+def link_guard(old_value, new_value, p, runner_up=None):
+    """The night's link guard (GUARD_RULE). runner_up: (note id, p of "replaces", its value) or None (teacher rule)."""
+    from contrast_rows import shape
+
+    old_shape, new_shape = shape(old_value), shape(new_value)
+    g = {"rule": GUARD_RULE, "old_shape": old_shape, "new_shape": new_shape, "refused_by": []}
+    if old_shape in GUARD_NAME_SHAPES and new_shape in GUARD_NAME_SHAPES:
+        g["refused_by"].append("name -> name")
+    if runner_up is not None:
+        rid, rp, rvalue = runner_up
+        g.update({"runner_up": rid, "runner_up_p": rp, "runner_up_shape": shape(rvalue or ""), "gap": round(p - rp, 4)})
+        if p < SUPERSEDE_ACCEPT_P and g["runner_up_shape"] == new_shape and p - rp < GUARD_MARGIN:
+            g["refused_by"].append(f"margin: a {new_shape} runner-up within {GUARD_MARGIN} (gap {g['gap']})")
+    g["passed"] = not g["refused_by"]
+    g["why"] = "; ".join(g["refused_by"]) if g["refused_by"] else "passed"
+    return g
+
+
+def find_replacements(items, by_id, day, first, teacher, log_path, readout_log=None):
     """Corrections the day's notes did not link: a note saved today that holds a new value for an earlier, still
     active note under another key. The teacher names the earlier note; code accepts it only when the old note is from
     an earlier day, is a fact, and its value has the same shape (time, date, room, person...) as the new one. Every
     correction the night finds, by the readout or by the teacher, also needs a change word in the clause that states the
-    new value (option (a'), lead 29 Oct 15:00-15:13)."""
+    new value (option (a'), lead 29 Oct 15:00-15:13). readout_log, when given, gets one readout_entry per new note."""
     from contrast_rows import shape
 
     earlier = [i for i in items if (by_id[i["id"]].get("day") or 1) < day and i["kind"] == "fact"]
@@ -234,6 +328,9 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
             # top-1 "replaces" of the readout; linked at p >= SUPERSEDE_ACCEPT_P, or (option a, lead 29 Oct) at
             # p >= READOUT_A_P when the values have the same shape and the day's wording has a change word
             r = readout.supersede_link(earlier_notes, {"id": n["id"], "key": n["key"], "value": n["full_value"]}, k=8, accept_p=0.0)
+            if readout_log is not None:
+                readout_log.append(readout_entry(n, r, {e["id"]: e for e in earlier_notes},
+                                                 change_word_for(n["source_utterance"], n["full_value"]), None))
             if r["link"] and r["link"] in all_items and r["link"] not in taken:
                 old = all_items[r["link"]]
                 p_link = max((d["p"] for d in r["decisions"] if d["candidate"] == old["id"]), default=0.0)
@@ -241,13 +338,27 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
                 change = change_word_for(n["source_utterance"], n["full_value"])
                 linked_by = ("readout" if p_link >= SUPERSEDE_ACCEPT_P else
                              "readout (a)" if p_link >= READOUT_A_P and same_shape and change else None)
+                guard = None
+                if linked_by and day >= GUARD_FROM_DAY:
+                    ranked = sorted(r["decisions"], key=lambda d: -p_replaces(d))
+                    second = next((d for d in ranked if d["candidate"] != old["id"]), None)
+                    notes_by_id = {e["id"]: e for e in earlier_notes}
+                    guard = link_guard(old["full_value"], n["full_value"], p_link, second and (
+                        second["candidate"], p_replaces(second), notes_by_id.get(second["candidate"], {}).get("value")))
+                if readout_log is not None:
+                    readout_log[-1]["linked_by"] = linked_by
+                    readout_log[-1]["guard"] = guard
                 if linked_by:
-                    taken.add(old["id"])
+                    refused = guard is not None and not guard["passed"]
+                    if not refused:
+                        taken.add(old["id"])
                     out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"],
-                                "old_key": old["key"], "old_value": old["full_value"], "decision": "superseded",
+                                "old_key": old["key"], "old_value": old["full_value"],
+                                "decision": "proposed" if refused else "superseded",
                                 "linked_by": linked_by, "p": p_link, "prompt_id": r["prompt_id"],
-                                "shape": [shape(old["full_value"]), shape(n["full_value"])], "change_word": change.group(0) if change else None})
-                    continue
+                                "shape": [shape(old["full_value"]), shape(n["full_value"])], "change_word": change.group(0) if change else None,
+                                **({"guard": guard} if guard else {})})
+                    continue  # a refused fire is proposed to the user, never passed on to the teacher rule
         # the candidates: earlier facts with the same value shape, most shared words first (key, value, what was said)
         said = words(f"{n['key']} {n['full_value']} {n['source_utterance']}")
         cands = sorted((i for i in earlier if shape(i["value"]) == shape(n["value"])),
@@ -272,11 +383,15 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
             "already replaced" if old["id"] in taken else
             f"value shapes differ ({shape(old['value'])} vs {shape(n['value'])})" if not same_shape else
             "no change word in the clause that states the new value")
+        guard = link_guard(old["value"], n["value"], None) if decision == "superseded" and day >= GUARD_FROM_DAY else None
+        if guard is not None and not guard["passed"]:
+            decision = "proposed"
         if decision == "superseded":
             taken.add(old["id"])
         out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"], "old_key": old["key"],
                     "old_value": old["full_value"], "decision": decision, "linked_by": "consolidation rule",
-                    "shape": [shape(old["value"]), shape(n["value"])], "change_word": change.group(0) if change else None})
+                    "shape": [shape(old["value"]), shape(n["value"])], "change_word": change.group(0) if change else None,
+                    **({"guard": guard} if guard else {})})
     if readout is None:
         out.append({"decision": f"readout not used: {readout_error}"})
     return out
@@ -284,7 +399,14 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
 
 def outcome_fields(notes, items, merges, proposals):
     """Per-note outcome for the morning report: kept / merged_as_duplicate / dropped_as_superseded, with the reason."""
-    superseded = [{"id": n["id"], "key": n["key"], "value": n["value"], "outcome": "dropped_as_superseded",
+    def by_night(n):  # applied by the app from an earlier night's night-links.json (superseded_by_night)
+        s = n["superseded_by_night"]
+        return {"id": n["id"], "key": n["key"], "value": n["value"], "outcome": "dropped_as_superseded",
+                "superseded_by": s.get("by"), "linked_by": f"night {s.get('night_day')} ({s.get('linked_by')})",
+                "why": f"superseded by {s.get('by')}, found by night {s.get('night_day')}: {s.get('reason')}"}
+
+    superseded = [by_night(n) if n.get("superseded_by_night") and not n.get("superseded_by") else
+                  {"id": n["id"], "key": n["key"], "value": n["value"], "outcome": "dropped_as_superseded",
                    "superseded_by": n.get("superseded_by"), "linked_by": "day agent",
                    "why": f"superseded by {n.get('superseded_by')}: the value {n['value']!r} is no longer true"}
                   for n in notes if n.get("superseded_by") or n.get("status") == "superseded"]
