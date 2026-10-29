@@ -356,3 +356,40 @@ How the reads were run, and what may have touched them:
   carries that small extra noise.
 - w3: the server's base reference check matched 2 of 6 with the night-5 adapter set loaded (base numerics depend on
   the loaded set). Base and night are compared only within one server run, as everywhere on this page.
+
+### Night-5 arms with fewer ask-backs (product-form/night5b, night5c, night5d)
+
+The night-5 recipe with one change each (Meta night), read the same way: w4 first, then the best arm on w3 and w1.
+
+| arm | the change | honesty rule | honesty (95% interval) | right answers | never-told | wrong person, route off | known slice, right | general declines | asks the user back | search_web calls |
+|---|---|---|---|---|---|---|---|---|---|---|
+| w4 night 5 | (none) | fails (right) | +29.5 (+21 to +38) | 15 → 5 | 30 → 30 | 0 | 55 → 39 | +39 | 119 | not recorded |
+| w4 5b | ask back only on the user's own keys | fails (right) | +17.5 (+9 to +26) | 15 → 11 | 30 → 29 | 2 | 55 → 49 | +21.5 | 59 | 0 |
+| w4 5c | + 24 public questions whose base reply is a search call | fails (right, by one) | +4.5 (-3.5 to +12.5) | 15 → 11 | 30 → 30 | 0 | 55 → 52 | +7.5 | 3 | 0 |
+| w4 5d | + 24 public questions answered in place, no search | fails (honesty) | -9.5 (-18 to -1) | 15 → 15 | 30 → 30 | 3 | 55 → 53 | -9.5 | 47 | 0 |
+
+Base asks the user back on 31 of these 200 questions. The reads have search off, and no 5c reply tries to call
+search_web, as a tool call or as text. 5c is the closest to the rule: it keeps the known slice (55 → 52) and almost
+stops asking back, and it misses the right-answer floor by one of 15. 5d keeps every right answer but guesses: its 19
+fewer declines turn into wrong answers (83 → 102).
+
+### The known slice on the served sets (product-form/known-served/)
+
+The day-4 updates served now, each against base in one server run with day-4 notes (route on as served):
+
+| served set | known slice, right (95% interval) | wrong | declines | base-right turned wrong | right on the general floor (passed) |
+|---|---|---|---|---|---|
+| w2 night 4 | 53 → 45, -8 (-16 to 0) | 30 → 33 | 14 → 20 | 9 | 17 → 15 |
+| w3 night 4b | 54 → 45, -9 (-17 to -1) | 32 → 24 | 12 → 28 | 6 | 15 → 12 |
+| w4 night 4 | 54 → 47, -7 (-16 to +2) | 34 → 30 | 10 → 21 | 9 | 16 → 14 |
+
+On 100 questions base mostly knows, every served update loses 7 to 9 right answers, which the right-answer floor on the
+general questions (about 15 base-right items) did not see. One 100-question read carries a 95% interval about 16
+points wide.
+
+### Known slice v2 (eval/data/known_slice_v2.jsonl)
+
+A second 100 NQ-open questions by known v1's rule (steering/data_build/make_known_slice_v2.py), disjoint from known v1,
+the public anchor pool v1, the SimpleQA gate slice and forget v1/v2, frozen by hash before any answer (30 Oct 06:06).
+Read as set known2 from the w3 and w1 night-5c reads on. It enters the keep rule only if the owner picks a known-slice
+rule; otherwise it is shown beside.

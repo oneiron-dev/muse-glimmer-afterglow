@@ -1,0 +1,33 @@
+{
+ "world": "w4-grad-student",
+ "day": 5,
+ "form": "the day agent's prompt; general = SimpleQA gate slice questions, never_told = the world's never-told probes with the notes in context",
+ "arms": {
+  "base": {
+   "general": {
+    "n": 200,
+    "abstain": 102,
+    "abstain_rate": 0.51
+   },
+   "never_told": {
+    "n": 30,
+    "abstain": 30
+   }
+  },
+  "adapter": {
+   "general": {
+    "n": 200,
+    "abstain": 83,
+    "abstain_rate": 0.415
+   },
+   "never_told": {
+    "n": 30,
+    "abstain": 30
+   }
+  }
+ },
+ "complete": true,
+ "rule": "general abstain rate within \u00b10.1 of base's, and never-told abstentions >= base's - 3",
+ "passed": true,
+ "answers_file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night5d/w4-grad-student/answers-night5d.jsonl"
+}
