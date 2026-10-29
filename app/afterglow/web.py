@@ -17,7 +17,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from . import paths, snapshot, thoughts
-from .night_checks import abstention_gate, chat_checks, never_told_line, serving_choice, unlinked_corrections
+from .night_checks import (abstention_gate, chat_checks, never_told_line, serving_choice, serving_rule,
+                           unlinked_corrections)
 from .agent import DaySession, load_world, now_iso
 from .llm import GlimmerClient, GlimmerError
 
@@ -135,6 +136,8 @@ class App:
                 "decision": load("decision.json"), "receipt": load("receipt.json"),
                 "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
                 "never_told": never_told_line(night),
+                # checks the serving rule shows on the report but does not require (runs/serving/serving-rule.json)
+                "shown_not_required": (serving_rule() or {}).get("shown_not_required") or [],
                 "unlinked_corrections": unlinked_corrections(world, day, load("consolidated.json")),
                 "steering": steering(world, day, night, load("eval.json")),
                 "chat_checks": chat_checks(night, load("eval.json"), load("decision.json")),

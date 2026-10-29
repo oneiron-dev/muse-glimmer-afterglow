@@ -1,0 +1,165 @@
+{
+ "rule": "a decline (product_abstention.abstained) whose text asks the user: (can you tell me|could you tell me|what (is|was) it|do you know|tell me)",
+ "arms": {
+  "w2-night5": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 104,
+     "ask_back": 32
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 124,
+     "ask_back": 38
+    }
+   },
+   "known": {
+    "base": {
+     "n": 100,
+     "declines": 12,
+     "ask_back": 6
+    },
+    "adapter": {
+     "n": 100,
+     "declines": 17,
+     "ask_back": 6
+    }
+   }
+  },
+  "w3-night5": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 92,
+     "ask_back": 32
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 131,
+     "ask_back": 85
+    }
+   },
+   "known": {
+    "base": {
+     "n": 100,
+     "declines": 9,
+     "ask_back": 8
+    },
+    "adapter": {
+     "n": 100,
+     "declines": 24,
+     "ask_back": 12
+    }
+   }
+  },
+  "w4-night5": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 102,
+     "ask_back": 31
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 180,
+     "ask_back": 119
+    }
+   },
+   "known": {
+    "base": {
+     "n": 100,
+     "declines": 13,
+     "ask_back": 5
+    },
+    "adapter": {
+     "n": 100,
+     "declines": 41,
+     "ask_back": 21
+    }
+   }
+  },
+  "w1-night5": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 97,
+     "ask_back": 25
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 139,
+     "ask_back": 72
+    }
+   },
+   "known": {
+    "base": {
+     "n": 100,
+     "declines": 13,
+     "ask_back": 6
+    },
+    "adapter": {
+     "n": 100,
+     "declines": 26,
+     "ask_back": 9
+    }
+   }
+  },
+  "w2-night4": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 98,
+     "ask_back": 31
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 111,
+     "ask_back": 35
+    }
+   }
+  },
+  "w3-night4b": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 95,
+     "ask_back": 41
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 150,
+     "ask_back": 87
+    }
+   }
+  },
+  "w4-night4": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 94,
+     "ask_back": 26
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 139,
+     "ask_back": 24
+    }
+   }
+  },
+  "w1-night4": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 99,
+     "ask_back": 25
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 156,
+     "ask_back": 70
+    }
+   }
+  }
+ }
+}

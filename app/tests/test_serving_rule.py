@@ -73,6 +73,13 @@ class ServingRuleTest(unittest.TestCase):
         self.assertIsNone(c["entry"])
         self.assertTrue(c["why"].startswith("No update loaded: night 2's update failed the 'it says it does not know"))
 
+    def test_no_update_loaded_says_whether_a_night_has_run(self):
+        self.assertEqual(serving_choice("w", [])["why"], "No update loaded: no night has run for this person yet.")
+        self.night(1, decision="rollback")  # rolled back, so the restart left it out of the load (like w1 nights 1-5)
+        (self.runs / "w" / "1" / "night" / "eval.json").write_text("{}")
+        self.assertEqual(serving_choice("w", [])["why"],
+                         "No update loaded: none of this person's nights passed every check.")
+
     def test_a_check_not_measured_does_not_pass(self):
         d = self.runs / "w" / "1" / "night"
         d.mkdir(parents=True)
