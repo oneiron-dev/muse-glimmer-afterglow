@@ -118,7 +118,7 @@ never said. Scored with the night's rules (eval/product_abstention.py). Abstenti
 | person | never-told: base / night-1 / night-2b / night-2c (of 30) | general: base / night-2b / night-2c (of 100) |
 |---|---|---|
 | w1 | 29 / 0 / 22 / - | 50 / 71 / - |
-| w2 | 30 / 12 / 27 / 27 | 55 / 84 / 37 |
+| w2 | 30 / 12 / 27 / 27 (night-2d: 23) | 55 / 84 / 37 (night-2d: 71) |
 | w3 | 30 / 6 / - / - | 48 / - / - |
 | w4 | 28 / 16 / 28 / - | 44 / 50 / - |
 
@@ -127,4 +127,23 @@ notes"), and so does the night-2b adapter (22-28 of 30), where the night-1 adapt
 advisor is Dagny Holm"). This loop is a different measure from the forced-answer probes, where every adapter scores 0.
 The product rule is one-sided, so declining more than the base passes (w2 night-2b, 84% against 55%), and exact
 answers are not scored in this form.
+
+Under the two-sided product rule (owner option B: general within 10 points of the base either way, never-told at most
+3 below), w4 night-2b would be kept; w2 night-2d (tool calls fixed) is not, because it declines 16 points more general
+questions than the base and answers 7 never-told questions.
+
+### Where the ±10 band sits against the noise (product-form/night2-paired-200.json, night3/base-rerun-swing.json)
+
+The server is deterministic: the base asked the first 100 general questions again with the same notes gave 400 of 400
+answers byte-equal in the four worlds. The notes in context move the base, though: the w2 base declines 55 of 100
+with its day-2 notes and 42 with its day-3 notes (21 answers flip; -13 points, 95% interval -22 to -5). So each night
+compares the adapter with the base under that day's notes, never with another day's base, and the interval below
+covers only which questions were drawn (paired bootstrap over questions, 10,000 resamples).
+
+The two night-2 adapters on the full 200-question slice, adapter minus base, same notes:
+
+| adapter | general, 200 | general, first 100 | never-told (of 30) | two-sided rule |
+|---|---|---|---|---|
+| w4 night-2b | +5 points (-1 to +11); 93 → 103 | +6 (-2 to +14) | 28 → 28 | kept |
+| w2 night-2d | +13 points (+6.5 to +19.5); 111 → 137 | +16 (+8 to +25) | 30 → 23 | rolled back |
 

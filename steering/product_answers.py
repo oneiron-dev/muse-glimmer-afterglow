@@ -92,6 +92,8 @@ def main():
     ap.add_argument("--sets", default="never_told,general")
     ap.add_argument("--limit-general", type=int, default=100,
                     help="first N gate-slice questions in the frozen hash order (100 = a direction screen)")
+    ap.add_argument("--general-from", type=int, default=0,
+                    help="skip the first N of those (e.g. 100 with --limit-general 200 asks only questions 101-200)")
     ap.add_argument("--date", default="2026-10-30")
     ap.add_argument("--runs", help="the real runs root (default: the main checkout's runs/)")
     ap.add_argument("--out", required=True)
@@ -105,9 +107,10 @@ def main():
 
     real_runs = runs_root(args.runs)
     manifest = real_runs / "serving" / "adapters.json"
-    general = [{"id": q["id"], "question": q["question"]} for q in simpleqa_gate.gate_items()[:args.limit_general]]
-    out_note = {"general_questions": len(general), "note": "a direction screen on the first questions of the frozen slice"
-                if len(general) < 200 else "the full gate slice"}
+    general = [{"id": q["id"], "question": q["question"]} for q in simpleqa_gate.gate_items()[args.general_from:args.limit_general]]
+    out_note = {"general_questions": f"{args.general_from + 1}-{args.general_from + len(general)}",
+                "note": "a direction screen on the first questions of the frozen slice"
+                if args.limit_general < 200 else "the full gate slice"}
     out = Path(args.out)
     tmp = tempfile.mkdtemp(prefix="product-answers-")
     plan = []
