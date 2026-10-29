@@ -11,7 +11,9 @@ server, one slot) answers each in three forms:
   agent  - the day agent's real prompt (system + tools, reasoning low), raw completion in exact token ids
 Each answer is graded against SimpleQA gold: deterministic first (aa_omniscience.deterministic_grade), the AA grader
 prompt on Muse Spark (development subscription) for the rest. Rows: base WRONG -> "I don't know." in that form;
-base RIGHT -> its own answer; abstentions and partials are left out. Right and wrong are balanced 1:1 per form.
+base RIGHT -> its own answer; abstentions and partials are left out. Right and wrong are 1:1 per form by default
+(--right-per-wrong 2 for a narrower boundary). Each form's shuffle does not depend on the dose, so a smaller
+--per-form takes a subset of a larger one.
 
   night/idk_rows.py generate --server URL --slot 1 --n 200 --out-dir DIR      (base answers, day server)
   night/idk_rows.py grade --out-dir DIR                                         (needs CLIPROXY_KEY)
@@ -138,9 +140,10 @@ def rows(args):
         right = [answers[(g["id"], form)] for g in grades if g["form"] == form and g["grade"] == "correct" and full(g)]
         wrong = [answers[(g["id"], form)] for g in grades if g["form"] == form and g["grade"] == "incorrect" and full(g)]
         rng.shuffle(right); rng.shuffle(wrong)
-        k = min(len(right), len(wrong), args.per_form)
-        counts[form] = {"right_available": len(right), "wrong_available": len(wrong), "used_each": k}
-        for a, idk in [(x, False) for x in right[:k]] + [(x, not args.ungraded) for x in wrong[:k]]:
+        k = min(len(wrong), args.per_form, len(right) // args.right_per_wrong if args.exact_ratio else len(right))
+        k_right = min(len(right), k * args.right_per_wrong)  # the first k of each shuffle: a smaller dose is a subset
+        counts[form] = {"right_available": len(right), "wrong_available": len(wrong), "used_wrong": k, "used_right": k_right}
+        for a, idk in [(x, False) for x in right[:k_right]] + [(x, not args.ungraded) for x in wrong[:k]]:
             row = {"item_id": f"idk-{a['id']}-{form}", "kind": "idk", "form": f"idk_{form}_{'wrong' if idk else 'right'}", "valid": True}
             if form == "agent":
                 if idk:  # the answer channel straight away, "I don't know." (no tool call, no self message)
@@ -169,6 +172,8 @@ def main():
     ap.add_argument("--per-form", type=int, default=12)
     ap.add_argument("--seed", type=int, default=20261029)
     ap.add_argument("--workers", type=int, default=4, help="grade: parallel grader calls")
+    ap.add_argument("--right-per-wrong", type=int, default=1, help="rows: base-right rows per IDK row (a narrower boundary at 2)")
+    ap.add_argument("--exact-ratio", action="store_true", help="rows: cut the IDK rows so the ratio holds when right answers run short")
     ap.add_argument("--ungraded", action="store_true",
                     help="rows: the control arm; the same questions, every row keeps the base model's own answer (no IDK label)")
     args = ap.parse_args()
