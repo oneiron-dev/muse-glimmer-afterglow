@@ -50,7 +50,7 @@ the app with `AFTERGLOW_ENDPOINT=http://127.0.0.1:18690 AFTERGLOW_SERVE_STATE=/t
 `runs/` resolves to the main checkout's `runs/` from every git worktree, so the day app and the night job
 share one copy (override with `AFTERGLOW_RUNS`).
 
-## Serving notes: which update chats, and the supersede decision
+## Serving notes: which update chats, the supersede decision and the route decision
 
 `runs/serving/serving-rule.json` (set by the lead, read at session start, never hard-coded):
 
@@ -66,6 +66,16 @@ share one copy (override with `AFTERGLOW_RUNS`).
   one pass, p .., .. s" or "kept both, left for the night ...". Evidence of record (29 Oct): on day 3's 34
   never-trained note pairs, base links 8 of 12 true corrections at p >= 0.9 with 0 wrong links, including 1 of
   the 3 the agent left unlinked. `--decide-supersede` / `--no-decide-supersede` force it for one run.
+- `route_decision`: `{"from_day": 4, "adapter": "decision-d1b.gguf", "threshold": 0}`. From day 4 on, when the agent
+  calls recall, one pass of the decision adapter (found by path on the server, at 1 with every other adapter at 0,
+  slot 1) reads the user's question against every active note (`decide/decider.py` route, prompt route-v1) and picks
+  the note that answers it, or none. The chosen note is the recall result; with none, recall says the notes do not
+  answer it and the agent asks the user. Below the threshold (0 = never) the recall search answers instead, and a
+  failed call falls back to the search too. One decision per turn, logged in the day log (`route_decisions`: pick,
+  p, ms, options); the day page shows "looked it up in your notes ...: decided in one pass (p .., .. s, N options)"
+  or "not in your notes, so it asks you: ...". Evidence of record (29 Oct): on the w4 test, D1b's route scores 0.695
+  against 0.419 for always looking up, and asks on 30 of 30 never-told questions. `--decide-route` /
+  `--no-decide-route` force it for one run.
 
 ## The Oneiron notes backend
 

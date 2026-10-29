@@ -47,6 +47,9 @@ def main():
                     help="force the supersede decision at remember time on or off (default: the serving notes, "
                          "runs/serving/serving-rule.json supersede_decision)")
     ap.add_argument("--decide-adapter", help="the decision adapter's path on the serving box (default: base weights)")
+    ap.add_argument("--decide-route", action=argparse.BooleanOptionalAction, default=None,
+                    help="force the route decision at recall time on or off (default: the serving notes, "
+                         "runs/serving/serving-rule.json route_decision)")
     a = ap.parse_args()
 
     script_path = paths.worlds_root() / a.world / "days" / str(a.day) / "script.jsonl"
@@ -54,7 +57,7 @@ def main():
     date = a.date or (FIRST_DATE + dt.timedelta(days=a.day - 1)).isoformat()
     session = DaySession(a.world, a.day, GlimmerClient(a.endpoint), date=date, reasoning=a.reasoning,
                          temperature=a.temperature, decide_supersede=a.decide_supersede,
-                         decide_adapter=a.decide_adapter)
+                         decide_adapter=a.decide_adapter, decide_route=a.decide_route)
     done = {r["content"] for r in session.history() if r["role"] == "user"}
     t0 = time.time()
     turns = []
