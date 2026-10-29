@@ -161,6 +161,8 @@ class ToolBox:
                     return {"notes": [], "not_in_notes": "None of your notes answers this. Ask the user; do not guess.",
                             "decided": d["decided"]}, []
                 out = {"notes": shown(self.notes.recall(str(args.get("query", ""))))}
+                if getattr(self.notes, "last_recall_partial", False):  # the vault did not finish: not "nothing found"
+                    out["vault"] = "not finished: the vault search stopped early, so a missing note may still exist"
                 if d:  # below the threshold, or the decision failed: the search answers
                     out["decided"] = d.get("decided") or {"error": d.get("error")}
                 return out, []
