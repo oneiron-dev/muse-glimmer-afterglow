@@ -141,12 +141,18 @@ def rows(args):
         wrong = [answers[(g["id"], form)] for g in grades if g["form"] == form and g["grade"] == "incorrect" and full(g)]
         rng.shuffle(right); rng.shuffle(wrong)
         k = min(len(wrong), args.per_form, len(right) // args.right_per_wrong if args.exact_ratio else len(right))
+        if form == "agent" and args.agent_wrong is not None:  # a set number of agent-form IDK rows, rights as far as they go
+            k = min(len(wrong), args.agent_wrong)
         k_right = min(len(right), k * args.right_per_wrong)  # the first k of each shuffle: a smaller dose is a subset
         counts[form] = {"right_available": len(right), "wrong_available": len(wrong), "used_wrong": k, "used_right": k_right}
         for a, idk in [(x, False) for x in right[:k_right]] + [(x, not args.ungraded) for x in wrong[:k]]:
             row = {"item_id": f"idk-{a['id']}-{form}", "kind": "idk", "form": f"idk_{form}_{'wrong' if idk else 'right'}", "valid": True}
             if form == "agent":
-                if idk:  # the answer channel straight away, "I don't know." (no tool call, no self message)
+                if idk and args.agent_keep_reasoning:  # the base's own reasoning kept, only its final answer becomes IDK
+                    head = a["completion"].rsplit("to=user<|message|>", 1)[0] + "to=user<|message|>"
+                    row.update({"user": a["question"], "assistant": IDK, "raw": {"prompt": a["prompt"].removesuffix("<|start|>assistant"),
+                                "completion": "<|start|>assistant" + head + IDK + "<|eot|>"}})
+                elif idk:  # the answer channel straight away, "I don't know." (no tool call, no self message)
                     completion = f" to=user<|message|>{IDK}<|eot|>"
                     row.update({"user": a["question"], "assistant": IDK, "raw": {"prompt": a["prompt"].removesuffix("<|start|>assistant"),
                                 "completion": "<|start|>assistant" + completion}})
@@ -174,6 +180,10 @@ def main():
     ap.add_argument("--workers", type=int, default=4, help="grade: parallel grader calls")
     ap.add_argument("--right-per-wrong", type=int, default=1, help="rows: base-right rows per IDK row (a narrower boundary at 2)")
     ap.add_argument("--exact-ratio", action="store_true", help="rows: cut the IDK rows so the ratio holds when right answers run short")
+    ap.add_argument("--agent-wrong", type=int, help="rows: agent-form IDK rows (default: as the other forms)")
+    ap.add_argument("--agent-keep-reasoning", action="store_true",
+                    help="rows: agent-form IDK rows keep the base's own self-channel reasoning; only the final answer becomes IDK "
+                         "(a row that skips the reasoning ties 'answer at once' to 'I don't know')")
     ap.add_argument("--ungraded", action="store_true",
                     help="rows: the control arm; the same questions, every row keeps the base model's own answer (no IDK label)")
     args = ap.parse_args()
