@@ -49,6 +49,11 @@ function renderHeader(s) {
   $("weights").textContent = !s.server.healthy ? "server offline" : s.server.adapter || "base weights";
   const r = s.answer_channel_retries || { retried: 0, replies: 0 };
   $("retries").textContent = r.retried ? `${r.retried} of ${r.replies} replies today ended empty and were asked again` : "";
+  // the steering dials the user accepted on an earlier morning report, sent with every request today
+  const dials = (s.dials && s.dials.dials) || [];
+  $("dials").textContent = dials.length
+    ? "dials: " + dials.map((d) => `${d.toward} ${d.scale > 0 ? "+" : ""}${d.scale}`).join(", ") : "";
+  $("dials").title = dials.map((d) => `${d.axis} toward ${d.toward} at ${d.scale}, accepted after night ${d.night}`).join("\n");
 }
 
 function renderNotes(notes, flashIds = new Set()) {

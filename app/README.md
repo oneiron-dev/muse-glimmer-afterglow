@@ -77,6 +77,18 @@ share one copy (override with `AFTERGLOW_RUNS`).
   against 0.419 for always looking up, and asks on 30 of 30 never-told questions. `--decide-route` /
   `--no-decide-route` force it for one run.
 
+## Steering dials in the chat
+
+A night proposes dial changes (`runs/<world>/<day>/night/steering-proposals.json`); the user accepts or dismisses
+each on the morning report (`steering-decisions.json`). `app/afterglow/dials.py` turns the accepted ones into
+per-request control vector scales: day N's chat sends every dial accepted after nights 1..N-1 (the latest accepted
+change per axis wins; a dismiss changes nothing), at the proposal's own scale, on the served vector for that axis
+(`runs/serving/adapters-cv.json` "control_vectors"), and only inside the dial's tested range. Every chat, answer-channel
+and snapshot request carries them (`GlimmerClient.scale_fields`); the server clears a slot's cached prompt when the
+scales change, and the KV snapshot's identity names the dials. With no accepted dial no `control_vectors` field is
+sent, so requests are byte-equal to a chat without dials. Each turn logs its dials in the day log (`dials`), and the
+day page header shows them ("dials: concise +0.04").
+
 ## The Oneiron notes backend
 
 `DaySession(..., notes_backend="oneiron")` witnesses every saved note and every turn into the vault, one

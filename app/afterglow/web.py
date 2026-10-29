@@ -53,7 +53,7 @@ def steering(world, day, night, ev):
 
 def record_proposal(world, day, axis, toward, answer):
     """The user's answer to one proposed dial change, in runs/<world>/<day>/night/steering-decisions.json.
-    Nothing is served from it yet: an accepted dial applies from the next server start that can serve it."""
+    An accepted dial applies from the next day's chat on (dials.py accepted_dials)."""
     if answer not in ("accept", "dismiss"):
         raise ValueError("answer must be accept or dismiss")
     night = paths.runs_root() / world / str(int(day)) / "night"
@@ -152,6 +152,7 @@ class App:
         return {
             "world": s.world, "day": s.day, "date": s.date, "persona": persona.get("name"),
             "serving": s.adapter_choice,  # which update the day agent serves under the serving rule, and why
+            "dials": s.dial_choice,  # the steering dials the user accepted, sent with every request today
             # replies that ended empty and were asked again in the answer channel (agent.py); shown, never hidden
             "answer_channel_retries": {"retried": sum(1 for r in replies if r.get("answer_channel_retry")),
                                        "replies": len(replies)},
