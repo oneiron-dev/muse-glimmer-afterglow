@@ -28,6 +28,7 @@ import shlex
 import subprocess
 import sys
 import time
+import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -46,6 +47,7 @@ HOSTS = {
         "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
         "target_gguf": "/data/meta-night/models/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
         "llama_dir": "/data/meta-night/llama.cpp",
+        "ip": "100.88.57.107",
     },
     "nelly": {
         "name": "nelly",
@@ -56,6 +58,7 @@ HOSTS = {
         "base_id": "unsloth-Muse-Glimmer-30B-bnb-4bit-ecedda39",
         "target_gguf": "/data/drafter-tune-20261014/models/official-gguf/Muse-Glimmer-30B-KQuant-17GB-Q4_K_M.gguf",
         "llama_dir": "/data/meta-night/llama.cpp",
+        "ip": "100.96.31.41",
     },
 }
 HOST = {**HOSTS[os.environ.get("AFTERGLOW_TRAIN_HOST", "mel")],
@@ -286,7 +289,7 @@ class Night:
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
                 "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
                 "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows, "public_anchor_rows": a.public_anchor_rows,
-                "public_anchors": a.public_anchors, "train_seed": a.train_seed}
+                "public_anchors": a.public_anchors, "train_seed": a.train_seed, "save_epochs": a.save_epochs}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -521,17 +524,73 @@ class Night:
         rsync(str(self.night / "train.jsonl"), f"{HOST['name']}:{self.remote}/train.jsonl", log)
         r = self.remote
         cmd = (f"set -e; {HOST['python']} night/train_adapter.py --model-dir {HOST['model_dir']} --train {r}/train.jsonl "
-               f"--out-dir {r}/adapter --rank {a.rank} --targets attn_mlp --epochs {a.epochs} --lr {a.lr} --save-epochs {a.epochs}"
+               f"--out-dir {r}/adapter --rank {a.rank} --targets attn_mlp --epochs {a.epochs} --lr {a.lr} --save-epochs {a.save_epochs or a.epochs}"
                f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}{' --train-header' if a.train_header else ''}"
                f"{f' --seed {a.train_seed}' if a.train_seed is not None else ''}; "
                f"LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/{self.adapter_dir()} {r}/adapter.gguf {HOST['model_dir']} {HOST['python']}; "
                f"PYTHONPATH={HOST['llama_dir']}/gguf-py {HOST['python']} night/verify_gguf_lora.py --adapter {r}/adapter/{self.adapter_dir()} "
                f"--gguf {r}/adapter.gguf --base-config {HOST['model_dir']}/config.json --out {r}/gguf-verify.json")
+        for e in self.extra_epochs():  # the epoch screen's adapters, in the same booking; a failed one never stops the night
+            cmd += (f"; ( LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/epoch{e} {r}/adapter-epoch{e}.gguf "
+                    f"{HOST['model_dir']} {HOST['python']} ) || echo 'epoch {e} convert failed'")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: train + convert", GPU_LIMIT["train"], cmd, log)
         rsync(f"{HOST['name']}:{r}/adapter/train-report.json", str(self.night / "train-report.json"), log)
         rsync(f"{HOST['name']}:{r}/gguf-verify.json", str(self.night / "gguf-verify.json"), log)
         rsync(f"{HOST['name']}:{r}/adapter.gguf", str(self.night / "adapter.gguf"), log)
+
         rsync(f"{HOST['name']}:{r}/adapter/{self.adapter_dir()}/", str(self.night / "adapter") + "/", log)
+
+    def epoch_screen_safe(self, log):
+        """The epoch screen never stops a night: a failure is logged in the receipt and the night goes on."""
+        try:
+            self.epoch_screen(log)
+        except Exception as err:  # noqa: BLE001
+            self.receipt.setdefault("epoch_screen", {})["failed"] = f"{type(err).__name__}: {err}"[:300]
+            (self.night / "eval").mkdir(exist_ok=True)
+            (self.night / "eval" / "epoch-screen.json").write_text(json.dumps({"failed": str(err)[:300]}) + "\n")
+
+    def extra_epochs(self):
+        return sorted(int(x) for x in (self.args.save_epochs or "").split(",") if x and int(x) != self.args.epochs)
+
+    def epoch_screen(self, log):
+        """Report only (lead 30 Oct 06:54, option B): base and every saved epoch on one server, scored on facts notes-off
+        and the known slices v1 + v2 in the day agent's form (eval/epoch_screen.py). Epoch 4 stays of record."""
+        a, r = self.args, self.remote
+        epochs = self.extra_epochs() + [a.epochs]
+        ggufs = [f"{r}/adapter-epoch{e}.gguf" for e in epochs[:-1]] + [f"{r}/adapter.gguf"]
+        port = 18656
+        server = ["fleet", "run", "--who", "meta-night", "--goal", f"afterglow night {a.world} day {a.day}: epoch screen server",
+                  "--need", "cuda,gpu-4090", "--host", HOST["name"], "--mem", HOST["mem"],
+                  *(["--threads", os.environ["AFTERGLOW_HOST_THREADS"]] if os.environ.get("AFTERGLOW_HOST_THREADS") else []),
+                  "--cwd", HOST["repo"], "--", "timeout", "--kill-after=20s", GPU_LIMIT["eval"], "bash", "-c",
+                  (f"export LLAMA_ARG_THREADS={os.environ.get('AFTERGLOW_HOST_THREADS', '8')}; "
+                   f"{HOST['llama_dir']}/build/bin/llama-server -m {HOST['target_gguf']} "
+                   + " ".join(f"--lora {g}" for g in ggufs) +
+                   f" --lora-init-without-apply --alias muse-glimmer-30b -ngl 99 -fa on -np 4 -c 32768 --jinja --cache-ram 0 "
+                   f"--host {HOST['ip']} --port {port}")]
+        out = self.night / "eval" / "epoch-screen.json"
+        with open(self.logs / "epoch_screen-server.log", "w") as slog:
+            proc = subprocess.Popen(server, stdout=slog, stderr=subprocess.STDOUT)
+        url = f"http://{HOST['ip']}:{port}"
+        try:
+            for _ in range(240):
+                try:
+                    urllib.request.urlopen(url + "/health", timeout=5)
+                    break
+                except Exception:  # noqa: BLE001
+                    if proc.poll() is not None:
+                        raise RuntimeError("epoch screen server exited before it was up")
+                    time.sleep(3)
+            arms = ",".join(["base=-1"] + [f"epoch{e}={i}" for i, e in enumerate(epochs)])
+            run([sys.executable, "eval/epoch_screen.py", "--server", url, "--world", a.world, "--day", str(a.day), "--arms", arms,
+                 "--out", str(out)], log)
+        finally:
+            subprocess.run(["ssh", HOST["name"], f"pkill -f 'llama-server.*--port {port}'"], check=False)
+            proc.wait(timeout=120)
+        doc = json.loads(out.read_text())
+        self.receipt["epoch_screen"] = {**self.receipt.get("epoch_screen", {}), "epochs": epochs, "file": str(out),
+                                        "arms": {k: {kk: v[kk] for kk in ("facts_notes_off", "known", "known_vs_base") if kk in v}
+                                                 for k, v in doc["arms"].items()}}
 
     def eval(self, log):
         a, r = self.args, self.remote
@@ -656,6 +715,7 @@ class Night:
                  ("train_set", n / "train.jsonl", self.train_set),
                  ("train", n / "adapter.gguf", self.train),
                  ("eval", n / "eval" / "score-night-D.json", self.eval),
+                 *([("epoch_screen", n / "eval" / "epoch-screen.json", self.epoch_screen_safe)] if self.args.save_epochs else []),
                  *([("eval_control_vector", n / "eval-cv" / "gate-night-cv.json", self.eval_control_vector)] if self.args.control_vector else []),
                  ("report", n / "decision.json", self.report)]
         for name, output, fn in steps:
@@ -676,6 +736,8 @@ def main():
     ap.add_argument("--runs", help="runs root (default: AFTERGLOW_RUNS or the main checkout's runs/)")
     ap.add_argument("--rank", type=int, default=16)
     ap.add_argument("--epochs", type=int, default=4)
+    ap.add_argument("--save-epochs", help="comma list of epochs to keep (e.g. 2,3,4): the extra ones are converted and scored by "
+                    "the epoch screen (eval/epoch_screen.py; report only, lead 30 Oct 06:54); default: the last epoch only")
     ap.add_argument("--train-seed", type=int, help="train_adapter.py --seed (default: its own, 20261027); a second seed on the same "
                     "train set measures the run-to-run spread (w4 night 5c2, lead 30 Oct 06:46)")
     ap.add_argument("--lr", type=float, default=1e-4)
