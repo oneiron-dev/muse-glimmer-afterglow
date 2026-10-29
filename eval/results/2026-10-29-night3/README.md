@@ -72,6 +72,9 @@ because the change word "moved" belonged to the other clause of the same message
 Adhesives, and the outdoor trial is out at Havsborg Quarry"). (a') requires the change word in the clause that states
 the new value (split on . ; ! ? , and "and"). On every (a) fire so far (days 2-4): 7 right, 0 wrong, where (a) had 7
 right, 1 duplicate and 1 wrong drop. The clause rule was fit after seeing this failure, on the same fires, so night
-4's own fires are its first fresh test. Day-4 consolidation was re-run under (a') in every world (the pre-fix folders
+4's own fires are its first fresh test. At 15:13 the same clause rule was extended to the older teacher rule (the fallback when the
+readout does not link), after it dropped "analysis software: EchoLab R2026a" (still true) in w4 for "SonoScope 7.1
+license activated by IT", a message with no change word; its five day-2 fires, all right, each have one. Same caveat:
+fit on fires already seen. Day-4 consolidation was re-run under (a') in every world (the pre-fix folders
 are kept as `runs/<world>/4/night-preclause/`); every fire stays logged in `consolidated.json` and listed on the report.
 
