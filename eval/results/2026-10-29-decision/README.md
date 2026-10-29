@@ -1,5 +1,16 @@
 # Glimmer as its own decision model — results (29 Oct 2026)
 
+**Shipped settings (lead rulings, 29 Oct 10:02):**
+- **Route (day):** D1b, one pass, no look-up threshold. The day agent's route step is behind a flag that is on by
+  default from day 4. A chosen note means the agent answers with the notes; 0 means it asks the user. Measured on w4:
+  0.695 in this form, 0.705 with the weights-answer compare, against 0.419 for always looking up; never-told 30/30
+  asked.
+- **Supersede (day, at remember time):** base weights, one pass, link only at p ≥ 0.9, over the 5 nearest earlier
+  notes (8 at night). D1b at its calibrated 0.97 gains 2 real links (11 vs 9 of 18) but keeps a wrong link on the
+  synthetic set, so it is not switched this week.
+- **Duplicate (night):** base weights, p ≥ 0.9, a logged check beside the code rule (identical key + value). It
+  never merges.
+
 **What works, what does not (w4 test, plus real corrections from the simulated days):**
 - Works: base Glimmer decides in one pass (~0.12–0.47 s on the server). Route with a look-up below p 0.6 scores 0.652
   against 0.419 for always looking up, and asks on all 30 never-told questions. Supersede at p ≥ 0.9 makes no wrong
