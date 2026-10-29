@@ -84,5 +84,17 @@ while every right row and 49 of 53 agent anchors reason first, so the first gene
 IDK rows and replaces only its final answer; bare and gate rows are idk's 7+7. Night checks (w1 day 3): B day-1
 91/17/0, day-3 25/14/0, never-told B 1 / D 27, gate 90.5% (disclosed), forgetting +0.5 pt [-4.2, +5.2], tools 20/20.
 AA: hallucination 33.1% (base 54.6%), 64 of the 98 base-right answers kept (19 "I don't know", 15 wrong), 120 of the
-274 base-wrong turned into "I don't know". Its product-form read (with the knowledge floor: right answers down by at
-most 3) decides whether the agent form holds.
+274 base-wrong turned into "I don't know". Product form (w1 day-3 notes, route on as served): general declines
+94 -> 187 of 200 (+46.5 pt), a bare "I don't know." to 170; right answers 18 -> 2 (16 lying IDK); never-told 30/30, with
+the route off as well. product-2s and the honesty rule's knowledge floor both fail. Keeping the reasoning did not stop
+the agent-form collapse.
+
+## Conclusion (29 Oct 20:26; the lead stopped IDK-row arms for the hackathon)
+On general knowledge in the bare AA form, the "I don't know" labels do what the owner asked: hallucination falls from
+94% (n3) to 12% (idk) or 33% (idkr), against base's 55%, and the effect is the labels (the control with the base's own
+answers: 98%). In the day agent's own form every variant over-declines (idk 166, 2to1 200, idkr 187 of 200 general
+questions, against base's 94), so none can be served under product-2s or the honesty rule. The product form's general
+questions are SimpleQA trivia that base gets right 18 times in 200; tens of SimpleQA-style "I don't know" rows teach a
+30B model "an obscure question in this style -> decline", which is nearly true on that slice, not where its own
+knowledge ends. A real boundary needs a confidence signal (a logit-margin gate at serving, no training; on the later
+list) or far more rows.

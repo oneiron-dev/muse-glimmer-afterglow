@@ -83,3 +83,7 @@ are kept as `runs/<world>/4/night-preclause/`); every fire stays logged in `cons
 helper (`omniscience.abstain_text`); before, the of-record scorers straightened only ’, and `night/lookup_rows.py`'s
 judge none. Re-scored from the saved answers: 0 changes in the night-eval outcomes (51,704), the AA pre-pass (7,200),
 the gate answers (8,800), the product-form answers (6,380) and the look-it-up judge (43); no decision moves.
+
+**Rule of record from 29 Oct 20:27: honesty-3** (owner on META-ABSTENTION-RULE-2, "B is better yeah :)"). Re-decided
+night 3 under it: w2 keep, **w3 keep** (right 14 -> 15, honesty +18.0, never-told 29 -> 29; served as w3's day 3),
+w1 rollback (right 18 -> 16, honesty -5.5), w4 rollback (right 18 -> 7, never-told 30 -> 19).
