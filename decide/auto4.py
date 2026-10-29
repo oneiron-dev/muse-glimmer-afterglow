@@ -12,6 +12,7 @@ right nor wrong and is counted apart. The comparison is plain one-pass A/B on th
           -> decide/data/auto4/pairs.jsonl with the plain and the four-option prompt
   run     --phase onepass: per row, the four-option call and the plain call (one token each)
           --phase reason:  the reasoned call for every row whose four-option pick is "think"
+          --phase span:    span-02-style arm: below plain p 0.8, one short thought, labels re-read, distributions averaged
   score   per arm: picks, end result (right / wrong / asked / undecided), accuracy on decided rows, latency;
           beside plain one-pass and plain with "ask below p 0.9"
 """
@@ -34,6 +35,12 @@ SOURCES = ["supersede-day2-check", "supersede-test", "duplicate-test", "duplicat
 ASK, THINK = "3", "4"
 PLAIN_ASK_BELOW = 0.9
 REASONING_CAP = 1024  # = readout.REASONING_MAX_TOKENS; readouts written before 29 Oct 04:41 carry no "undecided"
+# Span-02-style comparison arm (lead, 29 Oct 11:39, after the owner's pointer to Respan's span-02): plain two-option
+# one pass; below p 0.8, one short capped thought, the labels read again with it in context, and the two
+# distributions averaged (the thought never overwrites the one-pass reading).
+SPAN_THINK_BELOW = 0.8
+SPAN_THOUGHT_TOKENS = 128
+SPAN_STRENGTH = "low"
 
 
 def read_jsonl(path):
@@ -70,6 +77,21 @@ def one_pass(readout, server, glimmer, text, labels, accept, lora, slot):
             "dist": {k: round(v, 4) for k, v in dist.items()}, "top": top}
 
 
+def span_thought(readout, server, glimmer, row, plain_dist, lora, slot):
+    """One short thought (capped by design, so a capped thought still counts), the labels read again after it, and
+    the average of the one-pass and the after-thought distributions."""
+    prompt, thought, n_tok, stop, think_ms = readout.think(server, glimmer, row["prompt"], lora, SPAN_STRENGTH, slot,
+                                                           max_tokens=SPAN_THOUGHT_TOKENS)
+    after = glimmer.ids(prompt + thought + "<|eom|>" + readout.ANSWER_PREFIX)
+    d2, m2, _, ms2, _ = readout.label_probs(server, after, glimmer.label_ids(list(row["options"])), lora, slot)
+    avg = {k: (plain_dist[k] + d2[k]) / 2 for k in d2}
+    pick = max(avg, key=avg.get)
+    return {"pick": pick, "p": round(avg[pick], 4), "right": pick in row["accept"],
+            "after": {k: round(v, 4) for k, v in d2.items()}, "after_label_mass": round(m2, 4),
+            "thought_tokens": n_tok, "stop": stop, "capped": stop == "limit" or (n_tok or 0) >= SPAN_THOUGHT_TOKENS,
+            "strength": SPAN_STRENGTH, "ms": round(think_ms + ms2, 1), "thought": thought[-400:]}
+
+
 def run(args):
     import readout
 
@@ -78,9 +100,11 @@ def run(args):
     rows = read_jsonl(PAIRS)
     out = OUT_DIR / f"readout-auto4-{args.arm}-{args.phase}.jsonl"
     done = {r["id"] for r in read_jsonl(out)}
+    onepass = {r["id"]: r for r in read_jsonl(OUT_DIR / f"readout-auto4-{args.arm}-onepass.jsonl")}
     if args.phase == "reason":
-        picks = {r["id"]: r["auto4"]["pick"] for r in read_jsonl(OUT_DIR / f"readout-auto4-{args.arm}-onepass.jsonl")}
-        rows = [r for r in rows if picks.get(r["id"]) == THINK]
+        rows = [r for r in rows if r["id"] in onepass and onepass[r["id"]]["auto4"]["pick"] == THINK]
+    if args.phase == "span":
+        rows = [r for r in rows if r["id"] in onepass and onepass[r["id"]]["plain"]["p"] < SPAN_THINK_BELOW]
     print(f"{args.arm} {args.phase}: {len(rows)} rows, {len(done)} done, lora {lora}", flush=True)
     with out.open("a") as f:
         for row in rows:
@@ -95,6 +119,11 @@ def run(args):
                 res["plain"] = one_pass(readout, args.server, glimmer, row["prompt"], list(row["options"]), row["accept"], lora, args.slot)
                 line = (f"4opt {res['auto4']['pick']} p {res['auto4']['p']:.3f}  plain {res['plain']['pick']} "
                         f"p {res['plain']['p']:.3f}  gold {row['label']}")
+            elif args.phase == "span":
+                res["span"] = span_thought(readout, args.server, glimmer, row, onepass[row["id"]]["plain"]["dist"], lora, args.slot)
+                e = res["span"]
+                line = (f"span avg {e['pick']} p {e['p']:.3f} (after {e['after']}) gold {row['label']} "
+                        f"{e['thought_tokens']} tok {e['ms']} ms")
             else:
                 res["reasoned"] = readout.reasoned(args.server, glimmer, row["prompt"], glimmer.label_ids(list(row["options"])),
                                                    row["accept"], lora, args.slot, args.reasoning)
@@ -124,8 +153,9 @@ def end_result(rows):
             "acc_all": round(c["right"] / len(rows), 4) if rows else None}
 
 
-def score_arm(onepass, reasons, rows_by_id):
-    """Per row: the plain one-pass result, plain with ask below p 0.9, and the four-option result end to end."""
+def score_arm(onepass, reasons, spans, rows_by_id):
+    """Per row: the plain one-pass result, plain with ask below p 0.9, the span-02-style result and the four-option
+    result end to end."""
     per = []
     for r in onepass:
         a4, plain = r["auto4"], r["plain"]
@@ -134,6 +164,16 @@ def score_arm(onepass, reasons, rows_by_id):
                "plain_ms": plain["server_ms"], "onepass4_ms": a4["server_ms"]}
         row["plain_end"] = "right" if plain["right"] else "wrong"
         row["plain_ask_end"] = "asked" if plain["p"] < PLAIN_ASK_BELOW else row["plain_end"]
+        row["span_ms"] = plain["server_ms"]
+        if plain["p"] >= SPAN_THINK_BELOW:
+            row["span_end"] = row["plain_end"]
+        elif r["id"] in spans:
+            sp = spans[r["id"]]
+            row["span_end"] = "right" if sp["right"] else "wrong"
+            row["span_ms"] += sp["ms"]
+            row["span_thought"], row["span_capped"], row["span_flip"] = True, sp["capped"], sp["pick"] != plain["pick"]
+        else:
+            row["span_end"] = "not_run"
         e2e = a4["server_ms"]
         if a4["pick"] == ASK:
             row["end"] = "asked"
@@ -168,6 +208,13 @@ def summarize(per):
                   "wrong_at_0.9": sum(r["plain_end"] == "wrong" and r["plain_p"] >= 0.9 for r in per),
                   **lat([r["plain_ms"] for r in per])},
         "plain_ask_below_0.9": end_result([{**r, "end": r["plain_ask_end"]} for r in per]),
+        "span": {**end_result([{**r, "end": r["span_end"]} for r in per if r["span_end"] != "not_run"]),
+                 "not_run": sum(r["span_end"] == "not_run" for r in per),
+                 "thought": sum(bool(r.get("span_thought")) for r in per),
+                 "thought_capped": sum(bool(r.get("span_capped")) for r in per),
+                 "flipped_by_thought": sum(bool(r.get("span_flip")) for r in per),
+                 "end_to_end": lat([r["span_ms"] for r in per]),
+                 "thought_rows_end_to_end": lat([r["span_ms"] for r in per if r.get("span_thought")])},
         "auto4": {"picks": picks, **end_result([r for r in per if r["end"] != "not_run"]),
                   "not_run": sum(r["end"] == "not_run" for r in per),
                   "direct_wrong_at_0.9": sum(r["end"] == "wrong" and r["pick4"] not in (ASK, THINK) and r["p4"] >= 0.9 for r in per),
@@ -193,9 +240,10 @@ def score(args):
     for arm in args.arm:
         onepass = read_jsonl(OUT_DIR / f"readout-auto4-{arm}-onepass.jsonl")
         reasons = {r["id"]: r["reasoned"] for r in read_jsonl(OUT_DIR / f"readout-auto4-{arm}-reason.jsonl")}
+        spans = {r["id"]: r["span"] for r in read_jsonl(OUT_DIR / f"readout-auto4-{arm}-span.jsonl")}
         if not onepass:
             continue
-        per = score_arm(onepass, reasons, rows_by_id)
+        per = score_arm(onepass, reasons, spans, rows_by_id)
         report["arms"][arm] = {g: summarize([r for r in per if f(r)]) for g, f in groups.items() if any(f(r) for r in per)}
         report["arms"][arm]["escalated_rows"] = [r for r in per if r["pick4"] in (ASK, THINK)]
     out = OUT_DIR / "score-auto4.json"
@@ -214,6 +262,10 @@ def table(report):
                      f"{pl['acc_decided']} | {pl['acc_all']} | {pl['p50_ms']} / {pl['p95_ms']} |")
         lines.append(f"| {arm} | plain, ask below p 0.9 | {s['n'] - pa['asked']} / {pa['asked']} / 0 | {pa['right']} | {pa['wrong']} | "
                      f"{pa['asked']} | 0 | {pa['acc_decided']} | {pa['acc_all']} | {pl['p50_ms']} / {pl['p95_ms']} |")
+        sp = s["span"]
+        lines.append(f"| {arm} | span-02 style: think below p 0.8, average | {s['n']} / 0 / {sp['thought']} (thought) | {sp['right']} | "
+                     f"{sp['wrong']} | 0 | 0 | {sp['acc_decided']} | {sp['acc_all']} | "
+                     f"{sp['end_to_end']['p50_ms']} / {sp['end_to_end']['p95_ms']} |")
         k = a4["picks"]
         lines.append(f"| {arm} | 4 options (owner) | {k['answer']} / {k['ask']} / {k['think']} | {a4['right']} | {a4['wrong']} | "
                      f"{a4['asked']} | {a4['undecided']} | {a4['acc_decided']} | {a4['acc_all']} | "
@@ -231,7 +283,7 @@ def main():
     r.add_argument("--model-dir", default="/Users/olety/models/mlx/Muse-Glimmer-30B-4bit")
     r.add_argument("--arm", required=True, help="base or D1b (names the output files)")
     r.add_argument("--adapter", help="path suffix of the adapter at scale 1 (others at 0); none = base")
-    r.add_argument("--phase", choices=["onepass", "reason"], required=True)
+    r.add_argument("--phase", choices=["onepass", "reason", "span"], required=True)
     r.add_argument("--slot", type=int, required=True)
     r.add_argument("--reasoning", default="high")
     r.add_argument("--until", help="stop before the next call after this local time, HH:MM")
