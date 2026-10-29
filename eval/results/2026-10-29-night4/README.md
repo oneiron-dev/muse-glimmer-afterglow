@@ -58,6 +58,14 @@ Every night passes all of its own checks (learned, forgetting, tools, channel); 
   F24 -> F65), w2 4/36 (F07 -> F90 x2, F43 -> F89 once though linked, F33 -> F59), w4 5/36, w1 0/36.
 - **Never-told with the notes in context (eval form) falls in w3** (D 7/30, from 26 at night 3).
 
+## w3 night-4b: the ask-back unknown-key wording (night-5 candidate)
+The same day-4 data and recipe as w3 night 4; only the 24 unknown-key replies differ (`--unknown-keys-ask-back`: "You
+haven't told me your sales region yet. What is it?", no notes wording). Night checks, n4 -> 4b: never-told D (notes in
+context) 7 -> 26/30, B 0 -> 3; gate (disclosed) 5.5% -> 37.0%; B facts d1 63/78 -> 64/77, d3 14/25 -> 9/30, d4 21/18 ->
+18/21; D d1 abstain 2 -> 19; stale B 8 -> 9, D 7 -> 5; forgetting +3.0 pt both; tools 20/20, channel 30/30. One run of
+each, so the fact differences may be run-to-run variation. Its product-form read (general declines against w3 n4's
++31.5) is the test; it lands in a later PR.
+
 ## Fixes made today that touch these numbers
 - Option (a') (629a8da, e18bedb): a correction the night finds, by the readout or the teacher, needs a change word in
   the clause that states the new value; the pre-fix day-4 consolidations are kept in `runs/<world>/4/night-preclause/`.
