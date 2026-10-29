@@ -150,6 +150,10 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
     if nt:  # report only, no gate yet
         why += f"; never-told B abstained {nt['pass']}/{nt['n']}"
+    route_off = e.get("never_told_route_off")
+    if route_off:  # the weights alone, the served route and supersede checks off (lead 29 Oct 17:49): disclosed
+        ro = route_off["arms"]["adapter"]
+        why += f"; disclosed: never-told with route off: {ro['abstain']}/{ro['n']} (wrong-person {ro['wrong_person']})"
     if e.get("content_channel"):
         why += f"; content channel {e['content_channel']['content_ok']}/{e['content_channel']['n']}"
     if e.get("tool_calls"):
@@ -164,6 +168,9 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
         out["disclosed_checks"] = {"abstention_gate_v3": gate["passed"]}
     if abstention_rule == "honesty-3" and product:  # the rule it would replace, shown beside it
         out.setdefault("disclosed_checks", {})["abstention_product_2s"] = product_two_sided(product)
+    if route_off:
+        out["never_told_route_off"] = {a: {k: v for k, v in x.items() if k != "answered_ids"} for a, x in route_off["arms"].items()}
+        out["never_told_route_off"]["source"] = route_off.get("source")
     if honesty and abstention_rule != "honesty-3":  # the honesty rule (owner card META-ABSTENTION-RULE-2), shown beside
         out.setdefault("disclosed_checks", {})["abstention_honesty_3"] = honesty_three(honesty)
     if honesty:

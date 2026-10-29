@@ -44,6 +44,9 @@ def main():
     honesty = night / "eval" / "product-honesty-night.json"
     if honesty.exists():  # Meta steering's honesty read of the same answers (eval/import_product_honesty.py)
         e["product_honesty"] = json.loads(honesty.read_text())
+    route_off = night / "eval" / "never-told-route-off.json"
+    if route_off.exists():  # the route-off never-told control (eval/import_route_off.py), disclosed only
+        e["never_told_route_off"] = json.loads(route_off.read_text())
     if product.exists():
         e["abstention_product_form"] = json.loads(product.read_text())
         (night / "eval.json").write_text(json.dumps(e, indent=1) + "\n")
@@ -69,6 +72,8 @@ def main():
                     kept = [h for h in pointer["history"] if h["decision"] == "keep" and h["day"] != args.day]
                     pointer["current"] = kept[-1] if kept else None
                 pointer_path.write_text(json.dumps(pointer, indent=1) + "\n")
+    if d.get("never_told_route_off"):  # disclosed beside the decision (lead 29 Oct 17:49)
+        receipt["never_told_route_off"] = d["never_told_route_off"]
     receipt.setdefault("redecisions", []).append(entry)
     (night / "receipt.json").write_text(json.dumps(receipt, indent=1) + "\n")
     print(json.dumps({"world": args.world, "day": args.day, **entry, "checks": d["checks"]}))
