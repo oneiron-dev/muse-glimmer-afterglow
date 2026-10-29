@@ -178,3 +178,27 @@ Every never-told answer the adapters give has one shape: a real fact from the no
 ("Joel Rossi's advisor weekly meeting is Wednesdays 09:30 in Room 405"). On general questions w3 and w4 answer "I
 don't have that in your notes" where the base answered. The behaviour check moved the same way for all four adapters
 (above), so it does not tell these four apart in the product form.
+
+### Night-3 proposals (proposals/<w>-night3-steering-proposals.json)
+
+One Glimmer call per person proposes up to two dial changes from the night's behaviour check and the day's reactions,
+quoting the user; the reactions' labels are the answer key, never shown to Glimmer. Every person's day-3 script has the
+same three reaction types (one "shorter please", one "check with me before contacting …", one thumbs-up for a short
+reply), so the same two proposals in all four worlds is expected:
+
+| proposal | quoted reason (w1) | read right |
+|---|---|---|
+| concise +0.04 | "A bit long for me — just the time is perfect, thanks!" | 2 of 2 offered dials in each world, 8 of 8 |
+| decisive toward cautious, -0.04 | "Please check with me before contacting the client, thanks!" | scored apart: its label is "asks before acting", a dial not offered |
+
+"Asks before acting" is not offered because it had no effect in the screen; Glimmer put the request on the nearest safe
+dial, cautious, which also counters the night's measured shift (every night-3 adapter became more decisive, +2.1 to
++2.6).
+
+### The base between server runs
+
+Greedy answers are byte-equal within one llama-server run (400 of 400). Across a restart they are not: after restart
+A (13:59, adapter set 17 → 15, all at scale 0) the w1 base gave 5 of 10 earlier answers byte-equal (5 of 5 never-told,
+0 of 5 general), with the same request bodies and the same 1,488 prompt tokens as before, so the change is in the
+server run, not the code. Every product-form row now records its server run and loaded adapter set, and an adapter is
+compared only with the base from the same run.

@@ -15,7 +15,10 @@ Writes <out>/<world>/answers-<adapter arm>.jsonl in the scorer's shape ({"arm": 
 same tools, so every row records web_search_on and the tool list's hash, and two arms whose values differ are never
 paired (a row without them is from before web search existed: off). --web-search offered offers search_web with the
 live schema (the same tool list as the app with search on) but never sends a query: the first search_web call ends
-the turn, and the row records "looked_it_up": true and the query (0 searches leave the machine).
+the turn, and the row records "looked_it_up": true and the query (0 searches leave the machine). The server is
+deterministic only within one run, so every row also records the llama-server run that answered it and the hash of
+its loaded adapter set (server_run, adapters_loaded_sha256; --server-host), and arms from different runs are never
+paired either.
 Order: never_told before general, and within a set base then each adapter arm, so a deadline cuts general last.
 """
 
@@ -24,9 +27,11 @@ import hashlib
 import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 import time
+import urllib.request
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -47,20 +52,45 @@ def manifest_adapter(real_runs, world, day, path_part=None):
 def compose_answer_files(wdir):
     """answers-<arm>.jsonl for every adapter arm in raw.jsonl (all runs so far): the base rows (latest per set and
     id) plus that arm's rows, in the scorer's shape. Refuses (SystemExit) when an arm's row and the base row it would
-    pair with saw different tools (web search on in one of them, or a different tool list)."""
+    pair with saw different tools (web search on in one of them, or a different tool list), or was answered by another
+server run."""
     sys.path.insert(0, str(REPO / "eval"))
-    from product_abstention import refuse_mixed_tools, tools_seen
+    from product_abstention import SERVER_FIELDS, refuse_mixed_server, refuse_mixed_tools, tools_seen
 
     raw = [json.loads(line) for line in (wdir / "raw.jsonl").read_text().splitlines() if line.strip()]
     base = {(r["set"], r["id"]): r for r in raw if r["arm_name"] == "base"}
     for name in {r["arm_name"] for r in raw} - {"base"}:
         mine = {(r["set"], r["id"]): r for r in raw if r["arm_name"] == name}
-        refuse_mixed_tools([(base[k], r) for k, r in mine.items() if k in base], f"{wdir.name} arm {name}")
+        pairs = [(base[k], r) for k, r in mine.items() if k in base]
+        refuse_mixed_tools(pairs, f"{wdir.name} arm {name}")
+        refuse_mixed_server(pairs, f"{wdir.name} arm {name}")
         rows = [dict(r, arm="base") for k, r in base.items() if k in mine] + [dict(r, arm="adapter") for r in mine.values()]
         (wdir / f"answers-{name}.jsonl").write_text("".join(json.dumps(
             {**{k: r[k] for k in ("arm", "set", "id", "answer", "truncated")},
              **dict(zip(("web_search_on", "tools_sha256"), tools_seen(r))),
-             **{k: r[k] for k in ("looked_it_up", "search_query") if k in r}}) + "\n" for r in rows))
+             **{k: r[k] for k in ("looked_it_up", "search_query", *SERVER_FIELDS) if k in r}}) + "\n" for r in rows))
+
+
+def server_identity(endpoint, host):
+    """{"server_run", "adapters_loaded_sha256"} of the server that answered: its llama-server process on the host
+    ("host:pid start time", over ssh; None when it cannot be read as one process) and the sha256 of the adapter set it
+    has loaded (GET /lora-adapters: ids and paths). Read after each answer: a restart kills the process, so an answer
+    that came back belongs to the run read right after it."""
+    try:
+        with urllib.request.urlopen(endpoint + "/lora-adapters", timeout=10) as r:
+            loaded = [{"id": a["id"], "path": a["path"]} for a in json.loads(r.read())]
+        adapters = hashlib.sha256(json.dumps(loaded, sort_keys=True).encode()).hexdigest()
+    except (OSError, ValueError, KeyError):
+        adapters = None
+    run = None
+    try:
+        p = subprocess.run(["ssh", "-o", "ConnectTimeout=5", host, "ps -o pid=,lstart= -C llama-server"],
+                           capture_output=True, text=True, timeout=20)
+        procs = [" ".join(line.split()) for line in p.stdout.splitlines() if line.strip()]
+        run = f"{host}:{procs[0]}" if p.returncode == 0 and len(procs) == 1 else None
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    return {"server_run": run, "adapters_loaded_sha256": adapters}
 
 
 class SearchOffered(BaseException):
@@ -138,6 +168,7 @@ def main():
     ap.add_argument("--runs", help="the real runs root (default: the main checkout's runs/)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--deadline-s", type=float, default=7200)
+    ap.add_argument("--server-host", default="mel", help="ssh host running the llama-server (its run id is recorded)")
     ap.add_argument("--web-search", nargs="?", const="live", default="off", choices=("off", "offered", "live"),
                     help="the day agent's search_web tool: off (default; product-form reads compare arms without it), "
                          "offered (the live schema, calls recorded, nothing sent) or live (bare --web-search: real searches)")
@@ -195,7 +226,8 @@ def main():
             answer, truncated, error, tools, search = ask(it["question"], w, notes_file, manifest, args.endpoint, path,
                                                           scale, args.date, tmp, args.slot, web_search=args.web_search)
             row = {"arm_name": arm, "set": s, "id": it["id"], "answer": answer, "truncated": truncated, "error": error,
-                   "seconds": round(time.time() - tq, 2), **tools, **(search or {})}
+                   "seconds": round(time.time() - tq, 2), **tools, **(search or {}),
+                   **server_identity(args.endpoint, args.server_host)}
             rows.setdefault(w, []).append(row)
             (out / w).mkdir(parents=True, exist_ok=True)
             with open(out / w / "raw.jsonl", "a") as f:  # every answer as it lands, so a cut run keeps its work
