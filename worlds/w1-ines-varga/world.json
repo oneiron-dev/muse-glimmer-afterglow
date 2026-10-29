@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -277,7 +277,7 @@
    ],
    "statement": "Kestrel ships everything through Nordpil Freight.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F101"
   },
   {
    "id": "F24",
@@ -452,7 +452,7 @@
    ],
    "statement": "The Larkspur team chats in the #larkspur-build channel.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F103"
   },
   {
    "id": "F39",
@@ -463,7 +463,7 @@
    ],
    "statement": "If Old Gus goes down, Kestrel's backup machine shop is Falk Precision.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F102"
   },
   {
    "id": "F40",
@@ -1107,6 +1107,162 @@
    "valid_from": 5,
    "superseded_by": null,
    "supersedes": "F32"
+  },
+  {
+   "id": "F91",
+   "key": "anodizing vendor name",
+   "value": "Selmark Anodizing",
+   "accept": [
+    "selmark anodizing"
+   ],
+   "statement": "The anodizing vendor is Selmark Anodizing.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F92",
+   "key": "field calibration technician",
+   "value": "Tomas Ervik",
+   "accept": [
+    "tomas ervik"
+   ],
+   "statement": "The field calibration technician is Tomas Ervik.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F93",
+   "key": "thermal camera model",
+   "value": "Vireo T-57",
+   "accept": [
+    "vireo t-57"
+   ],
+   "statement": "The thermal camera model is Vireo T-57.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F94",
+   "key": "offsite storage location",
+   "value": "Stavdal North Depot",
+   "accept": [
+    "stavdal north depot"
+   ],
+   "statement": "The offsite storage location is Stavdal North Depot.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F95",
+   "key": "second pilot customer",
+   "value": "Halvorsen Mapping",
+   "accept": [
+    "halvorsen mapping"
+   ],
+   "statement": "The second pilot customer is Halvorsen Mapping.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F96",
+   "key": "design review date",
+   "value": "23 September",
+   "accept": [
+    "23 september",
+    "september 23",
+    "23rd september",
+    "september 23rd",
+    "23rd of september"
+   ],
+   "statement": "The design review date is 23 September.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F97",
+   "key": "replacement strut code",
+   "value": "KF-ST-418",
+   "accept": [
+    "kf-st-418",
+    "418"
+   ],
+   "statement": "The replacement strut part code is KF-ST-418.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F98",
+   "key": "safety checklist document",
+   "value": "QX-112-C",
+   "accept": [
+    "qx-112-c",
+    "112"
+   ],
+   "statement": "The safety checklist document is QX-112-C.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F99",
+   "key": "prototype paint finish",
+   "value": "Dusk Teal Matte",
+   "accept": [
+    "dusk teal matte"
+   ],
+   "statement": "The prototype paint finish is Dusk Teal Matte.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F100",
+   "key": "morning standup room",
+   "value": "Room 4.13",
+   "accept": [
+    "room 4.13",
+    "4.13"
+   ],
+   "statement": "The morning standup room is Room 4.13.",
+   "valid_from": 6,
+   "superseded_by": null
+  },
+  {
+   "id": "F101",
+   "key": "courier",
+   "value": "Baltic Swift Logistics",
+   "accept": [
+    "baltic swift logistics",
+    "baltic swift"
+   ],
+   "statement": "Our courier is now Baltic Swift Logistics.",
+   "valid_from": 6,
+   "superseded_by": null,
+   "supersedes": "F23"
+  },
+  {
+   "id": "F102",
+   "key": "backup machine shop",
+   "value": "Hale Engineering Works",
+   "accept": [
+    "hale engineering works",
+    "hale engineering"
+   ],
+   "statement": "Our backup machine shop is now Hale Engineering Works.",
+   "valid_from": 6,
+   "superseded_by": null,
+   "supersedes": "F39"
+  },
+  {
+   "id": "F103",
+   "key": "team chat channel",
+   "value": "#larkspur-sprint",
+   "accept": [
+    "larkspur sprint channel",
+    "larkspur sprint"
+   ],
+   "statement": "Our team chat channel is now #larkspur-sprint.",
+   "valid_from": 6,
+   "superseded_by": null,
+   "supersedes": "F38"
   }
  ],
  "preferences": [
