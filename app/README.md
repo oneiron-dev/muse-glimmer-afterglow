@@ -82,7 +82,8 @@ share one copy (override with `AFTERGLOW_RUNS`).
 `app/afterglow/web_search.py` adds one tool, `search_web`, for general knowledge the notes cannot hold. It is shaped
 as Oneiron's connector verb `connector.web.search`: input `{query, max_results}`, output `{provider: "exa", results:
 [{title, url, snippet}]}`, plus `latency_ms` and `cost_usd` (Exa's `costDollars`) for the log. The tool description
-tells the agent never to put the user's personal details in a query. It is OFF unless `runs/serving/serving-rule.json`
+says a query may name public places and topics from the conversation, never people's names, contact details or private
+identifiers (codes, numbers, account or file names). It is OFF unless `runs/serving/serving-rule.json`
 has `"web_search": {"on": true, "provider": "exa", "key_name": "<skate key name>", "max_results": 3, "cap":
 {"searches": N, "through": "YYYY-MM-DD"}}`; absent or off, the tool is not offered and every request (and the KV
 snapshot's prefix) is byte-equal to a chat without it. The key is read once per session with `skate get <key_name>`,
