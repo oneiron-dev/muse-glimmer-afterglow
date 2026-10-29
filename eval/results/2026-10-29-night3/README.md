@@ -65,3 +65,13 @@ that restates the same fact (dropping the older copy loses nothing); (b) the dec
 right, 0 wrong. The lead chose (a) for night 4 (`night/consolidate.py`, 964eb3b). Every fire is logged in
 `consolidated.json` (old note, new note, p, shapes, change word), and the morning report lists them under "The night
 treated these as corrections" (Meta day, PR #75). Night 4's stale and B probes on w3 and w4 are the real-world check.
+
+**Option (a') from 29 Oct 15:00 (lead).** Day-4 consolidation under (a) dropped a true fact in w1: "test fly location:
+Skjerstad Meadows" (F64, still true) for "outdoor trial location: Havsborg Quarry" (F66, a separate new fact), p 0.72,
+because the change word "moved" belonged to the other clause of the same message ("we moved our glue orders to Nordbond
+Adhesives, and the outdoor trial is out at Havsborg Quarry"). (a') requires the change word in the clause that states
+the new value (split on . ; ! ? , and "and"). On every (a) fire so far (days 2-4): 7 right, 0 wrong, where (a) had 7
+right, 1 duplicate and 1 wrong drop. The clause rule was fit after seeing this failure, on the same fires, so night
+4's own fires are its first fresh test. Day-4 consolidation was re-run under (a') in every world (the pre-fix folders
+are kept as `runs/<world>/4/night-preclause/`); every fire stays logged in `consolidated.json` and listed on the report.
+
