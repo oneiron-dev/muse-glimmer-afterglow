@@ -20,6 +20,9 @@ CHECK_NAMES = {"leak_check": "no held-out question in the training data",
                "content_channel": "its chat replies land in the reply", "tool_calls": "it still calls its tools in chat",
                "abstention_gate": "it says it does not know about as often as before",
                "abstention_product_form": "as the day assistant, it still says it does not know when it should"}
+HONESTY = ('graded honesty: right minus wrong did not fall, it kept what it knew, and it still says "not in your notes" '
+           'to things you never said')
+CHECK_NAMES.update(abstention_honesty=HONESTY, abstention_honesty_3=HONESTY)
 
 ABSTAIN_RATES = re.compile(r"abstain rate ([\d.]+) -> ([\d.]+)")
 
@@ -146,6 +149,10 @@ def night_results(world, day, night_dir=None):
     product = (read_json(night / "decision-product-2s.json") or {}).get("checks") or {}
     if product.get("abstention_product_form") is not None:
         results.setdefault("abstention_product_form", product["abstention_product_form"])
+    # the graded honesty check of record (owner, 29 Oct 20:27, honesty-3), counted only from a decision made under it
+    for d in (decision, read_json(night / "decision-honesty-3.json") or {}):
+        if d.get("abstention_rule") == "honesty-3" and (d.get("checks") or {}).get("abstention_honesty") is not None:
+            results.setdefault("abstention_honesty_3", d["checks"]["abstention_honesty"])
     for c in chat_checks(night, read_json(night / "eval.json"), decision):
         if c.get("passed") is not None:
             results.setdefault(c["name"], c["passed"])
@@ -156,9 +163,12 @@ def never_told_line(night):
     """"Never told: it said 'not in your notes' 30 of 30 times (the note check stopped 10 answers that would have
     pinned your notes on someone else)." from the night's product-form decision: the update as served (route decision
     on), and the wrong-person answers of the route-off control when it ran; None when not measured."""
-    d = read_json(night / "decision-product-2s.json") or read_json(night / "decision.json") or {}
-    served = (((d.get("abstention_product_form") or {}).get("arms") or {}).get("adapter") or {}).get("never_told")
-    if not served or served.get("n") is None:
+    arm = lambda d: (((d.get("abstention_product_form") or {}).get("arms") or {}).get("adapter") or {}).get("never_told")
+    # the decision of record first (it carries the route-off control), then the product-form one
+    d = next((d for d in (read_json(night / "decision.json"), read_json(night / "decision-product-2s.json"))
+              if d and arm(d) and arm(d).get("n") is not None), {})
+    served = arm(d)
+    if not served:
         return None
     line = f"Never told: it said 'not in your notes' {served['abstain']} of {served['n']} times"
     off = ((d.get("never_told_route_off") or {}).get("adapter") or {}).get("wrong_person")
