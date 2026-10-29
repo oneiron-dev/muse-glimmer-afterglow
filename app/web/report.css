@@ -129,6 +129,7 @@ a.rcpt:hover { color: var(--glow-violet); }
 .chose-summary strong { color: var(--ink); font-weight: 600; }
 .chose-list { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.92rem; }
 .chose-list li { display: grid; grid-template-columns: 5.2rem 1fr; gap: 0.6rem; }
+.chose-list li.chose-sub { display: block; margin-top: 0.35rem; color: var(--ink-soft); font-weight: 600; }
 .chose-list .what { font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); padding-top: 0.1rem; }
 .chose-list .old { color: var(--ink-faint); text-decoration: line-through; }
 .chose details.more ul { list-style: none; margin: 0.4rem 0 0; padding: 0; columns: 2 16rem; font-size: 0.85rem; }

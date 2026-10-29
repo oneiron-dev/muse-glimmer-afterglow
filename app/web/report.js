@@ -165,7 +165,11 @@ function chose(cons) {
     li.append(el("span", "what", what), body);
     list.append(li);
   };
-  for (const d of dropped) {
+  // the day's own links ("you changed it") first, then the corrections the night found itself (consolidated.json
+  // treated_as_correction_by_night: linked_by "readout" at p >= 0.9, "readout (a)" at p >= 0.6 with the same value
+  // shape and a change word in the day's wording, or "consolidation rule")
+  const found = dropped.filter((d) => d.treated_as_correction_by_night);
+  for (const d of dropped.filter((d) => !d.treated_as_correction_by_night)) {
     const newer = byId[d.superseded_by];
     row("Dropped", el("span", "old", label(d.id)), newer ? `: you changed it to ${newer.value}.` : ".");
   }
@@ -173,6 +177,15 @@ function chose(cons) {
   for (const p of overruled) {
     row("Kept apart", `The model proposed merging ${label(p.id)} with ${label(p.model_proposed_merge_with)}. `,
       `They stay separate${p.why ? `: ${p.why}` : ""}.`);
+  }
+  if (found.length) {
+    list.append(el("li", "chose-sub", "The night treated these as corrections"));
+  }
+  for (const d of found) {
+    const newer = byId[d.superseded_by];
+    const how = d.linked_by === "consolidation rule" ? "by its own rule"
+      : `p ${d.p != null ? Number(d.p).toFixed(2) : "?"}${d.change_word ? `, ‘${d.change_word}’` : ""}`;
+    row("Corrected", el("span", "old", label(d.id)), ` → ${newer ? newer.value : "a newer note"} (the night treated this as a correction: ${how}).`);
   }
   const det = $("chose-kept");
   det.querySelector("summary").textContent = `The ${kept.length} facts it trained on`;
