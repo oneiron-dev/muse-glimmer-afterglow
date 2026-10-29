@@ -78,3 +78,8 @@ license activated by IT", a message with no change word; its five day-2 fires, a
 fit on fires already seen. Day-4 consolidation was re-run under (a') in every world (the pre-fix folders
 are kept as `runs/<world>/4/night-preclause/`); every fire stays logged in `consolidated.json` and listed on the report.
 
+
+**Scorer note (29 Oct 17:5x, f52810b).** The abstain phrases now read every typographic apostrophe (’ ‘ ʼ) through one
+helper (`omniscience.abstain_text`); before, the of-record scorers straightened only ’, and `night/lookup_rows.py`'s
+judge none. Re-scored from the saved answers: 0 changes in the night-eval outcomes (51,704), the AA pre-pass (7,200),
+the gate answers (8,800), the product-form answers (6,380) and the look-it-up judge (43); no decision moves.
