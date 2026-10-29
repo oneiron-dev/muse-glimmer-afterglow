@@ -49,17 +49,22 @@ class ServingRuleTest(unittest.TestCase):
         self.assertEqual(c["entry"]["day"], 1)
         self.assertIn("night 2's failed the 'its chat replies land in the reply' check", c["why"])
 
-    def test_a_night_variant_passing_is_served_when_the_night_of_record_fails(self):
+    def test_a_passing_night_variant_is_not_served_until_promoted(self):
         self.night(1, added_abstention=False)
         self.night(2, failed=["tool_calls"])
-        d = self.runs / "w" / "2" / "night-2b"
+        d = self.runs / "w" / "2" / "night-2c"  # a control arm that passes every check (like w1 night-3-idkc)
         d.mkdir(parents=True)
-        (d / "decision.json").write_text(json.dumps({"decision": "keep", "checks": {k: True for k in CHECKS}}))
-        entries = self.entries + [{"id": 2, "world": "w", "day": 2, "path": "/a/w-d2-night-2b.gguf", "decision": "keep",
-                                   "arm": "night-2b", "night_dir": "2/night-2b"}]
+        (d / "decision.json").write_text(json.dumps({"decision": "keep", "checks": {k: True for k in CHECKS},
+                                                     "promotion": {"status": "passes, not promoted (control arm)"}}))
+        entries = self.entries + [{"id": 2, "world": "w", "day": 2, "path": "/a/w-d2-night-2c.gguf", "decision": "keep",
+                                   "arm": "night-2c", "night_dir": "2/night-2c"}]
         c = serving_choice("w", entries)
-        self.assertEqual(c["entry"]["path"], "/a/w-d2-night-2b.gguf")
-        self.assertTrue(c["why"].startswith("Night 2 (night-2b)'s update is loaded"))
+        self.assertIsNone(c["entry"])  # base + notes: the arm is never served by itself
+        self.assertIn("Night 2 (night-2c) passes every check but is not served: not promoted (control arm).", c["why"])
+        # promoted (promote_night writes it as the day's night of record, as for w4 night-2b): served
+        (self.runs / "w" / "2" / "night" / "decision.json").write_text(
+            json.dumps({"decision": "keep", "checks": {k: True for k in CHECKS}}))
+        self.assertEqual(serving_choice("w", entries)["entry"]["path"], "/a/w-d2.gguf")
 
     def test_no_update_when_every_one_fails_including_added_checks(self):
         self.night(1, added_abstention=False)
