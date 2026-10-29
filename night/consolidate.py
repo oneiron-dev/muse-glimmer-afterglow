@@ -152,7 +152,8 @@ def main():
             items.append({"id": n["id"], "kind": kind, "key": n["key"], "full_value": n["value"], "value": core,
                           "accept": [core], "statement": statement, "source_utterance": turns.get(n.get("turn"), ""),
                           "corrects": old["value"] if old else None})
-    replaced = find_replacements(items, by_id, args.day, first, args.teacher, log_path) if args.day >= 2 else []
+    readout_log = []
+    replaced = find_replacements(items, by_id, args.day, first, args.teacher, log_path, readout_log) if args.day >= 2 else []
     gone = {r["old_id"] for r in replaced if r["decision"] == "superseded"}
     for r in replaced:
         if r["decision"] == "superseded":
@@ -160,7 +161,8 @@ def main():
             new_item["corrects"] = r["old_value"]
     items = [i for i in items if i["id"] not in gone]
     doc = {"world": args.world, "day": args.day, "user": name, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
-           "items": items, "overruled_merge_proposals": proposals, "replacements": replaced, "teacher_fallbacks": teacher_fallbacks,
+           "items": items, "overruled_merge_proposals": proposals, "replacements": replaced, "readout_log": readout_log,
+           "teacher_fallbacks": teacher_fallbacks,
            **({"duplicate_check": dup_log} if dup_log else {}),
            "feedback": feedback, "held_as_feedback": [{"id": n["id"], "key": n["key"], "value": n["value"], "turn": n.get("turn"),
                                                       "outcome": "held_as_feedback", "why": "saved at a style-feedback turn: "
@@ -206,12 +208,35 @@ def duplicate_check(active):
             "rule": "logged only; the code rule (identical key + value) decides"}
 
 
-def find_replacements(items, by_id, day, first, teacher, log_path):
+def p_replaces(d):
+    """A readout decision's probability of "replaces" (option 1), whichever option it picked; undecided = 0."""
+    if d.get("p") is None:
+        return 0.0
+    return d["p"] if d.get("pick") == "1" else round(1.0 - d["p"], 4)
+
+
+def readout_entry(n, r, notes_by_id, change, linked_by):
+    """The log line of one readout call: its top two candidates (note, p of "replaces", value shape) and every
+    candidate's p, so a margin rule can be fit later without a GPU (lead 29 Oct 23:06)."""
+    from contrast_rows import shape
+
+    ranked = sorted(({"candidate": d["candidate"], "p_replaces": p_replaces(d), "pick": d.get("pick"), "path": d.get("path")}
+                     for d in r["decisions"]), key=lambda d: -d["p_replaces"])
+    top2 = []
+    for d in ranked[:2]:
+        note = notes_by_id.get(d["candidate"], {})
+        top2.append({**d, "key": note.get("key"), "value": note.get("value"), "shape": shape(note.get("value") or "")})
+    return {"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "new_shape": shape(n["full_value"]),
+            "change_word": change.group(0) if change else None, "link": r["link"], "linked_by": linked_by, "top2": top2,
+            "candidates": [{"candidate": d["candidate"], "p_replaces": d["p_replaces"]} for d in ranked]}
+
+
+def find_replacements(items, by_id, day, first, teacher, log_path, readout_log=None):
     """Corrections the day's notes did not link: a note saved today that holds a new value for an earlier, still
     active note under another key. The teacher names the earlier note; code accepts it only when the old note is from
     an earlier day, is a fact, and its value has the same shape (time, date, room, person...) as the new one. Every
     correction the night finds, by the readout or by the teacher, also needs a change word in the clause that states the
-    new value (option (a'), lead 29 Oct 15:00-15:13)."""
+    new value (option (a'), lead 29 Oct 15:00-15:13). readout_log, when given, gets one readout_entry per new note."""
     from contrast_rows import shape
 
     earlier = [i for i in items if (by_id[i["id"]].get("day") or 1) < day and i["kind"] == "fact"]
@@ -241,6 +266,9 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
             # top-1 "replaces" of the readout; linked at p >= SUPERSEDE_ACCEPT_P, or (option a, lead 29 Oct) at
             # p >= READOUT_A_P when the values have the same shape and the day's wording has a change word
             r = readout.supersede_link(earlier_notes, {"id": n["id"], "key": n["key"], "value": n["full_value"]}, k=8, accept_p=0.0)
+            if readout_log is not None:
+                readout_log.append(readout_entry(n, r, {e["id"]: e for e in earlier_notes},
+                                                 change_word_for(n["source_utterance"], n["full_value"]), None))
             if r["link"] and r["link"] in all_items and r["link"] not in taken:
                 old = all_items[r["link"]]
                 p_link = max((d["p"] for d in r["decisions"] if d["candidate"] == old["id"]), default=0.0)
@@ -248,6 +276,8 @@ def find_replacements(items, by_id, day, first, teacher, log_path):
                 change = change_word_for(n["source_utterance"], n["full_value"])
                 linked_by = ("readout" if p_link >= SUPERSEDE_ACCEPT_P else
                              "readout (a)" if p_link >= READOUT_A_P and same_shape and change else None)
+                if readout_log is not None:
+                    readout_log[-1]["linked_by"] = linked_by
                 if linked_by:
                     taken.add(old["id"])
                     out.append({"new_id": n["id"], "new_key": n["key"], "new_value": n["full_value"], "old_id": old["id"],
