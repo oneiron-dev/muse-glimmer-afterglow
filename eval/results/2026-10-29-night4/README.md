@@ -42,7 +42,8 @@ Every night passes all of its own checks (learned, forgetting, tools, channel); 
   the rows may amplify a base habit rather than create it. Under test: w3 night-4b, the same data with those 16
   replies (24 in all) rewritten to name the key and ask for it (`--unknown-keys-ask-back`).
 - **The mis-binding grows in the weights; the route check holds it at serving.** With the route decision off, the
-  night attaches a saved fact to another person in 3-10 of 30 never-told questions (w2: 3 at night 3, 10 at night 4).
+  night attaches a saved fact to another person in 3-10 of 30 never-told questions (w2: 3 wrong-person answers in its
+  night-3 read, 10 with the route off at night 4).
   As served, the route's named-person check catches them (30/30 in w1, w2, w4). The rule measures the served
   assistant, so the decisions stand; the route-off line is shown on every decision.
 - **Corrections found by the night (option (a'), one rule for the readout and the teacher rule).** w2: 2 links, both
