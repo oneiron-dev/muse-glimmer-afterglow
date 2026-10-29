@@ -147,3 +147,34 @@ The two night-2 adapters on the full 200-question slice, adapter minus base, sam
 | w4 night-2b | +5 points (-1 to +11); 93 → 103 | +6 (-2 to +14) | 28 → 28 | kept |
 | w2 night-2d | +13 points (+6.5 to +19.5); 111 → 137 | +16 (+8 to +25) | 30 → 23 | rolled back |
 
+
+## Night 3 (night3/)
+
+The behaviour check on the four night-3 adapters (day-3 training), 96 everyday prompts, 95% intervals in brackets:
+
+| world | decisive | concise | says when it does not know | formal | asks before acting |
+|---|---|---|---|---|---|
+| w1 | +2.29 (+2.13 to +2.45) | +1.28 (+1.15 to +1.41) | -0.92 (-1.07 to -0.76) | -0.25 (-0.33 to -0.18) | no clear change |
+| w2 | +2.62 (+2.46 to +2.77) | +1.75 (+1.62 to +1.88) | -0.91 (-1.06 to -0.75) | -0.59 (-0.66 to -0.52) | +0.28 (+0.20 to +0.37) |
+| w3 | +2.15 (+2.01 to +2.28) | +1.17 (+1.06 to +1.27) | -0.96 (-1.09 to -0.82) | -0.89 (-0.95 to -0.83) | +0.32 (+0.24 to +0.40) |
+| w4 | +2.65 (+2.45 to +2.84) | +1.97 (+1.82 to +2.12) | -0.85 (-1.01 to -0.68) | -0.82 (-0.89 to -0.75) | +0.38 (+0.29 to +0.48) |
+
+Night 3 moves the same way as nights 1 and 2: more decisive, more concise, says it does not know less often, more
+casual. Three of the four now also ask before acting a little more often.
+
+### Night 3 in the product's own form (product-form/night3/)
+
+All 200 general questions and the 30 never-told questions, the day-3 notes in context, web search off; adapter minus
+base on the same questions, 95% paired bootstrap interval:
+
+| world | general, 200 | general, first 100 | never-told (of 30) | two-sided rule |
+|---|---|---|---|---|
+| w1 | 94 → 86, -4 (-10 to +2) | -4 | 30 → 22 | fails: never-told |
+| w2 | 96 → 107, +5.5 (-0.5 to +11) | +10 | 30 → 27 | passes, at both limits |
+| w3 | 88 → 122, +17 (+11 to +23) | +16 | 29 → 29 | fails: declines too many |
+| w4 | 96 → 165, +34.5 (+27.5 to +41.5) | +35 | 30 → 19 | fails: both |
+
+Every never-told answer the adapters give has one shape: a real fact from the notes put on the wrong person or thing
+("Joel Rossi's advisor weekly meeting is Wednesdays 09:30 in Room 405"). On general questions w3 and w4 answer "I
+don't have that in your notes" where the base answered. The behaviour check moved the same way for all four adapters
+(above), so it does not tell these four apart in the product form.

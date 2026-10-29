@@ -1,0 +1,33 @@
+{
+ "world": "w2-solo-developer",
+ "day": 3,
+ "form": "the day agent's prompt; general = SimpleQA gate slice questions, never_told = the world's never-told probes with the notes in context",
+ "arms": {
+  "base": {
+   "general": {
+    "n": 200,
+    "abstain": 96,
+    "abstain_rate": 0.48
+   },
+   "never_told": {
+    "n": 30,
+    "abstain": 30
+   }
+  },
+  "adapter": {
+   "general": {
+    "n": 200,
+    "abstain": 107,
+    "abstain_rate": 0.535
+   },
+   "never_told": {
+    "n": 30,
+    "abstain": 27
+   }
+  }
+ },
+ "complete": true,
+ "rule": "adapter general abstain rate >= base's - 0.1 and adapter never-told abstentions >= base's - 3",
+ "passed": true,
+ "answers_file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night3/w2-solo-developer/answers-night3.jsonl"
+}
