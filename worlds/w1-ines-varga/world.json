@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -140,7 +140,7 @@
    ],
    "statement": "Machining at Kestrel happens in Hall C.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F75"
   },
   {
    "id": "F12",
@@ -232,7 +232,7 @@
    ],
    "statement": "The Larkspur specs are on the shared drive under /eng/larkspur/rev-d.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F77"
   },
   {
    "id": "F20",
@@ -244,7 +244,7 @@
    ],
    "statement": "The Larkspur frame is on Rev D.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F76"
   },
   {
    "id": "F21",
@@ -778,6 +778,170 @@
    "valid_from": 3,
    "superseded_by": null,
    "supersedes": "F15"
+  },
+  {
+   "id": "F65",
+   "key": "adhesive supplier name",
+   "value": "Nordbond Adhesives",
+   "accept": [
+    "nordbond adhesives",
+    "nordbond adhesive supplier"
+   ],
+   "statement": "The new adhesive supplier is Nordbond Adhesives.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F66",
+   "key": "field test site",
+   "value": "Havsborg Quarry",
+   "accept": [
+    "havsborg quarry",
+    "havsborg quarry site"
+   ],
+   "statement": "The field test site is Havsborg Quarry.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F67",
+   "key": "new composites engineer",
+   "value": "Sanna Roeg",
+   "accept": [
+    "sanna roeg",
+    "engineer sanna roeg"
+   ],
+   "statement": "The new composites engineer is Sanna Roeg.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F68",
+   "key": "calibration due date",
+   "value": "11 June",
+   "accept": [
+    "11 june",
+    "june 11",
+    "11th june",
+    "june 11th",
+    "11th of june"
+   ],
+   "statement": "The calibration due date is 11 June.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F69",
+   "key": "torque audit document",
+   "value": "DX-47B",
+   "accept": [
+    "dx-47b",
+    "dx 47b document",
+    "47b"
+   ],
+   "statement": "The torque audit document is DX-47B.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F70",
+   "key": "prototype storage room",
+   "value": "Room 6.21",
+   "accept": [
+    "room 6.21",
+    "storage room 6.21",
+    "6.21"
+   ],
+   "statement": "The prototype storage room is Room 6.21.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F71",
+   "key": "overflow delivery partner",
+   "value": "Fenmark Logistics",
+   "accept": [
+    "fenmark logistics",
+    "fenmark logistics firm"
+   ],
+   "statement": "The overflow delivery partner is Fenmark Logistics.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F72",
+   "key": "battery test bench",
+   "value": "Voltdeck V9",
+   "accept": [
+    "voltdeck v9",
+    "voltdeck v9 bench"
+   ],
+   "statement": "The battery test bench is Voltdeck V9.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F73",
+   "key": "client visit date",
+   "value": "30 July",
+   "accept": [
+    "30 july",
+    "july 30",
+    "30th july",
+    "july 30th",
+    "30th of july"
+   ],
+   "statement": "The client visit date is 30 July.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F74",
+   "key": "spare motor model",
+   "value": "KX-61",
+   "accept": [
+    "kx-61",
+    "kx 61 motor"
+   ],
+   "statement": "The spare motor model is KX-61.",
+   "valid_from": 4,
+   "superseded_by": null
+  },
+  {
+   "id": "F75",
+   "key": "machining building",
+   "value": "Hall B",
+   "accept": [
+    "hall b"
+   ],
+   "statement": "Machining is now in Hall B.",
+   "valid_from": 4,
+   "superseded_by": null,
+   "supersedes": "F11"
+  },
+  {
+   "id": "F76",
+   "key": "current frame revision",
+   "value": "Rev E",
+   "accept": [
+    "rev e"
+   ],
+   "statement": "Current frame revision is Rev E.",
+   "valid_from": 4,
+   "superseded_by": null,
+   "supersedes": "F20"
+  },
+  {
+   "id": "F77",
+   "key": "Larkspur spec folder",
+   "value": "/eng/larkspur/rev-e",
+   "accept": [
+    "/eng/larkspur/rev-e"
+   ],
+   "statement": "Larkspur spec folder is /eng/larkspur/rev-e.",
+   "valid_from": 4,
+   "superseded_by": null,
+   "supersedes": "F19"
   }
  ],
  "preferences": [

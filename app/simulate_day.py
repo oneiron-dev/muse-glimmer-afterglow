@@ -41,6 +41,9 @@ def main():
     ap.add_argument("--day", type=int, required=True)
     ap.add_argument("--date", help="the day's date (default: 27 Oct 2026 + day - 1)")
     ap.add_argument("--endpoint", default=GlimmerClient().endpoint)
+    ap.add_argument("--slot", type=int, default=0,
+                    help="the server slot the chat runs on (default 0, the app's; 1 keeps the app's cached slot 0 "
+                         "warm, and the route and supersede decisions run on slot 1 between the chat calls)")
     ap.add_argument("--reasoning", default="low", choices=["minimal", "low", "medium", "high"])
     ap.add_argument("--temperature", type=float, default=0.0, help="0 = greedy, so a day replays the same")
     ap.add_argument("--decide-supersede", action=argparse.BooleanOptionalAction, default=None,
@@ -55,7 +58,7 @@ def main():
     script_path = paths.worlds_root() / a.world / "days" / str(a.day) / "script.jsonl"
     script = [json.loads(line) for line in script_path.read_text().splitlines() if line.strip()]
     date = a.date or (FIRST_DATE + dt.timedelta(days=a.day - 1)).isoformat()
-    session = DaySession(a.world, a.day, GlimmerClient(a.endpoint), date=date, reasoning=a.reasoning,
+    session = DaySession(a.world, a.day, GlimmerClient(a.endpoint, slot=a.slot), date=date, reasoning=a.reasoning,
                          temperature=a.temperature, decide_supersede=a.decide_supersede,
                          decide_adapter=a.decide_adapter, decide_route=a.decide_route)
     done = {r["content"] for r in session.history() if r["role"] == "user"}
