@@ -125,12 +125,12 @@ never said. Scored with the night's rules (eval/product_abstention.py). Abstenti
 In the real loop the base declines questions about things the person never said ("I don't have that saved in your
 notes"), and so does the night-2b adapter (22-28 of 30), where the night-1 adapter invented an answer ("Your business
 advisor is Dagny Holm"). This loop is a different measure from the forced-answer probes, where every adapter scores 0.
-The product rule is one-sided, so declining more than the base passes (w2 night-2b, 84% against 55%), and exact
-answers are not scored in this form.
+Exact answers are not scored in this form.
 
-Under the two-sided product rule (owner option B: general within 10 points of the base either way, never-told at most
-3 below), w4 night-2b would be kept; w2 night-2d (tool calls fixed) is not, because it declines 16 points more general
-questions than the base and answers 7 never-told questions.
+The rule of record (owner option B, two-sided: general within 10 points of the base either way, never-told at most 3
+below; the pass flags in product-form/ follow it) keeps w4 night-2b and rolls back w2 night-2b, which declines 29
+points more general questions than the base (84% against 55%), and w2 night-2d (tool calls fixed), which declines 16
+points more and answers 7 never-told questions.
 
 ### Where the ±10 band sits against the noise (product-form/night2-paired-200.json, night3/base-rerun-swing.json)
 

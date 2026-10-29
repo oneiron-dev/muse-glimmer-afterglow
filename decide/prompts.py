@@ -38,3 +38,23 @@ def pair_prompt(kind, a, b):
 
 def pair_options(kind):
     return DUP_OPTIONS if kind == "duplicate" else SUP_OPTIONS
+
+
+# Owner design (29 Oct, META-AUTO-REASONING): the one-pass pair decision also offers "ask the user" and "think it
+# through", so Glimmer picks escalation itself in the same pass. The first two options are the pair options above.
+AUTO4_PROMPT_IDS = {"duplicate": "duplicate-auto4-v1", "supersede": "supersede-auto4-v1"}
+AUTO4_ESCALATIONS = {"3": "not sure: ask the user", "4": "not sure yet: think it through first"}
+
+
+def pair_options_auto4(kind):
+    return {**pair_options(kind), **AUTO4_ESCALATIONS}
+
+
+# Variant with one line on when to escalate (the bare form above picked 3 or 4 on 0 of 244 pairs on base).
+AUTO4_HINT_PROMPT_IDS = {"duplicate": "duplicate-auto4-hint-v1", "supersede": "supersede-auto4-hint-v1"}
+AUTO4_HINT = "Reply 1 or 2 only if you are sure; if you are not sure, reply 3 or 4."
+
+
+def pair_prompt_auto4(kind, a, b, hint=False):
+    text = pair_prompt(kind, a, b).replace(options_text(pair_options(kind)), options_text(pair_options_auto4(kind)))
+    return text.replace("\nReply with the number only.", f"\n{AUTO4_HINT} Reply with the number only.") if hint else text

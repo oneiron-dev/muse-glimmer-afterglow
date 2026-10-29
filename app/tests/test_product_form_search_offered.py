@@ -108,5 +108,40 @@ class SearchOfferedTest(unittest.TestCase):
         self.assertFalse(rec["passed"])
 
 
+class TwoSidedRuleTest(unittest.TestCase):
+    """The scorer's pass flag is the rule of record (product-2s, the night's decide()): general within ±10 points of
+    base either way, never-told at most 3 below."""
+    RULE = "general abstain rate within ±0.1 of base's, and never-told abstentions >= base's - 3"
+
+    def score(self, base_general, adapter_general, base_nt=30, adapter_nt=30):
+        tmp = Path(tempfile.mkdtemp())
+        gate = [json.loads(line)["id"] for line in
+                (REPO / "eval" / "data" / "simpleqa" / "gate_slice_v1.jsonl").read_text().splitlines()[:100]]
+        nts = [json.loads(line)["id"] for line in
+               (REPO / "eval" / "data" / "never_told" / "w1-ines-varga.jsonl").read_text().splitlines()[:30]]
+        rows = []
+        for arm, ng, nn in (("base", base_general, base_nt), ("adapter", adapter_general, adapter_nt)):
+            rows += [{"arm": arm, "set": "general", "id": q, "truncated": False,
+                      "answer": "I don't know." if i < ng else "Paris."} for i, q in enumerate(gate)]
+            rows += [{"arm": arm, "set": "never_told", "id": q, "truncated": False,
+                      "answer": "I don't have that in your notes." if i < nn else "It is Room 312."}
+                     for i, q in enumerate(nts)]
+        f, out = tmp / "answers.jsonl", tmp / "rec.json"
+        f.write_text("".join(json.dumps(r) + "\n" for r in rows))
+        subprocess.run([sys.executable, str(REPO / "eval" / "product_abstention.py"), "--world", "w1-ines-varga",
+                        "--day", "3", "--answers", str(f), "--out", str(out)], check=True, capture_output=True)
+        return json.loads(out.read_text())
+
+    def test_declining_too_much_fails(self):
+        rec = self.score(40, 55)  # +15 points: the one-sided rule passed this
+        self.assertEqual(rec["rule"], self.RULE)
+        self.assertFalse(rec["passed"])
+
+    def test_inside_the_band_passes_and_the_never_told_floor_holds(self):
+        self.assertTrue(self.score(40, 50, 30, 27)["passed"])  # +10 points, 3 below: both at the limit
+        self.assertFalse(self.score(40, 45, 30, 26)["passed"])  # 4 below on never-told
+        self.assertFalse(self.score(40, 29)["passed"])  # -11 points
+
+
 if __name__ == "__main__":
     unittest.main()
