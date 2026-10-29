@@ -100,6 +100,36 @@ def read_json(path):
     return json.loads(path.read_text()) if path.exists() else None
 
 
+def unlinked_corrections(world, day, consolidated):
+    """The world's corrections up to `day` that the night trained both ways: no note with the new value links to the
+    old one ("corrects" in the night's outcomes), and a kept note still holds the old value. Matched by the facts'
+    accept terms (eval/scoring.py). [{"key": the new note's key, "old": old value, "new": new value}]."""
+    import sys
+
+    sys.path.insert(0, str(paths.REPO / "eval"))
+    import scoring
+
+    world_doc = read_json(paths.worlds_root() / world / "world.json")
+    if not world_doc or not consolidated:
+        return []
+    facts = {f["id"]: f for f in world_doc["facts"]}
+    linked = {o["id"]: o.get("corrects") for o in consolidated.get("outcomes") or []}
+    items = consolidated.get("items") or []
+
+    def holding(f):
+        accept = scoring.usable_accept(f["accept"], f["value"])
+        return [i for i in items if scoring.score_fact(i.get("full_value") or i["value"], accept, f.get("require_all"))]
+
+    out = []
+    for new in world_doc["facts"]:
+        if not new.get("supersedes") or int(new.get("valid_from") or 1) > int(day):
+            continue
+        new_notes, old_notes = holding(new), holding(facts[new["supersedes"]])
+        if new_notes and old_notes and not any(linked.get(n["id"]) for n in new_notes):
+            out.append({"key": new_notes[0]["key"], "old": facts[new["supersedes"]]["value"], "new": new["value"]})
+    return out
+
+
 def night_results(world, day, night_dir=None):
     """Every check the night of (world, day) has a result for: {name: True | False}, from decision.json's checks,
     the abstention check and the two chat checks (the night's own, else the files added after it ran). night_dir:

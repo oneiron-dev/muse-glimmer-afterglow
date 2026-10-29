@@ -17,7 +17,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from . import paths, snapshot, thoughts
-from .night_checks import abstention_gate, chat_checks, serving_choice
+from .night_checks import abstention_gate, chat_checks, serving_choice, unlinked_corrections
 from .agent import DaySession, load_world, now_iso
 from .llm import GlimmerClient, GlimmerError
 
@@ -134,6 +134,7 @@ class App:
         return {"world": world, "day": day, "persona": persona_name(world), "eval": load("eval.json"),
                 "decision": load("decision.json"), "receipt": load("receipt.json"),
                 "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
+                "unlinked_corrections": unlinked_corrections(world, day, load("consolidated.json")),
                 "steering": steering(world, day, night, load("eval.json")),
                 "chat_checks": chat_checks(night, load("eval.json"), load("decision.json")),
                 "questions": questions, "night_dir": str(night),
