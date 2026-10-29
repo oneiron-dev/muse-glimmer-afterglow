@@ -167,8 +167,13 @@ def run(cmd, log, env=None):
 
 
 def fleet_gpu(goal, limit, remote_cmd, log):
+    threads = os.environ.get("AFTERGLOW_HOST_THREADS")  # a lent box's thread cap: booked, and set for torch and llama.cpp
+    if threads:
+        remote_cmd = (f"export OMP_NUM_THREADS={threads} MKL_NUM_THREADS={threads} LLAMA_ARG_THREADS={threads} "
+                      f"LLAMA_ARG_THREADS_BATCH={threads} TOKENIZERS_PARALLELISM=false; {remote_cmd}")
     cmd = ["fleet", "run", "--who", "meta-night", "--goal", goal, "--need", "cuda,gpu-4090", "--host", HOST["name"],
-           "--mem", HOST["mem"], "--cwd", HOST["repo"], "--", "timeout", "--kill-after=20s", limit, "bash", "-c", remote_cmd]
+           "--mem", HOST["mem"], *(["--threads", threads] if threads else []), "--cwd", HOST["repo"], "--",
+           "timeout", "--kill-after=20s", limit, "bash", "-c", remote_cmd]
     run(cmd, log)
 
 
@@ -204,7 +209,7 @@ class Night:
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
                 "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block,
-                "idk_rows": a.idk_rows}
+                "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -383,6 +388,8 @@ class Night:
             extra_rows.append(str(self.night / "agent-anchors.jsonl"))
         if self.args.idk_rows:
             extra_rows.append(self.args.idk_rows)
+        if self.args.lookup_rows:
+            extra_rows.append(self.args.lookup_rows)
         extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
@@ -587,6 +594,7 @@ def main():
                     "intended action (night/agent_anchor_rows.py; the day server, slot 1)")
     ap.add_argument("--drop-text-acks", action="store_true", help="drop store requests answered in text (night/build_train.py)")
     ap.add_argument("--idk-rows", help="graded IDK rows from night/idk_rows.py rows (base wrong -> I don't know, right -> its answer)")
+    ap.add_argument("--lookup-rows", help="look-it-up rows from night/lookup_rows.py rows (misses -> recall call or 'not sure', hits -> answer)")
     ap.add_argument("--own-note-in-block", action="store_true", help="unknown-key look-alike rows in the notes form hold the "
                     "user's own note for the key (night/unknown_key_rows.py)")
     ap.add_argument("--repeat-forms", nargs="*", default=[], help="FORM:N row weighting in build_train (e.g. agent_remember:3 agent_recall:3)")
