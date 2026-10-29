@@ -286,7 +286,7 @@ class Night:
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
                 "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
                 "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows, "public_anchor_rows": a.public_anchor_rows,
-                "public_anchors": a.public_anchors}
+                "public_anchors": a.public_anchors, "train_seed": a.train_seed}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -522,7 +522,8 @@ class Night:
         r = self.remote
         cmd = (f"set -e; {HOST['python']} night/train_adapter.py --model-dir {HOST['model_dir']} --train {r}/train.jsonl "
                f"--out-dir {r}/adapter --rank {a.rank} --targets attn_mlp --epochs {a.epochs} --lr {a.lr} --save-epochs {a.epochs}"
-               f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}{' --train-header' if a.train_header else ''}; "
+               f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}{' --train-header' if a.train_header else ''}"
+               f"{f' --seed {a.train_seed}' if a.train_seed is not None else ''}; "
                f"LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/{self.adapter_dir()} {r}/adapter.gguf {HOST['model_dir']} {HOST['python']}; "
                f"PYTHONPATH={HOST['llama_dir']}/gguf-py {HOST['python']} night/verify_gguf_lora.py --adapter {r}/adapter/{self.adapter_dir()} "
                f"--gguf {r}/adapter.gguf --base-config {HOST['model_dir']}/config.json --out {r}/gguf-verify.json")
@@ -675,6 +676,8 @@ def main():
     ap.add_argument("--runs", help="runs root (default: AFTERGLOW_RUNS or the main checkout's runs/)")
     ap.add_argument("--rank", type=int, default=16)
     ap.add_argument("--epochs", type=int, default=4)
+    ap.add_argument("--train-seed", type=int, help="train_adapter.py --seed (default: its own, 20261027); a second seed on the same "
+                    "train set measures the run-to-run spread (w4 night 5c2, lead 30 Oct 06:46)")
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--rows-per-fact", type=int, default=12)
     ap.add_argument("--replay-share", type=float, default=0.10)
