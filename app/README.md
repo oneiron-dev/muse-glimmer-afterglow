@@ -50,6 +50,11 @@ the app with `AFTERGLOW_ENDPOINT=http://127.0.0.1:18690 AFTERGLOW_SERVE_STATE=/t
 `runs/` resolves to the main checkout's `runs/` from every git worktree, so the day app and the night job
 share one copy (override with `AFTERGLOW_RUNS`).
 
+Some adapters (w2 d3, d4) give slightly different greedy text on a cached prefix than on a cold one (prompt reuse
+changes the arithmetic order), so `app/serve/check_lora_cache.py` reports cached-vs-uncached equality and does not
+fail on it; a change of scales dropping the cache, and the byte-equal answers on the arms two builds share, stay
+blocking.
+
 ## Serving notes: which update chats, the supersede decision and the route decision
 
 `runs/serving/serving-rule.json` (set by the lead, read at session start, never hard-coded):
