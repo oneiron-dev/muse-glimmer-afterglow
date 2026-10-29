@@ -71,7 +71,7 @@ server run."""
         (wdir / f"answers-{name}.jsonl").write_text("".join(json.dumps(
             {**{k: r[k] for k in ("arm", "set", "id", "answer", "truncated")},
              **dict(zip(("web_search_on", "tools_sha256"), tools_seen(r))),
-             **{k: r[k] for k in ("looked_it_up", "search_query", *SERVER_FIELDS, *DECIDE_FIELDS) if k in r}}) + "\n" for r in rows))
+             **{k: r[k] for k in ("looked_it_up", "search_query", "tool_names", *SERVER_FIELDS, *DECIDE_FIELDS) if k in r}}) + "\n" for r in rows))
 
 
 def server_identity(endpoint, host):
