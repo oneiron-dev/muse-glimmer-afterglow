@@ -102,6 +102,24 @@ class ServingRuleTest(unittest.TestCase):
         self.assertEqual(c["unmeasured"], {"night 1": ["abstention_product_form"]})
         self.assertIn("failed the 'it still calls its tools in chat' check and has no result yet for", c["why"])
 
+    def test_the_serving_line_shows_never_told_as_served_and_what_the_note_check_stopped(self):
+        product = ["abstention_product_form"] + CHECKS[1:]
+        (self.runs / "serving" / "serving-rule.json").write_text(json.dumps({"checks": product, "set": "test"}))
+        self.night(1)
+        f = self.runs / "w" / "1" / "night" / "decision-product-2s.json"
+        doc = {"decision": "keep", "checks": {"abstention_product_form": True},
+               "abstention_product_form": {"arms": {"adapter": {"never_told": {"n": 30, "abstain": 30}}}}}
+        f.write_text(json.dumps(doc))
+        why = serving_choice("w", self.entries[:1])["why"]
+        self.assertTrue(why.endswith("passed every check. Never told: it said 'not in your notes' 30 of 30 times."))
+        doc["never_told_route_off"] = {"adapter": {"n": 30, "abstain": 20, "wrong_person": 10, "made_up": 0}}
+        f.write_text(json.dumps(doc))
+        self.assertIn("30 of 30 times (the note check stopped 10 answers that would have pinned your notes on someone "
+                      "else).", serving_choice("w", self.entries[:1])["why"])
+        doc["never_told_route_off"]["adapter"]["wrong_person"] = 1
+        f.write_text(json.dumps(doc))
+        self.assertIn("stopped 1 answer that would have", serving_choice("w", self.entries[:1])["why"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -152,6 +152,22 @@ def night_results(world, day, night_dir=None):
     return results
 
 
+def never_told_line(night):
+    """"Never told: it said 'not in your notes' 30 of 30 times (the note check stopped 10 answers that would have
+    pinned your notes on someone else)." from the night's product-form decision: the update as served (route decision
+    on), and the wrong-person answers of the route-off control when it ran; None when not measured."""
+    d = read_json(night / "decision-product-2s.json") or read_json(night / "decision.json") or {}
+    served = (((d.get("abstention_product_form") or {}).get("arms") or {}).get("adapter") or {}).get("never_told")
+    if not served or served.get("n") is None:
+        return None
+    line = f"Never told: it said 'not in your notes' {served['abstain']} of {served['n']} times"
+    wrong = ((d.get("never_told_route_off") or {}).get("adapter") or {}).get("wrong_person")
+    if wrong:
+        line += (f" (the note check stopped {wrong} {'answer that' if wrong == 1 else 'answers that'} would have "
+                 f"pinned your notes on someone else)")
+    return line + "."
+
+
 def serving_rule():
     """The checks an update must pass to be served (runs/serving/serving-rule.json); None when no rule is set
     (then the night's own keep decision counts)."""
@@ -192,8 +208,9 @@ def serving_choice(world, entries):
             first = next(iter(failed), None)
             why = (f"{night_label(e).capitalize()}'s update is loaded: it passed every check" +
                    (f"; {first}'s {what(first)}." if first else "."))
-            return {"entry": e, "why": why + variants_note(world, ours, rule), "failed": failed,
-                    "unmeasured": unmeasured}
+            told = never_told_line(paths.runs_root() / world / (e.get("night_dir") or f"{e['day']}/night"))
+            return {"entry": e, "why": why + (f" {told}" if told else "") + variants_note(world, ours, rule),
+                    "failed": failed, "unmeasured": unmeasured}
         failed[night_label(e)] = bad
         if rule and any(k not in results for k in bad):
             unmeasured[night_label(e)] = [k for k in bad if k not in results]
