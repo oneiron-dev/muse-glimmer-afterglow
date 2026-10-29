@@ -169,9 +169,11 @@ def serving_choice(world, entries):
     {"entry": the entry or None, "why": text, "failed": {night label: [check names not passed]},
     "unmeasured": {night label: [the ones of those with no result yet]}}."""
     rule = serving_rule()
-    # latest day first; within a day the night of record before its variants
-    mine = sorted((e for e in entries if e.get("world") == world and e.get("day") is not None),
-                  key=lambda e: (-e["day"], bool(e.get("night_dir")), e.get("night_dir") or ""))
+    # Only a day's night of record (runs/<w>/<d>/night) is served; a night variant (night-3b, night-3-idkc, ...) is
+    # loaded to be read and is served only once it is promoted, which writes it as that day's night of record.
+    # Latest day first.
+    ours = [e for e in entries if e.get("world") == world and e.get("day") is not None]
+    mine = sorted((e for e in ours if not e.get("arm")), key=lambda e: -e["day"])
     failed, unmeasured = {}, {}
 
     def what(label):  # "failed the 'a' check and has no result yet for the 'b' check"
@@ -190,7 +192,8 @@ def serving_choice(world, entries):
             first = next(iter(failed), None)
             why = (f"{night_label(e).capitalize()}'s update is loaded: it passed every check" +
                    (f"; {first}'s {what(first)}." if first else "."))
-            return {"entry": e, "why": why, "failed": failed, "unmeasured": unmeasured}
+            return {"entry": e, "why": why + variants_note(world, ours, rule), "failed": failed,
+                    "unmeasured": unmeasured}
         failed[night_label(e)] = bad
         if rule and any(k not in results for k in bad):
             unmeasured[night_label(e)] = [k for k in bad if k not in results]
@@ -200,7 +203,27 @@ def serving_choice(world, entries):
     last = night_label(mine[0])
     return {"entry": None, "failed": failed, "unmeasured": unmeasured,
             "why": f"No update loaded: {last}'s update {what(last)}" +
-                   (", and no other loaded update passes every check." if len(mine) > 1 else ".")}
+                   (", and no other loaded update passes every check." if len(mine) > 1 else ".") +
+                   variants_note(world, ours, rule)}
+
+
+def variants_note(world, entries, rule):
+    """" Night 3 (night-3-idkc) passes every check but is not served: not promoted (control arm)." for each loaded
+    night variant that passes, with its promotion status from its decision files; "" when none does."""
+    notes = []
+    for e in entries:
+        if not e.get("arm") or not rule:
+            continue
+        results = night_results(world, e["day"], e.get("night_dir"))
+        if any(results.get(k) is not True for k in rule["checks"]):
+            continue
+        night = paths.runs_root() / world / e["night_dir"]
+        promo = next((d.get("promotion") for d in (read_json(night / "decision-product-2s.json"),
+                                                   read_json(night / "decision.json")) if d and d.get("promotion")), {})
+        status = str(promo.get("status") or "not promoted")
+        status = status.removeprefix("passes, ")
+        notes.append(f" {night_label(e).capitalize()} passes every check but is not served: {status}.")
+    return "".join(notes)
 
 
 def name_list(checks):
