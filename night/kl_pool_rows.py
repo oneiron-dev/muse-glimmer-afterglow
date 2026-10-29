@@ -110,20 +110,34 @@ def swapped_questions(rewrites, user_name, public_names, n, rng):
     return qs[:n]
 
 
-def make(root, system, items, lora, want, log):
-    rows, report, kept = [], [], {}
+def make(root, system, items, lora, want, log, rows=None, report=None, on_item=None):
+    """Ask each item until each part has its wanted rows; rows/report carry earlier progress (a resumed run), and
+    on_item(row or None, report line) is called after every question (the cache appends there)."""
+    rows, report = rows or [], report or []
+    kept = {}
+    for x in report:
+        if x["kept"]:
+            kept[x["part"]] = kept.get(x["part"], 0) + 1
+    asked = {x["id"] for x in report}
     for it in items:
+        if it["id"] in asked:
+            continue
         if kept.get(it["part"], 0) >= want.get(it["part"], 10**6):
             continue
         prompt, completion, tokens, ok = generate(root, system, it["question"], lora)
         k, why = keep(it, completion) if ok else (False, "cut or inexact tokens")
-        report.append({"id": it["id"], "part": it["part"], "kept": k, "why": why, "completion": completion[-200:]})
+        line = {"id": it["id"], "part": it["part"], "kept": k, "why": why, "completion": completion[-200:]}
+        report.append(line)
+        row = None
         if k:
             kept[it["part"]] = kept.get(it["part"], 0) + 1
-            rows.append({"item_id": f"kl-{it['id']}", "kind": "kl_anchor", "form": f"kl_{it['part']}", "user": it["question"],
-                         "assistant": completion, "raw": {"prompt": prompt[:-len("<|start|>assistant")],
-                                                          "completion": "<|start|>assistant" + completion, "completion_ids": tokens},
-                         "valid": True})
+            row = {"item_id": f"kl-{it['id']}", "kind": "kl_anchor", "form": f"kl_{it['part']}", "user": it["question"],
+                   "assistant": completion, "raw": {"prompt": prompt[:-len("<|start|>assistant")],
+                                                    "completion": "<|start|>assistant" + completion, "completion_ids": tokens},
+                   "valid": True}
+            rows.append(row)
+        if on_item:
+            on_item(row, line)
         if log and len(report) % 25 == 0:
             print(json.dumps({"asked": len(report), "kept": kept}), flush=True)
     return rows, report
@@ -148,27 +162,41 @@ def main():
     system = system_message(world)
     cands, sha = frozen_candidates()
     cache = Path(args.cache_dir) / f"{args.world}-kl-fixed-{sha[:12]}.jsonl" if args.cache_dir else None
-    if cache and cache.exists():
+    asked_log = cache.with_suffix(".asked.jsonl") if cache else None
+    done = cache.with_suffix(".done") if cache else None
+    if cache and done.exists():  # made once per world, reused every night
         fixed = [json.loads(line) for line in cache.read_text().splitlines() if line.strip()]
-        fixed_report = json.loads(cache.with_suffix(".report.json").read_text())
+        rep = [json.loads(line) for line in asked_log.read_text().splitlines() if line.strip()]
     else:
-        fixed, rep = make(root, system, cands, lora, KEEP, True)
-        fixed_report = {"asked": len(rep), "kept": {p: sum(1 for x in rep if x["kept"] and x["part"] == p) for p in KEEP},
-                        "why": {p: {w: sum(1 for x in rep if x["part"] == p and x["why"] == w) for w in {x["why"] for x in rep if x["part"] == p}}
-                                for p in KEEP}, "candidates_sha256": sha, "detail": rep}
+        prev_rows = [json.loads(line) for line in cache.read_text().splitlines() if line.strip()] if cache and cache.exists() else []
+        prev_rep = [json.loads(line) for line in asked_log.read_text().splitlines() if line.strip()] if asked_log and asked_log.exists() else []
         if cache:
             cache.parent.mkdir(parents=True, exist_ok=True)
-            cache.write_text("".join(json.dumps(r) + "\n" for r in fixed))
-            cache.with_suffix(".report.json").write_text(json.dumps(fixed_report, indent=1) + "\n")
+
+        def on_item(row, line):  # the cache grows row by row, so a cut run resumes where it stopped
+            if not cache:
+                return
+            if row:
+                with open(cache, "a") as f:
+                    f.write(json.dumps(row) + "\n")
+            with open(asked_log, "a") as f:
+                f.write(json.dumps(line) + "\n")
+
+        fixed, rep = make(root, system, cands, lora, KEEP, True, prev_rows, prev_rep, on_item)
+        if done:
+            done.write_text(json.dumps({"candidates_sha256": sha, "asked": len(rep), "rows": len(fixed)}) + "\n")
+    fixed_report = {"asked": len(rep), "kept": {p: sum(1 for x in rep if x["kept"] and x["part"] == p) for p in KEEP},
+                    "why": {p: {w: sum(1 for x in rep if x["part"] == p and x["why"] == w) for w in {x["why"] for x in rep if x["part"] == p}}
+                            for p in KEEP}, "candidates_sha256": sha}
     swapped, sw_report = [], []
     if args.rewrites and not args.fixed_only:
         names = [c["question"][len("Who is "):-1] for c in cands if c["part"] == "people" and c["question"].startswith("Who is ")]
         qs = swapped_questions(args.rewrites, world["persona"]["name"], names, args.swapped, random.Random(f"kl-swap:{args.world}"))
         swapped, sw_report = make(root, system, qs, lora, {}, False)
     Path(args.out).write_text("".join(json.dumps(r) + "\n" for r in fixed + swapped))
-    summary = {"world": args.world, "candidates_sha256": sha, "fixed": {"rows": len(fixed), "kept": fixed_report["kept"], "cached": bool(cache and cache.exists())},
+    summary = {"world": args.world, "candidates_sha256": sha, "fixed": {"rows": len(fixed), "kept": fixed_report["kept"], "complete": bool(done and done.exists())},
                "swapped": {"asked": len(sw_report), "rows": len(swapped)}, "rows": len(fixed) + len(swapped)}
-    Path(args.report).write_text(json.dumps({**summary, "fixed_report": {k: v for k, v in fixed_report.items() if k != "detail"},
+    Path(args.report).write_text(json.dumps({**summary, "fixed_report": fixed_report,
                                              "swapped_detail": sw_report}, indent=1) + "\n")
     print(json.dumps(summary))
 
