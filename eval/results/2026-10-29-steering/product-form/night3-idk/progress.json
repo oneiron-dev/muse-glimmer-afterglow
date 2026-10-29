@@ -1,0 +1,21 @@
+{
+ "general_questions": "1-200",
+ "note": "the full gate slice",
+ "counts": {
+  "night3idkc/never_told": 30,
+  "night3idkc/general": 200,
+  "night3idk/never_told": 30,
+  "night3idk/general": 200,
+  "base/never_told": 30,
+  "base/general": 200
+ },
+ "errors": 0,
+ "elapsed_s": 1628.2,
+ "stopped": null,
+ "server_run_backfill": {
+  "server_run": "mel:2172910 Thu Oct 29 13:59:20 2026",
+  "adapters_loaded_sha256": "9855421a8daae828808bda2f7686fb388d1000351d8da4df2b8e3c862f28a6cf",
+  "rows": 690,
+  "note": "rows asked 14:03-14:29 JST before the guard (PR #84) existed; the server read the same llama-server pid, start time and loaded adapter hash at 14:00 (before) and 14:29 (after the run), so every row is from this run"
+ }
+}

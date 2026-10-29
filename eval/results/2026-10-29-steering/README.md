@@ -202,3 +202,27 @@ A (13:59, adapter set 17 → 15, all at scale 0) the w1 base gave 5 of 10 earlie
 0 of 5 general), with the same request bodies and the same 1,488 prompt tokens as before, so the change is in the
 server run, not the code. Every product-form row now records its server run and loaded adapter set, and an adapter is
 compared only with the base from the same run.
+
+### w1 "I don't know" arms (product-form/night3-idk/)
+
+Two retrained w1 night-3 adapters: idk (wrong answers trained as "I don't know") and idkc (its control). Both are
+read beside a base asked again in the same server run, which declines 94 of 200 general questions and 30 of 30
+never-told ones.
+
+| w1 adapter | general, 200 (95% interval) | never-told (of 30) | two-sided rule |
+|---|---|---|---|
+| night 3 | -4 (-10 to +2) | 22 | fails: never-told |
+| idk | +36 (+29 to +43) | 29 | fails: declines too many |
+| idkc | -9.5 (-15.5 to -3.5) | 28 | passes, at the edge |
+
+The general questions each arm changed, graded with the AA-Omniscience grader of record against the gold targets
+(steering/product_known_split.py; a decline is graded on the base's answer, a new answer on the adapter's):
+
+| w1 adapter | new "I don't know" | base was right (it knew) | base was wrong (true "I don't know") | new answers | right | wrong |
+|---|---|---|---|---|---|---|
+| idk | 75 | 11 | 64 | 3 | 0 | 3 |
+| idkc | 11 | 0 | 11 | 30 | 2 | 28 |
+
+idk nearly removes the wrong-person answers on never-told questions (1 against night 3's 8), and 64 of its 75 new "I
+don't know" answers are on questions base answered wrongly. idkc stays inside the band because it answers 30 more
+questions, 28 of them wrongly; it is a control and is not promoted.
