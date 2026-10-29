@@ -27,6 +27,7 @@ def main():
     ap.add_argument("--day", type=int, required=True)
     ap.add_argument("--from", dest="source", required=True, help="the experiment folder, e.g. night-2b")
     ap.add_argument("--rule", required=True)
+    ap.add_argument("--note", help="what the promoted night is, opening its decision line (kept in receipt.json \"promoted\")")
     ap.add_argument("--runs")
     args = ap.parse_args()
     runs = runs_root(args.runs)
@@ -39,6 +40,9 @@ def main():
         dst.rename(day_dir / f"night-replaced-{stamp}")
     src.rename(dst)
     receipt = json.loads((dst / "receipt.json").read_text())
+    receipt["promoted"] = {"from": args.source, "at": stamp, "rule": args.rule, "note": args.note,
+                           "replaced": f"night-replaced-{stamp}" if (day_dir / f"night-replaced-{stamp}").exists() else None}
+    (dst / "receipt.json").write_text(json.dumps(receipt, indent=1) + "\n")
     pointer_path = runs / args.world / "adapters.json"
     pointer = json.loads(pointer_path.read_text()) if pointer_path.exists() else {"current": None, "history": []}
     host = receipt.get("host", "mel")

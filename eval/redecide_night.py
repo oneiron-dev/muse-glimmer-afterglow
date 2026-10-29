@@ -53,6 +53,9 @@ def main():
     receipt = json.loads((night / "receipt.json").read_text())
     verify = json.loads((night / "gguf-verify.json").read_text())
     d = decide(e, verify, receipt.get("leak_check", {}).get("clean_passed", False), abstention_rule=args.rule)
+    if (receipt.get("promoted") or {}).get("note"):  # a promoted experiment night says what it is (night/promote_night.py)
+        d["why"] = f"{receipt['promoted']['note']}; {d['why']}"
+        d["promoted"] = receipt["promoted"]
     (night / f"decision-{args.rule}.json").write_text(json.dumps(d, indent=1) + "\n")
     record = json.loads((night / "decision.json").read_text())
     entry = {"at": datetime.datetime.now().astimezone().isoformat(timespec="seconds"), "rule": args.rule,
