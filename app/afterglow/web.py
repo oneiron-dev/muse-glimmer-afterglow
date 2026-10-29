@@ -17,7 +17,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from . import paths, snapshot, thoughts
-from .night_checks import abstention_gate, chat_checks, serving_choice
+from .night_checks import abstention_gate, chat_checks, serving_choice, unlinked_corrections
 from .agent import DaySession, load_world, now_iso
 from .llm import GlimmerClient, GlimmerError
 
@@ -53,7 +53,7 @@ def steering(world, day, night, ev):
 
 def record_proposal(world, day, axis, toward, answer):
     """The user's answer to one proposed dial change, in runs/<world>/<day>/night/steering-decisions.json.
-    Nothing is served from it yet: an accepted dial applies from the next server start that can serve it."""
+    An accepted dial applies from the next day's chat on (dials.py accepted_dials)."""
     if answer not in ("accept", "dismiss"):
         raise ValueError("answer must be accept or dismiss")
     night = paths.runs_root() / world / str(int(day)) / "night"
@@ -90,10 +90,11 @@ def worlds_summary(day):
 
 class App:
     def __init__(self, world, day, endpoint, date=None, reasoning="low", restore=True, decide_supersede=None,
-                 decide_adapter=None):
+                 decide_adapter=None, decide_route=None, web_search=None):
         self.client = GlimmerClient(endpoint)
         self.session = DaySession(world, day, self.client, date=date, reasoning=reasoning,
-                                  decide_supersede=decide_supersede, decide_adapter=decide_adapter)
+                                  decide_supersede=decide_supersede, decide_adapter=decide_adapter,
+                                  decide_route=decide_route, web_search=web_search)
         self.lock = threading.Lock()
         self.snapshot_status = {"state": "idle"}
         if restore:
@@ -133,6 +134,7 @@ class App:
         return {"world": world, "day": day, "persona": persona_name(world), "eval": load("eval.json"),
                 "decision": load("decision.json"), "receipt": load("receipt.json"),
                 "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
+                "unlinked_corrections": unlinked_corrections(world, day, load("consolidated.json")),
                 "steering": steering(world, day, night, load("eval.json")),
                 "chat_checks": chat_checks(night, load("eval.json"), load("decision.json")),
                 "questions": questions, "night_dir": str(night),
@@ -151,6 +153,7 @@ class App:
         return {
             "world": s.world, "day": s.day, "date": s.date, "persona": persona.get("name"),
             "serving": s.adapter_choice,  # which update the day agent serves under the serving rule, and why
+            "dials": s.dial_choice,  # the steering dials the user accepted, sent with every request today
             # replies that ended empty and were asked again in the answer channel (agent.py); shown, never hidden
             "answer_channel_retries": {"retried": sum(1 for r in replies if r.get("answer_channel_retry")),
                                        "replies": len(replies)},
@@ -316,9 +319,16 @@ def main():
                     help="force the supersede decision at remember time on or off (default: the serving notes, "
                          "runs/serving/serving-rule.json supersede_decision)")
     ap.add_argument("--decide-adapter", help="the decision adapter's path on the serving box (default: base weights)")
+    ap.add_argument("--web-search", action=argparse.BooleanOptionalAction, default=None,
+                    help="force the search_web tool on or off (default: the serving notes, runs/serving/"
+                         "serving-rule.json web_search; off unless set)")
+    ap.add_argument("--decide-route", action=argparse.BooleanOptionalAction, default=None,
+                    help="force the route decision at recall time on or off (default: the serving notes, "
+                         "runs/serving/serving-rule.json route_decision)")
     a = ap.parse_args()
     Handler.app = App(a.world, a.day, a.endpoint, date=a.date, reasoning=a.reasoning, restore=not a.no_restore,
-                      decide_supersede=a.decide_supersede, decide_adapter=a.decide_adapter)
+                      decide_supersede=a.decide_supersede, decide_adapter=a.decide_adapter,
+                      decide_route=a.decide_route, web_search=a.web_search)
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
     srv.daemon_threads = True
     print(f"Afterglow: http://127.0.0.1:{a.port}  (world {a.world}, day {a.day}, Glimmer at {a.endpoint})", flush=True)

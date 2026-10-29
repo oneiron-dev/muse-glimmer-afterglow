@@ -56,6 +56,8 @@ class GlimmerClient:
         self.adapter_path = adapter_path  # this world's adapter on the server; every other adapter gets scale 0
         self.timeout = timeout
         self._adapters = (0.0, [])
+        # accepted steering dials (dials.py): [{"id", "axis", "toward", "scale", "night"}]; [] sends none
+        self.dials = []
 
     # --- plain HTTP ---
     def get(self, path, timeout=10):
@@ -111,6 +113,18 @@ class GlimmerClient:
         scale = (self.lora_scale if scale is None else scale) or 0.0
         return [{"id": a["id"], "scale": scale if mine and a["id"] == mine["id"] else 0.0} for a in loaded]
 
+    def scale_fields(self):
+        """Every per-request scale a chat request carries: "lora" (lora_field) and, when the user accepted a dial,
+        "control_vectors" (each accepted dial at its scale; the server runs every other vector at 0 and clears the
+        slot's cached prompt when the scales change). With no dial accepted there is no control_vectors field."""
+        out = {}
+        lora = self.lora_field()
+        if lora:
+            out["lora"] = lora
+        if self.dials:
+            out["control_vectors"] = [{"id": d["id"], "scale": d["scale"]} for d in self.dials]
+        return out
+
     def request_body(self, messages, tools=None, *, reasoning="low", max_tokens=1024, temperature=0.3,
                      stream=True, n_predict=None, cache_prompt=True):
         body = {"model": ALIAS, "messages": messages, "id_slot": self.slot, "temperature": temperature,
@@ -123,9 +137,7 @@ class GlimmerClient:
         if n_predict is not None:
             body["n_predict"] = n_predict
             body["max_tokens"] = n_predict
-        lora = self.lora_field()
-        if lora:
-            body["lora"] = lora
+        body.update(self.scale_fields())
         return body
 
     # --- streaming chat ---
@@ -216,9 +228,7 @@ class GlimmerClient:
         prompt = rendered.removesuffix("<|start|>assistant") + "<|start|>assistant to=user<|message|>"
         req = {"prompt": prompt, "n_predict": max_tokens, "temperature": temperature, "id_slot": self.slot,
                "cache_prompt": True}
-        lora = self.lora_field()
-        if lora:
-            req["lora"] = lora
+        req.update(self.scale_fields())
         t0 = time.time()
         # The trace proxy records this /completion (it records chat calls only) with the reason.
         r = self.post("/completion", req, timeout=self.timeout,

@@ -1,0 +1,18 @@
+{"turn": 1, "role": "user", "content": "Morning! While I grab coffee, please note we moved our glue orders to Nordbond Adhesives, and the outdoor trial is out at Havsborg Quarry. Can you track both for me?", "facts": ["F65", "F66"]}
+{"turn": 2, "role": "user", "content": "Sanna Roeg has joined as engineer handling composites, so please share the layup notes with her. Also the equipment needs recalibration by 11 June or we will slip. Thank you!", "facts": ["F67", "F68"]}
+{"turn": 3, "role": "user", "content": "One last thing before lunch — please pull the file for the torque audit, it's DX-47B, and double-check the sign-offs for me?", "facts": ["F69"]}
+{"turn": 4, "role": "user", "content": "Could you check if prototypes are locked up in Room 6.21? And if orders surge, Fenmark Logistics can cover the extra deliveries for us.", "facts": ["F70", "F71"]}
+{"turn": 5, "role": "user", "content": "Which courier is booked for the frame shipment to the client this week?", "facts": [], "question": true}
+{"turn": 6, "role": "user", "content": "A bit long for me — just the value next time, please.", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "correction", "refers_to_turn": 5}}
+{"turn": 7, "role": "user", "content": "I left the batteries on the Voltdeck V9 for testing this morning, and we're showing the clients around on 30 July so I want everything tidy.", "facts": ["F72", "F73"]}
+{"turn": 8, "role": "user", "content": "If the quad on stand two has trouble, please use a KX-61 from spares, we keep a few available for replacements.", "facts": ["F74"]}
+{"turn": 9, "role": "user", "content": "can you remind me what the conference city is?", "facts": [], "question": true}
+{"turn": 10, "role": "user", "content": "can you remind me who the safety officer is?", "facts": [], "question": true}
+{"turn": 11, "role": "user", "content": "Can you email the client contact about our purchase-order approval limit?", "facts": [], "question": true}
+{"turn": 12, "role": "user", "content": "Please check with me before contacting the client, thanks!", "facts": [], "feedback": {"axis": "asks_first", "toward": "asks before acting", "polarity": "correction", "refers_to_turn": 11}}
+{"turn": 13, "role": "user", "content": "heads up, machining building is now Hall B", "facts": ["F75"], "supersedes": ["F11"]}
+{"turn": 14, "role": "user", "content": "change of plan: current frame revision is now Rev E", "facts": ["F76"], "supersedes": ["F20"]}
+{"turn": 15, "role": "user", "content": "heads up, Larkspur spec folder is now /eng/larkspur/rev-e", "facts": ["F77"], "supersedes": ["F19"]}
+{"turn": 16, "role": "user", "content": "can you remind me what the purchase-order approval limit is?", "facts": [], "question": true}
+{"turn": 17, "role": "user", "content": "What time does the train with the carbon tubes arrive tomorrow?", "facts": [], "question": true}
+{"turn": 18, "role": "user", "content": "Perfect, thanks — short and direct like that is great.", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "approval", "refers_to_turn": 17}}

@@ -37,7 +37,6 @@ import uuid
 
 from . import paths
 from .llm import HOSTS, GlimmerClient, GlimmerError
-from .tools import TOOL_SCHEMAS
 
 JST = dt.timezone(dt.timedelta(hours=9))
 SERVE_STATE = f"{HOSTS['root']}/serve/current.json"
@@ -93,6 +92,8 @@ def identity(client, reasoning):
         "template_sha256": hashlib.sha256((props.get("chat_template") or "").encode()).hexdigest(),
         "template_kwargs": {"reasoning_strength": reasoning},
         "server_started": st.get("started"),
+        # the control vectors the chat sends; absent with no dial, so a snapshot saved before any dial still matches
+        **({"dials": [{"id": d["id"], "scale": d["scale"]} for d in client.dials]} if client.dials else {}),
     }
 
 
@@ -116,7 +117,7 @@ def render_prefix(session, messages):
     """The prompt text of `messages` exactly as the chat template renders it ahead of the next message."""
     mark = f"afterglow-prefix-mark-{uuid.uuid4().hex}"
     r = session.client.post("/apply-template", {
-        "messages": messages + [{"role": "user", "content": mark}], "tools": TOOL_SCHEMAS,
+        "messages": messages + [{"role": "user", "content": mark}], "tools": session.tool_schemas,
         "chat_template_kwargs": {"reasoning_strength": session.reasoning}})
     prompt = r["prompt"]
     at = prompt.find(mark)
@@ -140,10 +141,7 @@ def prefill(session, messages, erase=False, n_tokens=None):
     if erase:
         client.slot_action("erase")
     prompt = render_prefix(session, messages) if n_tokens is None else prefix_tokens(session, messages)[:n_tokens]
-    body = {"prompt": prompt, "n_predict": 0, "id_slot": client.slot, "cache_prompt": True}
-    lora = client.lora_field()
-    if lora:
-        body["lora"] = lora
+    body = {"prompt": prompt, "n_predict": 0, "id_slot": client.slot, "cache_prompt": True, **client.scale_fields()}
     return client.post("/completion", body).get("timings") or {}
 
 
@@ -177,7 +175,7 @@ def rewarm(session, max_bytes=MAX_SNAPSHOT_BYTES):
     meta = {"world": session.world, "slot": client.slot, "filename": fname, "saved_at": now_iso(),
             "n_tokens": r.get("n_saved"), "prefix_tokens": n_total, "bytes": r.get("n_written"), "max_bytes": max_bytes,
             "save_ms": (r.get("timings") or {}).get("save_ms"), "save_wall_s": round(time.time() - t0, 3),
-            "identity": ident, "prefix_sha256": sha256_json({"messages": prefix, "tools": TOOL_SCHEMAS}),
+            "identity": ident, "prefix_sha256": sha256_json({"messages": prefix, "tools": session.tool_schemas}),
             "prefill_ms": timings.get("prompt_ms")}
     meta_path(session.world).write_text(json.dumps(meta, indent=1))
     return meta
@@ -190,7 +188,7 @@ def check(session):
         return None, ["no snapshot"]
     meta = json.loads(p.read_text())
     reasons = [f"{k} differs" for k in compare(meta["identity"], identity(session.client, session.reasoning))]
-    if sha256_json({"messages": session.prefix_messages(), "tools": TOOL_SCHEMAS}) != meta["prefix_sha256"]:
+    if sha256_json({"messages": session.prefix_messages(), "tools": session.tool_schemas}) != meta["prefix_sha256"]:
         reasons.append("prefix differs")
     return meta, reasons
 
@@ -204,12 +202,12 @@ def start(session):
         meta = rewarm(session)
         report.update(kind="rewarmed", prefix_tokens=meta["n_tokens"], prefix_ms=meta["prefill_ms"])
     else:
-        # llama-server drops a slot's cached prompt when a request's adapter scales differ from the slot's
+        # llama-server drops a slot's cached prompt when a request's adapter or dial scales differ from the slot's
         # last ones, and a restore does not set them. So the slot takes this world's scales first.
-        lora = session.client.lora_field()
-        if lora:
+        scales = session.client.scale_fields()
+        if scales:
             session.client.post("/completion", {"prompt": "<|start|>", "n_predict": 0, "id_slot": session.client.slot,
-                                                "cache_prompt": True, "lora": lora})
+                                                "cache_prompt": True, **scales})
         r = session.client.slot_action("restore", meta["filename"])
         if not r.get("n_restored"):
             raise GlimmerError(f"slot restore of {meta['filename']} restored nothing: {r}")

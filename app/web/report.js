@@ -66,6 +66,17 @@ function staleLine(ev, rolledBack) {
   p.hidden = false;
 }
 
+function staleCause(unlinked) {
+  // Why old values came back: corrections the day never linked to the note they replace, so the night trained both
+  // values (web.py unlinked_corrections, from the night's own outcomes and the world's corrections).
+  const p = $("stale-cause");
+  if (!unlinked || !unlinked.length) return;
+  const n = unlinked.length;
+  p.replaceChildren(`${n} correction${n > 1 ? "s were" : " was"} never linked to the note ${n > 1 ? "they replace" : "it replaces"}, so both values were learned: `,
+    ...unlinked.flatMap((u, i) => [i ? "; " : "", el("strong", null, pretty(u.key)), ` (${u.old} and ${u.new})`]), ".");
+  p.hidden = false;
+}
+
 function lead(ev, facts, rolledBack) {
   const fl = (ev.learned && ev.learned.facts_learned) || {};
   const n = facts.length;
@@ -154,7 +165,11 @@ function chose(cons) {
     li.append(el("span", "what", what), body);
     list.append(li);
   };
-  for (const d of dropped) {
+  // the day's own links ("you changed it") first, then the corrections the night found itself (consolidated.json
+  // treated_as_correction_by_night: linked_by "readout" at p >= 0.9, "readout (a)" at p >= 0.6 with the same value
+  // shape and a change word in the day's wording, or "consolidation rule")
+  const found = dropped.filter((d) => d.treated_as_correction_by_night);
+  for (const d of dropped.filter((d) => !d.treated_as_correction_by_night)) {
     const newer = byId[d.superseded_by];
     row("Dropped", el("span", "old", label(d.id)), newer ? `: you changed it to ${newer.value}.` : ".");
   }
@@ -162,6 +177,15 @@ function chose(cons) {
   for (const p of overruled) {
     row("Kept apart", `The model proposed merging ${label(p.id)} with ${label(p.model_proposed_merge_with)}. `,
       `They stay separate${p.why ? `: ${p.why}` : ""}.`);
+  }
+  if (found.length) {
+    list.append(el("li", "chose-sub", "The night treated these as corrections"));
+  }
+  for (const d of found) {
+    const newer = byId[d.superseded_by];
+    const how = d.linked_by === "consolidation rule" ? "by its own rule"
+      : `p ${d.p != null ? Number(d.p).toFixed(2) : "?"}${d.change_word ? `, ‘${d.change_word}’` : ""}`;
+    row("Corrected", el("span", "old", label(d.id)), ` → ${newer ? newer.value : "a newer note"} (the night treated this as a correction: ${how}).`);
   }
   const det = $("chose-kept");
   det.querySelector("summary").textContent = `The ${kept.length} facts it trained on`;
@@ -505,6 +529,7 @@ async function boot() {
   verdict(r);
   lead(ev, facts, rolledBack);
   staleLine(ev, rolledBack);
+  staleCause(r.unlinked_corrections);
   chose(r.consolidated);
   grid(facts);
   abstainLine(r.abstention, r.decision);

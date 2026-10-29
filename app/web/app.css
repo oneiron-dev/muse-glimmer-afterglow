@@ -71,6 +71,8 @@ body {
 .weights:empty { display: none; }
 .retries { padding-left: 0.5rem; border-left: 1px solid var(--rule-strong); font-size: 0.85rem; color: var(--ink-soft); }
 .retries:empty { display: none; }
+.dials { padding-left: 0.5rem; border-left: 1px solid var(--rule-strong); font-size: 0.85rem; color: var(--ink-soft); }
+.dials:empty { display: none; }
 .pages { display: flex; gap: 1.1rem; margin-left: 1.25rem; font-size: 0.9rem; }
 .pages a { color: var(--ink-soft); text-decoration: none; padding: 0.15rem 0; border-bottom: 1.5px solid transparent; }
 .pages a:hover { color: var(--ink); }
@@ -127,6 +129,7 @@ body {
 .act { font-size: 0.875rem; color: var(--ink-soft); display: grid; grid-template-columns: 4.6rem 1fr; gap: 0.55rem; align-items: baseline; }
 .act code { font: 0.78rem/1 var(--mono); color: var(--glow-violet); }
 .act .was { color: var(--ink-faint); text-decoration: line-through; }
+.act .decided { font-size: 0.78rem; color: var(--ink-faint); margin-top: 0.1rem; }
 .act.err { color: var(--down); }
 
 .error-line { color: var(--down); font-size: 0.875rem; }

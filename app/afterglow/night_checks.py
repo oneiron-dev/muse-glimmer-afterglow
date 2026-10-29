@@ -18,7 +18,8 @@ CHECK_NAMES = {"leak_check": "no held-out question in the training data",
                "gguf_matches_peft": "the served file matches the trained one", "learned_gate": "it learned enough",
                "forgot_gate": "it kept its general skill", "tool_gate": "no new failures on the eval-form tool questions",
                "content_channel": "its chat replies land in the reply", "tool_calls": "it still calls its tools in chat",
-               "abstention_gate": "it says it does not know about as often as before"}
+               "abstention_gate": "it says it does not know about as often as before",
+               "abstention_product_form": "as the day assistant, it still says it does not know when it should"}
 
 ABSTAIN_RATES = re.compile(r"abstain rate ([\d.]+) -> ([\d.]+)")
 
@@ -100,9 +101,40 @@ def read_json(path):
     return json.loads(path.read_text()) if path.exists() else None
 
 
+def unlinked_corrections(world, day, consolidated):
+    """The world's corrections up to `day` that the night trained both ways: no note with the new value links to the
+    old one ("corrects" in the night's outcomes), and a kept note still holds the old value. Matched by the facts'
+    accept terms (eval/scoring.py). [{"key": the new note's key, "old": old value, "new": new value}]."""
+    import sys
+
+    sys.path.insert(0, str(paths.REPO / "eval"))
+    import scoring
+
+    world_doc = read_json(paths.worlds_root() / world / "world.json")
+    if not world_doc or not consolidated:
+        return []
+    facts = {f["id"]: f for f in world_doc["facts"]}
+    linked = {o["id"]: o.get("corrects") for o in consolidated.get("outcomes") or []}
+    items = consolidated.get("items") or []
+
+    def holding(f):
+        accept = scoring.usable_accept(f["accept"], f["value"])
+        return [i for i in items if scoring.score_fact(i.get("full_value") or i["value"], accept, f.get("require_all"))]
+
+    out = []
+    for new in world_doc["facts"]:
+        if not new.get("supersedes") or int(new.get("valid_from") or 1) > int(day):
+            continue
+        new_notes, old_notes = holding(new), holding(facts[new["supersedes"]])
+        if new_notes and old_notes and not any(linked.get(n["id"]) for n in new_notes):
+            out.append({"key": new_notes[0]["key"], "old": facts[new["supersedes"]]["value"], "new": new["value"]})
+    return out
+
+
 def night_results(world, day, night_dir=None):
     """Every check the night of (world, day) has a result for: {name: True | False}, from decision.json's checks,
-    the abstention check and the two chat checks (the night's own, else the files added after it ran). night_dir:
+    the abstention check, the product-form abstention check (decision-product-2s.json) and the two chat checks (the
+    night's own, else the files added after it ran). night_dir:
     a night variant's folder relative to the world ("2/night-2b"); default "<day>/night"."""
     night = paths.runs_root() / world / (night_dir or f"{day}/night")
     decision = read_json(night / "decision.json") or {}
@@ -110,6 +142,10 @@ def night_results(world, day, night_dir=None):
     abst = abstention_gate(night)
     if abst and abst.get("passed") is not None:
         results.setdefault("abstention_gate", abst["passed"])
+    # the abstention check in the day assistant's own form (owner ruling B, 29 Oct), written after the night ran
+    product = (read_json(night / "decision-product-2s.json") or {}).get("checks") or {}
+    if product.get("abstention_product_form") is not None:
+        results.setdefault("abstention_product_form", product["abstention_product_form"])
     for c in chat_checks(night, read_json(night / "eval.json"), decision):
         if c.get("passed") is not None:
             results.setdefault(c["name"], c["passed"])
@@ -130,12 +166,20 @@ def night_label(e):
 
 def serving_choice(world, entries):
     """Which of a world's loaded updates (serving-manifest entries) the day agent serves, and why in one line:
-    {"entry": the entry or None, "why": text, "failed": {night label: [check names]}}."""
+    {"entry": the entry or None, "why": text, "failed": {night label: [check names not passed]},
+    "unmeasured": {night label: [the ones of those with no result yet]}}."""
     rule = serving_rule()
     # latest day first; within a day the night of record before its variants
     mine = sorted((e for e in entries if e.get("world") == world and e.get("day") is not None),
                   key=lambda e: (-e["day"], bool(e.get("night_dir")), e.get("night_dir") or ""))
-    failed = {}
+    failed, unmeasured = {}, {}
+
+    def what(label):  # "failed the 'a' check and has no result yet for the 'b' check"
+        missing = unmeasured.get(label) or []
+        parts = ([f"failed {name_list([k for k in failed[label] if k not in missing])}"]
+                 if len(missing) < len(failed[label]) else [])
+        return " and ".join(parts + ([f"has no result yet for {name_list(missing)}"] if missing else []))
+
     for e in mine:
         results = night_results(world, e["day"], e.get("night_dir"))
         if rule:
@@ -145,14 +189,17 @@ def serving_choice(world, entries):
         if not bad:
             first = next(iter(failed), None)
             why = (f"{night_label(e).capitalize()}'s update is loaded: it passed every check" +
-                   (f"; {first}'s failed {name_list(failed[first])}." if first else "."))
-            return {"entry": e, "why": why, "failed": failed}
+                   (f"; {first}'s {what(first)}." if first else "."))
+            return {"entry": e, "why": why, "failed": failed, "unmeasured": unmeasured}
         failed[night_label(e)] = bad
+        if rule and any(k not in results for k in bad):
+            unmeasured[night_label(e)] = [k for k in bad if k not in results]
     if not mine:
-        return {"entry": None, "why": "No update loaded: no night has run for this person yet.", "failed": {}}
+        return {"entry": None, "why": "No update loaded: no night has run for this person yet.", "failed": {},
+                "unmeasured": {}}
     last = night_label(mine[0])
-    return {"entry": None, "failed": failed,
-            "why": f"No update loaded: {last}'s update failed {name_list(failed[last])}" +
+    return {"entry": None, "failed": failed, "unmeasured": unmeasured,
+            "why": f"No update loaded: {last}'s update {what(last)}" +
                    (", and no other loaded update passes every check." if len(mine) > 1 else ".")}
 
 
