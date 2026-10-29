@@ -189,6 +189,8 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     truncated = rounds[-1].get("finish_reason") in ("length", "limit")
     if rec.get("route_decisions"):  # the route decision at recall time: which note it picked (none = ask the user)
         tools["route_decisions"] = rec["route_decisions"]
+    # every tool the model called, in order (a search_web call with search off is answered "unknown tool", still listed)
+    tools["tool_names"] = [tc.get("name") for tc in rec.get("tool_calls") or []]
     shutil.rmtree(scratch, ignore_errors=True)
     return ev.get("content") or "", truncated, ev.get("error"), tools, search
 
