@@ -154,6 +154,28 @@ class LocalJsonNotes(NotesStore):
             self._save()
         return applied
 
+    def answer_night_proposal(self, proposal, answer, night_day, day=None):
+        """The user's answer to a link the night proposed but its guard refused (night-links.json "proposed"):
+        "link" applies it as the night would, marked by_user; "keep_both" changes nothing on the notes but stays on
+        the old note (night_links_kept_both), so no later night proposes the pair again. Returns the record."""
+        by_id = {n["id"]: n for n in self.notes}
+        old, new = by_id.get(proposal.get("old_id")), by_id.get(proposal.get("new_id"))
+        if not old or not new:
+            raise KeyError(f"{proposal.get('old_id')} -> {proposal.get('new_id')}: a note is missing")
+        rec = {"by": new["id"], "night_day": night_day, "answer": answer, "at": now_iso(), "day": day}
+        if answer == "link":
+            if old["status"] != "active" or new["status"] != "active":
+                raise ValueError(f"{old['id']} -> {new['id']}: a note is no longer active")
+            old.update(status="superseded", updated_at=now_iso(),
+                       superseded_by_night={"by": new["id"], "night_day": night_day, "by_user": True,
+                                            **{k: proposal.get(k) for k in ("linked_by", "p", "guard", "reason")}})
+        elif answer == "keep_both":
+            old.setdefault("night_links_kept_both", []).append(rec)
+        else:
+            raise ValueError(f"answer must be link or keep_both, not {answer!r}")
+        self._save()
+        return rec
+
     def undo_night_link(self, old_id, day=None):
         """The user's undo of a night's link: the old note is active again, and the undo stays on it
         (night_links_undone: by, night_day, at, day), so the next night sees it and no later start applies it again.

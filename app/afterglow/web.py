@@ -122,6 +122,24 @@ class App:
                                    ensure_ascii=False) + "\n")
         return {"undone": old_id, "link": link}
 
+    def answer_night_proposal(self, old_id, new_id, answer):
+        """The morning report's Link / Keep both on a link the night proposed but did not apply: the answer goes on
+        today's notes (notes.answer_night_proposal) and into runs/<w>/<day>/night-link-answers.jsonl for the night."""
+        with self.lock:
+            s = self.session
+            prev = paths.runs_root() / s.world / str(s.day - 1) / "night" / "night-links.json"
+            doc = json.loads(prev.read_text()) if prev.exists() else {}
+            proposal = next((p for p in doc.get("proposed") or [] if p.get("old_id") == old_id
+                             and p.get("new_id") == new_id), None)
+            if proposal is None:
+                return {"error": f"no proposed link {old_id} -> {new_id} for day {s.day}"}
+            notes = getattr(s.notes, "local", s.notes)
+            rec = notes.answer_night_proposal(proposal, answer, doc.get("day"), day=s.day)
+            with open(s.dir / "night-link-answers.jsonl", "a", encoding="utf-8") as f:
+                f.write(json.dumps({"world": s.world, "old_id": old_id, "new_id": new_id, "question":
+                                    proposal.get("question"), **rec}, ensure_ascii=False) + "\n")
+        return {"answered": answer, "old_id": old_id, "new_id": new_id}
+
     def night_links(self, world, day):
         """The night's links (night-links.json) with what today's notes did with each: applied (with an undo),
         undone, or not applied; None when the night wrote none."""
@@ -137,6 +155,11 @@ class App:
             link["state"] = ("applied" if (old.get("superseded_by_night") or {}).get("by") == link.get("new_id")
                              else "undone" if any(u.get("by") == link.get("new_id") for u in old.get("night_links_undone") or [])
                              else "not applied")
+        for prop in doc.get("proposed") or []:  # refused by the night's guard: the user answers Link / Keep both
+            old = today.get(prop.get("old_id")) or {}
+            linked = (old.get("superseded_by_night") or {}).get("by") == prop.get("new_id")
+            kept = any(k.get("by") == prop.get("new_id") for k in old.get("night_links_kept_both") or [])
+            prop["state"] = "linked by you" if linked else "kept both" if kept else "asked" if today else "proposed"
         return doc
 
     def report(self, world=None, day=None):
@@ -309,6 +332,10 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/snapshot/restore":
                 threading.Thread(target=self.app.restore_snapshot, daemon=True).start()
                 return self._json({"started": True})
+            if path == "/api/night-link/answer":
+                b = self._body()
+                return self._json(self.app.answer_night_proposal(b.get("old_id", ""), b.get("new_id", ""),
+                                                                 b.get("answer", "")))
             if path == "/api/night-link/undo":
                 return self._json(self.app.undo_night_link(self._body().get("old_id", "")))
             if path == "/api/day/end":

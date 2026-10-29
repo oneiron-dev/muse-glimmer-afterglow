@@ -65,6 +65,22 @@ class NightLinksTest(unittest.TestCase):
         n.remember("weekend clerk", "Ola Berg", day=6, turn=1)  # the user replaced N0002 today
         self.assertEqual(n.apply_night_links([LINK, dict(LINK, old_id="N0099")], 5), [])
 
+    def test_a_proposed_link_is_applied_only_on_the_users_link_and_keep_both_is_remembered(self):
+        n = self.notes(self.runs / "w" / "6")
+        prop = dict(LINK, state="proposed", reason="kept both: name -> name",
+                    question='Did "weekend clerk: Mia Holt" replace "front till cover: Lena Frost"?',
+                    guard={"rule": "shape", "passed": False, "why": "name -> name"})
+        self.assertEqual(n.apply_night_links([], 5), [])  # proposals are never applied on their own
+        rec = n.answer_night_proposal(prop, "keep_both", 5, day=6)
+        self.assertEqual((rec["answer"], rec["by"]), ("keep_both", "N0002"))
+        self.assertEqual(len(n.all()), 2)  # both notes stay
+        self.assertEqual(n.notes[0]["night_links_kept_both"][0]["night_day"], 5)
+        n.answer_night_proposal(prop, "link", 5, day=6)
+        self.assertEqual([x["id"] for x in n.all()], ["N0002"])
+        self.assertTrue(n.notes[0]["superseded_by_night"]["by_user"])
+        with self.assertRaises(ValueError):
+            n.answer_night_proposal(prop, "maybe", 5)
+
     def write_night(self, day, applies_from):
         d = self.runs / "w" / str(day) / "night"
         d.mkdir(parents=True)

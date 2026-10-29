@@ -162,6 +162,40 @@ function nightLinkControl(link) {
   return box;
 }
 
+function nightQuestions(nightLinks) {
+  // Links the night proposed but its guard refused (night-links.json "proposed"): the user answers Link (applied
+  // like the night's own, marked as the user's) or Keep both (both notes stay; the night does not ask again).
+  const props = (nightLinks && nightLinks.proposed) || [];
+  if (!props.length) return;
+  const list = $("chose-list");
+  list.append(el("li", "chose-sub", "The night was not sure about these"));
+  for (const p of props) {
+    const li = el("li", "night-question");
+    const status = el("span", "status");
+    const actions = el("div", "actions");
+    const show = (state) => {
+      status.textContent = state === "linked by you" ? "Linked: the old note is replaced in today's notes."
+        : state === "kept both" ? "Kept both." : state === "asked" ? "" : "Answer on the next day's report.";
+      actions.querySelectorAll("button").forEach((b) => (b.hidden = state !== "asked"));
+    };
+    const btn = (label, answer) => {
+      const b = el("button", answer === "link" ? "accept" : "dismiss", label);
+      b.type = "button";
+      b.onclick = async () => {
+        const r = await fetch("/api/night-link/answer", { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ old_id: p.old_id, new_id: p.new_id, answer }) });
+        if (r.ok && !(await r.json()).error) show(answer === "link" ? "linked by you" : "kept both");
+      };
+      return b;
+    };
+    actions.append(btn("Link", "link"), btn("Keep both", "keep_both"), status);
+    li.append(el("span", "what", "Asked"), el("div", null, p.question || `${p.new_key}: ${p.new_value} → ${p.old_key}?`),
+      el("div", "why", p.reason || ""), actions);
+    list.append(li);
+    show(p.state);
+  }
+}
+
 function chose(cons, nightLinks) {
   // runs/<w>/<d>/night/consolidated.json: one outcome per note ({id, key, value, outcome, why}, plus "into" for
   // merged_as_duplicate and "superseded_by" for dropped_as_superseded) and the merges the model proposed that
@@ -566,6 +600,7 @@ async function boot() {
   staleLine(ev, rolledBack);
   staleCause(r.unlinked_corrections);
   chose(r.consolidated, r.night_links);
+  nightQuestions(r.night_links);
   grid(facts);
   abstainLine(r.abstention, r.decision);
   neverToldLine(r.never_told);
