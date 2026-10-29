@@ -132,3 +132,18 @@ Under the two-sided product rule (owner option B: general within 10 points of th
 3 below), w4 night-2b would be kept; w2 night-2d (tool calls fixed) is not, because it declines 16 points more general
 questions than the base and answers 7 never-told questions.
 
+### Where the ±10 band sits against the noise (product-form/night2-paired-200.json, night3/base-rerun-swing.json)
+
+The server is deterministic: the base asked the first 100 general questions again with the same notes gave 400 of 400
+answers byte-equal in the four worlds. The notes in context move the base, though: the w2 base declines 55 of 100
+with its day-2 notes and 42 with its day-3 notes (21 answers flip; -13 points, 95% interval -22 to -5). So each night
+compares the adapter with the base under that day's notes, never with another day's base, and the interval below
+covers only which questions were drawn (paired bootstrap over questions, 10,000 resamples).
+
+The two night-2 adapters on the full 200-question slice, adapter minus base, same notes:
+
+| adapter | general, 200 | general, first 100 | never-told (of 30) | two-sided rule |
+|---|---|---|---|---|
+| w4 night-2b | +5 points (-1 to +11); 93 → 103 | +6 (-2 to +14) | 28 → 28 | kept |
+| w2 night-2d | +13 points (+6.5 to +19.5); 111 → 137 | +16 (+8 to +25) | 30 → 23 | rolled back |
+
