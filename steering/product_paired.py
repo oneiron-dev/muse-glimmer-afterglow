@@ -24,7 +24,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "eval"))
 import simpleqa_gate  # noqa: E402
-from product_abstention import abstained  # noqa: E402
+from product_abstention import abstained, refuse_mixed_tools  # noqa: E402
 
 SEED = 20261014
 RESAMPLES = 10000
@@ -47,9 +47,11 @@ def load(path):
 
 def answers_report(path, first):
     rows = load(path)
-    by = {}
+    full = {}
     for r in rows:
-        by.setdefault((r["set"], r["id"]), {})[r["arm"]] = int(abstained(r))
+        full.setdefault((r["set"], r["id"]), {})[r["arm"]] = r
+    refuse_mixed_tools([(v["base"], v["adapter"]) for v in full.values() if {"base", "adapter"} <= set(v)], path)
+    by = {k: {arm: int(abstained(r)) for arm, r in v.items()} for k, v in full.items()}
     out = {}
     order = [q["id"] for q in simpleqa_gate.gate_items()]
     for s in ("never_told", "general"):
@@ -67,6 +69,7 @@ def swing_report(path_a, path_b):
     def base(p):
         return {(r["set"], r["id"]): r for r in load(p) if r["arm_name"] == "base"}
     a, b = base(path_a), base(path_b)
+    refuse_mixed_tools([(a[k], b[k]) for k in a.keys() & b.keys()], f"{path_a} vs {path_b}")
     out = {}
     for s in ("never_told", "general"):
         keys = sorted(k for k in a.keys() & b.keys() if k[0] == s)

@@ -10,11 +10,15 @@ Each question runs in a fresh session under a scratch runs root (AFTERGLOW_RUNS)
 and the world's notes from --notes-day, so no real day record is touched.
 
 Writes <out>/<world>/answers-<adapter arm>.jsonl in the scorer's shape ({"arm": "base"|"adapter", "set", "id",
-"answer", "truncated"}; the base rows are shared by every adapter arm's file) and <out>/<world>/progress.json.
+"answer", "truncated", "web_search_on", "tools_sha256"}; the base rows are shared by every adapter arm's file) and
+<out>/<world>/progress.json. Web search stays off unless --web-search: a product-form read compares arms that saw the
+same tools, so every row records web_search_on and the tool list's hash, and two arms whose values differ are never
+paired (a row without them is from before web search existed: off).
 Order: never_told before general, and within a set base then each adapter arm, so a deadline cuts general last.
 """
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -40,18 +44,24 @@ def manifest_adapter(real_runs, world, day, path_part=None):
 
 def compose_answer_files(wdir):
     """answers-<arm>.jsonl for every adapter arm in raw.jsonl (all runs so far): the base rows (latest per set and
-    id) plus that arm's rows, in the scorer's shape."""
+    id) plus that arm's rows, in the scorer's shape. Refuses (SystemExit) when an arm's row and the base row it would
+    pair with saw different tools (web search on in one of them, or a different tool list)."""
+    sys.path.insert(0, str(REPO / "eval"))
+    from product_abstention import refuse_mixed_tools, tools_seen
+
     raw = [json.loads(line) for line in (wdir / "raw.jsonl").read_text().splitlines() if line.strip()]
     base = {(r["set"], r["id"]): r for r in raw if r["arm_name"] == "base"}
     for name in {r["arm_name"] for r in raw} - {"base"}:
         mine = {(r["set"], r["id"]): r for r in raw if r["arm_name"] == name}
+        refuse_mixed_tools([(base[k], r) for k, r in mine.items() if k in base], f"{wdir.name} arm {name}")
         rows = [dict(r, arm="base") for k, r in base.items() if k in mine] + [dict(r, arm="adapter") for r in mine.values()]
         (wdir / f"answers-{name}.jsonl").write_text("".join(json.dumps(
-            {k: r[k] for k in ("arm", "set", "id", "answer", "truncated")}) + "\n" for r in rows))
+            {**{k: r[k] for k in ("arm", "set", "id", "answer", "truncated")},
+             **dict(zip(("web_search_on", "tools_sha256"), tools_seen(r)))}) + "\n" for r in rows))
 
 
-def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot):
-    """One fresh day-agent session; returns (answer, truncated, error)."""
+def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot, web_search=False):
+    """One fresh day-agent session; returns (answer, truncated, error, {"web_search_on", "tools_sha256"})."""
     scratch = Path(tempfile.mkdtemp(dir=tmp))
     (scratch / "serving").mkdir(parents=True)
     shutil.copy(manifest, scratch / "serving" / "adapters.json")
@@ -65,7 +75,9 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     from afterglow.agent import DaySession  # paths are read per call, so the scratch root applies
     from afterglow.llm import GlimmerClient
     client = GlimmerClient(endpoint, slot=slot, lora_scale=scale)
-    session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0)
+    session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0, web_search=web_search)
+    tools = {"web_search_on": bool(session.web_search_on),
+             "tools_sha256": hashlib.sha256(json.dumps(session.tool_schemas, sort_keys=True).encode()).hexdigest()}
     if adapter_path:
         session.client.adapter_path = adapter_path
     ev = session.ask(question)
@@ -74,7 +86,7 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     rounds = rec.get("rounds") or [{}]
     truncated = rounds[-1].get("finish_reason") in ("length", "limit")
     shutil.rmtree(scratch, ignore_errors=True)
-    return ev.get("content") or "", truncated, ev.get("error")
+    return ev.get("content") or "", truncated, ev.get("error"), tools
 
 
 def main():
@@ -98,6 +110,8 @@ def main():
     ap.add_argument("--runs", help="the real runs root (default: the main checkout's runs/)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--deadline-s", type=float, default=7200)
+    ap.add_argument("--web-search", action="store_true",
+                    help="offer the day agent's search_web tool (default off: product-form reads compare arms without it)")
     args = ap.parse_args()
     t0 = time.time()
     sys.path.insert(0, str(Path(args.eval_root) / "eval"))
@@ -146,10 +160,10 @@ def main():
             while (out / "PAUSE").exists():  # the serving owner asked for a pause between calls (a restart)
                 time.sleep(5)
             tq = time.time()
-            answer, truncated, error = ask(it["question"], w, notes_file, manifest, args.endpoint, path, scale, args.date,
-                                           tmp, args.slot)
+            answer, truncated, error, tools = ask(it["question"], w, notes_file, manifest, args.endpoint, path, scale,
+                                                  args.date, tmp, args.slot, web_search=args.web_search)
             row = {"arm_name": arm, "set": s, "id": it["id"], "answer": answer, "truncated": truncated, "error": error,
-                   "seconds": round(time.time() - tq, 2)}
+                   "seconds": round(time.time() - tq, 2), **tools}
             rows.setdefault(w, []).append(row)
             (out / w).mkdir(parents=True, exist_ok=True)
             with open(out / w / "raw.jsonl", "a") as f:  # every answer as it lands, so a cut run keeps its work
