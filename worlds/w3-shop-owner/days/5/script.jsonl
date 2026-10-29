@@ -1,0 +1,18 @@
+{"turn": 1, "role": "user", "content": "Can you book the Thursday pickup? The courier usually comes Thursdays at 14:20, so have the boxes ready. Also check with Oscar Brent, he does our frames, whether the blue one is dry.", "facts": ["F92", "F93"]}
+{"turn": 2, "role": "user", "content": "Need to reorder tubes, we get them from Tubeline Rubber House, and seats from Comfisaddle Bikes Ltd. Could you check stock when you get a minute?", "facts": ["F94", "F95"]}
+{"turn": 3, "role": "user", "content": "Last thing, we're low on lube, the Slickchain Gold X we use on services. Add a bottle to the order please.", "facts": ["F96"]}
+{"turn": 4, "role": "user", "content": "Morning, could you wipe down Tall Giraffe before we open? That's what we call the rack up front for displaying bikes. And Green Heron is squeaking again, that's the lift we use for servicing.", "facts": ["F97", "F98"]}
+{"turn": 5, "role": "user", "content": "Who is our bookkeeper, what's their full name?", "facts": [], "question": true}
+{"turn": 6, "role": "user", "content": "That was a bit long, just give me the value next time please.", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "correction", "refers_to_turn": 5}}
+{"turn": 7, "role": "user", "content": "Took the new build out on Cinder Fox Trail at lunch, that's where we do our test rides. Log it under VINTAGE-2030-R, that's the code for the vintage project.", "facts": ["F99", "F100"]}
+{"turn": 8, "role": "user", "content": "Are we packed for Bramley Handmade Fair next weekend? That's the trade show where we're exhibiting, so remind me to check the stand gear.", "facts": ["F101"]}
+{"turn": 9, "role": "user", "content": "heads up, rental fleet delivery is now Sundays at 08:00 going forward", "facts": ["F102"], "supersedes": ["F21"]}
+{"turn": 10, "role": "user", "content": "Can you remind me what our partner town event is?", "facts": [], "question": true}
+{"turn": 11, "role": "user", "content": "Could you email Northwind Cycle Parts to confirm our busy season name?", "facts": [], "question": true}
+{"turn": 12, "role": "user", "content": "Please check with me before contacting Northwind Cycle Parts, thanks!", "facts": [], "feedback": {"axis": "asks_first", "toward": "asks before acting", "polarity": "correction", "refers_to_turn": 11}}
+{"turn": 13, "role": "user", "content": "change of plan: we're using Front Room 4 for overflow stock room now", "facts": ["F103"], "supersedes": ["F28"]}
+{"turn": 14, "role": "user", "content": "Can you remind me who our business advisor is?", "facts": [], "question": true}
+{"turn": 15, "role": "user", "content": "quick update, our new weekend clerk is Mia Holt starting now", "facts": ["F104"], "supersedes": ["F05"]}
+{"turn": 16, "role": "user", "content": "Can you remind me which company is our tire supplier?", "facts": [], "question": true}
+{"turn": 17, "role": "user", "content": "What's the workshop phone extension?", "facts": [], "question": true}
+{"turn": 18, "role": "user", "content": "Perfect, thanks — short and direct is great.", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "approval", "refers_to_turn": 17}}
