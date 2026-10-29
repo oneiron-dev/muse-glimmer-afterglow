@@ -88,7 +88,8 @@ def next_id(prefix, items):
 class ToolBox:
     """Runs one tool call. Returns (result_dict, notes_written)."""
 
-    def __init__(self, notes, world_state, day=None, decide_supersede=None):
+    def __init__(self, notes, world_state, day=None, decide_supersede=None, decide_route=None, web_search=None,
+                 web_cap=None):
         self.notes = notes
         self.world = world_state
         self.day = day
@@ -97,6 +98,31 @@ class ToolBox:
         # bars). With no note, both stay and the night's consolidation sees the pair.
         self.decide_supersede = decide_supersede
         self.decisions = []  # every supersede decision this session, for the day log
+        # decide_route(question) -> {"note": the active note that answers it or None, "ask", "look_up", "decided"}:
+        # at recall time, which note answers the user's question (agent.py). ask = none does: the agent asks the user.
+        self.decide_route = decide_route
+        self.question = None  # the user's words this turn (agent.py sets it); the route decision reads them
+        self.route_decisions = []  # one per turn that recalls, for the day log
+        self._routed = None  # (turn, decision): a second recall in the same turn reuses the decision
+        # web_search(query) -> {"provider", "results": [{"title", "url", "snippet"}], "latency_ms", "cost_usd"}: the
+        # search_web tool (web_search.py, connector.web.search), None when it is off; web_cap: its spend cap
+        self.web_search = web_search
+        self.web_cap = web_cap
+        self.web_searches = []  # every search this session: query, results, provider, latency, cost, for the day log
+
+    def route(self, turn):
+        """The turn's route decision, made once per turn; a failed call is logged and the recall search answers."""
+        if self._routed and self._routed[0] == turn:
+            return self._routed[1]
+        try:
+            d = self.decide_route(self.question)
+        except Exception as e:  # the server or the adapter is missing: never fails the turn
+            d = {"note": None, "ask": False, "look_up": True, "error": f"{type(e).__name__}: {e}"}
+        self._routed = (turn, d)
+        self.route_decisions.append({"turn": turn, "question": self.question, "note": d["note"] and d["note"]["id"],
+                                     "ask": d["ask"], **(d.get("decided") or {}),
+                                     **({"error": d["error"]} if d.get("error") else {})})
+        return d
 
     def run(self, name, args, turn=None):
         try:
@@ -127,9 +153,35 @@ class ToolBox:
                     out["note"] = "already saved"
                 return out, ([] if r["unchanged"] else [r["note"]["id"]])
             if name == "recall":
-                hits = self.notes.recall(str(args.get("query", "")))
-                return {"notes": [{"key": n["key"], "value": n["value"], "saved": n["updated_at"][:10]}
-                                  for n in hits]}, []
+                shown = lambda hits: [{"key": n["key"], "value": n["value"], "saved": n["updated_at"][:10]} for n in hits]
+                d = self.route(turn) if self.decide_route and self.question else None
+                if d and not d["look_up"]:
+                    if d["note"] is not None:
+                        return {"notes": shown([d["note"]]), "decided": d["decided"]}, []
+                    return {"notes": [], "not_in_notes": "None of your notes answers this. Ask the user; do not guess.",
+                            "decided": d["decided"]}, []
+                out = {"notes": shown(self.notes.recall(str(args.get("query", ""))))}
+                if d:  # below the threshold, or the decision failed: the search answers
+                    out["decided"] = d.get("decided") or {"error": d.get("error")}
+                return out, []
+            if name == "search_web":
+                query = str(args.get("query", "")).strip()
+                if self.web_search is None:
+                    return {"error": "web search is off"}, []
+                if not query:
+                    return {"error": "an empty query"}, []
+                from .web_search import cap_refusal
+
+                refused = cap_refusal(self.web_cap, pending=sum(1 for w in self.web_searches if w["turn"] == turn))
+                if refused:  # not sent, so not counted against the cap
+                    return {"error": refused}, []
+                try:
+                    out = self.web_search(query)
+                except Exception as e:  # never the key: web_search.py errors carry the status only
+                    self.web_searches.append({"turn": turn, "query": query, "error": str(e)})
+                    return {"error": str(e)}, []
+                self.web_searches.append({"turn": turn, "query": query, **out})
+                return {"provider": out["provider"], "results": out["results"]}, []
             st = self.world.state
             if name == "calendar.list_events":
                 ev = sorted((e for e in st["calendar"] if e.get("date") == args.get("date")),

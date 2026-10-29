@@ -18,9 +18,12 @@ import time
 from pathlib import Path
 
 from . import paths
-from .llm import GlimmerClient, world_adapter_choice
+from .dials import accepted_dials
+from .llm import GlimmerClient, GlimmerError, world_adapter_choice
 from .notes import LocalJsonNotes
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
+from .web_search import SEARCH_WEB_SCHEMA, web_search_setting
+from .web_search import connector as search_connector
 
 JST = dt.timezone(dt.timedelta(hours=9))
 MAX_ROUNDS = 8
@@ -28,14 +31,26 @@ LINK_P = 0.9  # a one-pass "replaces" this sure links at once (decide/decider.py
 ASK_AGAIN_P = 0.5  # from here up to LINK_P the decision is asked once more with reasoning on (when switched on)
 
 
-def supersede_setting(day):
-    """The serving notes' setting for the supersede decision at remember time (runs/serving/serving-rule.json
-    "supersede_decision": {"from_day", "link_p", "reasoned", "weights", "evidence"}): (on for this day, link_p,
-    reasoned). Absent: off."""
+def serving_setting(name, day):
+    """One decision's entry in the serving notes (runs/serving/serving-rule.json): ({...} or {}, on for this day)."""
     f = paths.runs_root() / "serving" / "serving-rule.json"
-    conf = (json.loads(f.read_text()).get("supersede_decision") if f.exists() else None) or {}
-    on = conf.get("from_day") is not None and int(day) >= int(conf["from_day"])
+    conf = (json.loads(f.read_text()).get(name) if f.exists() else None) or {}
+    return conf, conf.get("from_day") is not None and int(day) >= int(conf["from_day"])
+
+
+def supersede_setting(day):
+    """The serving notes' setting for the supersede decision at remember time ("supersede_decision": {"from_day",
+    "link_p", "reasoned", "weights", "evidence"}): (on for this day, link_p, reasoned). Absent: off."""
+    conf, on = serving_setting("supersede_decision", day)
     return on, float(conf.get("link_p", LINK_P)), bool(conf.get("reasoned", False))
+
+
+def route_setting(day):
+    """The serving notes' setting for the route decision at recall time ("route_decision": {"from_day", "adapter",
+    "threshold", "evidence"}; adapter = the decision adapter's file name, found by path on the server, none = base
+    weights): (on for this day, adapter file name or None, threshold). Absent: off."""
+    conf, on = serving_setting("route_decision", day)
+    return on, conf.get("adapter"), float(conf.get("threshold", 0.0))
 REASONING_TOKENS = 1024  # the reasoned call's budget (decide/decider.py); reasoning cut there never links
 
 SYSTEM_PROMPT = """You are Afterglow, {who} personal assistant. You run on {owner} own computer.
@@ -85,7 +100,7 @@ def system_message(world_doc):
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
                  notes_backend="local", temperature=0.3, decide_supersede=None, decide_reasoned=None,
-                 decide_adapter=None):
+                 decide_adapter=None, decide_route=None, dials=None, web_search=None):
         self.world, self.day = world, int(day)
         self.temperature = temperature
         self.client = client or GlimmerClient()
@@ -93,6 +108,9 @@ class DaySession:
         self.adapter_choice = world_adapter_choice(world)  # the serving rule: latest update passing every check
         self.adapter = self.adapter_choice["entry"]
         self.client.adapter_path = self.adapter["path"] if self.adapter else None
+        # the steering dials the user accepted on an earlier morning report (dials.py); none = no control vectors sent
+        self.dial_choice = accepted_dials(world, day) if dials is None else {"dials": list(dials), "skipped": []}
+        self.client.dials = self.dial_choice["dials"]
         self.reasoning = reasoning
         self.notes_in_context = notes_in_context
         self.world_doc = load_world(world)
@@ -111,8 +129,17 @@ class DaySession:
         on, self.link_p, reasoned = supersede_setting(self.day)
         self.decide_reasoned = reasoned if decide_reasoned is None else decide_reasoned
         on = on if decide_supersede is None else decide_supersede
+        route_on, route_adapter, self.route_threshold = route_setting(self.day)
+        route_on = route_on if decide_route is None else decide_route
+        # the search_web tool, off unless the serving notes switch it on; off, the tool list is exactly TOOL_SCHEMAS
+        search = web_search_setting()
+        self.web_search_on = search["on"] if web_search is None else web_search
+        self.tool_schemas = TOOL_SCHEMAS + [SEARCH_WEB_SCHEMA] if self.web_search_on else TOOL_SCHEMAS
         self.tools = ToolBox(self.notes, self.world_state, day=self.day,
-                             decide_supersede=self._supersede_decider(decide_adapter) if on else None)
+                             decide_supersede=self._supersede_decider(decide_adapter) if on else None,
+                             decide_route=self._route_decider(route_adapter) if route_on else None,
+                             web_search=search_connector(search) if self.web_search_on else None,
+                             web_cap=search.get("cap"))
         self.daylog_path = self.dir / "daylog.jsonl"
         self.session_path = self.dir / "session.json"
         self.system_message = system_message(self.world_doc)
@@ -157,6 +184,45 @@ class DaySession:
                 elif t["yes"]:
                     note = by_id[best["candidate"]]
             return {"note": note, "decided": decided, "decisions": r["decisions"]}
+
+        return decide
+
+    def _route_decider(self, adapter_file=None):
+        """The route decision at recall time (decide/decider.py route, prompt route-v1): one pass over every active
+        note in store order picks the note that answers the user's question, or none of them (ask the user). The
+        decision adapter (adapter_file, found by path on the server; None = base weights) runs at 1 with every other
+        adapter at 0, on slot 1, so its uncached call never overwrites the user's cached conversation in slot 0.
+        Below the threshold it looks up instead (the recall search). Returns the ToolBox hook."""
+        sys.path.insert(0, str(paths.REPO))
+        from decide.decider import Decider
+
+        name = (self.world_doc.get("persona") or {}).get("name")
+        first = name.split()[0] if name else "the user"  # decide/rows.py: the persona's first name
+        made = []
+
+        def decider():
+            if not made:
+                path = None
+                if adapter_file:
+                    found = [a["path"] for a in self.client.adapters() if Path(a["path"]).name == adapter_file]
+                    if len(found) != 1:
+                        raise GlimmerError(f"route decision adapter {adapter_file}: {len(found)} loaded")
+                    path = found[0]
+                made.append(Decider(self.client.endpoint, adapter_path=path, slot=1, trace="route_decision",
+                                    thresholds={"route": self.route_threshold}))
+            return made[0]
+
+        def decide(question):
+            active = self.notes.all()
+            r = decider().route(first, [{"id": n["id"], "key": n["key"], "value": n["value"]} for n in active],
+                                question)
+            by_id = {n["id"]: n for n in active}
+            decided = {"by": "one-pass decision" if r["path"] == "one_pass" else "looked up (below the threshold)",
+                       "pick": r["pick"], "p": r["p"], "label_mass": r["label_mass"],
+                       "latency_s": round(r["ms"] / 1000, 3), "options": len(active) + 1, "prompt_id": r["prompt_id"],
+                       "adapter": adapter_file or "base"}
+            return {"note": by_id[r["note"]["id"]] if r["note"] else None, "ask": r["ask"],
+                    "look_up": r["path"] != "one_pass", "decided": decided}
 
         return decide
 
@@ -218,13 +284,15 @@ class DaySession:
         final = ""
         retry = None  # why the reply came from the answer channel: empty_reply, repeated_tool_call or max_rounds
         seen_calls = set()
-        n_decisions = len(self.tools.decisions)
+        n_decisions, n_routes = len(self.tools.decisions), len(self.tools.route_decisions)
+        n_searches = len(self.tools.web_searches)
+        self.tools.question = text  # the route decision at recall time reads the user's own words, not the query
         t0 = time.time()
         error = None
         for r in range(MAX_ROUNDS):
             done = None
             try:
-                for ev in self.client.stream_chat(self.messages, TOOL_SCHEMAS, reasoning=self.reasoning,
+                for ev in self.client.stream_chat(self.messages, self.tool_schemas, reasoning=self.reasoning,
                                                   temperature=self.temperature):
                     if ev["type"] == "done":
                         done = ev
@@ -279,7 +347,7 @@ class DaySession:
             # ask again in the answer channel. Counted per turn in the day log and on the day page, never hidden.
             empty = new_msgs and new_msgs[-1]["role"] == "assistant" and not new_msgs[-1].get("tool_calls")
             try:
-                fix = self.client.answer_channel(self.messages[:-1] if empty else self.messages, TOOL_SCHEMAS,
+                fix = self.client.answer_channel(self.messages[:-1] if empty else self.messages, self.tool_schemas,
                                                  reasoning=self.reasoning, temperature=self.temperature, why=retry)
                 final = fix["content"]
                 if empty:
@@ -302,6 +370,12 @@ class DaySession:
                "tok_s": last_t.get("predicted_per_second"), "answer_channel_retry": retry, "error": error}
         if len(self.tools.decisions) > n_decisions:  # the one-pass supersede decisions of this turn, with p and ms
             rec["supersede_decisions"] = self.tools.decisions[n_decisions:]
+        if self.client.dials:  # the control vectors every request of this turn carried
+            rec["dials"] = [{k: d[k] for k in ("id", "axis", "toward", "scale")} for d in self.client.dials]
+        if len(self.tools.web_searches) > n_searches:  # what left the machine this turn: the queries and results
+            rec["web_searches"] = self.tools.web_searches[n_searches:]
+        if len(self.tools.route_decisions) > n_routes:  # the turn's route decision at recall time, with p and ms
+            rec["route_decisions"] = self.tools.route_decisions[n_routes:]
         live = hasattr(self.notes, "witness_turn") and final
         if live:  # push_day skips a turn the live path sent into the same conversation
             rec["witnessed_live"] = self.notes.conversation
