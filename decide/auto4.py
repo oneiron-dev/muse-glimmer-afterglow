@@ -104,7 +104,7 @@ def run(args):
     if args.phase == "reason":
         rows = [r for r in rows if r["id"] in onepass and onepass[r["id"]]["auto4"]["pick"] == THINK]
     if args.phase == "span":
-        rows = [r for r in rows if r["id"] in onepass and onepass[r["id"]]["plain"]["p"] < SPAN_THINK_BELOW]
+        rows = [r for r in rows if r["id"] in onepass and args.span_from <= onepass[r["id"]]["plain"]["p"] < args.span_below]
     print(f"{args.arm} {args.phase}: {len(rows)} rows, {len(done)} done, lora {lora}", flush=True)
     with out.open("a") as f:
         for row in rows:
@@ -172,6 +172,8 @@ def score_arm(onepass, reasons, spans, rows_by_id):
             row["span_end"] = "right" if sp["right"] else "wrong"
             row["span_ms"] += sp["ms"]
             row["span_thought"], row["span_capped"], row["span_flip"] = True, sp["capped"], sp["pick"] != plain["pick"]
+            row["span_fixed"] = row["span_flip"] and sp["right"]
+            row["span_broke"] = row["span_flip"] and not sp["right"]
         else:
             row["span_end"] = "not_run"
         e2e = a4["server_ms"]
@@ -196,6 +198,38 @@ def score_arm(onepass, reasons, spans, rows_by_id):
     return per
 
 
+def margin_gate(onepass, spans, rows_by_id):
+    """Span-02 blend behind a margin gate (top1 - top2 < tau) instead of max p < 0.8, tau fit on the calibration rows
+    only (most right, then fewest thoughts), scored on the other rows. With two labels the margin is 2p - 1, so this
+    is the max-p gate at p < (1 + tau) / 2: span-02's 0.8 is tau 0.6. Only taus whose gated rows all have a thought
+    are tried."""
+    def end(r, tau):
+        plain = r["plain"]
+        if 2 * plain["p"] - 1 >= tau:
+            return plain["right"], False
+        sp = spans.get(r["id"])
+        return (None, True) if sp is None else (sp["right"], True)
+
+    def at(rows, tau):
+        ends = [end(r, tau) for r in rows]
+        if any(e[0] is None for e in ends):
+            return None
+        return {"n": len(rows), "right": sum(e[0] for e in ends), "wrong": sum(not e[0] for e in ends),
+                "thought": sum(e[1] for e in ends)}
+
+    calib = [r for r in onepass if r["split"] == "calibration"]
+    rest = [r for r in onepass if r["split"] != "calibration"]
+    grid = [round(0.05 * i, 2) for i in range(0, 20)]
+    fits = {tau: at(calib, tau) for tau in grid}
+    fits = {tau: f for tau, f in fits.items() if f is not None and at(rest, tau) is not None}
+    if not calib or not fits:
+        return None
+    tau = max(fits, key=lambda t: (fits[t]["right"], -fits[t]["thought"]))
+    return {"tau": tau, "as_max_p": round((1 + tau) / 2, 3), "max_tau_covered": max(fits), "calibration": fits[tau],
+            "other_rows": at(rest, tau), "all": at(onepass, tau),
+            "span02_0.8_other_rows": at(rest, 0.6) if 0.6 in fits else None}
+
+
 def summarize(per):
     picks = {"answer": sum(r["pick4"] not in (ASK, THINK) for r in per), "ask": sum(r["pick4"] == ASK for r in per),
              "think": sum(r["pick4"] == THINK for r in per)}
@@ -213,6 +247,8 @@ def summarize(per):
                  "thought": sum(bool(r.get("span_thought")) for r in per),
                  "thought_capped": sum(bool(r.get("span_capped")) for r in per),
                  "flipped_by_thought": sum(bool(r.get("span_flip")) for r in per),
+                 "flips_wrong_to_right": sum(bool(r.get("span_fixed")) for r in per),
+                 "flips_right_to_wrong": sum(bool(r.get("span_broke")) for r in per),
                  "end_to_end": lat([r["span_ms"] for r in per]),
                  "thought_rows_end_to_end": lat([r["span_ms"] for r in per if r.get("span_thought")])},
         "auto4": {"picks": picks, **end_result([r for r in per if r["end"] != "not_run"]),
@@ -246,6 +282,7 @@ def score(args):
         per = score_arm(onepass, reasons, spans, rows_by_id)
         report["arms"][arm] = {g: summarize([r for r in per if f(r)]) for g, f in groups.items() if any(f(r) for r in per)}
         report["arms"][arm]["escalated_rows"] = [r for r in per if r["pick4"] in (ASK, THINK)]
+        report["arms"][arm]["margin_gate"] = margin_gate(onepass, spans, rows_by_id)
     out = OUT_DIR / "score-auto4.json"
     out.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n")
     print(table(report))
@@ -266,6 +303,12 @@ def table(report):
         lines.append(f"| {arm} | span-02 style: think below p 0.8, average | {s['n']} / 0 / {sp['thought']} (thought) | {sp['right']} | "
                      f"{sp['wrong']} | 0 | 0 | {sp['acc_decided']} | {sp['acc_all']} | "
                      f"{sp['end_to_end']['p50_ms']} / {sp['end_to_end']['p95_ms']} |")
+        mg = groups.get("margin_gate")
+        if mg and mg["all"]:
+            m = mg["all"]
+            lines.append(f"| {arm} | span blend, margin gate tau {mg['tau']} (= p < {mg['as_max_p']}; fit on calibration) | "
+                         f"{m['n']} / 0 / {m['thought']} (thought) | {m['right']} | {m['wrong']} | 0 | 0 | "
+                         f"{round(m['right'] / m['n'], 4)} | {round(m['right'] / m['n'], 4)} | - |")
         k = a4["picks"]
         lines.append(f"| {arm} | 4 options (owner) | {k['answer']} / {k['ask']} / {k['think']} | {a4['right']} | {a4['wrong']} | "
                      f"{a4['asked']} | {a4['undecided']} | {a4['acc_decided']} | {a4['acc_all']} | "
@@ -286,6 +329,8 @@ def main():
     r.add_argument("--phase", choices=["onepass", "reason", "span"], required=True)
     r.add_argument("--slot", type=int, required=True)
     r.add_argument("--reasoning", default="high")
+    r.add_argument("--span-from", type=float, default=0.0, help="span phase: think on plain p in [from, below)")
+    r.add_argument("--span-below", type=float, default=SPAN_THINK_BELOW)
     r.add_argument("--until", help="stop before the next call after this local time, HH:MM")
     r.add_argument("--stop-file")
     s = sub.add_parser("score")
