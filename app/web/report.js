@@ -334,6 +334,14 @@ function abstainLine(abst, decision) {
   p.hidden = false;
 }
 
+function neverToldLine(line) {
+  // As served (route decision on), and what the note check stopped in the route-off control (web.py never_told).
+  const p = $("never-told-line");
+  if (!line) return;
+  p.textContent = line;
+  p.hidden = false;
+}
+
 function numbers(ev, decision, abst, chat) {
   const box = $("numbers");
   box.replaceChildren();
@@ -533,6 +541,7 @@ async function boot() {
   chose(r.consolidated);
   grid(facts);
   abstainLine(r.abstention, r.decision);
+  neverToldLine(r.never_told);
   chatLines(r.chat_checks);
   behaviour(r.steering);
   proposes(r.steering, r.world, r.day);
