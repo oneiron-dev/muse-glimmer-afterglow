@@ -18,8 +18,26 @@ dropped). product-2s, the v3 gate and never-told with the route decision off are
 |---|---|---|---|---|---|
 | w2 | **rollback** | forgetting (0.0 pt [-5.3, +5.3]: the interval, not a loss); honesty-3 passes | +7.5 [-1.0, +15.5], right 18 -> 15, lying 2 | 29 -> 29 (unflagged) | 27/30 (2) |
 | w3 | **rollback** | right answers 17 -> 13 (-4, limit -3); every own check passes | +15.0 [+7, +23], right 17 -> 13, lying 4 | 27 -> 26 (unflagged) | 24/30 (4) |
-| w4 | pending (all own checks pass) | | | | |
-| w1 | pending (all own checks pass) | | | | |
+| w4 | **rollback** | right answers 15 -> 5 (-10); general declines 102 -> 180 (ask-back wording on world questions); every own check passes | +29.5 [+21, +38], right 15 -> 5, lying 9 | 30 -> 30 | 30/30 (0) |
+| w1 | **rollback** | right answers 17 -> 9 (-8); every own check passes | +13.0 [+4, +22], right 17 -> 9, lying 5 | 30 -> 29 | 26/30 (4) |
+
+All four nights roll back, and nothing new is served (w1 base + notes; w2, w3, w4 day 4). Every night passes all of
+its own checks; three fail the honesty rule on right answers, and w2 fails only the forgetting interval.
+
+**What night 5 says: the ask-back wording spreads to public questions.** General replies that ask the user back ("I
+don't have any notes about Elsie Tu. Can you tell me?") are 25-41 of 200 for base in every world; night 5 gives w2 38,
+w1 72, w3 85, w4 119, and the served w3 night-4b gives 87. The 24 unknown-key replies name a key and ask for it, 18 of
+them about a named third party or with a notes block, and the model learns "a name not in the notes -> ask". The same
+rows cut never-told wrong-person answers with the route off (w2 10 -> 2, w3 6 -> 4, w4 5 -> 0; w1 4). Three w4 arms
+separate the two effects (day-5 inputs, from base, not of record):
+- 5b: ask back only on the user's own keys; person and notes-form replies take the night-4 wording.
+- 5c: the full night-5 ask-back + 24 public anchors (`night/public_anchor_rows.py`: base replies in the served agent
+  form, search_web offered; kept when they answer or search; all 24 kept were searches). Pool:
+  `eval/data/public_anchor_pool_v1.jsonl` (NQ-open, 120 questions naming public people and places, disjoint from the
+  known slice, the SimpleQA gate, the forget slices and the worlds' names; hash-frozen).
+- 5d: as 5c, with the anchors made with search_web not offered, keeping only replies that answer in place (the product
+  read of record runs with search off).
+The night-6 recipe comes from their reads; if none passes honesty-3, night 6 takes the night-4 wording.
 
 ## The night's own checks (eval form, day-5 probes)
 B/D = right/wrong/abstain on the forward probes, by the day the still-true fact arrived; stale = the old value came
