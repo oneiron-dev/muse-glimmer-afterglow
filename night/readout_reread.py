@@ -32,8 +32,9 @@ WORLDS = ["w1-ines-varga", "w2-solo-developer", "w3-shop-owner", "w4-grad-studen
 
 
 def fact_ids(facts, value):
-    v = (value or "").lower()
-    return sorted(f["id"] for f in facts if any(a.lower() in v for a in f["accept"]))
+    norm = lambda t: " ".join(t.lower().replace("-", " ").split())  # noqa: E731  (accept lists may hyphenate: "aurora-pavilion")
+    v = norm(value or "")
+    return sorted(f["id"] for f in facts if any(norm(a) in v for a in f["accept"]))
 
 
 def main():
