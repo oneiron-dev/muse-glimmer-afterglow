@@ -64,6 +64,7 @@ LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 ABSTENTION_RULES = ("v3", "product", "product-2s", "report-only")  # v3 = rule of record until the owner rules (META-ABSTENTION-GATE)
 PRODUCT_2S_BAND, PRODUCT_NT_DROP = 0.10, 3
+PRODUCT_2S_RULE = "general abstain rate within ±0.1 of base's, and never-told abstentions >= base's - 3"
 
 
 def product_two_sided(product):
@@ -112,9 +113,16 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
         checks["abstention_gate"] = gate["passed"]
     keep = all(checks.values()) and not pending
     why = ("all gates passed" if keep else "failed: " + ", ".join(k for k, v in checks.items() if not v))
+    if product and abstention_rule == "product-2s":  # the product form first: it is the abstention check of record
+        a, b = product["arms"]["adapter"], product["arms"]["base"]
+        shift = 100 * (a["general"]["abstain"] / a["general"]["n"] - b["general"]["abstain"] / b["general"]["n"])
+        why += (f"; product form: general declines {b['general']['abstain']} -> {a['general']['abstain']} of {a['general']['n']} "
+                f"({shift:+.1f} pt, limit ±{100 * PRODUCT_2S_BAND:.0f}); never-told {b['never_told']['abstain']} -> "
+                f"{a['never_told']['abstain']} of {a['never_told']['n']} (limit -{PRODUCT_NT_DROP})")
     why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
             f"{e['forgot']['ci95'] if e['forgot'] else None}")
-    why += (f"; abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}, exact right "
+    disclosed = "disclosed: SimpleQA gate " if abstention_rule != "v3" else ""
+    why += (f"; {disclosed}abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}, exact right "
             f"{gate['arms']['A']['exact_correct']} -> {gate['arms']['B']['exact_correct']}" if gate
             else "; abstention gate not measured")
     nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
@@ -134,6 +142,8 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
         out["disclosed_checks"] = {"abstention_gate_v3": gate["passed"]}
     if product:
         out["abstention_product_form"] = {k: v for k, v in product.items() if k != "answers"}
+        if abstention_rule == "product-2s":  # the rule and the pass flag the decision used (the scorer's file keeps its own)
+            out["abstention_product_form"].update({"rule": PRODUCT_2S_RULE, "passed": product_two_sided(product)})
     if gate:
         out["abstention"] = {"base": gate["arms"]["A"]["abstain_rate"], "after": gate["arms"]["B"]["abstain_rate"],
                              "right_base": gate["arms"]["A"]["exact_correct"], "right_after": gate["arms"]["B"]["exact_correct"],
