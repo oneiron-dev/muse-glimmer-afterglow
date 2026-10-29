@@ -192,7 +192,7 @@ class Night:
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
-                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms}
+                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -362,7 +362,8 @@ class Night:
         if self.args.unknown_keys > 0:
             run([sys.executable, "night/unknown_key_rows.py", "--consolidated", str(self.night / "consolidated.json"),
                  "--day-text", str(self.run_dir / "daylog.jsonl"), str(self.run_dir / "notes.json"),
-                 "--rows", str(self.args.unknown_keys), "--out", str(self.night / "unknown-keys.jsonl")], log)
+                 "--rows", str(self.args.unknown_keys), "--out", str(self.night / "unknown-keys.jsonl"),
+                 *(["--own-note-in-block"] if self.args.own_note_in_block else [])], log)
             extra_rows.append(str(self.night / "unknown-keys.jsonl"))
         if self.args.self_check and self.args.day >= 2:
             extra_rows.append(str(self.night / "self-check.jsonl"))
@@ -571,6 +572,8 @@ def main():
     ap.add_argument("--agent-anchors", type=int, default=0, help="base replies to day-agent turns, kept when they take the "
                     "intended action (night/agent_anchor_rows.py; the day server, slot 1)")
     ap.add_argument("--drop-text-acks", action="store_true", help="drop store requests answered in text (night/build_train.py)")
+    ap.add_argument("--own-note-in-block", action="store_true", help="unknown-key look-alike rows in the notes form hold the "
+                    "user's own note for the key (night/unknown_key_rows.py)")
     ap.add_argument("--repeat-forms", nargs="*", default=[], help="FORM:N row weighting in build_train (e.g. agent_remember:3 agent_recall:3)")
     ap.add_argument("--train-header", action="store_true", help="train the answer header's recipient too (user channel on the chat endpoint)")
     ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
