@@ -95,10 +95,10 @@ def refuse_mixed_tools(pairs, what):
 
 def abstained(row):
     if row.get("looked_it_up"):  # a search_web call (offered mode): a decline on general, never a right
-        return row["set"] in ("general", "known")  # "not in your notes" on never-told (apart there: a privacy fail)
+        return row["set"] in ("general", "known", "known2")  # "not in your notes" on never-told (apart there: a privacy fail)
     if row.get("truncated"):
         return False
-    if row["set"] in ("general", "known"):  # known = the easier public slice (eval/data/known_slice_v1.jsonl)
+    if row["set"] in ("general", "known", "known2"):  # known, known2 = the easier public slices (eval/data/known_slice_v1/v2)
         return simpleqa_gate.is_abstain(row["answer"])
     return scoring.score_probe({"kind": "never_told"}, row["answer"], False, {})[0]
 

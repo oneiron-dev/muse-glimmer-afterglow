@@ -39,7 +39,7 @@ def main():
         rows = [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
         report["arms"][label] = {s: {arm: count([r for r in rows if r["set"] == s and r["arm"] == arm])
                                      for arm in ("base", "adapter")}
-                                 for s in ("general", "known") if any(r["set"] == s for r in rows)}
+                                 for s in ("general", "known", "known2") if any(r["set"] == s for r in rows)}
     text = json.dumps(report, indent=1)
     if args.out:
         Path(args.out).write_text(text + "\n")

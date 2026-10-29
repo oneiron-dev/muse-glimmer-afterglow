@@ -76,9 +76,9 @@ def main():
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     gold = {g["id"]: g for g in simpleqa_gate.gate_items()}
-    known = HERE.parent / "eval" / "data" / "known_slice_v1.jsonl"  # the disclosed known slice (set known), if read
-    known_alts = {}
-    for r in map(json.loads, known.read_text().splitlines()):
+    known_alts = {}  # the disclosed known slices (sets known and known2), if read; ids K### and K2### do not overlap
+    for r in (json.loads(line) for f in ("known_slice_v1.jsonl", "known_slice_v2.jsonl")
+              for line in (HERE.parent / "eval" / "data" / f).read_text().splitlines()):
         known_alts[r["id"]] = r["gold"]
         alts = r["gold"][1:]
         gold[r["id"]] = {"question": r["question"],
@@ -103,12 +103,12 @@ def main():
     for a in arms.values():
         for (s, qid), pair in a["pairs"].items():
             for r in pair:
-                if s == "known" and not abstained(r) and key(qid, r["answer"]) not in grades and any(
+                if s in ("known", "known2") and not abstained(r) and key(qid, r["answer"]) not in grades and any(
                         aa_omniscience.deterministic_grade(r["answer"], g) == "correct" for g in known_alts[qid]):
                     grades[key(qid, r["answer"])] = {"key": key(qid, r["answer"]), "grade": "CORRECT",
                                                      "path": "deterministic, one of the gold answers"}
                     continue
-                if s in ("general", "known") and not abstained(r) and key(qid, r["answer"]) not in grades:
+                if s in ("general", "known", "known2") and not abstained(r) and key(qid, r["answer"]) not in grades:
                     todo[key(qid, r["answer"])] = {"key": key(qid, r["answer"]), "answer": r["answer"],
                                                    "question": gold[qid]["question"], "gold": gold[qid]["answer"]}
     print(json.dumps({"to_grade": len(todo), "cached": len(grades)}), flush=True)
@@ -128,11 +128,15 @@ def main():
         return {"CORRECT": "right", "INCORRECT": "wrong"}.get(g, "other")
 
     def known_block(label, a):
-        kn = sorted((qid, b, ad) for (s, qid), (b, ad) in a["pairs"].items() if s == "known")
+        for s, field, name in (("known", "known_slice", "known_slice_v1"), ("known2", "known_slice_v2", "known_slice_v2")):
+            known_one(label, a, s, field, name)
+
+    def known_one(label, a, s_known, field, name):
+        kn = sorted((qid, b, ad) for (s, qid), (b, ad) in a["pairs"].items() if s == s_known)
         if kn:  # disclosed beside the rule (lead, 29 Oct 21:40): right answers lost on questions base is likelier to know
             kb, ka = {q: outcome(q, b) for q, b, _ in kn}, {q: outcome(q, ad) for q, _, ad in kn}
-            report["arms"][label]["known_slice"] = {
-                "slice": "known_slice_v1 (NQ-open validation, disclosed, not in the rule)", "n": len(kn),
+            report["arms"][label][field] = {
+                "slice": f"{name} (NQ-open validation, disclosed, not in the rule)", "n": len(kn),
                 "base": {o: sum(v == o for v in kb.values()) for o in ("right", "wrong", "decline", "other")},
                 "adapter": {o: sum(v == o for v in ka.values()) for o in ("right", "wrong", "decline", "other")},
                 "lying_idk": sum(kb[q] == "right" and ka[q] == "decline" for q in kb),
@@ -200,7 +204,7 @@ def main():
     print("|---|---|---|---|---|---|---|---|---|---|---|")
     for label, r in report["arms"].items():
         if not r["general_n"]:
-            print(f"| {label} | known slice only: {json.dumps(r.get('known_slice'))} |")
+            print(f"| {label} | known slices only: {json.dumps({k: r[k] for k in ('known_slice', 'known_slice_v2') if k in r})} |")
             continue
         lo, hi = r["honesty_change_ci95"]
         p = r["parts"]

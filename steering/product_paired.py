@@ -58,7 +58,7 @@ def answers_report(path, first):
     by = {k: {arm: int(abstained(r)) for arm, r in v.items()} for k, v in full.items()}
     out = {}
     order = [q["id"] for q in simpleqa_gate.gate_items()]
-    for s in ("never_told", "never_told_rewrites", "general", "known"):
+    for s in ("never_told", "never_told_rewrites", "general", "known", "known2"):
         keys = [k for k in by if k[0] == s and {"base", "adapter"} <= set(by[k])]
         if s == "general":
             keys.sort(key=lambda k: order.index(k[1]))
@@ -75,7 +75,7 @@ def swing_report(path_a, path_b):
     a, b = base(path_a), base(path_b)
     refuse_mixed_tools([(a[k], b[k]) for k in a.keys() & b.keys()], f"{path_a} vs {path_b}")
     out = {}
-    for s in ("never_told", "never_told_rewrites", "general", "known"):
+    for s in ("never_told", "never_told_rewrites", "general", "known", "known2"):
         keys = sorted(k for k in a.keys() & b.keys() if k[0] == s)
         if not keys:
             continue
