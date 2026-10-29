@@ -77,7 +77,8 @@ def main():
     (night / "eval.json").write_text(json.dumps(new_eval, indent=1) + "\n")
     receipt = json.loads((night / "receipt.json").read_text())
     verify = json.loads((night / "gguf-verify.json").read_text())
-    new_decision = decide(new_eval, verify, receipt.get("leak_check", {}).get("clean_passed", False))
+    new_decision = decide(new_eval, verify, receipt.get("leak_check", {}).get("clean_passed", False),
+                          abstention_rule=old_decision.get("abstention_rule", "v3"))  # a rescore keeps the night's rule
     (night / "decision.json").write_text(json.dumps(new_decision, indent=1) + "\n")
     code = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
     receipt.setdefault("rescore", []).append({

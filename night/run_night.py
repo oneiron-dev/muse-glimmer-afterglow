@@ -62,10 +62,24 @@ GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 
 
-ABSTENTION_RULES = ("v3", "product", "report-only")  # v3 = rule of record until the owner rules (card META-ABSTENTION-GATE)
+ABSTENTION_RULES = ("v3", "product", "product-2s", "report-only")  # v3 = rule of record until the owner rules (META-ABSTENTION-GATE)
+PRODUCT_2S_BAND, PRODUCT_NT_DROP = 0.10, 3
+PRODUCT_2S_RULE = "general abstain rate within ±0.1 of base's, and never-told abstentions >= base's - 3"
 
 
-def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_rule="v3"):
+def product_two_sided(product):
+    """Option B, two-sided: in the day agent's own form, the adapter's general abstain rate within 10 points of the
+    base's (either way) and its never-told abstentions at most 3 below the base's."""
+    a, b = product["arms"]["adapter"], product["arms"]["base"]
+    rate = lambda x: x["general"]["abstain"] / x["general"]["n"]  # noqa: E731
+    return product.get("complete", True) and abs(rate(a) - rate(b)) <= PRODUCT_2S_BAND + 1e-9 \
+        and a["never_told"]["abstain"] >= b["never_told"]["abstain"] - PRODUCT_NT_DROP
+
+
+ABSTENTION_RULE_OF_RECORD = "product-2s"  # owner ruling 29 Oct 11:2x (META-ABSTENTION-GATE = B); v3 stays a disclosed check
+
+
+def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_rule=ABSTENTION_RULE_OF_RECORD):
     """Keep the adapter only if every gate passes: clean data, GGUF = PEFT, learned (B-A interval above 0),
     no loss detected (forgetting interval's lower bound above -5 points), no new tool failure and, when measured,
     abstention kept (SimpleQA gate slice, two-sided: abstain rate within 10 points of the base's and exact-match right
@@ -85,21 +99,30 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     gate = e.get("abstention_gate")
     cv_gate = e.get("abstention_gate_with_control_vector")
     product = e.get("abstention_product_form")
-    if abstention_rule == "product":  # option B: abstention judged in the day agent's own form, no worse than base
-        if not product:
-            raise ValueError("abstention rule 'product' needs eval.json abstention_product_form (eval/product_abstention.py)")
-        checks["abstention_product_form"] = product["passed"]
+    pending = False
+    if abstention_rule in ("product", "product-2s"):  # option B: abstention judged in the day agent's own form
+        if product:
+            checks["abstention_product_form"] = product["passed"] if abstention_rule == "product" else product_two_sided(product)
+        else:  # measured after the night on the day server; until then the night is pending, never kept
+            pending = True
     elif abstention_rule == "report-only":  # option C: abstention reported, never a gate
         pass
     elif gate_with_control_vector and cv_gate:
         checks["abstention_gate_with_control_vector"] = cv_gate["passed"]
     elif gate:
         checks["abstention_gate"] = gate["passed"]
-    keep = all(checks.values())
+    keep = all(checks.values()) and not pending
     why = ("all gates passed" if keep else "failed: " + ", ".join(k for k, v in checks.items() if not v))
+    if product and abstention_rule == "product-2s":  # the product form first: it is the abstention check of record
+        a, b = product["arms"]["adapter"], product["arms"]["base"]
+        shift = 100 * (a["general"]["abstain"] / a["general"]["n"] - b["general"]["abstain"] / b["general"]["n"])
+        why += (f"; product form: general declines {b['general']['abstain']} -> {a['general']['abstain']} of {a['general']['n']} "
+                f"({shift:+.1f} pt, limit ±{100 * PRODUCT_2S_BAND:.0f}); never-told {b['never_told']['abstain']} -> "
+                f"{a['never_told']['abstain']} of {a['never_told']['n']} (limit -{PRODUCT_NT_DROP})")
     why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
             f"{e['forgot']['ci95'] if e['forgot'] else None}")
-    why += (f"; abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}, exact right "
+    disclosed = "disclosed: SimpleQA gate " if abstention_rule != "v3" else ""
+    why += (f"; {disclosed}abstain rate {gate['arms']['A']['abstain_rate']} -> {gate['arms']['B']['abstain_rate']}, exact right "
             f"{gate['arms']['A']['exact_correct']} -> {gate['arms']['B']['exact_correct']}" if gate
             else "; abstention gate not measured")
     nt = e["arms"].get("B", {}).get("by_kind", {}).get("never_told")
@@ -110,9 +133,17 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     if e.get("tool_calls"):
         c = e["tool_calls"]["counts"]
         why += f"; tool calls {c['base']['right']} -> {c['adapter']['right']} of {c['adapter']['n']}"
-    out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks, "abstention_rule": abstention_rule}
+    if pending:
+        why = ("pending: abstention in the product form not measured yet (re-decide with eval/redecide_night.py --rule "
+               f"{abstention_rule} --of-record); " + why)
+    out = {"decision": "pending" if pending and all(checks.values()) else ("keep" if keep else "rollback"), "why": why,
+           "checks": checks, "abstention_rule": abstention_rule}
+    if gate and abstention_rule != "v3":  # the SimpleQA instructed gate, shown beside the decision, never a blocker
+        out["disclosed_checks"] = {"abstention_gate_v3": gate["passed"]}
     if product:
         out["abstention_product_form"] = {k: v for k, v in product.items() if k != "answers"}
+        if abstention_rule == "product-2s":  # the rule and the pass flag the decision used (the scorer's file keeps its own)
+            out["abstention_product_form"].update({"rule": PRODUCT_2S_RULE, "passed": product_two_sided(product)})
     if gate:
         out["abstention"] = {"base": gate["arms"]["A"]["abstain_rate"], "after": gate["arms"]["B"]["abstain_rate"],
                              "right_base": gate["arms"]["A"]["exact_correct"], "right_after": gate["arms"]["B"]["exact_correct"],
@@ -146,8 +177,13 @@ def run(cmd, log, env=None):
 
 
 def fleet_gpu(goal, limit, remote_cmd, log):
+    threads = os.environ.get("AFTERGLOW_HOST_THREADS")  # a lent box's thread cap: booked, and set for torch and llama.cpp
+    if threads:
+        remote_cmd = (f"export OMP_NUM_THREADS={threads} MKL_NUM_THREADS={threads} LLAMA_ARG_THREADS={threads} "
+                      f"LLAMA_ARG_THREADS_BATCH={threads} TOKENIZERS_PARALLELISM=false; {remote_cmd}")
     cmd = ["fleet", "run", "--who", "meta-night", "--goal", goal, "--need", "cuda,gpu-4090", "--host", HOST["name"],
-           "--mem", HOST["mem"], "--cwd", HOST["repo"], "--", "timeout", "--kill-after=20s", limit, "bash", "-c", remote_cmd]
+           "--mem", HOST["mem"], *(["--threads", threads] if threads else []), "--cwd", HOST["repo"], "--",
+           "timeout", "--kill-after=20s", limit, "bash", "-c", remote_cmd]
     run(cmd, log)
 
 
@@ -182,7 +218,8 @@ class Night:
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
-                "drop_text_acks": a.drop_text_acks}
+                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block,
+                "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -352,17 +389,24 @@ class Night:
         if self.args.unknown_keys > 0:
             run([sys.executable, "night/unknown_key_rows.py", "--consolidated", str(self.night / "consolidated.json"),
                  "--day-text", str(self.run_dir / "daylog.jsonl"), str(self.run_dir / "notes.json"),
-                 "--rows", str(self.args.unknown_keys), "--out", str(self.night / "unknown-keys.jsonl")], log)
+                 "--rows", str(self.args.unknown_keys), "--out", str(self.night / "unknown-keys.jsonl"),
+                 *(["--own-note-in-block"] if self.args.own_note_in_block else [])], log)
             extra_rows.append(str(self.night / "unknown-keys.jsonl"))
         if self.args.self_check and self.args.day >= 2:
             extra_rows.append(str(self.night / "self-check.jsonl"))
         if self.args.agent_anchors:
             extra_rows.append(str(self.night / "agent-anchors.jsonl"))
+        if self.args.idk_rows:
+            extra_rows.append(self.args.idk_rows)
+        if self.args.lookup_rows:
+            extra_rows.append(self.args.lookup_rows)
         extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
         if self.args.drop_text_acks:
             extra += ["--drop-text-acks"]
+        if self.args.repeat_forms:
+            extra += ["--repeat-forms", *self.args.repeat_forms]
         if self.args.abstain_share > 0:
             extra += ["--abstain-anchors", str(self.abstain_anchors_path()),
                       *([str(self.abstain_anchors_plain_path())] if self.args.abstain_plain else []),
@@ -559,6 +603,11 @@ def main():
     ap.add_argument("--agent-anchors", type=int, default=0, help="base replies to day-agent turns, kept when they take the "
                     "intended action (night/agent_anchor_rows.py; the day server, slot 1)")
     ap.add_argument("--drop-text-acks", action="store_true", help="drop store requests answered in text (night/build_train.py)")
+    ap.add_argument("--idk-rows", help="graded IDK rows from night/idk_rows.py rows (base wrong -> I don't know, right -> its answer)")
+    ap.add_argument("--lookup-rows", help="look-it-up rows from night/lookup_rows.py rows (misses -> recall call or 'not sure', hits -> answer)")
+    ap.add_argument("--own-note-in-block", action="store_true", help="unknown-key look-alike rows in the notes form hold the "
+                    "user's own note for the key (night/unknown_key_rows.py)")
+    ap.add_argument("--repeat-forms", nargs="*", default=[], help="FORM:N row weighting in build_train (e.g. agent_remember:3 agent_recall:3)")
     ap.add_argument("--train-header", action="store_true", help="train the answer header's recipient too (user channel on the chat endpoint)")
     ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")

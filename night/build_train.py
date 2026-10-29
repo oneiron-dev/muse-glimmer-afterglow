@@ -64,6 +64,7 @@ def main():
     ap.add_argument("--abstain-anchors", nargs="*", default=[], help="base self-distilled answers to SimpleQA anchor-pool questions (one or more forms)")
     ap.add_argument("--abstain-share", type=float, default=0.10, help="abstaining-anchor rows, sized like --replay-share")
     ap.add_argument("--no-rules", action="store_true", help="leave out preference and procedure rows")
+    ap.add_argument("--repeat-forms", nargs="*", default=[], help="FORM:N, rows of that form taken N times (e.g. agent_remember:3)")
     ap.add_argument("--drop-text-acks", action="store_true", help="drop rows where the user asks to log/note/save and the reply "
                     "acknowledges in text (they teach 'saved it' with no remember call)")
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
@@ -84,6 +85,9 @@ def main():
         elif not args.no_rules:
             rows.extend(item_rows)
     rows.extend(r for path in args.extra for r in read_jsonl(path) if r["valid"])
+    for spec in args.repeat_forms:  # e.g. agent_remember:3 -> those rows appear 3 times
+        form, times = spec.split(":")
+        rows += [r for r in rows if r.get("form") == form] * (int(times) - 1)
     dropped_text_acks = []
     if args.drop_text_acks:
         dropped_text_acks = [r for r in rows if not r.get("raw") and is_text_ack(r)]

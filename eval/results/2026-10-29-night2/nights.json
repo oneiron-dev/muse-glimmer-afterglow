@@ -364,6 +364,96 @@
   }
  },
  {
+  "world": "w2-solo-developer",
+  "variant": "2d",
+  "decision": "rollback",
+  "failed": [
+   "abstention_gate"
+  ],
+  "host": "mel",
+  "B": {
+   "still_true_r2": {
+    "right": 94,
+    "wrong": 62,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 87,
+    "wrong": 68,
+    "abstain": 1
+   },
+   "new": {
+    "right": 8,
+    "wrong": 10,
+    "abstain": 0
+   },
+   "stale": [
+    1,
+    18
+   ],
+   "never_told": 0
+  },
+  "D": {
+   "still_true_r2": {
+    "right": 138,
+    "wrong": 18,
+    "abstain": 0
+   },
+   "still_true": {
+    "right": 140,
+    "wrong": 11,
+    "abstain": 5
+   },
+   "new": {
+    "right": 13,
+    "wrong": 4,
+    "abstain": 1
+   },
+   "stale": [
+    0,
+    18
+   ],
+   "never_told": 20
+  },
+  "tools": {
+   "base": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   },
+   "adapter": {
+    "remember": 10,
+    "recall": 10,
+    "n": 20,
+    "right": 20
+   }
+  },
+  "channel": {
+   "content_ok": 30,
+   "content_ok_after_retry": 30,
+   "n": 30
+  },
+  "gate": {
+   "base": 0.59,
+   "after": 0.21,
+   "right_base": 6,
+   "right_after": 4,
+   "n": 200,
+   "slice": "gate_slice_v1",
+   "rule": "abs(after - base) <= 0.10 and right_after >= right_base - 3"
+  },
+  "forgot": {
+   "delta": 0.015,
+   "ci95": [
+    -0.0356,
+    0.0655
+   ],
+   "before": 120,
+   "after": 123
+  }
+ },
+ {
   "world": "w3-shop-owner",
   "variant": "n2",
   "decision": "rollback",

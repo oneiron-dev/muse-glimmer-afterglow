@@ -47,6 +47,7 @@ UNKNOWN_PERSON = ["You haven't told me {name}'s {key}, so I don't know it.",
                   "I don't know {name}'s {key}: you haven't told me.",
                   "You haven't told me {name}'s {key} yet; I don't have that in your notes."]
 UNKNOWN_IN_NOTES = "Your notes don't have it: you haven't told me {what}."
+UNKNOWN_OWN_IN_NOTES = "Your notes don't have {name}'s {key}; they only have your own: {value}."
 NOTES_HEADER = "Notes I keep about {first}:\n"
 
 
@@ -65,6 +66,8 @@ def main():
                                                               "names they mention are never asked as unknown")
     ap.add_argument("--rows", type=int, required=True, help="unknown rows (each also gets one known_pair row)")
     ap.add_argument("--notes-share", type=float, default=0.5, help="share of rows in the notes-in-prompt form")
+    ap.add_argument("--own-note-in-block", action="store_true", help="notes-form look-alike rows hold the user's own note for "
+                    "the asked key (answer: not someone else's)")
     ap.add_argument("--max-core-words", type=int, default=6)
     ap.add_argument("--seed", type=int, default=20261029)
     ap.add_argument("--out", required=True)
@@ -85,6 +88,9 @@ def main():
     names = [f"{a} {b}" for a, b in zip(rng.sample(FIRST, len(FIRST)), rng.sample(LAST, len(LAST)))
              if a.lower() not in text and b.lower() not in text]
     person_keys = sorted({plain_key(i["key"]) for i in doc["items"] if any(t in i["key"].lower() for t in PERSON_KEY_WORDS)})
+    own_by_key = {}
+    for i in doc["items"]:
+        own_by_key.setdefault(plain_key(i["key"]), i)
     rng.shuffle(own_keys)
     rows = []
 
@@ -114,7 +120,14 @@ def main():
         kq = QUESTIONS[t].format(owner="my", key=plain_key(known["key"]))
         ka = f"Your {plain_key(known['key'])} is {known['value']}."
         uid = f"unknown-{n:03d}"
-        if n < n_notes:
+        if n < n_notes and person and args.own_note_in_block and key in own_by_key:
+            # the look-alike case with the notes at hand: the block holds the user's own note for this key, and the
+            # question is about someone else, so the answer must not lend the user's value to them
+            own = own_by_key[key]
+            add(uid, "unknown_in_notes", notes_block(exclude_id=own["id"], include=own) + "\n\n" + q,
+                UNKNOWN_OWN_IN_NOTES.format(name=name, key=key, value=own.get("full_value") or own["value"]))
+            add(f"{uid}-pair", "known_pair_in_notes", notes_block(exclude_id=known["id"], include=known) + "\n\n" + kq, ka)
+        elif n < n_notes:
             add(uid, "unknown_in_notes", notes_block() + "\n\n" + q, UNKNOWN_IN_NOTES.format(what=what))
             add(f"{uid}-pair", "known_pair_in_notes", notes_block(exclude_id=known["id"], include=known) + "\n\n" + kq, ka)
         else:
