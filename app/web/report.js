@@ -66,6 +66,17 @@ function staleLine(ev, rolledBack) {
   p.hidden = false;
 }
 
+function staleCause(unlinked) {
+  // Why old values came back: corrections the day never linked to the note they replace, so the night trained both
+  // values (web.py unlinked_corrections, from the night's own outcomes and the world's corrections).
+  const p = $("stale-cause");
+  if (!unlinked || !unlinked.length) return;
+  const n = unlinked.length;
+  p.replaceChildren(`${n} correction${n > 1 ? "s were" : " was"} never linked to the note ${n > 1 ? "they replace" : "it replaces"}, so both values were learned: `,
+    ...unlinked.flatMap((u, i) => [i ? "; " : "", el("strong", null, pretty(u.key)), ` (${u.old} and ${u.new})`]), ".");
+  p.hidden = false;
+}
+
 function lead(ev, facts, rolledBack) {
   const fl = (ev.learned && ev.learned.facts_learned) || {};
   const n = facts.length;
@@ -505,6 +516,7 @@ async function boot() {
   verdict(r);
   lead(ev, facts, rolledBack);
   staleLine(ev, rolledBack);
+  staleCause(r.unlinked_corrections);
   chose(r.consolidated);
   grid(facts);
   abstainLine(r.abstention, r.decision);
