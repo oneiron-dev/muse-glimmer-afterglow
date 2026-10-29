@@ -122,11 +122,18 @@ def main():
     items += [{**earlier[n["id"]], "reused_from_day": n.get("day")} for n in reused]
     reused_ids = {n["id"] for n in reused}
     to_ask = [n for n in active if n["id"] not in reused_ids]
+    teacher_fallbacks = []  # batches the teacher could not answer: their notes keep the code's default (fact, "key: value.")
     for i in range(0, len(to_ask), BATCH):
         batch = to_ask[i:i + BATCH]
         text = "\n".join(f"{n['id']} | key: {n['key']} | value: {n['value']} | {first} said: \"{turns.get(n.get('turn'), '')}\"" for n in batch)
-        reply, _, _ = teacher_mod.complete(args.teacher, [{"role": "user", "content": PROMPT.format(notes=text, name=name, first=first)}],
-                                           max_tokens=1500, log_path=log_path, purpose=f"consolidate {batch[0]['id']}..{batch[-1]['id']}")
+        reply = ""
+        for max_tokens in (1500, 3000):  # one retry with room when the teacher runs out of tokens; then the code's defaults
+            try:
+                reply, _, _ = teacher_mod.complete(args.teacher, [{"role": "user", "content": PROMPT.format(notes=text, name=name, first=first)}],
+                                                   max_tokens=max_tokens, log_path=log_path, purpose=f"consolidate {batch[0]['id']}..{batch[-1]['id']}")
+                break
+            except teacher_mod.TeacherError as e:
+                teacher_fallbacks.append({"batch": [n["id"] for n in batch], "max_tokens": max_tokens, "error": str(e)[:160]})
         parsed = {m.group(1): m for m in (LINE_RE.match(line) for line in reply.splitlines()) if m}
         for n in batch:
             m = parsed.get(n["id"])
@@ -153,7 +160,7 @@ def main():
             new_item["corrects"] = r["old_value"]
     items = [i for i in items if i["id"] not in gone]
     doc = {"world": args.world, "day": args.day, "user": name, "source": f"notes.json + daylog.jsonl, consolidated by {args.teacher}",
-           "items": items, "overruled_merge_proposals": proposals, "replacements": replaced,
+           "items": items, "overruled_merge_proposals": proposals, "replacements": replaced, "teacher_fallbacks": teacher_fallbacks,
            **({"duplicate_check": dup_log} if dup_log else {}),
            "feedback": feedback, "held_as_feedback": [{"id": n["id"], "key": n["key"], "value": n["value"], "turn": n.get("turn"),
                                                       "outcome": "held_as_feedback", "why": "saved at a style-feedback turn: "
