@@ -275,12 +275,17 @@ def readout_entry(n, r, notes_by_id, change, linked_by):
             "candidates": [{"candidate": d["candidate"], "p_replaces": d["p_replaces"]} for d in ranked]}
 
 
-def link_guard(old_value, new_value, p, runner_up=None):
-    """The night's link guard (GUARD_RULE). runner_up: (note id, p of "replaces", its value) or None (teacher rule)."""
+def link_guard(old_value, new_value, p, runner_up=None, judged_on="full_value", other=None):
+    """The night's link guard (GUARD_RULE). runner_up: (note id, p of "replaces", its value) or None (teacher rule).
+    judged_on names the values the shapes come from (the readout reads full values, the teacher rule the cores); other =
+    (old, new) of the other kind, logged so a shape mismatch between the two is visible (lead 30 Oct 01:16)."""
     from contrast_rows import shape
 
     old_shape, new_shape = shape(old_value), shape(new_value)
-    g = {"rule": GUARD_RULE, "old_shape": old_shape, "new_shape": new_shape, "refused_by": []}
+    g = {"rule": GUARD_RULE, "judged_on": judged_on, "old_shape": old_shape, "new_shape": new_shape, "refused_by": []}
+    if other is not None:
+        g["other_shapes"] = {"of": "value" if judged_on == "full_value" else "full_value",
+                             "old_shape": shape(other[0] or ""), "new_shape": shape(other[1] or "")}
     if old_shape in GUARD_NAME_SHAPES and new_shape in GUARD_NAME_SHAPES:
         g["refused_by"].append("name -> name")
     if runner_up is not None:
@@ -344,7 +349,8 @@ def find_replacements(items, by_id, day, first, teacher, log_path, readout_log=N
                     second = next((d for d in ranked if d["candidate"] != old["id"]), None)
                     notes_by_id = {e["id"]: e for e in earlier_notes}
                     guard = link_guard(old["full_value"], n["full_value"], p_link, second and (
-                        second["candidate"], p_replaces(second), notes_by_id.get(second["candidate"], {}).get("value")))
+                        second["candidate"], p_replaces(second), notes_by_id.get(second["candidate"], {}).get("value")),
+                        judged_on="full_value", other=(old.get("value"), n.get("value")))
                 if readout_log is not None:
                     readout_log[-1]["linked_by"] = linked_by
                     readout_log[-1]["guard"] = guard
@@ -383,7 +389,8 @@ def find_replacements(items, by_id, day, first, teacher, log_path, readout_log=N
             "already replaced" if old["id"] in taken else
             f"value shapes differ ({shape(old['value'])} vs {shape(n['value'])})" if not same_shape else
             "no change word in the clause that states the new value")
-        guard = link_guard(old["value"], n["value"], None) if decision == "superseded" and day >= GUARD_FROM_DAY else None
+        guard = (link_guard(old["value"], n["value"], None, judged_on="value", other=(old["full_value"], n["full_value"]))
+                 if decision == "superseded" and day >= GUARD_FROM_DAY else None)
         if guard is not None and not guard["passed"]:
             decision = "proposed"
         if decision == "superseded":
