@@ -192,7 +192,7 @@ class Night:
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
-                "drop_text_acks": a.drop_text_acks}
+                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -373,6 +373,8 @@ class Night:
             extra += ["--exclude-forms", *self.args.exclude_forms]
         if self.args.drop_text_acks:
             extra += ["--drop-text-acks"]
+        if self.args.repeat_forms:
+            extra += ["--repeat-forms", *self.args.repeat_forms]
         if self.args.abstain_share > 0:
             extra += ["--abstain-anchors", str(self.abstain_anchors_path()),
                       *([str(self.abstain_anchors_plain_path())] if self.args.abstain_plain else []),
@@ -569,6 +571,7 @@ def main():
     ap.add_argument("--agent-anchors", type=int, default=0, help="base replies to day-agent turns, kept when they take the "
                     "intended action (night/agent_anchor_rows.py; the day server, slot 1)")
     ap.add_argument("--drop-text-acks", action="store_true", help="drop store requests answered in text (night/build_train.py)")
+    ap.add_argument("--repeat-forms", nargs="*", default=[], help="FORM:N row weighting in build_train (e.g. agent_remember:3 agent_recall:3)")
     ap.add_argument("--train-header", action="store_true", help="train the answer header's recipient too (user channel on the chat endpoint)")
     ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
