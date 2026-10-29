@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
-"""Build the forgetting slice of record: 180 MMLU-Pro test items + 20 synthetic tool-call items.
+"""Build the forgetting slices of record.
 
+v1: 180 MMLU-Pro test items + 20 synthetic tool-call items (nights 1-5).
+v2: 300 more MMLU-Pro test items, disjoint from v1 (lead, 29 Oct 22:59): from night 6 the forgetting check reads
+v1 + v2 (500 items), so a night that changes nothing no longer fails the -5 point bar on noise (95% interval about
++-3.4 points at night 5's discordance, against +-5.3 on v1 alone).
 MMLU-Pro (TIGER-Lab/MMLU-Pro, MIT) is read at a pinned dataset revision and sampled stratified
 by category with a fixed seed; the tool items come from fixed templates. Output:
-eval/data/forget_slice_v1.jsonl and its manifest. Built once, before any adapter is scored on it.
-Run: uv run --with pyarrow python eval/build_forget_slice.py
+eval/data/forget_slice_<v>.jsonl and its manifest. Each is built once, before any adapter is scored on it.
+Run: uv run --with pyarrow python eval/build_forget_slice.py [--slice v2]
 """
 
+import argparse
 import hashlib
 import json
 import random
@@ -16,10 +21,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 REVISION = "b189ec765aa7ed75c8acfea42df31fdae71f97be"
 URL = f"https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro/resolve/{REVISION}/data/test-00000-of-00001.parquet"
-SEED = 20261014
-N_MMLU = 180
 LETTERS = "ABCDEFGHIJ"
-OUT = ROOT / "eval" / "data" / "forget_slice_v1.jsonl"
+DATA = ROOT / "eval" / "data"
+# seed, MMLU-Pro items, tool items, the slices it must not overlap
+SLICES = {"v1": {"seed": 20261014, "n_mmlu": 180, "tools": True, "disjoint_from": []},
+          "v2": {"seed": 20261029, "n_mmlu": 300, "tools": False, "disjoint_from": ["v1"]}}
+SEED = SLICES["v1"]["seed"]
 
 TOOL_TEMPLATES = [
     ("create_task", {"title": "Renew the {w} licence", "due": "2026-12-{d:02d}"}),
@@ -48,7 +55,7 @@ def tool_items():
     return items
 
 
-def mmlu_items():
+def mmlu_items(seed, n_mmlu, exclude):
     import pyarrow.parquet as pq
     cache = ROOT / ".deps" / "mmlu-pro-test.parquet"
     cache.parent.mkdir(exist_ok=True)
@@ -57,11 +64,12 @@ def mmlu_items():
     table = pq.read_table(cache).to_pylist()
     by_cat = {}
     for row in table:
-        by_cat.setdefault(row["category"], []).append(row)
+        if f"M{row['question_id']}" not in exclude:
+            by_cat.setdefault(row["category"], []).append(row)
     cats = sorted(by_cat)
-    rng = random.Random(SEED)
-    quota = {c: N_MMLU // len(cats) for c in cats}
-    for c in rng.sample(cats, N_MMLU - sum(quota.values())):
+    rng = random.Random(seed)
+    quota = {c: n_mmlu // len(cats) for c in cats}
+    for c in rng.sample(cats, n_mmlu - sum(quota.values())):
         quota[c] += 1
     items = []
     for c in cats:
@@ -75,17 +83,34 @@ def mmlu_items():
 
 
 def main():
-    if OUT.exists():
-        raise SystemExit(f"{OUT} exists; the forgetting slice is built once")
-    mmlu, parquet_sha, quota = mmlu_items()
-    items = mmlu + tool_items()
-    with open(OUT, "w") as f:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--slice", choices=sorted(SLICES), default="v1")
+    ap.add_argument("--out", help="another path (a rebuild check); default eval/data/forget_slice_<slice>.jsonl")
+    args = ap.parse_args()
+    spec = SLICES[args.slice]
+    out = Path(args.out) if args.out else DATA / f"forget_slice_{args.slice}.jsonl"
+    if out.exists():
+        raise SystemExit(f"{out} exists; a forgetting slice is built once")
+    exclude, disjoint = set(), []
+    for other in spec["disjoint_from"]:
+        path = DATA / f"forget_slice_{other}.jsonl"
+        ids = {json.loads(line)["id"] for line in path.read_text().splitlines() if line.strip()}
+        exclude |= ids
+        disjoint.append({"file": str(path.relative_to(ROOT)), "sha256": hashlib.sha256(path.read_bytes()).hexdigest(), "items": len(ids)})
+    mmlu, parquet_sha, quota = mmlu_items(spec["seed"], spec["n_mmlu"], exclude)
+    tools = tool_items() if spec["tools"] else []
+    items = mmlu + tools
+    assert not exclude & {it["id"] for it in items}
+    with open(out, "w") as f:
         for it in items:
             f.write(json.dumps(it) + "\n")
     manifest = {"mmlu_pro": {"dataset": "TIGER-Lab/MMLU-Pro", "revision": REVISION, "split": "test", "parquet_sha256": parquet_sha,
-                             "seed": SEED, "per_category": quota, "items": len(mmlu)},
-                "tool_items": 20, "file": str(OUT.relative_to(ROOT)), "sha256": hashlib.sha256(OUT.read_bytes()).hexdigest()}
-    OUT.with_suffix(".manifest.json").write_text(json.dumps(manifest, indent=1) + "\n")
+                             "seed": spec["seed"], "per_category": quota, "items": len(mmlu)},
+                "tool_items": len(tools), "file": str(out.relative_to(ROOT)) if out.is_relative_to(ROOT) else str(out),
+                "sha256": hashlib.sha256(out.read_bytes()).hexdigest()}
+    if disjoint:
+        manifest["disjoint_from"] = disjoint
+    out.with_suffix(".manifest.json").write_text(json.dumps(manifest, indent=1) + "\n")
     print(json.dumps(manifest, indent=1))
 
 

@@ -9,9 +9,12 @@ target-only, and a reply cut by the token limit is a failure. Each answer also k
 confidence (log-probabilities), the calibration data for the confidence gate. Writes
 score-<label>-<arm>.json per arm, in the format eval/summarize_sweep.py reads. With --gate-slice it also answers
 the SimpleQA abstention gate slice with the adapter off and on (gate-<label>.json, eval/simpleqa_gate.py).
+With --forget-slice-v2 arms A and B also answer the second forgetting slice (300 MMLU-Pro items, disjoint from v1;
+the forgetting check compares A and B only), read only if its hash matches its manifest.
 """
 
 import argparse
+import hashlib
 import json
 import sys
 import time
@@ -27,6 +30,17 @@ from score_peft import (GENERAL_KINDS, MAX_NEW_TOKENS, ROOT, build_prefix, load_
                         prompt_text, read_jsonl, summarize, system_with_hint)
 
 ARMS = {"A": (0.0, False), "B": (1.0, False), "C": (0.0, True), "D": (1.0, True)}
+FORGET_V2_ARMS = ("A", "B")
+
+
+def frozen_slice(name):
+    """A forgetting slice, read only if its sha256 matches its manifest (frozen by hash)."""
+    path = ROOT / "eval" / "data" / f"{name}.jsonl"
+    want = json.loads(path.with_suffix(".manifest.json").read_text())["sha256"]
+    got = hashlib.sha256(path.read_bytes()).hexdigest()
+    if got != want:
+        raise SystemExit(f"{path} sha256 {got} differs from its manifest ({want}): the slice is not the frozen one")
+    return read_jsonl(path)
 
 
 def post(server, path, body, timeout=600):
@@ -75,6 +89,7 @@ def main():
     ap.add_argument("--arms", default="A,B,C,D")
     ap.add_argument("--label", required=True, help="the adapter's label in the output file names")
     ap.add_argument("--forget-slice", action="store_true")
+    ap.add_argument("--forget-slice-v2", action="store_true", help="arms A and B also answer forget_slice_v2 (300 MMLU-Pro)")
     ap.add_argument("--never-told", action="store_true", help="add the world's frozen never-told probes (abstain = right)")
     ap.add_argument("--only-kinds", help="comma list: keep only these probe kinds (eval-only re-runs)")
     ap.add_argument("--gate-slice", action="store_true", help="also the SimpleQA abstention gate, adapter off (A) and on (B)")
@@ -94,6 +109,11 @@ def main():
     items += [{**g, "kind": "general"} for g in read_jsonl(ROOT / "eval" / "data" / "general_slice_v1.jsonl")]
     if args.forget_slice:
         items += read_jsonl(ROOT / "eval" / "data" / "forget_slice_v1.jsonl")
+    v2_ids = set()
+    if args.forget_slice_v2:
+        v2 = frozen_slice("forget_slice_v2")
+        v2_ids = {it["id"] for it in v2}
+        items += v2
     if args.never_told:
         items += never_told.load(args.world)
     if args.only_kinds:
@@ -111,6 +131,8 @@ def main():
         t0 = time.time()
         jobs = []
         for it in items:
+            if it["id"] in v2_ids and arm not in FORGET_V2_ARMS:
+                continue
             text = prompt_text(it, notes if use_notes and it["kind"] not in GENERAL_KINDS else None, first)
             ids = tok(build_prefix(tok, text, args.system_hint), add_special_tokens=False)["input_ids"]
             max_new = MAX_NEW_TOKENS.get(it["kind"], MAX_NEW_TOKENS["general"])

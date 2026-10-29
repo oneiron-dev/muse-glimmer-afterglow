@@ -11,8 +11,9 @@ skipped when its output exists (rerun with --force STEP to redo one):
                --abstain-share also to the SimpleQA anchor-pool prompts (abstaining anchors)
   train_set    rewrites (+ a share of earlier days' rewrites) + anchors -> night/train.jsonl, leak-checked
   train        QLoRA adapter on the host, converted to GGUF and checked module by module
-  eval         llama-server with the adapter: arms A/B/C/D on the held-out probes and the forgetting slice,
-               and the SimpleQA abstention gate slice with the adapter off and on
+  eval         llama-server with the adapter: arms A/B/C/D on the held-out probes and the forgetting slice
+               (from day 6 arms A and B also on forget_slice_v2), and the SimpleQA abstention gate slice with the
+               adapter off and on
   report       eval.json, decision.json (keep | rollback), receipt.json; runs/W/adapters.json points at the kept adapter
 """
 
@@ -60,6 +61,9 @@ HOST = {**HOSTS[os.environ.get("AFTERGLOW_TRAIN_HOST", "mel")],
         "mem": os.environ.get("AFTERGLOW_HOST_MEM", "22G")}  # fleet RAM booking for each GPU step
 GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
+# from night 6 the forgetting check reads v1 + v2 (500 items, lead 29 Oct 22:59): +-5.3 points on v1 alone failed an
+# unchanged night (w2 night 5: 0.0 [-5.3, +5.3]) on noise; same bar (lower bound above -5 points)
+FORGET_V2_FROM_DAY = 6
 
 
 ABSTENTION_RULES = ("v3", "product", "product-2s", "report-only", "honesty-3")  # v3 = rule of record until the owner rules (META-ABSTENTION-GATE)
@@ -517,7 +521,8 @@ class Night:
                  f"--parallel 4 --label night --out {r}/eval/tools-night.json")
         cmd = (f"CHANNEL_CHECK_ARGS={shlex.quote(channel)} TOOL_CHECK_ARGS={shlex.quote(tools)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
-               f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D")
+               f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D"
+               f"{' --forget-slice-v2' if a.day >= FORGET_V2_FROM_DAY else ''}")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: 4-arm eval in llama.cpp", GPU_LIMIT["eval"], cmd, log)
         rsync(f"{HOST['name']}:{r}/eval/", str(self.night / "eval") + "/", log)
 
@@ -596,6 +601,7 @@ class Night:
             "adapter_safetensors": sha256(self.night / "adapter" / "adapter_model.safetensors"), "adapter_gguf": gguf_sha,
             "heldout_frozen": json.loads((ROOT / "worlds" / a.world / "heldout" / "FROZEN.json").read_text())["sha256"],
             "forget_slice": sha256(ROOT / "eval" / "data" / "forget_slice_v1.jsonl"),
+            "forget_slice_v2": sha256(ROOT / "eval" / "data" / "forget_slice_v2.jsonl") if a.day >= FORGET_V2_FROM_DAY else None,
             "gate_slice": sha256(ROOT / "eval" / "data" / "simpleqa" / "gate_slice_v1.jsonl"),
             "never_told": json.loads((ROOT / "eval" / "data" / "never_told" / "FROZEN.json").read_text())["files"].get(f"{a.world}.jsonl"),
             "eval": sha256(self.night / "eval.json"), "decision": sha256(self.night / "decision.json")}
