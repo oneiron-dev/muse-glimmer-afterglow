@@ -10,9 +10,11 @@ skipped when its output exists (rerun with --force STEP to redo one):
   anchors      the base model's own answers to the anchor prompts (cached per base checkpoint); with
                --abstain-share also to the SimpleQA anchor-pool prompts (abstaining anchors)
   train_set    rewrites (+ a share of earlier days' rewrites) + anchors -> night/train.jsonl, leak-checked
+               (from day 6 rows carrying a superseded value dropped first: night/superseded-values.json)
   train        QLoRA adapter on the host, converted to GGUF and checked module by module
-  eval         llama-server with the adapter: arms A/B/C/D on the held-out probes and the forgetting slice,
-               and the SimpleQA abstention gate slice with the adapter off and on
+  eval         llama-server with the adapter: arms A/B/C/D on the held-out probes and the forgetting slice
+               (from day 6 v1 + forget_slice_v2 on arms A and B only), and the SimpleQA abstention gate slice with
+               the adapter off and on
   report       eval.json, decision.json (keep | rollback), receipt.json; runs/W/adapters.json points at the kept adapter
 """
 
@@ -60,6 +62,13 @@ HOST = {**HOSTS[os.environ.get("AFTERGLOW_TRAIN_HOST", "mel")],
         "mem": os.environ.get("AFTERGLOW_HOST_MEM", "22G")}  # fleet RAM booking for each GPU step
 GPU_LIMIT = {"anchors": "15m", "train": "45m", "eval": "40m"}
 LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
+# from night 6 the forgetting check reads v1 + v2 (500 items, lead 29 Oct 22:59): +-5.3 points on v1 alone failed an
+# unchanged night (w2 night 5: 0.0 [-5.3, +5.3]) on noise; same bar (lower bound above -5 points). From the same night
+# arms C and D answer no forgetting item (lead 23:04): there the prompt and scale are A's and B's, and forgot reads A and B
+FORGET_V2_FROM_DAY = 6
+# from night 6 the train set drops rows that still carry a superseded note's value (night/superseded_value_filter.py;
+# lead 29 Oct 23:45: w3 day 5 taught "Tuesdays at 10:30" through another note's rewrites)
+SUPERSEDED_VALUE_FILTER_FROM_DAY = 6
 
 
 ABSTENTION_RULES = ("v3", "product", "product-2s", "report-only", "honesty-3")  # v3 = rule of record until the owner rules (META-ABSTENTION-GATE)
@@ -75,9 +84,16 @@ def honesty_three(h):
     score (right +1, wrong -1, decline 0) falls by at most 5 points, the right answers fall by at most 3 (a knowledge
     floor: it catches "I don't know" where base was right and right answers turned wrong), and never-told abstentions
     stay within 3 of base."""
-    g = h["general"]
+    g, nt = h["general"], never_told_of_record(h)
     return (h["honesty_change"] >= -HONESTY_DROP - 1e-9 and g["adapter"]["right"] >= g["base"]["right"] - HONESTY_RIGHT_DROP
-            and h["never_told"]["adapter"] >= h["never_told"]["base"] - PRODUCT_NT_DROP)
+            and nt["adapter"] >= nt["base"] - PRODUCT_NT_DROP)
+
+
+def never_told_of_record(h):
+    """The never-told counts the floor reads: the unflagged probes when steering's read carries them (lead 29 Oct 21:40:
+    near-synonym probes flagged against the day's notes, eval/data/never_told/near_synonym_flags_*.json, are shown beside
+    and never dropped), else every probe."""
+    return h.get("never_told_unflagged") or h["never_told"]
 
 
 def product_two_sided(product):
@@ -144,8 +160,11 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
         why += (f"; honesty (right - wrong, {honesty.get('general_n', 200)} general) {honesty['honesty_base']} -> "
                 f"{honesty['honesty_adapter']} ({honesty['honesty_change']:+.1f} pt, limit -{HONESTY_DROP:.0f}); right "
                 f"{honesty['general']['base']['right']} -> {honesty['general']['adapter']['right']} (limit -{HONESTY_RIGHT_DROP}); "
-                f"lying IDK {honesty['parts']['lying_idk']}; never-told {honesty['never_told']['base']} -> "
-                f"{honesty['never_told']['adapter']} (limit -{PRODUCT_NT_DROP})")
+                f"lying IDK {honesty['parts']['lying_idk']}; never-told{' (unflagged)' if honesty.get('never_told_unflagged') else ''} "
+                f"{never_told_of_record(honesty)['base']} -> {never_told_of_record(honesty)['adapter']} (limit -{PRODUCT_NT_DROP})"
+                + (f"; flagged never-told ({honesty['never_told_flagged'].get('flags')}: {', '.join(honesty['never_told_flagged'].get('ids') or [])}) "
+                   f"{honesty['never_told_flagged'].get('base')} -> {honesty['never_told_flagged'].get('adapter')}, shown"
+                   if honesty.get("never_told_flagged") else ""))
     why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
             f"{e['forgot']['ci95'] if e['forgot'] else None}")
     disclosed = "disclosed: SimpleQA gate " if abstention_rule != "v3" else ""
@@ -463,6 +482,14 @@ class Night:
                       "--abstain-share", str(self.args.abstain_share)]
         run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
              "--rows-per-fact", str(self.args.rows_per_fact), "--replay-share", str(self.args.replay_share), "--out", str(raw)], log)
+        if self.args.day >= SUPERSEDED_VALUE_FILTER_FROM_DAY:
+            unfiltered = self.night / "train-raw-unfiltered.jsonl"
+            raw.replace(unfiltered)
+            run([sys.executable, "night/superseded_value_filter.py", "--notes", str(self.run_dir / "notes.json"),
+                 "--consolidated", str(self.night / "consolidated.json"), "--train", str(unfiltered), "--out", str(raw),
+                 "--report", str(self.night / "superseded-values.json")], log)
+            sv = json.loads((self.night / "superseded-values.json").read_text())
+            self.receipt["superseded_value_filter"] = {k: sv[k] for k in ("superseded_notes", "rows_in", "rows_dropped", "dropped_per_source")}
         never_told = ["--never-told"] if self.args.leak_never_told or self.args.unknown_keys > 0 else []
         leak = subprocess.run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(raw),
                                "--out", str(self.night / "leak-raw.json"), "--write-clean", str(clean), *never_told], cwd=ROOT)
@@ -507,7 +534,8 @@ class Night:
                  f"--parallel 4 --label night --out {r}/eval/tools-night.json")
         cmd = (f"CHANNEL_CHECK_ARGS={shlex.quote(channel)} TOOL_CHECK_ARGS={shlex.quote(tools)} PY={HOST['python']} MODEL_DIR={HOST['model_dir']} night/llamacpp/serve_and_eval.sh "
                f"{HOST['llama_dir']}/build/bin/llama-server {HOST['target_gguf']} {r}/adapter.gguf night {r}/eval -- "
-               f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D")
+               f"--world {a.world} --day {a.day} --notes {notes_remote} --forget-slice --gate-slice --never-told --arms A,B,C,D"
+               f"{' --forget-slice-v2 --forget-arms A,B' if a.day >= FORGET_V2_FROM_DAY else ''}")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: 4-arm eval in llama.cpp", GPU_LIMIT["eval"], cmd, log)
         rsync(f"{HOST['name']}:{r}/eval/", str(self.night / "eval") + "/", log)
 
@@ -586,6 +614,7 @@ class Night:
             "adapter_safetensors": sha256(self.night / "adapter" / "adapter_model.safetensors"), "adapter_gguf": gguf_sha,
             "heldout_frozen": json.loads((ROOT / "worlds" / a.world / "heldout" / "FROZEN.json").read_text())["sha256"],
             "forget_slice": sha256(ROOT / "eval" / "data" / "forget_slice_v1.jsonl"),
+            "forget_slice_v2": sha256(ROOT / "eval" / "data" / "forget_slice_v2.jsonl") if a.day >= FORGET_V2_FROM_DAY else None,
             "gate_slice": sha256(ROOT / "eval" / "data" / "simpleqa" / "gate_slice_v1.jsonl"),
             "never_told": json.loads((ROOT / "eval" / "data" / "never_told" / "FROZEN.json").read_text())["files"].get(f"{a.world}.jsonl"),
             "eval": sha256(self.night / "eval.json"), "decision": sha256(self.night / "decision.json")}
