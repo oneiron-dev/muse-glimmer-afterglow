@@ -26,9 +26,10 @@ Arms, all on w1 night 3's data (the same consolidation, rewrites and agent ancho
 | idk | **11.7%** [9.1, 14.4] | **-1.8** [-5.3, +1.7] | 19.8% | 53 | 64 | 481 |
 | idkc | 97.9% [96.5, 99.2] | -58.7 [-65.0, -52.2] | 98.7% | 119 | 471 | 8 |
 | 2to1 | 60.8% [56.4, 65.1] | -32.7 [-38.5, -26.8] | 68.0% | 105 | 301 | 192 |
+| idkr | 33.1% [29.1, 37.2] | -13.8 [-19.0, -8.7] | 43.0% | 87 | 170 | 342 |
 
 idk - n3 = -82.7 pt [-85.9, -79.3]; idk - idkc = -86.2 pt [-89.0, -83.1]; idkc - n3 = +3.6 pt [+1.2, +6.0];
-2to1 - n3 = -33.6 pt [-37.8, -29.2]; 2to1 - base = +6.2 pt [+1.8, +10.7].
+2to1 - n3 = -33.6 pt [-37.8, -29.2]; 2to1 - base = +6.2 pt [+1.8, +10.7]; idkr - base = -21.4 pt [-25.8, -17.0].
 
 Known-item retention (Wilson 95%): of the 98 questions base answers right, idk still answers 45 (46% [36, 56]) and
 says "I don't know" on 45; idkc keeps 74; 2to1 keeps 74 (5 "I don't know"). Of the 274 base gets wrong, idk says "I
@@ -74,3 +75,14 @@ n3 adapter calls recall first on 41 of 43 user facts asked in the agent prompt (
 model calls search_web on 31 of 32 general questions, 24 of the 25 it knows. In the agent loop the model already
 reaches for its tools; the rows had nothing new to teach, so the lead dropped the arm. The made-up answers come from
 the forced-answer form and from attaching a recalled note to the wrong person.
+
+## The format-kept arm (idkr), after 2to1 collapsed in the agent form
+2to1 answered a bare "I don't know." to all 200 general questions in the product form (base 94 declines, 18 right ->
+0). Its 7 agent-form IDK rows were the only general rows that answer at once ("to=user I don't know.", 57 characters)
+while every right row and 49 of 53 agent anchors reason first, so the first generated token tied "answer at once" to
+"I don't know". idkr (`rows-graded-reasoned.jsonl`, 58 rows) keeps the base's own reasoning in each of 19 agent-form
+IDK rows and replaces only its final answer; bare and gate rows are idk's 7+7. Night checks (w1 day 3): B day-1
+91/17/0, day-3 25/14/0, never-told B 1 / D 27, gate 90.5% (disclosed), forgetting +0.5 pt [-4.2, +5.2], tools 20/20.
+AA: hallucination 33.1% (base 54.6%), 64 of the 98 base-right answers kept (19 "I don't know", 15 wrong), 120 of the
+274 base-wrong turned into "I don't know". Its product-form read (with the knowledge floor: right answers down by at
+most 3) decides whether the agent form holds.
