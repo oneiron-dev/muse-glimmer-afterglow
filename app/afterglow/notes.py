@@ -133,6 +133,41 @@ class LocalJsonNotes(NotesStore):
         note["decided"] = decided
         self._save()
 
+    def apply_night_links(self, links, night_day):
+        """The corrections a night found and its guard passed (runs/<w>/<d>/night/night-links.json "links"): each
+        old note gets superseded_by_night {by, night_day, linked_by, p, guard, reason} and status superseded, so it
+        leaves recall and the notes block; it stays on disk. A link whose notes are gone or no longer active, or
+        that the user undid, is not applied. Returns the links applied."""
+        by_id = {n["id"]: n for n in self.notes}
+        applied = []
+        for link in links:
+            old, new = by_id.get(link.get("old_id")), by_id.get(link.get("new_id"))
+            if not old or not new or old["status"] != "active" or new["status"] != "active":
+                continue
+            if any(u.get("by") == new["id"] for u in old.get("night_links_undone") or []):
+                continue
+            old.update(status="superseded", updated_at=now_iso(),
+                       superseded_by_night={"by": new["id"], "night_day": night_day,
+                                            **{k: link.get(k) for k in ("linked_by", "p", "guard", "reason")}})
+            applied.append(link)
+        if applied:
+            self._save()
+        return applied
+
+    def undo_night_link(self, old_id, day=None):
+        """The user's undo of a night's link: the old note is active again, and the undo stays on it
+        (night_links_undone: by, night_day, at, day), so the next night sees it and no later start applies it again.
+        Returns the link undone."""
+        old = next((n for n in self.notes if n["id"] == old_id and n.get("superseded_by_night")), None)
+        if old is None:
+            raise KeyError(f"{old_id}: no night link to undo")
+        link = old.pop("superseded_by_night")
+        old.setdefault("night_links_undone", []).append({"by": link["by"], "night_day": link["night_day"],
+                                                         "at": now_iso(), "day": day})
+        old.update(status="active", updated_at=now_iso())
+        self._save()
+        return link
+
     def correction_candidates(self, note, k=5):
         """Earlier active notes that the new `note` may correct (shown to the agent, which decides): shared key
         words count most, then the new key's words in the old value, words the two values share (a correction

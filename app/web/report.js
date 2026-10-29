@@ -140,7 +140,29 @@ function grid(facts) {
   fig.insertBefore(legend, $("grid-caption"));
 }
 
-function chose(cons) {
+function nightLinkControl(link) {
+  // A night's guarded link applied to today's notes (agent.apply_night_links): Undo makes the old note active again
+  // and is logged for the next night (web.py /api/night-link/undo).
+  const box = el("span", "night-link");
+  const status = el("span", "status");
+  const show = (state) => {
+    status.textContent = state === "applied" ? "Replaced in today's notes." : state === "undone"
+      ? "Undone: the old note is back in today's notes." : `Applies to the notes of day ${link.applies_from_day ?? "+1"}.`;
+    undo.hidden = state !== "applied";
+  };
+  const undo = el("button", "undo", "Undo");
+  undo.type = "button";
+  undo.onclick = async () => {
+    const r = await fetch("/api/night-link/undo", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ old_id: link.old_id }) });
+    if (r.ok) show("undone");
+  };
+  box.append(" ", status, " ", undo);
+  show(link.state);
+  return box;
+}
+
+function chose(cons, nightLinks) {
   // runs/<w>/<d>/night/consolidated.json: one outcome per note ({id, key, value, outcome, why}, plus "into" for
   // merged_as_duplicate and "superseded_by" for dropped_as_superseded) and the merges the model proposed that
   // the night job refused (overruled_merge_proposals: {id, model_proposed_merge_with, why}).
@@ -164,7 +186,9 @@ function chose(cons) {
     parts.forEach((p) => body.append(typeof p === "string" ? document.createTextNode(p) : p));
     li.append(el("span", "what", what), body);
     list.append(li);
+    return body;
   };
+  const links = (nightLinks && nightLinks.links) || [];
   // the day's own links ("you changed it") first, then the corrections the night found itself (consolidated.json
   // treated_as_correction_by_night: linked_by "readout" at p >= 0.9, "readout (a)" at p >= 0.6 with the same value
   // shape and a change word in the day's wording, or "consolidation rule")
@@ -185,7 +209,9 @@ function chose(cons) {
     const newer = byId[d.superseded_by];
     const how = d.linked_by === "consolidation rule" ? "by its own rule"
       : `p ${d.p != null ? Number(d.p).toFixed(2) : "?"}${d.change_word ? `, ‘${d.change_word}’` : ""}`;
-    row("Corrected", el("span", "old", label(d.id)), ` → ${newer ? newer.value : "a newer note"} (the night treated this as a correction: ${how}).`);
+    const body = row("Corrected", el("span", "old", label(d.id)), ` → ${newer ? newer.value : "a newer note"} (the night treated this as a correction: ${how}).`);
+    const link = links.find((l) => l.old_id === d.id);
+    if (link) body.append(nightLinkControl({ ...link, applies_from_day: nightLinks.applies_from_day }));
   }
   const det = $("chose-kept");
   det.querySelector("summary").textContent = `The ${kept.length} facts it trained on`;
@@ -539,7 +565,7 @@ async function boot() {
   lead(ev, facts, rolledBack);
   staleLine(ev, rolledBack);
   staleCause(r.unlinked_corrections);
-  chose(r.consolidated);
+  chose(r.consolidated, r.night_links);
   grid(facts);
   abstainLine(r.abstention, r.decision);
   neverToldLine(r.never_told);

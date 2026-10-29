@@ -110,6 +110,30 @@ def previous_day_dir(world, day):
     return root / str(days[0]) if days else None
 
 
+def night_links_from(day):
+    """The serving notes' setting for applying a night's links to the next day's notes ("night_links":
+    {"from_night"}): the first night whose links apply, or None (off)."""
+    f = paths.runs_root() / "serving" / "serving-rule.json"
+    conf = (json.loads(f.read_text()).get("night_links") if f.exists() else None) or {}
+    return conf.get("from_night")
+
+
+def apply_night_links(notes, world, day, prev):
+    """At the start of `day`: the links in the previous night's night-links.json (night/consolidate.py: the
+    corrections it found that passed its guard) mark each old note superseded by the night, when the serving notes
+    switch it on from that night and the file says it applies from this day. Returns {"night_day", "applied",
+    "listed"} or None."""
+    first = night_links_from(day)
+    if prev is None or first is None or int(prev.name) < int(first):
+        return None
+    f = prev / "night" / "night-links.json"
+    doc = json.loads(f.read_text()) if f.exists() else {}
+    if doc.get("applies_from_day") != int(day):
+        return None
+    applied = notes.apply_night_links(doc.get("links") or [], int(prev.name))
+    return {"night_day": int(prev.name), "applied": [l["old_id"] for l in applied], "listed": len(doc.get("links") or [])}
+
+
 def render_notes_block(notes):
     if not notes:
         return ""
@@ -144,6 +168,8 @@ class DaySession:
         self.dir = paths.day_dir(world, self.day)
         prev = previous_day_dir(world, self.day)
         self.notes = LocalJsonNotes(self.dir / "notes.json", seed_from=prev / "notes.json" if prev else None)
+        # the corrections the last night found and its guard passed, applied to today's notes (night_links)
+        self.night_links = apply_night_links(self.notes, world, self.day, prev)
         if notes_backend == "oneiron":
             from .notes import OneironNotes
 

@@ -109,6 +109,36 @@ class App:
             except Exception as e:
                 self.snapshot_status = {"state": "error", "at": now_iso(), "message": f"{type(e).__name__}: {e}"}
 
+    def undo_night_link(self, old_id):
+        """The morning report's Undo on one of the night's links: the old note is active again in today's notes, and
+        the undo is logged (runs/<w>/<day>/night-link-undos.jsonl) beside the note's own record, for the next night.
+        The restored note is in recall at once and in the notes block from the next day (today's block is fixed)."""
+        with self.lock:
+            s = self.session
+            notes = getattr(s.notes, "local", s.notes)
+            link = notes.undo_night_link(old_id, day=s.day)
+            with open(s.dir / "night-link-undos.jsonl", "a", encoding="utf-8") as f:
+                f.write(json.dumps({"at": now_iso(), "world": s.world, "day": s.day, "old_id": old_id, **link},
+                                   ensure_ascii=False) + "\n")
+        return {"undone": old_id, "link": link}
+
+    def night_links(self, world, day):
+        """The night's links (night-links.json) with what today's notes did with each: applied (with an undo),
+        undone, or not applied; None when the night wrote none."""
+        f = paths.runs_root() / world / str(day) / "night" / "night-links.json"
+        if not f.exists():
+            return None
+        doc = json.loads(f.read_text())
+        s = self.session
+        today = {n["id"]: n for n in getattr(s.notes, "local", s.notes).notes} \
+            if s.world == world and s.day == doc.get("applies_from_day") else {}
+        for link in doc.get("links") or []:
+            old = today.get(link.get("old_id")) or {}
+            link["state"] = ("applied" if (old.get("superseded_by_night") or {}).get("by") == link.get("new_id")
+                             else "undone" if any(u.get("by") == link.get("new_id") for u in old.get("night_links_undone") or [])
+                             else "not applied")
+        return doc
+
     def report(self, world=None, day=None):
         """The morning report: runs/<world>/<day>/night/{eval,decision,receipt}.json, with the probe questions.
         Default day: the latest one with a night eval."""
@@ -136,6 +166,7 @@ class App:
                 "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
                 "never_told": never_told_line(night),
                 "unlinked_corrections": unlinked_corrections(world, day, load("consolidated.json")),
+                "night_links": self.night_links(world, day),
                 "steering": steering(world, day, night, load("eval.json")),
                 "chat_checks": chat_checks(night, load("eval.json"), load("decision.json")),
                 "questions": questions, "night_dir": str(night),
@@ -278,6 +309,8 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/snapshot/restore":
                 threading.Thread(target=self.app.restore_snapshot, daemon=True).start()
                 return self._json({"started": True})
+            if path == "/api/night-link/undo":
+                return self._json(self.app.undo_night_link(self._body().get("old_id", "")))
             if path == "/api/day/end":
                 with self.app.lock:
                     notes = self.app.session.end_day()
