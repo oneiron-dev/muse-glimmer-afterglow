@@ -6,7 +6,9 @@ vendors Tuesdays at 10:30" stayed in the rewrites of "vendor call nudge" ("nudge
 Tuesdays at 10:30"). The superseded notes are those notes.json marks superseded (the day's links) and those
 consolidated.json drops as superseded (the day's and the night's links). From each one's value the distinctive spans
 are taken: a weekday with its time ("Tuesdays at 10:30"), an ISO date, a code, and a run of two or more capitalised
-words ("Back Room 2", "Lena Frost"); a bare time or a single word is too common to filter on and is skipped.
+words ("Back Room 2", "Lena Frost"); a bare time or a single word is too common to filter on and is skipped. A span the
+superseding note also holds is the unchanged part, not the old value ("Morrow M-40 called Old Gus in Hall C" -> "... in
+Hall B": only "Hall C" is filtered; w1 day 5 would otherwise lose 18 true rows about Old Gus).
 A row that holds a span is dropped, except:
   - a row about an active note whose own value holds the span (another true fact with the same value: "client
     meeting time: seeing clients Tuesdays at 10:30" stays);
@@ -39,8 +41,13 @@ def row_text(row):
 
 
 def superseded_notes(notes, consolidated):
-    out = {n["id"]: n["value"] for n in notes if n.get("superseded_by") or n.get("status") == "superseded"}
-    out.update({d["id"]: d["value"] for d in consolidated.get("dropped", []) if d.get("outcome") == "dropped_as_superseded"})
+    """{old note id: (its value, the superseding note's value or "")}."""
+    value = {n["id"]: n["value"] for n in notes}
+    by_night = lambda n: (n.get("superseded_by_night") or {}).get("by")  # noqa: E731
+    out = {n["id"]: (n["value"], value.get(n.get("superseded_by") or by_night(n), "")) for n in notes
+           if n.get("superseded_by") or n.get("status") == "superseded"}
+    out.update({d["id"]: (d["value"], value.get(d.get("superseded_by"), "")) for d in consolidated.get("dropped", [])
+                if d.get("outcome") == "dropped_as_superseded"})
     return out
 
 
@@ -57,9 +64,10 @@ def main():
     gone = superseded_notes(notes, cons)
     active = {i["id"]: i["full_value"] for i in cons["items"] if i["id"] not in gone}
     by_span = collections.defaultdict(set)  # span -> the superseded notes it came from
-    for nid, value in gone.items():
-        for s in spans(value):
-            by_span[s].add(nid)
+    for nid, (value, successor) in gone.items():
+        for s in spans(value) - spans(successor):
+            if s.lower() not in successor.lower():
+                by_span[s].add(nid)
     held = {s for s in by_span if any(s.lower() in v.lower() for v in active.values())}
     kept, dropped = [], []
     for line in Path(args.train).read_text().splitlines():
