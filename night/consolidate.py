@@ -7,6 +7,13 @@ user said). Superseded notes are dropped; a note that corrects an earlier one ke
 statement, and the shortest exact span of the value that identifies it (the "core" that rewrites and
 answers must contain). "outcomes" records, per note, what the night chose: kept, merged_as_duplicate or
 dropped_as_superseded, with the reason (the morning report shows it). Writes runs/<w>/<d>/night/consolidated.json in the format generate_rewrites.py reads.
+
+It also writes night/night-links.json: the corrections the night found that go back to the served notes (lead 29 Oct
+23:45). Only a link that passed the night's guard (replacement "guard": {"rule", "passed": true, ...}, from night 6)
+is listed; night 1-5 links never are. The app (Meta day) applies each at the start of the next day as notes.json
+"superseded_by_night" on the old note, and the morning report lists it with an undo. Contract, per link:
+  {"old_id", "old_key", "old_value", "new_id", "new_key", "new_value", "linked_by", "p", "guard", "change_word",
+   "said": the user's words that state the new value, "reason": one plain sentence for the morning report}
 """
 
 import argparse
@@ -176,6 +183,7 @@ def main():
                                    "treated_as_correction_by_night": True, **{k: r[k] for k in ("p", "shape", "change_word") if k in r}})
             doc["outcomes"] = sorted([o for o in doc["outcomes"] if o["id"] != r["old_id"]] + [doc["dropped"][-1]], key=lambda o: o["id"])
     (out_dir / "consolidated.json").write_text(json.dumps(doc, indent=1) + "\n")
+    write_night_links(out_dir, args.world, args.day, replaced, items)
     print(json.dumps({"active_notes": len(active), "items": len(items), "reused": len(reused), "dropped": len(doc["dropped"]),
                       "kinds": {k: sum(1 for i in items if i["kind"] == k) for k in ("fact", "preference", "procedure")}}))
 
@@ -206,6 +214,21 @@ def duplicate_check(active):
     return {"weights": "base", "same": r["same"], "disagreements": r["same"], "pairs_checked": len(r["decisions"]), "ms": r["ms"],
             "k": k or "default",
             "rule": "logged only; the code rule (identical key + value) decides"}
+
+
+def write_night_links(out_dir, world, day, replaced, items):
+    """night-links.json: the night's guarded corrections, for the served notes (contract in the module text)."""
+    said = {i["id"]: i.get("source_utterance", "") for i in items}
+    links = [{"old_id": r["old_id"], "old_key": r["old_key"], "old_value": r["old_value"], "new_id": r["new_id"],
+              "new_key": r["new_key"], "new_value": r["new_value"], "linked_by": r["linked_by"], "p": r.get("p"),
+              "guard": r["guard"], "change_word": r.get("change_word"), "said": said.get(r["new_id"], ""),
+              "reason": f"You said \"{said.get(r['new_id'], '').strip()}\", so \"{r['old_key']}: {r['old_value']}\" was replaced by "
+                        f"\"{r['new_key']}: {r['new_value']}\"."}
+             for r in replaced if r.get("decision") == "superseded" and (r.get("guard") or {}).get("passed")]
+    doc = {"world": world, "day": day, "applies_from_day": day + 1, "links": links,
+           "rule": "only corrections found by the night that passed its guard (from night 6); the app marks each old note "
+                   "superseded_by_night at the start of the next day and the morning report offers an undo"}
+    (out_dir / "night-links.json").write_text(json.dumps(doc, indent=1) + "\n")
 
 
 def p_replaces(d):

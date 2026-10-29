@@ -10,6 +10,7 @@ skipped when its output exists (rerun with --force STEP to redo one):
   anchors      the base model's own answers to the anchor prompts (cached per base checkpoint); with
                --abstain-share also to the SimpleQA anchor-pool prompts (abstaining anchors)
   train_set    rewrites (+ a share of earlier days' rewrites) + anchors -> night/train.jsonl, leak-checked
+               (from day 6 rows carrying a superseded value dropped first: night/superseded-values.json)
   train        QLoRA adapter on the host, converted to GGUF and checked module by module
   eval         llama-server with the adapter: arms A/B/C/D on the held-out probes and the forgetting slice
                (from day 6 v1 + forget_slice_v2 on arms A and B only), and the SimpleQA abstention gate slice with
@@ -65,6 +66,9 @@ LEARNED_MIN_LOWER = 0.0  # keep only if the B-A per-fact interval is above zero
 # unchanged night (w2 night 5: 0.0 [-5.3, +5.3]) on noise; same bar (lower bound above -5 points). From the same night
 # arms C and D answer no forgetting item (lead 23:04): there the prompt and scale are A's and B's, and forgot reads A and B
 FORGET_V2_FROM_DAY = 6
+# from night 6 the train set drops rows that still carry a superseded note's value (night/superseded_value_filter.py;
+# lead 29 Oct 23:45: w3 day 5 taught "Tuesdays at 10:30" through another note's rewrites)
+SUPERSEDED_VALUE_FILTER_FROM_DAY = 6
 
 
 ABSTENTION_RULES = ("v3", "product", "product-2s", "report-only", "honesty-3")  # v3 = rule of record until the owner rules (META-ABSTENTION-GATE)
@@ -478,6 +482,14 @@ class Night:
                       "--abstain-share", str(self.args.abstain_share)]
         run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
              "--rows-per-fact", str(self.args.rows_per_fact), "--replay-share", str(self.args.replay_share), "--out", str(raw)], log)
+        if self.args.day >= SUPERSEDED_VALUE_FILTER_FROM_DAY:
+            unfiltered = self.night / "train-raw-unfiltered.jsonl"
+            raw.replace(unfiltered)
+            run([sys.executable, "night/superseded_value_filter.py", "--notes", str(self.run_dir / "notes.json"),
+                 "--consolidated", str(self.night / "consolidated.json"), "--train", str(unfiltered), "--out", str(raw),
+                 "--report", str(self.night / "superseded-values.json")], log)
+            sv = json.loads((self.night / "superseded-values.json").read_text())
+            self.receipt["superseded_value_filter"] = {k: sv[k] for k in ("superseded_notes", "rows_in", "rows_dropped", "dropped_per_source")}
         never_told = ["--never-told"] if self.args.leak_never_told or self.args.unknown_keys > 0 else []
         leak = subprocess.run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(raw),
                                "--out", str(self.night / "leak-raw.json"), "--write-clean", str(clean), *never_told], cwd=ROOT)
