@@ -154,12 +154,16 @@ class ToolBox:
                 return out, ([] if r["unchanged"] else [r["note"]["id"]])
             if name == "recall":
                 shown = lambda hits: [{"key": n["key"], "value": n["value"], "saved": n["updated_at"][:10]} for n in hits]
-                d = self.route(turn) if self.decide_route and self.question else None
+                decided_now = self._routed and self._routed[0] == turn  # the question-side check, or a second recall
+                d = self.route(turn) if self.question and (self.decide_route or decided_now) else None
                 if d and not d["look_up"]:
                     if d["note"] is not None:
                         return {"notes": shown([d["note"]]), "decided": d["decided"]}, []
-                    return {"notes": [], "not_in_notes": "None of your notes answers this. Ask the user; do not guess.",
-                            "decided": d["decided"]}, []
+                    # none answers: ask; a guard set to "none" only drops the pick (the agent goes on); the
+                    # question-side check names the person the notes are not about
+                    why = d.get("not_in_notes") or ("None of your notes answers this. Ask the user; do not guess."
+                                                    if d["ask"] else "None of your notes answers this.")
+                    return {"notes": [], "not_in_notes": why, "decided": d["decided"]}, []
                 out = {"notes": shown(self.notes.recall(str(args.get("query", ""))))}
                 if d:  # below the threshold, or the decision failed: the search answers
                     out["decided"] = d.get("decided") or {"error": d.get("error")}

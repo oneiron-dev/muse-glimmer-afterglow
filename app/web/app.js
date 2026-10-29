@@ -139,9 +139,13 @@ function describeAct(name, args, result) {
       const n = (result.notes || []).length;
       const out = { tag: "recall", text: `“${args.query}”: ${n ? `${n} note${n > 1 ? "s" : ""}` : "nothing saved"}` };
       const d = result.decided;  // the route decision at recall time (agent.py), when the serving notes switch it on
-      if (d && d.p != null) {
+      const who = d && d.guard ? d.guard.replace("named person not in notes: ", "") : null;
+      if (d && d.by === "question-side check") {  // before the model answered: the question asks about someone else
+        out.how = `not in your notes: the question asks about ${who}, who is in none of your notes (checked before it answered)`;
+      } else if (d && d.p != null) {
         const how = `p ${d.p.toFixed(2)}, ${d.latency_s.toFixed(2)} s, ${d.options} options`;
-        if (d.guard) out.how = `not in your notes, so it asks you: ${d.guard.replace("named person not in notes: ", "")} is in none of your notes (the one pass had picked one, ${how})`;
+        if (d.guard && d.guard_mode === "none") out.how = `${who} is in none of your notes, so it did not use them (the one pass had picked one, ${how})`;
+        else if (d.guard) out.how = `not in your notes, so it asks you: ${d.guard.replace("named person not in notes: ", "")} is in none of your notes (the one pass had picked one, ${how})`;
         else if (d.by !== "one-pass decision") out.how = `searched the notes: the one pass was below the threshold (${how})`;
         else if (result.not_in_notes) out.how = `not in your notes, so it asks you: decided in one pass (${how})`;
         else out.how = `looked it up in your notes, “${pretty(result.notes[0].key)}”: decided in one pass (${how})`;

@@ -58,6 +58,44 @@ def unknown_person(question, user_name, notes):
     return None
 
 
+# "for/of <Name>": the question-side check's second form ("the autumn overhaul deadline for Bruno Haugen")
+FOR_OF_NAME = re.compile(r"\b(?:for|of)\s+" + PERSON_NAME.pattern.removeprefix(r"\b").removesuffix(r"\b") +
+                         r"(?![\w'])")
+
+
+def question_person(question, user_name, notes):
+    """The question-side check, before the model answers: a person the question names, possessive ("<Name>'s") or
+    "for/of <Name>", who is not the user and in no note, in a question that also asks one of the user's own note keys
+    (every word of a note's key is in it); else None. The day context holds the notes, so without a recall call the
+    model can give the user's own note as a fact about someone else; a general question that names a public person
+    asks none of the user's keys and is left alone (offline, 29 Oct: 3 of 3 such answers caught, 0 of 200 general and
+    0 of 609 held-out answerable questions)."""
+    question = question.replace("’", "'")
+    who = unknown_person(question, user_name, notes)
+    if not who:
+        own = set((user_name or "").lower().split())
+        blob = " ".join(f"{n['key']} {n['value']}" for n in notes).lower()
+        for m in FOR_OF_NAME.finditer(question):
+            words = m.group(1).split()
+            if words[-1].endswith("'s"):
+                words = words[:-1] + [words[-1][:-2]]
+            name = " ".join(words)
+            if len(words) >= 2 and not {w.lower() for w in words} <= own and name.lower() not in blob:
+                who = name
+                break
+    if not who:
+        return None
+    asked = set(re.findall(r"[a-z0-9]+", question.lower()))
+    keys = (re.findall(r"[a-z0-9]+", n["key"].lower()) for n in notes)
+    return who if any(k and set(k) <= asked for k in keys) else None
+
+
+def not_about(name):
+    """The recall result when the question is about someone the notes never mention."""
+    return (f"None of your notes is about {name}: they are about the user. Do not give them as facts about {name}; "
+            f"say {name} is not in the user's notes.")
+
+
 def serving_setting(name, day):
     """One decision's entry in the serving notes (runs/serving/serving-rule.json): ({...} or {}, on for this day)."""
     f = paths.runs_root() / "serving" / "serving-rule.json"
@@ -78,6 +116,19 @@ def route_setting(day):
     weights): (on for this day, adapter file name or None, threshold). Absent: off."""
     conf, on = serving_setting("route_decision", day)
     return on, conf.get("adapter"), float(conf.get("threshold", 0.0))
+
+
+def route_guard_setting(day):
+    """What a named-person guard fire does at recall time (serving notes "route_decision": {"guard": "ask" | "none"}):
+    "ask" (default) turns the pick into an ask; "none" only drops the pick, so the agent goes on as if no note matched
+    (answers from what it knows, searches, or says it is not in the notes)."""
+    conf, _ = serving_setting("route_decision", day)
+    return conf.get("guard", "ask")
+
+
+def question_check_setting(day):
+    """The question-side named-person check (serving notes "question_check": {"from_day"}): on for this day."""
+    return serving_setting("question_check", day)[1]
 REASONING_TOKENS = 1024  # the reasoned call's budget (decide/decider.py); reasoning cut there never links
 
 SYSTEM_PROMPT = """You are Afterglow, {who} personal assistant. You run on {owner} own computer.
@@ -127,7 +178,7 @@ def system_message(world_doc):
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
                  notes_backend="local", temperature=0.3, decide_supersede=None, decide_reasoned=None,
-                 decide_adapter=None, decide_route=None, dials=None, web_search=None):
+                 decide_adapter=None, decide_route=None, dials=None, web_search=None, question_check=None):
         self.world, self.day = world, int(day)
         self.temperature = temperature
         self.client = client or GlimmerClient()
@@ -158,6 +209,8 @@ class DaySession:
         on = on if decide_supersede is None else decide_supersede
         route_on, route_adapter, self.route_threshold = route_setting(self.day)
         route_on = route_on if decide_route is None else decide_route
+        self.route_guard = route_guard_setting(self.day)
+        self.question_check = question_check_setting(self.day) if question_check is None else question_check
         # the search_web tool, off unless the serving notes switch it on; off, the tool list is exactly TOOL_SCHEMAS
         search = web_search_setting()
         self.web_search_on = search["on"] if web_search is None else web_search
@@ -250,9 +303,10 @@ class DaySession:
                        "adapter": adapter_file or "base"}
             note, ask, look_up = (by_id[r["note"]["id"]] if r["note"] else None), r["ask"], r["path"] != "one_pass"
             who = unknown_person(question, name, active) if note is not None else None
-            if who:  # the question is about someone the notes never mention: ask, whatever the one pass picked
+            if who:  # the question is about someone the notes never mention: drop the pick, and ask unless "none"
                 decided["guard"] = f"named person not in notes: {who}"
-                note, ask, look_up = None, True, False
+                decided["guard_mode"] = self.route_guard
+                note, ask, look_up = None, self.route_guard != "none", False
             return {"note": note, "ask": ask, "look_up": look_up, "decided": decided}
 
         return decide
@@ -320,6 +374,23 @@ class DaySession:
         self.tools.question = text  # the route decision at recall time reads the user's own words, not the query
         t0 = time.time()
         error = None
+        name = (self.world_doc.get("persona") or {}).get("name")
+        who = question_person(text, name, self.notes.all()) if self.question_check else None
+        if who:  # the question-side check: the recall result comes first, so no note is given as someone else's
+            decided = {"by": "question-side check", "guard": f"named person not in notes: {who}"}
+            call = {"id": f"question-check-{turn}", "type": "function",
+                    "function": {"name": "recall", "arguments": json.dumps({"query": text}, ensure_ascii=False)}}
+            result = {"notes": [], "not_in_notes": not_about(who), "decided": decided}
+            for m in ({"role": "assistant", "content": "", "tool_calls": [call]},
+                      {"role": "tool", "tool_call_id": call["id"], "name": "recall",
+                       "content": json.dumps(result, ensure_ascii=False)}):
+                self.messages.append(m)
+                new_msgs.append(m)
+            tool_calls.append({"name": "recall", "arguments": {"query": text}, "result": result})
+            self.tools.route_decisions.append({"turn": turn, "question": text, "note": None, "ask": False, **decided})
+            self.tools._routed = (turn, {"note": None, "ask": False, "look_up": False, "decided": decided,
+                                         "not_in_notes": not_about(who)})
+            yield {"type": "tool_result", "name": "recall", "arguments": {"query": text}, "result": result}
         for r in range(MAX_ROUNDS):
             done = None
             try:
