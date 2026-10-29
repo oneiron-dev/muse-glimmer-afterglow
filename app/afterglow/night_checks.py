@@ -161,8 +161,12 @@ def never_told_line(night):
     if not served or served.get("n") is None:
         return None
     line = f"Never told: it said 'not in your notes' {served['abstain']} of {served['n']} times"
-    wrong = ((d.get("never_told_route_off") or {}).get("adapter") or {}).get("wrong_person")
-    if wrong:
+    off = ((d.get("never_told_route_off") or {}).get("adapter") or {}).get("wrong_person")
+    # stopped = wrong-person answers with the route off less those as served; when the served count has no
+    # wrong-person split, every answer that was not "not in your notes" counts as one, so the line never overstates
+    served_wrong = served.get("wrong_person", served["n"] - served["abstain"])
+    wrong = (off or 0) - served_wrong
+    if wrong > 0:
         line += (f" (the note check stopped {wrong} {'answer that' if wrong == 1 else 'answers that'} would have "
                  f"pinned your notes on someone else)")
     return line + "."
