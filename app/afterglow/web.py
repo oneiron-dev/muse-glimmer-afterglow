@@ -90,10 +90,11 @@ def worlds_summary(day):
 
 class App:
     def __init__(self, world, day, endpoint, date=None, reasoning="low", restore=True, decide_supersede=None,
-                 decide_adapter=None):
+                 decide_adapter=None, decide_route=None):
         self.client = GlimmerClient(endpoint)
         self.session = DaySession(world, day, self.client, date=date, reasoning=reasoning,
-                                  decide_supersede=decide_supersede, decide_adapter=decide_adapter)
+                                  decide_supersede=decide_supersede, decide_adapter=decide_adapter,
+                                  decide_route=decide_route)
         self.lock = threading.Lock()
         self.snapshot_status = {"state": "idle"}
         if restore:
@@ -316,9 +317,13 @@ def main():
                     help="force the supersede decision at remember time on or off (default: the serving notes, "
                          "runs/serving/serving-rule.json supersede_decision)")
     ap.add_argument("--decide-adapter", help="the decision adapter's path on the serving box (default: base weights)")
+    ap.add_argument("--decide-route", action=argparse.BooleanOptionalAction, default=None,
+                    help="force the route decision at recall time on or off (default: the serving notes, "
+                         "runs/serving/serving-rule.json route_decision)")
     a = ap.parse_args()
     Handler.app = App(a.world, a.day, a.endpoint, date=a.date, reasoning=a.reasoning, restore=not a.no_restore,
-                      decide_supersede=a.decide_supersede, decide_adapter=a.decide_adapter)
+                      decide_supersede=a.decide_supersede, decide_adapter=a.decide_adapter,
+                      decide_route=a.decide_route)
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
     srv.daemon_threads = True
     print(f"Afterglow: http://127.0.0.1:{a.port}  (world {a.world}, day {a.day}, Glimmer at {a.endpoint})", flush=True)
