@@ -77,6 +77,17 @@ share one copy (override with `AFTERGLOW_RUNS`).
   against 0.419 for always looking up, and asks on 30 of 30 never-told questions. `--decide-route` /
   `--no-decide-route` force it for one run.
 
+## Web search (off unless switched on)
+
+`app/afterglow/web_search.py` adds one tool, `search_web`, for public information the notes cannot hold. It is OFF
+unless `runs/serving/serving-rule.json` has `"web_search": {"on": true, "provider": "exa", "key_name": "<skate key
+name>", "max_results": 3}`; absent or off, the tool is not offered and every request (and the KV snapshot's prefix) is
+byte-equal to a chat without it. On, the query goes to Exa (`POST https://api.exa.ai/search`), and up to 3 results
+come back as title, snippet and url. The key is read once per session with `skate get <key_name>`, kept in memory, and
+never printed, logged or written; errors carry the HTTP status only. Every search is logged in the day log
+(`web_searches`: query and results), and the day page shows "searched the web: <query>" with the result sites, so the
+data that leaves the machine is visible. `--web-search` / `--no-web-search` force it for one run.
+
 ## Steering dials in the chat
 
 A night proposes dial changes (`runs/<world>/<day>/night/steering-proposals.json`); the user accepts or dismisses
