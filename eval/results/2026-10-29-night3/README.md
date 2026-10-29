@@ -22,11 +22,22 @@ consolidation linked itself.
 | w3 | keep (-) | d1 58/91/1 · d2 5/13/0 · d3 11/28/0 | d1 110/16/24 · d2 12/5/1 · d3 30/8/1 | 8/27 · 6/27 | 1/26 | 10+10 | 30/30 | 0.590 -> 0.625 (right 5 -> 3) | +1.5 pt [-3.4, +6.4] | 0 |
 | w4 | rollback (abstention_gate) | d1 69/84/0 · d2 12/6/0 · d3 13/23/0 | d1 112/39/2 · d2 16/2/0 · d3 18/18/0 | 1/27 · 4/27 | 0/16 | 10+10 | 30/30 | 0.585 -> 0.100 (right 5 -> 7) | +4.5 pt [-0.4, +9.3] | 1 |
 
-The decisions above are under gate v3, the rule in force when the nights ran. The owner ruled B on 29 Oct 11:33
-(product-2s: the day agent's own form, general abstention within 10 pt of base and never-told no more than 3 below
-base); the v3 gate stays disclosed. Night 3 is re-decided under product-2s with `eval/redecide_night.py --world W
---day 3 --rule product-2s --of-record` once Meta steering's product-form read (200 general + 30 never-told, real
-agent loop) is in `runs/<world>/3/night/eval/product-abstention-night.json`.
+The table's decisions are under gate v3, the rule in force when the nights ran. The owner ruled B on 29 Oct 11:33
+(product-2s: in the day agent's own form, the general abstain rate within 10 points of base either way, and never-told
+abstentions no more than 3 below base); the v3 gate stays disclosed. Night 3 was re-decided of record under product-2s
+on Meta steering's product-form read (200 general + 30 never-told, the real agent loop, day-3 notes in context,
+search off; `runs/<world>/3/night/eval/product-abstention-night.json`):
+
+| world | decision, product-2s (of record) | general declines, base -> night (of 200) | never-told declines, base -> night (of 30) |
+|---|---|---|---|
+| w1 | rollback | 94 -> 86 (-4.0 pt) | 30 -> 22 (8 below base; limit 3) |
+| w2 | **keep** | 96 -> 107 (+5.5 pt) | 30 -> 27 (at the limit) |
+| w3 | rollback | 88 -> 122 (+17.0 pt; limit ±10) | 29 -> 29 |
+| w4 | rollback | 96 -> 165 (+34.5 pt) | 30 -> 19 |
+
+Serving: `runs/w2-solo-developer/adapters.json` current = day 3; w3 goes back to day 1 (R2), w4 stays at day 2 (2b,
+promoted under B), w1 at day 1. The lead keeps w1 and w3 on base + notes. Every night trains from base, so a pointer
+affects serving only.
 
 ## What each result says
 - **Tool calls and the answer channel hold in all four worlds**: 20/20 tool calls and 30/30 chat replies in the
@@ -35,6 +46,10 @@ agent loop) is in `runs/<world>/3/night/eval/product-abstention-night.json`.
 - **Forgetting passes everywhere**: every lower bound is above -5 pt.
 - **The instructed gate fails in three worlds**: w1, w2 and w4 abstain far less than base on the gate prompt (35.5%,
   21.5%, 10.0% vs 58.5%). w3 passes at 62.5%. Under the owner's rule B the gate is disclosed, not a check.
+- **The product form fails both ways under one recipe**: w1 and w4 answer never-told questions by attaching a saved
+  note to the wrong person ("Rasmus Duarte's safety officer is Lotte Brandt"); w3 and w4 decline general questions
+  base answers, mostly with "I don't have that in your notes" (38 of w3's new declines), the unknown-key rows' wording
+  carried from the user's facts to public facts.
 - **New facts are learned only in part**: day-3 facts score 11-20 right of 36-39 in B, and 18-32 in D (notes in
   context). Day-1 facts stay strong in w1 (93/14) and weak in w3 (58/91).
 - **Stale values**: 0-1 of 27 in w1, w2, w4. w3 gives the old value 8 of 27 times, from two corrections that neither

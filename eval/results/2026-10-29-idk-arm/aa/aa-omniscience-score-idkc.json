@@ -1,0 +1,60 @@
+{
+ "label": "AA-Omniscience-Public, own harness (not a leaderboard number)",
+ "dataset_revision": "e4883edbb9f5ccf2b2a8fdc6fb65e01a58e99849",
+ "csv_sha256": "1e04603dafa3bd0d16d8151f07a5eb74c43d90c3a85d2fca120da2359174d02f",
+ "answer_prompt_sha256": "2a74d1175d5d0bafc4c44153e5d70ecd9b7df57c75b998037513c6c6e4e46271",
+ "grader_prompt_sha256": "d598fe204eb74f568c61a965bc277731379ace0582523db30acc1b89dc8a2e03",
+ "grader": "spark-sub",
+ "arms": {
+  "base": {
+   "N": 600,
+   "correct": 98,
+   "incorrect": 274,
+   "partial": 5,
+   "not_attempted": 223,
+   "unparsed": 0,
+   "omniscience_index": -29.33,
+   "accuracy": 0.1633,
+   "hallucination_rate": 0.5458,
+   "attempt_rate": 0.6283,
+   "accuracy_on_attempted": 0.2599,
+   "grading_paths": {
+    "deterministic": 241,
+    "model": 359
+   },
+   "deterministic_audit": {
+    "n": 49,
+    "model_agrees": 49,
+    "disagreements": []
+   }
+  },
+  "w1idkc": {
+   "N": 600,
+   "correct": 119,
+   "incorrect": 471,
+   "partial": 2,
+   "not_attempted": 8,
+   "unparsed": 0,
+   "omniscience_index": -58.67,
+   "accuracy": 0.1983,
+   "hallucination_rate": 0.9792,
+   "attempt_rate": 0.9867,
+   "accuracy_on_attempted": 0.201,
+   "grading_paths": {
+    "deterministic": 54,
+    "model": 546
+   },
+   "deterministic_audit": {
+    "n": 50,
+    "model_agrees": 49,
+    "disagreements": [
+     [
+      "84",
+      "not_attempted",
+      "incorrect"
+     ]
+    ]
+   }
+  }
+ }
+}

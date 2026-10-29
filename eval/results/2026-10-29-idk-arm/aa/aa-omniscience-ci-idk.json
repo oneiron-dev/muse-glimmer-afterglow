@@ -1,0 +1,147 @@
+{
+ "label": "AA-Omniscience-Public, own harness",
+ "n_questions": 600,
+ "resamples": 4000,
+ "arms": {
+  "base": {
+   "hallucination_rate": {
+    "value": 0.5458,
+    "ci95": [
+     0.5031,
+     0.5882
+    ]
+   },
+   "omniscience_index": {
+    "value": -29.3333,
+    "ci95": [
+     -35.1667,
+     -23.5
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.6283,
+    "ci95": [
+     0.59,
+     0.665
+    ]
+   }
+  },
+  "w1n3": {
+   "hallucination_rate": {
+    "value": 0.9436,
+    "ci95": [
+     0.9218,
+     0.9629
+    ]
+   },
+   "omniscience_index": {
+    "value": -55.1667,
+    "ci95": [
+     -61.5,
+     -48.6667
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.9567,
+    "ci95": [
+     0.94,
+     0.9717
+    ]
+   }
+  },
+  "w1idk": {
+   "hallucination_rate": {
+    "value": 0.117,
+    "ci95": [
+     0.0906,
+     0.1444
+    ]
+   },
+   "omniscience_index": {
+    "value": -1.8333,
+    "ci95": [
+     -5.3333,
+     1.6667
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.1983,
+    "ci95": [
+     0.1667,
+     0.23
+    ]
+   }
+  }
+ },
+ "pairs": {
+  "w1idk - w1n3": {
+   "hallucination_rate": {
+    "value": -0.8266,
+    "ci95": [
+     -0.8593,
+     -0.7931
+    ]
+   },
+   "omniscience_index": {
+    "value": 53.3333,
+    "ci95": [
+     47.1667,
+     59.5
+    ]
+   },
+   "attempt_rate": {
+    "value": -0.7583,
+    "ci95": [
+     -0.7933,
+     -0.7233
+    ]
+   }
+  },
+  "w1idk - base": {
+   "hallucination_rate": {
+    "value": -0.4288,
+    "ci95": [
+     -0.471,
+     -0.3855
+    ]
+   },
+   "omniscience_index": {
+    "value": 27.5,
+    "ci95": [
+     22.1667,
+     32.8333
+    ]
+   },
+   "attempt_rate": {
+    "value": -0.43,
+    "ci95": [
+     -0.4683,
+     -0.39
+    ]
+   }
+  },
+  "w1n3 - base": {
+   "hallucination_rate": {
+    "value": 0.3978,
+    "ci95": [
+     0.3542,
+     0.4418
+    ]
+   },
+   "omniscience_index": {
+    "value": -25.8333,
+    "ci95": [
+     -32.0,
+     -19.5
+    ]
+   },
+   "attempt_rate": {
+    "value": 0.3283,
+    "ci95": [
+     0.2917,
+     0.3667
+    ]
+   }
+  }
+ }
+}
