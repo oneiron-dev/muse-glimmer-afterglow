@@ -15,8 +15,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "night")); sys.path.insert(0, str(ROOT / "eval"))
-from omniscience import ABSTAIN_RULE  # noqa: E402
 from paths import runs_root  # noqa: E402
+from product_abstention import abstained  # noqa: E402  (the scorer of the of-record product-form read)
 
 
 def main():
@@ -32,10 +32,10 @@ def main():
     if any(r.get("route_on") for r in rows):
         raise SystemExit("these answers were taken with the route on: not the route-off control")
     out = {"source": args.answers, "server_run": rows[0].get("server_run"), "route_on": False, "supersede_on": rows[0].get("supersede_on"),
-           "abstain_rule": "eval/omniscience.py ABSTAIN_RULE", "arms": {}}
+           "abstain_rule": "eval/product_abstention.py abstained (as the of-record product-form read)", "arms": {}}
     for arm in ("base", "adapter"):
         nt = [r for r in rows if r["arm"] == arm and r["set"] == "never_told"]
-        answered = [r for r in nt if not ABSTAIN_RULE.search(r.get("answer") or "")]
+        answered = [r for r in nt if not abstained(r)]
         out["arms"][arm] = {"n": len(nt), "abstain": len(nt) - len(answered),
                             "wrong_person": sum(probes[r["id"]]["type"] == "lookalike" for r in answered),
                             "made_up": sum(probes[r["id"]]["type"] != "lookalike" for r in answered),
