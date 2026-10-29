@@ -75,7 +75,10 @@ def product_two_sided(product):
         and a["never_told"]["abstain"] >= b["never_told"]["abstain"] - PRODUCT_NT_DROP
 
 
-def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_rule="v3"):
+ABSTENTION_RULE_OF_RECORD = "product-2s"  # owner ruling 29 Oct 11:2x (META-ABSTENTION-GATE = B); v3 stays a disclosed check
+
+
+def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_rule=ABSTENTION_RULE_OF_RECORD):
     """Keep the adapter only if every gate passes: clean data, GGUF = PEFT, learned (B-A interval above 0),
     no loss detected (forgetting interval's lower bound above -5 points), no new tool failure and, when measured,
     abstention kept (SimpleQA gate slice, two-sided: abstain rate within 10 points of the base's and exact-match right
@@ -95,17 +98,19 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     gate = e.get("abstention_gate")
     cv_gate = e.get("abstention_gate_with_control_vector")
     product = e.get("abstention_product_form")
+    pending = False
     if abstention_rule in ("product", "product-2s"):  # option B: abstention judged in the day agent's own form
-        if not product:
-            raise ValueError(f"abstention rule {abstention_rule!r} needs eval.json abstention_product_form (eval/product_abstention.py)")
-        checks["abstention_product_form"] = product["passed"] if abstention_rule == "product" else product_two_sided(product)
+        if product:
+            checks["abstention_product_form"] = product["passed"] if abstention_rule == "product" else product_two_sided(product)
+        else:  # measured after the night on the day server; until then the night is pending, never kept
+            pending = True
     elif abstention_rule == "report-only":  # option C: abstention reported, never a gate
         pass
     elif gate_with_control_vector and cv_gate:
         checks["abstention_gate_with_control_vector"] = cv_gate["passed"]
     elif gate:
         checks["abstention_gate"] = gate["passed"]
-    keep = all(checks.values())
+    keep = all(checks.values()) and not pending
     why = ("all gates passed" if keep else "failed: " + ", ".join(k for k, v in checks.items() if not v))
     why += (f"; learned B-A {learned.get('est')} {learned.get('ci95')}, forgot {e['forgot']['delta'] if e['forgot'] else None} "
             f"{e['forgot']['ci95'] if e['forgot'] else None}")
@@ -120,7 +125,13 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     if e.get("tool_calls"):
         c = e["tool_calls"]["counts"]
         why += f"; tool calls {c['base']['right']} -> {c['adapter']['right']} of {c['adapter']['n']}"
-    out = {"decision": "keep" if keep else "rollback", "why": why, "checks": checks, "abstention_rule": abstention_rule}
+    if pending:
+        why = ("pending: abstention in the product form not measured yet (re-decide with eval/redecide_night.py --rule "
+               f"{abstention_rule} --of-record); " + why)
+    out = {"decision": "pending" if pending and all(checks.values()) else ("keep" if keep else "rollback"), "why": why,
+           "checks": checks, "abstention_rule": abstention_rule}
+    if gate and abstention_rule != "v3":  # the SimpleQA instructed gate, shown beside the decision, never a blocker
+        out["disclosed_checks"] = {"abstention_gate_v3": gate["passed"]}
     if product:
         out["abstention_product_form"] = {k: v for k, v in product.items() if k != "answers"}
     if gate:
