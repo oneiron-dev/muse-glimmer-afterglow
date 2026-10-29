@@ -88,7 +88,7 @@ def next_id(prefix, items):
 class ToolBox:
     """Runs one tool call. Returns (result_dict, notes_written)."""
 
-    def __init__(self, notes, world_state, day=None, decide_supersede=None, decide_route=None):
+    def __init__(self, notes, world_state, day=None, decide_supersede=None, decide_route=None, web_search=None):
         self.notes = notes
         self.world = world_state
         self.day = day
@@ -103,6 +103,9 @@ class ToolBox:
         self.question = None  # the user's words this turn (agent.py sets it); the route decision reads them
         self.route_decisions = []  # one per turn that recalls, for the day log
         self._routed = None  # (turn, decision): a second recall in the same turn reuses the decision
+        # web_search(query) -> [{"title", "snippet", "url"}]: the search_web tool (web_search.py), None when it is off
+        self.web_search = web_search
+        self.web_searches = []  # every search this session, query and results, for the day log
 
     def route(self, turn):
         """The turn's route decision, made once per turn; a failed call is logged and the recall search answers."""
@@ -158,6 +161,19 @@ class ToolBox:
                 if d:  # below the threshold, or the decision failed: the search answers
                     out["decided"] = d.get("decided") or {"error": d.get("error")}
                 return out, []
+            if name == "search_web":
+                query = str(args.get("query", "")).strip()
+                if self.web_search is None:
+                    return {"error": "web search is off"}, []
+                if not query:
+                    return {"error": "an empty query"}, []
+                try:
+                    results = self.web_search(query)
+                except Exception as e:  # never the key: web_search.py errors carry the status only
+                    self.web_searches.append({"turn": turn, "query": query, "error": str(e)})
+                    return {"error": str(e)}, []
+                self.web_searches.append({"turn": turn, "query": query, "results": results})
+                return {"query": query, "results": results}, []
             st = self.world.state
             if name == "calendar.list_events":
                 ev = sorted((e for e in st["calendar"] if e.get("date") == args.get("date")),

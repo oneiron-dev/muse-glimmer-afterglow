@@ -147,6 +147,12 @@ function describeAct(name, args, result) {
       } else if (d && d.error) out.how = `the route decision failed, so it searched the notes: ${d.error}`;
       return out;
     }
+    case "search_web": {  // what left the machine: the query, and the sites the results came from
+      const res = result.results || [];
+      const sites = res.map((r) => { try { return new URL(r.url).hostname; } catch { return r.url; } });
+      return { tag: "web", text: `searched the web: “${args.query}”`,
+               how: res.length ? `${res.length} result${res.length > 1 ? "s" : ""}: ${sites.join(", ")}` : "no results" };
+    }
     case "calendar.list_events":
       return { tag: "calendar", text: `${args.date}: ${(result.events || []).length} event(s)` };
     case "calendar.add_event":

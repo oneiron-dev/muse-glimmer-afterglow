@@ -22,6 +22,8 @@ from .dials import accepted_dials
 from .llm import GlimmerClient, GlimmerError, world_adapter_choice
 from .notes import LocalJsonNotes
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
+from .web_search import SEARCH_WEB_SCHEMA, web_search_setting
+from .web_search import provider as search_provider
 
 JST = dt.timezone(dt.timedelta(hours=9))
 MAX_ROUNDS = 8
@@ -98,7 +100,7 @@ def system_message(world_doc):
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
                  notes_backend="local", temperature=0.3, decide_supersede=None, decide_reasoned=None,
-                 decide_adapter=None, decide_route=None, dials=None):
+                 decide_adapter=None, decide_route=None, dials=None, web_search=None):
         self.world, self.day = world, int(day)
         self.temperature = temperature
         self.client = client or GlimmerClient()
@@ -129,9 +131,14 @@ class DaySession:
         on = on if decide_supersede is None else decide_supersede
         route_on, route_adapter, self.route_threshold = route_setting(self.day)
         route_on = route_on if decide_route is None else decide_route
+        # the search_web tool, off unless the serving notes switch it on; off, the tool list is exactly TOOL_SCHEMAS
+        search = web_search_setting()
+        self.web_search_on = search["on"] if web_search is None else web_search
+        self.tool_schemas = TOOL_SCHEMAS + [SEARCH_WEB_SCHEMA] if self.web_search_on else TOOL_SCHEMAS
         self.tools = ToolBox(self.notes, self.world_state, day=self.day,
                              decide_supersede=self._supersede_decider(decide_adapter) if on else None,
-                             decide_route=self._route_decider(route_adapter) if route_on else None)
+                             decide_route=self._route_decider(route_adapter) if route_on else None,
+                             web_search=search_provider(search) if self.web_search_on else None)
         self.daylog_path = self.dir / "daylog.jsonl"
         self.session_path = self.dir / "session.json"
         self.system_message = system_message(self.world_doc)
@@ -277,13 +284,14 @@ class DaySession:
         retry = None  # why the reply came from the answer channel: empty_reply, repeated_tool_call or max_rounds
         seen_calls = set()
         n_decisions, n_routes = len(self.tools.decisions), len(self.tools.route_decisions)
+        n_searches = len(self.tools.web_searches)
         self.tools.question = text  # the route decision at recall time reads the user's own words, not the query
         t0 = time.time()
         error = None
         for r in range(MAX_ROUNDS):
             done = None
             try:
-                for ev in self.client.stream_chat(self.messages, TOOL_SCHEMAS, reasoning=self.reasoning,
+                for ev in self.client.stream_chat(self.messages, self.tool_schemas, reasoning=self.reasoning,
                                                   temperature=self.temperature):
                     if ev["type"] == "done":
                         done = ev
@@ -338,7 +346,7 @@ class DaySession:
             # ask again in the answer channel. Counted per turn in the day log and on the day page, never hidden.
             empty = new_msgs and new_msgs[-1]["role"] == "assistant" and not new_msgs[-1].get("tool_calls")
             try:
-                fix = self.client.answer_channel(self.messages[:-1] if empty else self.messages, TOOL_SCHEMAS,
+                fix = self.client.answer_channel(self.messages[:-1] if empty else self.messages, self.tool_schemas,
                                                  reasoning=self.reasoning, temperature=self.temperature, why=retry)
                 final = fix["content"]
                 if empty:
@@ -363,6 +371,8 @@ class DaySession:
             rec["supersede_decisions"] = self.tools.decisions[n_decisions:]
         if self.client.dials:  # the control vectors every request of this turn carried
             rec["dials"] = [{k: d[k] for k in ("id", "axis", "toward", "scale")} for d in self.client.dials]
+        if len(self.tools.web_searches) > n_searches:  # what left the machine this turn: the queries and results
+            rec["web_searches"] = self.tools.web_searches[n_searches:]
         if len(self.tools.route_decisions) > n_routes:  # the turn's route decision at recall time, with p and ms
             rec["route_decisions"] = self.tools.route_decisions[n_routes:]
         live = hasattr(self.notes, "witness_turn") and final
