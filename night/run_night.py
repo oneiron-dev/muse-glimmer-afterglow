@@ -285,7 +285,8 @@ class Night:
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
                 "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
-                "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows, "public_anchor_rows": a.public_anchor_rows}
+                "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows, "public_anchor_rows": a.public_anchor_rows,
+                "public_anchors": a.public_anchors}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -470,11 +471,15 @@ class Night:
             extra_rows.append(self.args.idk_rows)
         if self.args.lookup_rows:
             extra_rows.append(self.args.lookup_rows)
-        if self.args.public_anchor_rows:
-            extra_rows.append(self.args.public_anchor_rows)
+        public = self.args.public_anchor_rows or (str(self.night / "public-anchors.jsonl") if self.args.public_anchors else None)
+        if public:
+            extra_rows.append(public)
             pool = json.loads((ROOT / "eval" / "data" / "public_anchor_pool_v1.manifest.json").read_text())
-            self.receipt["public_anchors"] = {"rows": sum(1 for _ in Path(self.args.public_anchor_rows).read_text().splitlines()),
-                                              "file": self.args.public_anchor_rows, "pool": pool["file"], "pool_sha256": pool["sha256"]}
+            report = Path(public).with_name("public-anchors-report.json")
+            self.receipt["public_anchors"] = {"rows": sum(1 for _ in Path(public).read_text().splitlines()), "file": public,
+                                              "pool": pool["file"], "pool_sha256": pool["sha256"],
+                                              **({k: json.loads(report.read_text()).get(k) for k in ("search_offered", "asked", "by_outcome",
+                                                                                                    "kept_by_part")} if report.exists() else {})}
         extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
@@ -628,12 +633,21 @@ class Night:
         self.receipt["decision"] = decision["decision"]
         self.receipt["ended"] = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
 
+    def public_anchors(self, log):
+        """Public anchor rows (night/public_anchor_rows.py): base answers or looks up public questions in the served
+        agent form, set against the ask-back rows (w4 night 5c, lead 30 Oct 05:25: the night-6 recipe draft)."""
+        server = os.environ.get("GLIMMER_BASE_URL")
+        run([sys.executable, "night/public_anchor_rows.py", "--world", self.args.world, "--rows", str(self.args.public_anchors),
+             *(["--server", server] if server else []), "--out", str(self.night / "public-anchors.jsonl"),
+             "--report", str(self.night / "public-anchors-report.json")], log)
+
     def go(self):
         n = self.night
         steps = [("consolidate", n / "consolidated.json", self.consolidate),
                  ("rewrites", n / "rewrites" / "rewrites.jsonl", self.rewrites),
                  *([("self_check", n / "self-check.jsonl", self.self_check)] if self.args.self_check and self.args.day >= 2 else []),
                  *([("agent_anchors", n / "agent-anchors.jsonl", self.agent_anchors)] if self.args.agent_anchors else []),
+                 *([("public_anchors", n / "public-anchors.jsonl", self.public_anchors)] if self.args.public_anchors else []),
                  ("anchors", self.anchors_path(), self.anchors),
                  *([("abstain_anchors", self.abstain_anchors_path(), self.abstain_anchors)] if self.args.abstain_share > 0 else []),
                  *([("abstain_anchors_plain", self.abstain_anchors_plain_path(), lambda log: self.abstain_anchors(log, plain=True))]
@@ -693,6 +707,8 @@ def main():
                     "intended action (night/agent_anchor_rows.py; the day server, slot 1)")
     ap.add_argument("--drop-text-acks", action="store_true", help="drop store requests answered in text (night/build_train.py)")
     ap.add_argument("--idk-rows", help="graded IDK rows from night/idk_rows.py rows (base wrong -> I don't know, right -> its answer)")
+    ap.add_argument("--public-anchors", type=int, default=0, help="N public anchor rows made by the night (step public_anchors; "
+                    "base server GLIMMER_BASE_URL, else the serving box), search_web offered (night-6 recipe draft)")
     ap.add_argument("--public-anchor-rows", help="public anchor rows from night/public_anchor_rows.py (base answers or searches "
                     "public questions in the served agent form; set against the ask-back rows)")
     ap.add_argument("--lookup-rows", help="look-it-up rows from night/lookup_rows.py rows (misses -> recall call or 'not sure', hits -> answer)")
