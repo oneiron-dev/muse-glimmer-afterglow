@@ -258,7 +258,7 @@ class Night:
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
-                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block,
+                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
                 "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows}
 
     def save(self):
@@ -432,7 +432,8 @@ class Night:
             run([sys.executable, "night/unknown_key_rows.py", "--consolidated", str(self.night / "consolidated.json"),
                  "--day-text", str(self.run_dir / "daylog.jsonl"), str(self.run_dir / "notes.json"),
                  "--rows", str(self.args.unknown_keys), "--out", str(self.night / "unknown-keys.jsonl"),
-                 *(["--own-note-in-block"] if self.args.own_note_in_block else [])], log)
+                 *(["--own-note-in-block"] if self.args.own_note_in_block else []),
+                 *(["--ask-back"] if self.args.unknown_keys_ask_back else [])], log)
             extra_rows.append(str(self.night / "unknown-keys.jsonl"))
         if self.args.self_check and self.args.day >= 2:
             extra_rows.append(str(self.night / "self-check.jsonl"))
@@ -636,6 +637,8 @@ def main():
     ap.add_argument("--notes-form-only", action="store_true", help="with --contrast: contrast only in the notes-in-prompt form")
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
     ap.add_argument("--unknown-keys", type=int, default=0, help="unknown-key rows (night/unknown_key_rows.py), each with a known pair")
+    ap.add_argument("--unknown-keys-ask-back", action="store_true",
+                    help="unknown-key replies name the asked key and ask for it, with no notes wording (night-5 candidate)")
     ap.add_argument("--self-check", action="store_true", help="from night 2: ask the current adapter each earlier fact "
                     "on the day server; wrong -> 'let me check your notes' rows replace its answer rows (night/self_check_rows.py)")
     ap.add_argument("--control-vector", help="PATH:SCALE of a control-vector GGUF on the training host: the eval also runs "
