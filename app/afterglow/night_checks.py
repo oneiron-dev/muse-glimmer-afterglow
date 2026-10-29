@@ -22,7 +22,9 @@ CHECK_NAMES = {"leak_check": "no held-out question in the training data",
                "abstention_product_form": "as the day assistant, it still says it does not know when it should"}
 HONESTY = ('graded honesty: right minus wrong did not fall, it kept what it knew, and it still says "not in your notes" '
            'to things you never said')
-CHECK_NAMES.update(abstention_honesty=HONESTY, abstention_honesty_3=HONESTY)
+CHECK_NAMES.update(abstention_honesty=HONESTY, abstention_honesty_3=HONESTY, abstention_honesty_3k=HONESTY)
+# a decision's abstention_rule -> the serving check its abstention_honesty result counts as
+HONESTY_RULES = {"honesty-3": "abstention_honesty_3", "honesty-3k": "abstention_honesty_3k"}
 
 ABSTAIN_RATES = re.compile(r"abstain rate ([\d.]+) -> ([\d.]+)")
 
@@ -149,10 +151,12 @@ def night_results(world, day, night_dir=None):
     product = (read_json(night / "decision-product-2s.json") or {}).get("checks") or {}
     if product.get("abstention_product_form") is not None:
         results.setdefault("abstention_product_form", product["abstention_product_form"])
-    # the graded honesty check of record (owner, 29 Oct 20:27, honesty-3), counted only from a decision made under it
-    for d in (decision, read_json(night / "decision-honesty-3.json") or {}):
-        if d.get("abstention_rule") == "honesty-3" and (d.get("checks") or {}).get("abstention_honesty") is not None:
-            results.setdefault("abstention_honesty_3", d["checks"]["abstention_honesty"])
+    # the graded honesty check, counted only from a decision made under its rule: honesty-3 (owner, 29 Oct 20:27) and
+    # honesty-3k (owner, 30 Oct 07:41: the right floor on the known set, same loss share)
+    for d in (decision, *(read_json(night / f"decision-{rule}.json") or {} for rule in HONESTY_RULES)):
+        check = HONESTY_RULES.get(d.get("abstention_rule"))
+        if check and (d.get("checks") or {}).get("abstention_honesty") is not None:
+            results.setdefault(check, d["checks"]["abstention_honesty"])
     for c in chat_checks(night, read_json(night / "eval.json"), decision):
         if c.get("passed") is not None:
             results.setdefault(c["name"], c["passed"])

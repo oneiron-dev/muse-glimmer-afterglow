@@ -128,6 +128,24 @@ class ServingRuleTest(unittest.TestCase):
         self.assertEqual(c["entry"]["day"], 1)
         self.assertIn("night 2's failed the 'graded honesty: right minus wrong did not fall", c["why"])
 
+    def test_the_honesty_check_of_record_follows_the_rule_named_in_the_serving_rule(self):
+        # owner 30 Oct 07:41 (rule A): honesty-3k replaces honesty-3; a night decided under honesty-3 only no longer counts
+        (self.runs / "serving" / "serving-rule.json").write_text(json.dumps(
+            {"checks": ["abstention_honesty_3k"] + CHECKS[1:], "shown_not_required": ["abstention_honesty_3"], "set": "test"}))
+        self.night(1)
+        self.night(2)
+        for day, rule in ((1, "honesty-3"), (2, "honesty-3")):
+            f = self.runs / "w" / str(day) / "night" / "decision.json"
+            d = json.loads(f.read_text())
+            d.update(abstention_rule=rule, checks=dict(d["checks"], abstention_honesty=day == 1))
+            f.write_text(json.dumps(d))
+        c = serving_choice("w", self.entries)
+        self.assertIsNone(c["entry"])  # no night has a honesty-3k result yet
+        self.assertEqual(c["unmeasured"], {"night 2": ["abstention_honesty_3k"], "night 1": ["abstention_honesty_3k"]})
+        (self.runs / "w" / "2" / "night" / "decision-honesty-3k.json").write_text(json.dumps(
+            {"decision": "keep", "abstention_rule": "honesty-3k", "checks": {"abstention_honesty": True}}))
+        self.assertEqual(serving_choice("w", self.entries)["entry"]["day"], 2)  # failed honesty-3, passes honesty-3k
+
     def test_the_serving_line_shows_never_told_as_served_and_what_the_note_check_stopped(self):
         product = ["abstention_product_form"] + CHECKS[1:]
         (self.runs / "serving" / "serving-rule.json").write_text(json.dumps({"checks": product, "set": "test"}))
