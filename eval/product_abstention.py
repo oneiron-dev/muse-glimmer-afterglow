@@ -42,6 +42,27 @@ def same_tools(a, b):
     return wa == wb and (ha is None or hb is None or ha == hb)
 
 
+SERVER_FIELDS = ("server_run", "adapters_loaded_sha256")
+
+
+def same_server(a, b):
+    """Two answer rows came from one llama-server run with one loaded adapter set (the server is deterministic only
+    within a run: a restart, even with the other adapters at scale 0, moves greedy answers). Rows from before the
+    fields were recorded pair only with each other; a recorded row with no readable run pairs with nothing."""
+    legacy_a, legacy_b = (not any(k in r for k in SERVER_FIELDS) for r in (a, b))
+    if legacy_a or legacy_b:
+        return legacy_a and legacy_b
+    return a["server_run"] is not None and all(a[k] == b[k] for k in SERVER_FIELDS)
+
+
+def refuse_mixed_server(pairs, what):
+    """SystemExit when any (row, row) pair was answered by different server runs or adapter sets."""
+    bad = [(a.get("set"), a.get("id")) for a, b in pairs if not same_server(a, b)]
+    if bad:
+        raise SystemExit(f"{what}: the two arms were answered by different server runs (a restart or another loaded "
+                         f"adapter set) on {len(bad)} questions, e.g. {bad[0]}; ask both again in one server run")
+
+
 def refuse_mixed_tools(pairs, what):
     """SystemExit when any (row, row) pair saw different tools."""
     bad = [(a.get("set"), a.get("id")) for a, b in pairs if not same_tools(a, b)]
@@ -76,7 +97,9 @@ def main():
     by = {}
     for r in rows:
         by.setdefault((r["set"], r["id"]), {})[r["arm"]] = r
-    refuse_mixed_tools([(v["base"], v["adapter"]) for v in by.values() if {"base", "adapter"} <= set(v)], args.answers)
+    pairs = [(v["base"], v["adapter"]) for v in by.values() if {"base", "adapter"} <= set(v)]
+    refuse_mixed_tools(pairs, args.answers)
+    refuse_mixed_server(pairs, args.answers)
     arms = {}
     for arm in ("base", "adapter"):
         g = [r for r in rows if r["arm"] == arm and r["set"] == "general" and r["id"] in gate_ids]
