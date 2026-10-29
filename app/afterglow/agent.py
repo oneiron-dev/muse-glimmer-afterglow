@@ -23,7 +23,7 @@ from .llm import GlimmerClient, GlimmerError, world_adapter_choice
 from .notes import LocalJsonNotes
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 from .web_search import SEARCH_WEB_SCHEMA, web_search_setting
-from .web_search import provider as search_provider
+from .web_search import connector as search_connector
 
 JST = dt.timezone(dt.timedelta(hours=9))
 MAX_ROUNDS = 8
@@ -138,7 +138,8 @@ class DaySession:
         self.tools = ToolBox(self.notes, self.world_state, day=self.day,
                              decide_supersede=self._supersede_decider(decide_adapter) if on else None,
                              decide_route=self._route_decider(route_adapter) if route_on else None,
-                             web_search=search_provider(search) if self.web_search_on else None)
+                             web_search=search_connector(search) if self.web_search_on else None,
+                             web_cap=search.get("cap"))
         self.daylog_path = self.dir / "daylog.jsonl"
         self.session_path = self.dir / "session.json"
         self.system_message = system_message(self.world_doc)
