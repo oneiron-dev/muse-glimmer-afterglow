@@ -166,12 +166,20 @@ def night_label(e):
 
 def serving_choice(world, entries):
     """Which of a world's loaded updates (serving-manifest entries) the day agent serves, and why in one line:
-    {"entry": the entry or None, "why": text, "failed": {night label: [check names]}}."""
+    {"entry": the entry or None, "why": text, "failed": {night label: [check names not passed]},
+    "unmeasured": {night label: [the ones of those with no result yet]}}."""
     rule = serving_rule()
     # latest day first; within a day the night of record before its variants
     mine = sorted((e for e in entries if e.get("world") == world and e.get("day") is not None),
                   key=lambda e: (-e["day"], bool(e.get("night_dir")), e.get("night_dir") or ""))
-    failed = {}
+    failed, unmeasured = {}, {}
+
+    def what(label):  # "failed the 'a' check and has no result yet for the 'b' check"
+        missing = unmeasured.get(label) or []
+        parts = ([f"failed {name_list([k for k in failed[label] if k not in missing])}"]
+                 if len(missing) < len(failed[label]) else [])
+        return " and ".join(parts + ([f"has no result yet for {name_list(missing)}"] if missing else []))
+
     for e in mine:
         results = night_results(world, e["day"], e.get("night_dir"))
         if rule:
@@ -181,14 +189,17 @@ def serving_choice(world, entries):
         if not bad:
             first = next(iter(failed), None)
             why = (f"{night_label(e).capitalize()}'s update is loaded: it passed every check" +
-                   (f"; {first}'s failed {name_list(failed[first])}." if first else "."))
-            return {"entry": e, "why": why, "failed": failed}
+                   (f"; {first}'s {what(first)}." if first else "."))
+            return {"entry": e, "why": why, "failed": failed, "unmeasured": unmeasured}
         failed[night_label(e)] = bad
+        if rule and any(k not in results for k in bad):
+            unmeasured[night_label(e)] = [k for k in bad if k not in results]
     if not mine:
-        return {"entry": None, "why": "No update loaded: no night has run for this person yet.", "failed": {}}
+        return {"entry": None, "why": "No update loaded: no night has run for this person yet.", "failed": {},
+                "unmeasured": {}}
     last = night_label(mine[0])
-    return {"entry": None, "failed": failed,
-            "why": f"No update loaded: {last}'s update failed {name_list(failed[last])}" +
+    return {"entry": None, "failed": failed, "unmeasured": unmeasured,
+            "why": f"No update loaded: {last}'s update {what(last)}" +
                    (", and no other loaded update passes every check." if len(mine) > 1 else ".")}
 
 
