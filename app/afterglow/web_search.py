@@ -25,11 +25,12 @@ from . import paths
 SEARCH_WEB_SCHEMA = {"type": "function", "function": {
     "name": "search_web",
     "description": "Search the public web for general knowledge your notes cannot hold: news, documentation, "
-                   "public facts. Returns up to 3 results with title, url and snippet. Never put the user's "
-                   "personal details (names, places, plans, anything they told you) in a query; use recall for "
-                   "what the user told you.",
+                   "public facts. Returns up to 3 results with title, url and snippet. A query may name public "
+                   "places and topics from the conversation, never people's names, contact details or private "
+                   "identifiers (codes, numbers, account or file names); use recall for what the user told you.",
     "parameters": {"type": "object", "properties": {
-        "query": {"type": "string", "description": "general words to search the web for, nothing personal"}},
+        "query": {"type": "string", "description": "the words to search the web for: public places and topics, "
+                                                   "no names of people, contact details or private identifiers"}},
         "required": ["query"]}}}
 
 EXA_URL = "https://api.exa.ai/search"
