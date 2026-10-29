@@ -19,7 +19,7 @@ from paths import runs_root  # noqa: E402
 WORLDS = {"w1": "w1-ines-varga", "w2": "w2-solo-developer", "w3": "w3-shop-owner", "w4": "w4-grad-student"}
 NIGHTS = {"night3": (3, "night"), "idk": (3, "night-3-idk"), "idkc": (3, "night-3-idkc"), "idk2to1": (3, "night-3-idk2to1"),
           "night3b": (3, "night-3b"), "night2b": (2, "night"), "night2d": (2, "night-2d"), "night4": (4, "night"), "idkr": (3, "night-3-idkr"),
-          "night4b": (4, "night-4b")}  # w4 2b was promoted to night/
+          "night4b": (4, "night-4b"), "night5": (5, "night")}  # w4 2b was promoted to night/
 
 
 def main():
