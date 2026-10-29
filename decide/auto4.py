@@ -19,6 +19,7 @@ right nor wrong and is counted apart. The comparison is plain one-pass A/B on th
 
 import argparse
 import json
+import random
 import statistics
 import sys
 import time
@@ -63,6 +64,8 @@ def build(args):
             r["prompt4"] = prompts.pair_prompt_auto4(r["kind"], r["a"], r["b"])
             r["options4"] = prompts.pair_options_auto4(r["kind"])
             r["prompt4_id"] = prompts.AUTO4_PROMPT_IDS[r["kind"]]
+            r["prompt4_hint"] = prompts.pair_prompt_auto4(r["kind"], r["a"], r["b"], hint=True)
+            r["prompt4_hint_id"] = prompts.AUTO4_HINT_PROMPT_IDS[r["kind"]]
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
     print(f"{len(ids)} rows -> {PAIRS.relative_to(ROOT)}")
 
@@ -115,7 +118,7 @@ def run(args):
                 return
             res = {"id": row["id"], "kind": row["kind"], "split": row["split"], "label": row["label"], "arm": args.arm}
             if args.phase == "onepass":
-                res["auto4"] = one_pass(readout, args.server, glimmer, row["prompt4"], list(row["options4"]), row["accept"], lora, args.slot)
+                res["auto4"] = one_pass(readout, args.server, glimmer, row[args.prompt4_field], list(row["options4"]), row["accept"], lora, args.slot)
                 res["plain"] = one_pass(readout, args.server, glimmer, row["prompt"], list(row["options"]), row["accept"], lora, args.slot)
                 line = (f"4opt {res['auto4']['pick']} p {res['auto4']['p']:.3f}  plain {res['plain']['pick']} "
                         f"p {res['plain']['p']:.3f}  gold {row['label']}")
@@ -161,10 +164,10 @@ def score_arm(onepass, reasons, spans, rows_by_id):
         a4, plain = r["auto4"], r["plain"]
         row = {"id": r["id"], "kind": r["kind"], "split": r["split"], "label": r["label"], "pick4": a4["pick"], "p4": a4["p"],
                "plain_pick": plain["pick"], "plain_p": plain["p"], "plain_right": plain["right"],
-               "plain_ms": plain["server_ms"], "onepass4_ms": a4["server_ms"]}
+               "plain_ms": plain["ms"], "onepass4_ms": a4["ms"], "plain_server_ms": plain["server_ms"]}
         row["plain_end"] = "right" if plain["right"] else "wrong"
         row["plain_ask_end"] = "asked" if plain["p"] < PLAIN_ASK_BELOW else row["plain_end"]
-        row["span_ms"] = plain["server_ms"]
+        row["span_ms"] = plain["ms"]
         if plain["p"] >= SPAN_THINK_BELOW:
             row["span_end"] = row["plain_end"]
         elif r["id"] in spans:
@@ -176,7 +179,7 @@ def score_arm(onepass, reasons, spans, rows_by_id):
             row["span_broke"] = row["span_flip"] and not sp["right"]
         else:
             row["span_end"] = "not_run"
-        e2e = a4["server_ms"]
+        e2e = a4["ms"]
         if a4["pick"] == ASK:
             row["end"] = "asked"
         elif a4["pick"] == THINK:
@@ -206,28 +209,60 @@ def margin_gate(onepass, spans, rows_by_id):
     def end(r, tau):
         plain = r["plain"]
         if 2 * plain["p"] - 1 >= tau:
-            return plain["right"], False
+            return plain["right"], False, plain["ms"]
         sp = spans.get(r["id"])
-        return (None, True) if sp is None else (sp["right"], True)
+        return (None, True, None) if sp is None else (sp["right"], True, plain["ms"] + sp["ms"])
 
     def at(rows, tau):
         ends = [end(r, tau) for r in rows]
         if any(e[0] is None for e in ends):
             return None
         return {"n": len(rows), "right": sum(e[0] for e in ends), "wrong": sum(not e[0] for e in ends),
-                "thought": sum(e[1] for e in ends)}
+                "thought": sum(e[1] for e in ends), **lat([e[2] for e in ends])}
 
     calib = [r for r in onepass if r["split"] == "calibration"]
     rest = [r for r in onepass if r["split"] != "calibration"]
     grid = [round(0.05 * i, 2) for i in range(0, 20)]
     fits = {tau: at(calib, tau) for tau in grid}
     fits = {tau: f for tau, f in fits.items() if f is not None and at(rest, tau) is not None}
-    if not calib or not fits:
+    if not spans or not calib or not fits:
         return None
     tau = max(fits, key=lambda t: (fits[t]["right"], -fits[t]["thought"]))
     return {"tau": tau, "as_max_p": round((1 + tau) / 2, 3), "max_tau_covered": max(fits), "calibration": fits[tau],
             "other_rows": at(rest, tau), "all": at(onepass, tau),
             "span02_0.8_other_rows": at(rest, 0.6) if 0.6 in fits else None}
+
+
+def paired_bootstrap(a, b, n=10000, seed=20261014):
+    """Mean per-row difference of (right +1, wrong -1, asked or undecided 0) between two methods on the same rows,
+    with a 95% interval from a paired row bootstrap."""
+    d = [x - y for x, y in zip(a, b)]
+    rng = random.Random(seed)
+    xs = sorted(sum(d[rng.randrange(len(d))] for _ in d) / len(d) for _ in range(n))
+    return {"diff": round(sum(d) / len(d), 3), "ci95": [round(xs[int(0.025 * n)], 3), round(xs[int(0.975 * n)], 3)]}
+
+
+def versus_plain(per):
+    """(right - wrong) / n of each method minus plain one pass, paired by row."""
+    val = {"right": 1, "wrong": -1, "asked": 0, "undecided": 0}
+    plain = [val[r["plain_end"]] for r in per]
+    out = {"auto4": paired_bootstrap([val[r["end"]] for r in per], plain)} if all(r["end"] != "not_run" for r in per) else {}
+    if any(r.get("span_thought") for r in per) and all(r["span_end"] != "not_run" for r in per):
+        out["span"] = paired_bootstrap([val[r["span_end"]] for r in per], plain)
+    return out
+
+
+def flag_vs_p(per):
+    """Glimmer's own escalation (picks 3 or 4) used as 'ask', against asking on the same number of lowest plain-p
+    rows: which leaves fewer wrong answers among the rows it answers?"""
+    esc = {r["id"] for r in per if r["pick4"] in (ASK, THINK)}
+    if not esc:
+        return None
+    low = {r["id"] for r in sorted(per, key=lambda r: r["plain_p"])[:len(esc)]}
+    flag_wrong = sum(r["end"] == "wrong" for r in per if r["id"] not in esc)
+    p_wrong = sum(not r["plain_right"] for r in per if r["id"] not in low)
+    return {"asks": len(esc), "flag": {"right": len(per) - len(esc) - flag_wrong, "wrong": flag_wrong},
+            "plain_lowest_p": {"right": len(per) - len(esc) - p_wrong, "wrong": p_wrong}, "overlap": len(esc & low)}
 
 
 def summarize(per):
@@ -240,7 +275,7 @@ def summarize(per):
         "n": len(per),
         "plain": {**end_result([{**r, "end": r["plain_end"]} for r in per]),
                   "wrong_at_0.9": sum(r["plain_end"] == "wrong" and r["plain_p"] >= 0.9 for r in per),
-                  **lat([r["plain_ms"] for r in per])},
+                  **lat([r["plain_ms"] for r in per]), "server_p50_ms": pct([r["plain_server_ms"] for r in per], 0.5)},
         "plain_ask_below_0.9": end_result([{**r, "end": r["plain_ask_end"]} for r in per]),
         "span": {**end_result([{**r, "end": r["span_end"]} for r in per if r["span_end"] != "not_run"]),
                  "not_run": sum(r["span_end"] == "not_run" for r in per),
@@ -283,6 +318,8 @@ def score(args):
         report["arms"][arm] = {g: summarize([r for r in per if f(r)]) for g, f in groups.items() if any(f(r) for r in per)}
         report["arms"][arm]["escalated_rows"] = [r for r in per if r["pick4"] in (ASK, THINK)]
         report["arms"][arm]["margin_gate"] = margin_gate(onepass, spans, rows_by_id)
+        report["arms"][arm]["versus_plain"] = versus_plain(per)
+        report["arms"][arm]["escalation_flag_vs_plain_p"] = flag_vs_p(per)
     out = OUT_DIR / "score-auto4.json"
     out.write_text(json.dumps(report, indent=1, ensure_ascii=False) + "\n")
     print(table(report))
@@ -300,15 +337,16 @@ def table(report):
         lines.append(f"| {arm} | plain, ask below p 0.9 | {s['n'] - pa['asked']} / {pa['asked']} / 0 | {pa['right']} | {pa['wrong']} | "
                      f"{pa['asked']} | 0 | {pa['acc_decided']} | {pa['acc_all']} | {pl['p50_ms']} / {pl['p95_ms']} |")
         sp = s["span"]
-        lines.append(f"| {arm} | span-02 style: think below p 0.8, average | {s['n']} / 0 / {sp['thought']} (thought) | {sp['right']} | "
-                     f"{sp['wrong']} | 0 | 0 | {sp['acc_decided']} | {sp['acc_all']} | "
-                     f"{sp['end_to_end']['p50_ms']} / {sp['end_to_end']['p95_ms']} |")
+        if sp["thought"]:
+            lines.append(f"| {arm} | span-02 style: think below p 0.8, average | {s['n']} / 0 / {sp['thought']} (thought) | {sp['right']} | "
+                         f"{sp['wrong']} | 0 | 0 | {sp['acc_decided']} | {sp['acc_all']} | "
+                         f"{sp['end_to_end']['p50_ms']} / {sp['end_to_end']['p95_ms']} |")
         mg = groups.get("margin_gate")
         if mg and mg["all"]:
             m = mg["all"]
             lines.append(f"| {arm} | span blend, margin gate tau {mg['tau']} (= p < {mg['as_max_p']}; fit on calibration) | "
                          f"{m['n']} / 0 / {m['thought']} (thought) | {m['right']} | {m['wrong']} | 0 | 0 | "
-                         f"{round(m['right'] / m['n'], 4)} | {round(m['right'] / m['n'], 4)} | - |")
+                         f"{round(m['right'] / m['n'], 4)} | {round(m['right'] / m['n'], 4)} | {m['p50_ms']} / {m['p95_ms']} |")
         k = a4["picks"]
         lines.append(f"| {arm} | 4 options (owner) | {k['answer']} / {k['ask']} / {k['think']} | {a4['right']} | {a4['wrong']} | "
                      f"{a4['asked']} | {a4['undecided']} | {a4['acc_decided']} | {a4['acc_all']} | "
@@ -329,12 +367,13 @@ def main():
     r.add_argument("--phase", choices=["onepass", "reason", "span"], required=True)
     r.add_argument("--slot", type=int, required=True)
     r.add_argument("--reasoning", default="high")
+    r.add_argument("--prompt4-field", default="prompt4", help="prompt4 (bare) or prompt4_hint (one line on when to escalate)")
     r.add_argument("--span-from", type=float, default=0.0, help="span phase: think on plain p in [from, below)")
     r.add_argument("--span-below", type=float, default=SPAN_THINK_BELOW)
     r.add_argument("--until", help="stop before the next call after this local time, HH:MM")
     r.add_argument("--stop-file")
     s = sub.add_parser("score")
-    s.add_argument("--arm", nargs="+", default=["base", "D1b"])
+    s.add_argument("--arm", nargs="+", default=["base", "D1b", "base-hint", "D1b-hint"])
     args = ap.parse_args()
     {"build": build, "run": run, "score": score}[args.cmd](args)
 
