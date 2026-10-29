@@ -351,9 +351,11 @@ class Night:
                                       "questions_leak_check": json.loads((self.night / "self-check-questions-leak.json").read_text())["passed"]}
 
     def agent_anchors(self, log):
-        manifest = json.loads((self.runs / "serving" / "adapters.json").read_text())
+        server = os.environ.get("GLIMMER_BASE_URL")  # another base server (a lent box): its own adapter count
+        where = (["--server", server] if server else
+                 ["--n-loras", str(len(json.loads((self.runs / "serving" / "adapters.json").read_text())["adapters"]))])
         run([sys.executable, "night/agent_anchor_rows.py", "--world", self.args.world, "--consolidated", str(self.night / "consolidated.json"),
-             "--n-loras", str(len(manifest["adapters"])), "--turns", str(self.args.agent_anchors),
+             *where, "--turns", str(self.args.agent_anchors),
              "--out", str(self.night / "agent-anchors.jsonl"), "--report", str(self.night / "agent-anchors-report.json")], log)
         report = json.loads((self.night / "agent-anchors-report.json").read_text())
         self.receipt["agent_anchors"] = {k: report.get(k) for k in ("turns", "kept", "dropped", "by_action", "reasoning", "tokens", "inexact_tokens")}

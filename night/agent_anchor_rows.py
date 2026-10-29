@@ -113,7 +113,7 @@ def main():
     ap.add_argument("--world", required=True)
     ap.add_argument("--consolidated", required=True)
     ap.add_argument("--server", help="root URL (default: the serving box in app/serve/hosts.json)")
-    ap.add_argument("--n-loras", type=int, required=True, help="adapters loaded on the server (all sent at scale 0)")
+    ap.add_argument("--n-loras", type=int, help="adapters loaded on the server, all sent at scale 0 (default: the server's /lora-adapters)")
     ap.add_argument("--reasoning", default="low", help="the day agent's default")
     ap.add_argument("--turns", type=int, default=60)
     ap.add_argument("--seed", type=int, default=20261029)
@@ -133,6 +133,9 @@ def main():
     if overlap:
         raise SystemExit(f"agent anchors share text or keys with the tool-call check: {overlap[:3]}")
     system = system_message(json.loads((ROOT / "worlds" / args.world / "world.json").read_text()))
+    if args.n_loras is None:
+        with urllib.request.urlopen(f"{root}/lora-adapters", timeout=30) as resp:
+            args.n_loras = len(json.loads(resp.read()))
     lora = [{"id": i, "scale": 0.0} for i in range(args.n_loras)]
     rows, report = [], []
     for n, t in enumerate(turns):
