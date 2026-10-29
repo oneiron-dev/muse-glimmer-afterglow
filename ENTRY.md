@@ -76,6 +76,17 @@ Fetched at setup or called over the network. None of it is copied into this repo
 | llama.cpp, Unsloth, PEFT, Transformers | versions recorded in each run receipt | serving and training |
 | [re:dvx](https://github.com/lumpenspace/redvx) (MIT) | `redvx` 0.1.0 from PyPI, installed with `--no-deps` (it pins transformers <5.9; Glimmer needs 5.15, under which every module imports) | contrast-pair protocol, direction fit, common-component removal, vector format |
 
+## Evaluation data
+
+Public evaluation data copied into this repository, each licence read on the source's own card or README:
+
+| Source | Revision | Licence | What we copied |
+|---|---|---|---|
+| [SimpleQA](https://openai.com/index/introducing-simpleqa) (OpenAI, `simple_qa_test_set.csv` from [simple-evals](https://github.com/openai/simple-evals)) | CSV sha256 `feee3f7e7db3617e94e8fcf1977b756ec420ef8568f4e0fcbbe0e92e9d5fc032`; README at `652c89d` | MIT (the simple-evals README lists SimpleQA under its MIT License) | `eval/data/simpleqa/gate_slice_v1.jsonl` (200 questions with answers); `night/data/simpleqa_anchor_prompts_v1.jsonl` and `_plain_v1.jsonl` (300 questions each, as prompts) |
+| [AA-Omniscience-Public](https://huggingface.co/datasets/ArtificialAnalysis/AA-Omniscience-Public) (Artificial Analysis) | `e4883edbb9f5ccf2b2a8fdc6fb65e01a58e99849` | Apache-2.0 (dataset card) | the answer and grader prompts, verbatim, in `eval/data/aa_omniscience/`; our own answers and grades by question id in `eval/results/` (no question text) |
+| [MMLU-Pro](https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro) (TIGER-Lab) | `b189ec765aa7ed75c8acfea42df31fdae71f97be` | MIT (dataset card) | 180 test questions in `eval/data/forget_slice_v1.jsonl` |
+| [Natural Questions, open-domain split](https://huggingface.co/datasets/google-research-datasets/nq_open) (Google; Kwiatkowski et al., TACL 7:453-466, 2019; Lee, Chang and Toutanova, ACL 2019) | `5dd9790a83002ad084ddeb7c420dc716852c6f28`, validation parquet sha256 `b074bed0bccb56fa1551a8ac1c9c51ce89bc11c7fbb6a9c713b2c33a98531e12` | CC BY-SA 3.0 (dataset card) | 100 validation questions with their answers in `eval/data/known_slice_v1.jsonl`; that derived file is itself under CC BY-SA 3.0, as its manifest states |
+
 ## Hosted model use during development
 
 - Development-time Muse Spark calls (synthetic test worlds, answer grading, a Spark-vs-Glimmer teacher comparison) run on the owner's Meta subscription. The product itself calls only the local Muse Glimmer.
