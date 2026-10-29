@@ -1,0 +1,36 @@
+{
+ "mmlu_pro": {
+  "dataset": "TIGER-Lab/MMLU-Pro",
+  "revision": "b189ec765aa7ed75c8acfea42df31fdae71f97be",
+  "split": "test",
+  "parquet_sha256": "0e24a191921c2f453518a537a8b2117bd137e7714d4ef1565e9ba06c1ecb9ad8",
+  "seed": 20261029,
+  "per_category": {
+   "biology": 21,
+   "business": 21,
+   "chemistry": 21,
+   "computer science": 22,
+   "economics": 21,
+   "engineering": 22,
+   "health": 21,
+   "history": 22,
+   "law": 22,
+   "math": 21,
+   "other": 22,
+   "philosophy": 21,
+   "physics": 22,
+   "psychology": 21
+  },
+  "items": 300
+ },
+ "tool_items": 0,
+ "file": "eval/data/forget_slice_v2.jsonl",
+ "sha256": "27b60fb07ee30a5affd7d5c7f021bfa78bfae2e6a4b276d3a8fd4fe809742a4c",
+ "disjoint_from": [
+  {
+   "file": "eval/data/forget_slice_v1.jsonl",
+   "sha256": "5a3a2a0a7002abc36113afa0d0059730ba3641741a81169dae6fa44aa1c325c3",
+   "items": 200
+  }
+ ]
+}
