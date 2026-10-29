@@ -342,7 +342,7 @@ class Night:
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
                 "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
                 "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows, "public_anchor_rows": a.public_anchor_rows,
-                "public_anchors": a.public_anchors, "train_seed": a.train_seed, "save_epochs": a.save_epochs}
+                "public_anchors": a.public_anchors, "train_seed": a.train_seed, "save_epochs": a.save_epochs, "kl_anchors": a.kl_anchors}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -536,6 +536,10 @@ class Night:
                                               "pool": pool["file"], "pool_sha256": pool["sha256"],
                                               **({k: json.loads(report.read_text()).get(k) for k in ("search_offered", "asked", "by_outcome",
                                                                                                     "kept_by_part")} if report.exists() else {})}
+        if self.args.kl_anchors:  # soft-anchor pools: trained with the KL term, never as hard labels (train_adapter)
+            extra_rows.append(str(self.night / "kl-pools.jsonl"))
+            kp = json.loads((self.night / "kl-pools-report.json").read_text())
+            self.receipt["kl_pools"] = {k: kp.get(k) for k in ("candidates_sha256", "fixed", "swapped", "rows")}
         extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
@@ -576,17 +580,19 @@ class Night:
         run(["ssh", HOST["name"], f"mkdir -p {self.remote}"], log)
         rsync(str(self.night / "train.jsonl"), f"{HOST['name']}:{self.remote}/train.jsonl", log)
         r = self.remote
+        kl = f" --kl-weight {a.kl_anchors} --kl-cache-dir {HOST['work']}/kl-teacher-cache" if a.kl_anchors else ""
         cmd = (f"set -e; {HOST['python']} night/train_adapter.py --model-dir {HOST['model_dir']} --train {r}/train.jsonl "
                f"--out-dir {r}/adapter --rank {a.rank} --targets attn_mlp --epochs {a.epochs} --lr {a.lr} --save-epochs {a.save_epochs or a.epochs}"
                f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}{' --train-header' if a.train_header else ''}"
-               f"{f' --seed {a.train_seed}' if a.train_seed is not None else ''}; "
+               f"{f' --seed {a.train_seed}' if a.train_seed is not None else ''}"
+               f"{kl}; "
                f"LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/{self.adapter_dir()} {r}/adapter.gguf {HOST['model_dir']} {HOST['python']}; "
                f"PYTHONPATH={HOST['llama_dir']}/gguf-py {HOST['python']} night/verify_gguf_lora.py --adapter {r}/adapter/{self.adapter_dir()} "
                f"--gguf {r}/adapter.gguf --base-config {HOST['model_dir']}/config.json --out {r}/gguf-verify.json")
         for e in self.extra_epochs():  # the epoch screen's adapters, in the same booking; a failed one never stops the night
             cmd += (f"; ( LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/epoch{e} {r}/adapter-epoch{e}.gguf "
                     f"{HOST['model_dir']} {HOST['python']} ) || echo 'epoch {e} convert failed'")
-        fleet_gpu(f"afterglow night {a.world} day {a.day}: train + convert", GPU_LIMIT["train"], cmd, log)
+        fleet_gpu(f"afterglow night {a.world} day {a.day}: train + convert", "75m" if a.kl_anchors else GPU_LIMIT["train"], cmd, log)
         rsync(f"{HOST['name']}:{r}/adapter/train-report.json", str(self.night / "train-report.json"), log)
         rsync(f"{HOST['name']}:{r}/gguf-verify.json", str(self.night / "gguf-verify.json"), log)
         rsync(f"{HOST['name']}:{r}/adapter.gguf", str(self.night / "adapter.gguf"), log)
@@ -754,6 +760,17 @@ class Night:
              *(["--server", server] if server else []), "--out", str(self.night / "public-anchors.jsonl"),
              "--report", str(self.night / "public-anchors-report.json")], log)
 
+    def kl_pools(self, log):
+        """Soft-anchor pool rows (night/kl_pool_rows.py, research round 2 #1): base replies in the served agent form to
+        the frozen pools (obscure, known, people; made once per world, cached in runs/<w>/_kl_pools) and to this night's
+        user-fact questions with the user named as a public person. Needs a base server (GLIMMER_BASE_URL)."""
+        server = os.environ.get("GLIMMER_BASE_URL")
+        if not server:
+            raise RuntimeError("the soft-anchor pools need a base server: set GLIMMER_BASE_URL (phase P)")
+        run([sys.executable, "night/kl_pool_rows.py", "--world", self.args.world, "--server", server,
+             "--rewrites", str(self.night / "rewrites" / "rewrites.jsonl"), "--cache-dir", str(self.runs / self.args.world / "_kl_pools"),
+             "--out", str(self.night / "kl-pools.jsonl"), "--report", str(self.night / "kl-pools-report.json")], log)
+
     def go(self):
         n = self.night
         steps = [("consolidate", n / "consolidated.json", self.consolidate),
@@ -761,6 +778,7 @@ class Night:
                  *([("self_check", n / "self-check.jsonl", self.self_check)] if self.args.self_check and self.args.day >= 2 else []),
                  *([("agent_anchors", n / "agent-anchors.jsonl", self.agent_anchors)] if self.args.agent_anchors else []),
                  *([("public_anchors", n / "public-anchors.jsonl", self.public_anchors)] if self.args.public_anchors else []),
+                 *([("kl_pools", n / "kl-pools.jsonl", self.kl_pools)] if self.args.kl_anchors else []),
                  ("anchors", self.anchors_path(), self.anchors),
                  *([("abstain_anchors", self.abstain_anchors_path(), self.abstain_anchors)] if self.args.abstain_share > 0 else []),
                  *([("abstain_anchors_plain", self.abstain_anchors_plain_path(), lambda log: self.abstain_anchors(log, plain=True))]
@@ -791,6 +809,9 @@ def main():
     ap.add_argument("--epochs", type=int, default=4)
     ap.add_argument("--save-epochs", help="comma list of epochs to keep (e.g. 2,3,4): the extra ones are converted and scored by "
                     "the epoch screen (eval/epoch_screen.py; report only, lead 30 Oct 06:54); default: the last epoch only")
+    ap.add_argument("--kl-anchors", type=float, default=0.0, help="soft anchors (research round 2 #1; lead 30 Oct 08:03): "
+                    "the KL weight W for plain Glimmer's own rows (anchors, agent and public anchors, the kl pools made by the "
+                    "kl_pools step); fact and ask-back rows keep cross-entropy. 0 = off")
     ap.add_argument("--train-seed", type=int, help="train_adapter.py --seed (default: its own, 20261027); a second seed on the same "
                     "train set measures the run-to-run spread (w4 night 5c2, lead 30 Oct 06:46)")
     ap.add_argument("--lr", type=float, default=1e-4)

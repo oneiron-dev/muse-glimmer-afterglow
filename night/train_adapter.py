@@ -5,6 +5,13 @@ Loss falls on the assistant turn only. Target modules are named by full-path reg
 `gate_proj` exists both in the MLP and as the attention gate (`self_attn.gate_proj`).
 Saves the PEFT adapter after each epoch listed in --save-epochs (out_dir/epoch<N>/) and writes
 train-report.json (recipe, versions, trainable params, loss curve, tokens/s, memory).
+
+Soft anchors (--kl-weight W > 0; lead 30 Oct 08:03-08:05, research round 2 #1): rows that are plain Glimmer's own
+replies (forms "anchor", "agent_*", "public_*" and the soft-anchor pools "kl_*") are not trained as hard labels. Each
+gets W x KL(teacher || student) at its reply tokens, where the teacher is the same NF4 model with the adapter off and
+only its top-20 log-probabilities count (renormalised; computed once before epoch 1, cached by row hash in
+--kl-cache-dir). Fact rows and the ask-back unknown-key rows keep cross-entropy. The fixed pools (kl_obscure,
+kl_known, kl_people) rotate: --kl-rotate of them per epoch; the other soft rows train every epoch.
 """
 
 import argparse
@@ -14,6 +21,7 @@ import os
 import random
 import sys
 import time
+import hashlib
 from pathlib import Path
 
 GENERATION_DATE = "2026-10-27"
@@ -29,6 +37,14 @@ TARGETS = {
     "attn_mlp": r"(self_attn\.(q_proj|k_proj|v_proj|o_proj)|mlp\.(gate_proj|up_proj|down_proj))",
 }
 LAYERS = {"all": r"\d+", "last16": r"(3[6-9]|4\d|5[01])"}
+KL_TOP = 20
+KL_ROTATING = ("kl_obscure", "kl_known", "kl_people")
+
+
+def soft_row(row):
+    """Plain Glimmer's own words: trained toward its distribution (KL), not as hard labels."""
+    f = row.get("form", "")
+    return f == "anchor" or f.startswith(("agent_", "public_", "kl_"))
 
 
 def target_regex(targets, layers):
@@ -71,6 +87,59 @@ def encode_row(tokenizer, row, max_len, train_header=False):
     return ids_full, labels[:len(ids_full)]
 
 
+def reply_positions(labels):
+    """Positions whose logits predict a reply token (the token at p + 1 is a label)."""
+    return [p for p in range(len(labels) - 1) if labels[p + 1] != -100]
+
+
+def logits_at(model, ids, positions):
+    import torch
+    os.environ["UNSLOTH_RETURN_LOGITS"] = "1"  # Unsloth's fused loss path returns no logits otherwise
+    try:
+        out = model(input_ids=torch.tensor([ids]).cuda(), attention_mask=torch.ones((1, len(ids)), dtype=torch.long).cuda())
+    finally:
+        os.environ.pop("UNSLOTH_RETURN_LOGITS", None)
+    return out.logits[0, positions].float()
+
+
+def teacher_top_k(model, encoded, soft, cache_dir, report, write_report):
+    """The adapter-off model's top-20 log-probs at every reply token of every soft row; cached by row hash."""
+    import torch
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    out, hits, t0 = {}, 0, time.time()
+    model.eval()
+    for j, (ids, labels) in enumerate(encoded):
+        if not soft[j]:
+            continue
+        key = hashlib.sha256(json.dumps([ids, labels]).encode()).hexdigest()[:32]
+        path = cache_dir / f"{key}.pt"
+        if path.exists():
+            out[j] = torch.load(path)
+            hits += 1
+            continue
+        pos = reply_positions(labels)
+        with torch.no_grad(), model.disable_adapter():
+            lp = torch.log_softmax(logits_at(model, ids, pos), dim=-1)
+        top = lp.topk(KL_TOP, dim=-1)
+        out[j] = (top.indices.int().cpu(), top.values.half().cpu())
+        torch.save(out[j], path)
+    model.train()
+    report["kl_teacher"] = {"rows": len(out), "cache_hits": hits, "seconds": round(time.time() - t0, 1), "top_k": KL_TOP,
+                            "cache_dir": str(cache_dir)}
+    write_report()
+    return out
+
+
+def kl_row(model, row, teach):
+    """KL(teacher || student) over the teacher's top-20 (renormalised), mean over the row's reply tokens."""
+    import torch
+    ids, labels = row
+    idx, t_lp = teach[0].cuda().long(), teach[1].cuda().float()
+    s_lp = torch.log_softmax(logits_at(model, ids, reply_positions(labels)), dim=-1).gather(-1, idx)
+    t_p = torch.softmax(t_lp, dim=-1)  # renormalised over the top-20
+    return (t_p * (torch.log(t_p + 1e-12) - s_lp)).sum(-1).mean()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model-dir", required=True)
@@ -94,6 +163,10 @@ def main():
     ap.add_argument("--max-steps", type=int, default=0, help="stop after this many optimizer steps (probe runs)")
     ap.add_argument("--seed", type=int, default=20261027)
     ap.add_argument("--no-save", action="store_true")
+    ap.add_argument("--kl-weight", type=float, default=0.0, help="soft anchors: W x top-20 KL toward the adapter-off model "
+                    "on plain Glimmer's own rows (0 = off: every row is cross-entropy)")
+    ap.add_argument("--kl-rotate", type=int, default=80, help="fixed-pool soft rows (kl_obscure/known/people) per epoch")
+    ap.add_argument("--kl-cache-dir", help="teacher top-20 cache, by row hash (default: <out-dir>/../kl-teacher-cache)")
     args = ap.parse_args()
     alpha = args.alpha or args.rank
     save_epochs = {int(x) for x in args.save_epochs.split(",") if x} or {args.epochs}
@@ -152,10 +225,15 @@ def main():
 
     rows = [json.loads(line) for line in Path(args.train).read_text().splitlines() if line.strip()]
     encoded = [encode_row(tokenizer, r, args.max_len, args.train_header) for r in rows]
+    soft = [args.kl_weight > 0 and soft_row(r) for r in rows]
     bos = tokenizer.bos_token_id
     if bos is not None and encoded[0][0][0] != bos:
         raise SystemExit(f"first token {encoded[0][0][0]} is not BOS {bos}")
-    report["data"] = {"rows": len(rows), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
+    teacher = {}
+    if args.kl_weight > 0:
+        teacher = teacher_top_k(model, encoded, soft, Path(args.kl_cache_dir) if args.kl_cache_dir else out_dir.parent / "kl-teacher-cache",
+                                report, write_report)
+    report["data"] = {"rows": len(rows), "soft_rows": sum(soft), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
                       "loss_tokens_per_epoch": sum(sum(1 for x in lab if x != -100) for _, lab in encoded),
                       "max_row_tokens": max(len(i) for i, _ in encoded)}
     write_report()
@@ -171,19 +249,35 @@ def main():
     curve, step, tokens_seen, t_train = [], 0, 0, time.time()
     torch.cuda.reset_peak_memory_stats()
     stop = False
+    rotating = [j for j, r in enumerate(rows) if soft[j] and r.get("form") in KL_ROTATING]
+    rng.shuffle(rotating)
+    rot_set = set(rotating)
     for epoch in range(1, args.epochs + 1):
-        order = list(range(len(encoded)))
+        turn = set(rotating[((epoch - 1) * args.kl_rotate) % max(1, len(rotating)):][:args.kl_rotate]) if rotating else set()
+        if rotating and len(turn) < min(args.kl_rotate, len(rotating)):  # wrap around the pool
+            turn |= set(rotating[:args.kl_rotate - len(turn)])
+        order = [j for j in range(len(encoded)) if not (j in rot_set and j not in turn)]
         rng.shuffle(order)
-        short = [j for j in order if len(encoded[j][0]) <= LONG_ROW]
-        long_ = [j for j in order if len(encoded[j][0]) > LONG_ROW]
+        hard = [j for j in order if not soft[j]]
+        short = [j for j in hard if len(encoded[j][0]) <= LONG_ROW]
+        long_ = [j for j in hard if len(encoded[j][0]) > LONG_ROW]
         micro = [short[i:i + args.batch_rows] for i in range(0, len(short), args.batch_rows)]
         micro += [long_[i:i + args.long_batch_rows] for i in range(0, len(long_), args.long_batch_rows)]
+        soft_order = [j for j in order if soft[j]]  # soft rows run one at a time (their logits are kept for the KL term),
+        micro += [soft_order[i:i + args.batch_rows // 2] for i in range(0, len(soft_order), args.batch_rows // 2)]  # 8 per step
         rng.shuffle(micro)
         for k in range(0, len(micro), args.grad_accum):
             group = micro[k:k + args.grad_accum]
             n_loss = sum(sum(1 for x in encoded[j][1] if x != -100) for mb in group for j in mb)
             loss_sum = 0.0
             for mb in group:
+                if soft[mb[0]]:  # soft rows: W x KL to the teacher's top-20 at their reply tokens, one row per forward
+                    for j in mb:
+                        loss = args.kl_weight * kl_row(model, encoded[j], teacher[j]) * (len(teacher[j][0]) / max(1, n_loss))
+                        loss.backward()
+                        loss_sum += float(loss)
+                        tokens_seen += len(encoded[j][0])
+                    continue
                 width = max(len(encoded[j][0]) for j in mb)
                 ids = torch.full((len(mb), width), PAD_ID, dtype=torch.long)
                 lab = torch.full((len(mb), width), -100, dtype=torch.long)
@@ -228,6 +322,8 @@ def main():
         model.save_pretrained(str(out_dir / "final"))
         report.setdefault("saved", []).append("final")
     train_s = time.time() - t_train
+    if args.kl_weight > 0:
+        report["kl"] = {"weight": args.kl_weight, "rotate": args.kl_rotate, "soft_rows": sum(soft), "rotating_rows": len(rotating)}
     report.update({"status": "ok", "steps": step, "planned_steps": total_steps, "train_s": round(train_s, 1),
                    "tokens_seen": tokens_seen, "tok_s": round(tokens_seen / train_s, 1),
                    "ended": time.strftime("%Y-%m-%dT%H:%M:%S%z")})

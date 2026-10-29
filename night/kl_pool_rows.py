@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+"""Soft-anchor rows (lead 30 Oct 08:03-08:05; research round 2 #1): base Glimmer's own replies, in the day agent's
+form as served (its system prompt and tools, search_web not offered, reasoning low, greedy), to four prompt pools.
+The night trains them with a top-20 KL term toward plain Glimmer (night/train_adapter.py --kl-weight), never with
+cross-entropy:
+  obscure  - candidates of eval/data/kl_pool_candidates_v1.jsonl part "obscure", kept where base declines;
+  known    - part "known", kept where base's reply holds a gold answer (normalised match);
+  people   - part "people", every reply in the user channel kept;
+  swapped  - this night's own user-fact questions (rewrites, form qa_forward) with the user named as a public person
+             ("my <key>" -> "<Name>'s <key>", the user's name -> <Name>); every finished reply kept (base's own
+             behaviour on an unknown person, whatever it is).
+The fixed pools (obscure, known, people) depend only on the world's system prompt and plain Glimmer, so they are made
+once per world and cached (--cache-dir); the swapped pool is made every night. Rows are the raw prompt and completion
+with the generated token ids, like the agent anchors.
+"""
+
+import argparse
+import hashlib
+import json
+import random
+import re
+import sys
+import urllib.request
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "app"))
+sys.path.insert(0, str(ROOT / "eval"))
+sys.path.insert(0, str(ROOT / "night"))
+from afterglow.agent import system_message  # noqa: E402
+from afterglow.tools import TOOL_SCHEMAS  # noqa: E402
+from agent_anchor_rows import first_action, post  # noqa: E402
+from omniscience import says_abstain  # noqa: E402
+
+CANDIDATES = ROOT / "eval" / "data" / "kl_pool_candidates_v1.jsonl"
+KEEP = {"obscure": 100, "known": 100, "people": 100}
+ASKS_BACK = re.compile(r"can you tell me|could you tell me|what is it\?|haven't told me|have not told me|in your notes|"
+                       r"in my notes|any notes|don't know|do not know|not sure|no information|unable to", re.I)
+ARTICLES = re.compile(r"\b(a|an|the)\b")
+
+
+def norm(text):
+    t = re.sub(r"[^a-z0-9' ]+", " ", (text or "").lower().replace("’", "'"))
+    return " ".join(ARTICLES.sub(" ", t).split())
+
+
+def frozen_candidates():
+    want = json.loads(CANDIDATES.with_suffix(".manifest.json").read_text())["sha256"]
+    got = hashlib.sha256(CANDIDATES.read_bytes()).hexdigest()
+    if got != want:
+        raise SystemExit(f"{CANDIDATES} sha256 {got} differs from its manifest")
+    return [json.loads(line) for line in CANDIDATES.read_text().splitlines() if line.strip()], got
+
+
+def generate(root, system, question, lora):
+    prompt = post(f"{root}/apply-template", {"messages": [system, {"role": "user", "content": question}], "tools": TOOL_SCHEMAS,
+                                             "chat_template_kwargs": {"reasoning_strength": "low"}})["prompt"]
+    if not prompt.endswith("<|start|>assistant"):
+        raise SystemExit(f"unexpected rendered prompt end {prompt[-40:]!r}")
+    r = post(f"{root}/completion", {"prompt": prompt, "n_predict": 400, "temperature": 0.0, "top_k": 1, "seed": 20261014,
+                                    "id_slot": 1, "cache_prompt": False, "lora": lora, "return_tokens": True})
+    tokens = r.get("tokens") or []
+    ended = bool(tokens) and tokens[-1] == 200008  # <|eot|>
+    completion = post(f"{root}/detokenize", {"tokens": tokens, "with_pieces": False})["content"] if tokens else ""
+    if ended and not completion.endswith("<|eot|>"):
+        completion += "<|eot|>"
+    exact = tokens and post(f"{root}/tokenize", {"content": completion, "add_special": False, "parse_special": True})["tokens"] == tokens
+    return prompt, completion, tokens, bool(ended and r.get("stop_type") == "eos" and exact)
+
+
+def outcome(completion):
+    target, invoke, _ = first_action(completion)
+    if target != "user" or "<atem:function_calls>" in completion:
+        return "tool", ""
+    return "reply", completion.split("to=user<|message|>")[-1].replace("<|eot|>", "")
+
+
+def keep(item, completion):
+    kind, reply = outcome(completion)
+    if item["part"] == "swapped":
+        return True, kind
+    if kind != "reply":
+        return False, "tool"
+    declined = says_abstain(reply) or bool(ASKS_BACK.search(reply))
+    if item["part"] == "obscure":
+        return declined, "declined" if declined else "answered"
+    if item["part"] == "known":
+        right = any(norm(g) and norm(g) in norm(reply) for g in item["gold"])
+        return right and not declined, "right" if right else "not right"
+    return True, "reply"  # people
+
+
+def swapped_questions(rewrites, user_name, public_names, n, rng):
+    """The night's user-fact questions with the user named as a public person."""
+    first = user_name.split()[0]
+    qs, seen = [], set()
+    rows = [json.loads(line) for line in Path(rewrites).read_text().splitlines() if line.strip()]
+    for r in rows:
+        if r.get("form") != "qa_forward" or r.get("item_id") in seen:
+            continue
+        q = r["messages"][0]["content"] if r.get("messages") else r.get("user", "")
+        name = public_names[len(qs) % len(public_names)]
+        s = re.sub(rf"\b{re.escape(user_name)}\b|\b{re.escape(first)}\b", name, q)
+        s = re.sub(r"\bmy\b", f"{name}'s", s)
+        s = re.sub(r"\bMy\b", f"{name}'s", s)
+        if s != q:
+            seen.add(r.get("item_id"))
+            qs.append({"id": f"KS-{r.get('item_id')}", "part": "swapped", "question": s, "source": r.get("item_id")})
+    rng.shuffle(qs)
+    return qs[:n]
+
+
+def make(root, system, items, lora, want, log):
+    rows, report, kept = [], [], {}
+    for it in items:
+        if kept.get(it["part"], 0) >= want.get(it["part"], 10**6):
+            continue
+        prompt, completion, tokens, ok = generate(root, system, it["question"], lora)
+        k, why = keep(it, completion) if ok else (False, "cut or inexact tokens")
+        report.append({"id": it["id"], "part": it["part"], "kept": k, "why": why, "completion": completion[-200:]})
+        if k:
+            kept[it["part"]] = kept.get(it["part"], 0) + 1
+            rows.append({"item_id": f"kl-{it['id']}", "kind": "kl_anchor", "form": f"kl_{it['part']}", "user": it["question"],
+                         "assistant": completion, "raw": {"prompt": prompt[:-len("<|start|>assistant")],
+                                                          "completion": "<|start|>assistant" + completion, "completion_ids": tokens},
+                         "valid": True})
+        if log and len(report) % 25 == 0:
+            print(json.dumps({"asked": len(report), "kept": kept}), flush=True)
+    return rows, report
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--world", required=True)
+    ap.add_argument("--server", required=True, help="root URL of a llama-server with the base (all adapters sent at 0)")
+    ap.add_argument("--rewrites", help="the night's rewrites.jsonl (the swapped pool); none = fixed pools only")
+    ap.add_argument("--swapped", type=int, default=48)
+    ap.add_argument("--cache-dir", help="per-world cache of the fixed pools (made once, reused every night)")
+    ap.add_argument("--fixed-only", action="store_true")
+    ap.add_argument("--out", required=True)
+    ap.add_argument("--report", required=True)
+    args = ap.parse_args()
+    root = args.server.rstrip("/")
+    root = root[:-3] if root.endswith("/v1") else root
+    with urllib.request.urlopen(f"{root}/lora-adapters", timeout=30) as resp:
+        lora = [{"id": i, "scale": 0.0} for i in range(len(json.loads(resp.read())))]
+    world = json.loads((ROOT / "worlds" / args.world / "world.json").read_text())
+    system = system_message(world)
+    cands, sha = frozen_candidates()
+    cache = Path(args.cache_dir) / f"{args.world}-kl-fixed-{sha[:12]}.jsonl" if args.cache_dir else None
+    if cache and cache.exists():
+        fixed = [json.loads(line) for line in cache.read_text().splitlines() if line.strip()]
+        fixed_report = json.loads(cache.with_suffix(".report.json").read_text())
+    else:
+        fixed, rep = make(root, system, cands, lora, KEEP, True)
+        fixed_report = {"asked": len(rep), "kept": {p: sum(1 for x in rep if x["kept"] and x["part"] == p) for p in KEEP},
+                        "why": {p: {w: sum(1 for x in rep if x["part"] == p and x["why"] == w) for w in {x["why"] for x in rep if x["part"] == p}}
+                                for p in KEEP}, "candidates_sha256": sha, "detail": rep}
+        if cache:
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            cache.write_text("".join(json.dumps(r) + "\n" for r in fixed))
+            cache.with_suffix(".report.json").write_text(json.dumps(fixed_report, indent=1) + "\n")
+    swapped, sw_report = [], []
+    if args.rewrites and not args.fixed_only:
+        names = [c["question"][len("Who is "):-1] for c in cands if c["part"] == "people" and c["question"].startswith("Who is ")]
+        qs = swapped_questions(args.rewrites, world["persona"]["name"], names, args.swapped, random.Random(f"kl-swap:{args.world}"))
+        swapped, sw_report = make(root, system, qs, lora, {}, False)
+    Path(args.out).write_text("".join(json.dumps(r) + "\n" for r in fixed + swapped))
+    summary = {"world": args.world, "candidates_sha256": sha, "fixed": {"rows": len(fixed), "kept": fixed_report["kept"], "cached": bool(cache and cache.exists())},
+               "swapped": {"asked": len(sw_report), "rows": len(swapped)}, "rows": len(fixed) + len(swapped)}
+    Path(args.report).write_text(json.dumps({**summary, "fixed_report": {k: v for k, v in fixed_report.items() if k != "detail"},
+                                             "swapped_detail": sw_report}, indent=1) + "\n")
+    print(json.dumps(summary))
+
+
+if __name__ == "__main__":
+    main()
