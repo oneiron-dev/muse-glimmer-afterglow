@@ -93,7 +93,7 @@ def question_person(question, user_name, notes):
 def not_about(name):
     """The recall result when the question is about someone the notes never mention."""
     return (f"None of your notes is about {name}: they are about the user. Do not give them as facts about {name}; "
-            f"say {name} is not in the user's notes.")
+            f"tell the user you don't have anything about {name} in their notes.")
 
 
 def serving_setting(name, day):
