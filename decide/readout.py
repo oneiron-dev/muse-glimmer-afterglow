@@ -136,6 +136,18 @@ def think(server, glimmer, user_text, lora, strength, slot=None, max_tokens=REAS
     return prompt, r.get("content", ""), r.get("tokens_predicted"), r.get("stop_type"), round(1000 * (time.time() - t0), 1)
 
 
+def reasoned(server, glimmer, user_text, label_ids, accept, lora, slot=None, strength="high"):
+    """Think first, then read the labels after the reasoning. A reasoning turn that ends at its cap is undecided."""
+    prompt, reasoning, n_tok, stop, think_ms = think(server, glimmer, user_text, lora, strength, slot)
+    after = glimmer.ids(prompt + reasoning + "<|eom|>" + ANSWER_PREFIX)
+    d2, m2, top2, ms2, _ = label_probs(server, after, label_ids, lora, slot)
+    pick2 = max(d2, key=d2.get)
+    undecided = stop == "limit" or (n_tok or 0) >= REASONING_MAX_TOKENS  # lead ruling 29 Oct 04:40: never an answer
+    return {"pick": pick2, "p": round(d2[pick2], 4), "right": pick2 in accept, "undecided": undecided,
+            "label_mass": round(m2, 4),
+            "reasoning_tokens": n_tok, "stop": stop, "ms": round(think_ms + ms2, 1), "reasoning": reasoning[-600:]}
+
+
 def decide(server, glimmer, row, lora, slot=None, extend_below=None, strength="high"):
     labels = list(row["options"])
     label_ids = glimmer.label_ids(labels)
@@ -149,14 +161,7 @@ def decide(server, glimmer, row, lora, slot=None, extend_below=None, strength="h
            "prompt_per_second": t.get("prompt_per_second"), "top": top,
            "dist": {k: round(v, 4) for k, v in sorted(dist.items(), key=lambda kv: -kv[1])[:5]}}
     if extend_below is not None and dist[pick] < extend_below:
-        prompt, reasoning, n_tok, stop, think_ms = think(server, glimmer, row["prompt"], lora, strength, slot)
-        after = glimmer.ids(prompt + reasoning + "<|eom|>" + ANSWER_PREFIX)
-        d2, m2, top2, ms2, _ = label_probs(server, after, label_ids, lora, slot)
-        pick2 = max(d2, key=d2.get)
-        undecided = stop == "limit" or (n_tok or 0) >= REASONING_MAX_TOKENS  # lead ruling 29 Oct 04:40: never an answer
-        out["extended"] = {"pick": pick2, "p": round(d2[pick2], 4), "right": pick2 in row["accept"], "undecided": undecided,
-                           "label_mass": round(m2, 4),
-                           "reasoning_tokens": n_tok, "stop": stop, "ms": round(think_ms + ms2, 1), "reasoning": reasoning[-600:]}
+        out["extended"] = reasoned(server, glimmer, row["prompt"], label_ids, row["accept"], lora, slot, strength)
     return out
 
 
