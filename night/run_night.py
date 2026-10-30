@@ -634,7 +634,7 @@ class Night:
         for e in ([] if a.no_epoch_screen else self.extra_epochs()):  # the epoch screen's adapters, in the same booking; a failed one never stops the night
             cmd += (f"; ( LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/epoch{e} {r}/adapter-epoch{e}.gguf "
                     f"{HOST['model_dir']} {HOST['python']} ) || echo 'epoch {e} convert failed'")
-        fleet_gpu(f"afterglow night {a.world} day {a.day}: train + convert", "90m" if a.cd_rows else "75m" if a.kl_anchors else GPU_LIMIT["train"], cmd, log)
+        fleet_gpu(f"afterglow night {a.world} day {a.day}: train + convert", "150m" if a.cd_rows else "75m" if a.kl_anchors else GPU_LIMIT["train"], cmd, log)
         rsync(f"{HOST['name']}:{r}/adapter/train-report.json", str(self.night / "train-report.json"), log)
         rsync(f"{HOST['name']}:{r}/gguf-verify.json", str(self.night / "gguf-verify.json"), log)
         rsync(f"{HOST['name']}:{r}/adapter.gguf", str(self.night / "adapter.gguf"), log)
