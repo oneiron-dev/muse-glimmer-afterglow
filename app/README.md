@@ -123,6 +123,11 @@ day page header shows them ("dials: concise +0.04").
   credential reads every person in the vault). Values notes.json marks superseded are dropped; notes saved today
   that the vault has not acknowledged yet come from notes.json. A vault error or a partial pack answers that call
   from notes.json.
+- the vault is up, waking or down, and no turn waits for it. A session wakes it in the background when it opens
+  (a cold start takes ~27 s) and again before a recall after 14 quiet minutes (Hypnos stops it after 15). A
+  failed call marks it down: recalls answer from notes.json at once (`fallback_down`), witness runs are logged
+  unsent for push-day, and a background wake retries (15 s, 30 s, ... 5 min) until the vault answers. One recall
+  waits at most 35 s. Ending the day in the web app waits at most 30 s for queued witness runs.
 - notes.json stays the source for the day context, the supersede and route decisions, the night and the page.
 - the day log carries every vault recall of a turn (`vault_recalls`: ms, outcome, items kept and dropped, the
   values returned and the local values) and `notes_errors` (the day's count so far); `simulation.json` adds a

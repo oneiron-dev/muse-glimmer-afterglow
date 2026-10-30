@@ -134,6 +134,63 @@ class LocalJsonNotes(NotesStore):
         note["decided"] = decided
         self._save()
 
+    def apply_night_links(self, links, night_day):
+        """The corrections a night found and its guard passed (runs/<w>/<d>/night/night-links.json "links"): each
+        old note gets superseded_by_night {by, night_day, linked_by, p, guard, reason} and status superseded, so it
+        leaves recall and the notes block; it stays on disk. A link whose notes are gone or no longer active, or
+        that the user undid, is not applied. Returns the links applied."""
+        by_id = {n["id"]: n for n in self.notes}
+        applied = []
+        for link in links:
+            old, new = by_id.get(link.get("old_id")), by_id.get(link.get("new_id"))
+            if not old or not new or old["status"] != "active" or new["status"] != "active":
+                continue
+            if any(u.get("by") == new["id"] for u in old.get("night_links_undone") or []):
+                continue
+            old.update(status="superseded", updated_at=now_iso(),
+                       superseded_by_night={"by": new["id"], "night_day": night_day,
+                                            **{k: link.get(k) for k in ("linked_by", "p", "guard", "reason")}})
+            applied.append(link)
+        if applied:
+            self._save()
+        return applied
+
+    def answer_night_proposal(self, proposal, answer, night_day, day=None):
+        """The user's answer to a link the night proposed but its guard refused (night-links.json "proposed"):
+        "link" applies it as the night would, marked by_user; "keep_both" changes nothing on the notes but stays on
+        the old note (night_links_kept_both), so no later night proposes the pair again. Returns the record."""
+        by_id = {n["id"]: n for n in self.notes}
+        old, new = by_id.get(proposal.get("old_id")), by_id.get(proposal.get("new_id"))
+        if not old or not new:
+            raise KeyError(f"{proposal.get('old_id')} -> {proposal.get('new_id')}: a note is missing")
+        rec = {"by": new["id"], "night_day": night_day, "answer": answer, "at": now_iso(), "day": day}
+        if answer == "link":
+            if old["status"] != "active" or new["status"] != "active":
+                raise ValueError(f"{old['id']} -> {new['id']}: a note is no longer active")
+            old.update(status="superseded", updated_at=now_iso(),
+                       superseded_by_night={"by": new["id"], "night_day": night_day, "by_user": True,
+                                            **{k: proposal.get(k) for k in ("linked_by", "p", "guard", "reason")}})
+        elif answer == "keep_both":
+            old.setdefault("night_links_kept_both", []).append(rec)
+        else:
+            raise ValueError(f"answer must be link or keep_both, not {answer!r}")
+        self._save()
+        return rec
+
+    def undo_night_link(self, old_id, day=None):
+        """The user's undo of a night's link: the old note is active again, and the undo stays on it
+        (night_links_undone: by, night_day, at, day), so the next night sees it and no later start applies it again.
+        Returns the link undone."""
+        old = next((n for n in self.notes if n["id"] == old_id and n.get("superseded_by_night")), None)
+        if old is None:
+            raise KeyError(f"{old_id}: no night link to undo")
+        link = old.pop("superseded_by_night")
+        old.setdefault("night_links_undone", []).append({"by": link["by"], "night_day": link["night_day"],
+                                                         "at": now_iso(), "day": day})
+        old.update(status="active", updated_at=now_iso())
+        self._save()
+        return link
+
     def correction_candidates(self, note, k=5):
         """Earlier active notes that the new `note` may correct (shown to the agent, which decides): shared key
         words count most, then the new key's words in the old value, words the two values share (a correction
@@ -204,16 +261,23 @@ class OneironNotes(NotesStore):
     - recall (the recall tool): the vault is the source. It is asked with deadline_ms 30000; only items from this
       world's conversations count (world_conversations), a value the local copy marks superseded is dropped, and
       notes saved today that the vault has not acknowledged yet are added from the local copy. A vault error, a
-      partial pack (retrieval_meta.partial), or a vault still waking answers that call from the local notes; it is
-      logged. The session wakes the vault in the background when it opens (wake: a cold start takes ~27 s), and a
-      turn never waits for it.
+      partial pack (retrieval_meta.partial), or a vault that is waking or down answers that call from the local
+      notes; it is logged.
+    - The vault is up, waking or down (vault_state), and no turn waits for it to change. The session wakes it in the
+      background when it opens (a cold start takes ~27 s), and again before a recall after IDLE_STOP_S quiet (Hypnos
+      stops it after 900 s idle). A failed call marks it down: recalls then answer locally at once, witness runs are
+      logged unsent (push_day sends them later), and a background wake retries with backoff until it answers.
     - The local copy is the source for everything that needs the full note list: all(), the day context, the
       supersede decision (correction_candidates, link, record_decision), the route decision, export_day and the UI.
 
-    recalls: one entry per recall call (ms, outcome, items kept and dropped), for the day log. wake: the session's
-    wake call ({"state": waking|awake|error, "ms"}). errors: every vault error and fallback. Needs the "oneiron"
-    extra and the credentials in oneiron_vault.py.
+    recalls: one entry per recall call (ms, outcome, items kept and dropped), for the day log. wakes: every wake call
+    ({"ms", "outcome": awake|error}). errors: every vault error and fallback. Needs the "oneiron" extra and the
+    credentials in oneiron_vault.py.
     """
+
+    PROBE_BACKOFF_S = (15, 30, 60, 120, 300)  # between wake calls while the vault is down
+    IDLE_STOP_S = 840  # Hypnos stops the engine after 900 s idle: past this, a recall wakes it instead of waiting
+    RECALL_TIMEOUT_S = 35  # the client's wait for one recall: the 30 s deadline plus the trip
 
     def __init__(self, local, world, day, vault=None, tag=None, witness_log=None):
         import queue
@@ -237,24 +301,47 @@ class OneironNotes(NotesStore):
         # user's run 0); a restarted app starts from the live log, so a turn it never sent stays local-served
         sent = live_witness_sent(self.witness_log) if self.witness_log else {}
         self.unacknowledged = {n["id"] for n in local.notes if n.get("day") == day and 1 not in sent.get(n.get("turn"), ())}
+        self.wakes = []
+        self.vault_state = "waking"
+        self._up = threading.Event()  # set while the vault is up
+        self._lock = threading.Lock()
+        self._probing = False
+        self._last_ok = None  # time of the last vault call that answered
+        self._start_probe("waking")
         self._queue = queue.Queue()
         threading.Thread(target=self._send_loop, daemon=True).start()
-        self.wake = {"state": "waking"}
-        self._awake = threading.Event()
-        threading.Thread(target=self._wake, daemon=True).start()
 
-    def _wake(self):
+    def _start_probe(self, state):
+        """Mark the vault waking or down and start the background wake, unless one is running."""
+        import threading
+
+        self._up.clear()
+        with self._lock:
+            self.vault_state = state
+            if self._probing:
+                return
+            self._probing = True
+        threading.Thread(target=self._probe, daemon=True).start()
+
+    def _probe(self):
+        """Wake calls until one answers (the first right away, then with PROBE_BACKOFF_S between): then up."""
         import time
 
-        t0 = time.time()
-        try:
-            self.vault.wake()
-            self.wake = {"state": "awake", "ms": round((time.time() - t0) * 1000)}
-        except Exception as e:  # recalls still go to the vault (each one wakes it itself) and fall back on error
-            self.wake = {"state": "error", "ms": round((time.time() - t0) * 1000), "error": f"{type(e).__name__}: {e}"[:300]}
-            self.errors.append(f"vault wake failed: {self.wake['error']}")
-        finally:
-            self._awake.set()
+        for attempt in range(10 ** 6):
+            t0 = time.time()
+            try:
+                self.vault.wake()
+                self.wakes.append({"ms": round((time.time() - t0) * 1000), "outcome": "awake"})
+                with self._lock:
+                    self.vault_state, self._probing, self._last_ok = "up", False, time.time()
+                self._up.set()
+                return
+            except Exception as e:
+                err = f"{type(e).__name__}: {e}"[:300]
+                self.wakes.append({"ms": round((time.time() - t0) * 1000), "outcome": "error", "error": err})
+                self.errors.append(f"vault wake failed: {err}")
+                self.vault_state = "down"
+            time.sleep(self.PROBE_BACKOFF_S[min(attempt, len(self.PROBE_BACKOFF_S) - 1)])
 
     def _send_loop(self):
         import time
@@ -267,6 +354,8 @@ class OneironNotes(NotesStore):
             line = {"turn": job["turn"], "run": job["run"], "author": job["author"], "messages": len(job["texts"]),
                     "queued_s": round(t0 - job["queued_at"], 3)}
             try:
+                if self.vault_state == "down":  # not sent; push_day sends it later with the same ids
+                    raise RuntimeError("vault down: not sent")
                 try:
                     out = self.vault.client_for(job["author"]).witness_run(self.conversation, job["author"],
                                                                            job["texts"], job["at"], job["ids"]) or {}
@@ -277,9 +366,12 @@ class OneironNotes(NotesStore):
                     out = {"receipt_ref": "already-witnessed"}
                 self.unacknowledged -= set(job["notes"])
                 line["receipt_ref"] = out.get("receipt_ref")
+                self._last_ok = time.time()
             except Exception as e:  # the vault is a second copy; a failed write never loses the local note
                 line["error"] = f"{type(e).__name__}: {e}"[:300]
                 self.errors.append(f"vault witness turn {job['turn']} run {job['run']}: {line['error']}")
+                if self.vault_state != "down":
+                    self._start_probe("down")
             finally:
                 line["ms"] = round((time.time() - t0) * 1000)
                 if self.witness_log:
@@ -288,8 +380,18 @@ class OneironNotes(NotesStore):
                 self._queue.task_done()
 
     def flush(self, timeout=None):
-        """Wait until every queued witness call has been sent (the end of a day, a test)."""
-        self._queue.join()
+        """Wait until every queued witness call has been sent or logged unsent (the end of a day, a test), at most
+        `timeout` seconds. True when the queue is empty."""
+        import time
+
+        end = None if timeout is None else time.time() + timeout
+        with self._queue.all_tasks_done:
+            while self._queue.unfinished_tasks:
+                left = None if end is None else end - time.time()
+                if left is not None and left <= 0:
+                    return False
+                self._queue.all_tasks_done.wait(left)
+        return True
 
     def witness_turn(self, user_rec, rec):
         """Queue one finished turn for the vault: user_rec and rec are the turn's day-log records. Returns the
@@ -360,15 +462,19 @@ class OneironNotes(NotesStore):
 
         local = self.local.recall(query, k)
         call = {"query": query, "k": k}
-        if not self._awake.is_set():  # the vault may be starting (~27 s): the turn does not wait for it
-            call.update(outcome="fallback_waking", values=[n["value"][:200] for n in local])
-            self.errors.append(f"vault still waking for {query!r}; answered from local notes")
+        if self.vault_state == "up" and self._last_ok and time.time() - self._last_ok > self.IDLE_STOP_S:
+            self._start_probe("waking")  # quiet long enough for Hypnos to have stopped it: wake, do not wait
+        state = self.vault_state
+        if state != "up":  # waking (a cold start, ~27 s) or down: the turn does not wait for the vault
+            call.update(outcome=f"fallback_{state}", values=[n["value"][:200] for n in local])
+            self.errors.append(f"vault {state} for {query!r}; answered from local notes")
             self.recalls.append(call)
             return local
         t0 = time.time()
         try:
-            reply = self.vault.recall(query, limit=VAULT_RECALL_LIMIT) or {}
+            reply = self.vault.recall(query, limit=VAULT_RECALL_LIMIT, timeout=self.RECALL_TIMEOUT_S) or {}
             call["ms"] = round((time.time() - t0) * 1000)
+            self._last_ok = time.time()
             items = reply.get("items") or []
             call["items"] = len(items)
             if recall_partial(reply):  # not finished: what is missing is unknown, so the local notes answer
@@ -387,6 +493,7 @@ class OneironNotes(NotesStore):
             call.setdefault("ms", round((time.time() - t0) * 1000))
             call.update(outcome="fallback_error", error=f"{type(e).__name__}: {e}"[:300])
             self.errors.append(f"vault recall failed for {query!r}: {call['error']}; answered from local notes")
+            self._start_probe("down")
         call["values"] = [n["value"][:200] for n in local]
         self.recalls.append(call)
         return local
@@ -410,9 +517,10 @@ class OneironNotes(NotesStore):
         for c in self.recalls:
             for k, v in (c.get("dropped") or {}).items():
                 dropped[k] = dropped.get(k, 0) + v
-        slow = [ms for ms in [self.wake.get("ms")] + [c.get("ms") for c in self.recalls] + [x["ms"] for x in sent]
+        slow = [ms for ms in [w["ms"] for w in self.wakes] + [c.get("ms") for c in self.recalls] + [x["ms"] for x in sent]
                 if ms is not None and ms >= COLD_START_MS]
-        return {"conversation_ref": self.conversation, "wake": self.wake, "calls_over_20s": len(slow),
+        return {"conversation_ref": self.conversation, "vault_state": self.vault_state, "wakes": list(self.wakes),
+                "calls_over_20s": len(slow),
                 "recalls": len(self.recalls), "recall_outcomes": outcomes,
                 "recall_ms": spread([c["ms"] for c in self.recalls if "ms" in c]), "recall_dropped": dropped,
                 "recalls_with_unacknowledged": sum(1 for c in self.recalls if c.get("unacknowledged")),

@@ -140,7 +140,63 @@ function grid(facts) {
   fig.insertBefore(legend, $("grid-caption"));
 }
 
-function chose(cons) {
+function nightLinkControl(link) {
+  // A night's guarded link applied to today's notes (agent.apply_night_links): Undo makes the old note active again
+  // and is logged for the next night (web.py /api/night-link/undo).
+  const box = el("span", "night-link");
+  const status = el("span", "status");
+  const show = (state) => {
+    status.textContent = state === "applied" ? "Replaced in today's notes." : state === "undone"
+      ? "Undone: the old note is back in today's notes." : `Applies to the notes of day ${link.applies_from_day ?? "+1"}.`;
+    undo.hidden = state !== "applied";
+  };
+  const undo = el("button", "undo", "Undo");
+  undo.type = "button";
+  undo.onclick = async () => {
+    const r = await fetch("/api/night-link/undo", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ old_id: link.old_id }) });
+    if (r.ok) show("undone");
+  };
+  box.append(" ", status, " ", undo);
+  show(link.state);
+  return box;
+}
+
+function nightQuestions(nightLinks) {
+  // Links the night proposed but its guard refused (night-links.json "proposed"): the user answers Link (applied
+  // like the night's own, marked as the user's) or Keep both (both notes stay; the night does not ask again).
+  const props = (nightLinks && nightLinks.proposed) || [];
+  if (!props.length) return;
+  const list = $("chose-list");
+  list.append(el("li", "chose-sub", "The night was not sure about these"));
+  for (const p of props) {
+    const li = el("li", "night-question");
+    const status = el("span", "status");
+    const actions = el("div", "actions");
+    const show = (state) => {
+      status.textContent = state === "linked by you" ? "Linked: the old note is replaced in today's notes."
+        : state === "kept both" ? "Kept both." : state === "asked" ? "" : "Answer on the next day's report.";
+      actions.querySelectorAll("button").forEach((b) => (b.hidden = state !== "asked"));
+    };
+    const btn = (label, answer) => {
+      const b = el("button", answer === "link" ? "accept" : "dismiss", label);
+      b.type = "button";
+      b.onclick = async () => {
+        const r = await fetch("/api/night-link/answer", { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ old_id: p.old_id, new_id: p.new_id, answer }) });
+        if (r.ok && !(await r.json()).error) show(answer === "link" ? "linked by you" : "kept both");
+      };
+      return b;
+    };
+    actions.append(btn("Link", "link"), btn("Keep both", "keep_both"), status);
+    li.append(el("span", "what", "Asked"), el("div", null, p.question || `${p.new_key}: ${p.new_value} → ${p.old_key}?`),
+      el("div", "why", p.reason || ""), actions);
+    list.append(li);
+    show(p.state);
+  }
+}
+
+function chose(cons, nightLinks) {
   // runs/<w>/<d>/night/consolidated.json: one outcome per note ({id, key, value, outcome, why}, plus "into" for
   // merged_as_duplicate and "superseded_by" for dropped_as_superseded) and the merges the model proposed that
   // the night job refused (overruled_merge_proposals: {id, model_proposed_merge_with, why}).
@@ -164,7 +220,9 @@ function chose(cons) {
     parts.forEach((p) => body.append(typeof p === "string" ? document.createTextNode(p) : p));
     li.append(el("span", "what", what), body);
     list.append(li);
+    return body;
   };
+  const links = (nightLinks && nightLinks.links) || [];
   // the day's own links ("you changed it") first, then the corrections the night found itself (consolidated.json
   // treated_as_correction_by_night: linked_by "readout" at p >= 0.9, "readout (a)" at p >= 0.6 with the same value
   // shape and a change word in the day's wording, or "consolidation rule")
@@ -185,7 +243,9 @@ function chose(cons) {
     const newer = byId[d.superseded_by];
     const how = d.linked_by === "consolidation rule" ? "by its own rule"
       : `p ${d.p != null ? Number(d.p).toFixed(2) : "?"}${d.change_word ? `, ‘${d.change_word}’` : ""}`;
-    row("Corrected", el("span", "old", label(d.id)), ` → ${newer ? newer.value : "a newer note"} (the night treated this as a correction: ${how}).`);
+    const body = row("Corrected", el("span", "old", label(d.id)), ` → ${newer ? newer.value : "a newer note"} (the night treated this as a correction: ${how}).`);
+    const link = links.find((l) => l.old_id === d.id);
+    if (link) body.append(nightLinkControl({ ...link, applies_from_day: nightLinks.applies_from_day }));
   }
   const det = $("chose-kept");
   det.querySelector("summary").textContent = `The ${kept.length} facts it trained on`;
@@ -285,7 +345,7 @@ const CHECKS = { leak_check: "no held-out question in the training data",
                  content_channel: "its chat replies land in the reply, not only in its reasoning",
                  tool_calls: "it still calls its tools in chat, as the day agent does",
                  abstention_gate: "it says it does not know about as often as before",
-                 abstention_honesty: "graded honesty: right minus wrong did not fall, it kept what it knew, and it still says \"not in your notes\" to things you never said" };
+                 abstention_honesty: "graded honesty: right minus wrong fell by at most 5 points on 200 general questions, it kept what it knew, it still says \"not in your notes\" to things you never said, and it asks you for public facts at most 20 more times in 200 than before" };
 
 function plainRule(rule) {
   // The two-sided abstention rule as the night writes it, in plain words; any other rule as written.
@@ -551,7 +611,8 @@ async function boot() {
   lead(ev, facts, rolledBack);
   staleLine(ev, rolledBack);
   staleCause(r.unlinked_corrections);
-  chose(r.consolidated);
+  chose(r.consolidated, r.night_links);
+  nightQuestions(r.night_links);
   grid(facts);
   abstainLine(r.abstention, r.decision, r.shown_not_required);
   neverToldLine(r.never_told);
