@@ -69,6 +69,16 @@ class AlignmentStats(unittest.TestCase):
         self.assertFalse(s["passed"], s)
         self.assertGreaterEqual(s["hard_disagreements"], 1)
 
+    def test_exact_ties_in_identical_logits_agree(self):
+        full = self.full.clone()
+        for i in range(0, 40, 2):  # exact top-1 ties, as bf16 makes them
+            r = full[i + self.pos[0] - self.start]
+            r[(int(r.argmax()) + 7) % VOCAB] = r.max()
+        t = full[[p - self.start for p in self.pos]].clone()
+        s = ta.alignment_stats(t, full, self.pos, self.start)
+        self.assertEqual((s["aligned_max_abs"], s["top_token_agree"], s["hard_disagreements"]), (0.0, 1.0, 0), s)
+        self.assertTrue(s["passed"], s)
+
     def test_near_tie_flip_is_not_hard(self):
         full = self.full.clone()
         i = 7

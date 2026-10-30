@@ -1,0 +1,179 @@
+{
+ "status": "align-only",
+ "args": {
+  "model_dir": "/data/drafter-tune-20261014/models/target-nf4",
+  "train": "/data/meta-night/klguard-test/kl-pool-rows-w3d6.jsonl",
+  "out_dir": "/data/meta-night/klguard-test/out",
+  "rank": 16,
+  "alpha": null,
+  "dropout": 0.0,
+  "targets": "attn_mlp",
+  "layers": "all",
+  "epochs": 4,
+  "save_epochs": "",
+  "lr": 0.0001,
+  "warmup_steps": 10,
+  "batch_rows": 16,
+  "grad_accum": 1,
+  "max_grad_norm": 0.3,
+  "max_len": 512,
+  "long_batch_rows": 2,
+  "train_header": false,
+  "max_steps": 0,
+  "seed": 20261027,
+  "no_save": false,
+  "cd_weight": null,
+  "kl_weight": 0.0,
+  "kl_rotate": 80,
+  "kl_cache_dir": null,
+  "align_rows": 8,
+  "align_only": true
+ },
+ "alpha": 16,
+ "started": "2026-10-30T20:18:22+0900",
+ "versions": {
+  "torch": "2.14.1+cu130",
+  "transformers": "5.15.0",
+  "peft": "0.21.2",
+  "bitsandbytes": "0.50.2",
+  "unsloth": "2026.10.5"
+ },
+ "load_s": 17.1,
+ "mem_after_load_gib": 20.7,
+ "vision_moved_to_cpu": [
+  "vision_tower",
+  "vision_adapter",
+  "vision_projection"
+ ],
+ "mem_after_vision_offload_gib": 17.12,
+ "lora": {
+  "target_regex": ".*language_model\\.layers\\.\\d+\\.(self_attn\\.(q_proj|k_proj|v_proj|o_proj)|mlp\\.(gate_proj|up_proj|down_proj))",
+  "modules": 364,
+  "kinds": [
+   "mlp.down_proj",
+   "mlp.gate_proj",
+   "mlp.up_proj",
+   "self_attn.k_proj",
+   "self_attn.o_proj",
+   "self_attn.q_proj",
+   "self_attn.v_proj"
+  ],
+  "layers": [
+   0,
+   51,
+   52
+  ],
+  "vision_lora": 0,
+  "trainable_params": 95846400
+ },
+ "mem_after_lora_gib": 17.47,
+ "kl_check": {
+  "rows": [
+   {
+    "row": "r01437",
+    "tokens": 2016,
+    "positions": 470,
+    "aligned_max_abs": 0.0,
+    "aligned_mean_abs": 0.0,
+    "bf16_tolerance": 0.5,
+    "off_by_one_mean_abs": 1.5315,
+    "top_token_agree": 0.9702,
+    "top_token_agree_off_by_one": 0.0,
+    "hard_disagreements": 0,
+    "passed": false
+   },
+   {
+    "row": "r01634",
+    "tokens": 1975,
+    "positions": 761,
+    "aligned_max_abs": 0.25,
+    "aligned_mean_abs": 0.01019,
+    "bf16_tolerance": 0.5,
+    "off_by_one_mean_abs": 1.8062,
+    "top_token_agree": 0.9842,
+    "top_token_agree_off_by_one": 0.0039,
+    "hard_disagreements": 0,
+    "passed": false
+   },
+   {
+    "row": "r01372",
+    "tokens": 1889,
+    "positions": 395,
+    "aligned_max_abs": 0.25,
+    "aligned_mean_abs": 0.010613,
+    "bf16_tolerance": 0.5,
+    "off_by_one_mean_abs": 1.7804,
+    "top_token_agree": 0.9772,
+    "top_token_agree_off_by_one": 0.0101,
+    "hard_disagreements": 0,
+    "passed": false
+   },
+   {
+    "row": "r01414",
+    "tokens": 1880,
+    "positions": 351,
+    "aligned_max_abs": 0.0,
+    "aligned_mean_abs": 0.0,
+    "bf16_tolerance": 0.5,
+    "off_by_one_mean_abs": 1.5977,
+    "top_token_agree": 0.9829,
+    "top_token_agree_off_by_one": 0.0028,
+    "hard_disagreements": 0,
+    "passed": false
+   },
+   {
+    "row": "r01379",
+    "tokens": 1866,
+    "positions": 160,
+    "aligned_max_abs": 0.25,
+    "aligned_mean_abs": 0.010506,
+    "bf16_tolerance": 0.5,
+    "off_by_one_mean_abs": 1.7345,
+    "top_token_agree": 0.9875,
+    "top_token_agree_off_by_one": 0.0188,
+    "hard_disagreements": 0,
+    "passed": false
+   },
+   {
+    "row": "r01461",
+    "tokens": 1865,
+    "positions": 437,
+    "aligned_max_abs": 0.25,
+    "aligned_mean_abs": 0.010654,
+    "bf16_tolerance": 0.5,
+    "off_by_one_mean_abs": 1.7396,
+    "top_token_agree": 0.9931,
+    "top_token_agree_off_by_one": 0.0,
+    "hard_disagreements": 0,
+    "passed": true
+   },
+   {
+    "row": "r01449",
+    "tokens": 1846,
+    "positions": 215,
+    "aligned_max_abs": 0.25,
+    "aligned_mean_abs": 0.010666,
+    "bf16_tolerance": 0.5,
+    "off_by_one_mean_abs": 1.6245,
+    "top_token_agree": 0.9907,
+    "top_token_agree_off_by_one": 0.0047,
+    "hard_disagreements": 0,
+    "passed": true
+   },
+   {
+    "row": "r01406",
+    "tokens": 1845,
+    "positions": 213,
+    "aligned_max_abs": 0.25,
+    "aligned_mean_abs": 0.010319,
+    "bf16_tolerance": 0.5,
+    "off_by_one_mean_abs": 1.6842,
+    "top_token_agree": 0.9812,
+    "top_token_agree_off_by_one": 0.0094,
+    "hard_disagreements": 0,
+    "passed": false
+   }
+  ],
+  "passed": false
+ }
+}

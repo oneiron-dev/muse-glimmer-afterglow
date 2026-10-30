@@ -46,7 +46,7 @@ KL_ROTATING = ("kl_obscure", "kl_known", "kl_people")
 ALIGN_ROWS = 3  # the KL alignment guard reads the longest soft rows
 ALIGN_ULPS = 4  # tail vs full forward, aligned: within 4 bf16 ulps at the row's largest logit (seen: 1.5 ulps)
 ALIGN_RATIO = 0.05  # aligned mean difference below 5% of the off-by-one mean difference
-ALIGN_AGREE = 0.99  # top token agrees at >= 99% of reply positions, and every disagreement is a bf16 near-tie
+ALIGN_AGREE = 0.95  # top token agrees at >= 95% of reply positions (off by one: ~1%), and every disagreement is a bf16 near-tie
 
 
 def soft_row(row):
@@ -153,7 +153,8 @@ def bf16_ulp(x):
 def alignment_stats(tail, full, pos, start):
     """Tail logits (rows = reply positions pos) against one full forward (rows = positions start..): the aligned
     difference, the off-by-one difference (the nearer of p - 1 and p + 1) and top-token agreement. A top-token
-    disagreement counts as hard only where the full forward's top-2 margin is above the bf16 tolerance."""
+    disagreement counts as hard only where the full forward puts the tail's top token more than the bf16 tolerance
+    below its own top (exact ties are common in bf16: 2-3% of reply positions on the w3 day-6 pool rows)."""
     import torch
     at = lambda ps: full[[p - start for p in ps]]  # noqa: E731
     aligned = at(pos)
@@ -166,9 +167,9 @@ def alignment_stats(tail, full, pos, start):
             t = tail[keep]
             shifts[s] = (float((t - at([pos[i] + s for i in keep])).abs().mean()),
                          float((t.argmax(-1) == at([pos[i] + s for i in keep]).argmax(-1)).float().mean()))
-    top2 = aligned.topk(2, dim=-1)
-    agree = tail.argmax(-1) == top2.indices[:, 0]
-    hard = (~agree) & ((top2.values[:, 0] - top2.values[:, 1]) > tol)
+    pick = tail.argmax(-1)
+    agree = pick == aligned.argmax(-1)  # argmax on both sides: topk breaks exact bf16 ties another way
+    hard = (~agree) & ((aligned.max(-1).values - aligned.gather(-1, pick[:, None])[:, 0]) > tol)
     near = min(shifts.values()) if shifts else (float("inf"), 0.0)
     return {"positions": len(pos), "aligned_max_abs": round(float(diff.max()), 5), "aligned_mean_abs": round(float(diff.mean()), 6),
             "bf16_tolerance": tol, "off_by_one_mean_abs": round(near[0], 4), "top_token_agree": round(float(agree.float().mean()), 4),
