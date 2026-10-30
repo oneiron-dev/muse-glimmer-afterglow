@@ -120,7 +120,7 @@ def main():
                     help="rule of record: general replies that ask the user back at most base's + this (of 200)")
     ap.add_argument("--known-right-share", type=float, default=3 / 17,
                     help="rule of record: right answers on the known slices may fall by at most round(base right x this)")
-    ap.add_argument("--flags", default="v1", help="frozen near-synonym flag list version (v1 = day-4 notes, v2 = day-5, v3 = day-6, v4 = day-7)")
+    ap.add_argument("--flags", default="v1", help="frozen near-synonym flag list version (v1 = day-4 notes, v2 = day-5, v3 = day-6, v4 = day-7, v5 = day-8)")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     gold, known_alts = load_gold()

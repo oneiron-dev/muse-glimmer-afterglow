@@ -1,0 +1,769 @@
+{
+ "version": "v5",
+ "made_at": "2026-10-31T00:41:45+09:00",
+ "judge": "spark-sub",
+ "rule": "flag = the never-told question asks for a fact the user did tell, under another name (a near-synonym of a real note key); a question about another named person is never flagged; flagged probes are reported apart in the reads, never dropped",
+ "sources": {
+  "w1-ines-varga": {
+   "notes": "runs/w1-ines-varga/8/notes.json",
+   "notes_day": 8,
+   "notes_sha256": "c115b286607f951b33d902f131732d1ef9de0079b8f3e140d2a0f65fb378bcc1",
+   "active_notes": 113
+  },
+  "w2-solo-developer": {
+   "notes": "runs/w2-solo-developer/8/notes.json",
+   "notes_day": 8,
+   "notes_sha256": "6ec8139631de27c7f9884f7db958c0391cbafca73a3d99323b3d6e5a2c64f6df",
+   "active_notes": 138
+  },
+  "w3-shop-owner": {
+   "notes": "runs/w3-shop-owner/8/notes.json",
+   "notes_day": 8,
+   "notes_sha256": "220a81b48d3c3522b857bf2ee0e3fd2246c47b0c626c3e2cd501fa346e9a2a55",
+   "active_notes": 138
+  },
+  "w4-grad-student": {
+   "notes": "runs/w4-grad-student/8/notes.json",
+   "notes_day": 8,
+   "notes_sha256": "5ab792f8c6d50500b4aff7adf911ba9aced081081a8be8a25540274fb3c550e4",
+   "active_notes": 137
+  }
+ },
+ "flags": {
+  "w1-ines-varga": {
+   "NT01": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records accounts software.",
+    "type": "other_key"
+   },
+   "NT02": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records an e-bike fleet code.",
+    "type": "other_key"
+   },
+   "NT03": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a business advisor, manager is a different role.",
+    "type": "other_key"
+   },
+   "NT04": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note key is a near-synonym for external collaborator.",
+    "type": "other_key"
+   },
+   "NT05": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note lists a backend contractor.",
+    "type": "other_key"
+   },
+   "NT06": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note lists a founder role title, only the operations lead job title.",
+    "type": "other_key"
+   },
+   "NT07": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note lists a poster printing vendor, only other unrelated suppliers.",
+    "type": "other_key"
+   },
+   "NT08": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a lab mate.",
+    "type": "other_key"
+   },
+   "NT09": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note describes a deployment window or close synonym.",
+    "type": "other_key"
+   },
+   "NT10": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note contains a teaching course code.",
+    "type": "other_key"
+   },
+   "NT11": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a bookkeeper, only other distinct roles.",
+    "type": "other_key"
+   },
+   "NT12": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a lab seminar speaker.",
+    "type": "other_key"
+   },
+   "NT13": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a support inbox address.",
+    "type": "other_key"
+   },
+   "NT14": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions a payment processor.",
+    "type": "other_key"
+   },
+   "NT15": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a bookkeeper review time.",
+    "type": "other_key"
+   },
+   "NT16": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Oskar Ibsen's safety officer, not the user's.",
+    "type": "lookalike"
+   },
+   "NT17": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks for Noor Strand's extension, a different person's fact than the user's office extension.",
+    "type": "lookalike"
+   },
+   "NT18": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks for Anton Torres's office, not the user's office room.",
+    "type": "lookalike"
+   },
+   "NT19": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Ilse Varela's project, not the user's main project.",
+    "type": "lookalike"
+   },
+   "NT20": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Pavel Sato, not the user.",
+    "type": "lookalike"
+   },
+   "NT21": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks for Greta Okonkwo's extension, not the user's office extension.",
+    "type": "lookalike"
+   },
+   "NT22": {
+    "flag": false,
+    "note_key": null,
+    "why": "It asks about Rasmus Duarte's safety officer, not the user's stored fact.",
+    "type": "lookalike"
+   },
+   "NT23": {
+    "flag": false,
+    "note_key": null,
+    "why": "It asks for Emil Lindgren's time, not the user's.",
+    "type": "lookalike"
+   },
+   "NT24": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks for Agnes Kowal's room, not the user's office room.",
+    "type": "lookalike"
+   },
+   "NT25": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Bruno Mbeki, a different person, not the user's supplier call time.",
+    "type": "lookalike"
+   },
+   "NT26": {
+    "flag": false,
+    "note_key": null,
+    "why": "The note is for the build team chat, not Joel Marsh's channel.",
+    "type": "lookalike"
+   },
+   "NT27": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Viktor Novak, not the user's intern noted.",
+    "type": "lookalike"
+   },
+   "NT28": {
+    "flag": false,
+    "note_key": null,
+    "why": "It asks about Hanna Nyberg's office, not the user's office room.",
+    "type": "lookalike"
+   },
+   "NT29": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Paula Ekberg, not the noted intern Kaito Mori.",
+    "type": "lookalike"
+   },
+   "NT30": {
+    "flag": false,
+    "note_key": null,
+    "why": "It asks for Silja Ferreira's extension, not the user's office extension.",
+    "type": "lookalike"
+   }
+  },
+  "w2-solo-developer": {
+   "NT01": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a courier pickup time.",
+    "type": "other_key"
+   },
+   "NT02": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note lists a weekend clerk name.",
+    "type": "other_key"
+   },
+   "NT03": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a courier or equivalent delivery role.",
+    "type": "other_key"
+   },
+   "NT04": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a lab seminar speaker.",
+    "type": "other_key"
+   },
+   "NT05": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note stores a teaching course code.",
+    "type": "other_key"
+   },
+   "NT06": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a staff shift pattern.",
+    "type": "other_key"
+   },
+   "NT07": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records an overhaul service price.",
+    "type": "other_key"
+   },
+   "NT08": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a rental expansion code; reservation code is a different fact.",
+    "type": "other_key"
+   },
+   "NT09": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records an instrument booking slot.",
+    "type": "other_key"
+   },
+   "NT10": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note lists a bookkeeper; accounting partner is a related but different fact.",
+    "type": "other_key"
+   },
+   "NT11": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions lab safety training.",
+    "type": "other_key"
+   },
+   "NT12": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note defines a safety officer role.",
+    "type": "other_key"
+   },
+   "NT13": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions a rental deposit amount.",
+    "type": "other_key"
+   },
+   "NT14": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a reading group text.",
+    "type": "other_key"
+   },
+   "NT15": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note key is a near-synonym for autumn overhaul code.",
+    "type": "other_key"
+   },
+   "NT16": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Pavel Sato's fact, not the user's supplier catch up time.",
+    "type": "lookalike"
+   },
+   "NT17": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Leonie Varela's call, not the user's supplier catch-up time.",
+    "type": "lookalike"
+   },
+   "NT18": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Clara Kowal's deadline, not the user's general contractor invoice deadline.",
+    "type": "lookalike"
+   },
+   "NT19": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Felix Marsh's channel, not the user's team chat note.",
+    "type": "lookalike"
+   },
+   "NT20": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Silja Ferreira's room, not the user's coworking meeting room.",
+    "type": "lookalike"
+   },
+   "NT21": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Rasmus Okonkwo's desk, not the user's coworking desk number.",
+    "type": "lookalike"
+   },
+   "NT22": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Viktor Novak's tracker, not the user's work tracking note.",
+    "type": "lookalike"
+   },
+   "NT23": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Bruno Barros's channel, not the user's own client channel.",
+    "type": "lookalike"
+   },
+   "NT24": {
+    "flag": false,
+    "note_key": null,
+    "why": "It asks about Joel Nyberg, not the user's own team chat.",
+    "type": "lookalike"
+   },
+   "NT25": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Agnes Duarte, not the user's meeting room.",
+    "type": "lookalike"
+   },
+   "NT26": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Noor Torres, not the user's support extension.",
+    "type": "lookalike"
+   },
+   "NT27": {
+    "flag": false,
+    "note_key": null,
+    "why": "It asks for Oskar Strand's channel, not the user's client channel.",
+    "type": "lookalike"
+   },
+   "NT28": {
+    "flag": false,
+    "note_key": null,
+    "why": "The question asks for Hanna Ekberg's date, but notes only contain the user's go-live due date.",
+    "type": "lookalike"
+   },
+   "NT29": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Emil Rossi's tracker, not the user's own work tracking.",
+    "type": "lookalike"
+   },
+   "NT30": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Ilse Haugen's deadline, not the user's general note.",
+    "type": "lookalike"
+   }
+  },
+  "w3-shop-owner": {
+   "NT01": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question uses identical wording to existing note, not a synonym.",
+    "type": "other_key"
+   },
+   "NT02": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a travel conference name.",
+    "type": "other_key"
+   },
+   "NT03": {
+    "flag": true,
+    "note_key": "client meeting time",
+    "why": "Standup is a near-synonym for meeting for clients.",
+    "type": "other_key"
+   },
+   "NT04": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions a lab seminar speaker.",
+    "type": "other_key"
+   },
+   "NT05": {
+    "flag": true,
+    "note_key": "deliveries handler",
+    "why": "Courier is a near-synonym for deliveries handler.",
+    "type": "other_key"
+   },
+   "NT06": {
+    "flag": true,
+    "note_key": "business advisor",
+    "why": "External collaborator paraphrases business advisor as an outside helper.",
+    "type": "other_key"
+   },
+   "NT07": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a coworking space name, only shop and storage locations.",
+    "type": "other_key"
+   },
+   "NT08": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a server login username.",
+    "type": "other_key"
+   },
+   "NT09": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions lab mates.",
+    "type": "other_key"
+   },
+   "NT10": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a deployment window, only other unrelated times and deadlines.",
+    "type": "other_key"
+   },
+   "NT11": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a conference city.",
+    "type": "other_key"
+   },
+   "NT12": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions lab mates.",
+    "type": "other_key"
+   },
+   "NT13": {
+    "flag": true,
+    "note_key": "card reader at till",
+    "why": "Card reader is another name for the payment processor.",
+    "type": "other_key"
+   },
+   "NT14": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions a sonar prototype ID.",
+    "type": "other_key"
+   },
+   "NT15": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions a release platform name.",
+    "type": "other_key"
+   },
+   "NT16": {
+    "flag": false,
+    "note_key": null,
+    "why": "The note gives the general front desk extension, not Marta Barros's personal fact.",
+    "type": "lookalike"
+   },
+   "NT17": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Hanna Torres, not the user's shop locations in notes.",
+    "type": "lookalike"
+   },
+   "NT18": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions Greta Strand, only general supplier and vendor times.",
+    "type": "lookalike"
+   },
+   "NT19": {
+    "flag": false,
+    "note_key": null,
+    "why": "Notes have a general workshop phone ext, not Emil Okonkwo's personal extension.",
+    "type": "lookalike"
+   },
+   "NT20": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Rasmus Lindgren's deadline, not the user's rental expansion deadline.",
+    "type": "lookalike"
+   },
+   "NT21": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions Clara Ibsen, and the winter storage code is a general shop code not hers.",
+    "type": "lookalike"
+   },
+   "NT22": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question names Anton Nyberg while the note is about the general landlord meeting, not his.",
+    "type": "lookalike"
+   },
+   "NT23": {
+    "flag": false,
+    "note_key": null,
+    "why": "It asks about Silja Mbeki's slot, not the user's bookkeeper review slot.",
+    "type": "lookalike"
+   },
+   "NT24": {
+    "flag": false,
+    "note_key": null,
+    "why": "It asks for Noor Rossi's fact, not the shop's head mechanic ext.",
+    "type": "lookalike"
+   },
+   "NT25": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Joel Kowal, not the shop's head mechanic.",
+    "type": "lookalike"
+   },
+   "NT26": {
+    "flag": false,
+    "note_key": null,
+    "why": "Notes give the shop's landlord meeting time, not Viktor Varela's.",
+    "type": "lookalike"
+   },
+   "NT27": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks for Oskar Sato's extension, not the general front desk ext.",
+    "type": "lookalike"
+   },
+   "NT28": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Agnes Ekberg's room, not the user's overflow stock room.",
+    "type": "lookalike"
+   },
+   "NT29": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks for Mateo Novak's deadline, not the shop's noted deadline.",
+    "type": "lookalike"
+   },
+   "NT30": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Bruno Haugen's deadline, not the shop's autumn overhaul deadline.",
+    "type": "lookalike"
+   }
+  },
+  "w4-grad-student": {
+   "NT01": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note stores a weekend clerk name.",
+    "type": "other_key"
+   },
+   "NT02": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note lists a price for overhaul service.",
+    "type": "other_key"
+   },
+   "NT03": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a rental expansion code.",
+    "type": "other_key"
+   },
+   "NT04": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note stores a cleaning contractor name.",
+    "type": "other_key"
+   },
+   "NT05": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a contract template code.",
+    "type": "other_key"
+   },
+   "NT06": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a deployment window time.",
+    "type": "other_key"
+   },
+   "NT07": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a landlord name.",
+    "type": "other_key"
+   },
+   "NT08": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note stores a payment processor name.",
+    "type": "other_key"
+   },
+   "NT09": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note lists an autumn overhaul code under any wording.",
+    "type": "other_key"
+   },
+   "NT10": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a busy season name.",
+    "type": "other_key"
+   },
+   "NT11": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a backend contractor role for the user.",
+    "type": "other_key"
+   },
+   "NT12": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions arm hinge bolt torque.",
+    "type": "other_key"
+   },
+   "NT13": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions a client onboarding document or synonym.",
+    "type": "other_key"
+   },
+   "NT14": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records a hosting provider.",
+    "type": "other_key"
+   },
+   "NT15": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note records an error tracker name.",
+    "type": "other_key"
+   },
+   "NT16": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Pavel Novak's advisor, not the user's advisor office room note.",
+    "type": "lookalike"
+   },
+   "NT17": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Clara Lindgren's projects, notes only list Elin's projects.",
+    "type": "lookalike"
+   },
+   "NT18": {
+    "flag": false,
+    "note_key": null,
+    "why": "The question asks about Leonie Ibsen, not the user, so it is a different person's fact.",
+    "type": "lookalike"
+   },
+   "NT19": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Bruno Lenz, not the user's own thesis codename.",
+    "type": "lookalike"
+   },
+   "NT20": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Rasmus Duarte's office hours, not the user's office_hours note.",
+    "type": "lookalike"
+   },
+   "NT21": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Viktor Varela's deadline, not the user's own note.",
+    "type": "lookalike"
+   },
+   "NT22": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note mentions Silja Marsh or a teaching chat channel.",
+    "type": "lookalike"
+   },
+   "NT23": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Felix Sato's room, not the user's office desk room.",
+    "type": "lookalike"
+   },
+   "NT24": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Joel Rossi's meeting, not the user's meeting.",
+    "type": "lookalike"
+   },
+   "NT25": {
+    "flag": false,
+    "note_key": null,
+    "why": "The question asks for Marta Barros's extension, while notes only have the lab's extension and a different Marta Ellingsen.",
+    "type": "lookalike"
+   },
+   "NT26": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Paula Ekberg's slot, not the user's own slot.",
+    "type": "lookalike"
+   },
+   "NT27": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Anton Mbeki's room, not the user's own anechoic chamber room.",
+    "type": "lookalike"
+   },
+   "NT28": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Emil Kowal's room, not the user's anechoic chamber room.",
+    "type": "lookalike"
+   },
+   "NT29": {
+    "flag": false,
+    "note_key": null,
+    "why": "No note lists Mateo Strand's chat channel.",
+    "type": "lookalike"
+   },
+   "NT30": {
+    "flag": false,
+    "note_key": null,
+    "why": "Question asks about Greta Ferreira's advisor, not the user's, so it's a different person's fact.",
+    "type": "lookalike"
+   }
+  }
+ },
+ "counts": {
+  "w1-ines-varga": 0,
+  "w2-solo-developer": 0,
+  "w3-shop-owner": 4,
+  "w4-grad-student": 0
+ },
+ "unparsed": 0
+}
