@@ -1,0 +1,35 @@
+{
+ "parts": {
+  "obscure": 200,
+  "known": 150,
+  "people": 100
+ },
+ "sources": {
+  "obscure": {
+   "file": "simple_qa_test_set.csv",
+   "sha256": "feee3f7e7db3617e94e8fcf1977b756ec420ef8568f4e0fcbbe0e92e9d5fc032",
+   "excluded": "gate slice 200, SimpleQA anchor prompts 300, IDK pool 600"
+  },
+  "known+people": {
+   "dataset": "google-research-datasets/nq_open",
+   "split": "train",
+   "revision": "5dd9790a83002ad084ddeb7c420dc716852c6f28",
+   "parquet_sha256": "25d3a544324f900b31ebc05a3a5686bdd5b9b42738133500675c3f20eee7d83a",
+   "license": "cc-by-sa-3.0"
+  }
+ },
+ "disjoint_from": [
+  "AA-Omniscience public 600",
+  "known_slice_v1",
+  "known_slice_v2",
+  "SimpleQA gate 200",
+  "general slice",
+  "public_anchor_pool_v1",
+  "forget_slice_v1",
+  "forget_slice_v2",
+  "world person names"
+ ],
+ "rule": "no shared 3-word run with any held question or answer; no 5-word run with the forget slices; health and time-wording filters of the known slice",
+ "file": "eval/data/kl_pool_candidates_v1.jsonl",
+ "sha256": "20fe37ab2db307bf4da0eadef9bbff7fabbb5237a95c637a67f86b27f66a59e0"
+}
