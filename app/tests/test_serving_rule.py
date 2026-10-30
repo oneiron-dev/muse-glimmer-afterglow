@@ -80,6 +80,31 @@ class ServingRuleTest(unittest.TestCase):
         self.assertEqual(serving_choice("w", [])["why"],
                          "No update loaded: none of this person's nights passed every check.")
 
+    def test_a_held_night_is_never_served_and_the_line_says_so(self):
+        # lead 30 Oct 09:53: w2 nights 5c and 6 held until the owner answers card META-ASKBACK-BOUND
+        held = {"world": "w", "nights": [{"night": "2/night", "sha256": "bbbb"}, {"night": "2/night-2c", "sha256": "cccc"}],
+                "reason": "owner card META-ASKBACK-BOUND open", "who": "Meta lead", "since": "2026-10-30T09:53+09:00"}
+        (self.runs / "serving" / "serving-rule.json").write_text(json.dumps({"checks": CHECKS, "held": [held], "set": "test"}))
+        self.night(1)
+        self.night(2)
+        entries = [dict(self.entries[0], sha256="aaaa1"), dict(self.entries[1], sha256="bbbb2")]
+        c = serving_choice("w", entries)
+        self.assertEqual(c["entry"]["day"], 1)  # night 2 passes every check but is held
+        self.assertEqual(c["held"], ["night 2"])
+        self.assertIn("Night 2 is held: owner card META-ASKBACK-BOUND open.", c["why"])
+        # a held variant stays held once promoted: matched by its adapter, not its folder
+        d = self.runs / "w" / "2" / "night-2c"
+        d.mkdir(parents=True)
+        (d / "decision.json").write_text(json.dumps({"decision": "keep", "checks": {k: True for k in CHECKS}}))
+        arm = {"id": 2, "world": "w", "day": 2, "path": "/a/w-d2-night-2c.gguf", "arm": "night-2c", "night_dir": "2/night-2c",
+               "sha256": "cccc3"}
+        self.assertIn("Night 2 (night-2c) passes every check but is not served: held: owner card", serving_choice("w", entries + [arm])["why"])
+        promoted = dict(entries[1], sha256="cccc3")
+        self.assertEqual(serving_choice("w", [entries[0], promoted])["entry"]["day"], 1)
+        # every loaded night held: no update, and the line says why
+        c = serving_choice("w", [entries[1]])
+        self.assertEqual(c["why"], "No update loaded. Night 2 is held: owner card META-ASKBACK-BOUND open.")
+
     def test_a_check_not_measured_does_not_pass(self):
         d = self.runs / "w" / "1" / "night"
         d.mkdir(parents=True)
