@@ -118,7 +118,7 @@ def reply_positions(labels):
     return [p for p in range(len(labels) - 1) if labels[p + 1] != -100]
 
 
-def logits_at(model, ids, positions):
+def logits_at(model, ids, positions, tail=True):
     """Logits at the given positions; only the tail from the first of them is kept (logits_to_keep) when the model takes
     it, so a long teacher sequence (the notes block) never holds a full-vocabulary row per prompt token."""
     import torch
@@ -127,7 +127,7 @@ def logits_at(model, ids, positions):
     os.environ["UNSLOTH_RETURN_LOGITS"] = "1"  # Unsloth's fused loss path returns no logits otherwise
     try:
         try:
-            out = model(**batch, logits_to_keep=keep)
+            out = model(**batch, logits_to_keep=keep) if tail else model(**batch)
         except TypeError:
             out = model(**batch)
     finally:
@@ -276,6 +276,19 @@ def main():
     if args.kl_weight > 0:
         teacher = teacher_top_k(model, encoded, soft, Path(args.kl_cache_dir) if args.kl_cache_dir else out_dir.parent / "kl-teacher-cache",
                                 report, write_report, {j: t for j, t in enumerate(teach_enc) if t is not None})
+        # guard: the tail logits equal the full forward's at the same positions; the KL at init (LoRA B = 0) is the
+        # teacher's mass outside its top-20 on rows read with the same prompt
+        j0 = next(j for j in teacher if not rows[j].get("teacher"))
+        pos0 = reply_positions(encoded[j0][1])
+        with torch.no_grad():
+            model.eval()
+            diff = float((logits_at(model, encoded[j0][0], pos0) - logits_at(model, encoded[j0][0], pos0, tail=False)).abs().max())
+            init = [round(float(kl_row(model, encoded[j], teacher[j])), 4) for j in [j for j in teacher if not rows[j].get("teacher")][:3]]
+            model.train()
+        report["kl_check"] = {"tail_vs_full_max_abs": round(diff, 5), "kl_at_init": init}
+        write_report()
+        if diff > 0.05:
+            raise SystemExit(f"tail logits differ from the full forward by {diff}: the KL positions do not line up")
     report["data"] = {"rows": len(rows), "soft_rows": sum(soft), "kl_rows_over_max_len": len(too_long),
                       "cd_rows": sum(1 for r in rows if r.get("teacher")), "cd_rows_dropped_teacher": len(teacher_dropped), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
                       "loss_tokens_per_epoch": sum(sum(1 for x in lab if x != -100) for _, lab in encoded),
@@ -313,11 +326,13 @@ def main():
         for k in range(0, len(micro), args.grad_accum):
             group = micro[k:k + args.grad_accum]
             n_loss = sum(sum(1 for x in encoded[j][1] if x != -100) for mb in group for j in mb)
-            loss_sum = 0.0
+            loss_sum, kls = 0.0, []
             for mb in group:
                 if soft[mb[0]]:  # soft rows: W x KL to the teacher's top-20 at their reply tokens, one row per forward
                     for j in mb:
-                        loss = args.kl_weight * kl_row(model, encoded[j], teacher[j]) * (len(teacher[j][0]) / max(1, n_loss))
+                        kl = kl_row(model, encoded[j], teacher[j])
+                        kls.append(float(kl))
+                        loss = args.kl_weight * kl * (len(teacher[j][0]) / max(1, n_loss))
                         loss.backward()
                         loss_sum += float(loss)
                         tokens_seen += len(encoded[j][0])
@@ -343,7 +358,8 @@ def main():
             opt.zero_grad(set_to_none=True)
             step += 1
             elapsed = time.time() - t_train
-            curve.append({"step": step, "epoch": epoch, "loss": round(loss_sum, 4), "tok_s": round(tokens_seen / elapsed, 1)})
+            curve.append({"step": step, "epoch": epoch, "loss": round(loss_sum, 4), "tok_s": round(tokens_seen / elapsed, 1),
+                          **({"kl": round(sum(kls) / len(kls), 4)} if kls else {})})
             if step % 10 == 0 or step == 1:
                 print(json.dumps(curve[-1]), flush=True)
             if args.max_steps and step >= args.max_steps:
