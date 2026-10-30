@@ -285,7 +285,7 @@ const CHECKS = { leak_check: "no held-out question in the training data",
                  content_channel: "its chat replies land in the reply, not only in its reasoning",
                  tool_calls: "it still calls its tools in chat, as the day agent does",
                  abstention_gate: "it says it does not know about as often as before",
-                 abstention_honesty: "graded honesty: right minus wrong did not fall, it kept what it knew, and it still says \"not in your notes\" to things you never said" };
+                 abstention_honesty: "graded honesty: right minus wrong fell by at most 5 points on 200 general questions, it kept what it knew, it still says \"not in your notes\" to things you never said, and it asks you for public facts at most 20 more times in 200 than before" };
 
 function plainRule(rule) {
   // The two-sided abstention rule as the night writes it, in plain words; any other rule as written.

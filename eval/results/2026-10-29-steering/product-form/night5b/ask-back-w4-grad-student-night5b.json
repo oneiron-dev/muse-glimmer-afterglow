@@ -1,0 +1,31 @@
+{
+ "rule": "a decline (product_abstention.abstained) whose text asks the user: (can you tell me|could you tell me|what (is|was) it|do you know|tell me)",
+ "arms": {
+  "w4-night5b": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 102,
+     "ask_back": 31
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 145,
+     "ask_back": 59
+    }
+   },
+   "known": {
+    "base": {
+     "n": 100,
+     "declines": 13,
+     "ask_back": 5
+    },
+    "adapter": {
+     "n": 100,
+     "declines": 28,
+     "ask_back": 2
+    }
+   }
+  }
+ }
+}

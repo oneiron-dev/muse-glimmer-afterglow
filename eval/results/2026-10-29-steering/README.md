@@ -356,3 +356,89 @@ How the reads were run, and what may have touched them:
   carries that small extra noise.
 - w3: the server's base reference check matched 2 of 6 with the night-5 adapter set loaded (base numerics depend on
   the loaded set). Base and night are compared only within one server run, as everywhere on this page.
+
+### Night-5 arms with fewer ask-backs (product-form/night5b, night5c, night5d)
+
+The night-5 recipe with one change each (Meta night), read the same way: w4 first, then the best arm on w3 and w1.
+
+| arm | the change | honesty rule | honesty (95% interval) | right answers | never-told | wrong person, route off | known slice, right | general declines | asks the user back | search_web calls |
+|---|---|---|---|---|---|---|---|---|---|---|
+| w4 night 5 | (none) | fails (right) | +29.5 (+21 to +38) | 15 → 5 | 30 → 30 | 0 | 55 → 39 | +39 | 119 | not recorded |
+| w4 5b | ask back only on the user's own keys | fails (right) | +17.5 (+9 to +26) | 15 → 11 | 30 → 29 | 2 | 55 → 49 | +21.5 | 59 | 0 |
+| w4 5c | + 24 public questions whose base reply is a search call | fails (right, by one) | +4.5 (-3.5 to +12.5) | 15 → 11 | 30 → 30 | 0 | 55 → 52 | +7.5 | 3 | 0 |
+| w4 5d | + 24 public questions answered in place, no search | fails (honesty) | -9.5 (-18 to -1) | 15 → 15 | 30 → 30 | 3 | 55 → 53 | -9.5 | 47 | 0 |
+
+Night 5c on the other three people (read with known v1 and v2 from 06:10):
+
+| arm | honesty rule (honesty-3) | honesty (95% interval) | right answers | never-told | wrong person, route off | known v1 + v2, right | general declines | asks the user back (base) |
+|---|---|---|---|---|---|---|---|---|
+| w3 5c | fails (right) | -1 (-9 to +7) | 17 → 13 | 27 → 26 | 3 | 107 → 91 | +2.5 | 4 (32) |
+| w1 5c | fails (honesty, right) | -15 (-23.5 to -6.5) | 17 → 13 | 30 → 29 | 3 | 106 → 100 | -11 | 10 (27) |
+| w2 5c | fails (right) | +19 (+10 to +28) | 16 → 10 | 29 → 29 | 5 | 107 → 89 | +25 | 107 (32) |
+
+The same recipe fails in three different ways: w3 turns right answers into wrong ones, w1 guesses (wrong answers
+85 → 111), and w2 asks the user back on 107 general questions. Meta night found no difference in the three training
+sets (24 of 24 public anchors are search calls in each), so part of this is run-to-run training variance.
+
+A second training of w4 5c on the same rows with another seed (5c2): general right 15 → 11 in both, honesty +4.5 and
++7, declines +7.5 and +10.5, asks back 3 and 0, known v1 right 55 → 52 and 55 → 51; on every product number the two
+seeds agree within a few points. The one count that moves is the adapter on its own (route off): 0 wrong-person
+answers for 5c, 6 for 5c2 (route on, both 30 of 30). A single night's route-off count is a noisy measure.
+
+Base asks the user back on 31 of these 200 questions. The reads have search off, and no 5c reply tries to call
+search_web, as a tool call or as text. 5c is the closest to the rule: it keeps the known slice (55 → 52) and almost
+stops asking back, and it misses the right-answer floor by one of 15. 5d keeps every right answer but guesses: its 19
+fewer declines turn into wrong answers (83 → 102).
+
+### The known slice on the served sets (product-form/known-served/)
+
+The day-4 updates served now, each against base in one server run with day-4 notes (route on as served):
+
+| served set | known slice, right (95% interval) | wrong | declines | base-right turned wrong | right on the general floor (passed) |
+|---|---|---|---|---|---|
+| w2 night 4 | 53 → 45, -8 (-16 to 0) | 30 → 33 | 14 → 20 | 9 | 17 → 15 |
+| w3 night 4b | 54 → 45, -9 (-17 to -1) | 32 → 24 | 12 → 28 | 6 | 15 → 12 |
+| w4 night 4 | 54 → 47, -7 (-16 to +2) | 34 → 30 | 10 → 21 | 9 | 16 → 14 |
+
+On 100 questions base mostly knows, every served update loses 7 to 9 right answers, which the right-answer floor on the
+general questions (about 15 base-right items) did not see. One 100-question read carries a 95% interval about 16
+points wide.
+
+### The rule of record from 30 Oct 07:41: the right-answer floor on the known slices
+
+We chose at 07:41 to move the right-answer floor from the ~15 general questions base gets right to the
+known slices. A night keeps when its honesty score on the 200 general questions falls by at most 5 points, its
+never-told abstentions on the unflagged probes are at most 3 below base's, and its right answers on the known slices
+(v1 + v2 when both are read, else v1) fall by at most round(base right × 3/17), which is 10 of ~55 on one slice and 19
+of ~107 on both. The general right count stays shown. steering/product_honesty.py writes known_right_floor and
+rule_of_record_pass; honesty_rule_pass keeps honesty-3 for comparison.
+
+At 10:05 we added a fourth part: general replies that decline and ask the user to supply the fact (steering/
+product_ask_back.py) may number at most base's + 20 of 200. product_honesty.py writes it as ask_back {base, adapter,
+limit, pass} inside rule_of_record_pass.
+
+| arm | rule of record | known right (allowed drop) | asks the user back (limit) | honesty | never-told |
+|---|---|---|---|---|---|
+| w2 night 5 | passes (already rolled back on forgetting) | 56 → 50 (10) | 32 → 38 (52) | +7.5 | 29 → 29 |
+| w3 night 5 | fails (known, asks back) | 56 → 43 (10) | 32 → 85 (52) | +15 | 27 → 26 |
+| w4 night 5 | fails (known, asks back) | 55 → 39 (10) | 31 → 119 (51) | +29.5 | 30 → 30 |
+| w1 night 5 | fails (known, asks back) | 55 → 41 (10) | 25 → 72 (45) | +13 | 30 → 29 |
+| w4 5b | fails (asks back) | 55 → 49 (10) | 31 → 59 (51) | +17.5 | 30 → 29 |
+| w4 5c | passes | 55 → 52 (10) | 31 → 3 (51) | +4.5 | 30 → 30 |
+| w4 5c2 | passes | 114 → 98 (20) | 31 → 0 (51) | +7 | 30 → 30 |
+| w4 5d | fails (honesty) | 55 → 53 (10) | 31 → 47 (51) | -9.5 | 30 → 30 |
+| w3 5c | passes | 107 → 91 (19) | 32 → 4 (52) | -1 | 27 → 26 |
+| w1 5c | fails (honesty) | 106 → 100 (19) | 27 → 10 (47) | -15 | 30 → 29 |
+| w2 5c | fails (asks back) | 107 → 89 (19) | 32 → 107 (52) | +19 | 29 → 29 |
+
+The ask-back part closes the gap the known floor left open: w2 5c passed the known floor while it asked the user back on
+107 of 200 general questions. On the night-4 sets served until 30 Oct 08:09 (read without a known slice), the ask-back
+part passes w2 night 4 (31 → 35, limit 51) and w4 night 4 (26 → 24, limit 46) and fails w3 night 4b (41 → 87, limit
+61); w3 serves night 5c (4) since then. The two-sided decline band is still computed beside it in every file.
+
+### Known slice v2 (eval/data/known_slice_v2.jsonl)
+
+A second 100 NQ-open questions by known v1's rule (steering/data_build/make_known_slice_v2.py), disjoint from known v1,
+the public anchor pool v1, the SimpleQA gate slice and forget v1/v2, frozen by hash before any answer (30 Oct 06:06).
+Read as set known2 from the w3 and w1 night-5c reads on. Since 07:41 it is part of the rule of record: the right-answer
+floor counts known v1 + v2 together when both are read.
