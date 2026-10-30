@@ -31,6 +31,9 @@ ANSWER_PREFIX = "<|start|>assistant to=user<|message|>"
 HEADER_START = "<|start|>assistant"  # what the chat endpoint's generation prompt ends with
 RAW_MAX_LEN = 1600  # agent-anchor rows carry the day agent's system prompt and tool list (~1150 tokens)
 KL_MAX_LEN = 2048  # soft-anchor pool rows after a recall turn; a longer one is dropped whole, never cut
+TEACHER_MAX_LEN = 8192  # a context-distillation teacher sequence carries the notes block (no gradient, tail logits only)
+SOFT_FORMS = ("agent_", "public_", "kl_", "cd_")  # plain Glimmer's own words (kl_, cd_: the pools and context distillation)
+CAPPED_FORMS = ("kl_", "cd_")
 LONG_ROW = 600  # rows longer than this train in micro-batches of --long-batch-rows
 PAD_ID = 200018
 TARGETS = {
@@ -43,9 +46,11 @@ KL_ROTATING = ("kl_obscure", "kl_known", "kl_people")
 
 
 def soft_row(row):
-    """Plain Glimmer's own words: trained toward its distribution (KL), not as hard labels."""
+    """Plain Glimmer's own words: trained toward its distribution (KL), not as hard labels. A context-distillation row
+    (cd_*, Meta vault's night/context_distill.py) is the student's own sample, trained toward plain Glimmer reading the
+    same completion with the user's notes in its prompt (row["teacher"]["prompt"])."""
     f = row.get("form", "")
-    return f == "anchor" or f.startswith(("agent_", "public_", "kl_"))
+    return f == "anchor" or f.startswith(SOFT_FORMS)
 
 
 def target_regex(targets, layers):
@@ -62,21 +67,23 @@ def row_id(row):
     return row.get("id") or row.get("item_id")
 
 
-def encode_row(tokenizer, row, max_len, train_header=False):
+def encode_row(tokenizer, row, max_len, train_header=False, limit=None):
     """input_ids and labels for one exchange; labels are -100 everywhere except the assistant reply and its end token.
     With train_header the answer header's recipient (" to=user<|message|>") is trained too, so the adapter answers in
     the user channel when the server leaves the header to the model (chat endpoint), not in the self channel."""
+    capped = row.get("form", "").startswith(CAPPED_FORMS)
     if row.get("raw"):  # a verbatim exchange (agent anchors): the prompt as the server renders it, the reply as generated
         prompt = row["raw"]["prompt"]
         if tokenizer.bos_token and not prompt.startswith(tokenizer.bos_token):  # the server adds BOS when it tokenizes
             prompt = tokenizer.bos_token + prompt
-        prefix, full = prompt + HEADER_START, prompt + row["raw"]["completion"]
+        forced = row["raw"].get("forced_header")  # the prompt already ends in the answer header (a fact-form sample)
+        prefix, full = (prompt if forced else prompt + HEADER_START), prompt + row["raw"]["completion"]
         if "completion_ids" in row["raw"]:  # guard: the reply must be exactly the token ids the base generated
             got = tokenizer(row["raw"]["completion"], add_special_tokens=False)["input_ids"]
-            want = tokenizer(HEADER_START, add_special_tokens=False)["input_ids"] + row["raw"]["completion_ids"]
+            want = ([] if forced else tokenizer(HEADER_START, add_special_tokens=False)["input_ids"]) + row["raw"]["completion_ids"]
             if got != want:
                 raise SystemExit(f"row {row_id(row)}: the anchor reply does not re-tokenize to the generated ids")
-        max_len = max(max_len, KL_MAX_LEN if row.get("form", "").startswith("kl_") else RAW_MAX_LEN)
+        max_len = limit or max(max_len, KL_MAX_LEN if capped else RAW_MAX_LEN)
     else:
         user, assistant = row["messages"]
         full = render(tokenizer, [user, assistant])
@@ -87,11 +94,23 @@ def encode_row(tokenizer, row, max_len, train_header=False):
     ids_full = tokenizer(full, add_special_tokens=False)["input_ids"]
     if ids_full[:len(ids_prefix)] != ids_prefix:
         raise ValueError(f"row {row_id(row)}: prefix tokens differ inside the full exchange")
-    if len(ids_full) > max_len and row.get("form", "").startswith("kl_"):
+    if len(ids_full) > max_len and (capped or limit):
         return None
     ids_full = ids_full[:max_len]
     labels = [-100] * len(ids_prefix) + ids_full[len(ids_prefix):]
     return ids_full, labels[:len(ids_full)]
+
+
+def teacher_encoding(tokenizer, row):
+    """A context-distillation row's teacher sequence: the same completion after the teacher's prompt (the user's notes in
+    it). None when it is too long or its completion tokens differ from the student's."""
+    return encode_row(tokenizer, {**row, "raw": {**row["raw"], "prompt": row["teacher"]["prompt"]}}, TEACHER_MAX_LEN, limit=TEACHER_MAX_LEN)
+
+
+def same_completion(student, teacher):
+    s = [x for x in student[1] if x != -100]
+    t = [x for x in teacher[1] if x != -100]
+    return s == t
 
 
 def reply_positions(labels):
@@ -100,24 +119,35 @@ def reply_positions(labels):
 
 
 def logits_at(model, ids, positions):
+    """Logits at the given positions; only the tail from the first of them is kept (logits_to_keep) when the model takes
+    it, so a long teacher sequence (the notes block) never holds a full-vocabulary row per prompt token."""
     import torch
+    keep = len(ids) - min(positions)
+    batch = {"input_ids": torch.tensor([ids]).cuda(), "attention_mask": torch.ones((1, len(ids)), dtype=torch.long).cuda()}
     os.environ["UNSLOTH_RETURN_LOGITS"] = "1"  # Unsloth's fused loss path returns no logits otherwise
     try:
-        out = model(input_ids=torch.tensor([ids]).cuda(), attention_mask=torch.ones((1, len(ids)), dtype=torch.long).cuda())
+        try:
+            out = model(**batch, logits_to_keep=keep)
+        except TypeError:
+            out = model(**batch)
     finally:
         os.environ.pop("UNSLOTH_RETURN_LOGITS", None)
-    return out.logits[0, positions].float()
+    start = len(ids) - out.logits.shape[1]
+    return out.logits[0, [p - start for p in positions]].float()
 
 
-def teacher_top_k(model, encoded, soft, cache_dir, report, write_report):
-    """The adapter-off model's top-20 log-probs at every reply token of every soft row; cached by row hash."""
+def teacher_top_k(model, encoded, soft, cache_dir, report, write_report, teacher_encoded=None):
+    """The adapter-off model's top-20 log-probs at every reply token of every soft row; cached by row hash. A
+    context-distillation row is read by the teacher with its own prompt (teacher_encoded[j]): the same completion tokens,
+    so the student's KL compares the same positions."""
     import torch
     cache_dir.mkdir(parents=True, exist_ok=True)
     out, hits, t0 = {}, 0, time.time()
     model.eval()
-    for j, (ids, labels) in enumerate(encoded):
+    for j, enc in enumerate(encoded):
         if not soft[j]:
             continue
+        ids, labels = (teacher_encoded or {}).get(j) or enc
         key = hashlib.sha256(json.dumps([ids, labels]).encode()).hexdigest()[:32]
         path = cache_dir / f"{key}.pt"
         if path.exists():
@@ -232,8 +262,12 @@ def main():
 
     rows = [json.loads(line) for line in Path(args.train).read_text().splitlines() if line.strip()]
     encoded = [encode_row(tokenizer, r, args.max_len, args.train_header) for r in rows]
+    teach_enc = [teacher_encoding(tokenizer, r) if r.get("teacher") and e is not None else None for r, e in zip(rows, encoded)]
+    teacher_dropped = [row_id(r) for r, e, t in zip(rows, encoded, teach_enc)
+                       if r.get("teacher") and e is not None and (t is None or not same_completion(e, t))]
     too_long = [row_id(r) for r, e in zip(rows, encoded) if e is None]
-    rows, encoded = [r for r, e in zip(rows, encoded) if e is not None], [e for e in encoded if e is not None]
+    keep_j = [j for j, (r, e) in enumerate(zip(rows, encoded)) if e is not None and row_id(r) not in set(teacher_dropped)]
+    rows, encoded, teach_enc = [rows[j] for j in keep_j], [encoded[j] for j in keep_j], [teach_enc[j] for j in keep_j]
     soft = [args.kl_weight > 0 and soft_row(r) for r in rows]
     bos = tokenizer.bos_token_id
     if bos is not None and encoded[0][0][0] != bos:
@@ -241,8 +275,9 @@ def main():
     teacher = {}
     if args.kl_weight > 0:
         teacher = teacher_top_k(model, encoded, soft, Path(args.kl_cache_dir) if args.kl_cache_dir else out_dir.parent / "kl-teacher-cache",
-                                report, write_report)
-    report["data"] = {"rows": len(rows), "soft_rows": sum(soft), "kl_rows_over_max_len": len(too_long), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
+                                report, write_report, {j: t for j, t in enumerate(teach_enc) if t is not None})
+    report["data"] = {"rows": len(rows), "soft_rows": sum(soft), "kl_rows_over_max_len": len(too_long),
+                      "cd_rows": sum(1 for r in rows if r.get("teacher")), "cd_rows_dropped_teacher": len(teacher_dropped), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
                       "loss_tokens_per_epoch": sum(sum(1 for x in lab if x != -100) for _, lab in encoded),
                       "max_row_tokens": max(len(i) for i, _ in encoded)}
     write_report()
