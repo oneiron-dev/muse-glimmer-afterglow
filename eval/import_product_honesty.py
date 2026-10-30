@@ -29,7 +29,8 @@ NIGHTS = {"night3": (3, "night"), "idk": (3, "night-3-idk"), "idkc": (3, "night-
 # night 4 kept as night-replaced-20261029-2104/)
 PROMOTED = {("w3", "night4"): (4, "night-replaced-20261029-2104"), ("w3", "night4b"): (4, "night"),
             ("w3", "night5"): (5, "night-replaced-20261030-0749"), ("w3", "night5c"): (5, "night"),  # 5c promoted 30 Oct (honesty-3k)
-            ("w4", "night5"): (5, "night-replaced-20261030-0746"), ("w4", "night5c"): (5, "night")}
+            ("w4", "night5"): (5, "night-replaced-20261030-0746"), ("w4", "night5c"): (5, "night"),
+            ("w3", "night6"): (6, "night-replaced-20261030-2342"), ("w3", "night6cd"): (6, "night")}  # cd promoted 30 Oct 23:42 (honesty-3k)
 
 
 def main():
