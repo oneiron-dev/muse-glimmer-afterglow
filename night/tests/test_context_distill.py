@@ -259,6 +259,19 @@ class ContextDistillTest(unittest.TestCase):
         self.assertIn("RemoteDisconnected", report["error"])  # the server dropped the request
         self.assertEqual(report["asked"], 0)
 
+    def test_slot_and_temperature_options_reach_the_server_and_the_report(self):
+        report = self.run_cd("--forms", "cd_fact", "--slot", "-1", "--temperature", "0", "--base-sha256", "cd" * 32)
+        b = next(x for x in self.model.bodies if "lab mate" in x["prompt"])
+        self.assertEqual((b["id_slot"], b["temperature"], b["top_k"]), (-1, 0.0, 0))
+        self.assertEqual((report["slot"], report["base_sha256"], report["sampler_host"], report["sampler"]["temperature"]),
+                         (-1, "cd" * 32, "127.0.0.1", 0.0))
+        self.assertEqual(self.rows()["cd-cd_fact-N0001"]["student"]["temperature"], 0.0)
+
+    def test_base_student_samples_with_every_adapter_off(self):
+        self.run_cd("--forms", "cd_fact", "--student-adapter", "none")
+        b = next(x for x in self.model.bodies if "lab mate" in x["prompt"])
+        self.assertEqual(b["lora"], [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 0.0}])
+
     def test_with_no_notes_the_teacher_prompt_is_the_student_s(self):
         (self.runs / "w-test" / "6" / "notes.json").write_text(json.dumps({"notes": []}))
         self.run_cd("--forms", "cd_fact")
