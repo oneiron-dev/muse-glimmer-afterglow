@@ -5,6 +5,7 @@ runs/<world>/<day>/daylog.jsonl  one record per turn: {"ts", "turn", "role", "co
                                  turn, as sent to the model), "tool_calls", "notes_written", timings.
 runs/<world>/<day>/notes.json    the notes (notes.py), seeded from the previous day's notes.
 runs/<world>/<day>/world_state.json  calendar and tasks.
+runs/<world>/<day>/vault-witness.jsonl  with the vault notes backend: one line per speaker run sent to the vault.
 
 The prompt has two parts. The system prompt (persona header, rules, tools) is the same for every day
 of a world, so its KV is the one snapshot (snapshot.py). The day context (the date, and the notes from
@@ -28,6 +29,7 @@ from .web_search import connector as search_connector
 
 JST = dt.timezone(dt.timedelta(hours=9))
 MAX_ROUNDS = 8
+NOTES_BACKENDS = ("local", "vault")
 LINK_P = 0.9  # a one-pass "replaces" this sure links at once (decide/decider.py SUPERSEDE_ACCEPT_P)
 ASK_AGAIN_P = 0.5  # from here up to LINK_P the decision is asked once more with reasoning on (when switched on)
 
@@ -127,7 +129,7 @@ def system_message(world_doc):
 class DaySession:
     def __init__(self, world, day, client=None, *, date=None, reasoning="low", notes_in_context=True,
                  notes_backend="local", temperature=0.3, decide_supersede=None, decide_reasoned=None,
-                 decide_adapter=None, decide_route=None, dials=None, web_search=None):
+                 decide_adapter=None, decide_route=None, dials=None, web_search=None, vault_tag=None):
         self.world, self.day = world, int(day)
         self.temperature = temperature
         self.client = client or GlimmerClient()
@@ -144,10 +146,17 @@ class DaySession:
         self.dir = paths.day_dir(world, self.day)
         prev = previous_day_dir(world, self.day)
         self.notes = LocalJsonNotes(self.dir / "notes.json", seed_from=prev / "notes.json" if prev else None)
-        if notes_backend == "oneiron":
+        # local: notes.json only. vault: notes.json plus the Oneiron vault, which answers the recall tool (notes.py
+        # OneironNotes says where each copy is the source); vault_tag witnesses into a separate conversation
+        if notes_backend not in NOTES_BACKENDS:
+            raise ValueError(f"notes_backend must be one of {NOTES_BACKENDS}, got {notes_backend!r}")
+        self.notes_backend = notes_backend
+        if notes_backend == "vault":
             from .notes import OneironNotes
+            from .oneiron_vault import LIVE_WITNESS_LOG
 
-            self.notes = OneironNotes(self.notes, world, self.day)
+            self.notes = OneironNotes(self.notes, world, self.day, tag=vault_tag,
+                                      witness_log=self.dir / LIVE_WITNESS_LOG)
         seed = None
         if prev and (prev / "world_state.json").exists():
             seed = json.loads((prev / "world_state.json").read_text())
@@ -309,7 +318,8 @@ class DaySession:
         log's user record (a scripted day's "feedback" label, for the night's steering proposals)."""
         self.turn += 1
         turn = self.turn
-        self._log({"ts": now_iso(), "turn": turn, "role": "user", "content": text, "source": source, **(extra or {})})
+        user_rec = {"ts": now_iso(), "turn": turn, "role": "user", "content": text, "source": source, **(extra or {})}
+        self._log(user_rec)
         self.messages.append({"role": "user", "content": text})
         new_msgs, tool_calls, notes_written, rounds = [], [], [], []
         final = ""
@@ -317,6 +327,8 @@ class DaySession:
         seen_calls = set()
         n_decisions, n_routes = len(self.tools.decisions), len(self.tools.route_decisions)
         n_searches = len(self.tools.web_searches)
+        vault = self.notes_backend == "vault"
+        n_recalls, n_errors = (len(self.notes.recalls), len(self.notes.errors)) if vault else (0, 0)
         self.tools.question = text  # the route decision at recall time reads the user's own words, not the query
         t0 = time.time()
         error = None
@@ -407,12 +419,17 @@ class DaySession:
             rec["web_searches"] = self.tools.web_searches[n_searches:]
         if len(self.tools.route_decisions) > n_routes:  # the turn's route decision at recall time, with p and ms
             rec["route_decisions"] = self.tools.route_decisions[n_routes:]
-        live = hasattr(self.notes, "witness_turn") and final
-        if live:  # push_day skips a turn the live path sent into the same conversation
-            rec["witnessed_live"] = self.notes.conversation
+        if vault:
+            # every vault recall of this turn, timed (ms, outcome, items kept), and the day's vault error count so far
+            rec["vault_recalls"] = self.notes.recalls[n_recalls:]
+            rec["notes_errors"] = {"total": len(self.notes.errors), "new": self.notes.errors[n_errors:]}
+            from .oneiron_vault import turn_messages
+
+            if turn_messages(user_rec, rec):  # push_day skips a turn the live path sent into the same conversation
+                rec["witnessed_live"] = self.notes.conversation
         self._log(rec)
-        if live:
-            self.notes.witness_turn(text, final)
+        if vault and rec.get("witnessed_live"):
+            self.notes.witness_turn(user_rec, rec)
         yield {"type": "turn_done", "turn": turn, "content": final, "notes_written": notes_written,
                "answer_channel_retry": retry,
                "ttft_s": rec["ttft_s"], "total_s": rec["total_s"], "tok_s": rec["tok_s"], "error": error,

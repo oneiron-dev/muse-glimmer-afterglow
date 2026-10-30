@@ -1,6 +1,7 @@
 """Notes: what the user told the agent, kept outside the weights.
 
-One interface, NotesStore, with a local JSON backend now and an Oneiron backend later.
+One interface, NotesStore, with two backends: local JSON (LocalJsonNotes) and an Oneiron vault written through to
+the local file (OneironNotes).
 A note: {"id", "key", "value", "status": "active"|"superseded", "created_at", "updated_at",
          "day", "turn", "supersedes": id|null, "superseded_by": id|null}.
 remember() with a key that matches an active note (case and spacing ignored), or with replaces naming one,
@@ -171,25 +172,46 @@ def stable_id(tag):
     return format(int(h[:16], 16) | (1 << 62), "016x") + h[16:32]
 
 
-def conversation_ref(world, day, version=2):
+def conversation_ref(world, day, version=2, tag=None):
     """The vault conversation that holds one (world, day). Version 1 was witnessed with one credential for
-    every speaker; version 2 names the user by their PERSON-bound credential."""
-    return stable_id(f"afterglow:{world}:{day}" + (f":v{version}" if version > 1 else ""))
+    every speaker; version 2 names the user by their PERSON-bound credential. A tag names a separate
+    conversation: a measured rerun of a day the vault already holds."""
+    return stable_id(f"afterglow:{world}:{day}" + (f":v{version}" if version > 1 else "") + (f":{tag}" if tag else ""))
+
+
+def world_conversations(world, day, version=2, tag=None):
+    """The conversations one day's recall may read: this world's earlier days (either version) and the day's own.
+    The agent credential reads every person in the vault, so recall keeps only items from these."""
+    earlier = {conversation_ref(world, d, v) for d in range(1, int(day)) for v in (1, 2)}
+    return earlier | {conversation_ref(world, day, version, tag)}
+
+
+# a stored note as turn_messages (oneiron_vault.py) witnesses it
+NOTE_LINE = re.compile(r"Note saved: (.+?): (.+?)(?: \(replaces .*\))?", re.S)
+VAULT_RECALL_LIMIT = 20  # items asked of the vault per recall; items of other worlds are dropped before the top k
 
 
 class OneironNotes(NotesStore):
-    """Notes in an Oneiron vault (bright-otter-4848), mirrored in a local JSON store.
+    """Notes in an Oneiron vault (bright-otter-4848), written through to a local JSON store.
 
-    The vault is where the Dreamer consolidates the day: every saved note and every turn is witnessed into
-    the day's conversation. The local mirror keeps notes.json for the UI and the night job. recall() asks the
-    vault first and adds local matches. Needs the "oneiron" extra and the credentials in oneiron_vault.py.
+    Where the vault is the source, and where the local copy is:
+    - Writes: every note goes to the local file at once (remember), and to the vault with its turn when the turn
+      ends (witness_turn: the user's message, one "Note saved" message per note, the answer; push_day's shape and
+      message ids, so a later push_day sends nothing twice). One worker sends them in order, off the chat's path.
+    - recall (the recall tool): the vault is the source. It is asked with deadline_ms 30000; only items from this
+      world's conversations count (world_conversations), a value the local copy marks superseded is dropped, and
+      notes saved today that the vault has not acknowledged yet are added from the local copy. A vault error or a
+      partial pack (retrieval_meta.partial) answers that call from the local notes; the error is logged.
+    - The local copy is the source for everything that needs the full note list: all(), the day context, the
+      supersede decision (correction_candidates, link, record_decision), the route decision, export_day and the UI.
+
+    recalls: one entry per recall call (ms, outcome, items kept and dropped), for the day log. errors: every vault
+    error and fallback. Needs the "oneiron" extra and the credentials in oneiron_vault.py.
     """
 
-    def __init__(self, local, world, day, vault=None):
+    def __init__(self, local, world, day, vault=None, tag=None, witness_log=None):
         import queue
         import threading
-
-        import os
 
         from .oneiron_vault import OneironVault, SpeakerVaults
 
@@ -198,37 +220,66 @@ class OneironNotes(NotesStore):
         if vault is None:
             vault = SpeakerVaults(template.format(world=world)) if template else OneironVault()
         self.vault = vault
-        self.conversation = conversation_ref(world, day, 2 if isinstance(vault, SpeakerVaults) else 1)
+        version = 2 if isinstance(vault, SpeakerVaults) else 1
+        self.conversation = conversation_ref(world, day, version, tag)
+        self.readable = world_conversations(world, day, version, tag)
+        self.witness_log = Path(witness_log) if witness_log else None
         self.notes = local.notes
         self.errors = []
-        # Witness calls take seconds on a busy vault; one worker sends them in order, off the chat's path.
+        self.recalls = []
+        self.unacknowledged = set()  # ids of notes saved today whose turn the vault has not acknowledged yet
         self._queue = queue.Queue()
         threading.Thread(target=self._send_loop, daemon=True).start()
 
     def _send_loop(self):
-        while True:
-            messages, at = self._queue.get()
-            try:
-                self.vault.witness(self.conversation, messages, occurred_at=at)
-            except Exception as e:  # the vault is a second copy; a failed write never loses the local note
-                self.errors.append(f"{type(e).__name__}: {e}")
-            finally:
-                self._queue.task_done()
-
-    def _witness(self, messages):
         import time
 
-        self._queue.put((messages, int(time.time())))
+        while True:
+            job = self._queue.get()
+            t0 = time.time()
+            line = {"turn": job["turn"], "run": job["run"], "author": job["author"], "messages": len(job["texts"]),
+                    "queued_s": round(t0 - job["queued_at"], 3)}
+            try:
+                out = self.vault.client_for(job["author"]).witness_run(self.conversation, job["author"], job["texts"],
+                                                                       job["at"], job["ids"]) or {}
+                self.unacknowledged -= set(job["notes"])
+                line["receipt_ref"] = out.get("receipt_ref")
+            except Exception as e:  # the vault is a second copy; a failed write never loses the local note
+                line["error"] = f"{type(e).__name__}: {e}"[:300]
+                self.errors.append(f"vault witness turn {job['turn']} run {job['run']}: {line['error']}")
+            finally:
+                line["ms"] = round((time.time() - t0) * 1000)
+                if self.witness_log:
+                    with open(self.witness_log, "a", encoding="utf-8") as f:
+                        f.write(json.dumps(line, ensure_ascii=False) + "\n")
+                self._queue.task_done()
 
     def flush(self, timeout=None):
         """Wait until every queued witness call has been sent (the end of a day, a test)."""
         self._queue.join()
 
+    def witness_turn(self, user_rec, rec):
+        """Queue one finished turn for the vault: user_rec and rec are the turn's day-log records. Returns the
+        number of messages queued (0: nothing to witness)."""
+        import datetime as dt
+        import time
+
+        from .oneiron_vault import run_message_ids, speaker_runs, turn_messages
+
+        ts = lambda r: int(dt.datetime.fromisoformat(r["ts"]).timestamp())
+        msgs = turn_messages(user_rec, rec)
+        for i, (author, texts) in enumerate(speaker_runs(msgs)):
+            self._queue.put({"turn": rec["turn"], "run": i, "author": author, "texts": texts,
+                             "at": ts(user_rec) if author == "user" and user_rec else ts(rec),
+                             "ids": run_message_ids(self.conversation, rec["turn"], i, len(texts)),
+                             "notes": [] if author == "user" else list(rec.get("notes_written") or []),
+                             "queued_at": time.time()})
+        return len(msgs)
+
     def remember(self, key, value, *, day=None, turn=None, replaces=None):
         r = self.local.remember(key, value, day=day, turn=turn, replaces=replaces)
         if not r["unchanged"]:
-            was = f" (replaces {r['superseded']['value']})" if r["superseded"] else ""
-            self._witness([("assistant", f"Note saved: {key}: {value}{was}")])
+            self.unacknowledged.add(r["note"]["id"])
         return r
 
     def correction_candidates(self, note, k=5):
@@ -240,24 +291,67 @@ class OneironNotes(NotesStore):
     def record_decision(self, note, decided):
         return self.local.record_decision(note, decided)
 
-    def recall(self, query, k=5):
-        out = []
-        self.last_recall_partial = False
-        try:
-            from .oneiron_vault import recall_partial
+    def vault_notes(self, items):
+        """Recall items -> notes, this world's only: a TURN or MESSAGE item from one of its conversations gives one
+        note per message it quotes ("Note saved: key: value" back to key and value). Items of other worlds and
+        items with no conversation (claims, summaries) are dropped, as are values the local copy marks superseded
+        while no active note holds them. Returns (notes, dropped counts)."""
+        active = {n["value"] for n in self.local.notes if n["status"] == "active"}
+        stale = {n["value"] for n in self.local.notes if n["status"] == "superseded"} - active
+        out, seen, dropped = [], set(), {"other_world": 0, "no_conversation": 0, "superseded": 0}
+        for item in items:
+            conv = item.get("conversation_id")
+            if conv not in self.readable:
+                dropped["other_world" if conv else "no_conversation"] += 1
+                continue
+            quoted = item.get("cited_messages") or [{"short_id": item.get("short_id"),
+                                                     "value_text": item.get("value_text")}]
+            for m in quoted:
+                text = (m.get("value_text") or "").strip()
+                line = NOTE_LINE.fullmatch(text)
+                key, value = (line.group(1), line.group(2)) if line else ("from the conversation", text)
+                if not value or value in seen:
+                    continue
+                if value in stale:
+                    dropped["superseded"] += 1
+                    continue
+                seen.add(value)
+                out.append({"id": m.get("short_id"), "key": key, "value": value, "status": "active",
+                            "updated_at": "", "source": "vault"})
+        return out, dropped
 
-            reply = self.vault.recall(query, limit=k) or {}
-            items = reply.get("items", [])
-            if recall_partial(reply):  # the vault stopped early: what it found stands, what is missing is unknown
-                self.last_recall_partial = True
-                self.errors.append(f"vault recall not finished (partial) for {query!r}")
-            out = [{"id": i.get("short_id"), "key": i.get("predicate") or i.get("kind", "").lower(),
-                    "value": i.get("value_text") or "", "status": "active", "updated_at": "", "source": "vault"}
-                   for i in items if i.get("value_text")]
-        except Exception as e:
-            self.errors.append(f"{type(e).__name__}: {e}")
+    def recall(self, query, k=5):
+        import time
+
+        from .oneiron_vault import recall_partial
+
         local = self.local.recall(query, k)
-        return local + [n for n in out if n["value"] not in {m["value"] for m in local}][:max(0, k - len(local))]
+        call = {"query": query, "k": k}
+        t0 = time.time()
+        try:
+            reply = self.vault.recall(query, limit=VAULT_RECALL_LIMIT) or {}
+            call["ms"] = round((time.time() - t0) * 1000)
+            items = reply.get("items") or []
+            call["items"] = len(items)
+            if recall_partial(reply):  # not finished: what is missing is unknown, so the local notes answer
+                call["outcome"] = "fallback_partial"
+                self.errors.append(f"vault recall not finished (partial) for {query!r}; answered from local notes")
+            else:
+                found, call["dropped"] = self.vault_notes(items)
+                # read-your-writes: today's notes still on their way to the vault come from the local copy
+                fresh = [n for n in local if n["id"] in self.unacknowledged and n["value"] not in {f["value"] for f in found}]
+                out = (fresh + found)[:k]
+                call.update(outcome="vault", kept=len(found), unacknowledged=len(fresh),
+                            values=[n["value"][:200] for n in out], local_values=[n["value"][:200] for n in local])
+                self.recalls.append(call)
+                return out
+        except Exception as e:
+            call.setdefault("ms", round((time.time() - t0) * 1000))
+            call.update(outcome="fallback_error", error=f"{type(e).__name__}: {e}"[:300])
+            self.errors.append(f"vault recall failed for {query!r}: {call['error']}; answered from local notes")
+        call["values"] = [n["value"][:200] for n in local]
+        self.recalls.append(call)
+        return local
 
     def all(self, include_superseded=False):
         return self.local.all(include_superseded)
@@ -265,5 +359,31 @@ class OneironNotes(NotesStore):
     def export_day(self, path, *, world, day):
         return self.local.export_day(path, world=world, day=day)
 
-    def witness_turn(self, user_text, assistant_text):
-        return self._witness([("user", user_text), ("assistant", assistant_text)])
+    def summary(self):
+        """The day's vault numbers (simulation.json): recall latency (every call that reached the vault, fallbacks
+        too), outcomes, items dropped, witness sends from the live log, and the error count."""
+        sent = []
+        if self.witness_log and self.witness_log.exists():
+            sent = [json.loads(x) for x in self.witness_log.read_text().splitlines() if x.strip()]
+        outcomes = {}
+        for c in self.recalls:
+            outcomes[c["outcome"]] = outcomes.get(c["outcome"], 0) + 1
+        dropped = {}
+        for c in self.recalls:
+            for k, v in (c.get("dropped") or {}).items():
+                dropped[k] = dropped.get(k, 0) + v
+        return {"conversation_ref": self.conversation, "recalls": len(self.recalls), "recall_outcomes": outcomes,
+                "recall_ms": spread([c["ms"] for c in self.recalls if "ms" in c]), "recall_dropped": dropped,
+                "recalls_with_unacknowledged": sum(1 for c in self.recalls if c.get("unacknowledged")),
+                "witness_runs": len(sent), "witness_errors": sum(1 for x in sent if x.get("error")),
+                "witness_ms": spread([x["ms"] for x in sent]), "witness_queued_s": spread([x["queued_s"] for x in sent]),
+                "errors": len(self.errors)}
+
+
+def spread(values):
+    """{n, p50, p90, max} of a list of numbers (nearest rank), or {n: 0}."""
+    v = sorted(values)
+    if not v:
+        return {"n": 0}
+    rank = lambda q: v[max(0, -(-len(v) * q // 100) - 1)]
+    return {"n": len(v), "p50": rank(50), "p90": rank(90), "max": v[-1]}
