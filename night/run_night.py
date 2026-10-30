@@ -367,7 +367,7 @@ class Night:
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
                 "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "protective_share_day": a.protective_share_day, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
                 "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows, "public_anchor_rows": a.public_anchor_rows,
-                "public_anchors": a.public_anchors, "train_seed": a.train_seed, "save_epochs": a.save_epochs, "kl_anchors": a.kl_anchors,
+                "public_anchors": a.public_anchors, "train_seed": a.train_seed, "save_epochs": a.save_epochs, "no_epoch_screen": a.no_epoch_screen, "kl_anchors": a.kl_anchors,
                 "cd_rows": a.cd_rows, "cd_weight": a.cd_weight}
 
     def save(self):
@@ -631,7 +631,7 @@ class Night:
                f"LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/{self.adapter_dir()} {r}/adapter.gguf {HOST['model_dir']} {HOST['python']}; "
                f"PYTHONPATH={HOST['llama_dir']}/gguf-py {HOST['python']} night/verify_gguf_lora.py --adapter {r}/adapter/{self.adapter_dir()} "
                f"--gguf {r}/adapter.gguf --base-config {HOST['model_dir']}/config.json --out {r}/gguf-verify.json")
-        for e in self.extra_epochs():  # the epoch screen's adapters, in the same booking; a failed one never stops the night
+        for e in ([] if a.no_epoch_screen else self.extra_epochs()):  # the epoch screen's adapters, in the same booking; a failed one never stops the night
             cmd += (f"; ( LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/epoch{e} {r}/adapter-epoch{e}.gguf "
                     f"{HOST['model_dir']} {HOST['python']} ) || echo 'epoch {e} convert failed'")
         fleet_gpu(f"afterglow night {a.world} day {a.day}: train + convert", "90m" if a.cd_rows else "75m" if a.kl_anchors else GPU_LIMIT["train"], cmd, log)
@@ -836,7 +836,7 @@ class Night:
                  ("train_set", n / "train.jsonl", self.train_set),
                  ("train", n / "adapter.gguf", self.train),
                  ("eval", n / "eval" / "score-night-D.json", self.eval),
-                 *([("epoch_screen", n / "eval" / "epoch-screen.json", self.epoch_screen_safe)] if self.args.save_epochs else []),
+                 *([("epoch_screen", n / "eval" / "epoch-screen.json", self.epoch_screen_safe)] if self.args.save_epochs and not self.args.no_epoch_screen else []),
                  *([("eval_control_vector", n / "eval-cv" / "gate-night-cv.json", self.eval_control_vector)] if self.args.control_vector else []),
                  ("report", n / "decision.json", self.report)]
         for name, output, fn in steps:
@@ -859,6 +859,8 @@ def main():
     ap.add_argument("--epochs", type=int, default=4)
     ap.add_argument("--save-epochs", help="comma list of epochs to keep (e.g. 2,3,4): the extra ones are converted and scored by "
                     "the epoch screen (eval/epoch_screen.py; report only, lead 30 Oct 06:54); default: the last epoch only")
+    ap.add_argument("--no-epoch-screen", action="store_true", help="keep the --save-epochs PEFT checkpoints on the training host "
+                    "but skip their GGUF converts and the epoch screen (lead 30 Oct 23:41: night 8 keeps epoch 3 on disk)")
     ap.add_argument("--screen-extra", help="name=remote GGUF,...: other adapters scored in the same epoch-screen server run "
                     "(lead 30 Oct 11:16: the W=1 screen scores w3 night 6's epochs beside its own)")
     ap.add_argument("--cd-rows", help="context-distillation rows (night/context_distill.py cd-rows.jsonl), trained as soft rows "
