@@ -151,7 +151,7 @@ class ServingRuleTest(unittest.TestCase):
             {"decision": "rollback", "abstention_rule": "honesty-3", "checks": {"abstention_honesty": False}}))
         c = serving_choice("w", self.entries)
         self.assertEqual(c["entry"]["day"], 1)
-        self.assertIn("night 2's failed the 'graded honesty: right minus wrong did not fall", c["why"])
+        self.assertIn("night 2's failed the 'graded honesty: right minus wrong fell by at most 5 points on 200 general questions, it lost at most 3", c["why"])
 
     def test_the_honesty_check_of_record_follows_the_rule_named_in_the_serving_rule(self):
         # owner 30 Oct 07:41 (rule A): honesty-3k replaces honesty-3; a night decided under honesty-3 only no longer counts
