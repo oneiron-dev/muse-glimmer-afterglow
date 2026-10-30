@@ -105,6 +105,8 @@ def main():
     if out.exists() and not turns:
         prev = json.loads(out.read_text())
         summary["turns"] = prev.get("turns", [])
+        if prev.get("vault"):  # this session made no vault calls; the day's numbers are the earlier run's
+            summary["vault"] = prev["vault"]
     out.write_text(json.dumps(summary, indent=1) + "\n")
     print(json.dumps({k: v for k, v in summary.items() if k != "turns"}, indent=1))
 

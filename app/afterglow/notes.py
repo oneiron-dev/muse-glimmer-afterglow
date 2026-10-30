@@ -180,15 +180,18 @@ def conversation_ref(world, day, version=2, tag=None):
 
 
 def world_conversations(world, day, version=2, tag=None):
-    """The conversations one day's recall may read: this world's earlier days (either version) and the day's own.
-    The agent credential reads every person in the vault, so recall keeps only items from these."""
+    """The conversations one day's recall may read: this world's earlier days and the day itself, in either version
+    (a restart can change the credentials); a tagged rerun reads its own conversation instead of the day's. The
+    agent credential reads every person in the vault, so recall keeps only items from these."""
     earlier = {conversation_ref(world, d, v) for d in range(1, int(day)) for v in (1, 2)}
-    return earlier | {conversation_ref(world, day, version, tag)}
+    today = {conversation_ref(world, day, version, tag)} if tag else {conversation_ref(world, day, v) for v in (1, 2)}
+    return earlier | today
 
 
 # a stored note as turn_messages (oneiron_vault.py) witnesses it
 NOTE_LINE = re.compile(r"Note saved: (.+?): (.+?)(?: \(replaces .*\))?", re.S)
 VAULT_RECALL_LIMIT = 20  # items asked of the vault per recall; items of other worlds are dropped before the top k
+COLD_START_MS = 20000  # a vault call this slow most likely waited for a cold start (~27 s, Engine 30 Oct 09:56)
 
 
 class OneironNotes(NotesStore):
@@ -200,13 +203,16 @@ class OneironNotes(NotesStore):
       message ids, so a later push_day sends nothing twice). One worker sends them in order, off the chat's path.
     - recall (the recall tool): the vault is the source. It is asked with deadline_ms 30000; only items from this
       world's conversations count (world_conversations), a value the local copy marks superseded is dropped, and
-      notes saved today that the vault has not acknowledged yet are added from the local copy. A vault error or a
-      partial pack (retrieval_meta.partial) answers that call from the local notes; the error is logged.
+      notes saved today that the vault has not acknowledged yet are added from the local copy. A vault error, a
+      partial pack (retrieval_meta.partial), or a vault still waking answers that call from the local notes; it is
+      logged. The session wakes the vault in the background when it opens (wake: a cold start takes ~27 s), and a
+      turn never waits for it.
     - The local copy is the source for everything that needs the full note list: all(), the day context, the
       supersede decision (correction_candidates, link, record_decision), the route decision, export_day and the UI.
 
-    recalls: one entry per recall call (ms, outcome, items kept and dropped), for the day log. errors: every vault
-    error and fallback. Needs the "oneiron" extra and the credentials in oneiron_vault.py.
+    recalls: one entry per recall call (ms, outcome, items kept and dropped), for the day log. wake: the session's
+    wake call ({"state": waking|awake|error, "ms"}). errors: every vault error and fallback. Needs the "oneiron"
+    extra and the credentials in oneiron_vault.py.
     """
 
     def __init__(self, local, world, day, vault=None, tag=None, witness_log=None):
@@ -233,9 +239,27 @@ class OneironNotes(NotesStore):
         self.unacknowledged = {n["id"] for n in local.notes if n.get("day") == day and 1 not in sent.get(n.get("turn"), ())}
         self._queue = queue.Queue()
         threading.Thread(target=self._send_loop, daemon=True).start()
+        self.wake = {"state": "waking"}
+        self._awake = threading.Event()
+        threading.Thread(target=self._wake, daemon=True).start()
+
+    def _wake(self):
+        import time
+
+        t0 = time.time()
+        try:
+            self.vault.wake()
+            self.wake = {"state": "awake", "ms": round((time.time() - t0) * 1000)}
+        except Exception as e:  # recalls still go to the vault (each one wakes it itself) and fall back on error
+            self.wake = {"state": "error", "ms": round((time.time() - t0) * 1000), "error": f"{type(e).__name__}: {e}"[:300]}
+            self.errors.append(f"vault wake failed: {self.wake['error']}")
+        finally:
+            self._awake.set()
 
     def _send_loop(self):
         import time
+
+        from .oneiron_vault import VaultError
 
         while True:
             job = self._queue.get()
@@ -243,8 +267,14 @@ class OneironNotes(NotesStore):
             line = {"turn": job["turn"], "run": job["run"], "author": job["author"], "messages": len(job["texts"]),
                     "queued_s": round(t0 - job["queued_at"], 3)}
             try:
-                out = self.vault.client_for(job["author"]).witness_run(self.conversation, job["author"], job["texts"],
-                                                                       job["at"], job["ids"]) or {}
+                try:
+                    out = self.vault.client_for(job["author"]).witness_run(self.conversation, job["author"],
+                                                                           job["texts"], job["at"], job["ids"]) or {}
+                except VaultError as e:
+                    # committed before a timeout, so the resend's ids are already in the vault (as in push_day)
+                    if e.status != 400 or "already belongs to another turn" not in e.body:
+                        raise
+                    out = {"receipt_ref": "already-witnessed"}
                 self.unacknowledged -= set(job["notes"])
                 line["receipt_ref"] = out.get("receipt_ref")
             except Exception as e:  # the vault is a second copy; a failed write never loses the local note
@@ -330,6 +360,11 @@ class OneironNotes(NotesStore):
 
         local = self.local.recall(query, k)
         call = {"query": query, "k": k}
+        if not self._awake.is_set():  # the vault may be starting (~27 s): the turn does not wait for it
+            call.update(outcome="fallback_waking", values=[n["value"][:200] for n in local])
+            self.errors.append(f"vault still waking for {query!r}; answered from local notes")
+            self.recalls.append(call)
+            return local
         t0 = time.time()
         try:
             reply = self.vault.recall(query, limit=VAULT_RECALL_LIMIT) or {}
@@ -375,7 +410,10 @@ class OneironNotes(NotesStore):
         for c in self.recalls:
             for k, v in (c.get("dropped") or {}).items():
                 dropped[k] = dropped.get(k, 0) + v
-        return {"conversation_ref": self.conversation, "recalls": len(self.recalls), "recall_outcomes": outcomes,
+        slow = [ms for ms in [self.wake.get("ms")] + [c.get("ms") for c in self.recalls] + [x["ms"] for x in sent]
+                if ms is not None and ms >= COLD_START_MS]
+        return {"conversation_ref": self.conversation, "wake": self.wake, "calls_over_20s": len(slow),
+                "recalls": len(self.recalls), "recall_outcomes": outcomes,
                 "recall_ms": spread([c["ms"] for c in self.recalls if "ms" in c]), "recall_dropped": dropped,
                 "recalls_with_unacknowledged": sum(1 for c in self.recalls if c.get("unacknowledged")),
                 "witness_runs": len(sent), "witness_errors": sum(1 for x in sent if x.get("error")),

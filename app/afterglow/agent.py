@@ -156,7 +156,8 @@ class DaySession:
             from .oneiron_vault import LIVE_WITNESS_LOG
 
             self.notes = OneironNotes(self.notes, world, self.day, tag=vault_tag,
-                                      witness_log=self.dir / LIVE_WITNESS_LOG)
+                                      witness_log=self.dir / LIVE_WITNESS_LOG)  # wakes the vault in the background
+        self._vault_wake_logged = False
         seed = None
         if prev and (prev / "world_state.json").exists():
             seed = json.loads((prev / "world_state.json").read_text())
@@ -423,6 +424,8 @@ class DaySession:
             # every vault recall of this turn, timed (ms, outcome, items kept), and the day's vault error count so far
             rec["vault_recalls"] = self.notes.recalls[n_recalls:]
             rec["notes_errors"] = {"total": len(self.notes.errors), "new": self.notes.errors[n_errors:]}
+            if self.notes.wake["state"] != "waking" and not self._vault_wake_logged:  # once, on the turn it ended by
+                rec["vault_wake"], self._vault_wake_logged = self.notes.wake, True
             from .oneiron_vault import turn_messages
 
             if turn_messages(user_rec, rec):  # push_day skips a turn the live path sent into the same conversation

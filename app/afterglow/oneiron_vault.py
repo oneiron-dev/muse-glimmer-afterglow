@@ -35,6 +35,9 @@ WITNESS_TRIES = 3
 # bel's engine cuts a light recall at 5 s by default and marks the pack retrieval_meta.partial; full recalls take up to
 # ~30 s, so every recall names its own deadline, and a partial pack means "not finished", never "nothing found"
 RECALL_DEADLINE_MS = 30000
+# Hypnos stops an engine after 900 s idle and the next call waits ~27 s for it to start (Engine, 30 Oct 09:56): a
+# session opens with one small recall in the background (wake) so the user's first recall finds it running
+WAKE_QUERY, WAKE_DEADLINE_MS = "wake", 1000
 
 
 class VaultError(RuntimeError):
@@ -137,6 +140,10 @@ class OneironVault:
         return self.facade("vault.recall", {"query": query, "effort": effort, "limit": limit, "deadline_ms": deadline_ms},
                            timeout=max(WITNESS_TIMEOUT_S, deadline_ms / 1000 + 30))
 
+    def wake(self):
+        """One small recall (limit 1, 1 s deadline): it returns once the engine is running, cold or not."""
+        return self.recall(WAKE_QUERY, limit=1, deadline_ms=WAKE_DEADLINE_MS)
+
     def witness(self, conversation_ref, messages, occurred_at=None):
         """messages: [(author, text)] in order; author "user" or "assistant" (the vault calls it "companion").
         Every run is sent with this one credential. Returns one result per run."""
@@ -177,6 +184,9 @@ class SpeakerVaults:
 
     def recall(self, query, limit=5, effort="light", deadline_ms=RECALL_DEADLINE_MS):
         return self.by_author["companion"].recall(query, limit=limit, effort=effort, deadline_ms=deadline_ms)
+
+    def wake(self):
+        return self.by_author["companion"].wake()
 
 
 
@@ -242,7 +252,8 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
     d = paths.day_dir(world, day)
     records = [json.loads(line) for line in (d / "daylog.jsonl").read_text().splitlines() if line.strip()]
     conv = conversation_ref(world, day, version)
-    other = {r["witnessed_live"] for r in records if r.get("witnessed_live") not in (None, conv)}
+    days = {conversation_ref(world, day, v) for v in (1, 2)}  # a restart can change the version within a day
+    other = {r["witnessed_live"] for r in records if r.get("witnessed_live") not in (None, *days)}
     if other:  # a measured rerun (--vault-conversation-tag) is in its own conversation; it never joins the day's
         raise SystemExit(f"{d / 'daylog.jsonl'} was witnessed live into {sorted(other)}, not {conv}; not pushed")
     out_path = d / "oneiron.json"
