@@ -9,8 +9,9 @@ No network: the facade and the vault are stand-ins.
 import json
 import os
 import sys
-import threading
 import tempfile
+import threading
+import time
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -31,24 +32,30 @@ class StandInVault:
 
     origin = "https://vault.test"
 
-    def __init__(self, partial=False, fail=None, extra=(), waking=None):
-        self.partial, self.fail, self.extra, self.waking = partial, fail, list(extra), waking
+    def __init__(self, partial=False, fail=None, extra=(), waking=None, down=False):
+        self.partial, self.fail, self.extra, self.waking, self.down = partial, fail, list(extra), waking, down
         self.runs, self.asked, self.woken = [], [], 0
 
     def wake(self):
         if self.waking:  # a cold start: the wake returns when the test sets the event
             self.waking.wait(5)
+        if self.down:
+            raise oneiron_vault.VaultError(503, "vault_wake_timeout")
         self.woken += 1
 
     def client_for(self, author):
         return self
 
     def witness_run(self, conv, author, texts, at, ids=None):
+        if self.down:
+            raise oneiron_vault.VaultError(503, "vault_wake_timeout")
         self.runs.append({"conv": conv, "author": author, "texts": list(texts), "at": at, "ids": ids})
         return {"receipt_ref": f"r{len(self.runs)}", "turn_short_id": f"t{len(self.runs)}"}
 
-    def recall(self, query, limit=5):
-        self.asked.append({"query": query, "limit": limit})
+    def recall(self, query, limit=5, timeout=None):
+        self.asked.append({"query": query, "limit": limit, "timeout": timeout})
+        if self.down:
+            raise oneiron_vault.VaultError(503, "vault_wake_timeout")
         if self.fail:
             raise self.fail
         items = list(self.extra)
@@ -109,7 +116,7 @@ class VaultNotesTest(unittest.TestCase):
         local = LocalJsonNotes(Path(tempfile.mkdtemp()) / "notes.json")
         n = OneironNotes(local, "w", 2, vault=StandInVault(**kw))
         if wait:
-            n._awake.wait(5)
+            n._up.wait(5)
         return n
 
     def test_a_recall_while_the_vault_wakes_answers_from_the_local_notes(self):
@@ -118,14 +125,84 @@ class VaultNotesTest(unittest.TestCase):
         n.local.remember("lab mate", "Jonas Weber", day=1, turn=1)
         self.assertEqual([x["value"] for x in n.recall("lab mate")], ["Jonas Weber"])
         self.assertEqual((n.recalls[-1]["outcome"], n.vault.asked), ("fallback_waking", []))  # nothing waited
-        self.assertEqual(n.wake, {"state": "waking"})
+        self.assertEqual((n.vault_state, n.wakes), ("waking", []))
         started.set()
-        n._awake.wait(5)
-        self.assertEqual((n.wake["state"], n.vault.woken), ("awake", 1))
-        self.assertIsInstance(n.wake["ms"], int)
+        n._up.wait(5)
+        self.assertEqual((n.vault_state, n.vault.woken, n.wakes[0]["outcome"]), ("up", 1, "awake"))
+        self.assertIsInstance(n.wakes[0]["ms"], int)
         n.recall("lab mate")
         self.assertEqual(n.recalls[-1]["outcome"], "vault")
         self.assertEqual(n.summary()["recall_outcomes"], {"fallback_waking": 1, "vault": 1})
+
+    def fast_retry(self):
+        patch = mock.patch.object(OneironNotes, "PROBE_BACKOFF_S", (0.01,))
+        patch.start()
+        self.addCleanup(patch.stop)
+
+    def test_a_down_vault_answers_locally_at_once_and_comes_back(self):
+        self.fast_retry()
+        n = self.notes(wait=False, down=True)
+        for _ in range(200):  # the first wake fails: down
+            if n.vault_state == "down":
+                break
+            time.sleep(0.01)
+        n.local.remember("lab mate", "Jonas Weber", day=1, turn=1)
+        t0 = time.time()
+        self.assertEqual([x["value"] for x in n.recall("lab mate")], ["Jonas Weber"])
+        self.assertLess(time.time() - t0, 0.5)  # no wait on a down vault
+        self.assertEqual((n.recalls[-1]["outcome"], n.vault.asked), ("fallback_down", []))
+        n.vault.down = False  # bel back: the next wake answers
+        self.assertTrue(n._up.wait(5))
+        n.recall("lab mate")
+        self.assertEqual(n.recalls[-1]["outcome"], "vault")
+        self.assertEqual(n.vault.asked[-1]["timeout"], OneironNotes.RECALL_TIMEOUT_S)
+        self.assertEqual(n.wakes[-1]["outcome"], "awake")
+        self.assertIn("error", {w["outcome"] for w in n.wakes})
+
+    def test_a_failed_recall_marks_the_vault_down_until_a_wake_answers(self):
+        n = self.notes(fail=TimeoutError("timed out"))
+        n.PROBE_BACKOFF_S = (60,)
+        n.vault.wake = lambda: (_ for _ in ()).throw(TimeoutError("timed out"))
+        n.recall("lab mate")
+        self.assertEqual(n.recalls[-1]["outcome"], "fallback_error")
+        for _ in range(200):
+            if n.wakes and n.wakes[-1]["outcome"] == "error":
+                break
+            time.sleep(0.01)
+        n.recall("lab mate")
+        self.assertEqual((n.recalls[-1]["outcome"], len(n.vault.asked)), ("fallback_down", 1))  # not asked again
+
+    def test_a_recall_after_a_quiet_spell_wakes_the_vault_and_does_not_wait(self):
+        n = self.notes()
+        n.vault.waking = threading.Event()  # this wake is a cold start
+        n._last_ok = time.time() - OneironNotes.IDLE_STOP_S - 1
+        n.recall("lab mate")
+        self.assertEqual((n.recalls[-1]["outcome"], len(n.vault.asked)), ("fallback_waking", 0))
+        n.vault.waking.set()
+        self.assertTrue(n._up.wait(5))
+        self.assertEqual(n.vault.woken, 2)
+
+    def test_witness_runs_on_a_down_vault_are_logged_unsent_for_push_day(self):
+        log = Path(tempfile.mkdtemp()) / oneiron_vault.LIVE_WITNESS_LOG
+        local = LocalJsonNotes(log.parent / "notes.json")
+        n = OneironNotes(local, "w", 2, vault=StandInVault(down=True), witness_log=log)
+        n.PROBE_BACKOFF_S = (60,)
+        n.witness_turn({"ts": "2026-10-28T09:00:00+09:00", "turn": 1, "content": "Hi."},
+                       {"ts": "2026-10-28T09:00:05+09:00", "turn": 1, "content": "Hello.", "tool_calls": []})
+        self.assertTrue(n.flush(5))
+        lines = [json.loads(x) for x in log.read_text().splitlines()]
+        self.assertTrue(all(x.get("error") for x in lines))
+        self.assertEqual(oneiron_vault.live_witness_sent(log), {})  # push_day resends both runs
+
+    def test_flush_gives_up_after_its_timeout(self):
+        n = self.notes()
+        hold = threading.Event()
+        n.vault.witness_run = lambda *a, **kw: hold.wait(5) and {}
+        n.witness_turn({"ts": "2026-10-28T09:00:00+09:00", "turn": 1, "content": "Hi."},
+                       {"ts": "2026-10-28T09:00:05+09:00", "turn": 1, "content": "Hello.", "tool_calls": []})
+        self.assertFalse(n.flush(0.1))
+        hold.set()
+        self.assertTrue(n.flush(5))
 
     def test_a_run_committed_before_a_timeout_counts_as_sent(self):
         n = self.notes()
@@ -228,12 +305,12 @@ class VaultDaySessionTest(unittest.TestCase):
         os.environ["AFTERGLOW_RUNS"] = tempfile.mkdtemp()
         self.addCleanup(os.environ.pop, "AFTERGLOW_RUNS", None)
 
-    def session(self, client, backend="vault", vault=None, tag=None):
+    def session(self, client, backend="vault", vault=None, tag=None, wait=True):
         with mock.patch.object(oneiron_vault, "OneironVault", lambda: vault):  # the stand-in, not the credentialed client
             s = DaySession("w-test", 1, client, date="2026-10-27", notes_backend=backend, vault_tag=tag,
                            decide_supersede=False, decide_route=False, web_search=False)
-        if backend == "vault":
-            s.notes._awake.wait(5)
+        if backend == "vault" and wait:
+            s.notes._up.wait(5)
         return s
 
     def daylog(self, s):
@@ -263,8 +340,8 @@ class VaultDaySessionTest(unittest.TestCase):
         recs = [r for r in self.daylog(s) if r["role"] == "assistant"]
         self.assertEqual(recs[0]["witnessed_live"], conv)
         self.assertEqual(recs[0]["vault_recalls"], [])
-        self.assertEqual(recs[0]["vault_wake"]["state"], "awake")  # logged once, on the first turn after it ended
-        self.assertNotIn("vault_wake", recs[1])
+        self.assertEqual((recs[0]["vault_wakes"][0]["outcome"], recs[0]["vault_state"]), ("awake", "up"))
+        self.assertNotIn("vault_wakes", recs[1])  # each wake is logged once, on the turn it ended by
         call = recs[1]["vault_recalls"][0]
         # the vault's answer: the user's own words and the stored note, both from the day-1 turn
         self.assertEqual((call["query"], call["outcome"], call["values"]),
@@ -277,7 +354,7 @@ class VaultDaySessionTest(unittest.TestCase):
         summary = s.notes.summary()
         self.assertEqual((summary["recalls"], summary["recall_outcomes"], summary["recall_ms"]["n"]), (1, {"vault": 1}, 1))
         self.assertEqual((summary["witness_runs"], summary["witness_errors"], summary["errors"]), (4, 0, 0))
-        self.assertEqual((summary["wake"]["state"], summary["calls_over_20s"]), ("awake", 0))
+        self.assertEqual(([w["outcome"] for w in summary["wakes"]], summary["calls_over_20s"]), (["awake"], 0))
         # a later push_day sends nothing twice: every live run has a receipt
         pushed = StandInVault()
         oneiron_vault.push_day("w-test", 1, vault=pushed)
@@ -305,6 +382,28 @@ class VaultDaySessionTest(unittest.TestCase):
         again = self.session(Turns(), vault=vault)
         by_key = {n["key"]: n["id"] for n in again.notes.all()}
         self.assertEqual(again.notes.unacknowledged, {by_key["desk"]})
+
+    def test_a_day_on_a_down_vault_answers_from_the_local_notes_without_waiting(self):
+        vault = StandInVault(down=True)
+        with mock.patch.object(OneironNotes, "PROBE_BACKOFF_S", (60,)):
+            s = self.session(Turns([("remember", {"key": "desk", "value": "D-14"})], "Saved.",
+                                   [("recall", {"query": "desk"})], "D-14."), vault=vault, wait=False)
+            for _ in range(200):
+                if s.notes.vault_state == "down":
+                    break
+                time.sleep(0.01)
+            t0 = time.time()
+            s.ask("My desk is D-14.")
+            s.ask("Where is my desk?")
+            s.end_day(flush_timeout=5)
+            self.assertLess(time.time() - t0, 2)
+        recs = [r for r in self.daylog(s) if r["role"] == "assistant"]
+        self.assertEqual(recs[1]["content"], "D-14.")
+        self.assertEqual(recs[1]["vault_recalls"][0]["outcome"], "fallback_down")
+        self.assertEqual(recs[1]["tool_calls"][0]["result"]["notes"][0]["value"], "D-14")
+        self.assertEqual(recs[1]["vault_state"], "down")
+        self.assertGreater(recs[1]["notes_errors"]["total"], 0)
+        self.assertEqual(oneiron_vault.live_witness_sent(s.dir / oneiron_vault.LIVE_WITNESS_LOG), {})
 
     def test_a_measured_rerun_witnesses_into_its_own_conversation(self):
         vault = StandInVault()
