@@ -112,6 +112,32 @@ def previous_day_dir(world, day):
     return root / str(days[0]) if days else None
 
 
+def night_links_from(day):
+    """The serving notes' setting for applying a night's links to the next day's notes ("night_links":
+    {"from_night"}): the first night whose links apply, or None (off)."""
+    f = paths.runs_root() / "serving" / "serving-rule.json"
+    conf = (json.loads(f.read_text()).get("night_links") if f.exists() else None) or {}
+    return conf.get("from_night")
+
+
+def apply_night_links(notes, world, day, prev):
+    """At the start of `day`: the links in the previous night's night-links.json (night/consolidate.py: the
+    corrections it found that passed its guard) mark each old note superseded by the night, when the serving notes
+    switch it on from that night and the file says it applies from this day. Returns {"night_day", "applied",
+    "listed"} or None."""
+    first = night_links_from(day)
+    if prev is None or first is None or int(prev.name) < int(first):
+        return None
+    f = prev / "night" / "night-links.json"
+    doc = json.loads(f.read_text()) if f.exists() else {}
+    if doc.get("applies_from_day") != int(day):
+        return None
+    applied = notes.apply_night_links(doc.get("links") or [], int(prev.name))
+    return {"night_day": int(prev.name), "applied": [{"old_id": l["old_id"], "new_id": l["new_id"]} for l in applied],
+            "listed": len(doc.get("links") or []),
+            "proposed": [{"old_id": p.get("old_id"), "new_id": p.get("new_id")} for p in doc.get("proposed") or []]}
+
+
 def render_notes_block(notes):
     if not notes:
         return ""
@@ -146,6 +172,8 @@ class DaySession:
         self.dir = paths.day_dir(world, self.day)
         prev = previous_day_dir(world, self.day)
         self.notes = LocalJsonNotes(self.dir / "notes.json", seed_from=prev / "notes.json" if prev else None)
+        # the corrections the last night found and its guard passed, applied to today's notes (night_links)
+        self.night_links = apply_night_links(self.notes, world, self.day, prev)
         # local: notes.json only. vault: notes.json plus the Oneiron vault, which answers the recall tool (notes.py
         # OneironNotes says where each copy is the source); vault_tag witnesses into a separate conversation
         if notes_backend not in NOTES_BACKENDS:
@@ -178,6 +206,10 @@ class DaySession:
                              web_search=search_connector(search) if self.web_search_on else None,
                              web_cap=search.get("cap"))
         self.daylog_path = self.dir / "daylog.jsonl"
+        if self.night_links and not any(r.get("role") == "night_links" for r in self._records()):
+            # once a day, before the first turn: which of the night's links today's notes took, and its proposals
+            self._log({"ts": now_iso(), "turn": 0, "role": "night_links", **self.night_links,
+                       "answers": []})  # an answer to a proposed pair is logged as its own record (web.py)
         self.session_path = self.dir / "session.json"
         self.system_message = system_message(self.world_doc)
         self._init_day_context(date)
@@ -305,13 +337,15 @@ class DaySession:
         with open(self.daylog_path, "a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
+    def _records(self):
+        """Every record of today's day log."""
+        if not self.daylog_path.exists():
+            return []
+        return [json.loads(line) for line in self.daylog_path.read_text().splitlines() if line.strip()]
+
     def history(self):
-        """User-visible turns for the UI, rebuilt from the day log."""
-        out = []
-        if self.daylog_path.exists():
-            for line in self.daylog_path.read_text().splitlines():
-                out.append(json.loads(line))
-        return out
+        """User-visible turns for the UI, rebuilt from the day log (the night-links records are not turns)."""
+        return [r for r in self._records() if r.get("role") in ("user", "assistant")]
 
     # --- one turn ---
     def run_turn(self, text, source="user", extra=None):

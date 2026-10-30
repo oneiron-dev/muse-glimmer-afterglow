@@ -99,6 +99,9 @@ def main():
                "facts_stated": len(facts), "facts_in_notes": len(captured),
                "facts_missing_from_notes": sorted(set(f["id"] for f in facts) - set(captured)),
                "errors": [t for t in turns if t["error"]], "notes_backend": a.notes_backend, "turns": turns}
+    if session.night_links:  # the scripted user never answers a pair the night proposed: it stays both notes
+        summary["night_links"] = dict(session.night_links,
+                                      answers="none: the scripted user does not answer a proposed pair")
     if a.notes_backend == "vault":
         summary["vault"] = session.notes.summary()
     out = session.dir / "simulation.json"
