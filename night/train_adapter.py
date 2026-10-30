@@ -43,6 +43,10 @@ TARGETS = {
 LAYERS = {"all": r"\d+", "last16": r"(3[6-9]|4\d|5[01])"}
 KL_TOP = 20
 KL_ROTATING = ("kl_obscure", "kl_known", "kl_people")
+ALIGN_ROWS = 3  # the KL alignment guard reads the longest soft rows
+ALIGN_ULPS = 4  # tail vs full forward, aligned: within 4 bf16 ulps at the row's largest logit (seen: 1.5 ulps)
+ALIGN_RATIO = 0.05  # aligned mean difference below 5% of the off-by-one mean difference
+ALIGN_AGREE = 0.95  # top token agrees at >= 95% of reply positions (off by one: ~1%), and every disagreement is a bf16 near-tie
 
 
 def soft_row(row):
@@ -141,6 +145,48 @@ def logits_at(model, ids, positions, tail=True):
     return out.logits[0, [p - start for p in positions]].float()
 
 
+def bf16_ulp(x):
+    """The bf16 spacing at magnitude x (7 stored mantissa bits)."""
+    return 2.0 ** (math.floor(math.log2(max(abs(x), 2.0 ** -126))) - 7)
+
+
+def alignment_stats(tail, full, pos, start):
+    """Tail logits (rows = reply positions pos) against one full forward (rows = positions start..): the aligned
+    difference, the off-by-one difference (the nearer of p - 1 and p + 1) and top-token agreement. A top-token
+    disagreement counts as hard only where the full forward puts the tail's top token more than the bf16 tolerance
+    below its own top (exact ties are common in bf16: 2-3% of reply positions on the w3 day-6 pool rows)."""
+    import torch
+    at = lambda ps: full[[p - start for p in ps]]  # noqa: E731
+    aligned = at(pos)
+    tol = ALIGN_ULPS * bf16_ulp(float(aligned.abs().max()))
+    diff = (tail - aligned).abs()
+    shifts = {}
+    for s in (-1, 1):
+        keep = [i for i, p in enumerate(pos) if start <= p + s < start + len(full)]
+        if keep:
+            t = tail[keep]
+            shifts[s] = (float((t - at([pos[i] + s for i in keep])).abs().mean()),
+                         float((t.argmax(-1) == at([pos[i] + s for i in keep]).argmax(-1)).float().mean()))
+    pick = tail.argmax(-1)
+    agree = pick == aligned.argmax(-1)  # argmax on both sides: topk breaks exact bf16 ties another way
+    hard = (~agree) & ((aligned.max(-1).values - aligned.gather(-1, pick[:, None])[:, 0]) > tol)
+    near = min(shifts.values()) if shifts else (float("inf"), 0.0)
+    return {"positions": len(pos), "aligned_max_abs": round(float(diff.max()), 5), "aligned_mean_abs": round(float(diff.mean()), 6),
+            "bf16_tolerance": tol, "off_by_one_mean_abs": round(near[0], 4), "top_token_agree": round(float(agree.float().mean()), 4),
+            "top_token_agree_off_by_one": round(near[1], 4), "hard_disagreements": int(hard.sum()),
+            "passed": bool(float(diff.max()) <= tol and float(diff.mean()) <= ALIGN_RATIO * near[0]
+                           and float(agree.float().mean()) >= ALIGN_AGREE and int(hard.sum()) == 0)}
+
+
+def alignment_check(model, ids, labels):
+    """Proof that the tail logits (logits_to_keep) sit at the positions the KL reads, against one full forward of the
+    same row. The two differ by bf16 rounding (the lm_head GEMM has a different shape), so an absolute bound is no
+    proof; alignment_stats holds the rules."""
+    pos = reply_positions(labels)
+    start = max(0, min(pos) - 1)
+    return alignment_stats(logits_at(model, ids, pos), logits_at(model, ids, list(range(start, len(ids))), tail=False), pos, start)
+
+
 def teacher_top_k(model, encoded, soft, cache_dir, report, write_report, teacher_encoded=None):
     """The adapter-off model's top-20 log-probs at every reply token of every soft row; cached by row hash. A
     context-distillation row is read by the teacher with its own prompt (teacher_encoded[j]): the same completion tokens,
@@ -213,6 +259,9 @@ def main():
                     "on plain Glimmer's own rows (0 = off: every row is cross-entropy)")
     ap.add_argument("--kl-rotate", type=int, default=80, help="fixed-pool soft rows (kl_obscure/known/people) per epoch")
     ap.add_argument("--kl-cache-dir", help="teacher top-20 cache, by row hash (default: <out-dir>/../kl-teacher-cache)")
+    ap.add_argument("--align-rows", type=int, default=ALIGN_ROWS, help="the KL alignment guard reads this many of the longest soft rows")
+    ap.add_argument("--align-only", action="store_true", help="run the alignment guard on the longest soft and cd rows "
+                    "(whatever --kl-weight), write train-report.json and exit: 0 = passed")
     args = ap.parse_args()
     alpha = args.alpha or args.rank
     save_epochs = {int(x) for x in args.save_epochs.split(",") if x} or {args.epochs}
@@ -284,23 +333,36 @@ def main():
     bos = tokenizer.bos_token_id
     if bos is not None and encoded[0][0][0] != bos:
         raise SystemExit(f"first token {encoded[0][0][0]} is not BOS {bos}")
+    def align(js):
+        # guard: the tail logits sit at the full forward's positions (alignment_check), on the longest soft rows; the
+        # tail check reads the student's own sequence, whatever the row
+        js = sorted(js, key=lambda j: -len(encoded[j][0]))[:args.align_rows]
+        with torch.no_grad():
+            model.eval()
+            checks = [{"row": row_id(rows[j]), "tokens": len(encoded[j][0]), **alignment_check(model, *encoded[j])} for j in js]
+            model.train()
+        return checks
+
+    if args.align_only:
+        checks = align([j for j, r in enumerate(rows) if soft_row(r) or has_teacher(r)])
+        report.update({"status": "align-only", "kl_check": {"rows": checks, "passed": all(c["passed"] for c in checks)}})
+        write_report()
+        print(json.dumps(report["kl_check"], indent=1))
+        raise SystemExit(0 if report["kl_check"]["passed"] else 1)
     teacher = {}
     if any(soft):
         teacher = teacher_top_k(model, encoded, soft, Path(args.kl_cache_dir) if args.kl_cache_dir else out_dir.parent / "kl-teacher-cache",
                                 report, write_report, {j: t for j, t in enumerate(teach_enc) if t is not None})
-        # guard: the tail logits equal the full forward's at the same positions; the KL at init (LoRA B = 0) is the
-        # teacher's mass outside its top-20 on rows read with the same prompt
-        j0 = next(iter(teacher))  # the tail check reads the student's own sequence, whatever the row
-        pos0 = reply_positions(encoded[j0][1])
+        checks = align(list(teacher))
+        # the KL at init (LoRA B = 0) is the teacher's mass outside its top-20 on rows read with the same prompt
         with torch.no_grad():
             model.eval()
-            diff = float((logits_at(model, encoded[j0][0], pos0) - logits_at(model, encoded[j0][0], pos0, tail=False)).abs().max())
             init = [round(float(kl_row(model, encoded[j], teacher[j])), 4) for j in [j for j in teacher if not has_teacher(rows[j])][:3]]
             model.train()
-        report["kl_check"] = {"tail_vs_full_max_abs": round(diff, 5), "kl_at_init": init}
+        report["kl_check"] = {"rows": checks, "passed": all(c["passed"] for c in checks), "kl_at_init": init}
         write_report()
-        if diff > 0.05:
-            raise SystemExit(f"tail logits differ from the full forward by {diff}: the KL positions do not line up")
+        if not report["kl_check"]["passed"]:
+            raise SystemExit(f"tail logits do not line up with the full forward: {json.dumps(checks)}")
     report["data"] = {"rows": len(rows), "soft_rows": sum(soft), "kl_rows_over_max_len": len(too_long),
                       "cd_rows": sum(1 for r in rows if has_teacher(r)), "cd_rows_dropped_teacher": len(teacher_dropped), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
                       "loss_tokens_per_epoch": sum(sum(1 for x in lab if x != -100) for _, lab in encoded),
