@@ -98,6 +98,10 @@ class ToolBox:
         # bars). With no note, both stay and the night's consolidation sees the pair.
         self.decide_supersede = decide_supersede
         self.decisions = []  # every supersede decision this session, for the day log
+        # after_reply: the decision waits until the turn's reply is written (settle_supersede), so its ~0.5 s per saved
+        # fact stays off the reply; the model then never hears of a link the decision makes (serving notes, agent.py)
+        self.supersede_after_reply = False
+        self.pending_supersede = []  # notes saved this turn whose decision waits for the reply
         # decide_route(question) -> {"note": the active note that answers it or None, "ask", "look_up", "decided"}:
         # at recall time, which note answers the user's question (agent.py). ask = none does: the agent asks the user.
         self.decide_route = decide_route
@@ -124,6 +128,33 @@ class ToolBox:
                                      **({"error": d["error"]} if d.get("error") else {})})
         return d
 
+    def _supersede(self, note, after_reply=False):
+        """The supersede decision for a newly saved note: link it to the earlier note it replaces when the decision is
+        sure, else keep both and record the decision; logged either way. Returns the fields for the tool result."""
+        d = self.decide_supersede(note)
+        decided = dict(d["decided"], **({"after_reply": True} if after_reply else {}))
+        out = {}
+        if d.get("note") is not None:
+            self.notes.link(note, d["note"], decided)
+            out["replaced"] = {"id": d["note"]["id"], "old_value": d["note"]["value"], "decided": decided}
+        elif d.get("decisions"):
+            out["decision"] = dict(decided, linked=False)  # both notes stay; the night sees the pair
+            self.notes.record_decision(note, dict(decided, linked=False))  # for the day page
+        self.decisions.append({"note": note["id"], **decided, "linked": "replaced" in out, "calls": d.get("decisions")})
+        return out
+
+    def settle_supersede(self):
+        """The decisions that waited for the reply (supersede_after_reply): [(note, fields)] in save order. A failed
+        decision keeps both notes and is logged, so the turn still ends."""
+        pending, self.pending_supersede, done = self.pending_supersede, [], []
+        for note in pending:
+            try:
+                done.append((note, self._supersede(note, after_reply=True)))
+            except Exception as e:  # the server or the decision failed: both notes stay
+                self.decisions.append({"note": note["id"], "after_reply": True, "linked": False,
+                                       "error": f"{type(e).__name__}: {e}"})
+        return done
+
     def run(self, name, args, turn=None):
         try:
             if name == "remember":
@@ -132,17 +163,10 @@ class ToolBox:
                 out = {"saved": r["note"]["id"], "key": r["note"]["key"], "value": r["note"]["value"]}
                 if r["superseded"]:
                     out["replaced"] = {"id": r["superseded"]["id"], "old_value": r["superseded"]["value"]}
+                elif not r["unchanged"] and self.decide_supersede and self.supersede_after_reply:
+                    self.pending_supersede.append(r["note"])  # decided once the reply is written (settle_supersede)
                 elif not r["unchanged"] and self.decide_supersede:  # the model decides; linked only when sure
-                    d = self.decide_supersede(r["note"])
-                    decided = d["decided"]
-                    if d.get("note") is not None:
-                        self.notes.link(r["note"], d["note"], decided)
-                        out["replaced"] = {"id": d["note"]["id"], "old_value": d["note"]["value"], "decided": decided}
-                    elif d.get("decisions"):
-                        out["decision"] = dict(decided, linked=False)  # both notes stay; the night sees the pair
-                        self.notes.record_decision(r["note"], dict(decided, linked=False))  # for the day page
-                    self.decisions.append({"note": r["note"]["id"], **decided, "linked": "replaced" in out,
-                                           "calls": d.get("decisions")})
+                    out.update(self._supersede(r["note"]))
                 elif not r["unchanged"] and hasattr(self.notes, "correction_candidates"):
                     maybe = self.notes.correction_candidates(r["note"])
                     if maybe:  # the agent decides; a second remember with replaces links the old note

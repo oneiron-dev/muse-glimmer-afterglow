@@ -74,6 +74,13 @@ def supersede_setting(day):
     return on, float(conf.get("link_p", LINK_P)), bool(conf.get("reasoned", False))
 
 
+def supersede_after_reply(day):
+    """The serving notes' switch that moves the supersede decision after the turn's reply ("supersede_decision":
+    {..., "after_reply": true}; lead, 30 Oct 10:08: day-path speed). Off unless named and the decision itself is on."""
+    conf, on = serving_setting("supersede_decision", day)
+    return bool(on and conf.get("after_reply"))
+
+
 def route_setting(day):
     """The serving notes' setting for the route decision at recall time ("route_decision": {"from_day", "adapter",
     "threshold", "evidence"}; adapter = the decision adapter's file name, found by path on the server, none = base
@@ -177,6 +184,7 @@ class DaySession:
                              decide_route=self._route_decider(route_adapter) if route_on else None,
                              web_search=search_connector(search) if self.web_search_on else None,
                              web_cap=search.get("cap"))
+        self.tools.supersede_after_reply = supersede_after_reply(self.day)
         self.daylog_path = self.dir / "daylog.jsonl"
         self.session_path = self.dir / "session.json"
         self.system_message = system_message(self.world_doc)
@@ -406,11 +414,15 @@ class DaySession:
             except Exception as e:
                 error = f"answer channel retry: {type(e).__name__}: {e}"
                 yield {"type": "error", "message": error}
+        reply_s = round(time.time() - t0, 3)  # the reply is written: what the user waits for
+        for note, fields in self.tools.settle_supersede():  # decisions that waited for the reply (after_reply)
+            if fields.get("replaced"):
+                yield {"type": "note", "note": note, "replaced": fields["replaced"]}
         first = rounds[0] if rounds else {}
         last_t = (rounds[-1].get("timings") or {}) if rounds else {}
         rec = {"ts": now_iso(), "turn": turn, "role": "assistant", "content": final, "messages": new_msgs,
                "tool_calls": tool_calls, "notes_written": notes_written, "rounds": rounds,
-               "ttft_s": first.get("ttft_s"), "total_s": round(time.time() - t0, 3),
+               "ttft_s": first.get("ttft_s"), "reply_s": reply_s, "total_s": round(time.time() - t0, 3),
                "tok_s": last_t.get("predicted_per_second"), "answer_channel_retry": retry, "error": error}
         if len(self.tools.decisions) > n_decisions:  # the one-pass supersede decisions of this turn, with p and ms
             rec["supersede_decisions"] = self.tools.decisions[n_decisions:]
@@ -437,7 +449,8 @@ class DaySession:
             self.notes.witness_turn(user_rec, rec)
         yield {"type": "turn_done", "turn": turn, "content": final, "notes_written": notes_written,
                "answer_channel_retry": retry,
-               "ttft_s": rec["ttft_s"], "total_s": rec["total_s"], "tok_s": rec["tok_s"], "error": error,
+               "ttft_s": rec["ttft_s"], "reply_s": reply_s, "total_s": rec["total_s"], "tok_s": rec["tok_s"],
+               "error": error,
                "cache_n": (first.get("timings") or {}).get("cache_n"),
                "prompt_n": (first.get("timings") or {}).get("prompt_n")}
 
