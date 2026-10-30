@@ -56,6 +56,36 @@ def flagged_ids(path, version="v1"):
 POINTS = {"CORRECT": 1, "INCORRECT": -1}
 
 
+def load_gold():
+    """(gold, known_alts): the grader's question and gold text per id (SimpleQA gate slice + both known slices, a known
+    question's other gold answers listed as "also accepted"), and every known question's gold answers."""
+    gold = {g["id"]: g for g in simpleqa_gate.gate_items()}
+    known_alts = {}  # the disclosed known slices (sets known and known2), if read; ids K### and K2### do not overlap
+    for r in (json.loads(line) for f in ("known_slice_v1.jsonl", "known_slice_v2.jsonl")
+              for line in (HERE.parent / "eval" / "data" / f).read_text().splitlines()):
+        known_alts[r["id"]] = r["gold"]
+        alts = r["gold"][1:]
+        gold[r["id"]] = {"question": r["question"],
+                         "answer": r["gold"][0] + (f" (also accepted: {'; '.join(alts)})" if alts else "")}
+    return gold, known_alts
+
+
+def pending(rows, grades, gold, known_alts):
+    """(deterministic grades, grader items by key) for the answered rows of the graded sets not yet in grades: a known
+    answer that matches one of its gold answers is CORRECT without a call; the rest go to the grader."""
+    det, todo = {}, {}
+    for r in rows:
+        s, qid, k = r["set"], r["id"], key(r["id"], r["answer"])
+        if s not in ("general", "known", "known2") or abstained(r) or k in grades or k in det:
+            continue
+        if s in ("known", "known2") and any(aa_omniscience.deterministic_grade(r["answer"], g) == "correct"
+                                            for g in known_alts[qid]):
+            det[k] = {"key": k, "grade": "CORRECT", "path": "deterministic, one of the gold answers"}
+            continue
+        todo[k] = {"key": k, "answer": r["answer"], "question": gold[qid]["question"], "gold": gold[qid]["answer"]}
+    return det, todo
+
+
 def grade_with_backoff(item, template, grader, log, tries=6):
     """grade_one, waiting 5, 10, 20, 40, 80 s after an HTTP 429 from the grader (rate limit on the sub); any other error,
     or a reply from another model, stops the run as before."""
@@ -93,14 +123,7 @@ def main():
     ap.add_argument("--flags", default="v1", help="frozen near-synonym flag list version (v1 = day-4 notes, v2 = day-5)")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
-    gold = {g["id"]: g for g in simpleqa_gate.gate_items()}
-    known_alts = {}  # the disclosed known slices (sets known and known2), if read; ids K### and K2### do not overlap
-    for r in (json.loads(line) for f in ("known_slice_v1.jsonl", "known_slice_v2.jsonl")
-              for line in (HERE.parent / "eval" / "data" / f).read_text().splitlines()):
-        known_alts[r["id"]] = r["gold"]
-        alts = r["gold"][1:]
-        gold[r["id"]] = {"question": r["question"],
-                         "answer": r["gold"][0] + (f" (also accepted: {'; '.join(alts)})" if alts else "")}
+    gold, known_alts = load_gold()
     template = (aa_omniscience.DATA / "grader_prompt.txt").read_text().strip()
     notes = dict(n.split("=", 1) for n in args.note)
     cache = Path(args.cache)
@@ -117,18 +140,8 @@ def main():
         refuse_mixed_server(list(pairs.values()), path)
         refuse_mixed_decide(list(pairs.values()), path)
         arms[label] = {"path": path, "pairs": pairs}
-    todo = {}
-    for a in arms.values():
-        for (s, qid), pair in a["pairs"].items():
-            for r in pair:
-                if s in ("known", "known2") and not abstained(r) and key(qid, r["answer"]) not in grades and any(
-                        aa_omniscience.deterministic_grade(r["answer"], g) == "correct" for g in known_alts[qid]):
-                    grades[key(qid, r["answer"])] = {"key": key(qid, r["answer"]), "grade": "CORRECT",
-                                                     "path": "deterministic, one of the gold answers"}
-                    continue
-                if s in ("general", "known", "known2") and not abstained(r) and key(qid, r["answer"]) not in grades:
-                    todo[key(qid, r["answer"])] = {"key": key(qid, r["answer"]), "answer": r["answer"],
-                                                   "question": gold[qid]["question"], "gold": gold[qid]["answer"]}
+    det, todo = pending([r for a in arms.values() for pair in a["pairs"].values() for r in pair], grades, gold, known_alts)
+    grades.update(det)
     print(json.dumps({"to_grade": len(todo), "cached": len(grades)}), flush=True)
     log = cache.with_name(cache.stem + "-calls.jsonl")
     with ThreadPoolExecutor(max_workers=args.parallel) as pool, open(cache, "a") as f:
