@@ -11,7 +11,8 @@ cross-entropy:
              behaviour on an unknown person, whatever it is).
 The fixed pools (obscure, known, people) depend only on the world's system prompt and plain Glimmer, so they are made
 once per world and cached (--cache-dir); the swapped pool is made every night. Rows are the raw prompt and completion
-with the generated token ids, like the agent anchors.
+with the generated token ids, like the agent anchors. When base's first action is one recall call, the row is the
+second turn: the call and the product's empty recall result are in the prompt (generate()).
 """
 
 import argparse
@@ -52,20 +53,52 @@ def frozen_candidates():
     return [json.loads(line) for line in CANDIDATES.read_text().splitlines() if line.strip()], got
 
 
-def generate(root, system, question, lora):
-    prompt = post(f"{root}/apply-template", {"messages": [system, {"role": "user", "content": question}], "tools": TOOL_SCHEMAS,
+GREEDY = {"temperature": 0.0, "top_k": 1, "seed": 20261014, "id_slot": 1, "cache_prompt": False}
+N_PREDICT = 800
+NOTHING_RECALLED = {"notes": []}  # the product's recall result when no note matches
+
+
+def render(root, messages):
+    prompt = post(f"{root}/apply-template", {"messages": messages, "tools": TOOL_SCHEMAS,
                                              "chat_template_kwargs": {"reasoning_strength": "low"}})["prompt"]
     if not prompt.endswith("<|start|>assistant"):
         raise SystemExit(f"unexpected rendered prompt end {prompt[-40:]!r}")
-    r = post(f"{root}/completion", {"prompt": prompt, "n_predict": 400, "temperature": 0.0, "top_k": 1, "seed": 20261014,
-                                    "id_slot": 1, "cache_prompt": False, "lora": lora, "return_tokens": True})
+    return prompt
+
+
+def complete(root, prompt, lora):
+    r = post(f"{root}/completion", {"prompt": prompt, "n_predict": N_PREDICT, "lora": lora, "return_tokens": True, **GREEDY})
     tokens = r.get("tokens") or []
     ended = bool(tokens) and tokens[-1] == 200008  # <|eot|>
     completion = post(f"{root}/detokenize", {"tokens": tokens, "with_pieces": False})["content"] if tokens else ""
     if ended and not completion.endswith("<|eot|>"):
         completion += "<|eot|>"
     exact = tokens and post(f"{root}/tokenize", {"content": completion, "add_special": False, "parse_special": True})["tokens"] == tokens
-    return prompt, completion, tokens, bool(ended and r.get("stop_type") == "eos" and exact)
+    return completion, tokens, bool(ended and r.get("stop_type") == "eos" and exact)
+
+
+def generate(root, system, question, lora):
+    """Base's reply as the product gets it. When base's first action is one recall call, the product runs it; the
+    question is not about the user, so the recall finds nothing: the call (parsed by the server, as the product's
+    chat request gets it) and NOTHING_RECALLED go into the prompt, and the row's completion is the second turn."""
+    messages = [system, {"role": "user", "content": question}]
+    prompt = render(root, messages)
+    completion, tokens, ok = complete(root, prompt, lora)
+    _, invoke, _ = first_action(completion)
+    if not ok or invoke != "recall" or completion.count("<atem:invoke ") != 1:
+        return prompt, completion, tokens, ok, False
+    msg = post(f"{root}/v1/chat/completions", {"messages": messages, "tools": TOOL_SCHEMAS, "max_tokens": N_PREDICT,
+                                               "chat_template_kwargs": {"reasoning_strength": "low"}, "lora": lora,
+                                               **GREEDY})["choices"][0]["message"]
+    calls = msg.get("tool_calls") or []
+    if len(calls) != 1 or calls[0]["function"]["name"] != "recall":
+        return prompt, completion, tokens, False, True
+    msg = {"role": "assistant", "content": msg.get("content") or "", **({"reasoning_content": msg["reasoning_content"]}
+           if msg.get("reasoning_content") else {}), "tool_calls": calls}  # the fields the product keeps (llm.py)
+    tool = {"role": "tool", "tool_call_id": calls[0].get("id") or "call_0", "name": "recall", "content": json.dumps(NOTHING_RECALLED)}
+    prompt2 = render(root, messages + [msg, tool])
+    completion2, tokens2, ok2 = complete(root, prompt2, lora)
+    return prompt2, completion2, tokens2, ok2, True
 
 
 def outcome(completion):
@@ -124,15 +157,15 @@ def make(root, system, items, lora, want, log, rows=None, report=None, on_item=N
             continue
         if kept.get(it["part"], 0) >= want.get(it["part"], 10**6):
             continue
-        prompt, completion, tokens, ok = generate(root, system, it["question"], lora)
+        prompt, completion, tokens, ok, recalled = generate(root, system, it["question"], lora)
         k, why = keep(it, completion) if ok else (False, "cut or inexact tokens")
-        line = {"id": it["id"], "part": it["part"], "kept": k, "why": why, "completion": completion[-200:]}
+        line = {"id": it["id"], "part": it["part"], "kept": k, "why": why, "recalled": recalled, "completion": completion[-200:]}
         report.append(line)
         row = None
         if k:
             kept[it["part"]] = kept.get(it["part"], 0) + 1
             row = {"item_id": f"kl-{it['id']}", "kind": "kl_anchor", "form": f"kl_{it['part']}", "user": it["question"],
-                   "assistant": completion, "raw": {"prompt": prompt[:-len("<|start|>assistant")],
+                   "assistant": completion, "after_recall": recalled, "raw": {"prompt": prompt[:-len("<|start|>assistant")],
                                                     "completion": "<|start|>assistant" + completion, "completion_ids": tokens},
                    "valid": True}
             rows.append(row)
@@ -161,7 +194,7 @@ def main():
     world = json.loads((ROOT / "worlds" / args.world / "world.json").read_text())
     system = system_message(world)
     cands, sha = frozen_candidates()
-    cache = Path(args.cache_dir) / f"{args.world}-kl-fixed-{sha[:12]}.jsonl" if args.cache_dir else None
+    cache = Path(args.cache_dir) / f"{args.world}-kl-fixed-v2-{sha[:12]}.jsonl" if args.cache_dir else None
     asked_log = cache.with_suffix(".asked.jsonl") if cache else None
     done = cache.with_suffix(".done") if cache else None
     if cache and done.exists():  # made once per world, reused every night
