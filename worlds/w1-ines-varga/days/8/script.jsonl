@@ -1,0 +1,18 @@
+{"turn": 1, "role": "user", "content": "Morning, please remind me to swing by Northfield Hangar Three where we're testing prototypes, and tell the crew we still hold the quality standup at 08:40 daily?", "facts": ["F117", "F120"]}
+{"turn": 2, "role": "user", "content": "Also, we're now getting all our fasteners from Keldane Components so send POs there, and can you check Voltframe J-58 is ready for the prototype wiring today?", "facts": ["F118", "F121"]}
+{"turn": 3, "role": "user", "content": "Last thing, our field trial this autumn is locked in for 6 November so let's keep that week clear.", "facts": ["F119"]}
+{"turn": 4, "role": "user", "content": "Good morning. Ingvar Dahl is coming in from outside to check our paint, and Elin Broch just started helping with our purchasing analysis. Could you add both to today's notes please?", "facts": ["F122", "F123"]}
+{"turn": 5, "role": "user", "content": "What's our Larkspur product called?", "facts": [], "question": true}
+{"turn": 6, "role": "user", "content": "That was a bit long, just the value is fine thanks!", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "correction", "refers_to_turn": 5}}
+{"turn": 7, "role": "user", "content": "Could you log that we moved the overflow boxes to Aisle Amber East for storage, and the customer firmware is on Version Solace? I want it recorded correctly.", "facts": ["F124", "F125"]}
+{"turn": 8, "role": "user", "content": "Can we hold Saturday 09:30 for our weekend testing? I will be back from errands by then, just let me know if anything conflicts.", "facts": ["F126"]}
+{"turn": 9, "role": "user", "content": "heads up, my manager is now Elin Sorensen", "facts": ["F127"], "supersedes": ["F04"]}
+{"turn": 10, "role": "user", "content": "Can you remind me what our CNC machine model is?", "facts": [], "question": true}
+{"turn": 11, "role": "user", "content": "Could you email Maya at the client about the commute train line to their site?", "facts": [], "question": true}
+{"turn": 12, "role": "user", "content": "Please check with me first before messaging the client, thanks!", "facts": [], "feedback": {"axis": "asks_first", "toward": "asks before acting", "polarity": "correction", "refers_to_turn": 11}}
+{"turn": 13, "role": "user", "content": "change of plan: our carbon-fibre supplier is now Nordstrand Materials", "facts": ["F128"], "supersedes": ["F08"]}
+{"turn": 14, "role": "user", "content": "heads up, our Larkspur pilot customer is now Holmgren Mapping", "facts": ["F129"], "supersedes": ["F26"]}
+{"turn": 15, "role": "user", "content": "Can you remind me what our test-rig Wi-Fi network is?", "facts": [], "question": true}
+{"turn": 16, "role": "user", "content": "Can you remind me who my employer is?", "facts": [], "question": true}
+{"turn": 17, "role": "user", "content": "Which CNC machine model are we using for this run?", "facts": [], "question": true}
+{"turn": 18, "role": "user", "content": "Perfect, thanks for keeping it short and direct!", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "approval", "refers_to_turn": 17}}

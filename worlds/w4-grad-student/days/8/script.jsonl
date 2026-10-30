@@ -1,0 +1,18 @@
+{"turn": 1, "role": "user", "content": "Hi, could you pull the folder for Project MossBeacon before our call? That was the eighth project we started, and Lena Hovland just joined as our calibration engineer and wants a quick look.", "facts": ["F132", "F133"]}
+{"turn": 2, "role": "user", "content": "The acoustic camera we call Owl Lens needs cleaning after yesterday's session. Could you also email Vikstrand Marine Tools about the delayed crate? They handle our field supplies.", "facts": ["F134", "F135"]}
+{"turn": 3, "role": "user", "content": "Please block 2026-12-19 for the safety inspection, I want to tidy the lab that morning if we can.", "facts": ["F136"]}
+{"turn": 4, "role": "user", "content": "Could you note CAL-4428? That's the number we enter when calibrating the equipment. Also HB-5294 is the cable for the hydrophone, please keep it handy this afternoon.", "facts": ["F137", "F140"]}
+{"turn": 5, "role": "user", "content": "What is the conference name for next month's event in the project calendar?", "facts": [], "question": true}
+{"turn": 6, "role": "user", "content": "That was a bit long, just the value please next time.", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "correction", "refers_to_turn": 5}}
+{"turn": 7, "role": "user", "content": "Erik Strand just stopped by to say hello, he's the postdoc staying with us this month. He asked about the session for outside guests we're holding in Skjervik next week.", "facts": ["F141"]}
+{"turn": 8, "role": "user", "content": "Can you block Mondays at 10:30 for the weekly session where we work through data analysis? I'll be a bit late today.", "facts": ["F139"]}
+{"turn": 9, "role": "user", "content": "heads up, our lab technician is now Felix Brandt", "facts": ["F142"], "supersedes": ["F09"]}
+{"turn": 10, "role": "user", "content": "Can you remind me what our microphone array nickname is?", "facts": [], "question": true}
+{"turn": 11, "role": "user", "content": "Could you email the team at FjordSonics Ltd to confirm the laser vibrometer nickname for our records?", "facts": [], "question": true}
+{"turn": 12, "role": "user", "content": "Please check with me before contacting anyone at FjordSonics Ltd, thanks!", "facts": [], "feedback": {"axis": "asks_first", "toward": "asks before acting", "polarity": "correction", "refers_to_turn": 11}}
+{"turn": 13, "role": "user", "content": "change of plan: our external collaborator is now Lena Fischer", "facts": ["F143"], "supersedes": ["F40"]}
+{"turn": 14, "role": "user", "content": "quick update, our lab extension number is now Ext 4493", "facts": ["F144"], "supersedes": ["F29"]}
+{"turn": 15, "role": "user", "content": "Can you remind me who the department head is?", "facts": [], "question": true}
+{"turn": 16, "role": "user", "content": "Can you remind me which town our lab is in?", "facts": [], "question": true}
+{"turn": 17, "role": "user", "content": "Who is the third lab mate on the night shift roster?", "facts": [], "question": true}
+{"turn": 18, "role": "user", "content": "Perfect, thanks for keeping it short and direct!", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "approval", "refers_to_turn": 17}}
