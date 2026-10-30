@@ -30,6 +30,7 @@ REASONING_STRENGTH = "minimal"
 ANSWER_PREFIX = "<|start|>assistant to=user<|message|>"
 HEADER_START = "<|start|>assistant"  # what the chat endpoint's generation prompt ends with
 RAW_MAX_LEN = 1600  # agent-anchor rows carry the day agent's system prompt and tool list (~1150 tokens)
+KL_MAX_LEN = 2048  # soft-anchor pool rows after a recall turn; a longer one is dropped whole, never cut
 LONG_ROW = 600  # rows longer than this train in micro-batches of --long-batch-rows
 PAD_ID = 200018
 TARGETS = {
@@ -57,6 +58,10 @@ def render(tokenizer, messages):
                                          current_date=GENERATION_DATE)
 
 
+def row_id(row):
+    return row.get("id") or row.get("item_id")
+
+
 def encode_row(tokenizer, row, max_len, train_header=False):
     """input_ids and labels for one exchange; labels are -100 everywhere except the assistant reply and its end token.
     With train_header the answer header's recipient (" to=user<|message|>") is trained too, so the adapter answers in
@@ -70,18 +75,20 @@ def encode_row(tokenizer, row, max_len, train_header=False):
             got = tokenizer(row["raw"]["completion"], add_special_tokens=False)["input_ids"]
             want = tokenizer(HEADER_START, add_special_tokens=False)["input_ids"] + row["raw"]["completion_ids"]
             if got != want:
-                raise SystemExit(f"row {row['id']}: the anchor reply does not re-tokenize to the generated ids")
-        max_len = max(max_len, RAW_MAX_LEN)
+                raise SystemExit(f"row {row_id(row)}: the anchor reply does not re-tokenize to the generated ids")
+        max_len = max(max_len, KL_MAX_LEN if row.get("form", "").startswith("kl_") else RAW_MAX_LEN)
     else:
         user, assistant = row["messages"]
         full = render(tokenizer, [user, assistant])
         prefix = render(tokenizer, [user]) + (HEADER_START if train_header else ANSWER_PREFIX)
     if not full.startswith(prefix):
-        raise ValueError(f"row {row['id']}: rendered exchange does not start with the prompt prefix")
+        raise ValueError(f"row {row_id(row)}: rendered exchange does not start with the prompt prefix")
     ids_prefix = tokenizer(prefix, add_special_tokens=False)["input_ids"]
     ids_full = tokenizer(full, add_special_tokens=False)["input_ids"]
     if ids_full[:len(ids_prefix)] != ids_prefix:
-        raise ValueError(f"row {row['id']}: prefix tokens differ inside the full exchange")
+        raise ValueError(f"row {row_id(row)}: prefix tokens differ inside the full exchange")
+    if len(ids_full) > max_len and row.get("form", "").startswith("kl_"):
+        return None
     ids_full = ids_full[:max_len]
     labels = [-100] * len(ids_prefix) + ids_full[len(ids_prefix):]
     return ids_full, labels[:len(ids_full)]
@@ -225,6 +232,8 @@ def main():
 
     rows = [json.loads(line) for line in Path(args.train).read_text().splitlines() if line.strip()]
     encoded = [encode_row(tokenizer, r, args.max_len, args.train_header) for r in rows]
+    too_long = [row_id(r) for r, e in zip(rows, encoded) if e is None]
+    rows, encoded = [r for r, e in zip(rows, encoded) if e is not None], [e for e in encoded if e is not None]
     soft = [args.kl_weight > 0 and soft_row(r) for r in rows]
     bos = tokenizer.bos_token_id
     if bos is not None and encoded[0][0][0] != bos:
@@ -233,7 +242,7 @@ def main():
     if args.kl_weight > 0:
         teacher = teacher_top_k(model, encoded, soft, Path(args.kl_cache_dir) if args.kl_cache_dir else out_dir.parent / "kl-teacher-cache",
                                 report, write_report)
-    report["data"] = {"rows": len(rows), "soft_rows": sum(soft), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
+    report["data"] = {"rows": len(rows), "soft_rows": sum(soft), "kl_rows_over_max_len": len(too_long), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
                       "loss_tokens_per_epoch": sum(sum(1 for x in lab if x != -100) for _, lab in encoded),
                       "max_row_tokens": max(len(i) for i, _ in encoded)}
     write_report()
