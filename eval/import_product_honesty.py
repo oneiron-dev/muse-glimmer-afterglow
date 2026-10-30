@@ -24,7 +24,8 @@ NIGHTS = {"night3": (3, "night"), "idk": (3, "night-3-idk"), "idkc": (3, "night-
           "night5b": (5, "night-5b"), "night5c": (5, "night-5c"), "night5d": (5, "night-5d"),
           "night5c2": (5, "night-5c2"), "night6": (6, "night"), "night6e3": (6, "night-6e3"),
           "night6kl1": (6, "night-6kl1"), "night6cd": (6, "night-6cd"), "night6kl05": (6, "night-6kl05"),
-          "night6kl2": (6, "night-6kl2"), "night6pub12": (6, "night-6pub12"), "night7": (7, "night"), "night8": (8, "night")}  # w4 2b was promoted to night/
+          "night6kl2": (6, "night-6kl2"), "night6pub12": (6, "night-6pub12"), "night7": (7, "night"), "night8": (8, "night"),
+          "night8e3": (8, "night-8e3")}  # w4 2b was promoted to night/
 # nights promoted into night/ after their read: the arm follows its folder (w3 4b promoted 29 Oct 21:04, its plain
 # night 4 kept as night-replaced-20261029-2104/)
 PROMOTED = {("w3", "night4"): (4, "night-replaced-20261029-2104"), ("w3", "night4b"): (4, "night"),
