@@ -660,13 +660,19 @@ class Night:
                         raise RuntimeError("epoch screen server exited before it was up")
                     time.sleep(3)
             arms = ",".join(["base=-1"] + [f"epoch{e}={i}" for i, e in enumerate(epochs)])
+            # the base's and the epoch of record's facts come from the eval's arms A and B (same probes, prompt and decoding);
+            # the base's known completions are cached per world (lead 30 Oct 10:11: ~12 min a night, same measure)
+            ev = self.night / "eval"
+            reuse = ",".join(f"{arm}={ev / f}" for arm, f in (("base", "score-night-A.json"), (f"epoch{a.epochs}", "score-night-B.json"))
+                             if (ev / f).exists())
             run([sys.executable, "eval/epoch_screen.py", "--server", url, "--world", a.world, "--day", str(a.day), "--arms", arms,
+                 *(["--reuse-facts", reuse] if reuse else []), "--base-cache", str(self.night.parent.parent / "_screen_cache"),
                  "--out", str(out)], log)
         finally:
             subprocess.run(["ssh", HOST["name"], f"pkill -f 'llama-server.*--port {port}'"], check=False)
             proc.wait(timeout=120)
         doc = json.loads(out.read_text())
-        self.receipt["epoch_screen"] = {**self.receipt.get("epoch_screen", {}), "epochs": epochs, "file": str(out),
+        self.receipt["epoch_screen"] = {**self.receipt.get("epoch_screen", {}), "epochs": epochs, "file": str(out), "how": doc.get("how"),
                                         "arms": {k: {kk: v[kk] for kk in ("facts_notes_off", "known", "known_vs_base") if kk in v}
                                                  for k, v in doc["arms"].items()}}
 

@@ -7,11 +7,16 @@ scale 0, one switched on per request), each arm scored on
       low, greedy, 400 tokens; the reply in the user channel is graded by gold match (normalised, any gold alias
       inside the reply). A first action that is a tool call is counted as "tool" (no second turn here).
 Deterministic: no grader model. Each arm is compared with the base asked in the same server run.
+Faster, same measure (lead 30 Oct 10:11): --reuse-facts arm=score-file takes an arm's facts from the night's eval, which
+asks the same probes in the same form (the base = arm A, the epoch of record = arm B); --base-cache keeps the base's
+known-slice completions per world (same server build, prompt and decoding every night), so later nights ask only new ones.
 Usage: python3 eval/epoch_screen.py --server http://HOST:PORT --world W --day D --arms base=-1,epoch2=0,epoch3=1,epoch4=2 --out F
+       [--reuse-facts base=eval/score-night-A.json,epoch4=eval/score-night-B.json] [--base-cache runs/W/_screen_cache]
        (arm=LoRA id on the server, -1 = the base: every adapter at 0)
 """
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -87,6 +92,31 @@ def agent_reply(completion):
     return "reply", re.split(r"<\|(eot|end|return|call)\|>", reply)[0]
 
 
+def facts_from_eval(path, probes):
+    """An arm's facts from the night's eval score file (the same probes, prompt and decoding); scored as below."""
+    got = {r["id"]: r for r in json.loads(Path(path).read_text())["results"] if r["kind"] in FACT_KINDS}
+    missing = [p["id"] for p in probes if p["id"] not in got]
+    if missing:
+        raise SystemExit(f"{path} lacks {len(missing)} probes ({missing[:3]})")
+    return [(got[p["id"]]["answer"], bool(got[p["id"]].get("truncated"))) for p in probes]
+
+
+def score_facts(probes, fg, facts_by_id):
+    fr = {"forward": {"right": 0, "wrong": 0, "abstain": 0}, "stale": {"returned": 0, "n": 0}}
+    for p, (ans, cut) in zip(probes, fg):
+        passed, _ = scoring.score_probe(p, scoring.strip_answer(ans), cut, facts_by_id)
+        if p["kind"] == "stale":
+            fr["stale"]["n"] += 1
+            fr["stale"]["returned"] += bool(passed)
+        else:
+            fr["forward"]["right" if passed else "abstain" if says_abstain(ans) else "wrong"] += 1
+    return fr
+
+
+def base_cache_key(build, prompt):
+    return hashlib.sha256(json.dumps([build, prompt, 400, "greedy", 20261014]).encode()).hexdigest()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--server", required=True)
@@ -96,6 +126,8 @@ def main():
     ap.add_argument("--known", default="known_slice_v1,known_slice_v2")
     ap.add_argument("--parallel", type=int, default=4)
     ap.add_argument("--limit", type=int, help="first N items of each set (a smoke run)")
+    ap.add_argument("--reuse-facts", default="", help="arm=eval score file,... (the facts from the night's eval)")
+    ap.add_argument("--base-cache", help="directory of the per-world cache of the base's known completions")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     server = args.server.rstrip("/")
@@ -112,20 +144,37 @@ def main():
     fact_prompts = [fact_prompt(server, prompt_text(p, None, first)) for p in probes]
     known_prompts = [agent_prompt(server, system, k["question"]) for k in known]
     out = {"world": args.world, "day": args.day, "server_lora_adapters": loaded, "arms": {}, "rule": __doc__.split("\n\n")[0]}
-    answers = {}
+    reuse = dict(a.split("=", 1) for a in args.reuse_facts.split(",") if a)
+    cache_path, cache, build = None, {}, None
+    if args.base_cache:
+        with urllib.request.urlopen(server + "/props", timeout=30) as resp:
+            props = json.loads(resp.read())
+        build = [props.get("build_info"), Path(props.get("model_path") or "").name]
+        cache_path = Path(args.base_cache) / f"{args.world}-base-known.jsonl"
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        if cache_path.exists():
+            cache = {r["key"]: (r["completion"], r["cut"]) for r in map(json.loads, cache_path.read_text().splitlines()) if r}
+    answers, how = {}, {}
     for name, arm_id in arms.items():
         lo = lora(len(loaded), arm_id)
+        cached = bool(cache_path) and arm_id == -1
+        keys = [base_cache_key(build, pr) for pr in known_prompts] if cached else []
+        todo = [i for i, k in enumerate(keys) if k not in cache] if cached else list(range(len(known_prompts)))
         with ThreadPoolExecutor(max_workers=args.parallel) as pool:
-            fg = list(pool.map(lambda pr: complete(server, pr[1], MAX_NEW_TOKENS.get(pr[0]["kind"], MAX_NEW_TOKENS["general"]), lo), zip(probes, fact_prompts)))
-            kg = list(pool.map(lambda pr: complete(server, pr, 400, lo), known_prompts))
-        fr = {"forward": {"right": 0, "wrong": 0, "abstain": 0}, "stale": {"returned": 0, "n": 0}}
-        for p, (ans, cut) in zip(probes, fg):
-            passed, _ = scoring.score_probe(p, scoring.strip_answer(ans), cut, facts_by_id)
-            if p["kind"] == "stale":
-                fr["stale"]["n"] += 1
-                fr["stale"]["returned"] += bool(passed)
-            else:
-                fr["forward"]["right" if passed else "abstain" if says_abstain(ans) else "wrong"] += 1
+            fg = (facts_from_eval(reuse[name], probes) if name in reuse else
+                  list(pool.map(lambda pr: complete(server, pr[1], MAX_NEW_TOKENS.get(pr[0]["kind"], MAX_NEW_TOKENS["general"]), lo), zip(probes, fact_prompts))))
+            new = dict(zip(todo, pool.map(lambda i: complete(server, known_prompts[i], 400, lo), todo)))
+        if cached:
+            with open(cache_path, "a") as f:
+                for i, (comp, cut) in new.items():
+                    cache[keys[i]] = (comp, cut)
+                    f.write(json.dumps({"key": keys[i], "id": known[i]["id"], "completion": comp, "cut": cut}) + "\n")
+            kg = [cache[k] for k in keys]
+        else:
+            kg = [new[i] for i in range(len(known_prompts))]
+        how[name] = {"facts": f"from {reuse[name]}" if name in reuse else "asked",
+                     "known": f"asked {len(todo)}, cached {len(known_prompts) - len(todo)}"}
+        fr = score_facts(probes, fg, facts_by_id)
         ks, rows = {}, []
         for k, (comp, cut) in zip(known, kg):
             outcome, reply = agent_reply(comp)
@@ -145,6 +194,7 @@ def main():
             if name != "base":
                 out["arms"][name]["known_vs_base"] = {"right_to_wrong": sum(1 for r in rows if base.get(r["id"]) and not r["right"]),
                                                       "wrong_to_right": sum(1 for r in rows if not base.get(r["id"]) and r["right"])}
+    out["how"] = how
     out["answers"] = answers
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(out, indent=1) + "\n")
