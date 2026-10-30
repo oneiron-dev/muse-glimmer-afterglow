@@ -78,25 +78,27 @@ def complete(root, prompt, lora):
 
 
 def generate(root, system, question, lora):
-    """Base's reply as the product gets it. When base's first action is one recall call, the product runs it; the
-    question is not about the user, so the recall finds nothing: the call (parsed by the server, as the product's
-    chat request gets it) and NOTHING_RECALLED go into the prompt, and the row's completion is the second turn."""
+    """Base's reply as the product gets it. When base's first action is recall calls only, the product runs them (a
+    raw completion runs past <|eom|> into repeated recall calls; the chat request's parse is what the product gets);
+    the question is not about the user, so each recall finds nothing: the calls and one NOTHING_RECALLED per call go
+    into the prompt, and the row's completion is the second turn."""
     messages = [system, {"role": "user", "content": question}]
     prompt = render(root, messages)
     completion, tokens, ok = complete(root, prompt, lora)
-    _, invoke, _ = first_action(completion)
-    if not ok or invoke != "recall" or completion.count("<atem:invoke ") != 1:
+    invokes = set(re.findall(r'<atem:invoke name="([\w.]+)">', completion))
+    if not ok or invokes != {"recall"}:
         return prompt, completion, tokens, ok, False
     msg = post(f"{root}/v1/chat/completions", {"messages": messages, "tools": TOOL_SCHEMAS, "max_tokens": N_PREDICT,
                                                "chat_template_kwargs": {"reasoning_strength": "low"}, "lora": lora,
                                                **GREEDY})["choices"][0]["message"]
     calls = msg.get("tool_calls") or []
-    if len(calls) != 1 or calls[0]["function"]["name"] != "recall":
+    if not calls or any(c["function"]["name"] != "recall" for c in calls):
         return prompt, completion, tokens, False, True
     msg = {"role": "assistant", "content": msg.get("content") or "", **({"reasoning_content": msg["reasoning_content"]}
            if msg.get("reasoning_content") else {}), "tool_calls": calls}  # the fields the product keeps (llm.py)
-    tool = {"role": "tool", "tool_call_id": calls[0].get("id") or "call_0", "name": "recall", "content": json.dumps(NOTHING_RECALLED)}
-    prompt2 = render(root, messages + [msg, tool])
+    tools = [{"role": "tool", "tool_call_id": c.get("id") or f"call_{i}", "name": "recall", "content": json.dumps(NOTHING_RECALLED)}
+             for i, c in enumerate(calls)]
+    prompt2 = render(root, messages + [msg] + tools)
     completion2, tokens2, ok2 = complete(root, prompt2, lora)
     return prompt2, completion2, tokens2, ok2, True
 
