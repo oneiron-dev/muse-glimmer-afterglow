@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034); day 8 2026-10-30T20:14:28+09:00 by worlds/make_world.py --add-day 8 (teacher spark-sub, seed 20261035)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -55,7 +55,7 @@
    ],
    "statement": "Ines reports to Dagny Holm, the CTO of Kestrel Fabrication.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F127"
   },
   {
    "id": "F05",
@@ -103,7 +103,7 @@
    ],
    "statement": "Kestrel buys all its carbon tubes and plates from Brannock Composites.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F128"
   },
   {
    "id": "F09",
@@ -315,7 +315,7 @@
    ],
    "statement": "Vestergaard Surveying is the pilot customer for Larkspur.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F129"
   },
   {
    "id": "F27",
@@ -1428,6 +1428,166 @@
    "valid_from": 7,
    "superseded_by": null,
    "supersedes": "F45"
+  },
+  {
+   "id": "F117",
+   "key": "prototype test hangar",
+   "value": "Northfield Hangar Three",
+   "accept": [
+    "northfield hangar three",
+    "hangar three at northfield"
+   ],
+   "statement": "The prototype test hangar is Northfield Hangar Three.",
+   "valid_from": 8,
+   "superseded_by": null
+  },
+  {
+   "id": "F118",
+   "key": "new fastener supplier",
+   "value": "Keldane Components",
+   "accept": [
+    "keldane components",
+    "keldane components supplier"
+   ],
+   "statement": "Our new fastener supplier is Keldane Components.",
+   "valid_from": 8,
+   "superseded_by": null
+  },
+  {
+   "id": "F119",
+   "key": "autumn field trial",
+   "value": "6 November",
+   "accept": [
+    "6 november",
+    "november 6",
+    "6th november",
+    "november 6th",
+    "6th of november"
+   ],
+   "statement": "The autumn field trial is scheduled for 6 November.",
+   "valid_from": 8,
+   "superseded_by": null
+  },
+  {
+   "id": "F120",
+   "key": "quality standup time",
+   "value": "08:40 daily",
+   "accept": [
+    "08:40"
+   ],
+   "statement": "Quality standup time is 08:40 daily.",
+   "valid_from": 8,
+   "superseded_by": null
+  },
+  {
+   "id": "F121",
+   "key": "prototype wiring jig",
+   "value": "Voltframe J-58",
+   "accept": [
+    "voltframe j-58",
+    "j-58 voltframe"
+   ],
+   "statement": "The prototype wiring jig is Voltframe J-58.",
+   "valid_from": 8,
+   "superseded_by": null
+  },
+  {
+   "id": "F122",
+   "key": "external paint inspector",
+   "value": "Ingvar Dahl",
+   "accept": [
+    "ingvar dahl",
+    "inspector ingvar dahl"
+   ],
+   "statement": "The external paint inspector is Ingvar Dahl.",
+   "valid_from": 8,
+   "superseded_by": null
+  },
+  {
+   "id": "F123",
+   "key": "new procurement analyst",
+   "value": "Elin Broch",
+   "accept": [
+    "elin broch",
+    "analyst elin broch"
+   ],
+   "statement": "Our new procurement analyst is Elin Broch.",
+   "valid_from": 8,
+   "superseded_by": null
+  },
+  {
+   "id": "F124",
+   "key": "overflow storage aisle",
+   "value": "Aisle Amber East",
+   "accept": [
+    "aisle amber east",
+    "amber east aisle"
+   ],
+   "statement": "The overflow storage aisle is Aisle Amber East.",
+   "valid_from": 8,
+   "superseded_by": null
+  },
+  {
+   "id": "F125",
+   "key": "client firmware revision",
+   "value": "Version Solace",
+   "accept": [
+    "version solace",
+    "solace firmware version"
+   ],
+   "statement": "The client firmware revision is Version Solace.",
+   "valid_from": 8,
+   "superseded_by": null
+  },
+  {
+   "id": "F126",
+   "key": "weekend test slot",
+   "value": "Saturday 09:30",
+   "accept": [
+    "09:30"
+   ],
+   "statement": "The weekend test slot is Saturday 09:30.",
+   "valid_from": 8,
+   "superseded_by": null,
+   "require_all": [
+    "saturday"
+   ]
+  },
+  {
+   "id": "F127",
+   "key": "manager",
+   "value": "Elin Sorensen",
+   "accept": [
+    "elin sorensen"
+   ],
+   "statement": "My manager is now Elin Sorensen.",
+   "valid_from": 8,
+   "superseded_by": null,
+   "supersedes": "F04"
+  },
+  {
+   "id": "F128",
+   "key": "carbon-fibre supplier",
+   "value": "Nordstrand Materials",
+   "accept": [
+    "nordstrand materials"
+   ],
+   "statement": "Our carbon-fibre supplier is now Nordstrand Materials.",
+   "valid_from": 8,
+   "superseded_by": null,
+   "supersedes": "F08"
+  },
+  {
+   "id": "F129",
+   "key": "Larkspur pilot customer",
+   "value": "Holmgren Mapping",
+   "accept": [
+    "holmgren mapping"
+   ],
+   "statement": "Our Larkspur pilot customer is now Holmgren Mapping.",
+   "valid_from": 8,
+   "superseded_by": null,
+   "supersedes": "F26"
   }
  ],
  "preferences": [
