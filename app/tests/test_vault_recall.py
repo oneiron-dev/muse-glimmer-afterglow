@@ -248,6 +248,18 @@ class VaultDaySessionTest(unittest.TestCase):
         self.assertEqual(rec["tool_calls"][0]["result"]["notes"][0]["value"], "10:30")  # the local notes answered
         self.assertEqual(rec["notes_errors"]["total"], 1)
 
+    def test_a_restarted_day_serves_unsent_notes_from_the_local_copy(self):
+        vault = StandInVault()
+        s = self.session(Turns([("remember", {"key": "lab mate", "value": "Jonas Weber"})], "Saved.",
+                               [("remember", {"key": "desk", "value": "D-14"})], "Saved."), vault=vault)
+        s.ask("My lab mate is Jonas Weber.")
+        s.notes.flush()
+        s.notes._queue.put = lambda job: None  # the app stops before turn 2 reaches the vault
+        s.ask("My desk is D-14.")
+        again = self.session(Turns(), vault=vault)
+        by_key = {n["key"]: n["id"] for n in again.notes.all()}
+        self.assertEqual(again.notes.unacknowledged, {by_key["desk"]})
+
     def test_a_measured_rerun_witnesses_into_its_own_conversation(self):
         vault = StandInVault()
         s = self.session(Turns("Hello."), vault=vault, tag="measure-1")

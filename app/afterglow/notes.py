@@ -213,7 +213,7 @@ class OneironNotes(NotesStore):
         import queue
         import threading
 
-        from .oneiron_vault import OneironVault, SpeakerVaults
+        from .oneiron_vault import OneironVault, SpeakerVaults, live_witness_sent
 
         self.local, self.world, self.day = local, world, day
         template = os.environ.get("AFTERGLOW_ONEIRON_PERSON_CREDENTIAL_TEMPLATE")
@@ -227,7 +227,10 @@ class OneironNotes(NotesStore):
         self.notes = local.notes
         self.errors = []
         self.recalls = []
-        self.unacknowledged = set()  # ids of notes saved today whose turn the vault has not acknowledged yet
+        # ids of notes saved today whose turn the vault has not acknowledged yet (a note rides in run 1, after the
+        # user's run 0); a restarted app starts from the live log, so a turn it never sent stays local-served
+        sent = live_witness_sent(self.witness_log) if self.witness_log else {}
+        self.unacknowledged = {n["id"] for n in local.notes if n.get("day") == day and 1 not in sent.get(n.get("turn"), ())}
         self._queue = queue.Queue()
         threading.Thread(target=self._send_loop, daemon=True).start()
 
