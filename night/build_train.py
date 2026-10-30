@@ -7,6 +7,10 @@ Loss falls on the assistant turn only (the trainer masks the rest).
 --replay-share sets the anchors' share of all rows; --extra rows (contrast rows) are taken in full.
 --abstain-anchors adds the base's own answers to SimpleQA anchor-pool questions (abstentions included) on top,
 --abstain-share of the rows, the same way as the anchors.
+--protective-share-from <train.jsonl> keeps the protective rows (ask-back, known-pair, agent anchors; PROTECTIVE) at that
+night's shares of all rows as the fact rows grow: a category below its reference share is topped up by repeating its own
+rows in order; public anchors and every other form are never scaled, and nothing is dropped (lead 30 Oct 22:17, night-9
+candidate).
 Reads the day only, never worlds/<w>/heldout/.
 """
 
@@ -16,6 +20,41 @@ import json
 import random
 import re
 from pathlib import Path
+
+# the protective categories: the model's own "you haven't told me" and "I keep that" rows and the day agent's tool rows
+PROTECTIVE = {"ask_back": ("unknown_own", "unknown_in_notes", "unknown_person"),
+              "known_pair": ("known_pair", "known_pair_in_notes"),
+              "agent": ("agent_",)}
+
+
+def protective_category(form):
+    for name, forms in PROTECTIVE.items():
+        if any(form == f or (f.endswith("_") and form.startswith(f)) for f in forms):
+            return name
+    return None
+
+
+def protective_shares(path):
+    """Each protective category's share of all rows of a built train.jsonl."""
+    rows = read_jsonl(path)
+    return {c: sum(1 for r in rows if protective_category(r.get("form", "")) == c) / len(rows) for c in PROTECTIVE}
+
+
+def top_up(rows, shares, replay_share):
+    """Repeat each protective category's rows (in order) until it holds its share of the final set (replay anchors
+    included, soft rows not); returns the rows added per category. The final total T solves T (1 - replay - sum of
+    shares) = the rows outside the protective categories."""
+    by_cat = {c: [r for r in rows if protective_category(r.get("form", "")) == c] for c in PROTECTIVE}
+    other = len(rows) - sum(len(v) for v in by_cat.values())
+    total = other / (1 - replay_share - sum(shares.values()))
+    added = {}
+    for c, have in by_cat.items():
+        want = round(shares[c] * total)
+        extra = [have[i % len(have)] for i in range(max(0, want - len(have)))] if have else []
+        rows += extra
+        added[c] = {"had": len(have), "target": want, "added": len(extra)}
+    return added
+
 
 # Round-robin order across forms, so a small --rows-per-fact still mixes statements, both QA directions and use.
 FORM_ORDER = ["statement", "qa_forward", "in_context", "qa_reverse", "statement", "qa_forward",
@@ -71,6 +110,8 @@ def main():
     ap.add_argument("--drop-text-acks", action="store_true", help="drop rows where the user asks to log/note/save and the reply "
                     "acknowledges in text (they teach 'saved it' with no remember call)")
     ap.add_argument("--exclude-forms", nargs="*", default=[], help="rewrite forms never picked for facts (e.g. qa_reverse)")
+    ap.add_argument("--protective-share-from", help="a built train.jsonl (e.g. the world's day-5 night): keep ask-back, "
+                    "known-pair and agent rows at its shares by repeating them; public and fact rows are not scaled")
     ap.add_argument("--seed", type=int, default=20261027)
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
@@ -95,6 +136,11 @@ def main():
     if args.drop_text_acks:
         dropped_text_acks = [r for r in rows if not r.get("raw") and is_text_ack(r)]
         rows = [r for r in rows if r.get("raw") or not is_text_ack(r)]
+    protective = None
+    if args.protective_share_from:
+        shares = protective_shares(args.protective_share_from)
+        protective = {"from": args.protective_share_from, "shares": {c: round(v, 4) for c, v in shares.items()},
+                      "by_category": top_up(rows, shares, args.replay_share)}
     n_anchor = round(len(rows) * args.replay_share / (1 - args.replay_share)) if args.replay_share > 0 else 0
     soft = [r for path in args.soft_extra for r in read_jsonl(path) if r["valid"]]
     rows += soft  # after the anchor count, so it is the count without them
@@ -133,6 +179,7 @@ def main():
                                                     "replay_anchors_if_soft_counted": n_anchor_if_counted} if args.soft_extra else {}),
                "forms": forms, "rows_per_fact": args.rows_per_fact,
                "replay_share": args.replay_share, "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+               **({"protective_share": protective} if protective else {}),
                **({"dropped_text_acks": len(dropped_text_acks),
                    "dropped_text_ack_examples": [[r["user"][:80], r["assistant"][:80]] for r in dropped_text_acks[:5]]} if args.drop_text_acks else {})}
     out.with_suffix(".summary.json").write_text(json.dumps(summary, indent=1) + "\n")
