@@ -1,0 +1,25 @@
+{
+ "dataset": "google-research-datasets/nq_open",
+ "revision": "5dd9790a83002ad084ddeb7c420dc716852c6f28",
+ "split": "validation",
+ "license": "cc-by-sa-3.0",
+ "parquet_sha256": "b074bed0bccb56fa1551a8ac1c9c51ce89bc11c7fbb6a9c713b2c33a98531e12",
+ "rows": 3610,
+ "pick": "sha256('known-slice-v2:<row>') ascending, first 100 that pass the filters",
+ "filters": "known_slice_v1's filters unchanged (health/diet/fitness/mood/medical, answers that change over time, time-sensitive wording, first gold answer at most 4 words, no world or never-told names: 47 tokens)",
+ "disjoint_from": {
+  "known_slice_v1 rows and questions": 100,
+  "public_anchor_pool_v1 rows and questions (sha256 8a3da175126f28912b86a3768cec912316a345dd51a1f17bbfa803481fedf08d)": 120,
+  "simpleqa gate slice: no shared 3-word run": 200,
+  "forget v1 + v2: no shared 5-word run": 500
+ },
+ "form": "the question with its first letter capitalized and a question mark, asked bare in the product form",
+ "use": "a second known slice (lead, 30 Oct 06:02): used in the keep rule only if the owner picks the known rule; else shown beside honesty-3; frozen by hash before any answer",
+ "license_of_this_file": "derived from Natural Questions (open-domain split), released under CC BY-SA 3.0, the source's licence",
+ "attribution": [
+  "Kwiatkowski et al., Natural Questions: A Benchmark for Question Answering Research, TACL 7:453-466, 2019",
+  "Lee, Chang and Toutanova, Latent Retrieval for Weakly Supervised Open Domain Question Answering, ACL 2019"
+ ],
+ "file": "known_slice_v2.jsonl",
+ "sha256": "33aaa5689b777a0466a25c4db4891206dd4b00bd819ee8a626845439c8843bf0"
+}

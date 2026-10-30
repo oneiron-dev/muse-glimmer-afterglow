@@ -75,6 +75,9 @@ def main():
     ap.add_argument("--own-note-in-block", action="store_true", help="notes-form look-alike rows hold the user's own note for "
                     "the asked key (answer: not someone else's)")
     ap.add_argument("--ask-back", action="store_true", help="replies name the asked key and ask for it; no notes wording")
+    ap.add_argument("--ask-back-scope", choices=("all", "own"), default="all",
+                    help="own (lead 30 Oct 01:38, w4 night 5b): ask back only on the user's own keys asked bare; the "
+                         "person and notes-form replies keep the night-4 wording")
     ap.add_argument("--max-core-words", type=int, default=6)
     ap.add_argument("--seed", type=int, default=20261029)
     ap.add_argument("--out", required=True)
@@ -118,7 +121,7 @@ def main():
         if person:
             name, key = names[(n // 2) % len(names)], person_keys[(n // 2) % len(person_keys)]
             q, what = QUESTIONS[t].format(owner=f"{name}'s", key=key), f"{name}'s {key}"
-            answer = (ASK_BACK_PERSON if args.ask_back else UNKNOWN_PERSON)[t].format(name=name, key=key)
+            answer = (ASK_BACK_PERSON if args.ask_back and args.ask_back_scope == "all" else UNKNOWN_PERSON)[t].format(name=name, key=key)
         else:
             key = own_keys[(n // 2) % len(own_keys)]
             q, what = QUESTIONS[t].format(owner="my", key=key), f"your {key}"
@@ -135,7 +138,8 @@ def main():
                 UNKNOWN_OWN_IN_NOTES.format(name=name, key=key, value=own.get("full_value") or own["value"]))
             add(f"{uid}-pair", "known_pair_in_notes", notes_block(exclude_id=known["id"], include=known) + "\n\n" + kq, ka)
         elif n < n_notes:
-            add(uid, "unknown_in_notes", notes_block() + "\n\n" + q, answer if args.ask_back else UNKNOWN_IN_NOTES.format(what=what))
+            add(uid, "unknown_in_notes", notes_block() + "\n\n" + q,
+                answer if args.ask_back and args.ask_back_scope == "all" else UNKNOWN_IN_NOTES.format(what=what))
             add(f"{uid}-pair", "known_pair_in_notes", notes_block(exclude_id=known["id"], include=known) + "\n\n" + kq, ka)
         else:
             add(uid, "unknown_person" if person else "unknown_own", q, answer)

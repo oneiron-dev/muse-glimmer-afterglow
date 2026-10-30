@@ -345,7 +345,7 @@ const CHECKS = { leak_check: "no held-out question in the training data",
                  content_channel: "its chat replies land in the reply, not only in its reasoning",
                  tool_calls: "it still calls its tools in chat, as the day agent does",
                  abstention_gate: "it says it does not know about as often as before",
-                 abstention_honesty: "graded honesty: right minus wrong did not fall, it kept what it knew, and it still says \"not in your notes\" to things you never said" };
+                 abstention_honesty: "graded honesty: right minus wrong fell by at most 5 points on 200 general questions, it kept what it knew, it still says \"not in your notes\" to things you never said, and it asks you for public facts at most 20 more times in 200 than before" };
 
 function plainRule(rule) {
   // The two-sided abstention rule as the night writes it, in plain words; any other rule as written.
@@ -381,16 +381,27 @@ function addedChecks(checks, chat) {
 }
 const rate = (x) => `${(x * 100).toFixed(1)}%`;
 
-function abstainLine(abst, decision) {
-  // The abstention check: when the night's own decision did not include it, say it was added afterwards and
-  // what it would have decided.
+function outsideRate(abst) {
+  // A night with no recorded result for the check: its rate alone already breaks the rule's rate bar.
+  const m = /abs\(after - base\) <= ([\d.]+)/.exec(abst.rule || "");
+  return m != null && Math.abs(abst.after - abst.base) > parseFloat(m[1]);
+}
+
+function abstainLine(abst, decision, shownOnly) {
+  // The abstention check: when the serving rule shows it but does not require it, say so; when the night's own
+  // decision did not include it, say it was added afterwards and what it would have decided.
   const p = $("abstain-line");
   if (!abst || abst.base == null || abst.after == null) return;
-  const added = !("abstention_gate" in ((decision || {}).checks || {}));
-  p.replaceChildren(added ? "Abstention check (added 27 Oct after this night ran): " : "Abstention check: ",
+  const shown = (shownOnly || []).includes("abstention_gate");
+  const added = !shown && !("abstention_gate" in ((decision || {}).checks || {}));
+  p.replaceChildren(shown ? "Abstention check (shown, not required to serve): "
+      : added ? "Abstention check (added 27 Oct after this night ran): " : "Abstention check: ",
     "base ", el("strong", null, rate(abst.base)), " → ", el("strong", null, rate(abst.after)),
     abst.rule ? ` (rule: ${plainRule(abst.rule)})` : "",  // the night's rule in plain words; the code text is in the receipt
-    abst.passed ? "; passed." : added ? "; under this check the night would roll back." : "; failed.",
+    abst.passed ? "; passed."
+      : shown ? (abst.passed === false || outsideRate(abst) ? "; outside this bar, which does not decide what is served."
+        : "; shown only, it does not decide what is served.")
+      : added ? "; under this check the night would roll back." : "; failed.",
     " ", receiptLink("abstention.rule"));
   p.hidden = false;
 }
@@ -403,7 +414,7 @@ function neverToldLine(line) {
   p.hidden = false;
 }
 
-function numbers(ev, decision, abst, chat) {
+function numbers(ev, decision, abst, chat, shownOnly) {
   const box = $("numbers");
   box.replaceChildren();
   const add = (title, parts, field) => {
@@ -432,7 +443,8 @@ function numbers(ev, decision, abst, chat) {
       ` against the base model reading its notes${ci}.`], "learned");
   }
   const checks = { ...((decision && decision.checks) || {}) };
-  const added = abst && abst.passed != null && !("abstention_gate" in checks);
+  const added = abst && abst.passed != null && !("abstention_gate" in checks) &&
+    !(shownOnly || []).includes("abstention_gate");  // a shown-only check is never added to the decision's list
   if (added) checks.abstention_gate = abst.passed;  // the check added after the night ran
   const failedAdded = addedChecks(checks, chat);
   if (added && !abst.passed) failedAdded.unshift("abstention_gate");
@@ -602,12 +614,12 @@ async function boot() {
   chose(r.consolidated, r.night_links);
   nightQuestions(r.night_links);
   grid(facts);
-  abstainLine(r.abstention, r.decision);
+  abstainLine(r.abstention, r.decision, r.shown_not_required);
   neverToldLine(r.never_told);
   chatLines(r.chat_checks);
   behaviour(r.steering);
   proposes(r.steering, r.world, r.day);
-  numbers(ev, r.decision, r.abstention, r.chat_checks);
+  numbers(ev, r.decision, r.abstention, r.chat_checks, r.shown_not_required);
   asked(facts, r.questions || {});
   receipt(r);
   tooltip(facts);

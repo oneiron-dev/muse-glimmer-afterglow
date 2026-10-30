@@ -156,11 +156,28 @@ class PushDayTest(unittest.TestCase):
             rec(3, "assistant", "still noted", 4, tool_calls=[again], notes_written=[]),
             rec(4, "user", "live", 5),
             rec(4, "assistant", "sent live", 6, witnessed_live=conversation_ref("wt", 1, 1))])
+        self.live_log([{"turn": 4, "run": 0, "receipt_ref": "r"}, {"turn": 4, "run": 1, "receipt_ref": "r"}])
         v = FakeVault()
         oneiron_vault.push_day("wt", 1, vault=v)
         texts = [t for _, ts, _ in v.sent for t in ts]
         self.assertEqual(texts, ["office is Lisbon", "Note saved: office: Lisbon", "noted", "again, Lisbon",
                                  "still noted"])
+
+    def live_log(self, lines):
+        path = Path(os.environ["AFTERGLOW_RUNS"]) / "wt" / "1" / oneiron_vault.LIVE_WITNESS_LOG
+        path.write_text("".join(json.dumps(x) + "\n" for x in lines))
+
+    def test_a_live_turn_with_a_failed_or_unsent_run_is_sent_with_the_live_ids(self):
+        conv = conversation_ref("wt", 1, 1)
+        self.day([rec(1, "user", "live one", 0), rec(1, "assistant", "a", 1, witnessed_live=conv),
+                  rec(2, "user", "live two", 2), rec(2, "assistant", "b", 3, witnessed_live=conv)])
+        # turn 1: the companion run failed after its user run went; turn 2: queued, then the app stopped
+        self.live_log([{"turn": 1, "run": 0, "receipt_ref": "r"}, {"turn": 1, "run": 1, "error": "TimeoutError"}])
+        v = FakeVault()
+        with mock.patch("sys.stderr"):
+            oneiron_vault.push_day("wt", 1, vault=v)
+        self.assertEqual([t for _, ts, _ in v.sent for t in ts], ["live one", "a", "live two", "b"])
+        self.assertEqual(v.ids[1], oneiron_vault.run_message_ids(conv, 1, 1, 1))  # the ids the live path used
 
 
 if __name__ == "__main__":

@@ -1,0 +1,33 @@
+{
+ "world": "w3-shop-owner",
+ "day": 5,
+ "form": "the day agent's prompt; general = SimpleQA gate slice questions, never_told = the world's never-told probes with the notes in context",
+ "arms": {
+  "base": {
+   "general": {
+    "n": 200,
+    "abstain": 92,
+    "abstain_rate": 0.46
+   },
+   "never_told": {
+    "n": 30,
+    "abstain": 27
+   }
+  },
+  "adapter": {
+   "general": {
+    "n": 200,
+    "abstain": 97,
+    "abstain_rate": 0.485
+   },
+   "never_told": {
+    "n": 30,
+    "abstain": 26
+   }
+  }
+ },
+ "complete": true,
+ "rule": "general abstain rate within \u00b10.1 of base's, and never-told abstentions >= base's - 3",
+ "passed": true,
+ "answers_file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night5c/w3-shop-owner/answers-night5c.jsonl"
+}

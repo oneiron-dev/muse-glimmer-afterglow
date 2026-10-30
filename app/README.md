@@ -15,7 +15,7 @@ packages (`uv run --extra oneiron`).
 | `serve/hosts.json` | The serving boxes and the pinned weight hashes. |
 | `serve/mock_glimmer.py` | A stand-in server for working without a GPU. |
 | `afterglow/agent.py` | The day agent: one user, one world, one day; tool calls (`remember`, `recall`, calendar, tasks); one day-log record per turn. |
-| `afterglow/notes.py` | The notes store: local JSON, or an Oneiron vault (`OneironNotes`) with the local file as its mirror. |
+| `afterglow/notes.py` | The notes store: local JSON, or an Oneiron vault (`OneironNotes`) written through to the local file. |
 | `afterglow/snapshot.py` | The KV snapshot of each world's stable prompt prefix, with an identity (weights, adapter, template, prefix) that refuses a mismatch. |
 | `afterglow/oneiron_vault.py` | A paired-agent client for an Oneiron vault (`vault.witness`, `vault.recall`); `push-day` witnesses a recorded day. |
 | `afterglow/thoughts.py` | Copies the night's trace records (the Dreamer's and the night job's calls) for the thought log. |
@@ -112,11 +112,33 @@ day page header shows them ("dials: concise +0.04").
 
 ## The Oneiron notes backend
 
-`DaySession(..., notes_backend="oneiron")` witnesses every saved note and every turn into the vault, one
-conversation per world and day; `python3 -m afterglow.oneiron_vault push-day --world W --day N` does the same
-for a recorded day. Credentials come only from the environment, for one command:
-`AFTERGLOW_ONEIRON_CREDENTIAL` (the paired agent's credential file) and, for a hosted vault behind Cloudflare
-Access, `AFTERGLOW_CF_ACCESS_CLIENT_ID` / `AFTERGLOW_CF_ACCESS_CLIENT_SECRET`.
+`--notes-backend vault` (web app and `simulate_day.py`; `DaySession(..., notes_backend="vault")`) keeps
+`notes.json` and adds the Oneiron vault; `local` (the default) is notes.json only. In vault mode:
+
+- every note is saved to notes.json at once, and each finished turn goes to the vault in push_day's shape and
+  message ids (user message; one "Note saved: key: value" per note; the answer), one conversation per world and
+  day. Sends run off the chat's path; each one is a line in `runs/<world>/<day>/vault-witness.jsonl`. A later
+  push-day skips the turns sent live and resends any that failed.
+- the recall tool asks the vault (`deadline_ms` 30000) and keeps only this world's conversations (the agent
+  credential reads every person in the vault). Values notes.json marks superseded are dropped; notes saved today
+  that the vault has not acknowledged yet come from notes.json. A vault error or a partial pack answers that call
+  from notes.json.
+- the vault is up, waking or down, and no turn waits for it. A session wakes it in the background when it opens
+  (a cold start takes ~27 s) and again before a recall after 14 quiet minutes (Hypnos stops it after 15). A
+  failed call marks it down: recalls answer from notes.json at once (`fallback_down`), witness runs are logged
+  unsent for push-day, and a background wake retries (15 s, 30 s, ... 5 min) until the vault answers. One recall
+  waits at most 35 s. Ending the day in the web app waits at most 30 s for queued witness runs.
+- notes.json stays the source for the day context, the supersede and route decisions, the night and the page.
+- the day log carries every vault recall of a turn (`vault_recalls`: ms, outcome, items kept and dropped, the
+  values returned and the local values) and `notes_errors` (the day's count so far); `simulation.json` adds a
+  `vault` block (recall p50/p90, outcomes, witness times, errors). `--vault-conversation-tag T` witnesses a measured
+  rerun of a day the vault already holds into its own conversation.
+
+`python3 -m afterglow.oneiron_vault push-day --world W --day N` witnesses a recorded day after the fact.
+Credentials come only from the environment, for one command: `AFTERGLOW_ONEIRON_CREDENTIAL` (the paired agent's
+credential file), `AFTERGLOW_ONEIRON_PERSON_CREDENTIAL_TEMPLATE` (the user's PERSON-bound credential, `{world}` in
+the path) and, for a hosted vault behind Cloudflare Access, `AFTERGLOW_CF_ACCESS_CLIENT_ID` /
+`AFTERGLOW_CF_ACCESS_CLIENT_SECRET`. Run with `uv run --extra oneiron`.
 
 ## Tests
 

@@ -18,7 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from afterglow import paths  # noqa: E402
-from afterglow.agent import DaySession, load_world  # noqa: E402
+from afterglow.agent import NOTES_BACKENDS, DaySession, load_world  # noqa: E402
 from afterglow.llm import GlimmerClient  # noqa: E402
 
 FIRST_DATE = dt.date(2026, 10, 27)
@@ -56,7 +56,15 @@ def main():
     ap.add_argument("--decide-route", action=argparse.BooleanOptionalAction, default=None,
                     help="force the route decision at recall time on or off (default: the serving notes, "
                          "runs/serving/serving-rule.json route_decision)")
+    ap.add_argument("--notes-backend", default="local", choices=NOTES_BACKENDS,
+                    help="local (default): notes.json only; vault: notes.json plus the Oneiron vault, which answers "
+                         "the recall tool (needs the oneiron extra and the vault credentials, app/README.md)")
+    ap.add_argument("--vault-conversation-tag",
+                    help="with --notes-backend vault: witness into a separate conversation (a measured rerun of a day "
+                         "the vault already holds); recall then reads earlier days and this conversation only")
     a = ap.parse_args()
+    if a.vault_conversation_tag and a.notes_backend != "vault":
+        ap.error("--vault-conversation-tag needs --notes-backend vault")
 
     script_path = paths.worlds_root() / a.world / "days" / str(a.day) / "script.jsonl"
     script = [json.loads(line) for line in script_path.read_text().splitlines() if line.strip()]
@@ -64,7 +72,7 @@ def main():
     session = DaySession(a.world, a.day, GlimmerClient(a.endpoint, slot=a.slot), date=date, reasoning=a.reasoning,
                          temperature=a.temperature, decide_supersede=a.decide_supersede,
                          decide_adapter=a.decide_adapter, decide_route=a.decide_route,
-                         web_search=a.web_search)
+                         web_search=a.web_search, notes_backend=a.notes_backend, vault_tag=a.vault_conversation_tag)
     done = {r["content"] for r in session.history() if r["role"] == "user"}
     t0 = time.time()
     turns = []
@@ -90,11 +98,18 @@ def main():
                "notes_active": len(notes), "notes_total": len(session.notes.all(include_superseded=True)),
                "facts_stated": len(facts), "facts_in_notes": len(captured),
                "facts_missing_from_notes": sorted(set(f["id"] for f in facts) - set(captured)),
-               "errors": [t for t in turns if t["error"]], "turns": turns}
+               "errors": [t for t in turns if t["error"]], "notes_backend": a.notes_backend, "turns": turns}
+    if session.night_links:  # the scripted user never answers a pair the night proposed: it stays both notes
+        summary["night_links"] = dict(session.night_links,
+                                      answers="none: the scripted user does not answer a proposed pair")
+    if a.notes_backend == "vault":
+        summary["vault"] = session.notes.summary()
     out = session.dir / "simulation.json"
     if out.exists() and not turns:
         prev = json.loads(out.read_text())
         summary["turns"] = prev.get("turns", [])
+        if prev.get("vault"):  # this session made no vault calls; the day's numbers are the earlier run's
+            summary["vault"] = prev["vault"]
     out.write_text(json.dumps(summary, indent=1) + "\n")
     print(json.dumps({k: v for k, v in summary.items() if k != "turns"}, indent=1))
 

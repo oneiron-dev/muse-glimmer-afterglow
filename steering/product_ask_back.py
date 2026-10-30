@@ -21,9 +21,11 @@ ASK = re.compile(r"(can you tell me|could you tell me|what (is|was) it|do you kn
 
 
 def count(rows):
-    """{"n", "declines", "ask_back"} for one arm's rows of one set."""
+    """{"n", "declines", "ask_back", "search_web_calls"} for one arm's rows of one set; search_web_calls counts replies
+    whose turn called search_web (rows from before tool_names was recorded count 0)."""
     declines = [r for r in rows if abstained(r)]
-    return {"n": len(rows), "declines": len(declines), "ask_back": sum(bool(ASK.search(r["answer"] or "")) for r in declines)}
+    return {"n": len(rows), "declines": len(declines), "ask_back": sum(bool(ASK.search(r["answer"] or "")) for r in declines),
+            "search_web_calls": sum("search_web" in (r.get("tool_names") or []) for r in rows)}
 
 
 def main():
@@ -37,16 +39,17 @@ def main():
         rows = [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
         report["arms"][label] = {s: {arm: count([r for r in rows if r["set"] == s and r["arm"] == arm])
                                      for arm in ("base", "adapter")}
-                                 for s in ("general", "known") if any(r["set"] == s for r in rows)}
+                                 for s in ("general", "known", "known2") if any(r["set"] == s for r in rows)}
     text = json.dumps(report, indent=1)
     if args.out:
         Path(args.out).write_text(text + "\n")
-    print("| arm | set | n | base declines | base asks back | adapter declines | adapter asks back |")
-    print("|---|---|---|---|---|---|---|")
+    print("| arm | set | n | base declines | base asks back | adapter declines | adapter asks back | search_web calls (base / adapter) |")
+    print("|---|---|---|---|---|---|---|---|")
     for label, sets in report["arms"].items():
         for s, arms in sets.items():
             b, a = arms["base"], arms["adapter"]
-            print(f"| {label} | {s} | {a['n']} | {b['declines']} | {b['ask_back']} | {a['declines']} | {a['ask_back']} |")
+            print(f"| {label} | {s} | {a['n']} | {b['declines']} | {b['ask_back']} | {a['declines']} | {a['ask_back']} | "
+                  f"{b['search_web_calls']} / {a['search_web_calls']} |")
 
 
 if __name__ == "__main__":

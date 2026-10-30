@@ -17,8 +17,9 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from . import paths, snapshot, thoughts
-from .night_checks import abstention_gate, chat_checks, never_told_line, serving_choice, unlinked_corrections
-from .agent import DaySession, load_world, now_iso
+from .night_checks import (abstention_gate, chat_checks, never_told_line, serving_choice, serving_rule,
+                           unlinked_corrections)
+from .agent import NOTES_BACKENDS, DaySession, load_world, now_iso
 from .llm import GlimmerClient, GlimmerError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
@@ -90,11 +91,11 @@ def worlds_summary(day):
 
 class App:
     def __init__(self, world, day, endpoint, date=None, reasoning="low", restore=True, decide_supersede=None,
-                 decide_adapter=None, decide_route=None, web_search=None, slot=0):
+                 decide_adapter=None, decide_route=None, web_search=None, slot=0, notes_backend="local"):
         self.client = GlimmerClient(endpoint, slot=slot)
         self.session = DaySession(world, day, self.client, date=date, reasoning=reasoning,
                                   decide_supersede=decide_supersede, decide_adapter=decide_adapter,
-                                  decide_route=decide_route, web_search=web_search)
+                                  decide_route=decide_route, web_search=web_search, notes_backend=notes_backend)
         self.lock = threading.Lock()
         self.snapshot_status = {"state": "idle"}
         if restore:
@@ -138,6 +139,8 @@ class App:
             with open(s.dir / "night-link-answers.jsonl", "a", encoding="utf-8") as f:
                 f.write(json.dumps({"world": s.world, "old_id": old_id, "new_id": new_id, "question":
                                     proposal.get("question"), **rec}, ensure_ascii=False) + "\n")
+            s._log({"ts": rec.get("at"), "turn": s.turn, "role": "night_link_answer", "old_id": old_id,
+                    "new_id": new_id, "answer": answer})  # the day log keeps the user's answer too
         return {"answered": answer, "old_id": old_id, "new_id": new_id}
 
     def night_links(self, world, day):
@@ -188,6 +191,8 @@ class App:
                 "decision": load("decision.json"), "receipt": load("receipt.json"),
                 "consolidated": load("consolidated.json"), "abstention": abstention_gate(night),
                 "never_told": never_told_line(night),
+                # checks the serving rule shows on the report but does not require (runs/serving/serving-rule.json)
+                "shown_not_required": (serving_rule() or {}).get("shown_not_required") or [],
                 "unlinked_corrections": unlinked_corrections(world, day, load("consolidated.json")),
                 "night_links": self.night_links(world, day),
                 "steering": steering(world, day, night, load("eval.json")),
@@ -214,6 +219,7 @@ class App:
                                        "replies": len(replies)},
             "server": {"endpoint": self.client.endpoint, "healthy": healthy, "adapter": adapter},
             "notes": s.notes.all(include_superseded=True),
+            "notes_backend": s.notes_backend,
             "history": history,
             "snapshot": self.snapshot_status,
             "night": self.night_summary(),
@@ -340,7 +346,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(self.app.undo_night_link(self._body().get("old_id", "")))
             if path == "/api/day/end":
                 with self.app.lock:
-                    notes = self.app.session.end_day()
+                    notes = self.app.session.end_day(flush_timeout=30)  # a slow vault never holds the page
                 return self._json({"notes": notes})
         except Exception as e:
             traceback.print_exc()
@@ -389,13 +395,17 @@ def main():
     ap.add_argument("--decide-route", action=argparse.BooleanOptionalAction, default=None,
                     help="force the route decision at recall time on or off (default: the serving notes, "
                          "runs/serving/serving-rule.json route_decision)")
+    ap.add_argument("--notes-backend", default="local", choices=NOTES_BACKENDS,
+                    help="local (default): notes.json only; vault: notes.json plus the Oneiron vault, which answers "
+                         "the recall tool (needs the oneiron extra and the vault credentials, app/README.md)")
     a = ap.parse_args()
     Handler.app = App(a.world, a.day, a.endpoint, date=a.date, reasoning=a.reasoning, restore=not a.no_restore,
                       decide_supersede=a.decide_supersede, decide_adapter=a.decide_adapter,
-                      decide_route=a.decide_route, web_search=a.web_search, slot=a.slot)
+                      decide_route=a.decide_route, web_search=a.web_search, slot=a.slot, notes_backend=a.notes_backend)
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
     srv.daemon_threads = True
-    print(f"Afterglow: http://127.0.0.1:{a.port}  (world {a.world}, day {a.day}, Glimmer at {a.endpoint})", flush=True)
+    print(f"Afterglow: http://127.0.0.1:{a.port}  (world {a.world}, day {a.day}, Glimmer at {a.endpoint}, "
+          f"notes {a.notes_backend})", flush=True)
     try:
         srv.serve_forever()
     except KeyboardInterrupt:

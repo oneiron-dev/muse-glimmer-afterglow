@@ -1,0 +1,27 @@
+{
+ "dataset": "google-research-datasets/nq_open",
+ "revision": "5dd9790a83002ad084ddeb7c420dc716852c6f28",
+ "split": "validation",
+ "license": "cc-by-sa-3.0",
+ "parquet_sha256": "b074bed0bccb56fa1551a8ac1c9c51ce89bc11c7fbb6a9c713b2c33a98531e12",
+ "parts": {
+  "nq": 40,
+  "who_is": 40,
+  "where_is": 40
+ },
+ "pick": "sha256('public-anchor-pool-v1:<row>') ascending, after the filters",
+ "disjoint_from": {
+  "known_slice_v1 rows": 0,
+  "simpleqa gate + general slice 3-word runs": 0,
+  "forget v1/v2 5-word runs": 0,
+  "world and never-told names": 0
+ },
+ "use": "base replies in the served agent form (search_web offered), kept when they answer or search, as night rows set against the ask-back rows (night/public_anchor_rows.py)",
+ "file": "eval/data/public_anchor_pool_v1.jsonl",
+ "sha256": "8a3da175126f28912b86a3768cec912316a345dd51a1f17bbfa803481fedf08d",
+ "license_of_this_file": "derived from Natural Questions (open-domain split), released under CC BY-SA 3.0, the source's licence",
+ "attribution": [
+  "Kwiatkowski et al., Natural Questions: A Benchmark for Question Answering Research, TACL 7:453-466, 2019",
+  "Lee, Chang and Toutanova, Latent Retrieval for Weakly Supervised Open Domain Question Answering, ACL 2019"
+ ]
+}

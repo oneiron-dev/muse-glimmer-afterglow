@@ -99,10 +99,23 @@ class NightLinksTest(unittest.TestCase):
         self.rule(night_links={"from_night": 7})
         self.assertIsNone(apply_night_links(n, "w", 7, prev))  # night 6 is before the first night that applies
         self.rule(night_links={"from_night": 6})
-        self.assertEqual(apply_night_links(n, "w", 7, prev), {"night_day": 6, "applied": ["N0001"], "listed": 1})
+        self.assertEqual(apply_night_links(n, "w", 7, prev), {"night_day": 6, "applied": [{"old_id": "N0001", "new_id": "N0002"}],
+                                                               "listed": 1, "proposed": []})
         self.assertEqual([x["id"] for x in n.all()], ["N0002"])
         # yesterday's own notes file is untouched: the night reads it as the day it trained on
         self.assertEqual(len(LocalJsonNotes(prev / "notes.json").all()), 2)
+
+    def test_the_day_log_records_the_applied_links_once_and_the_ui_history_skips_it(self):
+        from afterglow.agent import DaySession
+        self.rule(night_links={"from_night": 6})
+        self.write_night(6, 7)
+        for _ in range(2):  # a second session on the same day (a restart) logs nothing new
+            s = DaySession("w", 7, decide_supersede=False, decide_route=False, web_search=False)
+        recs = [json.loads(x) for x in s.daylog_path.read_text().splitlines()]
+        self.assertEqual([r["role"] for r in recs], ["night_links"])
+        self.assertEqual((recs[0]["night_day"], recs[0]["applied"], recs[0]["answers"]),
+                         (6, [{"old_id": "N0001", "new_id": "N0002"}], []))
+        self.assertEqual(s.history(), [])
 
     def test_a_file_for_another_day_is_not_applied(self):
         self.rule(night_links={"from_night": 1})
