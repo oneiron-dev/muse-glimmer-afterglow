@@ -380,6 +380,11 @@ The same recipe fails in three different ways: w3 turns right answers into wrong
 85 → 111), and w2 asks the user back on 107 general questions. Meta night found no difference in the three training
 sets (24 of 24 public anchors are search calls in each), so part of this is run-to-run training variance.
 
+A second training of w4 5c on the same rows with another seed (5c2): general right 15 → 11 in both, honesty +4.5 and
++7, declines +7.5 and +10.5, asks back 3 and 0, known v1 right 55 → 52 and 55 → 51; on every product number the two
+seeds agree within a few points. The one count that moves is the adapter on its own (route off): 0 wrong-person
+answers for 5c, 6 for 5c2 (route on, both 30 of 30). A single night's route-off count is a noisy measure.
+
 Base asks the user back on 31 of these 200 questions. The reads have search off, and no 5c reply tries to call
 search_web, as a tool call or as text. 5c is the closest to the rule: it keeps the known slice (55 → 52) and almost
 stops asking back, and it misses the right-answer floor by one of 15. 5d keeps every right answer but guesses: its 19
