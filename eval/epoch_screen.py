@@ -5,7 +5,7 @@ scale 0, one switched on per request), each arm scored on
       reasoning minimal, the answer forced into the user channel, greedy), scored by eval/scoring.py;
   (b) known slices v1 + v2 in the day agent's form: its system prompt and tools (search_web not offered), reasoning
       low, greedy, 400 tokens; the reply in the user channel is graded by gold match (normalised, any gold alias
-      inside the reply). A first action that is a tool call is counted as "tool" (no second turn here).
+      inside the reply); a reply that declines (omniscience.says_abstain) is counted as declined. A first action that is a tool call is counted as "tool" (no second turn here).
 Deterministic: no grader model. Each arm is compared with the base asked in the same server run.
 Faster, same measure (lead 30 Oct 10:11): --reuse-facts arm=score-file takes an arm's facts from the night's eval, which
 asks the same probes in the same form (the base = arm A, the epoch of record = arm B); --base-cache keeps the base's
@@ -179,9 +179,10 @@ def main():
         for k, (comp, cut) in zip(known, kg):
             outcome, reply = agent_reply(comp)
             right = outcome == "reply" and not cut and gold_match(reply, k["gold"])
-            s = ks.setdefault(k["slice"], {"n": 0, "right": 0, "tool": 0, "cut": 0})
+            s = ks.setdefault(k["slice"], {"n": 0, "right": 0, "declined": 0, "tool": 0, "cut": 0})
             s["n"] += 1
             s["right"] += right
+            s["declined"] += outcome == "reply" and not cut and says_abstain(reply)
             s["tool"] += outcome == "tool"
             s["cut"] += cut
             rows.append({"id": k["id"], "right": right, "outcome": outcome, "reply": reply[:200]})
