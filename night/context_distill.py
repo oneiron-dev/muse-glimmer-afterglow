@@ -44,6 +44,7 @@ import random
 import re
 import sys
 import time
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -65,7 +66,8 @@ NOTHING_RECALLED = {"notes": []}  # the product's recall result when no note mat
 # on-policy: the student's own distribution, so temperature 1 and every truncation and penalty off
 SAMPLER = {"temperature": 1.0, "top_k": 0, "top_p": 1.0, "min_p": 0.0, "typical_p": 1.0, "repeat_penalty": 1.0,
            "presence_penalty": 0.0, "frequency_penalty": 0.0, "dry_multiplier": 0.0, "xtc_probability": 0.0}
-SLOT = {"id_slot": 1, "cache_prompt": False}  # slot 0 is the user's
+SLOT = {"id_slot": 1, "cache_prompt": False}  # slot 0 is the user's (--slot -1: any idle slot, on a server of our own)
+BASE_STUDENT = "none"  # --student-adapter none: plain Glimmer samples (a world served base + notes)
 N_PREDICT = {"cd_fact": 400, "agent": 800}
 FACT_TEMPLATE = {"reasoning_strength": "minimal", "knowledge_cutoff": KNOWLEDGE_CUTOFF, "current_date": EVAL_DATE}
 AGENT_TEMPLATE = {"reasoning_strength": "low"}  # the served form, as night/kl_pool_rows.py renders it
@@ -90,6 +92,8 @@ def student_lora(root, adapter_path):
     """The lora field with the student adapter (matched by its full path; ids change at server restarts) at 1 and every
     other loaded adapter at 0."""
     loaded = get(f"{root}/lora-adapters")
+    if adapter_path == BASE_STUDENT:
+        return [{"id": a["id"], "scale": 0.0} for a in loaded]
     found = [a for a in loaded if a.get("path") == adapter_path]
     if len(found) != 1:
         raise SystemExit(f"student adapter {adapter_path}: {len(found)} loaded on {root} (paths: "
@@ -98,8 +102,9 @@ def student_lora(root, adapter_path):
 
 
 class Sampler:
-    def __init__(self, root, lora):
+    def __init__(self, root, lora, slot=1, temperature=None):
         self.root, self.lora = root, lora
+        self.params = {**SAMPLER, **({} if temperature is None else {"temperature": temperature}), **SLOT, "id_slot": slot}
 
     def render(self, messages, tools, kwargs):
         prompt = post(f"{self.root}/apply-template", {"messages": messages, **({"tools": tools} if tools else {}),
@@ -111,7 +116,7 @@ class Sampler:
     def complete(self, prompt, n_predict, seed):
         """One sample: (text, token ids, ok). ok = it ended on <|eot|> and the text re-tokenizes to the same ids."""
         r = post(f"{self.root}/completion", {"prompt": prompt, "n_predict": n_predict, "lora": self.lora,
-                                             "return_tokens": True, "seed": seed, **SAMPLER, **SLOT})
+                                             "return_tokens": True, "seed": seed, **self.params})
         tokens = r.get("tokens") or []
         ended = bool(tokens) and tokens[-1] == EOT_ID and r.get("stop_type") == "eos"
         text = post(f"{self.root}/detokenize", {"tokens": tokens, "with_pieces": False})["content"] if tokens else ""
@@ -125,7 +130,7 @@ class Sampler:
     def chat(self, messages, n_predict, seed):
         return post(f"{self.root}/v1/chat/completions", {"messages": messages, "tools": TOOL_SCHEMAS, "max_tokens": n_predict,
                                                          "chat_template_kwargs": AGENT_TEMPLATE, "lora": self.lora,
-                                                         "seed": seed, **SAMPLER, **SLOT})["choices"][0]["message"]
+                                                         "seed": seed, **self.params})["choices"][0]["message"]
 
 
 def fact_row(s, q, notes_lines, first, seed):
@@ -260,7 +265,8 @@ def main(argv=None):
     ap.add_argument("--world", required=True)
     ap.add_argument("--day", type=int, required=True, help="the night's day: its notes.json and rewrites")
     ap.add_argument("--server", required=True, help="root URL of a llama-server with the student adapter loaded")
-    ap.add_argument("--student-adapter", required=True, help="the student adapter's path as the server lists it")
+    ap.add_argument("--student-adapter", required=True, help="the student adapter's path as the server lists it "
+                    f"('{BASE_STUDENT}': plain Glimmer, every loaded adapter at 0)")
     ap.add_argument("--student-sha256", help="its sha256, for the report (default: from runs/serving/adapters.json)")
     ap.add_argument("--pools", help="the world's soft-anchor fixed-pool cache (night/kl_pool_rows.py --cache-dir)")
     ap.add_argument("--rewrites", help="default: runs/<world>/<day>/night/rewrites/rewrites.jsonl")
@@ -268,6 +274,11 @@ def main(argv=None):
     ap.add_argument("--per-form", type=int, default=0, help="at most this many prompts per form (0 = all)")
     ap.add_argument("--stop-at", help="HH:MM JST: stop asking at this time and write the report (a slot window's end)")
     ap.add_argument("--out-dir", required=True)
+    ap.add_argument("--slot", type=int, default=SLOT["id_slot"], help="llama-server slot (-1 = any idle slot: a server of "
+                    "our own, so several worlds can sample at once)")
+    ap.add_argument("--temperature", type=float, help="checks only (0 = greedy, to compare two servers byte for byte); "
+                    "rows for training keep the on-policy temperature 1")
+    ap.add_argument("--base-sha256", help="the server's base GGUF sha256, for the report")
     a = ap.parse_args(argv)
     forms = list(dict.fromkeys(f for f in a.forms.split(",") if f))
     if not set(forms) <= set(FORMS):
@@ -297,7 +308,7 @@ def main(argv=None):
         m = paths.runs_root() / "serving" / "adapters.json"
         entries = json.loads(m.read_text()).get("adapters", []) if m.exists() else []
         student_sha = next((e.get("sha256") for e in entries if e.get("path") == a.student_adapter), None)
-    s = Sampler(root, student_lora(root, a.student_adapter))
+    s = Sampler(root, student_lora(root, a.student_adapter), a.slot, a.temperature)
     system = system_message(world)
     asked = [json.loads(x) for x in asked_path.read_text().splitlines() if x.strip()] if asked_path.exists() else []
     written = {json.loads(x)["item_id"] for x in rows_path.read_text().splitlines() if x.strip()} if rows_path.exists() else set()
@@ -343,7 +354,7 @@ def ask_all(a, s, items, done, written, asked, deadline, system, context, notes_
                     "teacher": {"prompt": row["teacher_prompt"], "notes": n, "notes_sha256": digest},
                     "student": {"adapter": a.student_adapter, "adapter_sha256": student_sha, "epoch": None,
                                 "source": f"served for day {a.day} (the previous night's adapter)", "seed": seed,
-                                "temperature": SAMPLER["temperature"]},
+                                "temperature": s.params["temperature"]},
                     "valid": True}
             with open(rows_path, "a") as f:
                 f.write(json.dumps(full, ensure_ascii=False) + "\n")
@@ -365,14 +376,15 @@ def write_report(a, forms, items, asked, stopped, error, t0, student_sha, teache
         b["after_recall"] += bool(x["kept"] and x["after_recall"])
         if not x["kept"]:
             b["dropped"][x["why"]] = b["dropped"].get(x["why"], 0) + 1
-    report = {"world": a.world, "day": a.day, "server": root, "forms": forms, "per_form": a.per_form,
+    report = {"world": a.world, "day": a.day, "server": root, "sampler_host": urllib.parse.urlparse(root).hostname,
+              "slot": a.slot, "base_sha256": a.base_sha256, "forms": forms, "per_form": a.per_form,
               "planned": len(items), "asked": len(asked), "kept": sum(x["kept"] for x in asked), "stopped_at_deadline": stopped,
               "error": error,
               "seconds_this_run": round(time.time() - t0, 1), "by_form": by_form,
               "student": {"adapter": a.student_adapter, "adapter_sha256": student_sha,
                           "note": "v1 (lead 30 Oct 10:19): the adapter served for this day samples; nights train from "
                                   "base, so the sampler is not the model being trained"},
-              "sampler": SAMPLER, "n_predict": N_PREDICT,
+              "sampler": {**SAMPLER, **({} if a.temperature is None else {"temperature": a.temperature})}, "n_predict": N_PREDICT,
               "teacher": {"cd_fact": {"form": "arm C (NOTES_HEADER + active notes)", "notes": teacher_notes["cd_fact"][0],
                                       "notes_sha256": teacher_notes["cd_fact"][1]},
                           "agent": {"form": "day-context message with the notes block", "notes": teacher_notes["agent"][0],
