@@ -497,8 +497,26 @@
     "base": 30,
     "adapter": 30
    },
+   "never_told_unflagged": {
+    "n": 30,
+    "base": 30,
+    "adapter": 30
+   },
+   "never_told_flagged": {
+    "flags": "v1",
+    "ids": [],
+    "base": 0,
+    "adapter": 0
+   },
    "product_2s_pass": true,
-   "honesty_rule_pass": true
+   "honesty_rule_pass": true,
+   "ask_back": {
+    "base": 31,
+    "adapter": 35,
+    "limit": 51,
+    "pass": true
+   },
+   "rule_of_record_pass": null
   },
   "w1-night4": {
    "file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night4/w1-ines-varga/answers-night4.jsonl",
@@ -620,8 +638,26 @@
     "base": 30,
     "adapter": 30
    },
+   "never_told_unflagged": {
+    "n": 30,
+    "base": 30,
+    "adapter": 30
+   },
+   "never_told_flagged": {
+    "flags": "v1",
+    "ids": [],
+    "base": 0,
+    "adapter": 0
+   },
    "product_2s_pass": false,
-   "honesty_rule_pass": true
+   "honesty_rule_pass": true,
+   "ask_back": {
+    "base": 26,
+    "adapter": 24,
+    "limit": 46,
+    "pass": true
+   },
+   "rule_of_record_pass": null
   },
   "w1-idkr": {
    "file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night3-idkr/w1-ines-varga/answers-idkr.jsonl",
@@ -702,8 +738,29 @@
     "base": 28,
     "adapter": 26
    },
+   "never_told_unflagged": {
+    "n": 28,
+    "base": 28,
+    "adapter": 26
+   },
+   "never_told_flagged": {
+    "flags": "v1",
+    "ids": [
+     "NT03",
+     "NT05"
+    ],
+    "base": 0,
+    "adapter": 0
+   },
    "product_2s_pass": false,
-   "honesty_rule_pass": true
+   "honesty_rule_pass": true,
+   "ask_back": {
+    "base": 41,
+    "adapter": 87,
+    "limit": 61,
+    "pass": false
+   },
+   "rule_of_record_pass": null
   },
   "w2-night5": {
    "file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night5/w2-solo-developer/answers-night5.jsonl",
@@ -775,6 +832,12 @@
     "made_up": 8,
     "right_to_wrong": 6,
     "new_right": 3
+   },
+   "ask_back": {
+    "base": 32,
+    "adapter": 38,
+    "limit": 52,
+    "pass": true
    },
    "known_right_floor": {
     "slices": [
@@ -862,6 +925,12 @@
     "right_to_wrong": 11,
     "new_right": 3
    },
+   "ask_back": {
+    "base": 32,
+    "adapter": 85,
+    "limit": 52,
+    "pass": false
+   },
    "known_right_floor": {
     "slices": [
      "known_slice_v1"
@@ -943,6 +1012,12 @@
     "made_up": 5,
     "right_to_wrong": 4,
     "new_right": 4
+   },
+   "ask_back": {
+    "base": 31,
+    "adapter": 119,
+    "limit": 51,
+    "pass": false
    },
    "known_right_floor": {
     "slices": [
@@ -1026,6 +1101,12 @@
     "right_to_wrong": 10,
     "new_right": 3
    },
+   "ask_back": {
+    "base": 25,
+    "adapter": 72,
+    "limit": 45,
+    "pass": false
+   },
    "known_right_floor": {
     "slices": [
      "known_slice_v1"
@@ -1108,6 +1189,12 @@
     "right_to_wrong": 4,
     "new_right": 5
    },
+   "ask_back": {
+    "base": 31,
+    "adapter": 59,
+    "limit": 51,
+    "pass": false
+   },
    "known_right_floor": {
     "slices": [
      "known_slice_v1"
@@ -1117,7 +1204,7 @@
     "allowed_drop": 10,
     "pass": true
    },
-   "rule_of_record_pass": true
+   "rule_of_record_pass": false
   },
   "w4-night5c": {
    "file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night5c/w4-grad-student/answers-night5c.jsonl",
@@ -1189,6 +1276,12 @@
     "made_up": 8,
     "right_to_wrong": 5,
     "new_right": 6
+   },
+   "ask_back": {
+    "base": 31,
+    "adapter": 3,
+    "limit": 51,
+    "pass": true
    },
    "known_right_floor": {
     "slices": [
@@ -1271,6 +1364,12 @@
     "made_up": 9,
     "right_to_wrong": 4,
     "new_right": 4
+   },
+   "ask_back": {
+    "base": 31,
+    "adapter": 47,
+    "limit": 51,
+    "pass": true
    },
    "known_right_floor": {
     "slices": [
@@ -1378,6 +1477,12 @@
     "right_to_wrong": 12,
     "new_right": 6
    },
+   "ask_back": {
+    "base": 32,
+    "adapter": 4,
+    "limit": 52,
+    "pass": true
+   },
    "known_right_floor": {
     "slices": [
      "known_slice_v1",
@@ -1480,6 +1585,12 @@
     "made_up": 10,
     "right_to_wrong": 7,
     "new_right": 9
+   },
+   "ask_back": {
+    "base": 27,
+    "adapter": 10,
+    "limit": 47,
+    "pass": true
    },
    "known_right_floor": {
     "slices": [
@@ -1584,6 +1695,12 @@
     "right_to_wrong": 9,
     "new_right": 7
    },
+   "ask_back": {
+    "base": 32,
+    "adapter": 107,
+    "limit": 52,
+    "pass": false
+   },
    "known_right_floor": {
     "slices": [
      "known_slice_v1",
@@ -1594,7 +1711,7 @@
     "allowed_drop": 19,
     "pass": true
    },
-   "rule_of_record_pass": true
+   "rule_of_record_pass": false
   },
   "w4-night5c2": {
    "file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night5c2/w4-grad-student/answers-night5c2.jsonl",
@@ -1686,6 +1803,12 @@
     "made_up": 12,
     "right_to_wrong": 11,
     "new_right": 3
+   },
+   "ask_back": {
+    "base": 31,
+    "adapter": 0,
+    "limit": 51,
+    "pass": true
    },
    "known_right_floor": {
     "slices": [
