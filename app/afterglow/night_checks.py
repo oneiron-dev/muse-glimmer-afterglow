@@ -208,6 +208,10 @@ def serving_choice(world, entries):
     # Latest day first.
     ours = [e for e in entries if e.get("world") == world and e.get("day") is not None]
     mine = sorted((e for e in ours if not e.get("arm")), key=lambda e: -e["day"])
+    # a night the serving rule holds is never served, whatever its checks say, and the serving line says why
+    held = {night_label(e): h for e in mine if (h := held_by(world, e, rule))}
+    mine = [e for e in mine if night_label(e) not in held]
+    held_note = "".join(f" {label.capitalize()} is held: {h.get('reason')}." for label, h in held.items())
     failed, unmeasured = {}, {}
 
     def what(label):  # "failed the 'a' check and has no result yet for the 'b' check"
@@ -227,22 +231,38 @@ def serving_choice(world, entries):
             why = (f"{night_label(e).capitalize()}'s update is loaded: it passed every check" +
                    (f"; {first}'s {what(first)}." if first else "."))
             told = never_told_line(paths.runs_root() / world / (e.get("night_dir") or f"{e['day']}/night"))
-            return {"entry": e, "why": why + (f" {told}" if told else "") + variants_note(world, ours, rule),
-                    "failed": failed, "unmeasured": unmeasured}
+            return {"entry": e, "why": why + (f" {told}" if told else "") + held_note + variants_note(world, ours, rule),
+                    "failed": failed, "unmeasured": unmeasured, "held": list(held)}
         failed[night_label(e)] = bad
         if rule and any(k not in results for k in bad):
             unmeasured[night_label(e)] = [k for k in bad if k not in results]
     if not mine:
         # Nights that ran but are not loaded were left out because they rolled back (the restart loads kept nights).
         ran = any(paths.runs_root().glob(f"{world}/*/night/eval.json"))
-        why = ("No update loaded: none of this person's nights passed every check." if ran
+        why = ("No update loaded." if held else
+               "No update loaded: none of this person's nights passed every check." if ran
                else "No update loaded: no night has run for this person yet.")
-        return {"entry": None, "why": why + variants_note(world, ours, rule), "failed": {}, "unmeasured": {}}
+        return {"entry": None, "why": why + held_note + variants_note(world, ours, rule), "failed": {},
+                "unmeasured": {}, "held": list(held)}
     last = night_label(mine[0])
-    return {"entry": None, "failed": failed, "unmeasured": unmeasured,
+    return {"entry": None, "failed": failed, "unmeasured": unmeasured, "held": list(held),
             "why": f"No update loaded: {last}'s update {what(last)}" +
                    (", and no other loaded update passes every check." if len(mine) > 1 else ".") +
-                   variants_note(world, ours, rule)}
+                   held_note + variants_note(world, ours, rule)}
+
+
+def held_by(world, e, rule):
+    """The serving rule's hold on a loaded update, or None. "held": [{"world", "nights": [{"night": "<day>/<folder>",
+    "sha256": "<adapter sha256 or a prefix>"}], "reason", "who", "since"}]. A night with a sha256 is matched by its
+    adapter, so a held variant stays held once it is promoted to the day's night of record; without one, by folder."""
+    night, sha = e.get("night_dir") or f"{e['day']}/night", e.get("sha256") or ""
+    for h in (rule or {}).get("held") or []:
+        if h.get("world") != world:
+            continue
+        for n in h.get("nights") or []:
+            if (sha.startswith(n["sha256"]) and sha) if n.get("sha256") else n.get("night") == night:
+                return h
+    return None
 
 
 def variants_note(world, entries, rule):
@@ -254,6 +274,10 @@ def variants_note(world, entries, rule):
             continue
         results = night_results(world, e["day"], e.get("night_dir"))
         if any(results.get(k) is not True for k in rule["checks"]):
+            continue
+        h = held_by(world, e, rule)
+        if h:
+            notes.append(f" {night_label(e).capitalize()} passes every check but is not served: held: {h.get('reason')}.")
             continue
         night = paths.runs_root() / world / e["night_dir"]
         promo = next((d.get("promotion") for d in (read_json(night / "decision-product-2s.json"),
