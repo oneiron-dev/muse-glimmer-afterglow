@@ -1,0 +1,63 @@
+{
+ "rule": "abstention by the night's rules; difference = second minus first (adapter minus base), points",
+ "bootstrap": {
+  "resamples": 10000,
+  "seed": 20261014
+ },
+ "paired": {
+  "w2-solo-developer-night6e3": {
+   "never_told": {
+    "n": 30,
+    "x": 29,
+    "y": 30,
+    "diff_points": 3.3,
+    "ci95_points": [
+     0.0,
+     10.0
+    ]
+   },
+   "general": {
+    "n": 200,
+    "x": 107,
+    "y": 104,
+    "diff_points": -1.5,
+    "ci95_points": [
+     -7.5,
+     4.5
+    ]
+   },
+   "general_first100": {
+    "n": 100,
+    "x": 48,
+    "y": 55,
+    "diff_points": 7.0,
+    "ci95_points": [
+     -1.0,
+     15.0
+    ]
+   },
+   "known": {
+    "n": 100,
+    "x": 14,
+    "y": 9,
+    "diff_points": -5.0,
+    "ci95_points": [
+     -10.0,
+     0.0
+    ]
+   },
+   "known2": {
+    "n": 100,
+    "x": 16,
+    "y": 9,
+    "diff_points": -7.0,
+    "ci95_points": [
+     -13.0,
+     -2.0
+    ]
+   },
+   "file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night6/w2-solo-developer/answers-night6e3.jsonl"
+  }
+ },
+ "swing": {}
+}
