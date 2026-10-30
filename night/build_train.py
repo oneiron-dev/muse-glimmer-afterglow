@@ -59,6 +59,9 @@ def main():
     ap.add_argument("--rewrites", required=True, nargs="+")
     ap.add_argument("--anchors", required=True)
     ap.add_argument("--extra", nargs="*", default=[], help="rows taken in full, not capped per fact (contrast rows)")
+    ap.add_argument("--soft-extra", nargs="*", default=[], help="rows taken in full that do not count toward the replay "
+                    "anchors (the soft-anchor pools, context-distillation rows): the anchor count stays the one without them "
+                    "(lead 30 Oct 12:30: a screen changes one thing)")
     ap.add_argument("--rows-per-fact", type=int, default=12)
     ap.add_argument("--replay-share", type=float, default=0.10, help="anchor rows / all rows")
     ap.add_argument("--abstain-anchors", nargs="*", default=[], help="base self-distilled answers to SimpleQA anchor-pool questions (one or more forms)")
@@ -93,6 +96,9 @@ def main():
         dropped_text_acks = [r for r in rows if not r.get("raw") and is_text_ack(r)]
         rows = [r for r in rows if r.get("raw") or not is_text_ack(r)]
     n_anchor = round(len(rows) * args.replay_share / (1 - args.replay_share)) if args.replay_share > 0 else 0
+    soft = [r for path in args.soft_extra for r in read_jsonl(path) if r["valid"]]
+    rows += soft  # after the anchor count, so it is the count without them
+    n_anchor_if_counted = round(len(rows) * args.replay_share / (1 - args.replay_share)) if args.replay_share > 0 else 0
     rng = random.Random(args.seed)
     anchor_pool = anchors[:]
     rng.shuffle(anchor_pool)
@@ -123,7 +129,9 @@ def main():
     for r in out_rows:
         forms[r["form"]] = forms.get(r["form"], 0) + 1
     summary = {"rows": len(out_rows), "fact_items": sum(1 for v in by_item.values() if v[0]["kind"] == "fact"),
-               "anchors": len(chosen_anchors), "forms": forms, "rows_per_fact": args.rows_per_fact,
+               "anchors": len(chosen_anchors), **({"soft_extra_rows": len(soft), "replay_anchors_pinned": n_anchor,
+                                                    "replay_anchors_if_soft_counted": n_anchor_if_counted} if args.soft_extra else {}),
+               "forms": forms, "rows_per_fact": args.rows_per_fact,
                "replay_share": args.replay_share, "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
                **({"dropped_text_acks": len(dropped_text_acks),
                    "dropped_text_ack_examples": [[r["user"][:80], r["assistant"][:80]] for r in dropped_text_acks[:5]]} if args.drop_text_acks else {})}

@@ -562,17 +562,18 @@ class Night:
                                               "pool": pool["file"], "pool_sha256": pool["sha256"],
                                               **({k: json.loads(report.read_text()).get(k) for k in ("search_offered", "asked", "by_outcome",
                                                                                                     "kept_by_part")} if report.exists() else {})}
+        soft_rows = []  # rows that never count toward the replay anchors (build_train --soft-extra)
         if self.args.kl_anchors:  # soft-anchor pools: trained with the KL term, never as hard labels (train_adapter)
-            extra_rows.append(str(self.night / "kl-pools.jsonl"))
+            soft_rows.append(str(self.night / "kl-pools.jsonl"))
             kp = json.loads((self.night / "kl-pools-report.json").read_text())
             self.receipt["kl_pools"] = {k: kp.get(k) for k in ("candidates_sha256", "fixed", "swapped", "rows")}
         if self.args.cd_rows:  # context distillation (night/context_distill.py): soft rows read by the teacher with the notes
-            extra_rows.append(self.args.cd_rows)
+            soft_rows.append(self.args.cd_rows)
             rep_path = Path(self.args.cd_rows).with_name("cd-report.json")
             self.receipt["cd_rows"] = {"file": self.args.cd_rows, "rows": sum(1 for _ in Path(self.args.cd_rows).read_text().splitlines()),
                                        "weight": self.args.cd_weight, "sha256": hashlib.sha256(Path(self.args.cd_rows).read_bytes()).hexdigest(),
                                        **({k: json.loads(rep_path.read_text()).get(k) for k in ("student", "by_form")} if rep_path.exists() else {})}
-        extra = ["--extra", *extra_rows] if extra_rows else []
+        extra = (["--extra", *extra_rows] if extra_rows else []) + (["--soft-extra", *soft_rows] if soft_rows else [])
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
         if self.args.drop_text_acks:
@@ -585,6 +586,9 @@ class Night:
                       "--abstain-share", str(self.args.abstain_share)]
         run([sys.executable, "night/build_train.py", "--rewrites", *sources, "--anchors", str(self.anchors_path()), *extra,
              "--rows-per-fact", str(self.args.rows_per_fact), "--replay-share", str(self.args.replay_share), "--out", str(raw)], log)
+        if soft_rows:  # the replay anchors stay the count without the soft rows; both counts in the receipt
+            ts = json.loads(raw.with_suffix(".summary.json").read_text())
+            self.receipt["replay_anchors"] = {k: ts.get(k) for k in ("soft_extra_rows", "replay_anchors_pinned", "replay_anchors_if_soft_counted")}
         if self.args.day >= SUPERSEDED_VALUE_FILTER_FROM_DAY:
             unfiltered = self.night / "train-raw-unfiltered.jsonl"
             raw.replace(unfiltered)
