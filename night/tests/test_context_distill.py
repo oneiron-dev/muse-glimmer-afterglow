@@ -221,6 +221,50 @@ class ContextDistillTest(unittest.TestCase):
                          {"another tool": 1, "inexact tokens": 1, "chat parse differs from the sample": 1})
         self.assertFalse((self.out / "cd-rows.jsonl").exists())
 
+    def test_a_chat_parse_must_be_the_sampled_calls_exactly(self):
+        pool = [{"item_id": "c", "form": "kl_people", "user": "Blind Guardian"},
+                {"item_id": "d", "form": "kl_people", "user": "Blind Guardian twice"}]
+        self.pools.write_text("".join(json.dumps(r) + "\n" for r in pool))
+        self.model.chat_query = "Guardian"  # a substring of the sampled query is not the same call
+        report = self.run_cd("--forms", "cd_people")
+        self.assertEqual(report["by_form"]["cd_people"]["dropped"], {"chat parse differs from the sample": 2})
+        self.assertEqual(cd.call_query({"function": {"name": "recall", "arguments": '{"query": "foo'}}), None)
+        self.assertEqual(cd.call_query({"function": {"name": "recall", "arguments": '"foo"'}}), None)
+        self.assertEqual(cd.call_query({"function": {"name": "recall", "arguments": '{"query": "foo"}'}}), "foo")
+
+    def test_a_reply_that_quotes_call_markup_is_a_reply(self):
+        self.model.completion = lambda prompt: (
+            ' to=user<|message|>Try <atem:invoke name="recall"> to look things up.<|eot|>', "eos")
+        report = self.run_cd("--forms", "cd_known")
+        r = self.rows()["cd-cd_known-kl-KK-1"]
+        self.assertFalse(r["after_recall"])
+        self.assertEqual((report["by_form"]["cd_known"]["kept"], self.model.chats), (1, []))
+
+    def test_a_row_written_before_a_crash_is_not_written_again(self):
+        self.run_cd("--forms", "cd_known")
+        (self.out / "cd-asked.jsonl").unlink()  # the crash came between the row and its asked line
+        n = len(self.model.bodies)
+        self.run_cd("--forms", "cd_known,cd_known")
+        self.assertEqual((len(self.rows()), len(self.model.bodies)), (1, n))
+        self.assertEqual(len((self.out / "cd-rows.jsonl").read_text().splitlines()), 1)
+
+    def test_the_report_is_written_when_the_server_fails_mid_run(self):
+        def down(prompt):
+            raise ConnectionResetError("server gone")
+
+        self.model.completion = down
+        with self.assertRaises(Exception):
+            self.run_cd("--forms", "cd_known")
+        report = json.loads((self.out / "cd-report.json").read_text())
+        self.assertIn("RemoteDisconnected", report["error"])  # the server dropped the request
+        self.assertEqual(report["asked"], 0)
+
+    def test_with_no_notes_the_teacher_prompt_is_the_student_s(self):
+        (self.runs / "w-test" / "6" / "notes.json").write_text(json.dumps({"notes": []}))
+        self.run_cd("--forms", "cd_fact")
+        r = self.rows()["cd-cd_fact-N0001"]
+        self.assertEqual(r["teacher"]["prompt"], r["raw"]["prompt"])
+
     def test_the_student_is_found_by_path_or_the_run_stops(self):
         self.loaded[1]["path"] = "/data/afterglow/adapters/w-test-d4.gguf"
         with self.assertRaises(SystemExit):

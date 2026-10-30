@@ -131,7 +131,8 @@ class Sampler:
 def fact_row(s, q, notes_lines, first, seed):
     """cd_fact: arm B (student) and arm C (teacher) prompts, the answer header forced in both."""
     ask = q + FACT_SUFFIX
-    taught = NOTES_HEADER.format(first=first) + "\n".join(f"- {n}" for n in notes_lines) + "\n\n" + ask
+    # with no notes the teacher's prompt is the student's, as in the eval's arm C (score_peft.prompt_text)
+    taught = NOTES_HEADER.format(first=first) + "\n".join(f"- {n}" for n in notes_lines) + "\n\n" + ask if notes_lines else ask
     student = s.render([{"role": "user", "content": ask}], None, FACT_TEMPLATE).removesuffix(HEADER_START) + ANSWER_PREFIX
     teacher = s.render([{"role": "user", "content": taught}], None, FACT_TEMPLATE).removesuffix(HEADER_START) + ANSWER_PREFIX
     text, tokens, why = s.complete(student, N_PREDICT["cd_fact"], seed)
@@ -150,20 +151,22 @@ def agent_row(s, system, context, q, seed):
     text, tokens, why = s.complete(prompt, N_PREDICT["agent"], seed)
     if why:
         return None, why, False
-    invokes = set(re.findall(r'<atem:invoke name="([\w.]+)">', text))
-    if not invokes:
-        target, _, _ = first_action(text)
-        if target != "user":
-            return None, "no reply to the user", False
+    invokes = re.findall(r'<atem:invoke name="([\w.]+)">', text)
+    target, first_invoke, _ = first_action(text)
+    if target == "user" and "<atem:function_calls>" not in text:  # a reply (it may quote call markup; it calls nothing)
         teacher = s.render(teacher_msgs, TOOL_SCHEMAS, AGENT_TEMPLATE)
         return {"raw": {"prompt": prompt[:-len(HEADER_START)], "completion": HEADER_START + text, "completion_ids": tokens},
                 "teacher_prompt": teacher[:-len(HEADER_START)]}, None, False
-    if invokes != {"recall"}:
+    if not invokes:
+        return None, "no reply to the user", False
+    if first_invoke != "recall" or set(invokes) != {"recall"}:
         return None, "another tool", False
     msg = s.chat(student_msgs, N_PREDICT["agent"], seed)  # the product's parse of the same sample (same seed)
     calls = msg.get("tool_calls") or []
-    queries = [json.loads(c["function"].get("arguments") or "{}").get("query", "") for c in calls]
-    if not calls or any(c["function"]["name"] != "recall" for c in calls) or not all(q_ and q_ in text for q_ in queries):
+    queries = [call_query(c) for c in calls]
+    # the parse must be the sample's own calls, in order (a raw sample can run on into repeated calls after them)
+    sampled = re.findall(r'<atem:invoke name="recall">\s*<atem:parameter name="query">(.*?)</atem:parameter>', text, re.S)
+    if not calls or None in queries or queries != sampled[:len(queries)]:
         return None, "chat parse differs from the sample", True
     msg = {"role": "assistant", "content": msg.get("content") or "", **({"reasoning_content": msg["reasoning_content"]}
            if msg.get("reasoning_content") else {}), "tool_calls": calls}  # the fields the product keeps (llm.py)
@@ -178,6 +181,18 @@ def agent_row(s, system, context, q, seed):
     teacher2 = s.render(teacher_msgs + [msg] + tools, TOOL_SCHEMAS, AGENT_TEMPLATE)
     return {"raw": {"prompt": prompt2[:-len(HEADER_START)], "completion": HEADER_START + text2, "completion_ids": tokens2},
             "teacher_prompt": teacher2[:-len(HEADER_START)]}, None, True
+
+
+def call_query(call):
+    """A parsed recall call's query, or None when the call is not a recall with a non-empty string query."""
+    if (call.get("function") or {}).get("name") != "recall":
+        return None
+    try:
+        args = json.loads(call["function"].get("arguments") or "{}")
+    except ValueError:
+        return None
+    q = args.get("query") if isinstance(args, dict) else None
+    return q if isinstance(q, str) and q.strip() else None
 
 
 def fact_questions(rewrites):
@@ -254,7 +269,7 @@ def main(argv=None):
     ap.add_argument("--stop-at", help="HH:MM JST: stop asking at this time and write the report (a slot window's end)")
     ap.add_argument("--out-dir", required=True)
     a = ap.parse_args(argv)
-    forms = [f for f in a.forms.split(",") if f]
+    forms = list(dict.fromkeys(f for f in a.forms.split(",") if f))
     if not set(forms) <= set(FORMS):
         ap.error(f"--forms: {sorted(set(forms) - set(FORMS))} not in {FORMS}")
     if set(forms) - {"cd_fact", "cd_fact_agent"} and not a.pools:
@@ -285,15 +300,34 @@ def main(argv=None):
     s = Sampler(root, student_lora(root, a.student_adapter))
     system = system_message(world)
     asked = [json.loads(x) for x in asked_path.read_text().splitlines() if x.strip()] if asked_path.exists() else []
+    written = {json.loads(x)["item_id"] for x in rows_path.read_text().splitlines() if x.strip()} if rows_path.exists() else set()
     done = {(x["form"], x["id"]) for x in asked}
     deadline = stop_time(a.stop_at)
-    stopped, t0 = False, time.time()
+    stopped, error, t0 = False, None, time.time()
+    try:
+        stopped = ask_all(a, s, items, done, written, asked, deadline, system, context, notes_lines, first,
+                          teacher_notes, student_sha, rows_path, asked_path)
+    except BaseException as e:  # the report is written whatever stops the run (a cut window, a server error)
+        error = f"{type(e).__name__}: {e}"[:300]
+        raise
+    finally:
+        report = write_report(a, forms, items, asked, stopped, error, t0, student_sha, teacher_notes, notes_path,
+                              rewrites, facts, pools, rows_path, report_path, root)
+    print(json.dumps({k: report[k] for k in ("planned", "asked", "kept", "stopped_at_deadline", "seconds_this_run")}))
+    return report
+
+
+def ask_all(a, s, items, done, written, asked, deadline, system, context, notes_lines, first, teacher_notes,
+            student_sha, rows_path, asked_path):
+    """Ask every item not yet asked or written, appending rows and asked lines as it goes; True when the deadline
+    stopped it."""
     for it in items:
-        if (it["form"], it["id"]) in done:
+        item_id = f"cd-{it['form']}-{it['id']}"
+        if (it["form"], it["id"]) in done or item_id in written:
             continue
         if deadline and time.time() >= deadline:
-            stopped = True
-            break
+            return True
+        s.lora = student_lora(s.root, a.student_adapter)  # by path every time: a server restart renumbers adapters
         seed = seed_for(a.world, a.day, it["form"], it["id"])
         t = time.time()
         if it["form"] == "cd_fact":
@@ -304,7 +338,7 @@ def main(argv=None):
                 "seed": seed, "s": round(time.time() - t, 2)}
         if row is not None:
             n, digest = teacher_notes["cd_fact" if it["form"] == "cd_fact" else "agent"]
-            full = {"item_id": f"cd-{it['form']}-{it['id']}", "kind": "context_distill", "form": it["form"],
+            full = {"item_id": item_id, "kind": "context_distill", "form": it["form"],
                     "user": it["question"], "raw": row["raw"], "after_recall": recalled,
                     "teacher": {"prompt": row["teacher_prompt"], "notes": n, "notes_sha256": digest},
                     "student": {"adapter": a.student_adapter, "adapter_sha256": student_sha, "epoch": None,
@@ -313,10 +347,16 @@ def main(argv=None):
                     "valid": True}
             with open(rows_path, "a") as f:
                 f.write(json.dumps(full, ensure_ascii=False) + "\n")
+            written.add(item_id)
         with open(asked_path, "a") as f:
             f.write(json.dumps(line) + "\n")
         asked.append(line)
+        done.add((it["form"], it["id"]))
+    return False
 
+
+def write_report(a, forms, items, asked, stopped, error, t0, student_sha, teacher_notes, notes_path, rewrites, facts,
+                 pools, rows_path, report_path, root):
     by_form = {}
     for x in asked:
         b = by_form.setdefault(x["form"], {"asked": 0, "kept": 0, "after_recall": 0, "dropped": {}})
@@ -327,6 +367,7 @@ def main(argv=None):
             b["dropped"][x["why"]] = b["dropped"].get(x["why"], 0) + 1
     report = {"world": a.world, "day": a.day, "server": root, "forms": forms, "per_form": a.per_form,
               "planned": len(items), "asked": len(asked), "kept": sum(x["kept"] for x in asked), "stopped_at_deadline": stopped,
+              "error": error,
               "seconds_this_run": round(time.time() - t0, 1), "by_form": by_form,
               "student": {"adapter": a.student_adapter, "adapter_sha256": student_sha,
                           "note": "v1 (lead 30 Oct 10:19): the adapter served for this day samples; nights train from "
@@ -340,7 +381,6 @@ def main(argv=None):
                          "fact_questions": len(facts), "pool_questions": len(pools)},
               "rows": str(rows_path)}
     report_path.write_text(json.dumps(report, indent=1) + "\n")
-    print(json.dumps({k: report[k] for k in ("planned", "asked", "kept", "stopped_at_deadline", "seconds_this_run")}))
     return report
 
 
