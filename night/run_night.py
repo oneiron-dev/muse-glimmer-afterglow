@@ -365,7 +365,7 @@ class Night:
                 "unknown_keys": a.unknown_keys, "leak_never_told": a.leak_never_told or a.unknown_keys > 0,
                 "self_check": a.self_check, "control_vector": a.control_vector, "control_vector_layers": a.control_vector_layers,
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
-                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
+                "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "protective_share_day": a.protective_share_day, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
                 "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows, "public_anchor_rows": a.public_anchor_rows,
                 "public_anchors": a.public_anchors, "train_seed": a.train_seed, "save_epochs": a.save_epochs, "kl_anchors": a.kl_anchors,
                 "cd_rows": a.cd_rows, "cd_weight": a.cd_weight}
@@ -580,6 +580,11 @@ class Night:
             extra += ["--drop-text-acks"]
         if self.args.repeat_forms:
             extra += ["--repeat-forms", *self.args.repeat_forms]
+        if self.args.protective_share_day:  # night-9 candidate (lead 30 Oct 22:17): protective rows at that day's shares
+            ref = self.runs / self.args.world / str(self.args.protective_share_day) / "night" / "train.jsonl"
+            if not ref.exists():
+                raise SystemExit(f"--protective-share-day {self.args.protective_share_day}: no {ref}")
+            extra += ["--protective-share-from", str(ref)]
         if self.args.abstain_share > 0:
             extra += ["--abstain-anchors", str(self.abstain_anchors_path()),
                       *([str(self.abstain_anchors_plain_path())] if self.args.abstain_plain else []),
@@ -904,6 +909,8 @@ def main():
     ap.add_argument("--own-note-in-block", action="store_true", help="unknown-key look-alike rows in the notes form hold the "
                     "user's own note for the key (night/unknown_key_rows.py)")
     ap.add_argument("--repeat-forms", nargs="*", default=[], help="FORM:N row weighting in build_train (e.g. agent_remember:3 agent_recall:3)")
+    ap.add_argument("--protective-share-day", type=int, help="keep ask-back, known-pair and agent rows at their share in that day's "
+                    "night of record (runs/<w>/<D>/night/train.jsonl) by repeating them; public and fact rows are not scaled")
     ap.add_argument("--train-header", action="store_true", help="train the answer header's recipient too (user channel on the chat endpoint)")
     ap.add_argument("--leak-never-told", action="store_true", help="leak-check the never-told probes too (on with --unknown-keys)")
     ap.add_argument("--seed-rewrites-from", help="reuse unchanged items' rewrites from this night folder (e.g. night)")
