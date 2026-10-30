@@ -1,0 +1,49 @@
+{
+ "rule": "a decline (product_abstention.abstained) whose text asks the user: (can you tell me|could you tell me|what (is|was) it|do you know|tell me)",
+ "arms": {
+  "w1-night6": {
+   "general": {
+    "base": {
+     "n": 200,
+     "declines": 109,
+     "ask_back": 36,
+     "search_web_calls": 0
+    },
+    "adapter": {
+     "n": 200,
+     "declines": 74,
+     "ask_back": 0,
+     "search_web_calls": 0
+    }
+   },
+   "known": {
+    "base": {
+     "n": 100,
+     "declines": 14,
+     "ask_back": 4,
+     "search_web_calls": 0
+    },
+    "adapter": {
+     "n": 100,
+     "declines": 9,
+     "ask_back": 0,
+     "search_web_calls": 0
+    }
+   },
+   "known2": {
+    "base": {
+     "n": 100,
+     "declines": 11,
+     "ask_back": 4,
+     "search_web_calls": 0
+    },
+    "adapter": {
+     "n": 100,
+     "declines": 6,
+     "ask_back": 0,
+     "search_web_calls": 0
+    }
+   }
+  }
+ }
+}
