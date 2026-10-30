@@ -83,7 +83,7 @@ class ServingRuleTest(unittest.TestCase):
     def test_a_held_night_is_never_served_and_the_line_says_so(self):
         # lead 30 Oct 09:53: w2 nights 5c and 6 held until the owner answers card META-ASKBACK-BOUND
         held = {"world": "w", "nights": [{"night": "2/night", "sha256": "bbbb"}, {"night": "2/night-2c", "sha256": "cccc"}],
-                "reason": "owner card META-ASKBACK-BOUND open", "who": "Meta lead", "since": "2026-10-30T09:53+09:00"}
+                "reason": "held for review until the same check is read", "ref": "owner card META-ASKBACK-BOUND", "who": "Meta lead", "since": "2026-10-30T09:53+09:00"}
         (self.runs / "serving" / "serving-rule.json").write_text(json.dumps({"checks": CHECKS, "held": [held], "set": "test"}))
         self.night(1)
         self.night(2)
@@ -91,19 +91,19 @@ class ServingRuleTest(unittest.TestCase):
         c = serving_choice("w", entries)
         self.assertEqual(c["entry"]["day"], 1)  # night 2 passes every check but is held
         self.assertEqual(c["held"], ["night 2"])
-        self.assertIn("Night 2 is held: owner card META-ASKBACK-BOUND open.", c["why"])
+        self.assertIn("Night 2: held for review until the same check is read.", c["why"])
         # a held variant stays held once promoted: matched by its adapter, not its folder
         d = self.runs / "w" / "2" / "night-2c"
         d.mkdir(parents=True)
         (d / "decision.json").write_text(json.dumps({"decision": "keep", "checks": {k: True for k in CHECKS}}))
         arm = {"id": 2, "world": "w", "day": 2, "path": "/a/w-d2-night-2c.gguf", "arm": "night-2c", "night_dir": "2/night-2c",
                "sha256": "cccc3"}
-        self.assertIn("Night 2 (night-2c) passes every check but is not served: held: owner card", serving_choice("w", entries + [arm])["why"])
+        self.assertIn("Night 2 (night-2c) passes every check but is not served: held for review", serving_choice("w", entries + [arm])["why"])
         promoted = dict(entries[1], sha256="cccc3")
         self.assertEqual(serving_choice("w", [entries[0], promoted])["entry"]["day"], 1)
         # every loaded night held: no update, and the line says why
         c = serving_choice("w", [entries[1]])
-        self.assertEqual(c["why"], "No update loaded. Night 2 is held: owner card META-ASKBACK-BOUND open.")
+        self.assertEqual(c["why"], "No update loaded. Night 2: held for review until the same check is read.")
 
     def test_a_check_not_measured_does_not_pass(self):
         d = self.runs / "w" / "1" / "night"
