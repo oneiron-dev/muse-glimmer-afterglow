@@ -641,7 +641,8 @@ class Night:
         and the known slices v1 + v2 in the day agent's form (eval/epoch_screen.py). Epoch 4 stays of record."""
         a, r = self.args, self.remote
         epochs = self.extra_epochs() + [a.epochs]
-        ggufs = [f"{r}/adapter-epoch{e}.gguf" for e in epochs[:-1]] + [f"{r}/adapter.gguf"]
+        extra = [x.split("=", 1) for x in (a.screen_extra or "").split(",") if x]  # other nights' adapters, same server run
+        ggufs = [f"{r}/adapter-epoch{e}.gguf" for e in epochs[:-1]] + [f"{r}/adapter.gguf"] + [g for _, g in extra]
         port = 18656
         server = ["fleet", "run", "--who", "meta-night", "--goal", f"afterglow night {a.world} day {a.day}: epoch screen server",
                   "--need", "cuda,gpu-4090", "--host", HOST["name"], "--mem", HOST["mem"],
@@ -665,7 +666,8 @@ class Night:
                     if proc.poll() is not None:
                         raise RuntimeError("epoch screen server exited before it was up")
                     time.sleep(3)
-            arms = ",".join(["base=-1"] + [f"epoch{e}={i}" for i, e in enumerate(epochs)])
+            arms = ",".join(["base=-1"] + [f"epoch{e}={i}" for i, e in enumerate(epochs)]
+                            + [f"{n}={len(epochs) + i}" for i, (n, _) in enumerate(extra)])
             # the base's and the epoch of record's facts come from the eval's arms A and B (same probes, prompt and decoding);
             # the base's known completions are cached per world (lead 30 Oct 10:11: ~12 min a night, same measure)
             ev = self.night / "eval"
@@ -840,6 +842,8 @@ def main():
     ap.add_argument("--epochs", type=int, default=4)
     ap.add_argument("--save-epochs", help="comma list of epochs to keep (e.g. 2,3,4): the extra ones are converted and scored by "
                     "the epoch screen (eval/epoch_screen.py; report only, lead 30 Oct 06:54); default: the last epoch only")
+    ap.add_argument("--screen-extra", help="name=remote GGUF,...: other adapters scored in the same epoch-screen server run "
+                    "(lead 30 Oct 11:16: the W=1 screen scores w3 night 6's epochs beside its own)")
     ap.add_argument("--kl-anchors", type=float, default=0.0, help="soft anchors (research round 2 #1; lead 30 Oct 08:03): "
                     "the KL weight W for plain Glimmer's own rows (anchors, agent and public anchors, the kl pools made by the "
                     "kl_pools step); fact and ask-back rows keep cross-entropy. 0 = off")

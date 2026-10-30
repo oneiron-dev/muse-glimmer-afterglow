@@ -17,11 +17,13 @@ second turn: the call and the product's empty recall result are in the prompt (g
 
 import argparse
 import hashlib
+import os
 import json
 import random
 import re
 import sys
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -145,37 +147,53 @@ def swapped_questions(rewrites, user_name, public_names, n, rng):
     return qs[:n]
 
 
-def make(root, system, items, lora, want, log, rows=None, report=None, on_item=None):
+def make(root, system, items, lora, want, log, rows=None, report=None, on_item=None, parallel=1):
     """Ask each item until each part has its wanted rows; rows/report carry earlier progress (a resumed run), and
-    on_item(row or None, report line) is called after every question (the cache appends there)."""
+    on_item(row or None, report line) is called after every question (the cache appends there). With parallel > 1 the
+    next items are asked together and taken in order, so the rows are the ones a sequential run keeps."""
     rows, report = rows or [], report or []
     kept = {}
     for x in report:
         if x["kept"]:
             kept[x["part"]] = kept.get(x["part"], 0) + 1
     asked = {x["id"] for x in report}
-    for it in items:
-        if it["id"] in asked:
-            continue
-        if kept.get(it["part"], 0) >= want.get(it["part"], 10**6):
-            continue
-        prompt, completion, tokens, ok, recalled = generate(root, system, it["question"], lora)
-        k, why = keep(it, completion) if ok else (False, "cut or inexact tokens")
-        line = {"id": it["id"], "part": it["part"], "kept": k, "why": why, "recalled": recalled, "completion": completion[-200:]}
-        report.append(line)
-        row = None
-        if k:
-            kept[it["part"]] = kept.get(it["part"], 0) + 1
-            row = {"item_id": f"kl-{it['id']}", "kind": "kl_anchor", "form": f"kl_{it['part']}", "user": it["question"],
-                   "assistant": completion, "after_recall": recalled, "raw": {"prompt": prompt[:-len("<|start|>assistant")],
-                                                    "completion": "<|start|>assistant" + completion, "completion_ids": tokens},
-                   "valid": True}
-            rows.append(row)
-        if on_item:
-            on_item(row, line)
-        if log and len(report) % 25 == 0:
-            print(json.dumps({"asked": len(report), "kept": kept}), flush=True)
+    todo = [it for it in items if it["id"] not in asked]
+    pool = ThreadPoolExecutor(max_workers=parallel) if parallel > 1 else None
+    while todo:
+        batch = []
+        while todo and len(batch) < parallel:
+            it = todo.pop(0)
+            if kept.get(it["part"], 0) < want.get(it["part"], 10**6):
+                batch.append(it)
+        ask = lambda it: generate(root, system, it["question"], lora)  # noqa: E731
+        got = list(pool.map(ask, batch)) if pool else [ask(it) for it in batch]
+        for it, (prompt, completion, tokens, ok, recalled) in zip(batch, got):
+            if kept.get(it["part"], 0) >= want.get(it["part"], 10**6):
+                continue  # filled by an earlier item of this batch
+            item_row = process(it, prompt, completion, tokens, ok, recalled, kept, rows, report)
+            if on_item:
+                on_item(*item_row)
+            if log and len(report) % 25 == 0:
+                print(json.dumps({"asked": len(report), "kept": kept}), flush=True)
+    if pool:
+        pool.shutdown()
     return rows, report
+
+
+def process(it, prompt, completion, tokens, ok, recalled, kept, rows, report):
+    """One asked item: its report line and, when kept, its row (kept counts and lists updated)."""
+    k, why = keep(it, completion) if ok else (False, "cut or inexact tokens")
+    line = {"id": it["id"], "part": it["part"], "kept": k, "why": why, "recalled": recalled, "completion": completion[-200:]}
+    report.append(line)
+    row = None
+    if k:
+        kept[it["part"]] = kept.get(it["part"], 0) + 1
+        row = {"item_id": f"kl-{it['id']}", "kind": "kl_anchor", "form": f"kl_{it['part']}", "user": it["question"],
+               "assistant": completion, "after_recall": recalled, "raw": {"prompt": prompt[:-len("<|start|>assistant")],
+                                                "completion": "<|start|>assistant" + completion, "completion_ids": tokens},
+               "valid": True}
+        rows.append(row)
+    return row, line
 
 
 def main():
@@ -186,9 +204,17 @@ def main():
     ap.add_argument("--swapped", type=int, default=48)
     ap.add_argument("--cache-dir", help="per-world cache of the fixed pools (made once, reused every night)")
     ap.add_argument("--fixed-only", action="store_true")
+    ap.add_argument("--parallel", type=int, default=int(os.environ.get("KL_POOL_PARALLEL", "1")),
+                    help="questions asked together (a dedicated base server with -np N; 1 on the serving box)")
+    ap.add_argument("--slot", type=int, default=int(os.environ.get("KL_POOL_SLOT", "1")),
+                    help="llama-server slot (1 on the serving box; -1 = any, for a dedicated base server)")
     ap.add_argument("--out", required=True)
     ap.add_argument("--report", required=True)
     args = ap.parse_args()
+    if args.slot < 0:
+        GREEDY.pop("id_slot", None)
+    else:
+        GREEDY["id_slot"] = args.slot
     root = args.server.rstrip("/")
     root = root[:-3] if root.endswith("/v1") else root
     with urllib.request.urlopen(f"{root}/lora-adapters", timeout=30) as resp:
@@ -217,7 +243,7 @@ def main():
             with open(asked_log, "a") as f:
                 f.write(json.dumps(line) + "\n")
 
-        fixed, rep = make(root, system, cands, lora, KEEP, True, prev_rows, prev_rep, on_item)
+        fixed, rep = make(root, system, cands, lora, KEEP, True, prev_rows, prev_rep, on_item, parallel=args.parallel)
         if done:
             done.write_text(json.dumps({"candidates_sha256": sha, "asked": len(rep), "rows": len(fixed)}) + "\n")
     fixed_report = {"asked": len(rep), "kept": {p: sum(1 for x in rep if x["kept"] and x["part"] == p) for p in KEEP},
@@ -227,7 +253,7 @@ def main():
     if args.rewrites and not args.fixed_only:
         names = [c["question"][len("Who is "):-1] for c in cands if c["part"] == "people" and c["question"].startswith("Who is ")]
         qs = swapped_questions(args.rewrites, world["persona"]["name"], names, args.swapped, random.Random(f"kl-swap:{args.world}"))
-        swapped, sw_report = make(root, system, qs, lora, {}, False)
+        swapped, sw_report = make(root, system, qs, lora, {}, False, parallel=args.parallel)
     Path(args.out).write_text("".join(json.dumps(r) + "\n" for r in fixed + swapped))
     summary = {"world": args.world, "candidates_sha256": sha, "fixed": {"rows": len(fixed), "kept": fixed_report["kept"], "complete": bool(done and done.exists())},
                "swapped": {"asked": len(sw_report), "rows": len(swapped)}, "rows": len(fixed) + len(swapped)}

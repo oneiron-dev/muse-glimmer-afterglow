@@ -168,7 +168,9 @@ def teacher_top_k(model, encoded, soft, cache_dir, report, write_report, teacher
 
 
 def kl_row(model, row, teach):
-    """KL(teacher || student) over the teacher's top-20 (renormalised), mean over the row's reply tokens."""
+    """KL(teacher || student) over the teacher's top-20, mean over the row's reply tokens: the teacher's 20 log-probs are
+    renormalised; the student's full-vocabulary log-probs are gathered at those 20 (not renormalised), so the term also
+    pushes the student's mass back inside the teacher's top-20 (a forward-KL approximation)."""
     import torch
     ids, labels = row
     idx, t_lp = teach[0].cuda().long(), teach[1].cuda().float()
@@ -383,7 +385,9 @@ def main():
         report.setdefault("saved", []).append("final")
     train_s = time.time() - t_train
     if args.kl_weight > 0:
-        report["kl"] = {"weight": args.kl_weight, "rotate": args.kl_rotate, "soft_rows": sum(soft), "rotating_rows": len(rotating)}
+        report["kl"] = {"weight": args.kl_weight, "rotate": args.kl_rotate, "soft_rows": sum(soft), "rotating_rows": len(rotating),
+                        "formula": "forward KL over the teacher's top-20: teacher log-probs renormalised over its 20; student "
+                                   "full-vocabulary log-probs gathered at those 20, not renormalised"}
     report.update({"status": "ok", "steps": step, "planned_steps": total_steps, "train_s": round(train_s, 1),
                    "tokens_seen": tokens_seen, "tok_s": round(tokens_seen / train_s, 1),
                    "ended": time.strftime("%Y-%m-%dT%H:%M:%S%z")})
