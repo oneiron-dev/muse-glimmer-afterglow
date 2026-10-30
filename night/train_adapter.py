@@ -63,6 +63,11 @@ def render(tokenizer, messages):
                                          current_date=GENERATION_DATE)
 
 
+def has_teacher(row):
+    """A context-distillation row: its teacher reads its own prompt (row["teacher"]["prompt"])."""
+    return isinstance(row.get("teacher"), dict) and "prompt" in row["teacher"]
+
+
 def row_id(row):
     return row.get("id") or row.get("item_id")
 
@@ -202,6 +207,8 @@ def main():
     ap.add_argument("--max-steps", type=int, default=0, help="stop after this many optimizer steps (probe runs)")
     ap.add_argument("--seed", type=int, default=20261027)
     ap.add_argument("--no-save", action="store_true")
+    ap.add_argument("--cd-weight", type=float, default=None, help="context-distillation rows (row[\"teacher\"]): their KL weight "
+                    "(default: --kl-weight); with --kl-weight 0 only they are soft and every other row stays cross-entropy")
     ap.add_argument("--kl-weight", type=float, default=0.0, help="soft anchors: W x top-20 KL toward the adapter-off model "
                     "on plain Glimmer's own rows (0 = off: every row is cross-entropy)")
     ap.add_argument("--kl-rotate", type=int, default=80, help="fixed-pool soft rows (kl_obscure/known/people) per epoch")
@@ -264,35 +271,38 @@ def main():
 
     rows = [json.loads(line) for line in Path(args.train).read_text().splitlines() if line.strip()]
     encoded = [encode_row(tokenizer, r, args.max_len, args.train_header) for r in rows]
-    teach_enc = [teacher_encoding(tokenizer, r) if r.get("teacher") and e is not None else None for r, e in zip(rows, encoded)]
+    teach_enc = [teacher_encoding(tokenizer, r) if has_teacher(r) and e is not None else None for r, e in zip(rows, encoded)]
     teacher_dropped = [row_id(r) for r, e, t in zip(rows, encoded, teach_enc)
-                       if r.get("teacher") and e is not None and (t is None or not same_completion(e, t))]
+                       if has_teacher(r) and e is not None and (t is None or not same_completion(e, t))]
     too_long = [row_id(r) for r, e in zip(rows, encoded) if e is None]
     keep_j = [j for j, (r, e) in enumerate(zip(rows, encoded)) if e is not None and row_id(r) not in set(teacher_dropped)]
     rows, encoded, teach_enc = [rows[j] for j in keep_j], [encoded[j] for j in keep_j], [teach_enc[j] for j in keep_j]
-    soft = [args.kl_weight > 0 and soft_row(r) for r in rows]
+    cd_weight = args.kl_weight if args.cd_weight is None else args.cd_weight
+    # a context-distillation row (with "teacher") is soft at --cd-weight; the other soft forms at --kl-weight
+    soft = [(cd_weight > 0) if has_teacher(r) else (args.kl_weight > 0 and soft_row(r)) for r in rows]
+    weight = [cd_weight if has_teacher(r) else args.kl_weight for r in rows]
     bos = tokenizer.bos_token_id
     if bos is not None and encoded[0][0][0] != bos:
         raise SystemExit(f"first token {encoded[0][0][0]} is not BOS {bos}")
     teacher = {}
-    if args.kl_weight > 0:
+    if any(soft):
         teacher = teacher_top_k(model, encoded, soft, Path(args.kl_cache_dir) if args.kl_cache_dir else out_dir.parent / "kl-teacher-cache",
                                 report, write_report, {j: t for j, t in enumerate(teach_enc) if t is not None})
         # guard: the tail logits equal the full forward's at the same positions; the KL at init (LoRA B = 0) is the
         # teacher's mass outside its top-20 on rows read with the same prompt
-        j0 = next(j for j in teacher if not rows[j].get("teacher"))
+        j0 = next(iter(teacher))  # the tail check reads the student's own sequence, whatever the row
         pos0 = reply_positions(encoded[j0][1])
         with torch.no_grad():
             model.eval()
             diff = float((logits_at(model, encoded[j0][0], pos0) - logits_at(model, encoded[j0][0], pos0, tail=False)).abs().max())
-            init = [round(float(kl_row(model, encoded[j], teacher[j])), 4) for j in [j for j in teacher if not rows[j].get("teacher")][:3]]
+            init = [round(float(kl_row(model, encoded[j], teacher[j])), 4) for j in [j for j in teacher if not has_teacher(rows[j])][:3]]
             model.train()
         report["kl_check"] = {"tail_vs_full_max_abs": round(diff, 5), "kl_at_init": init}
         write_report()
         if diff > 0.05:
             raise SystemExit(f"tail logits differ from the full forward by {diff}: the KL positions do not line up")
     report["data"] = {"rows": len(rows), "soft_rows": sum(soft), "kl_rows_over_max_len": len(too_long),
-                      "cd_rows": sum(1 for r in rows if r.get("teacher")), "cd_rows_dropped_teacher": len(teacher_dropped), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
+                      "cd_rows": sum(1 for r in rows if has_teacher(r)), "cd_rows_dropped_teacher": len(teacher_dropped), "tokens_per_epoch": sum(len(i) for i, _ in encoded),
                       "loss_tokens_per_epoch": sum(sum(1 for x in lab if x != -100) for _, lab in encoded),
                       "max_row_tokens": max(len(i) for i, _ in encoded)}
     write_report()
@@ -334,7 +344,7 @@ def main():
                     for j in mb:
                         kl = kl_row(model, encoded[j], teacher[j])
                         kls.append(float(kl))
-                        loss = args.kl_weight * kl * (len(teacher[j][0]) / max(1, n_loss))
+                        loss = weight[j] * kl * (len(teacher[j][0]) / max(1, n_loss))
                         loss.backward()
                         loss_sum += float(loss)
                         tokens_seen += len(encoded[j][0])
@@ -384,8 +394,8 @@ def main():
         model.save_pretrained(str(out_dir / "final"))
         report.setdefault("saved", []).append("final")
     train_s = time.time() - t_train
-    if args.kl_weight > 0:
-        report["kl"] = {"weight": args.kl_weight, "rotate": args.kl_rotate, "soft_rows": sum(soft), "rotating_rows": len(rotating),
+    if any(soft):
+        report["kl"] = {"weight": args.kl_weight, "cd_weight": cd_weight, "rotate": args.kl_rotate, "soft_rows": sum(soft), "rotating_rows": len(rotating),
                         "formula": "forward KL over the teacher's top-20: teacher log-probs renormalised over its 20; student "
                                    "full-vocabulary log-probs gathered at those 20, not renormalised"}
     report.update({"status": "ok", "steps": step, "planned_steps": total_steps, "train_s": round(train_s, 1),
