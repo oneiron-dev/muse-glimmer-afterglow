@@ -367,7 +367,8 @@ class Night:
                 "gate_with_control_vector": a.gate_with_control_vector, "train_header": a.train_header, "agent_anchors": a.agent_anchors,
                 "drop_text_acks": a.drop_text_acks, "repeat_forms": a.repeat_forms, "own_note_in_block": a.own_note_in_block, "unknown_keys_ask_back": a.unknown_keys_ask_back,
                 "idk_rows": a.idk_rows, "lookup_rows": a.lookup_rows, "public_anchor_rows": a.public_anchor_rows,
-                "public_anchors": a.public_anchors, "train_seed": a.train_seed, "save_epochs": a.save_epochs, "kl_anchors": a.kl_anchors}
+                "public_anchors": a.public_anchors, "train_seed": a.train_seed, "save_epochs": a.save_epochs, "kl_anchors": a.kl_anchors,
+                "cd_rows": a.cd_rows, "cd_weight": a.cd_weight}
 
     def save(self):
         self.receipt_path.write_text(json.dumps(self.receipt, indent=1) + "\n")
@@ -565,6 +566,12 @@ class Night:
             extra_rows.append(str(self.night / "kl-pools.jsonl"))
             kp = json.loads((self.night / "kl-pools-report.json").read_text())
             self.receipt["kl_pools"] = {k: kp.get(k) for k in ("candidates_sha256", "fixed", "swapped", "rows")}
+        if self.args.cd_rows:  # context distillation (night/context_distill.py): soft rows read by the teacher with the notes
+            extra_rows.append(self.args.cd_rows)
+            rep_path = Path(self.args.cd_rows).with_name("cd-report.json")
+            self.receipt["cd_rows"] = {"file": self.args.cd_rows, "rows": sum(1 for _ in Path(self.args.cd_rows).read_text().splitlines()),
+                                       "weight": self.args.cd_weight, "sha256": hashlib.sha256(Path(self.args.cd_rows).read_bytes()).hexdigest(),
+                                       **({k: json.loads(rep_path.read_text()).get(k) for k in ("student", "by_form")} if rep_path.exists() else {})}
         extra = ["--extra", *extra_rows] if extra_rows else []
         if self.args.exclude_forms:
             extra += ["--exclude-forms", *self.args.exclude_forms]
@@ -605,7 +612,8 @@ class Night:
         run(["ssh", HOST["name"], f"mkdir -p {self.remote}"], log)
         rsync(str(self.night / "train.jsonl"), f"{HOST['name']}:{self.remote}/train.jsonl", log)
         r = self.remote
-        kl = f" --kl-weight {a.kl_anchors} --kl-cache-dir {HOST['work']}/kl-teacher-cache" if a.kl_anchors else ""
+        kl = (f" --kl-weight {a.kl_anchors} --kl-cache-dir {HOST['work']}/kl-teacher-cache" if a.kl_anchors or a.cd_rows else "") + \
+             (f" --cd-weight {a.cd_weight}" if a.cd_rows else "")
         cmd = (f"set -e; {HOST['python']} night/train_adapter.py --model-dir {HOST['model_dir']} --train {r}/train.jsonl "
                f"--out-dir {r}/adapter --rank {a.rank} --targets attn_mlp --epochs {a.epochs} --lr {a.lr} --save-epochs {a.save_epochs or a.epochs}"
                f"{f' --max-steps {a.max_steps}' if a.max_steps else ''}{' --train-header' if a.train_header else ''}"
@@ -617,7 +625,7 @@ class Night:
         for e in self.extra_epochs():  # the epoch screen's adapters, in the same booking; a failed one never stops the night
             cmd += (f"; ( LLAMA_CPP_DIR={HOST['llama_dir']} night/convert_adapter.sh {r}/adapter/epoch{e} {r}/adapter-epoch{e}.gguf "
                     f"{HOST['model_dir']} {HOST['python']} ) || echo 'epoch {e} convert failed'")
-        fleet_gpu(f"afterglow night {a.world} day {a.day}: train + convert", "75m" if a.kl_anchors else GPU_LIMIT["train"], cmd, log)
+        fleet_gpu(f"afterglow night {a.world} day {a.day}: train + convert", "90m" if a.cd_rows else "75m" if a.kl_anchors else GPU_LIMIT["train"], cmd, log)
         rsync(f"{HOST['name']}:{r}/adapter/train-report.json", str(self.night / "train-report.json"), log)
         rsync(f"{HOST['name']}:{r}/gguf-verify.json", str(self.night / "gguf-verify.json"), log)
         rsync(f"{HOST['name']}:{r}/adapter.gguf", str(self.night / "adapter.gguf"), log)
@@ -844,6 +852,9 @@ def main():
                     "the epoch screen (eval/epoch_screen.py; report only, lead 30 Oct 06:54); default: the last epoch only")
     ap.add_argument("--screen-extra", help="name=remote GGUF,...: other adapters scored in the same epoch-screen server run "
                     "(lead 30 Oct 11:16: the W=1 screen scores w3 night 6's epochs beside its own)")
+    ap.add_argument("--cd-rows", help="context-distillation rows (night/context_distill.py cd-rows.jsonl), trained as soft rows "
+                    "toward plain Glimmer reading the user's notes (lead 30 Oct 12:23: the cd screen on w3 day 6)")
+    ap.add_argument("--cd-weight", type=float, default=1.0, help="the KL weight of the --cd-rows rows")
     ap.add_argument("--kl-anchors", type=float, default=0.0, help="soft anchors (research round 2 #1; lead 30 Oct 08:03): "
                     "the KL weight W for plain Glimmer's own rows (anchors, agent and public anchors, the kl pools made by the "
                     "kl_pools step); fact and ask-back rows keep cross-entropy. 0 = off")

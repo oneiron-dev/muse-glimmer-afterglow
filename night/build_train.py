@@ -109,8 +109,10 @@ def main():
     out_rows = []
     for i, r in enumerate(rows + chosen_anchors):
         out_rows.append({"id": f"r{i:05d}", "item_id": r["item_id"], "form": r["form"],
-                         "messages": [{"role": "user", "content": r["user"]}, {"role": "assistant", "content": r["assistant"]}],
-                         **({"raw": r["raw"]} if r.get("raw") else {})})  # agent anchors: trained verbatim from the raw text
+                         "messages": [{"role": "user", "content": r["user"]}, {"role": "assistant", "content": r.get("assistant", "")}],
+                         **({"raw": r["raw"]} if r.get("raw") else {}),  # agent anchors: trained verbatim from the raw text
+                         **({"teacher": r["teacher"]} if isinstance(r.get("teacher"), dict) else {})})  # context distillation:
+        # the teacher's prompt (a rewrite's "teacher" is the name of the model that wrote it, a string, and is not kept)
     rng.shuffle(out_rows)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
