@@ -456,6 +456,14 @@ same.
 |---|---|---|---|---|---|---|---|---|
 | w2 night 6 (epoch 4) | passes | -0.5 (-8.5 to +7.5) | 29 → 29 | 103 → 99 (18) | 33 → 39 (53) | +3.5 | 17 → 14 | 3 |
 | w2 night 6, epoch 3 | fails (asks back) | -3.5 (-11.5 to +4.5) | 29 → 30 | 103 → 99 (18) | 33 → 61 (53) | -1.5 | 17 → 15 | 3 |
+| w3 night 6 (epoch 4) | fails (honesty, never-told) | -12.0 (-21.0 to -3.0) | 27 → 22 | 109 → 100 (19) | 38 → 8 (58) | -6.0 | 19 → 13 | 7 |
+| w4 night 6 (epoch 4) | fails (honesty, known) | -17.5 (-28.0 to -6.5) | 30 → 30 | 102 → 59 (18) | 23 → 5 (43) | -13.5 | 16 → 12 | 8 |
 
 On w2 the epoch-3 checkpoint, which scored better on the night's own fact and known checks, asks the user back 22
 times more than epoch 4 in the product form.
+
+w3 and w4 night 6 both stop asking back, and both guess instead. w3: wrong general answers 81 → 99 (37 made up, 0
+lying "I don't know"), and with the route on it answers 5 never-told probes it declined before. w4: wrong general
+answers 84 → 115 (55 made up), and on the known slices it declines questions base answers right: declines 23 → 92,
+right 102 → 59, 30 lying "I don't know". Both are rolled back of record (Meta night). Read 30 Oct 12:47-14:05 in one
+server run (mel 12:45:46), w3 then w4, each with its own base.
