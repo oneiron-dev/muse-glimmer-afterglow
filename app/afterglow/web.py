@@ -19,7 +19,7 @@ from pathlib import Path
 from . import paths, snapshot, thoughts
 from .night_checks import (abstention_gate, chat_checks, never_told_line, serving_choice, serving_rule,
                            unlinked_corrections)
-from .agent import DaySession, load_world, now_iso
+from .agent import NOTES_BACKENDS, DaySession, load_world, now_iso
 from .llm import GlimmerClient, GlimmerError
 
 WEB = Path(__file__).resolve().parents[1] / "web"
@@ -91,11 +91,11 @@ def worlds_summary(day):
 
 class App:
     def __init__(self, world, day, endpoint, date=None, reasoning="low", restore=True, decide_supersede=None,
-                 decide_adapter=None, decide_route=None, web_search=None, slot=0):
+                 decide_adapter=None, decide_route=None, web_search=None, slot=0, notes_backend="local"):
         self.client = GlimmerClient(endpoint, slot=slot)
         self.session = DaySession(world, day, self.client, date=date, reasoning=reasoning,
                                   decide_supersede=decide_supersede, decide_adapter=decide_adapter,
-                                  decide_route=decide_route, web_search=web_search)
+                                  decide_route=decide_route, web_search=web_search, notes_backend=notes_backend)
         self.lock = threading.Lock()
         self.snapshot_status = {"state": "idle"}
         if restore:
@@ -163,6 +163,7 @@ class App:
                                        "replies": len(replies)},
             "server": {"endpoint": self.client.endpoint, "healthy": healthy, "adapter": adapter},
             "notes": s.notes.all(include_superseded=True),
+            "notes_backend": s.notes_backend,
             "history": history,
             "snapshot": self.snapshot_status,
             "night": self.night_summary(),
@@ -332,13 +333,17 @@ def main():
     ap.add_argument("--decide-route", action=argparse.BooleanOptionalAction, default=None,
                     help="force the route decision at recall time on or off (default: the serving notes, "
                          "runs/serving/serving-rule.json route_decision)")
+    ap.add_argument("--notes-backend", default="local", choices=NOTES_BACKENDS,
+                    help="local (default): notes.json only; vault: notes.json plus the Oneiron vault, which answers "
+                         "the recall tool (needs the oneiron extra and the vault credentials, app/README.md)")
     a = ap.parse_args()
     Handler.app = App(a.world, a.day, a.endpoint, date=a.date, reasoning=a.reasoning, restore=not a.no_restore,
                       decide_supersede=a.decide_supersede, decide_adapter=a.decide_adapter,
-                      decide_route=a.decide_route, web_search=a.web_search, slot=a.slot)
+                      decide_route=a.decide_route, web_search=a.web_search, slot=a.slot, notes_backend=a.notes_backend)
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
     srv.daemon_threads = True
-    print(f"Afterglow: http://127.0.0.1:{a.port}  (world {a.world}, day {a.day}, Glimmer at {a.endpoint})", flush=True)
+    print(f"Afterglow: http://127.0.0.1:{a.port}  (world {a.world}, day {a.day}, Glimmer at {a.endpoint}, "
+          f"notes {a.notes_backend})", flush=True)
     try:
         srv.serve_forever()
     except KeyboardInterrupt:
