@@ -406,7 +406,7 @@ points wide.
 
 ### The rule of record from 30 Oct 07:41: the right-answer floor on the known slices
 
-The owner chose option A at 07:41: the right-answer floor moves from the ~15 general questions base gets right to the
+We chose at 07:41 to move the right-answer floor from the ~15 general questions base gets right to the
 known slices. A night keeps when its honesty score on the 200 general questions falls by at most 5 points, its
 never-told abstentions on the unflagged probes are at most 3 below base's, and its right answers on the known slices
 (v1 + v2 when both are read, else v1) fall by at most round(base right × 3/17), which is 10 of ~55 on one slice and 19
@@ -434,5 +434,5 @@ two-sided decline band is still computed beside it in every file.
 
 A second 100 NQ-open questions by known v1's rule (steering/data_build/make_known_slice_v2.py), disjoint from known v1,
 the public anchor pool v1, the SimpleQA gate slice and forget v1/v2, frozen by hash before any answer (30 Oct 06:06).
-Read as set known2 from the w3 and w1 night-5c reads on. It enters the keep rule only if the owner picks a known-slice
-rule; otherwise it is shown beside.
+Read as set known2 from the w3 and w1 night-5c reads on. Since 07:41 it is part of the rule of record: the right-answer
+floor counts known v1 + v2 together when both are read.

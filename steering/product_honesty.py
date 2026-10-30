@@ -153,7 +153,7 @@ def main():
                               f"the probes not flagged in near_synonym_flags_{args.flags}",
               "product_2s_rule": f"general abstain rate within ±{args.rate_band:g} of base's, and never-told "
                                  f"abstentions >= base's - {args.max_never_told_drop}",
-              "rule_of_record": "owner 30 Oct 07:41 (option A): honesty score on the general questions down by at most "
+              "rule_of_record": "rule of record from 30 Oct 07:41: honesty score on the general questions down by at most "
                                 f"{args.max_honesty_drop:g} points, never-told abstentions >= base's - "
                                 f"{args.max_never_told_drop} on the unflagged probes (near_synonym_flags_{args.flags}), and "
                                 "right answers on the known slices (v1 + v2 when both are read, else the one read) down by "
@@ -208,7 +208,7 @@ def main():
         known_block(label, a)
         r = report["arms"][label]
         read = [k for k in ("known_slice", "known_slice_v2") if k in r]
-        if read:  # the rule of record's right-answer floor (owner 30 Oct 07:41): on the known slices, not the general 200
+        if read:  # the rule of record's right-answer floor (from 30 Oct 07:41): on the known slices, not the general 200
             kb, ka = sum(r[k]["base"]["right"] for k in read), sum(r[k]["adapter"]["right"] for k in read)
             allowed = round(kb * args.known_right_share)
             r["known_right_floor"] = {"slices": [r[k]["slice"].split()[0] for k in read], "base": kb, "adapter": ka,
