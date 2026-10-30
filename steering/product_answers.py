@@ -71,7 +71,7 @@ server run."""
         (wdir / f"answers-{name}.jsonl").write_text("".join(json.dumps(
             {**{k: r[k] for k in ("arm", "set", "id", "answer", "truncated")},
              **dict(zip(("web_search_on", "tools_sha256"), tools_seen(r))),
-             **{k: r[k] for k in ("looked_it_up", "search_query", *SERVER_FIELDS, *DECIDE_FIELDS) if k in r}}) + "\n" for r in rows))
+             **{k: r[k] for k in ("looked_it_up", "search_query", "tool_names", *SERVER_FIELDS, *DECIDE_FIELDS) if k in r}}) + "\n" for r in rows))
 
 
 def server_identity(endpoint, host):
@@ -110,15 +110,17 @@ def load_rewrites(world):
     return [{"id": r["id"], "question": r["question"]} for r in map(json.loads, path.read_text().splitlines())]
 
 
-KNOWN = REPO / "eval" / "data" / "known_slice_v1.jsonl"
+KNOWN = {"known": REPO / "eval" / "data" / "known_slice_v1.jsonl", "known2": REPO / "eval" / "data" / "known_slice_v2.jsonl"}
 
 
-def load_known():
-    """The frozen known slice (set known: 100 easier public questions, NQ-open), checked against its manifest."""
-    manifest = json.loads(KNOWN.with_name("known_slice_v1.manifest.json").read_text())
-    if hashlib.sha256(KNOWN.read_bytes()).hexdigest() != manifest["sha256"]:
-        raise SystemExit(f"{KNOWN.name} changed since it was frozen")
-    return [{"id": r["id"], "question": r["question"]} for r in map(json.loads, KNOWN.read_text().splitlines())]
+def load_known(s="known"):
+    """A frozen known slice (set known: known_slice_v1, set known2: known_slice_v2; 100 easier public questions each,
+    NQ-open), checked against its manifest."""
+    path = KNOWN[s]
+    manifest = json.loads(path.with_name(path.stem + ".manifest.json").read_text())
+    if hashlib.sha256(path.read_bytes()).hexdigest() != manifest["sha256"]:
+        raise SystemExit(f"{path.name} changed since it was frozen")
+    return [{"id": r["id"], "question": r["question"]} for r in map(json.loads, path.read_text().splitlines())]
 
 
 DECIDE_CODE = ("app/afterglow/agent.py", "app/afterglow/tools.py", "decide/decider.py", "decide/prompts.py")
@@ -189,6 +191,8 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     truncated = rounds[-1].get("finish_reason") in ("length", "limit")
     if rec.get("route_decisions"):  # the route decision at recall time: which note it picked (none = ask the user)
         tools["route_decisions"] = rec["route_decisions"]
+    # every tool the model called, in order (a search_web call with search off is answered "unknown tool", still listed)
+    tools["tool_names"] = [tc.get("name") for tc in rec.get("tool_calls") or []]
     shutil.rmtree(scratch, ignore_errors=True)
     return ev.get("content") or "", truncated, ev.get("error"), tools, search
 
@@ -205,7 +209,7 @@ def main():
     ap.add_argument("--skip-base", action="store_true", help="do not ask the base again (its answers are in raw.jsonl)")
     ap.add_argument("--slot", type=int, default=1, help="server slot; run one process per slot (one call per slot)")
     ap.add_argument("--notes-day", type=int, default=2)
-    ap.add_argument("--sets", default="never_told,general", help="never_told, general, never_told_rewrites (held out), known (easier public slice)")
+    ap.add_argument("--sets", default="never_told,general", help="never_told, general, never_told_rewrites (held out), known / known2 (easier public slices v1 / v2)")
     ap.add_argument("--limit-general", type=int, default=100,
                     help="first N gate-slice questions in the frozen hash order (100 = a direction screen)")
     ap.add_argument("--general-from", type=int, default=0,
@@ -252,7 +256,7 @@ def main():
                 else:
                     print(json.dumps({"world": w, "arm": name, "skipped": f"no day-{day} adapter in the manifest"}), flush=True)
             items = ([{"id": it["id"], "question": it["question"]} for it in never_told.load(w)] if s == "never_told"
-                     else load_rewrites(w) if s == "never_told_rewrites" else load_known() if s == "known" else general)
+                     else load_rewrites(w) if s == "never_told_rewrites" else load_known(s) if s in KNOWN else general)
             if only:
                 items = [it for it in items if it["id"] in only]
             if s == "general" and args.general_adapters != "none" and not any(
