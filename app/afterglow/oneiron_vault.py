@@ -134,11 +134,12 @@ class OneironVault:
     def client_for(self, author):
         return self
 
-    def recall(self, query, limit=5, effort="light", deadline_ms=RECALL_DEADLINE_MS):
+    def recall(self, query, limit=5, effort="light", deadline_ms=RECALL_DEADLINE_MS, timeout=None):
         """vault.recall with an explicit deadline. The reply's retrieval_meta.partial is true when the vault stopped
-        before it finished: callers read that as "not finished" (recall_partial), never as nothing found."""
+        before it finished: callers read that as "not finished" (recall_partial), never as nothing found. `timeout`:
+        the client's wait (default: past a cold start); the live notes backend waits less and answers locally."""
         return self.facade("vault.recall", {"query": query, "effort": effort, "limit": limit, "deadline_ms": deadline_ms},
-                           timeout=max(WITNESS_TIMEOUT_S, deadline_ms / 1000 + 30))
+                           timeout=timeout or max(WITNESS_TIMEOUT_S, deadline_ms / 1000 + 30))
 
     def wake(self):
         """One small recall (limit 1, 1 s deadline): it returns once the engine is running, cold or not."""
@@ -182,8 +183,9 @@ class SpeakerVaults:
         at = occurred_at or time.time()
         return [self.by_author[a].witness_run(conversation_ref, a, texts, at) for a, texts in speaker_runs(messages)]
 
-    def recall(self, query, limit=5, effort="light", deadline_ms=RECALL_DEADLINE_MS):
-        return self.by_author["companion"].recall(query, limit=limit, effort=effort, deadline_ms=deadline_ms)
+    def recall(self, query, limit=5, effort="light", deadline_ms=RECALL_DEADLINE_MS, timeout=None):
+        return self.by_author["companion"].recall(query, limit=limit, effort=effort, deadline_ms=deadline_ms,
+                                                  timeout=timeout)
 
     def wake(self):
         return self.by_author["companion"].wake()

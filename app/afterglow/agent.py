@@ -157,7 +157,7 @@ class DaySession:
 
             self.notes = OneironNotes(self.notes, world, self.day, tag=vault_tag,
                                       witness_log=self.dir / LIVE_WITNESS_LOG)  # wakes the vault in the background
-        self._vault_wake_logged = False
+        self._wakes_logged = 0  # wake calls already in the day log
         seed = None
         if prev and (prev / "world_state.json").exists():
             seed = json.loads((prev / "world_state.json").read_text())
@@ -424,8 +424,10 @@ class DaySession:
             # every vault recall of this turn, timed (ms, outcome, items kept), and the day's vault error count so far
             rec["vault_recalls"] = self.notes.recalls[n_recalls:]
             rec["notes_errors"] = {"total": len(self.notes.errors), "new": self.notes.errors[n_errors:]}
-            if self.notes.wake["state"] != "waking" and not self._vault_wake_logged:  # once, on the turn it ended by
-                rec["vault_wake"], self._vault_wake_logged = self.notes.wake, True
+            if len(self.notes.wakes) > self._wakes_logged:  # wake calls that ended since the last turn (ms, outcome)
+                rec["vault_wakes"] = self.notes.wakes[self._wakes_logged:]
+                self._wakes_logged += len(rec["vault_wakes"])
+            rec["vault_state"] = self.notes.vault_state
             from .oneiron_vault import turn_messages
 
             if turn_messages(user_rec, rec):  # push_day skips a turn the live path sent into the same conversation
@@ -446,8 +448,9 @@ class DaySession:
             last = ev
         return last
 
-    def end_day(self):
-        """Export the day's notes (runs/<world>/<day>/notes.json) for the night job."""
+    def end_day(self, flush_timeout=None):
+        """Export the day's notes (runs/<world>/<day>/notes.json) for the night job. With the vault backend, first wait
+        for the queued witness runs (at most flush_timeout s; the rest keep sending, and push_day covers them)."""
         if hasattr(self.notes, "flush"):
-            self.notes.flush()
+            self.notes.flush(flush_timeout)
         return self.notes.export_day(self.dir / "notes.json", world=self.world, day=self.day)

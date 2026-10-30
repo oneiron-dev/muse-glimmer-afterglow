@@ -284,7 +284,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"started": True})
             if path == "/api/day/end":
                 with self.app.lock:
-                    notes = self.app.session.end_day()
+                    notes = self.app.session.end_day(flush_timeout=30)  # a slow vault never holds the page
                 return self._json({"notes": notes})
         except Exception as e:
             traceback.print_exc()
