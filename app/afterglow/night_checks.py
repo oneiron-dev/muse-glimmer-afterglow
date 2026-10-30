@@ -211,7 +211,8 @@ def serving_choice(world, entries):
     # a night the serving rule holds is never served, whatever its checks say, and the serving line says why
     held = {night_label(e): h for e in mine if (h := held_by(world, e, rule))}
     mine = [e for e in mine if night_label(e) not in held]
-    held_note = "".join(f" {label.capitalize()} is held: {h.get('reason')}." for label, h in held.items())
+    # the reason is plain words that say it is held ("held for review: ..."); the card name stays in "ref" for the logs
+    held_note = "".join(f" {label.capitalize()}: {h.get('reason')}." for label, h in held.items())
     failed, unmeasured = {}, {}
 
     def what(label):  # "failed the 'a' check and has no result yet for the 'b' check"
@@ -253,7 +254,7 @@ def serving_choice(world, entries):
 
 def held_by(world, e, rule):
     """The serving rule's hold on a loaded update, or None. "held": [{"world", "nights": [{"night": "<day>/<folder>",
-    "sha256": "<adapter sha256 or a prefix>"}], "reason", "who", "since"}]. A night with a sha256 is matched by its
+    "sha256": "<adapter sha256 or a prefix>"}], "reason" (plain words for the serving line), "ref", "who", "since"}]. A night with a sha256 is matched by its
     adapter, so a held variant stays held once it is promoted to the day's night of record; without one, by folder."""
     night, sha = e.get("night_dir") or f"{e['day']}/night", e.get("sha256") or ""
     for h in (rule or {}).get("held") or []:
@@ -277,7 +278,7 @@ def variants_note(world, entries, rule):
             continue
         h = held_by(world, e, rule)
         if h:
-            notes.append(f" {night_label(e).capitalize()} passes every check but is not served: held: {h.get('reason')}.")
+            notes.append(f" {night_label(e).capitalize()} passes every check but is not served: {h.get('reason')}.")
             continue
         night = paths.runs_root() / world / e["night_dir"]
         promo = next((d.get("promotion") for d in (read_json(night / "decision-product-2s.json"),
