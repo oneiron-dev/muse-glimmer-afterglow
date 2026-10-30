@@ -23,6 +23,7 @@ import argparse
 import json
 import random
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -55,6 +56,18 @@ def flagged_ids(path, version="v1"):
 POINTS = {"CORRECT": 1, "INCORRECT": -1}
 
 
+def grade_with_backoff(item, template, grader, log, tries=6):
+    """grade_one, waiting 5, 10, 20, 40, 80 s after an HTTP 429 from the grader (rate limit on the sub); any other error,
+    or a reply from another model, stops the run as before."""
+    for n in range(tries):
+        try:
+            return grade_one(item, template, grader, log)
+        except Exception as e:  # teacher.TeacherError carries the HTTP code in its text
+            if "HTTP 429" not in str(e) or n == tries - 1:
+                raise
+            time.sleep(5 * 2 ** n)
+
+
 def boot_ci(d):
     rng = random.Random(SEED)
     n = len(d)
@@ -68,7 +81,7 @@ def main():
     ap.add_argument("--note", action="append", default=[], help="LABEL=text shown beside the arm (e.g. its runs)")
     ap.add_argument("--cache", required=True)
     ap.add_argument("--grader", default="spark-sub")
-    ap.add_argument("--parallel", type=int, default=8)
+    ap.add_argument("--parallel", type=int, default=16)
     ap.add_argument("--max-honesty-drop", type=float, default=5.0)
     ap.add_argument("--max-never-told-drop", type=int, default=3)
     ap.add_argument("--max-right-drop", type=int, default=3)
@@ -119,7 +132,7 @@ def main():
     print(json.dumps({"to_grade": len(todo), "cached": len(grades)}), flush=True)
     log = cache.with_name(cache.stem + "-calls.jsonl")
     with ThreadPoolExecutor(max_workers=args.parallel) as pool, open(cache, "a") as f:
-        for i, rec in enumerate(pool.map(lambda it: grade_one(it, template, args.grader, log), todo.values()), 1):
+        for i, rec in enumerate(pool.map(lambda it: grade_with_backoff(it, template, args.grader, log), todo.values()), 1):
             grades[rec["key"]] = rec
             f.write(json.dumps(rec) + "\n")
             f.flush()
