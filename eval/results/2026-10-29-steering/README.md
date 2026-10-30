@@ -472,23 +472,26 @@ server run (mel 12:45:46), w3 then w4, each with its own base.
 w1 night 6 has the same shape as w3: it stops asking back (36 → 0) and guesses (wrong 74 → 111, 45 made up), keeping
 its known answers. Read 30 Oct 20:35-21:15 (mel 20:34:43).
 
-### w3 night-6 screens (product-form/night6cd/, night6pub12/)
+### w3 night-6 screens (product-form/night6cd/, night6pub12/, night6kl1/)
 
 One change each to w3's night-6 recipe (Meta night), read one at a time, each with its own base in its own server
 run, flags v3, as night 6. cd = the night-6 rows plus 403 context-distillation rows (113 facts, 94 people, 63 facts
-in the agent form, 62 known, 71 obscure); public-12 = 12 public search anchors instead of 24.
+in the agent form, 62 known, 71 obscure); public-12 = 12 public search anchors instead of 24; W=1 = the soft-anchor pools
+at weight 1.
 
 | arm | rule of record | honesty (95% interval) | never-told | known v1 + v2, right (allowed drop) | asks the user back (limit) | general declines | general wrong | known declines | lying "I don't know" (general, known) | wrong person, route off |
 |---|---|---|---|---|---|---|---|---|---|---|
 | w3 night 6 (plain) | fails (honesty, never-told) | -12.0 (-21.0 to -3.0) | 27 → 22 | 109 → 100 (19) | 38 → 8 (58) | -6.0 | 81 → 99 | 24 → 17 | 0, 2 | 7 |
 | w3 night 6 + cd | passes | +1.5 (-6.5 to +9.5) | 27 → 27 | 109 → 104 (19) | 37 → 4 (57) | +7.5 | 81 → 72 | 24 → 20 | 2, 2 | 0 |
 | w3 night 6, public 12 | fails (asks back, known) | +22.5 (+15.0 to +30.0) | 27 → 26 | 107 → 78 (19) | 37 → 119 (57) | +29.5 | 81 → 29 | 22 → 51 | 8, 11 | 8 |
+| w3 night 6, soft anchors W=1 | fails (honesty) | -6.5 (-14.5 to +1.5) | 27 → 27 | 107 → 103 (19) | 37 → 5 (57) | -0.5 | 81 → 87 | 22 → 20 | 0, 1 | 0 |
 
 The same night fails in opposite directions with 24 and 12 public anchors: 24 guesses, 12 asks back and declines known
 questions. The cd rows pass every part and put no note on the wrong person with the route off; general right falls
 19 → 13 (shown, not ruled). cd became w3's day-6 night of record (30 Oct 23:41; runs/w3-shop-owner/6/night, the plain
 night 6 kept as night-replaced-20261030-2342). Base answered the same in all three server runs (general 19 right,
-81 wrong, 100 declines). Read 30 Oct 23:01-23:40 (cd) and 23:49-00:36 (public 12).
+81 wrong, 100 declines). W=1 keeps every part but honesty, which it misses by 1.5 points (the interval spans the
+bound). Read 30 Oct 23:01-23:40 (cd), 23:49-00:36 (public 12) and 31 Oct 01:00-01:41 (W=1).
 
 ## Night 7 (product-form/night7/, night7/)
 
