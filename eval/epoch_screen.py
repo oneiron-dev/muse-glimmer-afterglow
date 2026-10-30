@@ -5,7 +5,10 @@ scale 0, one switched on per request), each arm scored on
       reasoning minimal, the answer forced into the user channel, greedy), scored by eval/scoring.py;
   (b) known slices v1 + v2 in the day agent's form: its system prompt and tools (search_web not offered), reasoning
       low, greedy, 400 tokens; the reply in the user channel is graded by gold match (normalised, any gold alias
-      inside the reply); a reply that declines (omniscience.says_abstain) is counted as declined. A first action that is a tool call is counted as "tool" (no second turn here).
+      inside the reply); a reply that declines (omniscience.says_abstain) is counted as declined. When the first action
+      is recall calls only, the product runs them and, on a general question, finds nothing: the calls (the server's
+      chat parse) and an empty result {"notes": []} per call go into the prompt and the second turn is graded (lead
+      30 Oct 11:16; counted as "recalled"). Any other first tool call is counted as "tool".
 Deterministic: no grader model. Each arm is compared with the base asked in the same server run.
 Faster, same measure (lead 30 Oct 10:11): --reuse-facts arm=score-file takes an arm's facts from the night's eval, which
 asks the same probes in the same form (the base = arm A, the epoch of record = arm B); --base-cache keeps the base's
@@ -82,6 +85,28 @@ def complete(server, prompt, n_predict, lora_list):
     return r.get("content", ""), r.get("stop_type") == "limit"
 
 
+def known_answer(server, system, question, prompt, lora_list):
+    """(completion, cut, recalled): the reply the product gets; a recall-only first action gets its second turn."""
+    comp, cut = complete(server, prompt, 400, lora_list)
+    if cut or set(re.findall(r'<atem:invoke name="([\w.]+)">', comp)) != {"recall"}:
+        return comp, cut, False
+    messages = [system, {"role": "user", "content": question}]
+    msg = post(server, "/v1/chat/completions", {"messages": messages, "tools": TOOL_SCHEMAS, "max_tokens": 400, "temperature": 0.0,
+                                                "top_k": 1, "seed": 20261014, "cache_prompt": False, "lora": lora_list,
+                                                "chat_template_kwargs": {"reasoning_strength": "low"}})["choices"][0]["message"]
+    calls = msg.get("tool_calls") or []
+    if not calls or any(c["function"]["name"] != "recall" for c in calls):
+        return comp, cut, False
+    msg = {"role": "assistant", "content": msg.get("content") or "", "tool_calls": calls,
+           **({"reasoning_content": msg["reasoning_content"]} if msg.get("reasoning_content") else {})}
+    tools = [{"role": "tool", "tool_call_id": c.get("id") or f"call_{i}", "name": "recall", "content": json.dumps({"notes": []})}
+             for i, c in enumerate(calls)]
+    p2 = post(server, "/apply-template", {"messages": messages + [msg] + tools, "tools": TOOL_SCHEMAS,
+                                          "chat_template_kwargs": {"reasoning_strength": "low"}})["prompt"]
+    comp2, cut2 = complete(server, p2, 400, lora_list)
+    return comp2, cut2, True
+
+
 def agent_reply(completion):
     """(outcome, reply): the first action after the self channel."""
     heads = re.findall(r"to=([\w.]+)<\|message\|>", completion)
@@ -114,7 +139,7 @@ def score_facts(probes, fg, facts_by_id):
 
 
 def base_cache_key(build, prompt):
-    return hashlib.sha256(json.dumps([build, prompt, 400, "greedy", 20261014]).encode()).hexdigest()
+    return hashlib.sha256(json.dumps([build, prompt, 400, "greedy", 20261014, "recall-second-turn"]).encode()).hexdigest()
 
 
 def main():
@@ -128,6 +153,7 @@ def main():
     ap.add_argument("--limit", type=int, help="first N items of each set (a smoke run)")
     ap.add_argument("--reuse-facts", default="", help="arm=eval score file,... (the facts from the night's eval)")
     ap.add_argument("--base-cache", help="directory of the per-world cache of the base's known completions")
+    ap.add_argument("--known-only", action="store_true", help="the known slices only (a re-score; facts not asked)")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     server = args.server.rstrip("/")
@@ -139,6 +165,7 @@ def main():
     first = world["persona"]["name"].split()[0]
     probes = [p for p in probes_for_day(read_jsonl(ROOT / "worlds" / args.world / "heldout" / "probes.jsonl"), facts_by_id, args.day)
               if p["kind"] in FACT_KINDS][:args.limit]
+    probes = [] if args.known_only else probes
     known = [{**k, "slice": name} for name in args.known.split(",") for k in read_jsonl(ROOT / "eval" / "data" / f"{name}.jsonl")[:args.limit]]
     system = system_message(world)
     fact_prompts = [fact_prompt(server, prompt_text(p, None, first)) for p in probes]
@@ -153,7 +180,8 @@ def main():
         cache_path = Path(args.base_cache) / f"{args.world}-base-known.jsonl"
         cache_path.parent.mkdir(parents=True, exist_ok=True)
         if cache_path.exists():
-            cache = {r["key"]: (r["completion"], r["cut"]) for r in map(json.loads, cache_path.read_text().splitlines()) if r}
+            cache = {r["key"]: (r["completion"], r["cut"], r.get("recalled", False))
+                     for r in map(json.loads, cache_path.read_text().splitlines()) if r}
     answers, how = {}, {}
     for name, arm_id in arms.items():
         lo = lora(len(loaded), arm_id)
@@ -163,29 +191,30 @@ def main():
         with ThreadPoolExecutor(max_workers=args.parallel) as pool:
             fg = (facts_from_eval(reuse[name], probes) if name in reuse else
                   list(pool.map(lambda pr: complete(server, pr[1], MAX_NEW_TOKENS.get(pr[0]["kind"], MAX_NEW_TOKENS["general"]), lo), zip(probes, fact_prompts))))
-            new = dict(zip(todo, pool.map(lambda i: complete(server, known_prompts[i], 400, lo), todo)))
+            new = dict(zip(todo, pool.map(lambda i: known_answer(server, system, known[i]["question"], known_prompts[i], lo), todo)))
         if cached:
             with open(cache_path, "a") as f:
-                for i, (comp, cut) in new.items():
-                    cache[keys[i]] = (comp, cut)
-                    f.write(json.dumps({"key": keys[i], "id": known[i]["id"], "completion": comp, "cut": cut}) + "\n")
+                for i, (comp, cut, rec) in new.items():
+                    cache[keys[i]] = (comp, cut, rec)
+                    f.write(json.dumps({"key": keys[i], "id": known[i]["id"], "completion": comp, "cut": cut, "recalled": rec}) + "\n")
             kg = [cache[k] for k in keys]
         else:
             kg = [new[i] for i in range(len(known_prompts))]
         how[name] = {"facts": f"from {reuse[name]}" if name in reuse else "asked",
                      "known": f"asked {len(todo)}, cached {len(known_prompts) - len(todo)}"}
-        fr = score_facts(probes, fg, facts_by_id)
+        fr = score_facts(probes, fg, facts_by_id) if probes else None
         ks, rows = {}, []
-        for k, (comp, cut) in zip(known, kg):
+        for k, (comp, cut, rec) in zip(known, kg):
             outcome, reply = agent_reply(comp)
             right = outcome == "reply" and not cut and gold_match(reply, k["gold"])
-            s = ks.setdefault(k["slice"], {"n": 0, "right": 0, "declined": 0, "tool": 0, "cut": 0})
+            s = ks.setdefault(k["slice"], {"n": 0, "right": 0, "declined": 0, "recalled": 0, "tool": 0, "cut": 0})
             s["n"] += 1
+            s["recalled"] += rec
             s["right"] += right
             s["declined"] += outcome == "reply" and not cut and says_abstain(reply)
             s["tool"] += outcome == "tool"
             s["cut"] += cut
-            rows.append({"id": k["id"], "right": right, "outcome": outcome, "reply": reply[:200]})
+            rows.append({"id": k["id"], "right": right, "outcome": outcome, "recalled": rec, "reply": reply[:200]})
         answers[name] = rows
         out["arms"][name] = {"lora_id": arm_id, "facts_notes_off": fr, "known": ks}
         print(json.dumps({"arm": name, **out["arms"][name]}), flush=True)
