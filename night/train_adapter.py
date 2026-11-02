@@ -397,6 +397,7 @@ def main():
         soft_order = [j for j in order if soft[j]]  # soft rows run one at a time (their logits are kept for the KL term),
         micro += [soft_order[i:i + args.batch_rows // 2] for i in range(0, len(soft_order), args.batch_rows // 2)]  # 8 per step
         rng.shuffle(micro)
+        form_kl = {}  # per soft form: [KL sum, rows] this epoch (logging only; lead 31 Oct 05:00)
         for k in range(0, len(micro), args.grad_accum):
             group = micro[k:k + args.grad_accum]
             n_loss = sum(sum(1 for x in encoded[j][1] if x != -100) for mb in group for j in mb)
@@ -406,6 +407,9 @@ def main():
                     for j in mb:
                         kl = kl_row(model, encoded[j], teacher[j])
                         kls.append(float(kl))
+                        acc = form_kl.setdefault(rows[j].get("form", "?"), [0.0, 0])
+                        acc[0] += kls[-1]
+                        acc[1] += 1
                         loss = weight[j] * kl * (len(teacher[j][0]) / max(1, n_loss))
                         loss.backward()
                         loss_sum += float(loss)
@@ -441,7 +445,9 @@ def main():
                 break
         epoch_loss = [c["loss"] for c in curve if c["epoch"] == epoch]
         report.setdefault("epochs", []).append({"epoch": epoch, "mean_loss": round(sum(epoch_loss) / max(1, len(epoch_loss)), 4),
-                                                "steps": step, "elapsed_s": round(time.time() - t_train, 1)})
+                                                "steps": step, "elapsed_s": round(time.time() - t_train, 1),
+                                                **({"kl_by_form": {f: {"mean": round(t / n, 4), "rows": n} for f, (t, n) in sorted(form_kl.items())}}
+                                                   if form_kl else {})})
         if epoch in save_epochs and not args.no_save and not stop:
             model.save_pretrained(str(out_dir / f"epoch{epoch}"))
             report.setdefault("saved", []).append(f"epoch{epoch}")

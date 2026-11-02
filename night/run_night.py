@@ -603,14 +603,19 @@ class Night:
             sv = json.loads((self.night / "superseded-values.json").read_text())
             self.receipt["superseded_value_filter"] = {k: sv[k] for k in ("superseded_notes", "rows_in", "rows_dropped", "dropped_per_source")}
         never_told = ["--never-told"] if self.args.leak_never_told or self.args.unknown_keys > 0 else []
+        # train.jsonl is the step's output (a rerun skips the step when it exists), so it appears only after both leak
+        # checks pass and the receipt holds them: a run stopped mid-step leaves train.jsonl.partial, never a train.jsonl
+        partial = clean.with_name(clean.name + ".partial")
         leak = subprocess.run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(raw),
-                               "--out", str(self.night / "leak-raw.json"), "--write-clean", str(clean), *never_told], cwd=ROOT)
-        run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(clean),
+                               "--out", str(self.night / "leak-raw.json"), "--write-clean", str(partial), *never_told], cwd=ROOT)
+        run([sys.executable, "night/leak_check.py", "--world", self.args.world, "--train", str(partial),
              "--out", str(self.night / "leak.json"), *never_told], log)
         raw_report = json.loads((self.night / "leak-raw.json").read_text())
         self.receipt["leak_check"] = {"raw_hits": raw_report["hits"], "dropped_rows": raw_report.get("dropped_rows", 0),
                                       "raw_exit": leak.returncode, "clean_passed": True}
-        self.receipt["train_set"] = {"rows": sum(1 for _ in clean.read_text().splitlines()), "sha256": sha256(clean)}
+        self.receipt["train_set"] = {"rows": sum(1 for _ in partial.read_text().splitlines()), "sha256": sha256(partial)}
+        self.save()
+        partial.replace(clean)
 
     def adapter_dir(self):
         return "final" if self.args.max_steps else f"epoch{self.args.epochs}"
