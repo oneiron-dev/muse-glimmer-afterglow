@@ -12,7 +12,7 @@ import sys
 
 root = sys.argv[1]
 out = {}
-for d in sorted(glob.glob(os.path.join(root, "series-*"))):
+for d in sorted(p for p in glob.glob(os.path.join(root, "series-*")) if os.path.isdir(p)):
     s = os.path.basename(d).split("-", 1)[1]
     rows = []
     for f in sorted(glob.glob(os.path.join(d, "night*.json")), key=lambda p: int(re.findall(r"\d+", os.path.basename(p))[0])):
