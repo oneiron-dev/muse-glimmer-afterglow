@@ -4,7 +4,7 @@ runs/<world>/<day>/daylog.jsonl  one record per turn: {"ts", "turn", "role", "co
                                  assistant records add "messages" (every assistant and tool message of the
                                  turn, as sent to the model), "tool_calls", "notes_written", timings.
 runs/<world>/<day>/notes.json    the notes (notes.py), seeded from the previous day's notes.
-runs/<world>/<day>/world_state.json  calendar and tasks.
+runs/<world>/<day>/world_state.json  calendar, tasks and email drafts.
 runs/<world>/<day>/vault-witness.jsonl  with the vault notes backend: one line per speaker run sent to the vault.
 
 The prompt has two parts. The system prompt (persona header, rules, tools) is the same for every day
@@ -90,7 +90,7 @@ How you work:
 - When the user names something (a device, room, channel, project, event), save what the name stands for, not only today's news about it: key "label printer name", value "Puffin".
 - The key says what the fact is to the user, in plain words ("build server name", not "afternoon location"). The value copies names, codes, numbers, paths and dates exactly as the user wrote them.
 - Before you answer a question about something the user told you before, use recall.
-- Use the calendar and tasks tools for the user's schedule and to-dos.
+- Use the calendar and tasks tools for the user's schedule and to-dos. When the user asks you to write an email, use email.draft: it saves a draft for the user to send, never sends it.
 - Answer in one to three short sentences, in plain words.
 - You keep the user's facts and procedures. You do not give advice about the user's health, mood or personality."""
 
