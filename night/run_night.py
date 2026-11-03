@@ -184,7 +184,7 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
               "learned_gate": bool(learned.get("ci95")) and learned["ci95"][0] > LEARNED_MIN_LOWER,
               "forgot_gate": bool(e["forgot"]) and e["forgot"]["ci95"][0] > -0.05,
               "tool_gate": bool(e["forgot"]) and not e["forgot"]["critical_tool_failures"]}
-    if e.get("content_channel"):  # the app's chat calls must get an answer in the user channel (>= 95%)
+    if e.get("content_channel"):  # gate v2 (lead 2026-11-03): the app's path (first try + its one retry) >= 95%
         checks["content_channel"] = e["content_channel"]["passed"]
     if e.get("tool_calls"):  # the day agent's tool calls: no more than 2 of 20 below the base
         checks["tool_calls"] = e["tool_calls"]["passed"]
@@ -248,7 +248,10 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
         ro = route_off["arms"]["adapter"]
         why += f"; disclosed: never-told with route off: {ro['abstain']}/{ro['n']} (wrong-person {ro['wrong_person']})"
     if e.get("content_channel"):
-        why += f"; content channel {e['content_channel']['content_ok']}/{e['content_channel']['n']}"
+        cc = e["content_channel"]
+        why += (f"; content channel final {cc.get('final_ok', cc.get('content_ok_after_retry', cc['content_ok']))}/"
+                f"{cc['n']} (first-try {cc.get('first_try_ok', cc['content_ok'])}/{cc['n']}, "
+                f"gate {cc.get('gate_mode', 'first-try (legacy file)')})")
     if e.get("tool_calls"):
         c = e["tool_calls"]["counts"]
         why += f"; tool calls {c['base']['right']} -> {c['adapter']['right']} of {c['adapter']['n']}"
@@ -272,6 +275,15 @@ def decide(e, verify, leak_passed, gate_with_control_vector=False, abstention_ru
     if route_off:
         out["never_told_route_off"] = {a: {k: v for k, v in x.items() if k != "answered_ids"} for a, x in route_off["arms"].items()}
         out["never_told_route_off"]["source"] = route_off.get("source")
+    if e.get("content_channel"):  # gate v2 disclosure (lead 2026-11-03 18:4x): rule + reason in every decision it touches
+        cc = e["content_channel"]
+        out["content_channel_gate"] = {
+            "mode": cc.get("gate_mode", "first-try (legacy file)"),
+            "final_ok": cc.get("final_ok", cc.get("content_ok_after_retry", cc["content_ok"])), "n": cc["n"],
+            "first_try_ok": cc.get("first_try_ok", cc["content_ok"]), "min_rate": cc.get("min_rate", 0.95),
+            "reason": ("11/11 first-try fails across w3n9/w4e5/w4cdonly/w4idkc are finish=length at max_tokens 256 "
+                       "(reasoning+content share the budget); the app's forced answer-channel retry (n_predict 320) "
+                       "recovers 11/11, so the gate rules on final answers with first-try shown beside")}
     if honesty and abstention_rule != "honesty-3":  # honesty-3 (the 200-question right floor), shown beside
         out.setdefault("disclosed_checks", {})["abstention_honesty_3"] = honesty_three(honesty)
     if honesty and abstention_rule != "honesty-3k":
