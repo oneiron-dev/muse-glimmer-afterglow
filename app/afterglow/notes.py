@@ -252,7 +252,7 @@ COLD_START_MS = 20000  # a vault call this slow most likely waited for a cold st
 
 
 class OneironNotes(NotesStore):
-    """Notes in an Oneiron vault (bright-otter-4848), written through to a local JSON store.
+    """Notes in the configured Oneiron vault, written through to a local JSON store.
 
     Where the vault is the source, and where the local copy is:
     - Writes: every note goes to the local file at once (remember), and to the vault with its turn when the turn
