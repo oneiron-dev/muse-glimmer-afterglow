@@ -103,6 +103,19 @@ decoding (step A, 14 Oct). The w1 own-vs-stock split is a punctuation choice ins
 `:` second (p 0.41). The retrained arms take the target's first choice there; the stock arm takes its second.
 `tie_check.py` reads the target's top 5 at every split (`results/live/tie_check-<world>.json`).
 
+Every split of a retrained arm against stock is a near-tie in the target alone (the world's adapter at scale 1):
+
+| Split | Retrained arm's token (target p) | Stock arm's token (target p) |
+|---|---|---|
+| w1 t3 (own, pooled) | `"` 0.53, the target's first choice | `:` 0.41 |
+| w3 t11 (own) | ` would` 0.53, first choice | ` should` 0.47 |
+| w4 t2 (own) | ` fact` 0.33 | `.\n\n` 0.34, first choice |
+| w4 t9 (own, pooled) | `storage` 0.46, first choice | `dataset` 0.37 |
+| w4 t17 (own) | `Ph` 0.58, first choice | `role` 0.43 |
+
+In every case both tokens are the target's own top two, 1 to 15 points apart. In 6 of the 7 splits, the retrained
+arm takes the target's first choice.
+
 ## Files
 
 - `build_sequences.py`, `extract_taps.py`, `train_drafter.py`, `convert.sh`, `eval_live.py`, `run_live.sh`,
