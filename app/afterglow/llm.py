@@ -49,11 +49,13 @@ class GlimmerClient:
     """One llama-server. Every chat call pins a slot and, when an adapter is loaded, sends its scale per request
     (slot files and the global scale do not track adapters, so a per-request scale is the only safe form)."""
 
-    def __init__(self, endpoint=None, slot=USER_SLOT, lora_scale=1.0, adapter_path=None, timeout=600):
+    def __init__(self, endpoint=None, slot=USER_SLOT, lora_scale=1.0, adapter_path=None, timeout=600,
+                 adapter_scales=None):
         self.endpoint = (endpoint or default_endpoint()).rstrip("/")
         self.slot = slot
         self.lora_scale = lora_scale  # the scale for this world's adapter, when the server has it loaded
-        self.adapter_path = adapter_path  # this world's adapter on the server; every other adapter gets scale 0
+        self.adapter_path = adapter_path  # this world's adapter on the server
+        self.adapter_scales = dict(adapter_scales or {})  # optional second LoRA paths at their own nonzero scales
         self.timeout = timeout
         self._adapters = (0.0, [])
         # accepted steering dials (dials.py): [{"id", "axis", "toward", "scale", "night"}]; [] sends none
@@ -103,15 +105,18 @@ class GlimmerClient:
         return hits[0] if hits else None
 
     def lora_field(self, scale=None, loaded=None):
-        """Per-request scales for every loaded adapter: this world's at `scale` (default lora_scale), all others
-        0. None when the server has no adapter loaded. (Slot files and the global scale do not track adapters,
+        """Per-request scales for every loaded adapter: this world's at `scale` (default lora_scale), any
+        adapter_scales entries at their own scales, and every other adapter at 0. None when the server has no
+        adapter loaded. (Slot files and the global scale do not track adapters,
         so the scale is always sent per request.) Pass `loaded` to build several fields from one adapter list."""
         loaded = self.adapters() if loaded is None else loaded
         if not loaded:
             return None
         mine = self.world_adapter(loaded)
         scale = (self.lora_scale if scale is None else scale) or 0.0
-        return [{"id": a["id"], "scale": scale if mine and a["id"] == mine["id"] else 0.0} for a in loaded]
+        return [{"id": a["id"],
+                 "scale": scale if mine and a["id"] == mine["id"] else self.adapter_scales.get(a["path"], 0.0)}
+                for a in loaded]
 
     def scale_fields(self):
         """Every per-request scale a chat request carries: "lora" (lora_field) and, when the user accepted a dial,

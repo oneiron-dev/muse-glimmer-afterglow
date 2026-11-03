@@ -7,6 +7,8 @@ Sets (frozen): general = the SimpleQA gate slice questions, asked bare (no "say 
 never_told = the world's never-told probes. Arms: base (every adapter at 0) and each named adapter of the world
 from the serving manifest (R2 = its day-1 adapter, night2 = its day-2 adapter), at scale 1 by default;
 --adapter-scale overrides the adapter arms for a serving-scale screen, while the base stays at scale 0.
+--second-adapter-scale PATH:SCALE adds a second LoRA beside the night's adapter on adapter arms only; the base stays
+all-zero.
 Each question runs in a fresh session under a scratch runs root (AFTERGLOW_RUNS) seeded with the serving manifest
 and the world's notes from --notes-day, so no real day record is touched.
 
@@ -40,6 +42,17 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 sys.path.insert(0, str(REPO / "night"))
 from paths import runs_root  # noqa: E402
+
+
+def second_adapter_spec(value):
+    """Parse PATH:SCALE for an optional second LoRA carried only by adapter arms."""
+    path, sep, scale = value.rpartition(":")
+    if not sep or not path:
+        raise argparse.ArgumentTypeError("second adapter must be PATH:SCALE")
+    try:
+        return path, float(scale)
+    except ValueError as e:
+        raise argparse.ArgumentTypeError(f"invalid second-adapter scale {scale!r}") from e
 
 
 def manifest_adapter(real_runs, world, day, path_part=None):
@@ -151,7 +164,7 @@ def offered_search(query, max_results=None):
 
 
 def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, date, tmp, slot, web_search="off",
-        route=None, supersede=None):
+        route=None, supersede=None, second_adapter=None):
     """One fresh day-agent session; returns (answer, truncated, error, {"web_search_on", "tools_sha256"}, search)
     where search is None, or in the offered mode {"looked_it_up", "search_query"}."""
     scratch = Path(tempfile.mkdtemp(dir=tmp))
@@ -166,7 +179,8 @@ def ask(question, world, notes_file, manifest, endpoint, adapter_path, scale, da
     os.environ["AFTERGLOW_RUNS"] = str(scratch)
     from afterglow.agent import DaySession  # paths are read per call, so the scratch root applies
     from afterglow.llm import GlimmerClient
-    client = GlimmerClient(endpoint, slot=slot, lora_scale=scale)
+    adapter_scales = {second_adapter[0]: second_adapter[1]} if second_adapter and scale else {}
+    client = GlimmerClient(endpoint, slot=slot, lora_scale=scale, adapter_scales=adapter_scales)
     session = DaySession(world, 1, client, date=date, reasoning="low", temperature=0.0, web_search=web_search != "off",
                          decide_route=route, decide_supersede=supersede)
     tools = {"web_search_on": bool(session.web_search_on),
@@ -207,6 +221,8 @@ def main():
                     help="ARM:DAY[:PATH_PART] list from the serving manifest (e.g. night2b:2:2b); empty for none")
     ap.add_argument("--adapter-scale", type=float, default=1.0,
                     help="scale for every adapter arm (default 1.0); the base arm always stays at scale 0")
+    ap.add_argument("--second-adapter-scale", type=second_adapter_spec, metavar="PATH:SCALE",
+                    help="second LoRA carried by adapter arms at its own scale; the base arm stays all-zero")
     ap.add_argument("--general-adapters", default="night2",
                     help="adapter arms that also answer the general set; 'none' = the base only")
     ap.add_argument("--skip-base", action="store_true", help="do not ask the base again (its answers are in raw.jsonl)")
@@ -285,7 +301,8 @@ def main():
             tq = time.time()
             answer, truncated, error, tools, search = ask(it["question"], w, notes_file, manifest, args.endpoint, path,
                                                           scale, args.date, tmp, args.slot, web_search=args.web_search,
-                                                          route=onoff[args.route], supersede=onoff[args.supersede])
+                                                          route=onoff[args.route], supersede=onoff[args.supersede],
+                                                          second_adapter=args.second_adapter_scale)
             row = {"arm_name": arm, "set": s, "id": it["id"], "answer": answer, "truncated": truncated, "error": error,
                    "seconds": round(time.time() - tq, 2), **tools, **(search or {}),
                    **server_identity(args.endpoint, args.server_host)}

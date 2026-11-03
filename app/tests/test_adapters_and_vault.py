@@ -33,6 +33,17 @@ class AdapterTest(unittest.TestCase):
         self.assertEqual(c.lora_field(), [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 1.0}])
         self.assertEqual(c.lora_field(0.0), [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 0.0}])
 
+    def test_stacked_adapter_scales(self):
+        honesty = "/data/honesty-idk-v1.gguf"
+        loaded = LOADED + [{"id": 2, "path": honesty, "scale": 1.0}]
+        c = GlimmerClient("http://127.0.0.1:9", adapter_path="/data/runs/w2/1/night/adapter.gguf",
+                          adapter_scales={honesty: 0.5})
+        c.get = lambda path, timeout=10: loaded
+        self.assertEqual(c.lora_field(), [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 1.0},
+                                          {"id": 2, "scale": 0.5}])
+        self.assertEqual(c.lora_field(0.0), [{"id": 0, "scale": 0.0}, {"id": 1, "scale": 0.0},
+                                             {"id": 2, "scale": 0.5}])
+
     def test_adapter_missing_from_a_loaded_server_raises(self):
         with self.assertRaises(GlimmerError):
             client("/data/runs/w3/1/night/adapter.gguf").lora_field()
