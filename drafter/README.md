@@ -107,5 +107,7 @@ decoding (step A, 14 Oct). The w1 own-vs-stock split is a punctuation choice ins
 
 - `build_sequences.py`, `extract_taps.py`, `train_drafter.py`, `convert.sh`, `eval_live.py`, `run_live.sh`,
   `analyze_live.py`, `tie_check.py`: the pipeline.
+- `results/`: the live summary (`live-summary.json`), the stock check (`stock-day10.json`) and every drafter's
+  training report (held-out checks per epoch, step times). The drafter weights are not in git.
 - `run_taps.sh`, `run_stage1.sh`, `run_stage2.sh`, `run_all.sh`, `run_series.sh`, `run_after.sh`, `launch.sh`:
   the box jobs (`launch.sh` starts each one with setsid, so an ssh or session stop does not kill it).
