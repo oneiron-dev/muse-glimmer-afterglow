@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034); day 8 2026-10-30T20:14:28+09:00 by worlds/make_world.py --add-day 8 (teacher spark-sub, seed 20261035)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034); day 8 2026-10-30T20:14:28+09:00 by worlds/make_world.py --add-day 8 (teacher spark-sub, seed 20261035); day 9 2026-11-03T08:33:28+09:00 by worlds/make_world.py --add-day 9 (teacher spark-sub, seed 20261036)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -349,7 +349,7 @@
    ],
    "statement": "Kestrel's batteries come from Corvane Cells.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F140"
   },
   {
    "id": "F30",
@@ -372,7 +372,7 @@
    ],
    "statement": "The test rigs run on their own Wi-Fi network, KF-RIG-5G.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F141"
   },
   {
    "id": "F32",
@@ -485,7 +485,7 @@
    ],
    "statement": "Ines takes the R7 train to work most days.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F142"
   },
   {
    "id": "F42",
@@ -1588,6 +1588,162 @@
    "valid_from": 8,
    "superseded_by": null,
    "supersedes": "F26"
+  },
+  {
+   "id": "F130",
+   "key": "prototype inspection date",
+   "value": "3 December",
+   "accept": [
+    "3 december",
+    "december 3",
+    "3rd december",
+    "december 3rd",
+    "3rd of december"
+   ],
+   "statement": "The prototype inspection date is 3 December.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F131",
+   "key": "new avionics supplier",
+   "value": "Vetrel Systems",
+   "accept": [
+    "vetrel systems"
+   ],
+   "statement": "The new avionics supplier is Vetrel Systems.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F132",
+   "key": "backup battery model",
+   "value": "BX-93",
+   "accept": [
+    "bx-93"
+   ],
+   "statement": "The backup battery model is BX-93.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F133",
+   "key": "quality audit document",
+   "value": "QA-209-C",
+   "accept": [
+    "qa-209-c",
+    "209"
+   ],
+   "statement": "The quality audit document is QA-209-C.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F134",
+   "key": "prototype storage bay",
+   "value": "Bay Meridian South",
+   "accept": [
+    "bay meridian south"
+   ],
+   "statement": "The prototype storage bay is Bay Meridian South.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F135",
+   "key": "new test engineer",
+   "value": "Jorunn Halberg",
+   "accept": [
+    "jorunn halberg"
+   ],
+   "statement": "The new test engineer is Jorunn Halberg.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F136",
+   "key": "client demo date",
+   "value": "9 December",
+   "accept": [
+    "9 december",
+    "december 9",
+    "9th december",
+    "december 9th",
+    "9th of december"
+   ],
+   "statement": "The client demo date is 9 December.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F137",
+   "key": "freight forwarder name",
+   "value": "Vestmark Freight",
+   "accept": [
+    "vestmark freight"
+   ],
+   "statement": "The freight forwarder name is Vestmark Freight.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F138",
+   "key": "new assembly jig",
+   "value": "Framehold F-70",
+   "accept": [
+    "framehold f-70"
+   ],
+   "statement": "The new assembly jig is Framehold F-70.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F139",
+   "key": "design workshop city",
+   "value": "Skavholm",
+   "accept": [
+    "skavholm"
+   ],
+   "statement": "The design workshop city is Skavholm.",
+   "valid_from": 9,
+   "superseded_by": null
+  },
+  {
+   "id": "F140",
+   "key": "battery supplier",
+   "value": "Voltedge Packs",
+   "accept": [
+    "voltedge",
+    "voltedge packs"
+   ],
+   "statement": "Our battery supplier is now Voltedge Packs.",
+   "valid_from": 9,
+   "superseded_by": null,
+   "supersedes": "F29"
+  },
+  {
+   "id": "F141",
+   "key": "test-rig Wi-Fi network",
+   "value": "KF-RIG-6G",
+   "accept": [
+    "kf-rig-6g"
+   ],
+   "statement": "The test-rig Wi-Fi network is now KF-RIG-6G.",
+   "valid_from": 9,
+   "superseded_by": null,
+   "supersedes": "F31"
+  },
+  {
+   "id": "F142",
+   "key": "commute train line",
+   "value": "R9 Express",
+   "accept": [
+    "r9 express"
+   ],
+   "statement": "My commute train line is now R9 Express.",
+   "valid_from": 9,
+   "superseded_by": null,
+   "supersedes": "F41"
   }
  ],
  "preferences": [

@@ -1,0 +1,18 @@
+{"turn": 1, "role": "user", "content": "Morning, catching up between meetings. We'll inspect the prototype on 3 December, and Vetrel Systems is handling our avionics now.", "facts": ["F130", "F131"]}
+{"turn": 2, "role": "user", "content": "Thanks for holding the line. We slotted BX-93 in for the backup battery, and QA-209-C is the form the audit team asked for on quality.", "facts": ["F132", "F133"]}
+{"turn": 3, "role": "user", "content": "One more thing, we're keeping the prototype in Bay Meridian South, so please keep that in mind.", "facts": ["F134"]}
+{"turn": 4, "role": "user", "content": "Morning, could you add Jorunn Halberg to the testing rota? She just joined us. Also please hold 9 December open, we're demoing for the client then.", "facts": ["F135", "F136"]}
+{"turn": 5, "role": "user", "content": "What CNC machine model do we use for the frames?", "facts": [], "question": true}
+{"turn": 6, "role": "user", "content": "That was a bit long — just the value is fine, thanks!", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "correction", "refers_to_turn": 5}}
+{"turn": 7, "role": "user", "content": "Can you chase Vestmark Freight about the outbound pallets? And the Framehold F-70 is here to hold frames while we build, let's get it set up today.", "facts": ["F137", "F138"]}
+{"turn": 8, "role": "user", "content": "I'm off to Skavholm next week for the workshop to finalize designs, could you sort travel?", "facts": ["F139"]}
+{"turn": 9, "role": "user", "content": "Which conference were we planning to attend?", "facts": [], "question": true}
+{"turn": 10, "role": "user", "content": "What was our CNC machine nickname again?", "facts": [], "question": true}
+{"turn": 11, "role": "user", "content": "What's the Larkspur part-number prefix? Could you message it to the client?", "facts": [], "question": true}
+{"turn": 12, "role": "user", "content": "Please check with me before contacting the client, thanks!", "facts": [], "feedback": {"axis": "asks_first", "toward": "asks before acting", "polarity": "correction", "refers_to_turn": 11}}
+{"turn": 13, "role": "user", "content": "Can you remind me what inventory system we use?", "facts": [], "question": true}
+{"turn": 14, "role": "user", "content": "heads up, our battery supplier is now Voltedge Packs.", "facts": ["F140"], "supersedes": ["F29"]}
+{"turn": 15, "role": "user", "content": "change of plan: our test-rig Wi-Fi network is now KF-RIG-6G.", "facts": ["F141"], "supersedes": ["F31"]}
+{"turn": 16, "role": "user", "content": "heads up, my commute train line is now R9 Express.", "facts": ["F142"], "supersedes": ["F41"]}
+{"turn": 17, "role": "user", "content": "Who is my employer?", "facts": [], "question": true}
+{"turn": 18, "role": "user", "content": "Perfect, thanks — short and direct is great!", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "approval", "refers_to_turn": 17}}
