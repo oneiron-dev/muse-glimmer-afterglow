@@ -17,7 +17,8 @@ packages (`uv run --extra oneiron`).
 | `afterglow/agent.py` | The day agent: one user, one world, one day; tool calls (`remember`, `recall`, calendar, tasks); one day-log record per turn. |
 | `afterglow/notes.py` | The notes store: local JSON, or an Oneiron vault (`OneironNotes`) written through to the local file. |
 | `afterglow/snapshot.py` | The KV snapshot of each world's stable prompt prefix, with an identity (weights, adapter, template, prefix) that refuses a mismatch. |
-| `afterglow/oneiron_vault.py` | A paired-agent client for an Oneiron vault (`vault.witness`, `vault.recall`); `push-day` witnesses a recorded day. |
+| `afterglow/oneiron_vault.py` | A paired-agent client for an Oneiron vault (`vault.witness`, `vault.recall`, exact transcript reads); `push-day` witnesses a recorded day. |
+| `replay_vault_days.py` | Replays w1-w4 days 1-9 into a fresh vault, with isolated receipts, per-turn timings, resume, and exact read-back. |
 | `afterglow/thoughts.py` | Copies the night's trace records (the Dreamer's and the night job's calls) for the thought log. |
 | `afterglow/web.py` + `web/` | The local web app: the day (`/`), the morning report (`/report`), the overnight thought log (`/night`). |
 | `simulate_day.py` | Plays a world's day script through the real agent, so every night has a reproducible day. |
@@ -138,7 +139,31 @@ day page header shows them ("dials: concise +0.04").
 Credentials come only from the environment, for one command: `AFTERGLOW_ONEIRON_CREDENTIAL` (the paired agent's
 credential file), `AFTERGLOW_ONEIRON_PERSON_CREDENTIAL_TEMPLATE` (the user's PERSON-bound credential, `{world}` in
 the path) and, for a hosted vault behind Cloudflare Access, `AFTERGLOW_CF_ACCESS_CLIENT_ID` /
-`AFTERGLOW_CF_ACCESS_CLIENT_SECRET`. Run with `uv run --extra oneiron`.
+`AFTERGLOW_CF_ACCESS_CLIENT_SECRET`. `AFTERGLOW_ONEIRON_ORIGIN` overrides the vault base URL; without it, the
+credential's `origin` is used, as before. Run with `uv run --extra oneiron`.
+
+`replay_vault_days.py` replays all 36 recorded days in order. Normal person+agent replay requires the person
+credential template, so user runs cannot silently use the agent credential. The source runs root is read-only: daylogs are copied to
+`OUTPUT/runs`, and `push_day` writes fresh `oneiron.json` receipts there. `OUTPUT/replay.jsonl` records each attempted
+turn's write milliseconds and failures; `OUTPUT/report.json` keeps p50/p90, failure counts, verified-day counts, and
+receipt paths. Use the same output root for the one-day smoke and the full replay so the full run resumes the smoke's
+receipts:
+
+```bash
+cd app
+uv run --extra oneiron python replay_vault_days.py --output /tmp/vault-replay --world w2 --day 1 --verify
+uv run --extra oneiron python replay_vault_days.py --output /tmp/vault-replay
+```
+
+For BEL's pre-enrolment step only, `--agent-only` defaults to all four worlds' day 1, writes v1 conversations with the
+agent credential, and needs no person template. It refuses later days. Use `--verify` for the four exact read-backs.
+The same output root can later hold the person+agent replay: push_day archives each day-1 v1 receipt in `history`
+before writing v2. `report.json` separates `write_ms_by_speakers` for `agent` and `person+agent`.
+
+`--verify` reads the configured speaker lanes' paged conversation transcripts and requires every receipt speaker run to map to one
+transcript turn with exactly its stable message ids and byte-equal text. Suppressed or malformed reads are not a
+pass. A normal rerun resumes from per-run receipts. `--from-turn N` is only for a single explicit `--world`/`--day`
+whose receipts were lost; do not combine it with `--verify`, because skipped turns have no receipt turn ids to compare.
 
 ## Tests
 

@@ -15,6 +15,7 @@ Credentials come from the environment, never from this repo:
                                        "origin": ...}): Afterglow's own (companion) credential
   AFTERGLOW_ONEIRON_PERSON_CREDENTIAL_TEMPLATE  path of the user's PERSON-bound credential, with {world} in it
                                        (the vault names a turn's speaker by the credential that sent it)
+  AFTERGLOW_ONEIRON_ORIGIN             vault base URL; defaults to the credential's origin
   AFTERGLOW_CF_ACCESS_CLIENT_ID / _SECRET   the Access service token (hosted vaults)
 Needs the "oneiron" extra: uv run --extra oneiron ...
 """
@@ -24,6 +25,7 @@ import secrets
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -46,6 +48,14 @@ class VaultError(RuntimeError):
         self.status, self.body = status, body
 
 
+def vault_origin(document_origin=None, origin=None):
+    """The explicit origin, then AFTERGLOW_ONEIRON_ORIGIN, then the credential's origin (the old default)."""
+    value = origin or os.environ.get("AFTERGLOW_ONEIRON_ORIGIN") or document_origin
+    if not value:
+        raise RuntimeError("set AFTERGLOW_ONEIRON_ORIGIN or use a credential with an origin")
+    return value.rstrip("/")
+
+
 class OneironVault:
     def __init__(self, credential_path=None, origin=None):
         from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
@@ -59,7 +69,7 @@ class OneironVault:
         slip_hex, _, seed_hex = rest.rpartition(".")
         if prefix or not slip_hex or len(seed_hex) != 64:
             raise RuntimeError("the credential is not v2.cred.<slip>.<seed>")
-        self.origin = (origin or doc.get("origin")).rstrip("/")
+        self.origin = vault_origin(doc.get("origin"), origin)
         self.bearer = f"Bearer v2.slip.{slip_hex}"
         self.key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(seed_hex))
         self.slip_digest = blake3.blake3(bytes.fromhex(slip_hex)).digest()
@@ -79,10 +89,16 @@ class OneironVault:
         return json.dumps({"timestamp": timestamp, "nonce": nonce, "signature": self.key.sign(transcript).hex()},
                           separators=(",", ":"))
 
-    def _post(self, path, body, timeout=WITNESS_TIMEOUT_S):
-        headers = {"Content-Type": "application/json", "User-Agent": USER_AGENT, "Authorization": self.bearer,
+    def _headers(self, content=False):
+        headers = {"User-Agent": USER_AGENT, "Authorization": self.bearer,
                    "x-oneiron-binding": self.holder_proof(), **self.access}
-        req = urllib.request.Request(self.origin + path, data=json.dumps(body).encode(), headers=headers)
+        if content:
+            headers["Content-Type"] = "application/json"
+        return headers
+
+    def _post(self, path, body, timeout=WITNESS_TIMEOUT_S):
+        req = urllib.request.Request(self.origin + path, data=json.dumps(body).encode(),
+                                     headers=self._headers(content=True))
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 text = r.read()
@@ -90,11 +106,18 @@ class OneironVault:
         except urllib.error.HTTPError as e:
             raise VaultError(e.code, e.read().decode(errors="replace")) from e
 
-    def facade(self, verb, body, timeout=WITNESS_TIMEOUT_S):
-        """POST one facade verb. A 401 on the first call probes the vault's proof clock once (its authority
-        clock can trail the wall clock) and retries with the offset it finds."""
+    def _get(self, path, timeout=WITNESS_TIMEOUT_S):
+        req = urllib.request.Request(self.origin + path, headers=self._headers())
         try:
-            return self._post(f"/v1/core/facade/{verb}", body, timeout)
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            raise VaultError(e.code, e.read().decode(errors="replace")) from e
+
+    def _with_clock_retry(self, call):
+        """A 401 on the first call probes the vault's proof clock once and retries with the offset it finds."""
+        try:
+            return call()
         except VaultError as e:
             if e.status != 401 or self.probes >= 3:
                 raise
@@ -104,12 +127,16 @@ class OneironVault:
             for skew in (-60 * step, 60 * step):
                 self.skew = skew
                 try:
-                    return self._post(f"/v1/core/facade/{verb}", body, timeout)
+                    return call()
                 except VaultError as e:
                     if e.status != 401:
                         raise
         self.skew = 0
         raise VaultError(401, f"no holder proof within 10 min of the wall clock was accepted; first reply: {first.body[:200]}")
+
+    def facade(self, verb, body, timeout=WITNESS_TIMEOUT_S):
+        """POST one facade verb, with the same clock-skew retry as an exact transcript GET."""
+        return self._with_clock_retry(lambda: self._post(f"/v1/core/facade/{verb}", body, timeout))
 
     # --- the verbs the notes backend uses ---
     def witness_run(self, conversation_ref, author, texts, occurred_at, ids=None):
@@ -130,6 +157,14 @@ class OneironVault:
                 if not ids or attempt == WITNESS_TRIES or isinstance(e, urllib.error.HTTPError):
                     raise
                 print(f"  vault.witness timed out ({e}); resending the same message ids", file=sys.stderr, flush=True)
+
+    def transcript(self, conversation_ref, limit=200, after=None, timeout=WITNESS_TIMEOUT_S):
+        """One exact transcript page: turn ids, stable message ids and full text, with no recall ranking."""
+        query = {"limit": limit}
+        if after:
+            query["after"] = after
+        path = f"/v1/core/conversations/{conversation_ref}/transcript?{urllib.parse.urlencode(query)}"
+        return self._with_clock_retry(lambda: self._get(path, timeout))
 
     def client_for(self, author):
         return self
@@ -172,6 +207,9 @@ class SpeakerVaults:
         self.by_author = {"user": OneironVault(person_credential_path),
                           "companion": OneironVault(agent_credential_path)}
         self.origin = self.by_author["companion"].origin
+        if self.by_author["user"].origin != self.origin:
+            raise RuntimeError("agent and person credentials name different vault origins; "
+                               "set AFTERGLOW_ONEIRON_ORIGIN to one vault")
 
     def client_for(self, author):
         return self.by_author[author]
@@ -238,10 +276,11 @@ def run_message_ids(conversation, turn, run, count):
     return [stable_id(f"{conversation}:turn{turn}:run{run}:msg{j}") for j in range(count)]
 
 
-def push_day(world, day, vault=None, from_turn=None, person_credential=None):
+def push_day(world, day, vault=None, from_turn=None, person_credential=None, on_turn=None):
     """Witness a recorded day (runs/<world>/<day>/daylog.jsonl) into the vault: per turn, the user's message,
     one assistant message per saved note, and the answer. Progress goes to runs/<world>/<day>/oneiron.json after
-    every turn, and a rerun skips the turns recorded there (or starts at from_turn)."""
+    every turn, and a rerun skips the turns recorded there (or starts at from_turn). on_turn, if given, receives
+    one timing record after each attempted turn, including a failure record before its exception is re-raised."""
     import datetime as dt
 
     from . import paths
@@ -291,6 +330,8 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
         return int(dt.datetime.fromisoformat(r["ts"]).timestamp())
 
     for rec in records:
+        if rec["role"] not in ("user", "assistant"):
+            continue
         if rec["role"] == "user":
             if pending is not None:
                 print(f"  turn {pending['turn']}: user message without an answer, not witnessed", file=sys.stderr)
@@ -318,24 +359,37 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None):
                        "turn_short_ids": []}
             receipts.append(receipt)
             by_turn[rec["turn"]] = receipt
-        for i, (author, texts) in enumerate(runs):
-            if i < len(receipt["receipt_refs"]):
-                continue  # this run reached the vault on an earlier try
-            at = ts(user) if author == "user" else ts(rec)
-            ids = run_message_ids(conv, rec["turn"], i, len(texts))
-            try:
-                out = vault.client_for(author).witness_run(conv, author, texts, at, ids)
-            except VaultError as e:
-                # A run whose call failed after the vault committed it (its receipt never came back): the resend's
-                # stable ids are already in the vault under that earlier turn, so the run is witnessed.
-                if e.status != 400 or "already belongs to another turn" not in e.body:
-                    raise
-                print(f"  turn {rec['turn']} run {i}: already in the vault (committed before an earlier failure)",
-                      file=sys.stderr)
-                out = {"receipt_ref": "already-witnessed", "turn_short_id": None}
-            receipt["receipt_refs"].append(out.get("receipt_ref"))
-            receipt["turn_short_ids"].append(out.get("turn_short_id"))
-            save()  # after every run, so a failure in the next one never repeats this one
+        started = time.perf_counter()
+        i, author = -1, None
+        try:
+            for i, (author, texts) in enumerate(runs):
+                if i < len(receipt["receipt_refs"]):
+                    continue  # this run reached the vault on an earlier try
+                at = ts(user) if author == "user" else ts(rec)
+                ids = run_message_ids(conv, rec["turn"], i, len(texts))
+                try:
+                    out = vault.client_for(author).witness_run(conv, author, texts, at, ids)
+                except VaultError as e:
+                    # A run whose call failed after the vault committed it (its receipt never came back): the resend's
+                    # stable ids are already in the vault under that earlier turn, so the run is witnessed.
+                    if e.status != 400 or "already belongs to another turn" not in e.body:
+                        raise
+                    print(f"  turn {rec['turn']} run {i}: already in the vault (committed before an earlier failure)",
+                          file=sys.stderr)
+                    out = {"receipt_ref": "already-witnessed", "turn_short_id": None}
+                receipt["receipt_refs"].append(out.get("receipt_ref"))
+                receipt["turn_short_ids"].append(out.get("turn_short_id"))
+                save()  # after every run, so a failure in the next one never repeats this one
+        except Exception as e:
+            if on_turn:
+                on_turn({"world": world, "day": day, "turn": rec["turn"], "outcome": "error", "speakers": speakers,
+                         "ms": round((time.perf_counter() - started) * 1000), "messages": len(msgs),
+                         "runs": len(runs), "run": i, "author": author,
+                         "error": f"{type(e).__name__}: {e}"[:300]})
+            raise
+        if on_turn:
+            on_turn({"world": world, "day": day, "turn": rec["turn"], "outcome": "witnessed", "speakers": speakers,
+                     "ms": round((time.perf_counter() - started) * 1000), "messages": len(msgs), "runs": len(runs)})
         print(f"  turn {rec['turn']}: {len(msgs)} messages in {len(runs)} runs witnessed", file=sys.stderr, flush=True)
         pending = None
     return save()
