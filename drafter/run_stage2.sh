@@ -2,7 +2,7 @@
 # Stage 2 on the box: the final drafters with the recipe the pilot picked (LR, EPOCHS), each trained on days 1-9 and
 # checked teacher-forced on every world's held-out day 10; then each converts to the serving GGUF.
 #   own-<world>: that world's traffic only;  pooled: the four worlds' traffic together.
-# usage: LR=2e-5 EPOCHS=2 run_stage2.sh [own|pooled|all]
+# usage: LR=2e-5 EPOCHS=2 run_stage2.sh [own|pooled|all|pooled-only|own-<w>-only WORLD]
 set -euo pipefail
 W=/data/drafter
 PY=/opt/drafter/venv/bin/python
@@ -20,5 +20,6 @@ train() {  # NAME TRAIN_SPEC
 if [ "$WHICH" = own ] || [ "$WHICH" = all ]; then
   for w in w1-ines-varga w2-solo-developer w3-shop-owner w4-grad-student; do train own-${w%%-*} $w:1-9; done
 fi
-if [ "$WHICH" = pooled ] || [ "$WHICH" = all ]; then train pooled all:1-9; fi
+if [ "$WHICH" = pooled ] || [ "$WHICH" = all ] || [ "$WHICH" = pooled-only ]; then train pooled all:1-9; fi
+case $WHICH in own-*-only) train ${WHICH%-only} ${2:?WORLD}:1-9 ;; esac
 echo STAGE2-DONE

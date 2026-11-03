@@ -49,6 +49,7 @@ ap.add_argument("--warmup", type=float, default=0.1)
 ap.add_argument("--eval-every-epoch", action="store_true")
 ap.add_argument("--eval-only", action="store_true")
 ap.add_argument("--save", action="store_true", help="save the final weights (HF format) for conversion")
+ap.add_argument("--init", default="models/drafter-stock", help="drafter to start from (under W): stock, or last night's")
 ap.add_argument("--seed", type=int, default=20261103)
 args = ap.parse_args()
 W = args.workdir
@@ -91,7 +92,7 @@ def parse_set(spec):
 
 from transformers.models.muse_glimmer_assistant import MuseGlimmerAssistantModel  # noqa: E402
 
-model, info = MuseGlimmerAssistantModel.from_pretrained(f"{W}/models/drafter-stock", dtype=torch.bfloat16,
+model, info = MuseGlimmerAssistantModel.from_pretrained(f"{W}/{args.init}", dtype=torch.bfloat16,
                                                         output_loading_info=True)
 assert not any(info[k] for k in ("missing_keys", "unexpected_keys", "mismatched_keys")), info
 model.to(dev)
@@ -248,7 +249,7 @@ if args.eval_only:
 
 def train_one(lr, out):
     global model
-    model = MuseGlimmerAssistantModel.from_pretrained(f"{W}/models/drafter-stock", dtype=torch.bfloat16).to(dev)
+    model = MuseGlimmerAssistantModel.from_pretrained(f"{W}/{args.init}", dtype=torch.bfloat16).to(dev)
     params = list(model.parameters())
     master = [p.detach().float().cpu() for p in params]
     for m in master:
