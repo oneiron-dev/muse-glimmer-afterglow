@@ -93,13 +93,41 @@ class App:
     def __init__(self, world, day, endpoint, date=None, reasoning="low", restore=True, decide_supersede=None,
                  decide_adapter=None, decide_route=None, web_search=None, slot=0, notes_backend="local"):
         self.client = GlimmerClient(endpoint, slot=slot)
-        self.session = DaySession(world, day, self.client, date=date, reasoning=reasoning,
-                                  decide_supersede=decide_supersede, decide_adapter=decide_adapter,
-                                  decide_route=decide_route, web_search=web_search, notes_backend=notes_backend)
+        # every day this app opens (the start day, then the day switcher's) is built with the same options
+        self.session_options = dict(reasoning=reasoning, decide_supersede=decide_supersede,
+                                    decide_adapter=decide_adapter, decide_route=decide_route, web_search=web_search,
+                                    notes_backend=notes_backend)
+        self.session = DaySession(world, day, self.client, date=date, **self.session_options)
         self.lock = threading.Lock()
         self.snapshot_status = {"state": "idle"}
+        self.restore = restore
         if restore:
             threading.Thread(target=self.restore_snapshot, daemon=True).start()
+
+    def recorded_days(self):
+        """The day switcher's list: every person with the days already opened once (a day folder with session.json),
+        [{"world", "name", "days": [n, ...]}]."""
+        out = []
+        for root in sorted(p for p in paths.runs_root().iterdir() if p.is_dir() and not p.name.startswith(("_", "."))
+                           and p.name != "serving"):
+            days = sorted(int(d.name) for d in root.iterdir() if d.name.isdigit() and (d / "session.json").exists())
+            if days:
+                out.append({"world": root.name, "name": persona_name(root.name), "days": days})
+        return out
+
+    def open_day(self, world, day):
+        """The day switcher: this app now serves another recorded day (its chat, notes, dials and update), as a new
+        app process started on that day would; only a day with session.json, so no new day is made here. The
+        snapshot restore runs again when this app restores at start."""
+        day = int(day)
+        if not (paths.runs_root() / world / str(day) / "session.json").exists():
+            raise ValueError(f"no recorded day {day} for {world}")
+        with self.lock:
+            self.session = DaySession(world, day, self.client, **self.session_options)
+            self.snapshot_status = {"state": "idle"}
+        if self.restore:
+            threading.Thread(target=self.restore_snapshot, daemon=True).start()
+        return {"world": world, "day": day, "date": self.session.date}
 
     def restore_snapshot(self):
         with self.lock:
@@ -304,6 +332,9 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.urlparse(self.path).path
         if path == "/api/state":
             return self._json(self.app.state())
+        if path == "/api/days":
+            return self._json({"current": {"world": self.app.session.world, "day": self.app.session.day},
+                               "people": self.app.recorded_days()})
         if path == "/api/thoughts":
             q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
             available = thoughts.dates()
@@ -352,6 +383,14 @@ class Handler(BaseHTTPRequestHandler):
                 b = self._body()
                 return self._json(self.app.answer_night_proposal(b.get("old_id", ""), b.get("new_id", ""),
                                                                  b.get("answer", "")))
+            if path == "/api/day/open":
+                b = self._body()
+                if self.app.lock.locked():
+                    return self._json({"error": "Afterglow is busy; open the day again in a moment"}, 409)
+                try:
+                    return self._json(self.app.open_day(b.get("world") or self.app.session.world, b.get("day")))
+                except (ValueError, TypeError) as e:
+                    return self._json({"error": str(e)}, 400)
             if path == "/api/night-link/undo":
                 return self._json(self.app.undo_night_link(self._body().get("old_id", "")))
             if path == "/api/day/end":
