@@ -108,7 +108,7 @@ Gain of the night's drafter over stock on the next day (mean of the four worlds)
 
 - The gain over stock grows night by night. The cheap nightly update ends within 0.1-0.3 of a drafter trained on all
   nine days at once.
-- Each night's drafter is checked against the previous night's on the next day's turns. In 6 of 36 nights the new
+- Each night's drafter is checked against the previous night's on the next day's turns. In 5 of 36 nights the new
   drafter scored lower; the keep rule then keeps the previous drafter. The series here always continues from the
   latest night; `results/series-summary.json` marks each night's keep decision.
 
