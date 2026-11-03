@@ -382,13 +382,13 @@ def push_day(world, day, vault=None, from_turn=None, person_credential=None, on_
                 save()  # after every run, so a failure in the next one never repeats this one
         except Exception as e:
             if on_turn:
-                on_turn({"world": world, "day": day, "turn": rec["turn"], "outcome": "error",
+                on_turn({"world": world, "day": day, "turn": rec["turn"], "outcome": "error", "speakers": speakers,
                          "ms": round((time.perf_counter() - started) * 1000), "messages": len(msgs),
                          "runs": len(runs), "run": i, "author": author,
                          "error": f"{type(e).__name__}: {e}"[:300]})
             raise
         if on_turn:
-            on_turn({"world": world, "day": day, "turn": rec["turn"], "outcome": "witnessed",
+            on_turn({"world": world, "day": day, "turn": rec["turn"], "outcome": "witnessed", "speakers": speakers,
                      "ms": round((time.perf_counter() - started) * 1000), "messages": len(msgs), "runs": len(runs)})
         print(f"  turn {rec['turn']}: {len(msgs)} messages in {len(runs)} runs witnessed", file=sys.stderr, flush=True)
         pending = None

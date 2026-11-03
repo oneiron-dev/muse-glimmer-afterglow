@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from afterglow import paths  # noqa: E402
 from afterglow.notes import spread  # noqa: E402
-from afterglow.oneiron_vault import (SpeakerVaults, push_day, run_message_ids, speaker_runs,  # noqa: E402
+from afterglow.oneiron_vault import (OneironVault, SpeakerVaults, push_day, run_message_ids, speaker_runs,  # noqa: E402
                                      turn_messages)
 
 WORLD_NAMES = ("w1-ines-varga", "w2-solo-developer", "w3-shop-owner", "w4-grad-student")
@@ -75,6 +75,9 @@ def write_report(output):
         "days_failed": sum(e["outcome"] == "error" for e in days),
         "days": days,
         "write_ms": spread([e["ms"] for e in turns if e["outcome"] == "witnessed"]),
+        "write_ms_by_speakers": {speaker: spread([e["ms"] for e in turns if e["outcome"] == "witnessed"
+                                                   and e.get("speakers") == speaker])
+                                 for speaker in ("agent", "person+agent")},
         "failure_events": sum(e["outcome"] == "error" for e in turns),
         "unresolved_failed_turns": sum(e["outcome"] == "error" for e in latest_turn.values()),
         "readbacks": [e for e in events if e.get("kind") == "readback"],
@@ -103,10 +106,12 @@ def expected_runs(daylog, conversation):
     return expected
 
 
-def transcript_turns(vault, conversation):
-    """Read both lanes, with schema checks, bounded paging, and one message map per transcript turn."""
+def transcript_turns(vault, conversation, speakers):
+    """Read the agent lane (v1) or both person+agent lanes (v2), with bounded, schema-checked paging."""
     actual_turns, lanes = {}, {}
-    for author in ("companion", "user"):
+    readers = (("agent", vault),) if speakers == "agent" else (("companion", vault.by_author["companion"]),
+                                                                  ("user", vault.by_author["user"]))
+    for author, reader in readers:
         after, pages, suppressed, seen = None, 0, 0, set()
         while True:
             if pages >= 100:
@@ -115,7 +120,7 @@ def transcript_turns(vault, conversation):
                 raise RuntimeError(f"{author} transcript repeated cursor {after!r}")
             if after:
                 seen.add(after)
-            page = vault.by_author[author].transcript(conversation, limit=200, after=after) or {}
+            page = reader.transcript(conversation, limit=200, after=after) or {}
             if not isinstance(page, dict) or not isinstance(page.get("turns"), list):
                 raise RuntimeError(f"{author} transcript page has no turns list")
             pages += 1
@@ -152,7 +157,7 @@ def verify_day(day_dir, summary, vault):
                 for run, ref in enumerate(receipt["receipt_refs"])}
     if receipts.keys() != runs.keys():
         raise RuntimeError("read-back receipt/daylog speaker-run mismatch")
-    actual_turns, lanes = transcript_turns(vault, conversation)
+    actual_turns, lanes = transcript_turns(vault, conversation, summary["speakers"])
     expected = {}
     for messages in runs.values():
         for mid, text in messages.items():
@@ -213,7 +218,7 @@ def paths_overlap(a, b):
 
 
 def replay_days(worlds, days, runs_root, output, from_turn=None, person_template=None, vault_factory=None,
-                verify=False):
+                verify=False, agent_only=False):
     """Push selected days in order. vault_factory(world, day) is the offline test seam."""
     worlds, days = list(worlds), list(days)
     if from_turn is not None and (len(worlds) != 1 or len(days) != 1):
@@ -223,7 +228,9 @@ def replay_days(worlds, days, runs_root, output, from_turn=None, person_template
     runs_root, output = Path(runs_root).resolve(), Path(output).resolve()
     if paths_overlap(runs_root, output) or paths_overlap(runs_root, output / "runs"):
         raise ValueError("--output and its runs root must not overlap the source runs root")
-    if vault_factory is None and not person_template:
+    if agent_only and any(day != 1 for day in days):
+        raise ValueError("--agent-only is only for pre-enrolment day-1 pushes")
+    if vault_factory is None and not agent_only and not person_template:
         raise ValueError("set AFTERGLOW_ONEIRON_PERSON_CREDENTIAL_TEMPLATE for person+agent replay")
     output.mkdir(parents=True, exist_ok=True)
     log = output / "replay.jsonl"
@@ -249,7 +256,7 @@ def replay_days(worlds, days, runs_root, output, from_turn=None, person_template
                         raise RuntimeError(f"daylog copy differed from {source}")
                     os.replace(tmp, day_dir / "daylog.jsonl")
                     vault = (vault_factory(world, day) if vault_factory else
-                             SpeakerVaults(person_template.format(world=world)))
+                             OneironVault() if agent_only else SpeakerVaults(person_template.format(world=world)))
                     summary = push_day(world, day, vault=vault, from_turn=from_turn, on_turn=on_turn)
                     if verify:
                         try:
@@ -292,6 +299,8 @@ def main():
     ap.add_argument("--person-credential-template", default=os.environ.get("AFTERGLOW_ONEIRON_PERSON_CREDENTIAL_TEMPLATE"),
                     help="person credential path template containing {world} (default: the environment variable)")
     ap.add_argument("--verify", action="store_true", help="after each day, exact-check transcript turn/message ids and text")
+    ap.add_argument("--agent-only", action="store_true",
+                    help="pre-enrolment only: four day-1 v1 conversations with the agent credential (default day: 1)")
     a = ap.parse_args()
     world = WORLD_ALIASES.get(a.world, a.world)
     if a.world and world not in WORLD_NAMES:
@@ -301,11 +310,13 @@ def main():
     if a.verify and a.from_turn is not None:
         ap.error("--verify needs complete receipts; run without --from-turn")
     template = a.person_credential_template
-    if not template or "{world}" not in template:
+    if not a.agent_only and (not template or "{world}" not in template):
         ap.error("set AFTERGLOW_ONEIRON_PERSON_CREDENTIAL_TEMPLATE to a path containing {world}")
+    days = [a.day] if a.day else ([1] if a.agent_only else range(1, 10))
     try:
-        report = replay_days([world] if world else WORLD_NAMES, [a.day] if a.day else range(1, 10),
-                             a.runs_root, a.output, from_turn=a.from_turn, person_template=template, verify=a.verify)
+        report = replay_days([world] if world else WORLD_NAMES, days,
+                             a.runs_root, a.output, from_turn=a.from_turn, person_template=template, verify=a.verify,
+                             agent_only=a.agent_only)
     except Exception as e:
         print(f"ERROR {type(e).__name__}: {e}", file=sys.stderr)
         print(f"replay log: {Path(a.output).resolve() / 'replay.jsonl'}", file=sys.stderr)
