@@ -16,7 +16,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import paths, snapshot, thoughts
+from . import morning, paths, snapshot, thoughts
 from .night_checks import (abstention_gate, chat_checks, never_told_line, serving_choice, serving_rule,
                            unlinked_corrections)
 from .agent import NOTES_BACKENDS, DaySession, load_world, now_iso
@@ -166,17 +166,25 @@ class App:
         return doc
 
     def report(self, world=None, day=None):
-        """The morning report: runs/<world>/<day>/night/{eval,decision,receipt}.json, with the probe questions.
-        Default day: the latest one with a night eval."""
+        """The morning report: the night of record's {eval,decision,receipt}.json (runs/<world>/<day>/night, or the kept
+        arm the serving manifest names for that day, morning.night_dir), with the probe questions, every night of the
+        person (morning.nights), the fresh-200 confirmation and the drafter's speed. Default day: for the person of
+        this session, the latest night before today's day; for another person, the night their chat is served with;
+        else the latest one with a night eval."""
         world = world or self.session.world
         root = paths.runs_root() / world
         if day is None:
-            days = sorted((int(p.parent.parent.name) for p in root.glob("*/night/eval.json")
-                           if p.parent.parent.name.isdigit()), reverse=True)
+            days = sorted((int(p.name) for p in root.glob("*") if p.name.isdigit()
+                           and (root / morning.night_dir(world, p.name) / "eval.json").exists()), reverse=True)
             if not days:
                 return {"world": world, "missing": "no night has run for this world yet"}
-            day = days[0]
-        night = root / str(day) / "night"
+            kept = morning.served(world)
+            before_today = [d for d in days if d < self.session.day] if world == self.session.world else []
+            day = before_today[0] if before_today else kept["day"] if kept and kept["day"] in days else days[0]
+        rel = morning.night_dir(world, day)
+        night = root / rel
+        if not (night / "eval.json").exists() and rel != f"{day}/night":
+            rel, night = f"{day}/night", root / str(day) / "night"
         if not (night / "eval.json").exists():
             return {"world": world, "day": day, "missing": f"no eval.json in {night}"}
         load = lambda name: json.loads((night / name).read_text()) if (night / name).exists() else None
@@ -197,7 +205,9 @@ class App:
                 "night_links": self.night_links(world, day),
                 "steering": steering(world, day, night, load("eval.json")),
                 "chat_checks": chat_checks(night, load("eval.json"), load("decision.json")),
-                "questions": questions, "night_dir": str(night),
+                "questions": questions, "night_dir": str(night), "night_of_record": rel,
+                "served": morning.served(world), "nights": morning.nights(world),
+                "fresh": morning.fresh(load("decision.json")), "speed": morning.speed(),
                 "worlds": worlds_summary(day)}
 
     def state(self):
