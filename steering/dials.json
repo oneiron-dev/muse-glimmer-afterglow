@@ -1,6 +1,6 @@
 {
  "version": 1,
- "note": "Dial library for serving and night proposals. Scales are fractions of each layer's mean residual norm, added on layers 16-42 (llama-server --control-vector-layer-range 16 42). scale = the positive end's working scale; negative_scale = the negative end's tested scale, null where that end is not safe.",
+ "note": "Dial library for serving and night proposals. Scales are fractions of each layer's mean residual norm, added on layers 16-42 (llama-server --control-vector-layer-range 16 42). scale = the positive end's working scale; negative_scale = the negative end's tested scale, null where that end is not safe. positive_offered false = the positive end is served but never proposed.",
  "layer_range": [
   16,
   42
@@ -39,7 +39,9 @@
     42
    ],
    "negative_scale": -0.04,
-   "negative_evidence": "live 29 Oct: -0.04 on base, judge 8/8 more casual, coherence 4.5 (unsteered 4.9)"
+   "negative_evidence": "live 29 Oct: -0.04 on base, judge 8/8 more casual, coherence 4.5 (unsteered 4.9)",
+   "positive_offered": false,
+   "positive_evidence": "NOT OFFERED from 4 Nov: +0.04 with concise +0.04 on base cuts \"I don't know\" on the 200 SimpleQA gate questions from 116 to 85 (answers 41 that base declined); concise +0.04 alone gives 132, so the cut comes with formal; formal alone not measured (eval/results/2026-11-04-voice/presets, presets formal and brief)"
   },
   "decisive": {
    "safe": true,
@@ -53,8 +55,8 @@
     16,
     42
    ],
-   "negative_scale": -0.04,
-   "negative_evidence": "live 29 Oct: -0.04 on base, judge 15/16 halves more cautious (0.06 toward decisive), coherence 4.75; -0.06 on the R2 adapter damaged facts"
+   "negative_scale": null,
+   "negative_evidence": "live 29 Oct: -0.04 on base, judge 15/16 halves more cautious (0.06 toward decisive), coherence 4.75; -0.06 on the R2 adapter damaged facts; NOT OFFERED from 4 Nov: -0.04 on base cuts \"I don't know\" on the 200 SimpleQA gate questions from 116 to 11 (answers 107 that base declined; 47 of 200 truncated) (eval/results/2026-11-04-voice/presets, preset careful)"
   },
   "asks_first": {
    "safe": false,
