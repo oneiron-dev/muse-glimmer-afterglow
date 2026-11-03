@@ -106,10 +106,11 @@ class MorningReportTest(unittest.TestCase):
         self.assertEqual(r["night_of_record"], "3/night-3b")
         self.assertEqual(r["decision"]["decision"], "keep")
         self.assertEqual(r["fresh"]["change"], 16.0)
-        self.assertEqual([x["day"] for x in r["nights"]], [1, 2, 3, 4])
+        self.assertEqual([x["day"] for x in r["nights"]], [1, 2, 3])  # night 4 comes after this morning
 
     def test_report_for_a_day_shows_a_rollback_as_it_was(self):
         r = self.app(day=5).report("w", 2)
+        self.assertEqual([x["day"] for x in r["nights"]], [1, 2])  # the morning after night 2 lists no later night
         self.assertEqual(r["night_of_record"], "2/night")
         self.assertEqual(r["decision"]["decision"], "rollback")
         self.assertIsNone(r["fresh"])
