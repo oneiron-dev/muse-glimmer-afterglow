@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034); day 8 2026-10-30T20:14:28+09:00 by worlds/make_world.py --add-day 8 (teacher spark-sub, seed 20261035); day 9 2026-11-03T08:33:28+09:00 by worlds/make_world.py --add-day 9 (teacher spark-sub, seed 20261036); day 10 2026-11-03T13:46:39+09:00 by worlds/make_world.py --add-day 10 (teacher spark-sub, seed 20261037)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034); day 8 2026-10-30T20:14:28+09:00 by worlds/make_world.py --add-day 8 (teacher spark-sub, seed 20261035); day 9 2026-11-03T08:33:28+09:00 by worlds/make_world.py --add-day 9 (teacher spark-sub, seed 20261036); day 10 2026-11-03T13:46:39+09:00 by worlds/make_world.py --add-day 10 (teacher spark-sub, seed 20261037); day 11 2026-11-03T22:31:15+09:00 by worlds/make_world.py --add-day 11 (teacher spark-sub, seed 20261038)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -255,7 +255,7 @@
    ],
    "statement": "The Larkspur arm hinge bolts are torqued to 2.8 newton-metres.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F166"
   },
   {
    "id": "F22",
@@ -361,7 +361,7 @@
    ],
    "statement": "Larkspur uses the Corvane CV-22 battery pack.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F167"
   },
   {
    "id": "F31",
@@ -419,7 +419,7 @@
    ],
    "statement": "Kaito Mori is building a hinge fatigue rig for Larkspur.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F168"
   },
   {
    "id": "F36",
@@ -1907,6 +1907,161 @@
    "valid_from": 10,
    "superseded_by": null,
    "supersedes": "F37"
+  },
+  {
+   "id": "F156",
+   "key": "new packaging supplier",
+   "value": "Stralvik Packaging Co",
+   "accept": [
+    "stralvik packaging co"
+   ],
+   "statement": "Our new packaging supplier is Stralvik Packaging Co.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F157",
+   "key": "prototype motor model",
+   "value": "VX-87",
+   "accept": [
+    "vx-87"
+   ],
+   "statement": "The prototype motor model is VX-87.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F158",
+   "key": "new quality inspector",
+   "value": "Inga Vollheim",
+   "accept": [
+    "inga vollheim"
+   ],
+   "statement": "Our new quality inspector is Inga Vollheim.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F159",
+   "key": "field test date",
+   "value": "15 March",
+   "accept": [
+    "15 march",
+    "march 15",
+    "15th march",
+    "march 15th",
+    "15th of march"
+   ],
+   "statement": "The field test date is 15 March.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F160",
+   "key": "new assembly location",
+   "value": "Fjordvik Test Yard",
+   "accept": [
+    "fjordvik test yard"
+   ],
+   "statement": "Our new assembly location is Fjordvik Test Yard.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F161",
+   "key": "calibration report code",
+   "value": "CL-308-D",
+   "accept": [
+    "cl-308-d",
+    "308"
+   ],
+   "statement": "The calibration report code is CL-308-D.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F162",
+   "key": "regional delivery partner",
+   "value": "Nordvik Haulage",
+   "accept": [
+    "nordvik haulage"
+   ],
+   "statement": "Our regional delivery partner is Nordvik Haulage.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F163",
+   "key": "new torque sensor model",
+   "value": "TQ-94",
+   "accept": [
+    "tq-94"
+   ],
+   "statement": "The new torque sensor model is TQ-94.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F164",
+   "key": "new firmware engineer",
+   "value": "Jonas Dahlberg",
+   "accept": [
+    "jonas dahlberg"
+   ],
+   "statement": "Our new firmware engineer is Jonas Dahlberg.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F165",
+   "key": "client workshop city",
+   "value": "Svelvik",
+   "accept": [
+    "svelvik"
+   ],
+   "statement": "The client workshop city is Svelvik.",
+   "valid_from": 11,
+   "superseded_by": null
+  },
+  {
+   "id": "F166",
+   "key": "arm hinge bolt torque",
+   "value": "3.4 newton-metres",
+   "accept": [
+    "3.4nm",
+    "3.4 nm torque",
+    "3.4"
+   ],
+   "statement": "The arm hinge bolt torque is now 3.4 newton-metres.",
+   "valid_from": 11,
+   "superseded_by": null,
+   "supersedes": "F21"
+  },
+  {
+   "id": "F167",
+   "key": "battery pack model",
+   "value": "CV-27",
+   "accept": [
+    "cv-27",
+    "cv27"
+   ],
+   "statement": "The battery pack model is now CV-27.",
+   "valid_from": 11,
+   "superseded_by": null,
+   "supersedes": "F30"
+  },
+  {
+   "id": "F168",
+   "key": "intern project",
+   "value": "a rotor vibration stand",
+   "accept": [
+    "rotor vibration stand",
+    "rotor vib stand"
+   ],
+   "statement": "The intern project is now a rotor vibration stand.",
+   "valid_from": 11,
+   "superseded_by": null,
+   "supersedes": "F35"
   }
  ],
  "preferences": [

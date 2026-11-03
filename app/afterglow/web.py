@@ -16,7 +16,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import paths, snapshot, thoughts
+from . import morning, paths, snapshot, thoughts
 from .night_checks import (abstention_gate, chat_checks, never_told_line, serving_choice, serving_rule,
                            unlinked_corrections)
 from .agent import NOTES_BACKENDS, DaySession, load_world, now_iso
@@ -93,13 +93,42 @@ class App:
     def __init__(self, world, day, endpoint, date=None, reasoning="low", restore=True, decide_supersede=None,
                  decide_adapter=None, decide_route=None, web_search=None, slot=0, notes_backend="local"):
         self.client = GlimmerClient(endpoint, slot=slot)
-        self.session = DaySession(world, day, self.client, date=date, reasoning=reasoning,
-                                  decide_supersede=decide_supersede, decide_adapter=decide_adapter,
-                                  decide_route=decide_route, web_search=web_search, notes_backend=notes_backend)
+        # every day this app opens (the start day, then the day switcher's) is built with the same options
+        self.session_options = dict(reasoning=reasoning, decide_supersede=decide_supersede,
+                                    decide_adapter=decide_adapter, decide_route=decide_route, web_search=web_search,
+                                    notes_backend=notes_backend)
+        self.session = DaySession(world, day, self.client, date=date, **self.session_options)
         self.lock = threading.Lock()
         self.snapshot_status = {"state": "idle"}
+        self.restore = restore
         if restore:
             threading.Thread(target=self.restore_snapshot, daemon=True).start()
+
+    def recorded_days(self):
+        """The day switcher's list: every person with the days already opened once (a day folder with session.json),
+        [{"world", "name", "days": [n, ...]}]."""
+        out = []
+        for root in sorted(p for p in paths.runs_root().iterdir() if p.is_dir() and not p.name.startswith(("_", "."))
+                           and p.name != "serving"):
+            days = sorted(int(d.name) for d in root.iterdir() if d.name.isdigit() and (d / "session.json").exists())
+            if days:
+                out.append({"world": root.name, "name": persona_name(root.name), "days": days})
+        return out
+
+    def open_day(self, world, day):
+        """The day switcher: this app now serves another recorded day (its chat, notes, dials and update), as a new
+        app process started on that day would; only a day with session.json, so no new day is made here. The
+        snapshot restore runs again when this app restores at start."""
+        day = int(day)
+        # only a person and day the list holds: the names come from runs/, never straight from the request
+        if not any(p["world"] == world and day in p["days"] for p in self.recorded_days()):
+            raise ValueError(f"no recorded day {day} for {world}")
+        with self.lock:
+            self.session = DaySession(world, day, self.client, **self.session_options)
+            self.snapshot_status = {"state": "idle"}
+        if self.restore:
+            threading.Thread(target=self.restore_snapshot, daemon=True).start()
+        return {"world": world, "day": day, "date": self.session.date}
 
     def restore_snapshot(self):
         with self.lock:
@@ -166,17 +195,25 @@ class App:
         return doc
 
     def report(self, world=None, day=None):
-        """The morning report: runs/<world>/<day>/night/{eval,decision,receipt}.json, with the probe questions.
-        Default day: the latest one with a night eval."""
+        """The morning report: the night of record's {eval,decision,receipt}.json (runs/<world>/<day>/night, or the kept
+        arm the serving manifest names for that day, morning.night_dir), with the probe questions, every night of the
+        person (morning.nights), the fresh-200 confirmation and the drafter's speed. Default day: for the person of
+        this session, the latest night before today's day; for another person, the night their chat is served with;
+        else the latest one with a night eval."""
         world = world or self.session.world
         root = paths.runs_root() / world
         if day is None:
-            days = sorted((int(p.parent.parent.name) for p in root.glob("*/night/eval.json")
-                           if p.parent.parent.name.isdigit()), reverse=True)
+            days = sorted((int(p.name) for p in root.glob("*") if p.name.isdigit()
+                           and (root / morning.night_dir(world, p.name) / "eval.json").exists()), reverse=True)
             if not days:
                 return {"world": world, "missing": "no night has run for this world yet"}
-            day = days[0]
-        night = root / str(day) / "night"
+            kept = morning.served(world)
+            before_today = [d for d in days if d < self.session.day] if world == self.session.world else []
+            day = before_today[0] if before_today else kept["day"] if kept and kept["day"] in days else days[0]
+        rel = morning.night_dir(world, day)
+        night = root / rel
+        if not (night / "eval.json").exists() and rel != f"{day}/night":
+            rel, night = f"{day}/night", root / str(day) / "night"
         if not (night / "eval.json").exists():
             return {"world": world, "day": day, "missing": f"no eval.json in {night}"}
         load = lambda name: json.loads((night / name).read_text()) if (night / name).exists() else None
@@ -197,7 +234,9 @@ class App:
                 "night_links": self.night_links(world, day),
                 "steering": steering(world, day, night, load("eval.json")),
                 "chat_checks": chat_checks(night, load("eval.json"), load("decision.json")),
-                "questions": questions, "night_dir": str(night),
+                "questions": questions, "night_dir": str(night), "night_of_record": rel,
+                "served": morning.served(world), "nights": [n for n in morning.nights(world) if n["day"] <= int(day)],
+                "fresh": morning.fresh(load("decision.json")), "speed": morning.speed(),
                 "worlds": worlds_summary(day)}
 
     def state(self):
@@ -294,6 +333,9 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.urlparse(self.path).path
         if path == "/api/state":
             return self._json(self.app.state())
+        if path == "/api/days":
+            return self._json({"current": {"world": self.app.session.world, "day": self.app.session.day},
+                               "people": self.app.recorded_days()})
         if path == "/api/thoughts":
             q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
             available = thoughts.dates()
@@ -342,6 +384,14 @@ class Handler(BaseHTTPRequestHandler):
                 b = self._body()
                 return self._json(self.app.answer_night_proposal(b.get("old_id", ""), b.get("new_id", ""),
                                                                  b.get("answer", "")))
+            if path == "/api/day/open":
+                b = self._body()
+                if self.app.lock.locked():
+                    return self._json({"error": "Afterglow is busy; open the day again in a moment"}, 409)
+                try:
+                    return self._json(self.app.open_day(b.get("world") or self.app.session.world, b.get("day")))
+                except (ValueError, TypeError) as e:
+                    return self._json({"error": str(e)}, 400)
             if path == "/api/night-link/undo":
                 return self._json(self.app.undo_night_link(self._body().get("old_id", "")))
             if path == "/api/day/end":

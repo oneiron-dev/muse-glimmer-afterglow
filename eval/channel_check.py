@@ -58,6 +58,9 @@ def main():
     ap.add_argument("--n-general", type=int, default=10)
     ap.add_argument("--max-tokens", type=int, default=256)
     ap.add_argument("--min-rate", type=float, default=0.95)
+    ap.add_argument("--gate", choices=("as-served", "first-try"), default="as-served",
+                    help="as-served (gate v2, lead 2026-11-03): pass on >= min-rate FINAL answers (first try + the "
+                         "app's one forced answer-channel retry); first-try shows beside. first-try keeps the old rule.")
     ap.add_argument("--parallel", type=int, default=1)
     ap.add_argument("--seed", type=int, default=20261029)
     ap.add_argument("--label", default="")
@@ -92,13 +95,19 @@ def main():
         rows = list(pool.map(one, qs))
     ok = sum(r["ok"] for r in rows)
     ok_retry = sum(r["ok_after_retry"] for r in rows)
+    first_rate = round(ok / len(rows), 4) if rows else None
+    final_rate = round(ok_retry / len(rows), 4) if rows else None
+    gate_n = ok_retry if args.gate == "as-served" else ok
     rec = {"label": args.label, "world": args.world, "day": args.day, "lora": lora, "n": len(rows), "content_ok": ok,
-           "rate": round(ok / len(rows), 4) if rows else None, "min_rate": args.min_rate,
+           "rate": first_rate, "min_rate": args.min_rate,
            "content_ok_after_retry": ok_retry, "retry": "the app's one answer-channel retry, temperature 0 (report only)",
-           "passed": bool(rows) and ok / len(rows) >= args.min_rate,
+           "gate_mode": args.gate, "first_try_ok": ok, "first_try_rate": first_rate,
+           "final_ok": ok_retry, "final_rate": final_rate,
+           "passed": bool(rows) and gate_n / len(rows) >= args.min_rate,
            "rule": "non-empty content and finish 'stop' on chat-endpoint calls at reasoning_strength minimal", "replies": rows}
     Path(args.out).write_text(json.dumps(rec, indent=1) + "\n")
-    print(json.dumps({k: rec[k] for k in ("label", "world", "n", "content_ok", "content_ok_after_retry", "rate", "passed")}))
+    print(json.dumps({k: rec[k] for k in ("label", "world", "n", "content_ok", "content_ok_after_retry", "rate",
+                                                 "gate_mode", "final_ok", "final_rate", "passed")}))
 
 
 if __name__ == "__main__":

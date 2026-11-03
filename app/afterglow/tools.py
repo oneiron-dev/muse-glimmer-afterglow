@@ -1,6 +1,7 @@
-"""The agent's tools: notes (remember, recall) and two world tools from the synthetic world (calendar, tasks).
+"""The agent's tools: notes (remember, recall), two world tools from the synthetic world (calendar, tasks) and email
+drafts (email.draft: saved for the user to review; nothing is ever sent, no mail server, no network).
 
-World state lives in runs/<world>/<day>/world_state.json. A new day starts from the previous day's
+World state lives in runs/<world>/<day>/world_state.json (calendar, tasks, email drafts). A new day starts from the previous day's
 state, or from the "calendar" / "tasks" seed in world.json when there is none.
 """
 import json
@@ -54,6 +55,15 @@ TOOL_SCHEMAS = [
             "due": {"type": "string", "description": "YYYY-MM-DD, optional"}},
             "required": ["title"]}}},
     {"type": "function", "function": {
+        "name": "email.draft",
+        "description": "Write an email for the user as a draft. It is only saved for the user to read, change and "
+                       "send from their own mail app; it is never sent.",
+        "parameters": {"type": "object", "properties": {
+            "to": {"type": "string", "description": "the recipient, name or address, as the user wrote it"},
+            "subject": {"type": "string"},
+            "body": {"type": "string", "description": "the full email text"}},
+            "required": ["to", "subject", "body"]}}},
+    {"type": "function", "function": {
         "name": "tasks.complete",
         "description": "Mark a task done.",
         "parameters": {"type": "object", "properties": {
@@ -69,7 +79,8 @@ class WorldState:
             self.state = json.loads(self.path.read_text())
         else:
             seed = seed or {}
-            self.state = {"calendar": list(seed.get("calendar") or []), "tasks": list(seed.get("tasks") or [])}
+            self.state = {"calendar": list(seed.get("calendar") or []), "tasks": list(seed.get("tasks") or []),
+                          "emails": []}
             self.save()
 
     def save(self):
@@ -205,6 +216,15 @@ class ToolBox:
                 st["tasks"].append(t)
                 self.world.save()
                 return {"added": t}, []
+            if name == "email.draft":  # a draft only: stored in world_state.json, never sent anywhere
+                drafts = st.setdefault("emails", [])
+                m = {"id": next_id("M", drafts), "to": str(args["to"]), "subject": str(args["subject"]),
+                     "body": str(args["body"]), "status": "draft"}
+                if self.day is not None:
+                    m["day"] = self.day
+                drafts.append(m)
+                self.world.save()
+                return {"drafted": m, "sent": False}, []
             if name == "tasks.complete":
                 for t in st["tasks"]:
                     if t["id"] == args.get("task_id"):
