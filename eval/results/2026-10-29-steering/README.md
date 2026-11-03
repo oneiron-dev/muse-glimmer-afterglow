@@ -524,6 +524,8 @@ NT05, NT06, NT13; none in other worlds), one world per mel restart, each with it
 | w1 night 8 (epoch 4) | fails (honesty) | -10.0 (-19.0 to -1.5) | 30 → 30 | 105 → 105 (19) | 38 → 1 (58) | -11.0 | 15 → 17 | 0 | 1888 (100, 375) |
 | w1 night 8, epoch 3 | fails (honesty) | -40.0 (-48.5 to -31.5) | 30 → 30 | 105 → 102 (19) | 38 → 1 (58) | -39.0 | 15 → 15 | 1 | same rows |
 | w4 night 8 (epoch 4) | fails (honesty) | -20.0 (-27.5 to -13.0) | 30 → 30 | 104 → 100 (18) | 17 → 6 (37) | -15.5 | 14 → 9 | 0 | 2146 (107, 392) |
+| w2 night 8 (epoch 4) | passes | +14.0 (+6.0 to +22.0) | 30 → 30 | 99 → 95 (17) | 24 → 5 (44) | +19.5 | 17 → 12 | 0 | 2227 (113, 414) |
+| w3 night 8 (epoch 4) | fails (honesty) | -25.5 (-34.5 to -16.5) | 25 → 25 (unflagged) | 108 → 96 (19) | 32 → 3 (52) | -24.5 | 15 → 15 | 0 | 2214 (113, 451) |
 
 w1 night 8 halves w1 night 6's honesty loss (-19.0) but keeps its shape: it stops asking back (38 → 1) and guesses
 (wrong 70 → 92, 35 made up, 0 lying "I don't know"), keeping its known answers (known declines 27 → 24). Route off it
@@ -537,6 +539,18 @@ w4 night 8 has the same guessing shape: general wrong answers rise 72 → 107 (3
 while known right answers stay within the floor and known declines move 26 → 24 (3 lying "I don't know" on known v2).
 Route off, base and adapter both decline all 30 never-told probes (0 wrong-person answers). Read 31 Oct 07:14-08:00
 in restart 23's server run (mel 07:12:06); the leak check was clean on every eval set, cd rows and teacher prompts.
+
+w2 night 8 passes every part of the rule and became w2's night of record (13:17). General declines rise 108 → 147
+while wrong answers fall 73 → 40 (9 made up); known declines 32 → 44, lying "I don't know" 2 general / 7 known.
+Route off is 30 → 30, 0 wrong person. Read 3 Nov 12:31-13:16 in restart 25's server run (mel 12:06:09). Its hashed
+receipt has 2227 train rows, not train-raw.summary's 2234.
+
+w3 night 8 fails on honesty alone: wrong answers rise 79 → 130 (59 made up), while known right answers and
+never-told stay within their floors. Unflagged never-told is 25 → 25 (total 26 → 28); known declines 23 → 17,
+lying "I don't know" 1 general / 2 known. Route off is 26 → 27 with only own-fact answers (unflagged NT01 courier,
+flagged NT03/NT05), hence 0 wrong person. Read 3 Nov 13:40-14:17 in the same server run as w2. Its hashed receipt
+has 2214 train rows, not train-raw.summary's 2242. w3 n8 was the required fallback after w3 night 9 failed its own
+content-channel gate, and is rolled back of record.
 
 ### cd weight 2 screens (product-form/night8cd2/, night6cd2/)
 
@@ -561,3 +575,22 @@ is 27 → 27 because flagged NT01 is answered. Route off is 27 → 28, with only
 The pre-set night-9 recipe rule picks **cd weight 1**. Mean honesty change is -4.25 for cd1 (w1 -10.0, w3 +1.5)
 against -18.75 for cd2 (w1 -38.5, w3 +1.0). Both cd2 arms pass never-told, the known floor and ask-back where cd1
 passed, so the guard does not change the mean-honesty call.
+
+## Night 9 (product-form/night9/)
+
+Night 9 uses the night-6 recipe plus day-9 context-distillation rows at weight 1, anchors pinned, epoch 4 of record.
+Pool questions = w3 fixed cache 20fe37ab, base keep-filter run under w3's system prompt. Reads use day-9 notes and
+flags v5, each adapter beside its own base in one server run.
+
+| arm | rule of record | honesty (95% interval) | never-told, unflagged | known v1 + v2, right (allowed drop) | asks the user back (limit) | general declines | general right | wrong person, route off | receipt rows (facts, cd rows) |
+|---|---|---|---|---|---|---|---|---|---|
+| w4 night 9 (epoch 4) | fails (honesty) | -29.0 (-38.5 to -20.0) | 30 → 30 | 105 → 109 (19) | 16 → 0 (36) | -23.5 | 18 → 12 | 0 | 2244 (113, 395) |
+
+w4 night 9 guesses: general wrong answers rise 78 → 130 (61 made up), while known right answers improve 105 → 109
+and never-told stays 30 → 30. Known declines 32 → 17, lying "I don't know" 1 general / 1 known. Route off is
+30 → 30, 0 wrong person. Read 3 Nov 13:22-14:02 on nelly's full 15-adapter read server (90/90 shared parity plus
+6 d9-only smoke and an NT01 route-on preflight), one nelly server run (13:17:14). Its hashed receipt has 2244 train
+rows, not train-raw.summary's 2254. It is rolled back of record.
+
+w3 night 9 was rolled back on its own content-channel gate (26/30) before any product read, so no product-honesty
+row is claimed for it; serving stays on the night-6 cd update. w2 night 9's product read is pending its nelly lane.

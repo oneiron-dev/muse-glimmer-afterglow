@@ -1,0 +1,63 @@
+{
+ "rule": "abstention by the night's rules; difference = second minus first (adapter minus base), points",
+ "bootstrap": {
+  "resamples": 10000,
+  "seed": 20261014
+ },
+ "paired": {
+  "w4-grad-student-night9": {
+   "never_told": {
+    "n": 30,
+    "x": 30,
+    "y": 30,
+    "diff_points": 0.0,
+    "ci95_points": [
+     0.0,
+     0.0
+    ]
+   },
+   "general": {
+    "n": 200,
+    "x": 104,
+    "y": 57,
+    "diff_points": -23.5,
+    "ci95_points": [
+     -30.5,
+     -16.5
+    ]
+   },
+   "general_first100": {
+    "n": 100,
+    "x": 51,
+    "y": 29,
+    "diff_points": -22.0,
+    "ci95_points": [
+     -33.0,
+     -11.0
+    ]
+   },
+   "known": {
+    "n": 100,
+    "x": 16,
+    "y": 8,
+    "diff_points": -8.0,
+    "ci95_points": [
+     -14.0,
+     -3.0
+    ]
+   },
+   "known2": {
+    "n": 100,
+    "x": 16,
+    "y": 9,
+    "diff_points": -7.0,
+    "ci95_points": [
+     -14.0,
+     0.0
+    ]
+   },
+   "file": "/Users/olety/Desktop/temp/meta-hack-20261014/steering/product-answers-night9/w4-grad-student/answers-night9.jsonl"
+  }
+ },
+ "swing": {}
+}
