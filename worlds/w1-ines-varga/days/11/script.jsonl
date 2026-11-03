@@ -1,0 +1,18 @@
+{"turn": 1, "role": "user", "content": "Morning, could you log that Stralvik Packaging Co. is handling our packaging from now on? We're using VX-87 for the prototype motor so keep that handy.", "facts": ["F156", "F157"]}
+{"turn": 2, "role": "user", "content": "Thanks, also Inga Vollheim is starting with us checking quality, please keep her contact handy. We're aiming for 15 March for the field test, so block the calendar.", "facts": ["F158", "F159"]}
+{"turn": 3, "role": "user", "content": "Last thing for now, we're moving assembly over to Fjordvik Test Yard, can you update the notes? Thanks!", "facts": ["F160"]}
+{"turn": 4, "role": "user", "content": "Morning, could you file the calibration report CL-308-D for me? Also Nordvik Haulage is covering our regional deliveries today, so let me know if they check in.", "facts": ["F161", "F162"]}
+{"turn": 5, "role": "user", "content": "Who is my employer?", "facts": [], "question": true}
+{"turn": 6, "role": "user", "content": "That was longer than needed — just the value next time please!", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "correction", "refers_to_turn": 5}}
+{"turn": 7, "role": "user", "content": "Jonas Dahlberg started with us on firmware, could you share access? I also want him to look at the new torque sensor TQ-94 this afternoon.", "facts": ["F164", "F163"]}
+{"turn": 8, "role": "user", "content": "I'm heading to the client workshop in Svelvik tomorrow morning, could you pull the agenda and travel time?", "facts": ["F165"]}
+{"turn": 9, "role": "user", "content": "heads up, arm hinge bolt torque is now 3.4 newton-metres", "facts": ["F166"], "supersedes": ["F21"]}
+{"turn": 10, "role": "user", "content": "Can you remind me what my job title is?", "facts": [], "question": true}
+{"turn": 11, "role": "user", "content": "Could you message our client contact about our CNC machine model?", "facts": [], "question": true}
+{"turn": 12, "role": "user", "content": "Please check with me before messaging the client.", "facts": [], "feedback": {"axis": "asks_first", "toward": "asks before acting", "polarity": "correction", "refers_to_turn": 11}}
+{"turn": 13, "role": "user", "content": "Can you remind me what my commute start town is?", "facts": [], "question": true}
+{"turn": 14, "role": "user", "content": "change of plan, battery pack model is now CV-27", "facts": ["F167"], "supersedes": ["F30"]}
+{"turn": 15, "role": "user", "content": "heads up, intern project is now a rotor vibration stand", "facts": ["F168"], "supersedes": ["F35"]}
+{"turn": 16, "role": "user", "content": "Can you remind me what the Larkspur product is?", "facts": [], "question": true}
+{"turn": 17, "role": "user", "content": "Which inventory system do we use?", "facts": [], "question": true}
+{"turn": 18, "role": "user", "content": "Perfect, short and direct, thanks!", "facts": [], "feedback": {"axis": "concise", "toward": "concise", "polarity": "approval", "refers_to_turn": 17}}
