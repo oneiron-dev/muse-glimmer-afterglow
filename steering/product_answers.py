@@ -5,7 +5,8 @@
 
 Sets (frozen): general = the SimpleQA gate slice questions, asked bare (no "say that you do not know" line);
 never_told = the world's never-told probes. Arms: base (every adapter at 0) and each named adapter of the world
-from the serving manifest (R2 = its day-1 adapter, night2 = its day-2 adapter), at scale 1.
+from the serving manifest (R2 = its day-1 adapter, night2 = its day-2 adapter), at scale 1 by default;
+--adapter-scale overrides the adapter arms for a serving-scale screen, while the base stays at scale 0.
 Each question runs in a fresh session under a scratch runs root (AFTERGLOW_RUNS) seeded with the serving manifest
 and the world's notes from --notes-day, so no real day record is touched.
 
@@ -204,6 +205,8 @@ def main():
     ap.add_argument("--world", action="append", required=True)
     ap.add_argument("--adapters", default="R2:1,night2:2",
                     help="ARM:DAY[:PATH_PART] list from the serving manifest (e.g. night2b:2:2b); empty for none")
+    ap.add_argument("--adapter-scale", type=float, default=1.0,
+                    help="scale for every adapter arm (default 1.0); the base arm always stays at scale 0")
     ap.add_argument("--general-adapters", default="night2",
                     help="adapter arms that also answer the general set; 'none' = the base only")
     ap.add_argument("--skip-base", action="store_true", help="do not ask the base again (its answers are in raw.jsonl)")
@@ -252,7 +255,7 @@ def main():
                 name, day, *part = spec.split(":")
                 entry = manifest_adapter(real_runs, w, int(day), part[0] if part else None)
                 if entry:
-                    arms.append((name, entry["path"], 1.0))
+                    arms.append((name, entry["path"], args.adapter_scale))
                 else:
                     print(json.dumps({"world": w, "arm": name, "skipped": f"no day-{day} adapter in the manifest"}), flush=True)
             items = ([{"id": it["id"], "question": it["question"]} for it in never_told.load(w)] if s == "never_told"
