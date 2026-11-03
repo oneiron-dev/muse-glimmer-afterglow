@@ -206,7 +206,7 @@ class App:
                 "steering": steering(world, day, night, load("eval.json")),
                 "chat_checks": chat_checks(night, load("eval.json"), load("decision.json")),
                 "questions": questions, "night_dir": str(night), "night_of_record": rel,
-                "served": morning.served(world), "nights": morning.nights(world),
+                "served": morning.served(world), "nights": [n for n in morning.nights(world) if n["day"] <= int(day)],
                 "fresh": morning.fresh(load("decision.json")), "speed": morning.speed(),
                 "worlds": worlds_summary(day)}
 
