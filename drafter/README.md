@@ -86,6 +86,32 @@ the stock drafter's on 151 of 153 rounds; the 2 splits are near-ties in the targ
   and greedy replies differ from the logged replies, which were sampled at temperature 0.3. The ranking of the arms
   is the same in both.
 
+### Faster every morning: the nightly loop (`run_series.sh`, `analyze_series.py`)
+
+Each world ran nine nights. Night k starts from night k-1's drafter (night 1 from stock) and trains on day k's
+traffic only (lr 2e-5, 2 epochs). It is checked teacher-forced on day k+1, the next morning's turns. One night takes
+about 1 GPU-minute of training on one 4090: 8-11 minutes per world for all nine nights.
+
+Gain of the night's drafter over stock on the next day (mean of the four worlds):
+
+| Night | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+|---|---|---|---|---|---|---|---|---|---|
+| Checked on day | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| Gain over stock | +6.0 % | +7.3 % | +6.1 % | +7.3 % | +9.7 % | +8.6 % | +10.5 % | +10.2 % | **+11.5 %** |
+
+| World | Day 10: stock | Day 10: night 9 | Day 10: own drafter trained on days 1-9 in one run |
+|---|---|---|---|
+| w1 | 8.01 | 8.85 | 9.11 |
+| w2 | 6.60 | 7.34 | 7.39 |
+| w3 | 7.20 | 8.02 | 8.13 |
+| w4 | 8.68 | 9.80 | 9.89 |
+
+- The gain over stock grows night by night. The cheap nightly update ends within 0.1-0.3 of a drafter trained on all
+  nine days at once.
+- Each night's drafter is checked against the previous night's on the next day's turns. In 5 of 36 nights the new
+  drafter scored lower; the keep rule then keeps the previous drafter. The series here always continues from the
+  latest night; `results/series-summary.json` marks each night's keep decision.
+
 ### Losslessness
 
 | World | Pooled = stock ours | Own = stock ours | Meta's file = stock ours | Stock ours = target alone |
@@ -102,6 +128,19 @@ decoding (step A, 14 Oct). The w1 own-vs-stock split is a punctuation choice ins
 (`Title "Gullwing review"` vs `Title: Gullwing review`). At that point the target alone ranks `"` first (p 0.53) and
 `:` second (p 0.41). The retrained arms take the target's first choice there; the stock arm takes its second.
 `tie_check.py` reads the target's top 5 at every split (`results/live/tie_check-<world>.json`).
+
+Every split of a retrained arm against stock is a near-tie in the target alone (the world's adapter at scale 1):
+
+| Split | Retrained arm's token (target p) | Stock arm's token (target p) |
+|---|---|---|
+| w1 t3 (own, pooled) | `"` 0.53, the target's first choice | `:` 0.41 |
+| w3 t11 (own) | ` would` 0.53, first choice | ` should` 0.47 |
+| w4 t2 (own) | ` fact` 0.33 | `.\n\n` 0.34, first choice |
+| w4 t9 (own, pooled) | `storage` 0.46, first choice | `dataset` 0.37 |
+| w4 t17 (own) | `Ph` 0.58, first choice | `role` 0.43 |
+
+In every case both tokens are the target's own top two, 1 to 15 points apart. In 6 of the 7 splits, the retrained
+arm takes the target's first choice.
 
 ## Files
 
