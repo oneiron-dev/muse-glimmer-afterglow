@@ -1,0 +1,24 @@
+{
+ "label": "fresh confirmation 200 (lead 2026-11-03 22:3x)",
+ "n": 200,
+ "rule": "first 200 leak-clean by sha256(question) among SimpleQA rows unused by id",
+ "disjoint_by_id_from": {
+  "gate_general_200": 200,
+  "idk_sqa_pool": [
+   "sqa0025",
+   "sqa0026",
+   "sqa0035",
+   "sqa0083",
+   "sqa0096"
+  ],
+  "idk_sqa_pool_n": 200
+ },
+ "leak_check": {
+  "train_files": 89,
+  "train_rows": 124688,
+  "hit_probes_dropped": 82,
+  "stat_8gram_overlap": 183,
+  "hits_file": "builders/night9/fresh_confirm_leakhits.json"
+ },
+ "sha256": "847ef7a7f83f1b3f5f2af07710306fbb260ea8ee05982397a790aefb837241c9"
+}
