@@ -60,6 +60,11 @@ class DaySwitcherTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.app.open_day("w", 9)
         self.assertFalse((self.runs / "w" / "9").exists())  # no stray day folder
+        outside = self.runs.parent / f"{self.runs.name}-outside" / "1"
+        outside.mkdir(parents=True)
+        (outside / "session.json").write_text("{}")
+        with self.assertRaises(ValueError):  # a path is not a person
+            self.app.open_day(f"../{self.runs.name}-outside", 1)
         self.assertEqual(self.app.session.day, 1)
 
 

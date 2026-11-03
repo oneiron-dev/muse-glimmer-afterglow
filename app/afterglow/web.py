@@ -120,7 +120,8 @@ class App:
         app process started on that day would; only a day with session.json, so no new day is made here. The
         snapshot restore runs again when this app restores at start."""
         day = int(day)
-        if not (paths.runs_root() / world / str(day) / "session.json").exists():
+        # only a person and day the list holds: the names come from runs/, never straight from the request
+        if not any(p["world"] == world and day in p["days"] for p in self.recorded_days()):
             raise ValueError(f"no recorded day {day} for {world}")
         with self.lock:
             self.session = DaySession(world, day, self.client, **self.session_options)
