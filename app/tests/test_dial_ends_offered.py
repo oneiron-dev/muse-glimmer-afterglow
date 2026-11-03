@@ -21,11 +21,11 @@ class DialEndsTest(unittest.TestCase):
     def test_ends_that_cut_i_dont_know_are_never_proposed(self):
         self.assertIsNone(ps.dial_scale(DIALS["decisive"], -1))  # cautious: 116 -> 11 on the gate questions
         self.assertIsNone(ps.dial_scale(DIALS["formal"], 1))  # formal (+ concise): 116 -> 85
-        self.assertEqual(ps.dial_scale(DIALS["formal"], -1), -0.04)
+        self.assertIsNone(ps.dial_scale(DIALS["formal"], -1))  # casual: 116 -> 106
+        self.assertFalse(DIALS["formal"]["safe"])  # neither end offered: formal is not in Glimmer's dial list
         self.assertEqual(ps.dial_scale(DIALS["concise"], 1), 0.04)
 
     def test_glimmer_is_offered_only_the_ends_it_may_propose(self):
-        self.assertEqual(ps.dial_line(AXES["formal"], DIALS["formal"]), "- formal: toward casual only")
         self.assertEqual(ps.dial_line(AXES["decisive"], DIALS["decisive"]), "- decisive: toward decisive only")
 
 

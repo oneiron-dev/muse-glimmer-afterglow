@@ -27,7 +27,7 @@
    "negative_evidence": "live 29 Oct: -0.04 breaks replies (2/8 empty or a title only at the token cap; judge coherence 3.5)"
   },
   "formal": {
-   "safe": true,
+   "safe": false,
    "scale": 0.04,
    "max_scale": 0.04,
    "tested": true,
@@ -38,10 +38,11 @@
     16,
     42
    ],
-   "negative_scale": -0.04,
-   "negative_evidence": "live 29 Oct: -0.04 on base, judge 8/8 more casual, coherence 4.5 (unsteered 4.9)",
+   "negative_scale": null,
+   "negative_evidence": "live 29 Oct: -0.04 on base, judge 8/8 more casual, coherence 4.5 (unsteered 4.9); NOT OFFERED from 4 Nov: -0.04 (casual) on base cuts \"I don't know\" on the 200 SimpleQA gate questions from 116 to 106 (answers 30 that base declined), more than the 4-of-200 floor (eval/results/2026-11-04-voice/presets, preset casual)",
    "positive_offered": false,
-   "positive_evidence": "NOT OFFERED from 4 Nov: +0.04 with concise +0.04 on base cuts \"I don't know\" on the 200 SimpleQA gate questions from 116 to 85 (answers 41 that base declined); concise +0.04 alone gives 132, so the cut comes with formal; formal alone not measured (eval/results/2026-11-04-voice/presets, presets formal and brief)"
+   "positive_evidence": "NOT OFFERED from 4 Nov: +0.04 with concise +0.04 on base cuts \"I don't know\" on the 200 SimpleQA gate questions from 116 to 85 (answers 41 that base declined); concise +0.04 alone gives 132, so the cut comes with formal; formal alone not measured (eval/results/2026-11-04-voice/presets, presets formal and brief)",
+   "safe_note": "neither end is offered from 4 Nov (both lower I-don't-know by more than 4 of 200); the vector stays served"
   },
   "decisive": {
    "safe": true,
