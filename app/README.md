@@ -142,8 +142,8 @@ the path) and, for a hosted vault behind Cloudflare Access, `AFTERGLOW_CF_ACCESS
 `AFTERGLOW_CF_ACCESS_CLIENT_SECRET`. `AFTERGLOW_ONEIRON_ORIGIN` overrides the vault base URL; without it, the
 credential's `origin` is used, as before. Run with `uv run --extra oneiron`.
 
-`replay_vault_days.py` replays all 36 recorded days in order. It requires the person credential template, so user
-runs cannot silently use the agent credential. The source runs root is read-only: daylogs are copied to
+`replay_vault_days.py` replays all 36 recorded days in order. Normal person+agent replay requires the person
+credential template, so user runs cannot silently use the agent credential. The source runs root is read-only: daylogs are copied to
 `OUTPUT/runs`, and `push_day` writes fresh `oneiron.json` receipts there. `OUTPUT/replay.jsonl` records each attempted
 turn's write milliseconds and failures; `OUTPUT/report.json` keeps p50/p90, failure counts, verified-day counts, and
 receipt paths. Use the same output root for the one-day smoke and the full replay so the full run resumes the smoke's
@@ -155,7 +155,12 @@ uv run --extra oneiron python replay_vault_days.py --output /tmp/vault-replay --
 uv run --extra oneiron python replay_vault_days.py --output /tmp/vault-replay
 ```
 
-`--verify` reads both speakers' paged conversation transcripts and requires every receipt speaker run to map to one
+For BEL's pre-enrolment step only, `--agent-only` defaults to all four worlds' day 1, writes v1 conversations with the
+agent credential, and needs no person template. It refuses later days. Use `--verify` for the four exact read-backs.
+The same output root can later hold the person+agent replay: push_day archives each day-1 v1 receipt in `history`
+before writing v2. `report.json` separates `write_ms_by_speakers` for `agent` and `person+agent`.
+
+`--verify` reads the configured speaker lanes' paged conversation transcripts and requires every receipt speaker run to map to one
 transcript turn with exactly its stable message ids and byte-equal text. Suppressed or malformed reads are not a
 pass. A normal rerun resumes from per-run receipts. `--from-turn N` is only for a single explicit `--world`/`--day`
 whose receipts were lost; do not combine it with `--verify`, because skipped turns have no receipt turn ids to compare.
