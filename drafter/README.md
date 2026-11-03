@@ -6,7 +6,17 @@ drafted token. A better-fitted drafter cannot change an answer. It only makes re
 This folder tests one idea: each night, retrain the drafter on the agent's own traffic from the day. The test uses
 the four Afterglow worlds (w1-w4). Days 1-9 are training data and day 10 is held out.
 
-RESULTS: see "Results" below (filled in Tue 3 Nov 2026 22:xx JST; the full numbers are in `results/`).
+**Result (Tue 3 Nov 2026, 23:2x JST): the idea works.** One drafter retrained on the four worlds' own traffic
+(days 1-9) is the fastest arm in every world on held-out day 10. Live in llama.cpp at the serving settings it reaches
+**6.40 accepted tokens per verify step and 118.0 tok/s (2.85× the target alone)**. Meta's stock drafter reaches 5.74
+and 107.4 tok/s (2.59×). That is **+11.4 % acceptance and +9.9 % decode speed** over Meta's file. The outputs stay
+the stock drafter's on 151 of 153 rounds; the 2 splits are near-ties in the target itself.
+
+- Serving: llama-server takes one drafter for all worlds, and the pooled drafter is that one file
+  (`pooled-Q4_K_M.gguf`, sha256 `d85bf7f19e9af53dd82616f035ef3c52f225f02e834165e38078cdbaa9db57c7`).
+- Per-world drafters also win in all four worlds (+7.9 % tok/s over stock). The pooled drafter wins by more,
+  because most of the gain is the agent's shared format. A user's own facts add only a little.
+- Step A's generic retrain (14 Oct, on generic chat) gives no gain here (5.65, 105.6 tok/s).
 
 ## Method
 
@@ -52,7 +62,7 @@ RESULTS: see "Results" below (filled in Tue 3 Nov 2026 22:xx JST; the full numbe
 | own-w2 | 8.89 | **7.39** | 8.19 | 9.94 | 8.68 |
 | own-w3 | 8.95 | 7.24 | **8.13** | 9.77 | 8.61 |
 | own-w4 | 8.98 | 7.36 | 8.05 | **9.89** | 8.66 |
-| pooled (4 worlds, days 1-9) | | | | | |
+| **pooled (4 worlds, days 1-9)** | **9.18** | **7.58** | **8.43** | **10.16** | **8.92** |
 
 - Every retrained drafter lifts every world. Most of the gain comes from the agent's shared format: its reasoning
   style, its `remember` calls and the shape of its replies.
@@ -64,25 +74,34 @@ RESULTS: see "Results" below (filled in Tue 3 Nov 2026 22:xx JST; the full numbe
 
 | World (rounds) | Target alone | Stock (Meta's file) | Stock (our conversion) | Step-A generic | Own world | Pooled |
 |---|---|---|---|---|---|---|
-| w1 (47) | 41.5 tok/s | 6.04 / 112.3 / 2.71× | 5.96 / 111.5 / 2.69× | 5.82 / 107.7 / 2.60× | **6.34 / 116.4 / 2.80×** | |
-| w2 (37) | 41.1 tok/s | 5.11 / 96.0 / 2.33× | 5.05 / 94.9 / 2.31× | 5.14 / 96.5 / 2.35× | **5.44 / 101.9 / 2.48×** | |
-| w3 (33) | 41.4 tok/s | 5.30 / 99.9 / 2.42× | 5.20 / 98.0 / 2.37× | 5.22 / 98.6 / 2.38× | **5.75 / 107.9 / 2.61×** | |
-| w4 (36) | 41.5 tok/s | 6.44 / 119.7 / 2.89× | 6.48 / 120.3 / 2.90× | 6.39 / 118.6 / 2.86× | **7.24 / 133.9 / 3.23×** | |
-| **all (153)** | 41.4 tok/s | 5.74 / 107.4 / 2.59× | 5.69 / 106.5 / 2.57× | 5.65 / 105.6 / 2.55× | **6.19 / 114.9 / 2.78×** | |
+| w1 (47) | 41.5 tok/s | 6.04 / 112.3 / 2.71× | 5.96 / 111.5 / 2.69× | 5.82 / 107.7 / 2.60× | 6.34 / 116.4 / 2.80× | **6.55 / 120.9 / 2.91×** |
+| w2 (37) | 41.1 tok/s | 5.11 / 96.0 / 2.33× | 5.05 / 94.9 / 2.31× | 5.14 / 96.5 / 2.35× | 5.44 / 101.9 / 2.48× | **5.55 / 102.4 / 2.49×** |
+| w3 (33) | 41.4 tok/s | 5.30 / 99.9 / 2.42× | 5.20 / 98.0 / 2.37× | 5.22 / 98.6 / 2.38× | 5.75 / 107.9 / 2.61× | **6.11 / 112.9 / 2.73×** |
+| w4 (36) | 41.5 tok/s | 6.44 / 119.7 / 2.89× | 6.48 / 120.3 / 2.90× | 6.39 / 118.6 / 2.86× | 7.24 / 133.9 / 3.23× | **7.42 / 136.6 / 3.29×** |
+| **all (153)** | 41.4 tok/s | 5.74 / 107.4 / 2.59× | 5.69 / 106.5 / 2.57× | 5.65 / 105.6 / 2.55× | 6.19 / 114.9 / 2.78× | **6.40 / 118.0 / 2.85×** |
+
+- The target alone decodes at 41 tok/s here; step A measured 51 tok/s. Here the world's adapter runs at decode
+  time and the contexts are about 10 k tokens.
+- Live acceptance (about 6) is lower than teacher-forced acceptance (about 8). Live, the drafter is the Q4_K_M file,
+  and greedy replies differ from the logged replies, which were sampled at temperature 0.3. The ranking of the arms
+  is the same in both.
 
 ### Losslessness
 
-| World | Own = stock ours (rounds) | Every drafter arm = target alone (rounds) |
-|---|---|---|
-| w1 | 46/47 | 35/47 |
-| w2 | 37/37 | 24/37 |
-| w3 | 32/33 | 23/33 |
-| w4 | 33/36 | 22/36 |
+| World | Pooled = stock ours | Own = stock ours | Meta's file = stock ours | Stock ours = target alone |
+|---|---|---|---|---|
+| w1 | 46/47 | 46/47 | 47/47 | 35/47 |
+| w2 | 37/37 | 37/37 | 36/37 | 24/37 |
+| w3 | 33/33 | 32/33 | 33/33 | 23/33 |
+| w4 | 35/36 | 33/36 | 36/36 | 22/36 |
+| all | 151/153 | 148/153 | 152/153 | 104/153 |
 
 The drafter arms differ from the target alone on some rounds. Meta's own drafter file differs in the same way, so
 the drafter does not cause this. llama.cpp's speculative verify batch breaks near-ties differently from one-token
 decoding (step A, 14 Oct). The w1 own-vs-stock split is a punctuation choice inside the reasoning channel
-(`Title "Gullwing review"` vs `Title: Gullwing review`). `tie_check.py` reads the target's top-2 at every split.
+(`Title "Gullwing review"` vs `Title: Gullwing review`). At that point the target alone ranks `"` first (p 0.53) and
+`:` second (p 0.41). The retrained arms take the target's first choice there; the stock arm takes its second.
+`tie_check.py` reads the target's top 5 at every split (`results/live/tie_check-<world>.json`).
 
 ## Files
 
