@@ -122,8 +122,16 @@ def main():
                     help="rule of record: right answers on the known slices may fall by at most round(base right x this)")
     ap.add_argument("--flags", default="v1", help="frozen near-synonym flag list version (v1 = day-4 notes, v2 = day-5, v3 = day-6, v4 = day-7, v5 = day-8)")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--gold-file", default=None,
+                    help="extra gold JSONL (id/question/answer per line, e.g. a fresh confirmation set); "
+                         "sourced verbatim, metric logic untouched")
     args = ap.parse_args()
     gold, known_alts = load_gold()
+    if args.gold_file:
+        for line in Path(args.gold_file).read_text().splitlines():
+            if line.strip():
+                r = json.loads(line)
+                gold[r["id"]] = {"question": r["question"], "answer": r["answer"]}
     template = (aa_omniscience.DATA / "grader_prompt.txt").read_text().strip()
     notes = dict(n.split("=", 1) for n in args.note)
     cache = Path(args.cache)
