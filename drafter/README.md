@@ -86,6 +86,32 @@ the stock drafter's on 151 of 153 rounds; the 2 splits are near-ties in the targ
   and greedy replies differ from the logged replies, which were sampled at temperature 0.3. The ranking of the arms
   is the same in both.
 
+### Faster every morning: the nightly loop (`run_series.sh`, `analyze_series.py`)
+
+Each world ran nine nights. Night k starts from night k-1's drafter (night 1 from stock) and trains on day k's
+traffic only (lr 2e-5, 2 epochs). It is checked teacher-forced on day k+1, the next morning's turns. One night takes
+about 1 GPU-minute of training on one 4090: 8-11 minutes per world for all nine nights.
+
+Gain of the night's drafter over stock on the next day (mean of the four worlds):
+
+| Night | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+|---|---|---|---|---|---|---|---|---|---|
+| Checked on day | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 |
+| Gain over stock | +6.0 % | +7.3 % | +6.1 % | +7.3 % | +9.7 % | +8.6 % | +10.5 % | +10.2 % | **+11.5 %** |
+
+| World | Day 10: stock | Day 10: night 9 | Day 10: own drafter trained on days 1-9 in one run |
+|---|---|---|---|
+| w1 | 8.01 | 8.85 | 9.11 |
+| w2 | 6.60 | 7.34 | 7.39 |
+| w3 | 7.20 | 8.02 | 8.13 |
+| w4 | 8.68 | 9.80 | 9.89 |
+
+- The gain over stock grows night by night. The cheap nightly update ends within 0.1-0.3 of a drafter trained on all
+  nine days at once.
+- Each night's drafter is checked against the previous night's on the next day's turns. In 6 of 36 nights the new
+  drafter scored lower; the keep rule then keeps the previous drafter. The series here always continues from the
+  latest night; `results/series-summary.json` marks each night's keep decision.
+
 ### Losslessness
 
 | World | Pooled = stock ours | Own = stock ours | Meta's file = stock ours | Stock ours = target alone |
