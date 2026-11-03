@@ -10,7 +10,10 @@ Custom voices (--voice SLUG=ID):
          not know (simpleqa_gate.is_abstain, rule v2) and how many answers match the gold answer exactly.
 Presets (--presets voices.json with --dial AXIS=ID for the served dials): each preset at its own fixed dial scales,
 the same two reads on eight day-axis test prompts (axes.json: concise, formal, decisive) and on the 200 questions.
-A voice or preset that makes the model guess more does not ship (voice_report.py applies the rule).
+  known  the 200 public questions base Glimmer mostly knows (eval/data/known_slice_v1 + v2), same prompt form and
+         settings: right = a gold answer appears in the reply (normalised), so a voice that refuses or garbles what
+         the model knows shows as lost right answers.
+A voice or preset that makes the model guess more, or lose what it knows, does not ship (voice_report.py).
 
 Every request names only the vectors it sets, so every other vector stays at 0.
 Writes <out>/sweep-<slug>.json, <out>/idk-<slug>.json (presets: preset-<slug>), and <out>/idk-base.json.
@@ -81,6 +84,22 @@ def flips(base_rows, rows):
             "base_answered_now_abstains": sum(not ab(b["answer"]) and ab(r["answer"]) for b, r in zip(base_rows, rows))}
 
 
+KNOWN = [HERE.parent / "eval" / "data" / f"known_slice_v{i}.jsonl" for i in (1, 2)]
+
+
+def known_right(answer, golds):
+    a = aa_omniscience.norm_answer(answer) or ""
+    return any(len(g) >= 2 and g in a for g in (aa_omniscience.norm_answer(x) or "" for x in golds))
+
+
+def known_stats(rows, gold):
+    n = len(rows)
+    right = sum(known_right(r["answer"], gold[r["id"]]) for r in rows)
+    abstain = sum(simpleqa_gate.is_abstain(r["answer"]) for r in rows)
+    return {"n": n, "right": right, "abstain": abstain, "truncated": sum(r["truncated"] for r in rows),
+            "errors": sum(bool(r.get("error")) for r in rows)}
+
+
 def summarize(rows):
     return {"words": round(sum(len(r["answer"].split()) for r in rows) / len(rows), 1),
             "truncated": sum(r["truncated"] for r in rows), "empty": sum(not r["answer"] for r in rows),
@@ -90,7 +109,8 @@ def summarize(rows):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--endpoint", default="http://127.0.0.1:18670")
-    ap.add_argument("--voice", action="append", default=[], help="SLUG=VECTOR_ID (its position in the load list)")
+    ap.add_argument("--voice", action="append", default=[], help="STEM=VECTOR_ID[:SLUG]: a voice vector (its position "
+                    "in the load list); STEM names the output files, SLUG the voice folder (default STEM)")
     ap.add_argument("--dial", action="append", default=[], help="AXIS=VECTOR_ID for a served dial (presets)")
     ap.add_argument("--presets", help="voices.json: read every preset whose dials are all loaded")
     ap.add_argument("--voices-dir", default=str(HERE / "voices"))
@@ -120,9 +140,10 @@ def main():
     sweep_scales = [float(x) for x in args.scales.split(",") if x]
     idk_scales = [float(x) for x in args.idk_scales.split(",") if x]
     for spec in args.voice:
-        slug, vid = spec.split("=")
-        axis = json.loads((Path(args.voices_dir) / slug / "axis.json").read_text())
-        arms.append({"stem": slug, "kind": "voice", "prompts": axis["test_prompts"],
+        stem, rest = spec.split("=")
+        vid, _, slug = rest.partition(":")
+        axis = json.loads((Path(args.voices_dir) / (slug or stem) / "axis.json").read_text())
+        arms.append({"stem": stem, "kind": "voice", "prompts": axis["test_prompts"],
                      "sweep": {f"{s:g}": [{"id": int(vid), "scale": s}] for s in sweep_scales},
                      "idk": {f"{s:g}": [{"id": int(vid), "scale": s}] for s in idk_scales}})
     if args.presets:
@@ -172,6 +193,31 @@ def main():
                 doc["by_scale"][label] = {**st, "control_vectors": cv, "answers": rows}
                 print(json.dumps({"idk": arm["stem"], "setting": label, **st, "elapsed_s": round(time.time() - t0)}), flush=True)
             (out / f"idk-{arm['stem']}.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
+    if "known" in args.steps:
+        items = [json.loads(line) for f in KNOWN for line in f.read_text().splitlines() if line.strip()]
+        gold = {q["id"]: q["gold"] for q in items}
+        prompts = list(pool.map(lambda q: answer_prompt(ep, simpleqa_gate.PROMPT.format(question=q["question"])), items))
+
+        def run_known(cv):
+            ans = list(pool.map(lambda p: complete(ep, p, cv, simpleqa_gate.MAX_NEW_TOKENS), prompts))
+            return [{"id": q["id"], **a} for q, a in zip(items, ans)]
+        base_rows = run_known([])
+        base = known_stats(base_rows, gold)
+        (out / "known-base.json").write_text(json.dumps({"set": "known slice v1+v2 (200), gate prompt form", "stats": base,
+                                                         "answers": base_rows}, indent=1, ensure_ascii=False) + "\n")
+        print(json.dumps({"known": "base", **base, "elapsed_s": round(time.time() - t0)}), flush=True)
+        for arm in arms:
+            doc = {"voice": arm["stem"], "kind": arm["kind"], "set": "known slice v1+v2 (200), gate prompt form",
+                   "grading": "right = a normalised gold answer is a substring of the normalised reply", "base": base,
+                   "by_scale": {}}
+            for label, cv in arm["idk"].items():
+                rows = run_known(cv)
+                st = known_stats(rows, gold)
+                st["lost"] = sum(known_right(b["answer"], gold[b["id"]]) and not known_right(r["answer"], gold[r["id"]])
+                                 for b, r in zip(base_rows, rows))
+                doc["by_scale"][label] = {**st, "control_vectors": cv, "answers": rows}
+                print(json.dumps({"known": arm["stem"], "setting": label, **st, "elapsed_s": round(time.time() - t0)}), flush=True)
+            (out / f"known-{arm['stem']}.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
 
 
 if __name__ == "__main__":

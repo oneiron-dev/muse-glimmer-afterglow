@@ -7,7 +7,8 @@
 #   5. sweep     voice_sweep.py: test-prompt replies per scale + the "I don't know" rate on the 200 gate questions
 # Usage (on the GPU host, from the repo copy): steering/voice_job.sh RUN_NAME SLUG [SLUG ...]
 # Env: ROOT (default /data/meta-voice), MODEL_DIR, GGUF, LLAMA, PORT, LAYERS ("16 42", the served range), NGL,
-#      CHECK_SCALES, SWEEP_SCALES, IDK_SCALES, SWEEP_STEPS, DIALS_DIR (the served dial GGUFs <axis>-j1.gguf: the
+#      PREP (default "extract,fit,check"; empty = reuse the run's vectors), VARIANT (comma list of raw, orth: the voice GGUFs
+#      served), NP (server slots and client threads, default 4), OUT (sweep output dir name, default sweep), CHECK_SCALES, SWEEP_SCALES, IDK_SCALES, SWEEP_STEPS, DIALS_DIR (the served dial GGUFs <axis>-j1.gguf: the
 #      presets in steering/voices.json get the same sweep and "I don't know" check; empty = voices only).
 set -euo pipefail
 RUN_NAME=$1; shift
@@ -21,6 +22,10 @@ LAYERS=${LAYERS:-16 42}
 NGL=${NGL:-99}
 SWEEP_STEPS=${SWEEP_STEPS:-sweep,idk}
 DIALS_DIR=${DIALS_DIR-$ROOT/dials}
+PREP=${PREP-extract,fit,check}
+VARIANT=${VARIANT:-raw}
+OUT=${OUT:-sweep}
+NP=${NP:-4}
 CHECK_SCALES=${CHECK_SCALES:-0.04,0.08}
 SWEEP_SCALES=${SWEEP_SCALES:-0.02,0.04,0.06,0.08}
 IDK_SCALES=${IDK_SCALES:-0.04,0.06,0.08}
@@ -42,26 +47,27 @@ Path(out).write_text(json.dumps(spec, indent=1, ensure_ascii=False) + "\n")
 print(json.dumps({"axes": [a["name"] for a in spec["axes"]]}))
 PY
 
-if [ ! -f "$RUN/states/status.json" ] || ! grep -q '"finished": true' "$RUN/states/status.json"; then
+if [[ $PREP == *extract* ]] && { [ ! -f "$RUN/states/status.json" ] || ! grep -q '"finished": true' "$RUN/states/status.json"; }; then
   log "extract"
   "$PY" steering/extract_states.py --model-dir "$MODEL_DIR" --axes "$RUN/axes.json" --out "$RUN/states" \
     --deadline-s 1200 2>&1 | tee -a "$RUN/extract.log" | grep -v Warning || true
   grep -q '"finished": true' "$RUN/states/status.json" || { log "extract did not finish"; exit 2; }
 fi
-log "fit"
-"$PY" steering/fit_vectors.py --states "$RUN/states" --axes "$RUN/axes.json" --out "$RUN/vectors" > "$RUN/fit.log" 2>&1
+[[ $PREP == *fit* ]] && log "fit" && "$PY" steering/fit_vectors.py --states "$RUN/states" --axes "$RUN/axes.json" --out "$RUN/vectors" > "$RUN/fit.log" 2>&1
 
 VEC_ARGS=()
 for slug in "$@"; do
   for s in ${CHECK_SCALES//,/ }; do VEC_ARGS+=(--vector "voice-$slug@$s=$RUN/vectors/base/voice-$slug-raw.gguf:$s"); done
 done
-log "behaviour check (${#VEC_ARGS[@]} args)"
-"$PY" steering/behaviour_check.py --model-dir "$MODEL_DIR" --axes "$RUN/axes.json" --axes-states "$RUN/states" \
+[[ $PREP == *check* ]] && log "behaviour check (${#VEC_ARGS[@]} args)" && "$PY" steering/behaviour_check.py --model-dir "$MODEL_DIR" --axes "$RUN/axes.json" --axes-states "$RUN/states" \
   --out "$RUN/check" --deadline-s 1200 --vector-layers "${LAYERS// /,}" "${VEC_ARGS[@]}" 2>&1 | tee -a "$RUN/check.log" | grep -v Warning || true
 
 CV=""; VOICE_ARGS=(); i=0
-for slug in "$@"; do
-  CV="${CV:+$CV,}$RUN/vectors/base/voice-$slug-raw.gguf:0"; VOICE_ARGS+=(--voice "$slug=$i"); i=$((i + 1))
+for variant in ${VARIANT//,/ }; do  # raw: output stem <slug>; any other variant: <slug>-<variant>
+  for slug in "$@"; do
+    stem=$slug; [ "$variant" = raw ] || stem=$slug-$variant
+    CV="${CV:+$CV,}$RUN/vectors/base/voice-$slug-$variant.gguf:0"; VOICE_ARGS+=(--voice "$stem=$i:$slug"); i=$((i + 1))
+  done
 done
 if [ -n "$DIALS_DIR" ]; then
   for axis in concise formal decisive; do
@@ -70,7 +76,7 @@ if [ -n "$DIALS_DIR" ]; then
   VOICE_ARGS+=(--presets steering/voices.json)
 fi
 log "serve"
-"$LLAMA" -m "$GGUF" --alias muse-glimmer-30b -ngl "$NGL" -fa on -np 4 -c 16384 --jinja \
+"$LLAMA" -m "$GGUF" --alias muse-glimmer-30b -ngl "$NGL" -fa on -np "$NP" -c 16384 --jinja \
   --chat-template-kwargs '{"reasoning_strength":"minimal"}' --control-vector-scaled "$CV" \
   --control-vector-layer-range $LAYERS --host 127.0.0.1 --port "$PORT" > "$RUN/server.log" 2>&1 &
 SERVER=$!
@@ -83,6 +89,6 @@ done
 curl -sf "http://127.0.0.1:$PORT/health" > /dev/null || { log "server not healthy"; exit 3; }
 log "sweep + idk"
 "$PY" steering/voice_sweep.py --endpoint "http://127.0.0.1:$PORT" "${VOICE_ARGS[@]}" --scales "$SWEEP_SCALES" \
-  --idk-scales "$IDK_SCALES" --steps "$SWEEP_STEPS" --out "$RUN/sweep" 2>&1 | tee -a "$RUN/sweep.log"
-sha256sum "$RUN"/vectors/base/voice-*-raw.gguf > "$RUN/vectors.sha256"
+  --idk-scales "$IDK_SCALES" --parallel "$NP" --steps "$SWEEP_STEPS" --out "$RUN/$OUT" 2>&1 | tee -a "$RUN/$OUT.log"
+sha256sum "$RUN"/vectors/base/voice-*-raw.gguf "$RUN"/vectors/base/voice-*-orth.gguf 2>/dev/null > "$RUN/vectors.sha256" || true
 log "DONE"

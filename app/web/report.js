@@ -331,7 +331,9 @@ function proposes(st, world, day) {
     };
     const actions = el("div", "actions");
     actions.append(btn("Accept", "accept", "accept"), btn("Dismiss", "dismiss", "dismiss"), status);
-    li.append(el("div", "toward", `More ${p.toward}`), el("p", "reason", p.reason || ""), actions);
+    // a custom voice (kind "voice") is a new dial of its own; the others turn an existing dial
+    li.append(el("div", "toward", p.kind === "voice" ? `New voice: ${p.toward}` : `More ${p.toward}`),
+      el("p", "reason", p.reason || ""), actions);
     show(answers[key]);
     return li;
   }));
