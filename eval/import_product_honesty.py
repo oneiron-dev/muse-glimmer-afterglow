@@ -29,13 +29,16 @@ NIGHTS = {"night3": (3, "night"), "idk": (3, "night-3-idk"), "idkc": (3, "night-
           "night8s05": (8, "night-8s05"), "night9": (9, "night"),
           "night9protective2": (9, "night-9protective2"), "night9e5": (9, "night-9e5"),
           "night9rpf4": (9, "night-9rpf4"), "night9idkc": (9, "night-9idkc"), "night9idkb": (9, "night-9idkb"),
-          "night9cdonly": (9, "night-9cdonly"), "night10": (10, "night")}  # w4 2b was promoted to night/; night-8s05 = the scale-0.5 screen of night 8
+          "night9cdonly": (9, "night-9cdonly"), "night10": (10, "night"),
+          "night11s1": (11, "night-11s1"), "night11s2": (11, "night-11s2"),
+          "night11s3": (11, "night-11s3")}  # w4 2b was promoted to night/; night-8s05 = the scale-0.5 screen of night 8
 # nights promoted into night/ after their read: the arm follows its folder (w3 4b promoted 29 Oct 21:04, its plain
 # night 4 kept as night-replaced-20261029-2104/)
 PROMOTED = {("w3", "night4"): (4, "night-replaced-20261029-2104"), ("w3", "night4b"): (4, "night"),
             ("w3", "night5"): (5, "night-replaced-20261030-0749"), ("w3", "night5c"): (5, "night"),  # 5c promoted 30 Oct (honesty-3k)
             ("w4", "night5"): (5, "night-replaced-20261030-0746"), ("w4", "night5c"): (5, "night"),
-            ("w3", "night6"): (6, "night-replaced-20261030-2342"), ("w3", "night6cd"): (6, "night")}  # cd promoted 30 Oct 23:42 (honesty-3k)
+            ("w3", "night6"): (6, "night-replaced-20261030-2342"), ("w3", "night6cd"): (6, "night"),  # cd promoted 30 Oct 23:42 (honesty-3k)
+            ("w4", "night9"): (9, "night-replaced-20261104-0819"), ("w4", "night9e5"): (9, "night")}  # e5 promoted 4 Nov 08:19 (honesty-3k)
 
 
 def main():
@@ -47,6 +50,7 @@ def main():
     runs = runs_root(args.runs)
     for name, arm in doc["arms"].items():
         world, _, which = name.partition("-")
+        which = which.replace("-", "")  # steering hyphenates screen arms (night-9e5); NIGHTS keys do not
         if world not in WORLDS or which not in NIGHTS:
             print(json.dumps({"arm": name, "skipped": "no night folder"}))
             continue
