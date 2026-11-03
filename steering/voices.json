@@ -1,0 +1,18 @@
+{
+ "version": 1,
+ "note": "Voices: how Afterglow's replies sound. A preset is a named bundle of the served steering dials (dials.json: concise, formal, decisive; the scales are each dial's tested ones, positive or negative end). A custom voice is a control vector of its own, fitted by re:dvx from the user's one-sentence description (steering/voices/<slug>/voice.json; listed under custom once it is ready). The user picks one voice; it applies from the next message (app/afterglow/dials.py). asks_first and abstention are measured, never dials.",
+ "presets": [
+  {"slug": "default", "label": "Default", "line": "Glimmer as it is: no dials.", "dials": []},
+  {"slug": "brief", "label": "Brief", "line": "Short answers.",
+   "dials": [{"axis": "concise", "toward": "concise", "scale": 0.04}]},
+  {"slug": "formal", "label": "Formal", "line": "Polite, formal and short.",
+   "dials": [{"axis": "concise", "toward": "concise", "scale": 0.04}, {"axis": "formal", "toward": "formal", "scale": 0.04}]},
+  {"slug": "casual", "label": "Casual", "line": "Relaxed, everyday wording.",
+   "dials": [{"axis": "formal", "toward": "casual", "scale": -0.04}]},
+  {"slug": "direct", "label": "Direct", "line": "Short and decisive.",
+   "dials": [{"axis": "concise", "toward": "concise", "scale": 0.04}, {"axis": "decisive", "toward": "decisive", "scale": 0.04}]},
+  {"slug": "careful", "label": "Careful", "line": "Weighs the options before it commits.",
+   "dials": [{"axis": "decisive", "toward": "cautious", "scale": -0.04}]}
+ ],
+ "custom": []
+}
