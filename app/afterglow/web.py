@@ -279,6 +279,14 @@ class App:
             "busy": self.lock.locked(),
         }
 
+    def workspace(self):
+        """What the agent's world tools hold for the open day (world_state.json): calendar events, tasks and email
+        drafts, for the app's side panel. Read only; drafts are never sent."""
+        st = self.session.world_state.state
+        return {"world": self.session.world, "day": self.session.day, "date": self.session.date,
+                "calendar": sorted(st.get("calendar") or [], key=lambda e: (e.get("date", ""), e.get("time", ""))),
+                "tasks": st.get("tasks") or [], "emails": st.get("emails") or []}
+
     def adapter_label(self, loaded_adapter):
         """How the page names the world's loaded adapter: the night it came from (every file is adapter.gguf)."""
         entry = self.session.adapter
@@ -349,6 +357,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.app.state())
         if path == "/api/voices":
             return self._json(self.app.voices())
+        if path == "/api/workspace":
+            return self._json(self.app.workspace())
         if path == "/api/days":
             return self._json({"current": {"world": self.app.session.world, "day": self.app.session.day},
                                "people": self.app.recorded_days()})
