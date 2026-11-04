@@ -130,6 +130,8 @@ def main():
     ap.add_argument("--axes", default=str(HERE / "axes.json"))
     ap.add_argument("--scales", default="0.02,0.04,0.06,0.08")
     ap.add_argument("--idk-scales", default="0.04,0.06,0.08")
+    ap.add_argument("--idk-set", help="JSONL {id, question, answer} instead of the gate slice (e.g. "
+                    "eval/data/fresh_confirm_v1.jsonl, the fresh disjoint 200): the same idk read on other questions")
     ap.add_argument("--max-tokens", type=int, default=400)
     ap.add_argument("--parallel", type=int, default=4)
     ap.add_argument("--steps", default="sweep,idk")
@@ -200,7 +202,12 @@ def main():
                  "summary": summary, "replies": by_scale}, indent=1, ensure_ascii=False) + "\n")
             print(json.dumps({"sweep": arm["stem"], "summary": summary, "elapsed_s": round(time.time() - t0)}), flush=True)
     if "idk" in args.steps:
-        items = simpleqa_gate.gate_items()
+        global SET
+        if args.idk_set:
+            items = [json.loads(line) for line in Path(args.idk_set).read_text().splitlines() if line.strip()]
+            SET = f"{Path(args.idk_set).name} ({len(items)}), gate prompt form"
+        else:
+            items = simpleqa_gate.gate_items()
         gold = {q["id"]: q["answer"] for q in items}
         prompts = list(pool.map(lambda q: answer_prompt(ep, simpleqa_gate.PROMPT.format(question=q["question"])), items))
 
