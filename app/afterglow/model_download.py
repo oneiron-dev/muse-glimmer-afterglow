@@ -218,7 +218,7 @@ class DownloadManager:
 
     def running(self):
         with self._lock:
-            return self._running_id if self._thread and self._thread.is_alive() else None
+            return self._running_id
 
     def plan(self, choice, dest_root=None):
         """The persisted pinned plan for a choice, or None (resume reuses it)."""
@@ -235,9 +235,9 @@ class DownloadManager:
         main, so a download never mixes revisions."""
         cid = choice["id"]
         with self._lock:
-            if self._thread and self._thread.is_alive():
+            if self._running_id is not None:
                 if self._running_id != cid:
-                    raise RuntimeError("another download is already running")
+                    raise RuntimeError("another download is already running or preparing")
                 return dict(self._states[cid])
             if self.is_downloaded(choice, dest_root=dest_root):
                 root = Path(dest_root) if dest_root else models_dir()
@@ -246,54 +246,63 @@ class DownloadManager:
                       "line": "Already downloaded."}
                 self._states[cid] = st
                 return dict(st)
-        root = Path(dest_root) if dest_root else models_dir()
-        root.mkdir(parents=True, exist_ok=True)
-        if files is None:
-            pinned = choice.get("revision")
-            old = _read_plan(choice, root)
-            if pinned:
-                rev = pinned
-                if old and old.get("revision") == rev:
-                    files = old["files"]
-                else:
-                    files = _filter_tree(choice, hf_tree(choice["repo"], rev, opener=opener))
-            elif old:
-                rev, files = old["revision"], old["files"]
-            else:
-                rev = hf_sha(choice["repo"], opener=opener)
-                if not rev:
-                    raise ValueError(f"{choice['repo']}: Hub gave no commit sha")
-                files = _filter_tree(choice, hf_tree(choice["repo"], rev, opener=opener))
-        else:
-            old = _read_plan(choice, root)
-            rev = choice.get("revision") or (old.get("revision") if old else None) or "test"
-        dest = _dest(choice, root)
-        total = sum(e.get("size") or 0 for e in files)
-        have = 0
-        for e in files:
-            fp = dest if choice.get("single_file") else dest / e["path"]
-            part = Path(str(fp) + ".part")
-            if fp.is_file() and e.get("size") and fp.stat().st_size == e["size"]:
-                have += e["size"]
-            elif part.is_file():
-                have += min(part.stat().st_size, e.get("size") or part.stat().st_size)
-        free = shutil.disk_usage(root).free
-        if free < max(total - have, 0) + 512 * 1024 * 1024:
-            raise RuntimeError(f"Not enough free disk space in {root}: "
-                               f"about {(total - have) / 1e9:.1f} GB more is needed.")
-        _write_plan(choice, root, rev, files)
-        ev = threading.Event()
-        with self._lock:
+            # Reserve the slot before Hub metadata or plan preparation can block.
+            ev = threading.Event()
             self._stop[cid] = ev
-            st = {"state": "downloading", "id": cid, "revision": rev, "done": have, "total": total,
-                  "files_done": 0, "files_total": len(files), "file": None,
-                  "started_at": now_iso(), "rate_mb_s": None}
-            self._states[cid] = st
-            self._thread = threading.Thread(target=self._run,
-                                            args=(choice, files, rev, dest, root, opener, ev, on_done), daemon=True)
             self._running_id = cid
-            self._thread.start()
-            return dict(st)
+            self._states[cid] = {"state": "downloading", "id": cid, "done": 0, "total": 0,
+                                 "line": "Preparing the download."}
+        try:
+            root = Path(dest_root) if dest_root else models_dir()
+            root.mkdir(parents=True, exist_ok=True)
+            if files is None:
+                pinned = choice.get("revision")
+                old = _read_plan(choice, root)
+                if pinned:
+                    rev = pinned
+                    if old and old.get("revision") == rev:
+                        files = old["files"]
+                    else:
+                        files = _filter_tree(choice, hf_tree(choice["repo"], rev, opener=opener))
+                elif old:
+                    rev, files = old["revision"], old["files"]
+                else:
+                    rev = hf_sha(choice["repo"], opener=opener)
+                    if not rev:
+                        raise ValueError(f"{choice['repo']}: Hub gave no commit sha")
+                    files = _filter_tree(choice, hf_tree(choice["repo"], rev, opener=opener))
+            else:
+                old = _read_plan(choice, root)
+                rev = choice.get("revision") or (old.get("revision") if old else None) or "test"
+            dest = _dest(choice, root)
+            total = sum(e.get("size") or 0 for e in files)
+            have = 0
+            for e in files:
+                fp = dest if choice.get("single_file") else dest / e["path"]
+                part = Path(str(fp) + ".part")
+                if fp.is_file() and e.get("size") and fp.stat().st_size == e["size"]:
+                    have += e["size"]
+                elif part.is_file():
+                    have += min(part.stat().st_size, e.get("size") or part.stat().st_size)
+            free = shutil.disk_usage(root).free
+            if free < max(total - have, 0) + 512 * 1024 * 1024:
+                raise RuntimeError(f"Not enough free disk space in {root}: "
+                                   f"about {(total - have) / 1e9:.1f} GB more is needed.")
+            _write_plan(choice, root, rev, files)
+            with self._lock:
+                st = {"state": "downloading", "id": cid, "revision": rev, "done": have, "total": total,
+                      "files_done": 0, "files_total": len(files), "file": None,
+                      "started_at": now_iso(), "rate_mb_s": None}
+                self._states[cid] = st
+                self._thread = threading.Thread(target=self._run,
+                                                args=(choice, files, rev, dest, root, opener, ev, on_done), daemon=True)
+                self._thread.start()
+                return dict(st)
+        except Exception as e:
+            with self._lock:
+                self._running_id = None
+                self._states[cid].update(state="failed", line=f"The download could not start: {e}.")
+            raise
 
     def _run(self, choice, files, rev, dest, root, opener, stop, on_done=None):
         cid = choice["id"]
@@ -404,7 +413,7 @@ class DownloadManager:
         """Delete weights this manager downloaded (never the HF cache or legacy paths)."""
         cid = choice["id"]
         with self._lock:
-            if self._thread and self._thread.is_alive() and self._running_id == cid:
+            if self._running_id == cid:
                 raise RuntimeError("pause the download before removing it")
             self._states.pop(cid, None)
             self._stop.pop(cid, None)

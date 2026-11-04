@@ -264,6 +264,86 @@ class DownloadTest(unittest.TestCase):
         gate.set()
         self.assertEqual(wait_state(mgr, "qwen3.5-4b-mac")["state"], "done")
 
+    def test_concurrent_start_during_preparation_keeps_one_worker(self):
+        for same_choice in (True, False):
+            with self.subTest(same_choice=same_choice):
+                root = self.root / str(same_choice)
+                preparing = threading.Event()
+                finish_preparing = threading.Event()
+                downloading = threading.Event()
+                finish_downloading = threading.Event()
+
+                class SlowHub(FakeHub):
+                    def __call__(self_inner, req, timeout=None):
+                        if "/tree/" in req.full_url and not preparing.is_set():
+                            preparing.set()
+                            if not finish_preparing.wait(10):
+                                raise RuntimeError("test did not release metadata")
+                        if "/resolve/" in req.full_url:
+                            downloading.set()
+                            if not finish_downloading.wait(10):
+                                raise RuntimeError("test did not release download")
+                        return super().__call__(req, timeout=timeout)
+
+                hub = SlowHub({"a.bin": b"1" * 100, "mmproj-test.gguf": b"G" * 100})
+                mgr = model_download.DownloadManager()
+                choice = choice_multi("r1")
+                results, errors = [], []
+
+                def start_first():
+                    try:
+                        results.append(mgr.start(choice, opener=hub, dest_root=root))
+                    except Exception as e:
+                        errors.append(e)
+
+                starter = threading.Thread(target=start_first)
+                starter.start()
+                try:
+                    self.assertTrue(preparing.wait(5), "first start must reach metadata")
+                    if same_choice:
+                        state = mgr.start(choice, opener=hub, dest_root=root)
+                        self.assertEqual(state["state"], "downloading")
+                    else:
+                        with self.assertRaisesRegex(RuntimeError, "already running"):
+                            mgr.start(choice_single("r1"), opener=hub, dest_root=root)
+                    self.assertIsNone(mgr._thread, "no worker may start before metadata is ready")
+                    self.assertEqual(mgr.running(), choice["id"])
+                    self.assertEqual(mgr.state(choice["id"])["state"], "downloading")
+                    finish_preparing.set()
+                    starter.join(5)
+                    self.assertFalse(starter.is_alive())
+                    self.assertEqual(errors, [])
+                    self.assertEqual(len(results), 1)
+                    self.assertTrue(downloading.wait(5))
+                    worker = mgr._thread
+                    self.assertEqual(mgr.running(), choice["id"])
+                    self.assertEqual(mgr.start(choice, opener=hub, dest_root=root)["state"],
+                                     "downloading")
+                    self.assertIs(mgr._thread, worker)
+                    mgr.pause(choice["id"])
+                    finish_downloading.set()
+                    worker.join(5)
+                    self.assertFalse(worker.is_alive())
+                    self.assertEqual(mgr.state(choice["id"])["state"], "paused")
+                    self.assertIsNone(mgr.running())
+                finally:
+                    finish_preparing.set()
+                    finish_downloading.set()
+                    starter.join(5)
+                    if mgr._thread:
+                        mgr._thread.join(5)
+
+    def test_preparation_failure_releases_download_slot(self):
+        hub = FakeHub({"a.bin": b"1" * 100})
+        mgr = model_download.DownloadManager()
+        with mock.patch.object(model_download, "hf_tree", side_effect=ValueError("bad metadata")):
+            with self.assertRaisesRegex(ValueError, "bad metadata"):
+                mgr.start(choice_multi("r1"), opener=hub, dest_root=self.root)
+        self.assertIsNone(mgr.running())
+        self.assertEqual(mgr.state(choice_multi()["id"])["state"], "failed")
+        mgr.start(choice_multi("r1"), opener=hub, dest_root=self.root)
+        self.assertEqual(wait_state(mgr, choice_multi()["id"])["state"], "done")
+
     def test_pause_then_resume_completes(self):
         gate = threading.Event()
         gate.set()
