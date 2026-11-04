@@ -50,6 +50,7 @@ export default function App() {
   const [schedule, setSchedule] = useState(null); // when the night starts: {ends_at: "HH:MM", auto}
   const [earlier, setEarlier] = useState([]); // earlier days in the one thread, oldest first: {day, date, history}
   const [threads, setThreads] = useState([]); // today's subthreads (dictations, explainers, computer use)
+  const [loom, setLoom] = useState(null); // the open day's branches: alternatives, line, contradictions, resolution
 
   const load = useCallback(async () => {
     try {
@@ -57,6 +58,7 @@ export default function App() {
       setState(s); setReport(r); setDays(d); setWs(w); setError(null);
       getJSON("/api/schedule").then(setSchedule).catch(() => {});
       getJSON("/api/threads").then((t) => setThreads(t.threads || [])).catch(() => {});
+      getJSON("/api/loom").then(setLoom).catch(() => setLoom(null));
       return s;
     } catch {
       setError("Afterglow’s server does not answer. Start it, then reload.");
@@ -101,8 +103,8 @@ export default function App() {
       else if (ev.type === "turn_done") { turn.thinking = false; }
       setLive({ ...turn });
     }
-    const [s, w] = await Promise.all([getJSON("/api/state"), getJSON("/api/workspace")]);
-    setState(s); setWs(w); setLive(null);
+    const [s, w, l] = await Promise.all([getJSON("/api/state"), getJSON("/api/workspace"), getJSON("/api/loom").catch(() => null)]);
+    setState(s); setWs(w); setLoom(l); setLive(null);
   }
 
   async function endDay() {
@@ -212,7 +214,9 @@ export default function App() {
               onGoToday={() => openDay(state.world, today)} onOpenPanel={openPanel} onOpenDay={(d) => openDay(state.world, d)}
               earlier={sealed ? [] : earlier} nights={nights} threads={sealed ? [] : threads}
               onMoreEarlier={!sealed && earlier.length && earlier[0].day > 1 ? () => loadEarlier(earlier[0].day - 1) : null}
-              moreLabel={earlier.length ? `Show day ${earlier[0].day - 1}` : ""} />
+              moreLabel={earlier.length ? `Show day ${earlier[0].day - 1}` : ""}
+              lp={{ loom, disabled: !!(live && !live.done), onLive: (t) => setLive(t ? { ...t } : null), onNote: () => setNewNotes((n) => n + 1),
+                onReload: async () => { const [s, l] = await Promise.all([getJSON("/api/state"), getJSON("/api/loom").catch(() => null)]); setState(s); setLoom(l); } }} />
             {error && <p className="error-line" role="alert">{error}</p>}
             <Composer dropRef={mainRef} voices={voices} onVoice={setVoices} busy={!!live && !live.done} sealed={sealed} night={after && after.phase !== "morning"} onSend={send} />
           </main>

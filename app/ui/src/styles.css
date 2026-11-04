@@ -746,3 +746,15 @@ input[type="file"]::file-selector-button:hover { background: var(--chip); }
 .fl-note textarea { height: auto; padding: 10px 12px; resize: vertical; min-height: 120px; font: inherit; line-height: 1.5; }
 @keyframes fl-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .fl-view { animation: none; } }
+
+/* the inline message editor (loom): takes the message's full width above its actions, and stays visible while open */
+.acts:has(.msg-edit) { opacity: 1; flex-wrap: wrap; }
+.msg-edit { order: -1; flex-basis: 100%; width: min(52ch, 70vw); margin: 4px 0 2px; padding: 10px 12px; animation: pop 160ms var(--ease-out); transform-origin: top right; }
+.msg-edit .factions { margin-top: 6px; justify-content: flex-end; }
+
+/* side threads in a row fold into one row; open, they list in one even column */
+.tgroup { align-self: center; display: flex; flex-direction: column; align-items: center; gap: 4px; width: min(52ch, 100%); }
+.tgroup-list { display: flex; flex-direction: column; gap: 4px; width: 100%; animation: pop 160ms var(--ease-out); transform-origin: top center; }
+.tgroup-head, .tgroup-list .tchip { align-self: stretch; max-width: none; }
+.tgroup .tchip time { flex: none; margin-left: auto; padding-left: 8px; white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .tgroup-list { animation: none; } }
