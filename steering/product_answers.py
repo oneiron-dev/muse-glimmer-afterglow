@@ -234,6 +234,8 @@ def main():
     ap.add_argument("--general-from", type=int, default=0,
                     help="skip the first N of those (e.g. 100 with --limit-general 200 asks only questions 101-200)")
     ap.add_argument("--ids", help="file of question ids (one per line): ask only those, in both sets")
+    ap.add_argument("--general-file", help="jsonl of {id, question} for set general (e.g. the fresh-200 confirmation set): "
+                    "overrides the frozen gate slice, same bare ask form")
     ap.add_argument("--date", default="2026-10-30")
     ap.add_argument("--runs", help="the real runs root (default: the main checkout's runs/)")
     ap.add_argument("--out", required=True)
@@ -256,11 +258,19 @@ def main():
 
     real_runs = runs_root(args.runs)
     manifest = real_runs / "serving" / "adapters.json"
-    general = [{"id": q["id"], "question": q["question"]} for q in simpleqa_gate.gate_items()[args.general_from:args.limit_general]]
+    if args.general_file:
+        _gf_lines = [ln for ln in Path(args.general_file).read_text().splitlines() if ln.strip()]
+        general = [{"id": q["id"], "question": q["question"]} for q in map(json.loads, _gf_lines)]
+    else:
+        general = [{"id": q["id"], "question": q["question"]} for q in simpleqa_gate.gate_items()[args.general_from:args.limit_general]]
     only = set(Path(args.ids).read_text().split()) if args.ids else None
-    out_note = {"general_questions": f"{args.general_from + 1}-{args.general_from + len(general)}",
-                "note": "a direction screen on the first questions of the frozen slice"
-                if args.limit_general < 200 else "the full gate slice"}
+    out_note = {"general_questions": f"custom file {args.general_file} ({len(general)} questions)"
+                if args.general_file else f"{args.general_from + 1}-{args.general_from + len(general)}",
+                "note": "custom general file (fresh confirmation set)"
+                if args.general_file else ("a direction screen on the first questions of the frozen slice"
+                if args.limit_general < 200 else "the full gate slice"), "general_sha256": hashlib.sha256(
+                Path(args.general_file).read_bytes()).hexdigest() if args.general_file else json.loads(
+                (Path(args.eval_root) / "eval" / "data" / "simpleqa" / "MANIFEST.json").read_text())["gate_slice"]["sha256"]}
     out = Path(args.out)
     tmp = tempfile.mkdtemp(prefix="product-answers-")
     plan = []

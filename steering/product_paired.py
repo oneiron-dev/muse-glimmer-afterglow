@@ -61,7 +61,8 @@ def answers_report(path, first):
     for s in ("never_told", "never_told_rewrites", "general", "known", "known2"):
         keys = [k for k in by if k[0] == s and {"base", "adapter"} <= set(by[k])]
         if s == "general":
-            keys.sort(key=lambda k: order.index(k[1]))
+            known = set(order)
+            keys.sort(key=lambda k: order.index(k[1]) if k[1] in known else len(order))
         if keys:
             out[s] = paired([(by[k]["base"], by[k]["adapter"]) for k in keys])
         if s == "general" and len(keys) > first:
