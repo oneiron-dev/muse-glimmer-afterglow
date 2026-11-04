@@ -111,4 +111,6 @@ Validation completed:
 - loom.alternatives is unchanged: nested regenerations expose immediate alternatives, not a flattened
   set of every cousin version. No existing branch model or note-store behavior is changed.
 
-Implementation ready. The completion marker will be added only after the first successful branch push.
+Published implementation commit 53a4a77 to origin/afterglow/loom before writing the completion marker.
+
+DONE
