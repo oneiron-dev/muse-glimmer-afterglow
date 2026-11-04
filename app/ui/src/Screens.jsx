@@ -3,9 +3,10 @@ import { useNavigate, useSearch } from "@tanstack/react-router";
 import { CalendarView, EmailView, Empty, NightView, TasksView } from "./Panel.jsx";
 import { Icon } from "./Sidebar.jsx";
 import { DaysView } from "./DaysView.jsx";
-import { factRows, failedWhy, getJSON, postJSON, pretty, signed } from "./lib.js";
+import { factRows, failedWhy, getJSON, isCodeKey, postJSON, pretty, signed } from "./lib.js";
 import { ClipsList } from "./clips/ClipsList.jsx";
 import { FilesList } from "./files/FilesList.jsx";
+import { NoteValue, noteSearchText } from "./NoteValue.jsx";
 
 const TITLES = { memory: "Memory", nights: "Nights", calendar: "Calendar", mail: "Mail", tasks: "Tasks", files: "Files", settings: "Settings" };
 
@@ -64,7 +65,7 @@ function MemoryScreen({ ctx }) {
   const byId = useMemo(() => Object.fromEntries(notes.map((n) => [n.id, n])), [notes]);
   const active = notes.filter((n) => n.status === "active").reverse();
   const removed = notes.filter((n) => n.status === "forgotten").reverse();
-  const shown = q ? active.filter((n) => `${n.key} ${n.value}`.toLowerCase().includes(q.toLowerCase())) : active;
+  const shown = q ? active.filter((n) => noteSearchText(n).includes(q.toLowerCase())) : active;
   const facts = factRows(report && report.eval);
   const tested = Object.fromEntries(facts.map((f) => [f.key.toLowerCase(), f]));
   const known = facts.filter((f) => f.b >= 2).length;
@@ -110,13 +111,13 @@ function MemoryScreen({ ctx }) {
                     <button type="submit" className="btn btn-send">Save</button>
                     <button type="button" className="btn btn-text" onClick={() => setEditing(null)}>Cancel</button>
                   </form>
-                ) : <span className="nv">{n.value}</span>}
-                {prev && <span className="nwas">was {prev.value}</span>}
+                ) : <NoteValue k={n.key} value={n.value} />}
+                {prev && !isCodeKey(n.key) && <span className="nwas">was {prev.value}</span>}
                 <span className="nwhen">
                   {changedAfter && prevIn && tIn
                     ? <>Changed on day {n.day}, after night {prevIn}. <b>Trained in night {tIn}</b>{t ? `, answers it without notes ${t.b} of 3 times` : ""}.</>
                     : changedAfter && prevIn
-                    ? <>Changed on day {n.day}, after night {prevIn}. The model still holds “{prev.value}” until a night trains this.</>
+                    ? <>Changed on day {n.day}, after night {prevIn}. The model still holds {isCodeKey(n.key) ? "the old value" : `“${prev.value}”`} until a night trains this.</>
                     : tIn ? <>Said on day {n.day || "?"}. <b>Trained in night {tIn}</b>{t ? `, answers it without notes ${t.b} of 3 times` : ""}.</>
                       : <>Said on day {n.day || "?"}. Not trained yet: tonight’s night trains it.</>}
                 </span>
@@ -132,7 +133,7 @@ function MemoryScreen({ ctx }) {
         </ul>
         {removed.length > 0 && (
           <details className="removed"><summary>Removed by you <span className="num">{removed.length}</span></summary>
-            <ul className="notes">{removed.map((n) => <li key={n.id}><span className="nk">{pretty(n.key)}</span><span className="nv">{n.value}</span><span className="nwhen">Removed on day {n.forgotten_day}.</span></li>)}</ul>
+            <ul className="notes">{removed.map((n) => <li key={n.id}><span className="nk">{pretty(n.key)}</span><NoteValue k={n.key} value={n.value} /><span className="nwhen">Removed on day {n.forgotten_day}.</span></li>)}</ul>
           </details>
         )}
       </section>

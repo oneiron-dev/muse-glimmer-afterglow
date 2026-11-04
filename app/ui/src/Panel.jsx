@@ -2,6 +2,7 @@ import { Component, useEffect, useMemo, useState } from "react";
 import { CHECKS, MINUS, factRows, failedWhy, getJSON, longDate, nf, postJSON, pretty, shortDate, signed } from "./lib.js";
 import { Glyph } from "./Thread.jsx";
 import { ThreadsView } from "./ThreadsView.jsx";
+import { NoteValue, noteSearchText, wasValues } from "./NoteValue.jsx";
 import { cue } from "./sound.js";
 
 const TABS = [
@@ -184,7 +185,7 @@ export function MemoryView({ state, report, first }) {
   const byId = useMemo(() => Object.fromEntries(notes.map((n) => [n.id, n])), [notes]);
   const active = notes.filter((n) => n.status === "active").reverse();
   const today = active.filter((n) => n.day === state.day);
-  const shown = (q ? active.filter((n) => `${n.key} ${n.value}`.toLowerCase().includes(q.toLowerCase())) : active);
+  const shown = (q ? active.filter((n) => noteSearchText(n).includes(q.toLowerCase())) : active);
   const rows = factRows(report && report.eval);
   const known = rows.filter((r) => r.b >= 2).length;
   return (
@@ -205,8 +206,8 @@ export function MemoryView({ state, report, first }) {
               return (
                 <li key={n.id} className={n.day === state.day ? "new" : ""}>
                   <span className="nk">{pretty(n.key)}</span>
-                  <span className="nv">{n.value}</span>
-                  {was.length > 0 && <span className="nwas">was {was.join(", then ")}</span>}
+                  <NoteValue k={n.key} value={n.value} />
+                  {wasValues(n, was).length > 0 && <span className="nwas">was {was.join(", then ")}</span>}
                   <span className="nday num">day {n.day}</span>
                 </li>
               );
