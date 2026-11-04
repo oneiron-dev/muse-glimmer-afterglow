@@ -40,7 +40,7 @@ Completed checks:
 - Bun install succeeded, with Electron 45.2.2 pinned as a development dependency.
 - node --test: 17 passed. Tests use ephemeral HTTP fixtures and stubbed Electron APIs, not an Afterglow server, model, or Electron runtime.
 - node --check main.js: passed.
-- Review fixes verified headlessly: failed-spawn cleanup, credentialed-link blocking, repeated-quit waiting, and intentional load-abort handling.
+- Review regressions verified headlessly: failed-spawn cleanup, credentialed-link blocking, and repeated-quit waiting. Intentional load-abort handling was also added.
 - bun run icon: passed using macOS sips and iconutil. PNG is 1024x1024 RGBA with a transparent corner; ICNS generated.
 - Bundled SVG is byte-identical to the supplied buildout icon.
 - cd app && python3 -m unittest discover -s tests: 153 tests, OK, one skipped. Existing ResourceWarnings were emitted.
@@ -65,3 +65,6 @@ need the owner's manual check. Device permissions are denied; voice capture is
 not enabled by the shell. Electron's prebuilt runtime is downloaded lazily on
 first start and was not launched. Unsigned .app packaging was skipped; this is a
 checkout-based development shell, not a standalone Python bundle.
+
+Implementation commit 36f077e was pushed to origin/afterglow/electron before this completion marker.
+DONE
