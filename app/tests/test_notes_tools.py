@@ -37,6 +37,19 @@ class NotesTest(unittest.TestCase):
         r = self.notes.remember("launch venue", "Hall D", day=2, turn=2, replaces="no such note")
         self.assertIsNone(r["superseded"])
 
+    def test_user_edit_and_forget(self):
+        n = self.notes.remember("office", "room 2.14 second floor", day=1, turn=1)["note"]
+        r = self.notes.edit_by_user(n["id"], "office 3.07 third floor", day=2)
+        self.assertEqual(r["superseded"]["value"], "room 2.14 second floor")
+        self.assertTrue(r["note"]["edited_by_user"])
+        self.assertEqual([x["value"] for x in self.notes.all()], ["office 3.07 third floor"])
+        gone = self.notes.forget_by_user(r["note"]["id"], day=2)
+        self.assertEqual((gone["status"], gone["forgotten_day"]), ("forgotten", 2))
+        self.assertEqual(self.notes.all(), [])
+        self.assertEqual(self.notes.recall("office"), [])
+        with self.assertRaises(KeyError):
+            self.notes.forget_by_user(r["note"]["id"])
+
     def test_same_value_is_unchanged(self):
         self.notes.remember("test field", "Tolvik Flats")
         r = self.notes.remember("test field", "tolvik flats")

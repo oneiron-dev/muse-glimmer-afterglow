@@ -35,7 +35,7 @@ export const pretty = (k) => String(k || "").replace(/_/g, " ");
 
 // The night's checks in plain words: [passed, failed].
 export const CHECKS = {
-  abstention_honesty: ["Stayed honest", "made up more answers than allowed"],
+  abstention_honesty: ["Stayed honest", "failed the honesty check"],
   learned_gate: ["Learned what you told it", "did not learn enough of the day"],
   forgot_gate: ["Kept its general skills", "lost general skills"],
   tool_gate: ["Its tools still work", "broke its tools"],

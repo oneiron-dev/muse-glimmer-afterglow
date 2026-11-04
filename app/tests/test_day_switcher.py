@@ -54,6 +54,17 @@ class DaySwitcherTest(unittest.TestCase):
         self.app.open_day("v", 4)
         self.assertEqual((self.app.session.world, self.app.session.day), ("v", 4))
 
+    def test_a_profile_made_in_the_app_opens_its_first_day(self):
+        r = self.app.create_profile("  Mira  Holt ", "Runs a small bakery")
+        self.assertEqual((r["world"], r["day"], r["name"]), ("p-mira-holt", 1, "Mira Holt"))
+        self.assertEqual((self.app.session.world, self.app.session.day), ("p-mira-holt", 1))
+        self.assertIn("Mira Holt's personal assistant", self.app.session.system_message["content"])
+        self.assertIn("p-mira-holt", [p["world"] for p in self.app.recorded_days()])
+        self.assertNotIn("_profiles", [p["world"] for p in self.app.recorded_days()])
+        self.assertEqual(self.app.create_profile("Mira Holt")["world"], "p-mira-holt-2")
+        with self.assertRaises(ValueError):
+            self.app.create_profile("   ")
+
     def test_refuses_a_day_that_was_never_opened(self):
         with self.assertRaises(ValueError):
             self.app.open_day("w", 3)

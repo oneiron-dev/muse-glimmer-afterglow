@@ -130,6 +130,46 @@ class App:
             threading.Thread(target=self.restore_snapshot, daemon=True).start()
         return {"world": world, "day": day, "date": self.session.date}
 
+    def change_note(self, note_id, value=None, forget=False):
+        """The Memory screen's edit or forget on one note (local notes; the night reads notes.json), logged in
+        runs/<world>/<day>/note-edits.jsonl."""
+        with self.lock:
+            s = self.session
+            notes = getattr(s.notes, "local", s.notes)
+            if forget:
+                n = notes.forget_by_user(note_id, day=s.day)
+                rec = {"at": now_iso(), "id": note_id, "action": "forget", "key": n["key"], "value": n["value"]}
+            else:
+                if not str(value or "").strip():
+                    raise ValueError("a note needs a value; use forget to remove it")
+                r = notes.edit_by_user(note_id, value, day=s.day)
+                n = r["note"]
+                rec = {"at": now_iso(), "id": note_id, "action": "edit", "key": n["key"], "new_id": n["id"],
+                       "value": n["value"], "old_value": (r["superseded"] or {}).get("value")}
+            with open(s.dir / "note-edits.jsonl", "a", encoding="utf-8") as f:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        return rec
+
+    def create_profile(self, name, about=""):
+        """Add a profile made in the app: runs/_profiles/<id>/world.json (the person's name and one line about their
+        work, nothing else), then open its first day. A new person starts with no notes and the base weights."""
+        name = " ".join(str(name or "").split())[:60]
+        if not name:
+            raise ValueError("a profile needs a name")
+        slug = "p-" + ("-".join("".join(c if c.isalnum() else " " for c in name.lower()).split()) or "profile")
+        root = paths.runs_root() / "_profiles"
+        world, n = slug, 2
+        while (root / world).exists() or (paths.runs_root() / world).exists():
+            world, n = f"{slug}-{n}", n + 1
+        (root / world).mkdir(parents=True)
+        doc = {"world": world, "synthetic": False, "made_in_app": now_iso(),
+               "persona": {"name": name, "summary": " ".join(str(about or "").split())[:240]}}
+        (root / world / "world.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
+        with self.lock:
+            self.session = DaySession(world, 1, self.client, **self.session_options)
+            self.snapshot_status = {"state": "idle"}
+        return {"world": world, "day": 1, "date": self.session.date, "name": name}
+
     def restore_snapshot(self):
         with self.lock:
             self.snapshot_status = {"state": "restoring", "at": now_iso()}
@@ -279,6 +319,14 @@ class App:
             "busy": self.lock.locked(),
         }
 
+    def settings(self):
+        """What the Settings screen shows, read only: the agent's tools, its reasoning setting, the notes backend, the
+        model server and slot, and the serving rule the nights are judged by (runs/serving/serving-rule.json)."""
+        s = self.session
+        return {"tools": [t["function"]["name"] for t in s.tool_schemas], "reasoning": s.reasoning,
+                "notes_backend": s.notes_backend, "endpoint": self.client.endpoint, "slot": self.client.slot,
+                "serving_rule": serving_rule(), "serving": s.adapter_choice, "dials": s.dial_choice}
+
     def workspace(self):
         """What the agent's world tools hold for the open day (world_state.json): calendar events, tasks and email
         drafts, for the app's side panel. Read only; drafts are never sent."""
@@ -398,6 +446,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(self.app.raw_turn(int(turn), q.get("mode", ["reply"])[0]))
             except GlimmerError as e:
                 return self._json({"error": f"the model server did not render the template: {e}"}, 502)
+        if path == "/api/settings":
+            return self._json(self.app.settings())
         if path == "/api/workspace":
             return self._json(self.app.workspace())
         if path == "/api/days":
@@ -420,6 +470,8 @@ class Handler(BaseHTTPRequestHandler):
             path = "/report.html"
         elif path == "/night":
             path = "/night.html"
+        elif "." not in path.rsplit("/", 1)[-1]:  # the app's own screens (/memory, /nights, ...): one page
+            path = "/index.html"
         f = (WEB / path.lstrip("/")).resolve()
         if WEB not in f.parents or not f.is_file():
             return self._json({"error": "not found"}, 404)
@@ -473,6 +525,20 @@ class Handler(BaseHTTPRequestHandler):
                 try:
                     return self._json(self.app.open_day(b.get("world") or self.app.session.world, b.get("day")))
                 except (ValueError, TypeError) as e:
+                    return self._json({"error": str(e)}, 400)
+            if path in ("/api/notes/edit", "/api/notes/forget"):
+                b = self._body()
+                try:
+                    return self._json(self.app.change_note(b.get("id", ""), b.get("value"), forget=path.endswith("forget")))
+                except (KeyError, ValueError) as e:
+                    return self._json({"error": str(e).strip("'")}, 400)
+            if path == "/api/profile":
+                if self.app.lock.locked():
+                    return self._json({"error": "Afterglow is busy; try again in a moment"}, 409)
+                b = self._body()
+                try:
+                    return self._json(self.app.create_profile(b.get("name"), b.get("about")))
+                except ValueError as e:
                     return self._json({"error": str(e)}, 400)
             if path == "/api/night-link/undo":
                 return self._json(self.app.undo_night_link(self._body().get("old_id", "")))

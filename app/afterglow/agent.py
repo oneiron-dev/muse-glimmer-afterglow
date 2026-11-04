@@ -102,8 +102,12 @@ def now_iso():
 
 
 def load_world(world):
-    p = paths.worlds_root() / world / "world.json"
-    return json.loads(p.read_text()) if p.exists() else {"world": world}
+    """The world's document: a synthetic world from worlds/, else a profile made in the app (runs/_profiles)."""
+    for root in (paths.worlds_root(), paths.runs_root() / "_profiles"):
+        p = root / world / "world.json"
+        if p.exists():
+            return json.loads(p.read_text())
+    return {"world": world}
 
 
 def previous_day_dir(world, day):

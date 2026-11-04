@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CHECKS, MINUS, failedKeys, failedWhy, learnedExamples, longDate, nf, shortDate, signed } from "./lib.js";
 
 /** The one conversation: the morning's card, the day's messages, then the night and the next morning. */
-export function Thread({ state, report, live, after, nextDay, first, onOpenPanel, onOpenDay }) {
+export function Thread({ state, report, live, after, nextDay, sealed, onGoToday, onOpenPanel, onOpenDay }) {
   const scroller = useRef(null);
   const stick = useRef(true);
   const turns = state.history || [];
@@ -16,11 +16,18 @@ export function Thread({ state, report, live, after, nextDay, first, onOpenPanel
         {report && !report.missing && (
           <>
             <p className="divider">Morning, day {state.day}</p>
-            <MorningCard report={report} first={first} onOpenNight={() => onOpenPanel("night", report.day)} />
+            <MorningCard report={report} onOpenNight={() => onOpenPanel("night", report.day)} />
           </>
         )}
+        {sealed && (
+          <div className="seal" role="note">
+            <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="4" y="9" width="12" height="8.5" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" /><path d="M7 9V6.5a3 3 0 0 1 6 0V9" fill="none" stroke="currentColor" strokeWidth="1.5" /></svg>
+            <span>Sealed. {sealed.night ? `Night ${sealed.night.day} trained on this day and ${sealed.night.decision === "keep" ? "kept the update" : "rolled it back"}.` : "A night trained on this day."} It stays as it was; anything new goes into today.</span>
+            <button type="button" className="btn btn-quiet" onClick={onGoToday}>Go to today</button>
+          </div>
+        )}
         <p className="divider">{longDate(state.date) || `Day ${state.day}`}</p>
-        {turns.length === 0 && !live && <p className="empty">A new day. Tell {first}’s agent what you are working on, who with, and what changed.</p>}
+        {turns.length === 0 && !live && <p className="empty">A new day. Tell your agent what you are working on, who with, and what changed.</p>}
         {turns.map((t, i) => (t.role === "user" ? <UserMsg key={i} text={t.content} ts={t.ts} turn={t.turn} onOpenPanel={onOpenPanel} />
           : t.role === "assistant" ? <Reply key={i} rec={t} text={t.content} tools={t.tool_calls} error={t.error} onOpenPanel={onOpenPanel} /> : null))}
         {live && (
@@ -29,7 +36,7 @@ export function Thread({ state, report, live, after, nextDay, first, onOpenPanel
             <Reply text={live.text} tools={live.tools} error={live.error} thinking={live.thinking} onOpenPanel={onOpenPanel} />
           </>
         )}
-        {after && <Night after={after} state={state} first={first} nextDay={nextDay} onOpenDay={onOpenDay} onOpenPanel={onOpenPanel} />}
+        {after && <Night after={after} state={state} nextDay={nextDay} onOpenDay={onOpenDay} onOpenPanel={onOpenPanel} />}
       </div>
     </div>
   );
@@ -129,7 +136,7 @@ export function Glyph({ kind }) {
 }
 
 /** The morning card: the night of record before today, kept or rolled back, with its proof. */
-export function MorningCard({ report, first, onOpenNight }) {
+export function MorningCard({ report, onOpenNight }) {
   const dec = report.decision || {};
   const ev = report.eval || {};
   const n = report.day;
@@ -189,7 +196,7 @@ function Proof({ examples }) {
 }
 
 /** The night after today, step by step from its own files (receipt.json, decision.json), then the morning. */
-function Night({ after, state, first, nextDay, onOpenDay, onOpenPanel }) {
+function Night({ after, state, nextDay, onOpenDay, onOpenPanel }) {
   const r = after.report;
   const dec = (r && r.decision) || {};
   const rc = (r && r.receipt) || {};
@@ -219,7 +226,7 @@ function Night({ after, state, first, nextDay, onOpenDay, onOpenPanel }) {
           ))}
           {r ? (
             <li className={`verdict ${kept ? "is-keep" : "is-rollback"}${after.shown > steps.length ? " on" : ""}`}><i className="mk" />
-              <div><b>{kept ? "Kept" : "Rolled back"}</b><span>{kept ? `From tomorrow ${first} talks to night ${r.day}’s update.` : `The update ${failedWhy(failedKeys(dec))}. ${first} keeps night ${r.served ? r.served.day : "?"}’s update.`}</span></div></li>
+              <div><b>{kept ? "Kept" : "Rolled back"}</b><span>{kept ? `From tomorrow you talk to night ${r.day}’s update.` : `The update ${failedWhy(failedKeys(dec))}. You keep night ${r.served ? r.served.day : "?"}’s update.`}</span></div></li>
           ) : (
             <li className={`verdict${after.shown > 1 ? " on" : ""}`}><i className="mk" /><div><b>Training tonight</b><span>The night runs on the training GPU. Its result arrives here in the morning.</span></div></li>
           )}
@@ -235,7 +242,7 @@ function Night({ after, state, first, nextDay, onOpenDay, onOpenPanel }) {
             {!kept && <p className="mwhy">The update {failedWhy(failedKeys(dec))}{ah.honesty_change != null ? `: honesty ${signed(ah.honesty_change)} on 200 general questions, and the limit is ${MINUS}5` : ""}.</p>}
             {!kept && r.served && <p className="mkeep">You still talk to night {r.served.day}’s update. Today’s notes stay, and tonight I try again.</p>}
             {kept && L.B != null && <p className="mkeep">{L.B} of your facts answered without notes, before {L.A}.</p>}
-            <p className="mfine">{(r.nights || []).filter((x) => x.decision === "rollback").length} of {first}’s {(r.nights || []).filter((x) => x.decision).length} nights so far were rolled back. That is the check doing its job.</p>
+            <p className="mfine">{(r.nights || []).filter((x) => x.decision === "rollback").length} of your {(r.nights || []).filter((x) => x.decision).length} nights so far were rolled back. That is the check doing its job.</p>
             <div className="mrow">
               <button type="button" className="link" onClick={() => onOpenPanel("night", r.day)}>See the night</button>
               {nextDay && <button type="button" className="btn btn-quiet" onClick={() => onOpenDay(nextDay)}>Open day {nextDay}</button>}

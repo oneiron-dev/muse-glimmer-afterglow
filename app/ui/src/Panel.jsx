@@ -44,11 +44,11 @@ export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) 
   );
 }
 
-function Empty({ kind, children }) {
+export function Empty({ kind, children }) {
   return <div className="pempty"><Glyph kind={kind} /><p>{children}</p></div>;
 }
 
-function CalendarView({ ws, focus, today }) {
+export function CalendarView({ ws, focus, today }) {
   const events = (ws && ws.calendar) || [];
   if (!events.length) return <Empty kind="calendar">No events yet. Ask the agent to put something in the calendar.</Empty>;
   const byDate = events.reduce((m, e) => ((m[e.date] = m[e.date] || []).push(e), m), {});
@@ -73,7 +73,7 @@ function CalendarView({ ws, focus, today }) {
   );
 }
 
-function TasksView({ ws, focus }) {
+export function TasksView({ ws, focus }) {
   const tasks = (ws && ws.tasks) || [];
   if (!tasks.length) return <Empty kind="tasks">No tasks yet. Ask the agent to add one.</Empty>;
   const open = tasks.filter((t) => !t.done), done = tasks.filter((t) => t.done);
@@ -91,7 +91,7 @@ function TasksView({ ws, focus }) {
   );
 }
 
-function EmailView({ ws, focus }) {
+export function EmailView({ ws, focus }) {
   const drafts = [...((ws && ws.emails) || [])].reverse();
   const [sel, setSel] = useState(focus || (drafts[0] && drafts[0].id));
   const [copied, setCopied] = useState(false);
@@ -136,7 +136,7 @@ function WebView({ focus }) {
 }
 
 /** Memory: the notes it keeps outside the model, and what the last kept night put into its weights. */
-function MemoryView({ state, report, first }) {
+export function MemoryView({ state, report, first }) {
   const [view, setView] = useState("notes");
   const [q, setQ] = useState("");
   const notes = state.notes || [];
@@ -191,7 +191,7 @@ function MemoryView({ state, report, first }) {
 }
 
 /** Every night so far, and one night in full (GET /api/report?day=N). */
-function NightView({ state, report, focus, first }) {
+export function NightView({ state, report, focus, first }) {
   const [day, setDay] = useState(typeof focus === "number" ? focus : report && report.day);
   const [r, setR] = useState(report && report.day === day ? report : null);
   useEffect(() => { if (typeof focus === "number") setDay(focus); }, [focus]);
