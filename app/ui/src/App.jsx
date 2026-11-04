@@ -6,6 +6,7 @@ import { Panel } from "./Panel.jsx";
 import { Composer } from "./Composer.jsx";
 import { Sidebar } from "./Sidebar.jsx";
 import { Screen } from "./Screens.jsx";
+import { useVoices } from "./Voice.jsx";
 
 const STEP_MS = 950;
 
@@ -29,6 +30,7 @@ export default function App() {
   const [newNotes, setNewNotes] = useState(0);
   const [error, setError] = useState(null);
   const timers = useRef([]);
+  const [voices, setVoices] = useVoices();
 
   const load = useCallback(async () => {
     try {
@@ -114,7 +116,7 @@ export default function App() {
   const sealedNight = (report && report.nights || []).find((n) => n.day === state.day);
   const sealed = state.day < today ? { night: sealedNight || null } : null;
   const nights = ((report && report.nights) || []).filter((n) => n.day < state.day);
-  const ctx = { state, report, days, ws, nights, openPanel, openDay, go, setSky, mode, hour, reload: load };
+  const ctx = { state, report, days, ws, nights, openPanel, openDay, go, setSky, mode, hour, reload: load, voices, setVoices };
 
   return (
     <div className={`app${folded ? " folded" : ""}${screen === "chat" && panel ? " with-panel" : ""}`}>
@@ -134,7 +136,7 @@ export default function App() {
             <Thread state={state} report={report} live={live} after={after} nextDay={nextDay} sealed={sealed}
               onGoToday={() => openDay(state.world, today)} onOpenPanel={openPanel} onOpenDay={(d) => openDay(state.world, d)} />
             {error && <p className="error-line" role="alert">{error}</p>}
-            <Composer busy={!!live && !live.done} sealed={sealed} night={after && after.phase !== "morning"} onSend={send} />
+            <Composer voices={voices} onVoice={setVoices} busy={!!live && !live.done} sealed={sealed} night={after && after.phase !== "morning"} onSend={send} />
           </main>
           {panel && <Panel tab={panel} focus={focus} state={state} report={report} ws={ws} onTab={(t) => openPanel(t)} onClose={closePanel} />}
         </>

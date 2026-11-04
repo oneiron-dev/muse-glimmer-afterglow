@@ -487,3 +487,26 @@ a { color: inherit; }
 .ob-loop li { display: grid; grid-template-columns: 110px 1fr; gap: 12px; font-size: 14px; }
 .ob-loop b { font: 400 17px/1.3 var(--serif); }
 .ob-loop span { color: var(--ink-2); }
+
+/* voice */
+.vwrap { position: relative; align-self: center; }
+.vpill { height: 32px; border: 0; border-radius: 999px; padding: 0 12px; background: var(--chip); color: var(--ink-2); font-size: 13px; font-weight: 600; white-space: nowrap; margin-left: 2px; }
+.vpill:hover, .vpill[aria-expanded="true"] { color: var(--ink); background: color-mix(in oklch, var(--chip) 85%, var(--ink)); }
+.vsheet { position: absolute; bottom: calc(100% + 12px); left: 0; z-index: 20; width: 380px; padding: 12px; border-radius: 14px; background: var(--card); box-shadow: var(--pop-shadow); transform-origin: bottom left; animation: pop 180ms var(--ease-out); }
+.vs-head { margin: 2px 6px 8px; font-weight: 600; } .vs-head span { font-weight: 400; color: var(--ink-3); font-size: 12.5px; margin-left: 6px; }
+.voices { display: flex; flex-direction: column; gap: 10px; }
+.v-list { display: flex; flex-direction: column; gap: 2px; }
+.v-row { display: flex; gap: 10px; align-items: flex-start; text-align: left; border: 0; background: transparent; border-radius: 10px; padding: 9px 10px; color: var(--ink); }
+.v-row:hover { background: var(--sunk); }
+.v-row.on { background: var(--chip); }
+.v-row span { display: flex; flex-direction: column; }
+.v-row b { font-weight: 600; font-size: 14px; }
+.v-row small { font-size: 12.5px; color: var(--ink-3); }
+.v-radio { flex: none; margin-top: 3px; width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink-3); }
+.v-row.on .v-radio { box-shadow: inset 0 0 0 4px var(--accent); }
+.v-held { font-size: 13px; color: var(--ink-2); padding: 0 6px; }
+.v-held summary { cursor: pointer; color: var(--ink-3); }
+.v-held ul { margin: 6px 0 0; padding-left: 16px; display: flex; flex-direction: column; gap: 4px; }
+.v-describe { display: flex; gap: 6px; padding: 0 2px; }
+.v-describe input { flex: 1; height: 36px; padding: 0 10px; border: 0; border-radius: 9px; background: var(--sunk); font-size: 14px; outline: 0; }
+.v-describe input:focus { box-shadow: inset 0 0 0 1.5px var(--focus); }

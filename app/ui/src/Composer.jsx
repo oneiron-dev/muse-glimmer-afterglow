@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
+import { VoicePill } from "./Voice.jsx";
 
 /** The message box: Enter sends, Shift+Enter breaks a line. Open at night too: replies come from the last kept update. */
-export function Composer({ busy, night, sealed, onSend }) {
+export function Composer({ busy, night, sealed, voices, onVoice, onSend }) {
   const [text, setText] = useState("");
   const ta = useRef(null);
   const grow = () => { const t = ta.current; if (!t) return; t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight, 180) + "px"; };
@@ -15,6 +16,7 @@ export function Composer({ busy, night, sealed, onSend }) {
   };
   return (
     <form className="composer" onSubmit={submit}>
+      {!sealed && <VoicePill voices={voices} onChange={onVoice} />}
       <label className="sr" htmlFor="msg">Message</label>
       <textarea id="msg" ref={ta} rows={1} value={text} autoComplete="off"
         placeholder={sealed ? "This day is sealed. Go to today to keep talking" : night ? "Still here tonight. Message your agent" : "Message your agent"}

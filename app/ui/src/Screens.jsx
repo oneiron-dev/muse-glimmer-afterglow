@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearch } from "@tanstack/react-router";
 import { CalendarView, EmailView, Empty, NightView, TasksView } from "./Panel.jsx";
 import { Icon } from "./Sidebar.jsx";
+import { VoiceList } from "./Voice.jsx";
 import { CHECKS, MINUS, factRows, failedWhy, getJSON, postJSON, pretty, signed } from "./lib.js";
 
 const TITLES = { memory: "Memory", nights: "Nights", calendar: "Calendar", mail: "Mail", tasks: "Tasks", files: "Files", settings: "Settings" };
@@ -197,7 +198,7 @@ function FilesScreen({ ctx }) {
   );
 }
 
-const SECTIONS = [["profile", "Profile"], ["tools", "Tools"], ["nights", "Nights"], ["model", "Model"], ["appearance", "Appearance"]];
+const SECTIONS = [["profile", "Profile"], ["voice", "Voice"], ["tools", "Tools"], ["nights", "Nights"], ["model", "Model"], ["appearance", "Appearance"]];
 const TOOL_NAMES = {
   remember: ["Notes", "Writes down what you tell it"], recall: ["Look-ups", "Reads your notes before it answers"],
   "calendar.list_events": ["Calendar", "Reads your calendar"], "calendar.add_event": ["Calendar", "Adds events"],
@@ -224,6 +225,12 @@ function SettingsScreen({ ctx }) {
             {sec === "profile" && (
               <section><h2 className="sec">Profile</h2>
                 <dl className="kv"><div><dt>Name</dt><dd>{st.persona || st.world}</dd></div><div><dt>Days</dt><dd className="num">{st.day}</dd></div><div><dt>Notes stored</dt><dd>{s.notes_backend === "vault" ? "On this computer and in your Oneiron vault" : "On this computer"}</dd></div></dl>
+              </section>
+            )}
+            {sec === "voice" && (
+              <section><h2 className="sec">Voice</h2>
+                <p className="pfine">How your agent sounds. A voice steers the model directly (re:dvx dials), from your next message.</p>
+                <VoiceList voices={ctx.voices} onChange={ctx.setVoices} />
               </section>
             )}
             {sec === "tools" && (
