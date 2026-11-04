@@ -307,7 +307,7 @@ def agent_vision(app):
         ready = model_path("glimmer-mmproj")
         if ready is None:
             return {"local": True, "available": False, "hint": "Press Download on Glimmer's own vision.",
-                    "line": "Download your agent's vision file to let it see images."}
+                    "line": "Download the add-on to let your agent see pictures."}
         running, cmd = _local_running(app), _local_cmd(app)
         confirmed = running and _cmd_arg(cmd, "--mmproj") == str(ready)
         starting = bool((getattr(app, "model_source", None) or {}).get("starting"))
@@ -320,16 +320,16 @@ def agent_vision(app):
                 return {"local": True, "available": False, "hint": None,
                         "line": "Your agent's server is starting."}
             return {"local": True, "available": False, "hint": "Start it from the Agent slot.",
-                    "line": "Your agent's server is stopped. Start it from the Agent slot to load vision."}
+                    "line": "Your agent is stopped. Start it under Agent, then come back here."}
         if _selected_id("vision") == "glimmer-mmproj":
             return {"local": True, "available": False, "hint": "Press Use on Glimmer's own vision.",
-                    "line": "Your agent's server runs without its vision file. Press Use to restart it with vision."}
+                    "line": "Press Use to restart your agent with the add-on."}
         return {"local": True, "available": False, "hint": "Press Use on Glimmer's own vision.",
-                "line": "Your agent's vision file is ready. Press Use to load it."}
+                "line": "The add-on is downloaded. Press Use to turn it on."}
     url = agent_endpoint(app)
     if not url:
         return {"local": False, "available": None, "hint": None,
-                "line": "No agent server is set."}
+                "line": "Set up your agent first, under Agent."}
     now = time.time()
     if _vision_probe_cache["url"] == url and now - _vision_probe_cache["at"] < 30:
         avail = _vision_probe_cache["value"]
@@ -338,13 +338,12 @@ def agent_vision(app):
         _vision_probe_cache.update(at=now, url=url, value=avail)
     if avail is True:
         return {"local": False, "available": True, "hint": None,
-                "line": "Your agent's server can see images."}
+                "line": "Turned on where your agent runs."}
     if avail is False:
         return {"local": False, "available": False, "hint": "--mmproj <file>",
-                "line": "Your agent's server does not load its vision projector yet. "
-                         "Whoever runs that server can start it with the projector file (--mmproj)."}
+                "line": "Not turned on yet on the computer that runs your agent."}
     return {"local": False, "available": None, "hint": None,
-            "line": "Could not reach your agent's server to check vision."}
+            "line": "Could not reach your agent to check."}
 
 
 # --- effective selection -----------------------------------------------------------------------------------------
@@ -524,18 +523,18 @@ def memory_bar(app, hw):
     segs = []
     if agent_local(app):
         gb = local_agent_gb(app)
-        label = "Glimmer 30B"
+        label = "Your agent"
         v = vision_choice()
         if v and v["id"] == "glimmer-mmproj" and is_downloaded(v):
             gb += float(v["memory_gb"])
-            label = "Glimmer 30B + vision"
+            label = "Your agent, with vision"
         segs.append({"id": "agent", "label": label, "gb": round(gb, 1)})
     s = _effective_choice("speech", app)
     if s and is_downloaded(s):
-        segs.append({"id": f"speech:{s['id']}", "label": s["label"], "gb": s["memory_gb"]})
+        segs.append({"id": f"speech:{s['id']}", "label": "Speech", "gb": s["memory_gb"]})
     v = vision_choice()
     if v and v["runtime"] == "mlx-vlm" and is_downloaded(v):
-        segs.append({"id": f"vision:{v['id']}", "label": v["label"], "gb": v["memory_gb"]})
+        segs.append({"id": f"vision:{v['id']}", "label": "Vision", "gb": v["memory_gb"]})
     used = round(sum(sg["gb"] for sg in segs), 1)
     if total is None:
         return {"total_gb": None, "used_gb": used, "free_gb": None, "segments": segs}
@@ -555,14 +554,14 @@ def choice_state(choice, app):
         if avail is True:
             if _selected_id("vision") == cid:
                 return {"state": "in_use", "progress": None,
-                        "line": "Your agent's server can see images."}
+                        "line": "Turned on where your agent runs."}
             return {"state": "downloaded", "progress": None,
-                    "line": "Your agent's server can see images. Press Use."}
+                    "line": "Your agent can see pictures. Press Use to turn it on."}
         if avail is False:
             return {"state": "unavailable", "progress": None,
-                    "line": "Your agent's server does not load its vision projector."}
+                    "line": "Not turned on yet on the computer that runs your agent."}
         return {"state": "unavailable", "progress": None,
-                "line": "Could not reach your agent's server."}
+                "line": "Could not reach your agent to check."}
     dl = DOWNLOADS.state(cid)
     if dl.get("state") in ("downloading", "paused", "failed"):
         total, done = dl.get("total") or 0, dl.get("done") or 0

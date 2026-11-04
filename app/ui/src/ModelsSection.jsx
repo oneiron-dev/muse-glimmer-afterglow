@@ -10,19 +10,19 @@ import "./models.css";
 const SLOT_META = {
   speech: {
     title: "Speech",
-    line: "Turns what you say into text in the message box. Pick the speech model that fits this computer.",
-    none: "Default",
-    noneLine: "What you have today. Nothing changes until you pick a model.",
+    line: "When you dictate, speech writes down what you say. A bigger model understands more and needs more memory.",
+    none: "Standard",
+    noneLine: "What Afterglow comes with. Good for English and Japanese.",
   },
   vision: {
     title: "Vision",
-    line: "Lets the circle see pictures, icons and emoji, not just text.",
-    none: "None",
-    noneLine: "Text only. The circle finds words, not pictures.",
+    line: "When you hold fn and circle part of your screen to ask about it, your agent reads the words there. With vision it also sees the pictures, icons and emoji.",
+    none: "Words only",
+    noneLine: "Your agent reads the words in what you circle, not the pictures.",
   },
 };
 
-const FIT = { fits: "Fits", tight: "Tight", too_big: "Too big for this computer" };
+const FIT = { fits: "Fits", tight: "Tight fit", too_big: "Too big for this computer" };
 const GLIMMER_VISION = "glimmer-mmproj";
 
 /* ---------------- memory ---------------- */
@@ -34,7 +34,7 @@ function MemoryBar({ memory, hwLine }) {
   return (
     <section className="fsec" aria-label="Memory on this computer">
       <h2 className="fh">Memory on this computer</h2>
-      <p className="fp">An estimate for the models in use, and what is still free.</p>
+      <p className="fp">About how much memory your models use, and how much is left.</p>
       <div className="membar" role="img" aria-label={segs.map((s) => `${s.label}, ${s.gb} GB`).join("; ")}>
         {segs.map((s, i) => (
           <i key={s.id} className={s.id === "free" ? "free" : ""}
@@ -77,9 +77,9 @@ function ChoiceRow({ slotId, slot, c, av, acting, onAct }) {
   const inUse = st === "in_use";
   const fit = FIT[c.fit] || null;
   const pct = c.progress ? c.progress.pct : null;
-  const needsLine = c.needs === "apple-silicon" ? "Needs Apple silicon" : c.needs === "cuda" ? "Needs an NVIDIA GPU" : null;
-  const sizes = remote ? "Runs in your agent's server, using no memory on this computer." : [`${c.disk_gb} GB to download`, `${c.memory_gb} GB in memory`, needsLine].filter(Boolean).join(" \u00b7 ");
-  const speedLink = /^https?:\/\//.test(c.speed_source || "") ? c.speed_source : null;
+  // What it needs is only worth saying when this computer does not have it.
+  const needsLine = c.fit !== "too_big" ? null : c.needs === "apple-silicon" ? "Needs a Mac with Apple silicon" : c.needs === "cuda" ? "Needs an NVIDIA graphics card" : null;
+  const sizes = remote ? "Uses no memory on this computer." : [`${c.disk_gb} GB download`, `uses about ${c.memory_gb} GB of memory`, needsLine].filter(Boolean).join(" \u00b7 ");
   const statusLine = c.line
     ? (st === "failed" ? <p className="ferr" role="alert">{c.line}</p> : <p>{c.line}</p>)
     : null;
@@ -115,17 +115,17 @@ function ChoiceRow({ slotId, slot, c, av, acting, onAct }) {
           {inUse && (!remote || selected) && <span className="mtag">In use</span>}
           {st === "downloaded" && <span className="mtag">Downloaded</span>}
           {st === "paused" && <span className="mtag">Paused</span>}
-          {c.recommended && <span className="mtag">Recommended for this computer</span>}
+          {c.recommended && <span className="mtag">Recommended</span>}
           {fit && !remote && <span className="mtag">{fit}</span>}
           {remote && <span className="mtag">On your agent's server</span>}
         </b>
+        {c.model && <p className="mmodel">{c.model}</p>}
         <p>{c.adds}</p>
         {glimmer && <p>{av.line}</p>}
         {!glimmer && statusLine}
         {glimmer && av.local && statusLine}
         <p className="mmeta num">{sizes}</p>
-        <p className="mmeta">{c.speed}{speedLink && <> <a href={speedLink} target="_blank" rel="noreferrer">Source</a></>}</p>
-        {c.tested === false && !remote && <p className="mmeta">Not yet tried on this Mac.</p>}
+        {c.speed && <p className="mmeta">{c.speed}</p>}
         {(st === "downloading" || st === "paused") && (
           <div className="mdl" role="status">
             <div className="fit-bar"><i style={{ "--f": (pct || 0) / 100 }} /></div>
@@ -149,9 +149,9 @@ function SlotSection({ slotId, slot, av, circle, acting, onAct }) {
     <section className="fsec" aria-label={meta.title}>
       <h2 className="fh">{meta.title}</h2>
       <p className="fp">{meta.line}</p>
+      {slotId === "vision" && <p className="fp mcircle"><b>Now:</b> {circle === "vision" ? "your agent also sees pictures, icons and emoji." : "your agent reads only the words."}</p>}
       <NoneRow slotId={slotId} slot={slot} acting={acting} onAct={onAct} />
       {slot.choices.map((c) => <ChoiceRow key={c.id} slotId={slotId} slot={slot} c={c} av={slotId === "vision" ? av : null} acting={acting} onAct={onAct} />)}
-      {slotId === "vision" && <p className="fp mcircle"><b>Circle:</b> {circle === "vision" ? "sees pictures, icons and emoji" : "reads text only"}</p>}
     </section>
   );
 }
