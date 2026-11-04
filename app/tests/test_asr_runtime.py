@@ -162,6 +162,9 @@ class Base(unittest.TestCase):
         return q
 
 
+ATEXIT_RUNS = 8
+
+
 class QwenTest(Base):
     def test_protocol_reuse(self):
         tmp = self.tmpdir()
@@ -282,6 +285,19 @@ class QwenTest(Base):
             time.sleep(0.05)
         self.assertFalse(pid_alive(pid))
 
+    def test_a_transcription_cut_off_by_exit_returns_quietly(self):
+        q = asr_runtime.QwenWorker(model="x", python=sys.executable, worker_path="/nonexistent")
+        with mock.patch.object(q, "_ensure_locked", side_effect=RuntimeError("Qwen: worker died waiting for reply")):
+            tmp = self.tmpdir()
+            wav = self.wav(tmp)
+            with self.assertRaises(RuntimeError):
+                q.transcribe(wav)
+            asr_runtime._exiting.set()
+            try:
+                self.assertEqual(q.transcribe(wav), "")
+            finally:
+                asr_runtime._exiting.clear()
+
     def test_atexit_does_not_block_on_stuck_transcribe(self):
         tmp = self.tmpdir()
         fw = self.fake_qwen(tmp)
@@ -299,11 +315,15 @@ class QwenTest(Base):
             "    time.sleep(0.05)\n"
             "print(q.status()['pid'], flush=True)\n")
         app_root = str(Path(__file__).resolve().parents[1])
-        t0 = time.time()
-        r = subprocess.run([sys.executable, str(child), app_root],
-                           capture_output=True, text=True, timeout=15)
-        self.assertLess(time.time() - t0, 5.0)
-        self.assertEqual(r.returncode, 0, r.stderr)
+        # The exit race (a daemon reader raising while the interpreter shuts down) aborted about 1 run in 6;
+        # several exits in a row catch it.
+        for _ in range(ATEXIT_RUNS):
+            t0 = time.time()
+            r = subprocess.run([sys.executable, str(child), app_root],
+                               capture_output=True, text=True, timeout=15)
+            self.assertLess(time.time() - t0, 5.0)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertNotIn("Traceback", r.stderr)
         pid = int(r.stdout.strip().split()[0])
         deadline = time.monotonic() + 2.0
         while time.monotonic() < deadline and pid_alive(pid):

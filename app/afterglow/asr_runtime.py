@@ -66,6 +66,17 @@ def _readline(proc, buf, timeout):
         buf.extend(chunk)
 
 
+# Set when the app is exiting, just before the exit hooks stop the workers. A transcription still waiting on
+# a worker then returns quietly: nothing reads its reply, and an exception printed from a daemon thread while
+# the interpreter shuts down can abort the whole process (SIGABRT on the stderr lock).
+_exiting = threading.Event()
+
+
+def _kill_at_exit(proc):
+    _exiting.set()
+    _kill(proc)
+
+
 def _kill(proc):
     try:
         proc.terminate()
@@ -149,7 +160,7 @@ class QwenWorker:
             raise RuntimeError(f"Qwen: startup failed: {doc}")
         self._proc = proc
         self._warm = True
-        atexit.register(_kill, proc)
+        atexit.register(_kill_at_exit, proc)
 
     def transcribe(self, wav_path, language=None):
         try:
@@ -187,6 +198,8 @@ class QwenWorker:
                     return text.strip()
                 raise RuntimeError(f"Qwen: {doc.get('error') or 'transcription failed'}")
         except RuntimeError:
+            if _exiting.is_set():
+                return ""
             raise
         except Exception as e:
             raise RuntimeError(f"Qwen: failed: {e}") from e
@@ -324,7 +337,7 @@ class WhisperServer:
                     _close(proc)
                     raise
                 self._proc, self._server_pid, self._model, self._url = proc, spid, m, url
-                atexit.register(_kill, proc)
+                atexit.register(_kill_at_exit, proc)
                 return url
         except RuntimeError:
             raise
