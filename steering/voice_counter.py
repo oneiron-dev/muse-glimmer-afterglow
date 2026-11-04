@@ -14,9 +14,10 @@ written per layer and divided by s, so --control-vector-scaled FILE:s adds exact
               random-control.gguf (a seeded random direction, same norms: the control for "any push")
   bake        write <vectors>/base/voice-<slug>-v1.gguf = (s x voice + a x direction) / s for the chosen s and a
   dom         write <vectors>/base/voice-<slug>-dom.gguf: the voice fitted with re:dvx's diff_of_means estimator
-              (the mean paired difference) instead of centered PCA. Over two contrast sets written from the same
-              sentence, the mean differences agree (cosine 0.85-0.90 on layers 16-42) where the centered-PCA
-              directions do not (0.16-0.41, some layers pointing against their own mean difference).
+              (the mean paired difference) from a run's states fitted with centered PCA. Over two contrast sets
+              written from the same sentence, the mean differences agree (cosine 0.85-0.90 on layers 16-42) where the
+              centered-PCA directions do not (0.16-0.41, some layers pointing against their own mean difference).
+              The same fit as voice_job.sh now makes for every voice (fit_vectors.py, estimator diff_of_means).
   slice       write <vectors>/base/voice-<slug>-L<lo>-<hi>.gguf: the raw voice on layers lo..hi only (a layer missing
               from a control-vector GGUF gets nothing), to test where along the depth the voice can be added
 """
@@ -95,16 +96,13 @@ def bake(args):
 
 
 def diff_of_means(args):
-    from redvx.wizard_protocol import fit_direction
     for slug in args.voice:
         d = np.load(Path(args.states) / "base" / f"voice-{slug}.npz")
         layers = steering_layers(d["pos"].shape[1])
-        _, resid, _ = fit_axis(d["pos"], d["neg"], layers)
-        diffs = d["pos"].astype(np.float32) - d["neg"].astype(np.float32)
-        units = {layer: fit_direction(diffs[:, layer], "diff_of_means") for layer in layers}
+        units, resid, seps = fit_axis(d["pos"], d["neg"], layers, "diff_of_means")
         path = Path(args.vectors) / "base" / f"voice-{slug}-dom.gguf"
         write_gguf(path, units, resid, layers)
-        sep = float(np.mean([(diffs[:, layer] @ units[layer]).mean() / resid[layer] for layer in layers if 16 <= layer <= 42]))
+        sep = float(np.mean([seps[layer] for layer in layers if 16 <= layer <= 42]))
         print(json.dumps({"voice": slug, "gguf": str(path), "sha256": sha(path), "separation_l16_42": round(sep, 4)}))
 
 

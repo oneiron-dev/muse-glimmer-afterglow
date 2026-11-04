@@ -2,9 +2,10 @@
 """Fit re:dvx control vectors from captured states, export llama.cpp control-vector GGUFs, read the behaviour check.
 
 CPU only. Input: the extract_states.py output (<states>/<tag>/<axis>.npz, check.npz).
-Per axis and layer: re:dvx centered PCA on the paired differences (sign by majority), then re:dvx common-component
-removal against three other axes ("proj"); "raw" keeps the unprojected direction. Steering layers follow re:dvx's
-scaled_repeng mask (depth 52 -> 16..42 and 51).
+Per axis and layer: the axis's re:dvx estimator on the paired differences ("estimator" in the axis spec: centered_pca,
+the default, sign by majority; or diff_of_means, the mean paired difference, which the voice job sets for every voice
+axis), then re:dvx common-component removal against three other axes ("proj"); "raw" keeps the unprojected
+direction. Steering layers follow re:dvx's scaled_repeng mask (depth 52 -> 16..42 and 51).
 
 Exports, per axis, variant and model tag:
   <out>/<tag>/<axis>-<variant>.redvx.json  re:dvx WriteVector (unit directions, direction_scales = residual norms)
@@ -32,12 +33,12 @@ def steering_layers(depth):
     return Protocol(target="cuda", layer_policy="scaled_repeng").steering_layers(depth)
 
 
-def fit_axis(pos, neg, layers):
+def fit_axis(pos, neg, layers, estimator="centered_pca"):
     from redvx.wizard_protocol import fit_direction
     diffs = pos.astype(np.float32) - neg.astype(np.float32)
     units, resid, sep = {}, {}, {}
     for layer in layers:
-        u = fit_direction(diffs[:, layer], "centered_pca")
+        u = fit_direction(diffs[:, layer], estimator)
         units[layer] = u
         norms = np.linalg.norm(np.concatenate([pos[:, layer], neg[:, layer]]).astype(np.float32), axis=1)
         resid[layer] = float(norms.mean())
@@ -72,7 +73,7 @@ def write_redvx(path, axis, units, resid, diff_scales, kept, layers, n_component
     from redvx.vectors import VectorMetadata, WriteVector
     meta = VectorMetadata(model_id="muse-glimmer-30b-nf4", axis_name=axis["name"],
                           positive_label=axis["positive_label"], negative_label=axis["negative_label"],
-                          training_method="centered_pca", layer_ids=tuple(layers),
+                          training_method=estimator_of(axis), layer_ids=tuple(layers),
                           diff_scales={layer: diff_scales[layer] for layer in layers},
                           residual_norms={layer: resid[layer] for layer in layers},
                           direction_scales={layer: resid[layer] for layer in layers},
@@ -80,6 +81,10 @@ def write_redvx(path, axis, units, resid, diff_scales, kept, layers, n_component
                           projection_residual_fractions={layer: 1.0 for layer in layers},
                           projection_n_components=n_components)
     WriteVector(model_type="muse_glimmer", directions={layer: units[layer] for layer in layers}, metadata=meta).save(path)
+
+
+def estimator_of(axis):
+    return axis.get("estimator") or "centered_pca"
 
 
 def sha256(path):
@@ -106,7 +111,7 @@ def main():
             d = np.load(f)
             depth = d["pos"].shape[1]
             layers = steering_layers(depth)
-            units, resid, sep = fit_axis(d["pos"], d["neg"], layers)
+            units, resid, sep = fit_axis(d["pos"], d["neg"], layers, estimator_of(axis))
             diff_scales = {layer: float(np.linalg.norm(d["pos"][:, layer].astype(np.float32) - d["neg"][:, layer].astype(np.float32), axis=1).mean()) for layer in layers}
             fitted[(tag, axis["name"])] = {"units": units, "resid": resid, "sep": sep, "diff": diff_scales, "layers": layers, "n": len(d["pos"])}
     for (tag, name), fit in fitted.items():
@@ -126,6 +131,7 @@ def main():
             write_redvx(rv, axis, units, fit["resid"], fit["diff"], kept, fit["layers"], n_comp)
             sep = float(np.mean([(units[layer] @ fit["units"][layer]) * fit["sep"][layer] for layer in fit["layers"]]))
             entry[f"{tag}/{variant}"] = {"gguf": str(gg), "gguf_sha256": sha256(gg), "redvx": str(rv),
+                                         "estimator": estimator_of(axis),
                                          "pairs": fit["n"], "layers": fit["layers"], "separation": round(sep, 4),
                                          "refs": others if variant == "proj" else [],
                                          "kept_fraction": round(float(np.mean(list(kept.values()))), 4) if kept else 1.0,

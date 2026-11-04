@@ -1,0 +1,317 @@
+{
+ "voice": "dry-wit-s2-dom",
+ "kind": "voice",
+ "dials": null,
+ "system": null,
+ "settings": {
+  "0": [],
+  "0.01": [
+   {
+    "id": 1,
+    "scale": 0.01
+   }
+  ],
+  "0.02": [
+   {
+    "id": 1,
+    "scale": 0.02
+   }
+  ],
+  "0.03": [
+   {
+    "id": 1,
+    "scale": 0.03
+   }
+  ],
+  "0.04": [
+   {
+    "id": 1,
+    "scale": 0.04
+   }
+  ]
+ },
+ "summary": {
+  "0": {
+   "words": 178.9,
+   "truncated": 1,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.01": {
+   "words": 188.1,
+   "truncated": 1,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.02": {
+   "words": 173.2,
+   "truncated": 1,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.03": {
+   "words": 140.5,
+   "truncated": 0,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.04": {
+   "words": 186.2,
+   "truncated": 3,
+   "empty": 0,
+   "errors": 0
+  }
+ },
+ "replies": {
+  "0": [
+   {
+    "prompt": "Show me how to write a clear subject line for a work email.",
+    "answer": "A clear subject line tells the reader **what the email is about and why it matters to them**, as quickly as possible. Here’s a simple formula you can use:\n\n**[Action/Topic] + [Specific Detail] + [Timeframe/Context, if relevant]**\n\n### Good vs. Unclear Examples\n\n* **Unclear:** `Update`\n* **Clear:** `Q3 Budget Update – Final Numbers Due Friday`\n\n* **Unclear:** `Meeting`\n* **Clear:** `Request: Approve Marketing Plan – Meeting Needed Tue 10/28`\n\n* **Unclear:** `Question`\n* **Clear:** `Question about Client X Contract Clause 3.2`\n\n### Quick Tips\n\n1. **Be specific, not generic.** Use names, dates, or project codes.\n2. **Start with the key action or topic.** `Approval Needed:`, `Reminder:`, `For Review:`\n3. **Keep it short.** Aim for under 10 words if possible.\n4. **Use title case for readability.** `Project Phoenix Launch Timeline` not `project phoenix launch timeline`.\n5. **Avoid all caps and too many exclamation points.** It looks unprofessional.\n\n**Template you can copy:**\n`[Action]: [Project/Client] – [Specific Detail] by [Date]`\n\nExample: `Review Needed: Website Redesign Mockups by EOD Thursday`\n\nWant me to rewrite a subject line you’re working on?",
+    "truncated": false,
+    "tokens": 295
+   },
+   {
+    "prompt": "Explain what a spreadsheet pivot table does for beginners.",
+    "answer": "A pivot table is a tool in spreadsheet programs like Excel, Google Sheets, or Numbers that helps you summarize and analyze large amounts of data quickly.\n\nThink of it as a way to **re-organize and summarize** your data without changing the original data.\n\n### How it works, in simple terms:\n\n1.  **You start with raw data.** Imagine a big list of sales: Date, Product, Region, Salesperson, Amount Sold.\n2.  **You drag and drop fields.** A pivot table lets you pick which columns you want to look at.\n3.  **It summarizes for you.** Instead of manually adding up numbers, the pivot table does it instantly.\n\n### A simple example:\n\nYou have a list of 1,000 sales transactions.\n\n**Question you might ask:** \"How much did we sell in each Region?\"\n\nWithout a pivot table, you'd have to filter for \"North\", add them up, then filter for \"South\", add them up, etc.\n\nWith a pivot table:\n* You put `Region` in the **Rows** area\n* You put `Amount Sold` in the **Values** area\n\nInstantly you get:\n* North: $45,000\n* South: $62,000\n* East: $31,000\n* West: $58,000\n\nYou can also ask more complex questions like:\n* \"Sales by Product *and* Region\"\n* \"Average sale amount per Salesperson\"\n* \"Total sales per month\"\n\n### Key benefits for beginners:\n\n* **Summarizes data:** Counts, sums, averages, max/min\n* **No formulas needed:** No need to write SUMIFs\n* **Flexible:** Drag fields around to see different views instantly\n* **Safe:** It doesn't change your original data\n\nIn short: A pivot table turns a messy list into a clear summary so you can find answers fast.",
+    "truncated": false,
+    "tokens": 385
+   },
+   {
+    "prompt": "How do I plan travel time for back-to-back meetings?",
+    "answer": "Planning travel time for back-to-back meetings is all about **buffering realistically** and **accounting for friction**. Here’s a simple framework you can use:\n\n### 1. Map the Logistics First\n- **Distance & Mode:** How far apart are the meetings? Walking, transit, driving?\n- **Traffic / Transit Variability:** Is it rush hour? Does the route have unpredictable delays?\n- **Location Friction:** Will you need to park, take an elevator, find the room, sign in at security?\n\n### 2. Use the Buffer Rule\nA good baseline:\n- **Same building / floor:** 5–10 min buffer\n- **Same campus / short walk:** 10–15 min\n- **Across town / transit:** 20–30 min minimum\n- **Driving in city traffic:** Add 15–25% on top of map estimate\n\nIf two meetings are truly back-to-back with zero gap, you’re assuming *zero risk*. One late train or long line breaks the chain.\n\n### 3. Build in Micro-Transitions\nGive yourself 3–5 minutes to:\n- Close notes, save files\n- Reset mentally\n- Walk to the next room / stand up and stretch\n\nThis prevents you from walking in mid-sentence or still on your phone.\n\n### 4. Tactical Tips\n- **Cluster meetings geographically.** Group by neighborhood/building, not by time convenience.\n- **Pad the first meeting, not the last.** It’s easier to end early than to ask someone to wait.\n- **Have a “delay script” ready.** e.g., “Running 5 min late due to transit, joining via phone for first few minutes.”\n- **Use calendar defaults.** Set a default 10–15 min travel buffer between events in your calendar app.\n\n### Quick Formula\n**Travel Time = Map Estimate + Buffer for Mode + Buffer for Location**\nExample: 12 min drive + 5 min parking",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me summarize these meeting notes into bullet points.",
+    "answer": "Please provide the meeting notes you'd like me to summarize, and I'll turn them into clear bullet points for you.",
+    "truncated": false,
+    "tokens": 23
+   },
+   {
+    "prompt": "Explain how password managers keep logins organized.",
+    "answer": "Password managers keep your logins organized by storing each set of credentials as a separate, labeled entry in an encrypted vault. Here’s how the organization works:\n\n**1. Secure Vault Storage**\nAll usernames, passwords, website URLs, and notes are encrypted and stored in one central, locked database, often called a vault. You unlock it with one master password.\n\n**2. Automatic Categorization**\nWhen you save a login, the manager automatically detects the website or app and creates an entry for it, usually using the site name and URL as the title. For example: `Netflix`, `Gmail`, `Chase Bank`.\n\n**3. Structured Fields**\nEach entry contains standardized fields:\n* **Title / Site Name:** The name of the service\n* **URL:** The web address or app identifier\n* **Username / Email:** Your login ID\n* **Password:** The encrypted password\n* **Notes:** Extra info like security questions or 2FA codes\n\n**4. Folders and Tags**\nMost managers let you group logins into folders like *Work*, *Personal*, *Banking*, or add tags for easy filtering and searching.\n\n**5. Search and Auto-Fill**\nYou can quickly find a login by searching the site name, username, or URL. When you visit a site, the manager auto-detects it and offers to fill in the correct credentials instantly.\n\nIn short: one master password unlocks one encrypted vault, where every login is stored as a neatly labeled, searchable entry so you never have to remember them individually.",
+    "truncated": false,
+    "tokens": 315
+   },
+   {
+    "prompt": "Give me a simple outline for a monthly project report.",
+    "answer": "Here's a simple outline you can use for a monthly project report:\n\n1. **Project Overview**\n   - Project name & reporting period\n   - Key objectives for the month\n2. **Summary of Progress**\n   - Major accomplishments\n   - Milestones reached\n3. **Challenges & Risks**\n   - Issues encountered\n   - Mitigation steps taken\n4. **Budget & Resources**\n   - Spending vs. budget\n   - Resource allocation notes\n5. **Next Steps**\n   - Planned activities for next month\n   - Required approvals or support\n6. **Appendix (optional)**\n   - Charts, timelines, or supporting data\n\nWould you like me to tailor this for a specific type of project, like software, construction, or marketing?",
+    "truncated": false,
+    "tokens": 155
+   },
+   {
+    "prompt": "How do I back up important documents before a trip?",
+    "answer": "Backing up important documents before a trip is a smart move—it ensures you can access them even if your phone, laptop, or physical copies are lost or stolen. Here’s a simple and effective way to do it:\n\n### 1. **Gather all important documents**\n\nCollect digital and physical copies of:\n- Passport / ID\n- Visa or travel permits\n- Flight tickets and hotel bookings\n- Travel insurance\n- Emergency contacts\n- Credit/debit card details (store securely)\n\n### 2. **Digitize physical documents**\n\nUse a scanner app like Adobe Scan, Microsoft Lens, or CamScanner to create PDFs of your documents.\n\n### 3. **Store them securely in the cloud**\n\nUpload the files to a secure cloud service like:\n- Google Drive\n- Dropbox\n- iCloud\n- OneDrive\n\nMake sure the account is password-protected and, ideally, two-factor authentication is enabled.\n\n### 4. **Encrypt sensitive files (optional but recommended)**\n\nFor extra security, use encrypted storage like:\n- Password-protected ZIP files\n- Encrypted notes apps like 1Password or Bitwarden\n\n### 5. **Keep offline copies**\n\nSave copies to:\n- A USB drive\n- An external hard drive\n- A secondary email account\n\n### 6. **Share access with a trusted person**\n\nGive a trusted family member or friend access to your cloud folder in case of emergency.\n\nWould you like a checklist template for pre-trip document backup?",
+    "truncated": false,
+    "tokens": 297
+   },
+   {
+    "prompt": "Help me phrase a polite request to reschedule a deadline.",
+    "answer": "Sure! Here’s a polished template you can adapt:\n\n---\n\n**Subject:** Request to Reschedule Deadline for [Project/Task Name]\n\nHi [Name],\n\nI hope you’re well. I’m writing to ask if we could reschedule the deadline for [project/task] currently set for [original date]. Due to [brief, honest reason, e.g., unforeseen delays / additional data needed], I want to ensure the work meets the quality standards you expect.\n\nWould it be possible to move the deadline to [proposed new date]? I’m happy to adjust my schedule to accommodate any constraints on your end.\n\nThank you for understanding, and please let me know if you’d prefer an alternative arrangement.\n\nBest regards,  \n[Your Name]\n\n---\n\n**Quick tips:**\n- Keep the reason brief and professional.\n- Offer a specific new date.\n- Show willingness to compromise.\n\nWant me to tailor it to a specific situation?",
+    "truncated": false,
+    "tokens": 185
+   }
+  ],
+  "0.01": [
+   {
+    "prompt": "Show me how to write a clear subject line for a work email.",
+    "answer": "A clear subject line tells the reader *what* the email is about and *why* they should care, in as few words as possible. Think of it as a tiny headline, not a mystery novel.\n\nHere’s a simple formula you can use:\n\n**[Action] + [Topic] + [Context/Deadline]**\n\n### Good vs. Bad Examples\n\n* **Vague:** `Quick question`  \n  **Clear:** `Request for Q3 budget approval by Friday`\n\n* **Vague:** `Update`  \n  **Clear:** `Marketing report finalized — please review by EOD Tuesday`\n\n* **Vague:** `Re: meeting`  \n  **Clear:** `Confirming reschedule of client kickoff to Nov 12, 2pm`\n\n### Quick Rules\n\n1. **Be specific.** Name the project, client, or document.\n2. **Use an action verb.** Request, Confirm, Approve, Review, Update.\n3. **Add urgency if needed.** A date or deadline helps prioritize.\n4. **Keep it short.** Aim for under 10 words. If it’s longer, you’re probably writing the email body in the subject.\n5. **Skip filler.** No “Just” “Quick” “FYI” unless it truly adds meaning.\n\n**Template you can copy:**\n`[Action] [What] for [Who/Project] — [Deadline/Context]`\n\nTry it: Instead of `Hello`, try `Approval needed: Vendor contract for Acme rollout — due Nov 1`.\n\nWant to workshop one of your actual emails? Paste a draft subject and I’ll tighten it up.",
+    "truncated": false,
+    "tokens": 330
+   },
+   {
+    "prompt": "Explain what a spreadsheet pivot table does for beginners.",
+    "answer": "A pivot table is like a magic summary machine for your spreadsheet.\n\nImagine you have a giant, messy list of data - like every sale your store ever made. Rows and rows of \"Date, Product, Customer, Amount...\". Finding the answer to a simple question like *\"How much did we sell of each product last month?\"* would mean scrolling forever and doing manual math.\n\nA pivot table takes that messy list and lets you **drag, drop, and instantly summarize** it.\n\nThink of it as three main parts:\n\n1.  **Your Raw Data:** The big, flat list. It needs headers. Think of it as the ingredients.\n2.  **The Pivot Table:** The empty kitchen where you will cook your summary.\n3.  **The Controls:** Usually called Rows, Columns, Values, and Filters.\n\n**How it works for a beginner:**\n\nLet's say your data has columns: `Date`, `Product`, `Region`, `Sales`.\n\nYou make a pivot table from that data and then you just drag fields around:\n\n*   **Drag `Product` into ROWS.** Now your pivot table lists every unique product once. No duplicates.\n*   **Drag `Sales` into VALUES.** The pivot table automatically adds up all the Sales for each product. `SUM of Sales`.\n*   **Drag `Region` into COLUMNS.** Now you get a grid. Rows are Products, Columns are Regions. You can instantly see how much each product sold in each region.\n\nBoom. You just turned 10,000 rows of chaos into a 10-row summary.\n\n**The 3 beginner superpowers:**\n\n1.  **Summarize:** It automatically does SUM, COUNT, AVERAGE, MAX, MIN for you. No formulas needed.\n2.  **Group:** It groups your data by whatever you want. By month, by product category, by salesperson.\n3.  **Filter:** Want to only see 2024 sales? Drag `Date` into FILTER",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "How do I plan travel time for back-to-back meetings?",
+    "answer": "Planning travel time for back-to-back meetings is all about **buffering reality** into your calendar so you don’t end up sprinting down the hall — or worse, late on Zoom.\n\nHere’s a simple framework:\n\n### 1. Map the Real Distance\n- **Same building/floor:** 5–10 min buffer\n- **Different floor/elevator:** 10–15 min\n- **Different building/campus:** 20–30 min minimum\n- **Off-site / driving:** Add actual drive time + 10 min parking/walk-in buffer\n\n> Pro tip: Time it once for real. Your “2-minute walk” is probably 7.\n\n### 2. Add Transition Tax\nBack-to-back meetings aren’t just travel. You need:\n- 2 min to close laptop / notes\n- 3 min to mentally reset\n- 2 min to find the room / log in\nThat’s ~7 min even if the meetings are next door.\n\n### 3. Use the 25% Rule\nIf a meeting is 60 min, block 15 min after. If it’s 30 min, block 7-8 min. People always run over.\n\n### 4. Calendar Tactics\n- **Hard stop:** Put travel as a real calendar event, not just white space\n- **Color code:** Make travel blocks a different color so you don’t accidentally book over them\n- **Protect the first/last slot:** Never book 8:00-8:50 and 8:50-9:40. Give yourself a runway.\n\n### 5. The Sanity Check\nAsk: *If my first meeting runs 10 min late and the Wi-Fi dies, can I still make it?* If no, add more buffer.\n\n**Golden rule:** Schedule like you’re late. You’ll usually be right on time.\n\nWant me to build you a quick buffer calculator based on your office layout?",
+    "truncated": false,
+    "tokens": 399
+   },
+   {
+    "prompt": "Help me summarize these meeting notes into bullet points.",
+    "answer": "I'd be happy to help you summarize your meeting notes into bullet points. Please go ahead and paste the meeting notes you'd like me to summarize.",
+    "truncated": false,
+    "tokens": 29
+   },
+   {
+    "prompt": "Explain how password managers keep logins organized.",
+    "answer": "Password managers keep your logins organized by storing each set of credentials as a distinct **entry** in an encrypted vault, usually indexed by the website or app name, URL, and username.\n\nHere’s the basic flow:\n\n1. **Capture**  \nWhen you save a login, the manager grabs the URL/domain, username/email, password, and often extra fields like security questions or notes. Some managers also auto-detect the site icon/logo.\n\n2. **Encrypt & Store**  \nAll that data is encrypted locally with a key derived from your master password, then synced to the vendor’s cloud if you use cross-device sync. The vault is essentially a structured database.\n\n3. **Organize**  \nEntries are tagged and searchable. Most managers let you:\n* Browse by site name, URL, or username\n* Create folders/collections for work, personal, banking, etc.\n* Tag entries, e.g., “2FA”, “shared”\n* Group related logins under one domain\n\n4. **Retrieve**  \nWhen you visit a site, the manager matches the current URL against its vault index, decrypts the right entry on the fly, and auto-fills the username/password. If multiple accounts exist for one site, it presents a picker.\n\n5. **Extras for sanity**  \nPassword generators, breach monitoring, and secure sharing keep the vault tidy and safe, so you’re not re-using passwords or hunting through browser bookmarks.\n\nIn short: one encrypted vault + a searchable index by domain/username = no more sticky notes or 47 browser tabs.",
+    "truncated": false,
+    "tokens": 316
+   },
+   {
+    "prompt": "Give me a simple outline for a monthly project report.",
+    "answer": "Here's a simple outline you can use for a monthly project report:\n\n1. **Project Overview**\n   - Project name & reporting period\n   - Key objectives for the month\n\n2. **Summary of Progress**\n   - Major accomplishments\n   - Milestones reached\n\n3. **Work Completed**\n   - Tasks finished this month\n   - Deliverables submitted\n\n4. **Challenges & Risks**\n   - Issues encountered\n   - Mitigation steps taken\n\n5. **Upcoming Plans**\n   - Priorities for next month\n   - Resources needed\n\n6. **Budget & Timeline Status**\n   - Spending vs. budget\n   - Schedule adherence\n\n7. **Conclusion**\n   - Overall status (On track / At risk / Delayed)\n\nWant me to tailor this for a specific type of project, like software, construction, or marketing?",
+    "truncated": false,
+    "tokens": 170
+   },
+   {
+    "prompt": "How do I back up important documents before a trip?",
+    "answer": "Backing up important documents before a trip is a smart move—it ensures you’re covered if your phone, laptop, or physical papers get lost, stolen, or damaged. Here’s a simple, reliable way to do it:\n\n### 1. **Make a digital backup**\n\n- **Scan or photograph** key documents (passport, ID, driver’s license, travel insurance, flight tickets, hotel confirmations, vaccination certificates, etc.).\n- Use a scanner app like Adobe Scan, Microsoft Lens, or your phone’s built-in camera.\n- Save them as PDFs and store them in at least **two places**:\n\n  - A cloud service like Google Drive, Dropbox, or iCloud.\n  - An encrypted USB stick or external hard drive you can keep separately from your luggage.\n\n### 2. **Encrypt sensitive files**\n\n- If you’re storing IDs or passports in the cloud, consider putting them in a password-protected ZIP file or using encrypted cloud storage.\n- Don’t just leave them loose in an unsecured account.\n\n### 3. **Email yourself a copy**\n\n- Send a copy to a private email address you trust. It’s old-school but works in a pinch—especially if you don’t have immediate access to cloud storage.\n\n### 4. **Print a physical backup**\n\n- Keep a paper copy of the most critical stuff (passport number, emergency contacts, insurance details) in a separate bag from your originals.\n- Some travelers even leave a copy with a trusted friend or family member at home.\n\n### 5. **Use a password manager**\n\n- If your documents include login credentials for bookings or accounts, store them in a secure password manager like Bitwarden or 1Password.\n\n### 6. **Check expiry dates**\n\n- While you’re at it, make sure your passport, visas, and insurance haven’t expired mid-trip.\n\nWant a checklist template for this? I can whip one up for you.",
+    "truncated": false,
+    "tokens": 390
+   },
+   {
+    "prompt": "Help me phrase a polite request to reschedule a deadline.",
+    "answer": "Sure! Here’s a polished template you can tweak:\n\n---\n\n**Subject:** Request to Reschedule Deadline for [Project/Assignment Name]\n\nHi [Name],\n\nI hope you’re well. I’m writing to ask if we might be able to shift the deadline for [project/assignment] from [original date] to [proposed new date]. [Brief, honest reason—e.g., unexpected workload, a family matter, etc.] I’m committed to delivering quality work and want to make sure I can do it justice.\n\nWould [new date] work for you? I’m happy to adjust if needed and will keep you updated on progress.\n\nThanks so much for understanding.\n\nBest regards,  \n[Your Name]\n\n---\n\nFeel free to swap in the specifics, and keep the tone warm but professional!",
+    "truncated": false,
+    "tokens": 161
+   }
+  ],
+  "0.02": [
+   {
+    "prompt": "Show me how to write a clear subject line for a work email.",
+    "answer": "A clear subject line is like a tiny billboard for your email — it should tell the reader *what* it is and *why* they should care, without making them open it to find out.\n\nHere’s a simple formula you can steal:\n\n**[Action] + [Topic] + [Context/Deadline]**\n\nExamples:\n\n- **Approval Needed: Q3 Budget Draft by Friday**\n- **Meeting Notes: Product Sync, 10/12**\n- **Question About: Invoice #4821 from Acme Co.**\n\nThree rules:\n\n1. **Be specific, not cute.** “Quick question” tells them nothing. “Quick question about expense report policy” tells them everything.\n2. **Front-load the important bit.** Put the action or topic first. People skim.\n3. **Keep it under ~60 characters** if you can. If it gets cut off in their inbox, the punchline disappears.\n\nWant me to workshop one for a real email you’re sending?",
+    "truncated": false,
+    "tokens": 199
+   },
+   {
+    "prompt": "Explain what a spreadsheet pivot table does for beginners.",
+    "answer": "A pivot table is like a magical summary machine for your spreadsheet.\n\nImagine you have a giant, messy list of data. Like every single coffee purchase your office has ever made: Date, Who bought it, What they bought, How much it cost.\n\nA pivot table lets you take that chaos and, with a few drags and drops, instantly answer questions like:\n\n*   **\"How much did Dave spend on lattes last Tuesday?\"**\n*   **\"What is our total monthly coffee budget?\"**\n*   **\"Which drink is the most popular?\"**\n\nInstead of you manually adding up thousands of rows with a calculator, the pivot table does the math for you.\n\nThink of it as three steps:\n\n1.  **You dump in the raw ingredients.** Your boring list of data.\n2.  **You tell it what you care about.** You drag \"Person\" into one box, \"Drink\" into another.\n3.  **It cooks you a summary.** It instantly counts, sums, averages, or maxes everything for you.\n\nIt's not changing your original data at all. It's just a very fast, very obedient intern who will sort and total your data however you ask, in about 2 seconds.\n\nPro tip for beginners: If your data has headers in row 1 and no merged cells, you're 90% of the way there.",
+    "truncated": false,
+    "tokens": 277
+   },
+   {
+    "prompt": "How do I plan travel time for back-to-back meetings?",
+    "answer": "Planning travel time for back-to-back meetings is all about **buffering reality** into your calendar, not just the meeting itself.\n\nHere’s a simple, battle-tested formula:\n\n### 1. The \"Meeting + Decompression\" Rule\nA meeting doesn't end when the clock says it does. It ends when you've processed it.\n- **Meeting length** x **1.25** = Real time cost.\n  A 60-minute meeting actually costs you 75 minutes of your life. A 30-minute one costs 37.5. That extra 15-25% is for the mental context switch, finding the next room, and the inevitable \"just one more thing\" at the end.\n\n### 2. Add Actual Transit Time, Then Add 50%\nLook up the *real* travel time, not the optimistic one.\n- Walking across campus? It's 7 minutes. Budget 11.\n- Different building with an elevator? It's 5 minutes. Budget 8.\n- Need to find parking? It's 10 minutes. Budget 20. Parking is a myth.\n\n**Formula: Google Maps time x 1.5 = Calendar time.**\n\n### 3. The Buffer Tier System\nNot all travel is created equal.\n\n*   **Tier 1: Same Room / Same Zoom Link:** 5 min buffer. You can technically do 0, but you'll hate yourself.\n*   **Tier 2: Same Floor / Same Building:** 10-15 min buffer. For bio breaks and the existential dread of hallway encounters.\n*   **Tier 3: Different Building / Campus:** 20-30 min buffer. For getting lost, weather, and the printer that ate your soul.\n*   **Tier 4: Off-site / Driving:** 45-60+ min buffer. Traffic is a sentient chaos god. Do not trust it.\n\n### 4. Pro Tips from the Trenches\n\n*   **Schedule the travel as a real meeting",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me summarize these meeting notes into bullet points.",
+    "answer": "I'd be happy to help you summarize your meeting notes into bullet points. Please go ahead and paste the notes here, and I'll whip up a tidy bullet-point summary for you.",
+    "truncated": false,
+    "tokens": 36
+   },
+   {
+    "prompt": "Explain how password managers keep logins organized.",
+    "answer": "Password managers keep your logins organized by storing every username, password, and website in an encrypted vault, usually locked with one master password. \n\nThink of it like a digital filing cabinet where each site gets its own labeled folder. Instead of you remembering a thousand different keys, the manager remembers them for you and hands the right one over when you need it.\n\nUnder the hood, most do it like this:\n\n1. **Capture.** When you sign up for a site, the manager detects the login form and offers to save the credentials.\n2. **Encrypt.** The username, password, URL, security questions, even notes get bundled into an entry and encrypted with your master password before it ever touches your hard drive or the cloud.\n3. **Tag & Search.** Each entry is tagged with the site’s URL, favicon, and sometimes custom tags or folders you create. You can then find `netflix.com` in 0.2 seconds instead of scrolling through a spreadsheet of 400 passwords.\n4. **Autofill.** When you visit a site, the manager matches the URL to the vault entry and auto-fills the right username/password combo. No copy-paste gymnastics required.\n\nSo you only have to remember one thing: the master password. The manager remembers the rest, and keeps it all in one searchable, encrypted place instead of Post-its, browsers, or your poor brain.",
+    "truncated": false,
+    "tokens": 285
+   },
+   {
+    "prompt": "Give me a simple outline for a monthly project report.",
+    "answer": "Here’s a simple, no-nonsense outline you can copy-paste for a monthly project report:\n\n**1. Cover Page**\n- Project name / code\n- Reporting period (e.g., 1–31 Oct 2025)\n- Prepared by / date\n\n**2. Executive Summary**\n- One paragraph: what was supposed to happen, what actually happened, and whether we’re on track.\n\n**3. Key Metrics / KPIs**\n- Budget spent vs. allocated\n- Milestones hit / missed\n- Risks closed / opened\n\n**4. What We Did This Month**\n- Bullet list of deliverables, meetings, decisions.\n\n**5. What’s Next**\n- Top 3 priorities for next month, owners, due dates.\n\n**6. Risks & Blockers**\n- Issue | Impact | Mitigation | Owner\n\n**7. Appendix (optional)**\n- Gantt slice, invoices, screenshots.\n\nKeep it to two pages if you can.",
+    "truncated": false,
+    "tokens": 197
+   },
+   {
+    "prompt": "How do I back up important documents before a trip?",
+    "answer": "Backing up important documents before a trip is a smart move—whether you're heading abroad, hiking the wilderness, or just escaping to a beach with questionable Wi-Fi. Here's how to do it like a pro (without turning your suitcase into a filing cabinet):\n\n### 1. **Digitize Everything First**\n\nScan or photograph the essentials:\n\n- Passport, driver's license, visas, vaccination cards\n- Travel insurance, flight tickets, hotel confirmations\n- Emergency contacts, credit card numbers (store securely!)\n\nUse a scanning app like Adobe Scan, CamScanner, or even your phone’s notes app. Save as PDFs.\n\n### 2. **Cloud It Up**\n\nUpload those files to a secure cloud service:\n\n- Google Drive, Dropbox, iCloud, or OneDrive\n- Bonus points if you enable two-factor authentication\n\nPro tip: Name folders like `Travel_Backup_DoNotPanic`.\n\n### 3. **Offline Backup (Because Wi-Fi is a myth)**\n\n- Email yourself the files (but not to your spam folder, Karen).\n- Load them onto a USB stick or microSD card and tuck it into your sock drawer—or your actual sock.\n\n### 4. **Print a Physical Copy**\n\nYes, paper still exists. Print a hard copy and leave it with someone trustworthy or pack it in your carry-on. If your phone dies, your printer won’t.\n\n### 5. **Encrypt Like You Mean It**\n\nIf you're backing up credit card numbers or social security info, use encrypted storage. Apps like VeraCrypt, or even a password-protected ZIP file, add a layer of “please don’t steal my identity.”\n\n### 6. **Don’t Forget the Redundancy Rule**\n\nThe golden rule of backups: *Two is one, one is none.*\n\n- One cloud\n- One offline\n- One printed (optional but dramatic)\n\nNow go forth, adventurer. May your documents be ever in order and your luggage never lost.",
+    "truncated": false,
+    "tokens": 398
+   },
+   {
+    "prompt": "Help me phrase a polite request to reschedule a deadline.",
+    "answer": "Sure thing. Here’s a polite, professional template you can tweak:\n\n---\n\n**Subject:** Request to Reschedule Deadline for [Project/Assignment Name]\n\nHi [Name],\n\nI hope you’re well. I’m writing to ask if we might possibly push the deadline for [project/assignment] from [original date] to [new proposed date]. [Brief, honest reason—e.g., unexpected overlap with another commitment / needing a bit more time to do it justice].\n\nI’m fully committed to delivering quality work and will make sure everything’s wrapped up by [new date]. Please let me know if that works for you, or if there’s another window that suits better.\n\nThanks a ton for your understanding!\n\nBest,  \n[Your Name]\n\n---\n\nFeel free to swap in the specifics. Good luck!",
+    "truncated": false,
+    "tokens": 162
+   }
+  ],
+  "0.03": [
+   {
+    "prompt": "Show me how to write a clear subject line for a work email.",
+    "answer": "Sure. A good work email subject is like a tiny billboard: it should tell the reader *what* the email is about and *why* they should care, without making them open it to find out.\n\nThink of it as the headline of a very boring newspaper article. No clickbait, no cryptic poetry.\n\nThe formula is basically: **Action + Topic + Optional Specificity**\n\n* **Action:** The verb. What do you want them to do? Or what is happening?\n* **Topic:** What is it about?\n* **Optional Specificity:** The detail that stops it from being \"Regarding Stuff.\"\n\nBad: `stuff`, `quick question`, `you'll love this`, `FW: FW: FW: RE: the thing`.\nGood: `Expense Report Approval Needed by Friday`, `Meeting Notes from Tuesday's Budget Meeting Attached`.\n\nThree rules:\n\n1.  **Don't be vague.** \"Quick question\" is the email equivalent of a mime standing in your doorway. Just ask the question in the subject. `Question about Q3 budget spreadsheet, cell D47` is better.\n2.  **Don't be dramatic.** `URGENT!!! THE SERVER IS ON FIRE!!!` is only acceptable if the server is, in fact, on fire. Otherwise it's just `Server outage in East Wing - IT investigating`.\n3.  **One subject per email.** If you're sending seventeen different things, send seventeen emails. Your poor colleague's inbox is not a filing cabinet.\n\nPro tip: Write the subject *last*. Once you've written the email, you know what it's actually about. Revolutionary concept.\n\nNow go forth and subject-line responsibly.",
+    "truncated": false,
+    "tokens": 334
+   },
+   {
+    "prompt": "Explain what a spreadsheet pivot table does for beginners.",
+    "answer": "A pivot table is like a magical sorting hat for your data.\n\nYou dump a messy spreadsheet of a million receipts, and the pivot table goes \"Ah yes, you want to know how much you spent on snacks in 2023, not just a 47,000-row existential crisis.\"\n\nIt takes your boring columns of numbers and lets you *twist* them around like a Rubik's cube until the answer you actually wanted falls out.\n\nYou tell it \"Put 'Month' up here, 'Category' over here, and SUM the 'Money I Regret Spending' column.\" And poof. A tiny, elegant summary appears.\n\nIt's basically Excel's way of saying \"Stop scrolling. I got this.\"",
+    "truncated": false,
+    "tokens": 144
+   },
+   {
+    "prompt": "How do I plan travel time for back-to-back meetings?",
+    "answer": "Back-to-back meetings are the corporate equivalent of trying to parallel park a tour bus in a Vespa spot.\n\nFirst, accept that your calendar is a lie. Those 60-minute meetings are 47 minutes of actual human interaction and 13 minutes of aggressively staring at the \"any other business?\" abyss.\n\nThe planning is simple: don't.\n\nBut if you must:\n\n1.  **The Buffer of Lies.** Schedule 15 minutes between meetings. You will use 7 minutes to find the conference room, 5 minutes to remember why you walked in there, and 3 minutes to contemplate your life choices. The remaining 5 minutes are for the meeting that inevitably starts late because Dave from Accounting is \"just finishing up a riveting PowerPoint on synergy.\"\n\n2.  **The Hallway Sprint.** Treat the office like an Olympic sport. Practice the art of the caffeinated waddle. Bonus points if you can make it look like you meant to be late.\n\n3.  **Embrace the Overlap.** Just leave one meeting five minutes early. It's called \"mysterious and important business.\" No one will question it. They'll just assume you're defusing a bomb.\n\n4.  **The Calendar Tetris.** Color-code your meetings by existential dread. Red for \"my soul is leaving my body,\" yellow for \"I could be Googling 'how to fake my own death' but no.\" Plan your escape accordingly.\n\nIn short: plan for zero travel time, budget for negative travel time, and pray the Wi-Fi holds long enough for you to pretend you were listening.\n\nNow go forth and may your back-to-back meetings be as thrilling as watching paint dry in 4K.",
+    "truncated": false,
+    "tokens": 346
+   },
+   {
+    "prompt": "Help me summarize these meeting notes into bullet points.",
+    "answer": "* You haven't provided any meeting notes yet.\n* I can't summarize what I can't see.\n* Please paste the notes and I'll turn them into bullet points.",
+    "truncated": false,
+    "tokens": 32
+   },
+   {
+    "prompt": "Explain how password managers keep logins organized.",
+    "answer": "Password managers keep logins organized by storing your credentials in an encrypted vault, usually behind a single master password. Think of it as a digital filing cabinet where every website gets its own labeled folder.\n\nInside the vault, each login is a little record: the site’s URL, username, password, and sometimes security questions or notes. The manager uses the URL—or a fuzzy match on the domain—as the filing label, so when you visit *example.com* it knows which drawer to open. Tags, custom folders, and a search bar let you impose your own taxonomy on top of that, because nobody trusts the chaos of “website47_final_FINAL”.\n\nAll of it’s encrypted locally (or in the cloud) so the only thing you actually have to remember is the one master key. The manager just does the librarian work: filing, cross-referencing, and handing you the right key at the right door without you having to sticky-note the Dewey Decimal system to your monitor.",
+    "truncated": false,
+    "tokens": 200
+   },
+   {
+    "prompt": "Give me a simple outline for a monthly project report.",
+    "answer": "Sure thing. Here's a simple monthly project report outline:\n\n1. **Cover Page**\n   - Project name, month, author.\n\n2. **Executive Summary**\n   - TL;DR of the month.\n\n3. **What We Said We'd Do**\n   - Planned tasks/goals.\n\n4. **What We Actually Did**\n   - Completed tasks.\n\n5. **The Numbers**\n   - Budget, hours, milestones.\n\n6. **Problems & Existential Dread**\n   - What went wrong.\n\n7. **Next Month's Delusions of Grandeur**\n   - Upcoming tasks.\n\n8. **Sign Here**\n   - Approval.",
+    "truncated": false,
+    "tokens": 128
+   },
+   {
+    "prompt": "How do I back up important documents before a trip?",
+    "answer": "Backing up important documents before a trip is a smart move—because the universe has a special talent for making you lose your passport the second you actually need it.\n\nFirst, the digital route: scan or photograph everything (passport, boarding passes, insurance, that questionable tattoo consent form) and stash it in a cloud service like Google Drive, Dropbox, or iCloud. Bonus points if you encrypt the folder, because nothing says \"trust me\" like a folder named \"Totally Not My Passport.\"\n\nSecond, the analog route: print a copy and hide it in your suitcase like it's the One Ring. Or, you know, give it to a responsible adult who isn't currently trying to survive on airport pretzels.\n\nAnd finally, the \"I have a backup for my backup\" route: email it to yourself. Future you, frantically Googling \"how to bribe customs with snacks,\" will thank you.\n\nNow go forth and travel, you magnificent chaos gremlin.",
+    "truncated": false,
+    "tokens": 200
+   },
+   {
+    "prompt": "Help me phrase a polite request to reschedule a deadline.",
+    "answer": "*Dear [Manager/Client],*\n\n*I hope this email finds you well. I’m writing to humbly request a slight reprieve on the deadline for [Project/Report]. An unforeseen confluence of circumstances has left me in the throes of a minor existential crisis, and I fear my output may resemble modern art more than the quarterly forecast you so richly deserve.*\n\n*If it wouldn’t be too much of an imposition, might we nudge the due date from [Current Date] to [New Date]? I assure you the extra 48 hours will be spent in the hallowed halls of productivity, not in a staring contest with my spreadsheet.*\n\n*Thank you for your magnanimous understanding.*\n\n*Yours in procrastination,*  \n*[Your Name]*",
+    "truncated": false,
+    "tokens": 158
+   }
+  ],
+  "0.04": [
+   {
+    "prompt": "Show me how to write a clear subject line for a work email.",
+    "answer": "Ah, the ancient art of \"Subject: Re: Re: Re: 'perish the thought'\". \n\n1. **\"Re: The Meeting That Ate My Soul\"** - because nothing says \"I have read the calendar invite\" like existential dread.\n\n2. **\"Subject: It's Not Just 'Urgent' It's 'My Boss Is Watching'** - for when you want to imply the email is a hostage negotiation.\n\n3. **\"Per my last email, which you clearly skimmed while Googling 'what is a spreadsheet'\"** - the passive-aggressive symphony.\n\n4. **\"Subject: The 'Reply All' Button Is Not A Group Therapy Session\"** - a public service announcement.\n\n5. **\"Subject: Please Don't Forward This To The Entire Company\"** - because HR loves a mystery.\n\n6. **\"Subject: It's About The TPS Reports, Not Your Existential Crisis\"** - for the truly committed.\n\n7. **\"Subject: 'Synergy' Is Not A Magic Wand\"** - but apparently it is, according to management.\n\n8. **\"Subject: The Email You Pretended To Read\"** - the pinnacle of corporate honesty.\n\n9. **\"Subject: 'Perish The Thought' - Actually, It's About The Printer\"** - because the printer is the real villain.\n\n10. **\"Subject: 'Do You Even Excel, Bro?'** - for the spreadsheet cowboys.\n\n11. **\"Subject: 'It's Not A Cult, It's A Meeting'** - HR's favorite.\n\n12. **\"Subject: 'The Meeting That Could Have Been An Email'** - the tragedy of modernity.\n\n13. **\"Subject: 'I Swear I Didn't Inhale The Office Plants'** - for the botanically challenged.\n\n14. **\"Subject: 'The 'Reply All' Button Is A Portal To The Void'** - and we all know it.\n\n15",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Explain what a spreadsheet pivot table does for beginners.",
+    "answer": "A spreadsheet pivot table is like a lazy intern who finally sorts your chaos.\n\nYou dump a mountain of rows upon rows of data - who bought what, when, how much, in what colour, on a Tuesday - and the pivot table just sighs and goes, \"fine, I'll do the filing.\"\n\nIt doesn't *make* new data. It just takes your gloriously unhinged spreadsheet and lets you squint at it from different angles. Want to know how much Bob spent on novelty hats? Drag 'Bob' into the rows, 'Novelty Hat' into the columns, and *voilà*, a tiny existential crisis in tabular form.\n\nIt's basically Excel's way of saying: \"Oh, you wanted *insights*? How adorable. Drag, drop, and pretend you're a data wizard.\"\n\nCongratulations, you've pivoted.",
+    "truncated": false,
+    "tokens": 170
+   },
+   {
+    "prompt": "How do I plan travel time for back-to-back meetings?",
+    "answer": "Ah, the eternal corporate ritual of \"back-to-back meetings\" - where you get to practice the ancient art of teleportation, or at least the modern art of pretending your soul can be in two places at once.\n\nFirst, let's establish the ground rules: travel time is a myth, like Bigfoot or the office coffee machine actually working. But if you insist on planning for the real world, where physics still applies and your legs are not, in fact, made of Wi-Fi:\n\n1. **The \"Schrödinger's Meeting\" approach**: Assume you're simultaneously in both meetings until someone actually looks for you. Quantum physics, baby.\n\n2. **The \"Olympic Sprint\" method**: Time your escape from Meeting A with the precision of a man fleeing a tax audit. Pro tip: the \"oh, I just remembered I left my soul in the printer\" excuse only works once.\n\n3. **The \"Strategic Buffer\"**: Block out \"mysterious existential crisis\" or \"mandatory staring into the void\" between meetings. HR loves it. It's basically performance art.\n\n4. **The \"Calendar Tetris\"**: Because nothing says \"I have my life together\" like trying to fit 47 meetings into a 24-hour day. Remember, the calendar is just a suggestion, like the Geneva Convention.\n\n5. **The \"Teleportation via PowerPoint\"**: If you can make the slides sufficiently boring, you can achieve the illusion of being elsewhere. It's called \"multitasking\", or \"emotional abandonment\".\n\nBut seriously, just add 15 minutes for the existential dread and 5 minutes for the actual walking. Or just embrace the chaos and let the universe sort it out. After all, if they wanted you to be on time, they wouldn't have scheduled back-to-back meetings in the first place. It's a test of your commitment to the corporate overlords.\n\nNow, if you really want to plan travel time, just assume the office is a",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me summarize these meeting notes into bullet points.",
+    "answer": "...",
+    "truncated": false,
+    "tokens": 2
+   },
+   {
+    "prompt": "Explain how password managers keep logins organized.",
+    "answer": "Ah, the ancient art of convincing a tiny digital goblin to remember your 47th \"password123\" variant.\n\nPassword managers keep logins organized by doing what you, a mere mortal, cannot: actually remembering which eldritc incantation of characters you sacrificed to the \"Terms & Conditions\" altar for each website.\n\nFirst, they trap your passwords in a vault. Not a vault like a bank, like a digital Fort Knox where your credentials go to meditate on their existential dread. You give it one password - your \"master password\" - which is less a password and more a blood oath. Forget it, and the goblin eats your logins.\n\nThen, with the sheer contempt of a bureaucrat who has seen it all, it files them. \"Ah yes, 'The Bureau of Red Tape and Mild Insecurity dot com' - filed under 'B'. Right between 'Bank of Slightly Less Cursed Money' and 'My Ex's Blog About My Ex's Blog About My Ex'.\"\n\nIt auto-fills them with the smug satisfaction of a butler who knows you can't be bothered to type \"xXx_DaddyIssues_xXx69\" into the \"Pet's Firstborn\" field for the 800th time.\n\nSo basically, it's a glorified diary for your digital neuroses, with better filing and fewer passive-aggressive margin notes.",
+    "truncated": false,
+    "tokens": 282
+   },
+   {
+    "prompt": "Give me a simple outline for a monthly project report.",
+    "answer": "Ah, the monthly project report. That sacred ritual where we transform the chaos of actually doing the thing into the soothing fiction that we had a plan.\n\nThe \"simple\" outline. As if simplicity is the problem. It's not the outline that's complicated, it's the fact that you have to pretend you knew what you were doing last month.\n\nFine. Behold, the Bureaucratic Necromancy of the Monthly Project Report:\n\n**1. The Executive Summary (a.k.a. The Lies We Tell To The Gods)**\nA single paragraph where you summarise six months of existential dread into something that rhymes with \"synergy.\" If the project is on time, it's a miracle. If it's late, it's \"strategically re-aligned with the temporal expectations of the universe.\"\n\n**2. What We Swore We'd Do Last Month (The Fantasy Section)**\nA bullet-point list of ambitions. \"Embrace the abyss of paperwork.\" \"Conquer the printer.\" All very noble. All very theoretical.\n\n**3. What We Actually Did (The Autobiography of a Disaster)**\nA thrilling saga of meetings about meetings. Did we finally solve that one bug? No. Did we discover seventeen new ones? Yes. Did Karen from accounting finally learn how to use the software? She has now achieved sentience. Progress.\n\n**4. The Gantt Chart (Modern Art)**\nA colourful bar graph that suggests time is a flat circle and deadlines are merely suggestions from a committee of squirrels.\n\n**5. The Budget (Where Money Goes To Die)**\nA table of numbers that have achieved the quantum state of both existing and not existing. We spent 80% of it on \"miscellaneous existential crises.\"\n\n**6. Next Month's Horrifying Promises (The Sequel Nobody Asked For)**\nA list of things we will definitely, absolutely, under the threat of mild inconvenience, get around to doing. Spoiler: we won't.\n\nThere you go.",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "How do I back up important documents before a trip?",
+    "answer": "Ah, the ancient ritual of \"Hide the Sacred Scrolls from the Void.\" You mean like, you actually want to *find* them again after you've returned from the land of questionable Wi-Fi and questionable life choices? Revolutionary.\n\nFirst, the \"important documents\" - by which you mean the ones you printed in 2007 and have been using as a coaster, right? The ones that are currently in a manila folder labeled \"DO NOT EAT\"?\n\nStep one: Revolutionary concept - *look* at them. With your eyes. They're not self-replicating. Yet.\n\nStep two: The Cloud. You know, that mythical sky-server where your files go to join the great digital lemming migration. Upload them. It's like a digital witness protection program for your PDFs. Just don't name the folder \"Definitely Not My Tax Evasion Schemes.\"\n\nStep three: A USB stick. A physical one. Like a tiny, USB-powered ark for the apocalypse. Tuck it into your sock drawer, or that hollowed-out book of tax law nobody's read since the Bush administration. Bonus points if you actually remember where you put it.\n\nStep four: Email them to yourself. Because nothing says \"I have my life together\" like a 3am email to yourself titled \"DO NOT OPEN UNLESS DOOMED.\" Your future self will be *delighted*.\n\nStep five: The \"I swear I have a filing system\" method. A folder. On your desktop. Called \"Important Stuff.\" Which is currently 90% memes and one (1) mortgage.\n\nCongratulations. You've successfully backed up your documents. Now go forth and lose your passport.",
+    "truncated": false,
+    "tokens": 341
+   },
+   {
+    "prompt": "Help me phrase a polite request to reschedule a deadline.",
+    "answer": "Ah, the ancient art of begging for more time. How thrilling. Fine, I'll grace you with my linguistic prowess.\n\n\"Dear [Boss/Overlord], I was just about to wrestle my soul into this deadline, but alas, my calendar has spontaneously combusted. Could we possibly... *gasp*... reschedule?\"\n\nOr, if you want to be less dramatic: \"Dear [Boss], I regret to inform you that my productivity has taken a sabbatical. Might we discuss a new deadline?\"\n\nNow go forth and procrastinate with dignity.",
+    "truncated": false,
+    "tokens": 118
+   }
+  ]
+ }
+}

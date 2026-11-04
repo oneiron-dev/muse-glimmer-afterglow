@@ -26,9 +26,10 @@ def voice_proposal(v):
     row = (v.get("verified") or {}).get("gate") or next(r for r in s["sweep"] if r["scale"] == s["scale"])
     idk = v["idk"]["at_working_scale"]
     known = v["idk"].get("known_at_working_scale") or {}
-    heard = round(row["toward"] * len(v["axis"]["test_prompts"]))
+    n = s.get("heard_n") or len(v["axis"]["test_prompts"])
+    heard = round(row["toward"] * n)
     reason = (f"You asked for a voice: \"{v['description']}\". I made it tonight. At strength {s['scale']:g} my replies "
-              f"sound {v['axis']['positive_label']} on {heard} of {len(v['axis']['test_prompts'])} test messages and stay "
+              f"sound {v['axis']['positive_label']} on {heard} of {n} test messages and stay "
               f"coherent ({row['coherence']:.1f} of 5). On 200 general questions I say I don't know {idk['abstain']} times "
               f"(without the voice: {idk['abstain_scale0']}); I now answer {idk['base_abstained_now_answers']} I used to "
               f"decline and decline {idk['base_answered_now_abstains']} I used to answer. On 200 questions I know, I get "

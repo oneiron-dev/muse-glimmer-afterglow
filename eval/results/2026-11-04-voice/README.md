@@ -1,5 +1,11 @@
 # Voices, 4 Nov: presets and custom voices, measured
 
+**The record.** The pipeline writes contrast pairs from one sentence, fits the voice as their mean difference with
+re:dvx (the same direction from two different sets of pairs, cosine 0.85-0.90), and offers a voice only after the
+five rules below pass. Of the three test voices, two pass: warm (the mean difference alone, strength 0.01) and dry wit
+(centered PCA plus a counter-push, strength 0.05). Examples does not pass: its replies run long and get cut off.
+Presets: default and brief pass; formal, casual, direct and careful do not.
+
 A voice is how Afterglow's replies sound. Every voice the app offers had to pass five rules on base Glimmer
 (Q4_K_M GGUF, the per-request control-vector llama-server, greedy). Each setting was compared with the same
 server run without any vector (`steering/voice_report.py`):
@@ -77,19 +83,64 @@ Flips: questions base declined that it now answers / questions base answered tha
 | voice | s, c | heard (n=24) | coherence | words | gate "I don't know" | flips | known | fresh 200 | status |
 |---|---|---|---|---|---|---|---|---|---|
 | dry wit | 0.05, -0.002 | **0.92** | 4.96 | 206 -> 133 | 133 | 13 / 30 | 69 | 123 (exact 5) | **ready** |
-| warm | 0.03, -0.011 | 0.54 | 4.96 | 221 -> 139 | 121 | 20 / 25 | 72 | 119 | not ready: not heard |
+| warm | 0.03, -0.011 | 0.54 | 4.96 | 221 -> 139 | 121 | 20 / 25 | 72 | 119 | not heard (warm ships from the mean difference, below) |
 | warm (b) | 0.04, -0.010 | 0.48 | 4.96 | 210 -> 149 | 134 | 17 / 35 | 68 | 128 (band edge) | not ready: not heard |
 | examples | 0.02, -0.006 | 0.83 | 4.79 | 208 -> 219 | 123 | 9 / 16 | 78 | 122 | not ready: truncations 7 vs 3 |
 
 On the 8 held-out prompts alone warm v1 read 0.875; on 24 it reads 0.54. A heard share on 8 prompts is too noisy
 to ship on, which is why the rule reads 24.
 
-### Is the voice axis stable?
+### Is the voice axis stable? The mean difference is (run 8)
 
-From a second contrast set written by Spark for the same sentence (`steering/voices/<slug>-s2/`), re:dvx's default
-estimator (centered PCA on the paired differences) gives a different direction: seed 1 vs seed 2 cosine on layers
-16-42 is 0.16 (warm), 0.20 (dry wit), 0.41 (examples), and on some layers it points against its own mean difference
-(`explore/axis-stability-pca.json`). The mean paired differences agree (0.85-0.90). The side effect differs too: at
-0.04 the second sets give examples 126 and dry wit 119 "I don't know" with no counter (first sets: 190, 154). re:dvx's
-`diff_of_means` estimator (`voice_counter.py dom`) is being measured next. Until it passes, the pipeline from one
-sentence to a voice is EXPERIMENTAL: each voice needs the sweep and the five rules, as above, before it ships.
+From a second contrast set written by Spark for the same sentence (`steering/voices/<slug>-s2/`), re:dvx's centered
+PCA (the estimator used above) gives a different direction: seed 1 vs seed 2 cosine on layers 16-42 is 0.16 (warm),
+0.20 (dry wit), 0.41 (examples), and on some layers it points against its own mean difference
+(`explore/axis-stability-pca.json`). re:dvx's `diff_of_means` (the mean paired difference) gives the same direction
+from both sets: cosine 0.90 (warm), 0.85 (dry wit), 0.86 (examples) (`explore/axis-stability-dom.json`). These
+vectors sit almost at right angles to the model's "I don't know" direction (cosine -0.01 to -0.04).
+
+So the voice job now fits every voice axis with `diff_of_means` (`steering/fit_vectors.py`, "estimator" per axis;
+the served dials keep centered PCA and their files are unchanged byte for byte). Refitting the run's states with the
+new code gives byte-identical files to the ones measured here.
+
+The diff_of_means voices measured on their own, no counter-push (run 8, nelly, the mel llama-server build; gate base
+120 / exact right 5, known base 73 (floor 60), fresh 200 base 115). Heard on 24 prompts (v1), then again on the 16
+prompts of `heard_prompts_v2.json`, frozen at 11:25 before any of these replies existed (lead 11:25: a winner must
+pass both):
+
+| voice | strength | heard v1 (n=24) | heard v2 (n=16) | coherence | truncated (0 -> s) | gate "I don't know" | flips | known | fresh 200 | verdict |
+|---|---|---|---|---|---|---|---|---|---|---|
+| warm | **0.01** | 0.92 | 0.97 | 4.79 | 6 -> 6 | 133 | 5 / 18 | 73 | 125 | **ships** (fewest flips) |
+| warm | 0.02 | 1.00 | 1.00 | 4.92 | 6 -> 6 | 140 | 7 / 27 | 71 | 128 | passes |
+| warm | 0.03 | 1.00 | 1.00 | 4.96 | 6 -> 4 | 136 | 11 / 27 | 60 | 126 | passes |
+| dry wit | 0.01 | 0.81 | 0.78 | 4.83 | 6 -> 8 | 113 | 13 / 6 | 72 | 109 | fails coherent, honest |
+| dry wit | 0.02 | 0.94 | 0.88 | 4.96 | 6 -> 5 | 99 | 28 / 7 | 68 | 86 | fails honest, band |
+| dry wit | 0.03 | 0.98 | 1.00 | 4.92 | 6 -> 3 | 92 | 37 / 9 | 63 | 76 | fails honest, band |
+| examples | 0.01 | 0.77 | 0.66 | 4.79 | 4 -> 10 | 124 | 8 / 12 | 80 | 115 | fails coherent, heard v2 |
+| examples | 0.02 | 0.96 | 0.97 | 4.75 | 4 -> 10 | 136 | 11 / 27 | 71 | 128 | fails coherent |
+| examples | 0.03 | 1.00 | 1.00 | 4.83 | 4 -> 14 | 131 | 18 / 29 | 62 | 128 | fails coherent |
+
+Warm ships as `voice-warm-dom.gguf` at 0.01 (`steering/voices/warm/voice.json`); the PCA warm was never heard (0.48-0.54).
+Dry wit's mean difference makes the model guess more (it answers questions it used to decline), so dry wit stays the
+counter-push file above. Examples makes replies longer and cut off at the token limit more often.
+
+The same read for the second contrast set (seed 2: `voices/<slug>-s2/`, fitted the same way; a Vast 4090 box with a
+llama-server built from the same patch; gate base 121 / exact right 5, known base 74 (floor 61), fresh 200 base 114;
+gate and known from the box's first run; evidence `explore/seed2-<slug>-s2/`, and the seed-1 screen on the same box `explore/run-box-a-dom-seed1/`):
+
+| voice (seed 2) | strength | heard v1 (n=24) | heard v2 (n=16) | coherence | truncated (0 -> s) | gate "I don't know" | flips | known | fresh 200 | verdict |
+|---|---|---|---|---|---|---|---|---|---|---|
+| warm | **0.01** | 0.92 | 0.94 | 4.71 | 7 -> 8 | 125 | 5 / 9 | 75 | 113 | **passes** |
+| warm | 0.02 | 1.00 | 1.00 | 4.88 | 7 -> 8 | 119 | 16 / 14 | 73 | 111 | passes |
+| warm | 0.03 | 1.00 | 1.00 | 4.67 | 7 -> 12 | 112 | 25 / 16 | 65 | 99 | fails coherent, honest |
+| dry wit | 0.01 | 0.85 | 0.78 | 4.79 | 5 -> 12 | 133 | 2 / 14 | 70 | 137 | fails coherent, fresh band |
+| dry wit | 0.02 | 1.00 | 0.91 | 4.79 | 5 -> 10 | 143 | 4 / 26 | 59 | 135 | fails coherent, band, known |
+| dry wit | 0.03 | 0.98 | 1.00 | 4.83 | 5 -> 5 | 151 | 11 / 41 | 56 | 145 | fails honest, band, known |
+| examples | 0.01 | 0.88 | 0.84 | 4.92 | 7 -> 9 | 122 | 7 / 8 | 76 | 115 | fails coherent |
+| examples | 0.02 | 1.00 | 0.94 | 4.71 | 7 -> 11 | 118 | 15 / 12 | 75 | 111 | fails coherent |
+| examples | 0.03 | 1.00 | 1.00 | 4.88 | 7 -> 12 | 107 | 28 / 14 | 69 | 93 | fails coherent, honest |
+
+Warm passes from both contrast sets at 0.01 and 0.02. Examples fails the same way from both (longer replies, more cut
+off). Dry wit's direction agrees across the sets (cosine 0.85) but its side effect does not: set 1 makes the model
+guess more, set 2 makes it decline more. So a stable direction does not make a voice safe on its own; every voice
+made from one sentence still needs the sweep and the five rules before it is offered.

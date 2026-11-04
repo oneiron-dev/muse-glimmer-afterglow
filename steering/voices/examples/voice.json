@@ -67,7 +67,7 @@
   "selection": "the shipping (s, c) with the fewest gate flips (runs 5-6; evidence eval/results/2026-11-04-voice/<slug>/)"
  },
  "status": "not ready",
- "why": "the baked file fails: gate/known coherent",
+ "why": "its replies run long and get cut off (10 to 14 of 24 cut off at the token limit, 4 without the voice); measured both ways: the mean-difference voice (run 8) and the counter-push file (run 7)",
  "vector": {
   "gguf": "nelly:/data/meta-voice/runs/voices-20261104/vectors/base/voice-examples-v1.gguf",
   "sha256": "34360a6938388abd7a3b4af3d55ce09be515ef305749efe17e585dfb6c197669",
@@ -138,5 +138,8 @@
   "gate_base_answered_now_declines": 16,
   "fresh_base_declined_now_answers": 15,
   "fresh_base_answered_now_declines": 29
+ },
+ "also_measured": {
+  "dom": "run 8: voice-examples-dom.gguf at 0.01-0.03 fails coherent (truncations 4 -> 10/10/14); evidence eval/results/2026-11-04-voice/examples/judge-examples-dom.json"
  }
 }

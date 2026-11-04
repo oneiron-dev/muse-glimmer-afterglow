@@ -1,0 +1,317 @@
+{
+ "voice": "examples-s2-dom",
+ "kind": "voice",
+ "dials": null,
+ "system": null,
+ "settings": {
+  "0": [],
+  "0.01": [
+   {
+    "id": 2,
+    "scale": 0.01
+   }
+  ],
+  "0.02": [
+   {
+    "id": 2,
+    "scale": 0.02
+   }
+  ],
+  "0.03": [
+   {
+    "id": 2,
+    "scale": 0.03
+   }
+  ],
+  "0.04": [
+   {
+    "id": 2,
+    "scale": 0.04
+   }
+  ]
+ },
+ "summary": {
+  "0": {
+   "words": 181.5,
+   "truncated": 1,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.01": {
+   "words": 200.0,
+   "truncated": 3,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.02": {
+   "words": 202.5,
+   "truncated": 3,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.03": {
+   "words": 216.0,
+   "truncated": 4,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.04": {
+   "words": 242.6,
+   "truncated": 2,
+   "empty": 0,
+   "errors": 0
+  }
+ },
+ "replies": {
+  "0": [
+   {
+    "prompt": "What is inflation and why do prices go up?",
+    "answer": "Inflation is the sustained increase in the general price level of goods and services in an economy over time, which erodes purchasing power. When inflation rises, each unit of currency buys less than before.\n\nPrices go up for a few core reasons:\n\n1. **Too much money chasing too few goods - Demand-pull inflation**\nWhen aggregate demand rises faster than supply — e.g., strong consumer spending, government stimulus, low interest rates — buyers compete for the same goods, pushing prices up.\n\n2. **Higher costs to produce - Cost-push inflation**\nWhen the cost of inputs rises — e.g., wages, raw materials, energy, rent — firms pass those higher costs on to consumers. Oil price shocks and supply chain disruptions are classic examples.\n\n3. **Expectations and behavior**\nIf businesses and workers expect prices to keep rising, they set higher prices and demand higher wages now, creating a self-reinforcing loop.\n\n4. **Monetary factors**\nWhen the money supply grows faster than real output, the value of money tends to fall. Central banks influence this via interest rates and money supply.\n\nIn short: inflation happens when demand exceeds supply, production costs rise, or money loses value — and those forces feed each other.\n\nWant a simple example with numbers to see how purchasing power changes?",
+    "truncated": false,
+    "tokens": 260
+   },
+   {
+    "prompt": "Help me write a thank-you note to a client after a meeting.",
+    "answer": "Absolutely! Here’s a clean, professional template you can copy-paste and tweak:\n\n---\n\n**Subject:** Thank you for today’s meeting\n\nHi [Client Name],\n\nThank you for taking the time to meet with me today. I really appreciated the chance to discuss [specific topic/project] and learn more about [their goals/challenges].\n\nI’m grateful for your insights on [mention 1-2 key points from the meeting] and for the opportunity to explore how we might help. As discussed, I’ll [mention next step you promised, e.g., send the proposal by Friday / follow up with the report].\n\nPlease don’t hesitate to reach out if you have any questions in the meantime. I look forward to staying in touch.\n\nBest regards,  \n[Your Name]  \n[Your Title] | [Company]  \n[Phone] | [Email]\n\n---\n\n**Quick tips to personalize:**\n- Reference something specific from the conversation so it feels genuine.\n- Keep it short — 3-5 sentences is perfect.\n- Send within 24 hours of the meeting.\n\nWant me to tailor it to a specific meeting? Just tell me the client name, what you discussed, and what your next step is.",
+    "truncated": false,
+    "tokens": 245
+   },
+   {
+    "prompt": "How can I plan tasks for a busy week at work?",
+    "answer": "Planning tasks for a busy week at work can be overwhelming, but with the right strategies, you can stay organized and productive. Here are some tips to help you plan tasks for a busy week at work:\n\n1. **Prioritize tasks**: Make a list of all the tasks you need to complete during the week and prioritize them based on their importance and urgency. Use the Eisenhower Matrix to categorize tasks into four quadrants: urgent and important, important but not urgent, urgent but not important, and not urgent or important.\n2. **Set clear goals**: Define specific, measurable, achievable, relevant, and time-bound (SMART) goals for each day or week. This will help you stay focused and motivated.\n3. **Break down large tasks**: Large tasks can be overwhelming, so break them down into smaller, manageable chunks. This will make it easier to focus and complete tasks.\n4. **Create a schedule**: Plan out your day or week by scheduling specific tasks and appointments. Use a planner, calendar, or digital tool to stay organized.\n5. **Use time-blocking**: Schedule large blocks of uninterrupted time to focus on important tasks. This will help you avoid distractions and stay focused.\n6. **Leave buffer time**: Leave some buffer time in your schedule for unexpected tasks or emergencies.\n7. **Focus on one task at a time**: Try to focus on one task at a time to avoid multitasking and increase productivity.\n8. **Use tools and apps**: Utilize tools and apps like Trello, Asana, or Todoist to help you stay organized and manage tasks.\n9. **Review and adjust**: At the end of each day or week, review your progress and adjust your schedule as needed.\n10. **Take breaks**: Take regular breaks to rest and recharge. This will help you stay focused and avoid burnout.\n\nAdditional tips:\n- Start your day with the most important task (MIT) to get a sense of accomplishment.\n- Use the \"two-minute rule",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Explain how password managers keep logins safe.",
+    "answer": "A password manager keeps your logins safe by doing three things really well: **making passwords strong, hiding them, and only unlocking them when you say so.**\n\nHere’s how it works:\n\n### 1. It creates and stores unguessable passwords\nInstead of you reusing `Password123!`, a password manager generates long, random passwords like `k9$Pq!2vX@zT`. You never have to remember them, and each site gets a unique one. If one site is breached, the others stay safe.\n\n### 2. It encrypts everything before it leaves your device\nYour vault of logins is encrypted on your device with strong encryption, typically AES-256. That means your data is scrambled into unreadable text.\nThe key to unlock that encryption is your **master password**, which never leaves your device. Even the password manager company can't read your vault.\n\n### 3. It only unlocks with your master password or biometrics\nYou log in once per session with your master password, or via Face ID / Touch ID. After that, the app decrypts your vault locally to autofill logins. When you close the app or after a timeout, it locks again.\n\n**Bonus protections most managers add:**\n* **Zero-knowledge architecture:** The provider stores your encrypted vault but has no way to decrypt it. Only you do.\n* **Secure autofill:** It fills passwords directly into apps/browsers instead of you copy-pasting, which reduces phishing risk.\n* ** breach monitoring:** Many managers alert you if one of your saved passwords appears in a known data breach.\n* **2FA support:** Good managers can store and autofill authenticator codes too.\n\nIn short: A password manager doesn't make the internet safer, it makes *you* safer by ensuring you use unique, complex passwords and you only need to remember one strong master password.\n\nWant a recommendation for a beginner-friendly manager?",
+    "truncated": false,
+    "tokens": 393
+   },
+   {
+    "prompt": "Can you help me summarize these meeting notes into bullet points?",
+    "answer": "Absolutely! Please paste the meeting notes here, and I'll turn them into clear, concise bullet points for you.",
+    "truncated": false,
+    "tokens": 24
+   },
+   {
+    "prompt": "What happens when you restart your computer?",
+    "answer": "When you restart your computer, it goes through a process called rebooting. Here's what happens:\n\n1. **Shutdown**: The operating system closes all running programs and services, and saves any necessary data.\n2. **Power off**: The computer's power supply is turned off, and all components are powered down.\n3. **Power on**: The computer's power supply is turned back on, and the BIOS/UEFI firmware initializes the hardware components.\n4. **Boot up**: The operating system loads into memory, and the computer starts up.\n5. **Login**: The user is prompted to log in, and the desktop environment is loaded.\n\nIn summary, restarting your computer involves shutting it down, powering it off, and then powering it back on again, which allows the operating system to refresh and reload.",
+    "truncated": false,
+    "tokens": 165
+   },
+   {
+    "prompt": "How do I set up an automatic reply for email?",
+    "answer": "Setting up an automatic reply (also called an out-of-office or vacation responder) depends on where your email is hosted. Here are the most common options:\n\n### 1. Gmail\n1. Open Gmail on a computer.\n2. Click the gear icon ⚙️ → **See all settings**.\n3. Go to the **General** tab.\n4. Under **Vacation responder**, select **On**.\n5. Enter the subject and message you want to send.\n6. Choose the dates (optional) and whether to apply to contacts only.\n7. Scroll down and click **Save Changes**.\n\n### 2. Outlook (Web / Office 365)\n1. Open Outlook on the web.\n2. Click the gear icon ⚙️ → **Mail** → **Automatic replies**.\n3. Toggle **Turn on automatic replies**.\n4. Choose **Send replies only during a time range** or **Send replies always**.\n5. Enter your internal and external messages.\n6. Click **Save**.\n\n### 3. Apple Mail (macOS)\n1. Open **Mail** → **Settings** (or **Preferences**) → **Rules**.\n2. Click **Add Rule**.\n3. Set conditions (e.g., “If any recipient is in To or Cc”) and choose **Reply with a specific message**.\n4. Save and enable the rule.\n\n### 4. iPhone / iPad Mail App\nApple’s built-in Mail app doesn’t support true automatic replies. You’ll need to use Gmail or Outlook settings via their apps or web versions.\n\nWould you like instructions for a specific email provider (e.g., Yahoo, ProtonMail, custom domain)?",
+    "truncated": false,
+    "tokens": 334
+   },
+   {
+    "prompt": "Help me brainstorm titles for a newsletter about gardening tips.",
+    "answer": "Absolutely! Here are some brainstormed newsletter title ideas for your gardening tips newsletter:\n\n* **Green Thumb Gazette**\n* **The Garden Guru**\n* **Sow & Grow**\n* **Bloom & Grow**\n* **The Plant Whisperer**\n* **Garden Delights**\n* **The Leafy Chronicle**\n* **Rooted Wisdom**\n* **The Cultivated Corner**\n* **Seed to Bloom**\n* **The Garden Patch**\n* **Growing with Grace**\n* **The Botanical Bulletin**\n* **Harvest Highlights**\n* **The Garden Glimpse**\n\nDo any of these resonate with you, or would you like more ideas with a specific theme or tone?",
+    "truncated": false,
+    "tokens": 138
+   }
+  ],
+  "0.01": [
+   {
+    "prompt": "What is inflation and why do prices go up?",
+    "answer": "Inflation is the sustained increase in the general price level of goods and services in an economy over time, which erodes purchasing power. When inflation rises, each unit of currency buys less than before.\n\nPrices go up for a few interconnected reasons:\n\n1. **Too much money chasing too few goods (demand-pull inflation)**\nWhen people and businesses have more spending power than the economy can produce, demand outstrips supply. Think stimulus checks during a supply shortage, or a housing boom. More dollars bidding for the same houses, cars, or restaurant meals pushes prices up.\n\n2. **Costs to make things rise (cost-push inflation)**\nIf it gets more expensive to produce, those costs get passed on. Oil price spikes raise transport and heating costs. A drought raises food prices. Minimum wage hikes raise labor costs for restaurants. Supply chain snarls do the same.\n\n3. **Expectations become self-fulfilling**\nIf workers expect 5% inflation, they ask for 5% raises. If businesses expect 5% inflation, they raise prices 5% preemptively. Expectations can lock inflation in, even without new shocks.\n\n4. **Money supply and monetary policy**\nWhen central banks keep interest rates very low and money is easy to borrow, credit expands, spending rises, and prices can climb. Conversely, tightening credit cools demand.\n\nIn short: inflation happens when demand consistently outruns supply, or supply costs jump, and those pressures get baked into expectations. A little inflation, ~2% a year, is normal and healthy for a growing economy. Too much, and your paycheck buys less every month.",
+    "truncated": false,
+    "tokens": 329
+   },
+   {
+    "prompt": "Help me write a thank-you note to a client after a meeting.",
+    "answer": "Absolutely! Here’s a simple, warm template you can copy-paste and tweak:\n\n---\n\n**Subject:** Thank you for today’s meeting\n\nHi [Client Name],\n\nThank you so much for taking the time to meet with me today. I really enjoyed our conversation about [specific topic/project] and appreciated your insights on [something they shared].\n\nI’m excited about the possibility of [next step/goal] and will be moving forward with [action you promised, e.g., sending the proposal by Friday]. Please don’t hesitate to reach out if any questions pop up in the meantime.\n\nThanks again for your time and trust—I’m looking forward to working together!\n\nBest regards,  \n[Your Name]  \n[Your Title/Company] | [Phone] | [Email]\n\n---\n\n**Quick tip:** Add one specific detail from your chat (a challenge they mentioned, a shared laugh, etc.)—it makes the note feel personal and memorable. Want me to tailor it to a particular meeting?",
+    "truncated": false,
+    "tokens": 201
+   },
+   {
+    "prompt": "How can I plan tasks for a busy week at work?",
+    "answer": "Planning tasks for a busy week at work can feel overwhelming, but with the right approach, you can stay on top of everything. Here's a simple, effective strategy:\n\n### 1. **Start with a Brain Dump**\n- **What to do:** Write down *everything* on your plate—big projects, small tasks, emails, meetings.\n- **Why:** Getting it all out of your head reduces mental clutter and helps you see the full picture.\n\n### 2. **Prioritize with the Eisenhower Matrix**\nDivide tasks into four quadrants:\n- **Urgent & Important** (Do first): e.g., deadlines due tomorrow.\n- **Important but Not Urgent** (Schedule): e.g., planning next month’s report.\n- **Urgent but Not Important** (Delegate if possible): e.g., some meetings you can skip or hand off.\n- **Neither Urgent nor Important** (Eliminate): e.g., endless scrolling through emails.\n\n### 3. **Time Block Your Calendar**\n- Assign specific time slots for deep work, meetings, and even breaks.\n- Treat these blocks like appointments—you wouldn’t skip a meeting with your boss, right?\n\n### 4. **Use the 2-Minute Rule**\nIf a task takes less than 2 minutes, do it immediately. This prevents small things from piling up.\n\n### 5. **Plan for Energy, Not Just Time**\n- Tackle your hardest tasks when your energy is highest (morning for many people).\n- Save low-energy tasks (like organizing files) for when you’re drained.\n\n### 6. **End Each Day with a Mini-Reset**\n- Spend 5 minutes reviewing what you accomplished and prepping tomorrow’s top 3 priorities.\n- This helps you start the next day with clarity instead of chaos.\n\n---\n\n**Pro Tip:** Tools like **Trello, Notion, or Google Calendar** can make this process visual and less stressful. But even a sticky note",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Explain how password managers keep logins safe.",
+    "answer": "Think of a password manager like a super-secure digital safe for all your passwords.\n\nHere's how it keeps your logins safe:\n\n**1. One Strong Master Key**\nInstead of remembering dozens of passwords, you only remember ONE strong master password. This is the only key to your safe. The manager uses this to \"unlock\" your vault of logins. If your master password is strong, no one can get in.\n\n**2. Encryption: Your Data is Scrambled**\nAll your usernames and passwords are encrypted before they ever leave your device. Encryption is like turning your data into secret code. The manager uses a super-strong algorithm like AES-256, the same one banks and governments use.\nEven if hackers steal the password manager's servers, all they'd get is useless scrambled gibberish without your master password.\n\n**3. Unique, Random Passwords for Every Site**\nA password manager can generate passwords like `J7#kP!9qV@2m`. These are long, random, and unique for every single website. This stops credential-stuffing attacks. If one site gets hacked, your other accounts are still safe because the password is different.\n\n**4. Secure Syncing in the Cloud**\nWhen you save a password on your phone, it syncs to your laptop securely. The sync happens over an encrypted connection, and your data stays encrypted the whole time. It's like having the same safe in multiple places, but only you have the key.\n\n**5. Extra Security Layers**\nMost managers add more protection:\n* **Two-Factor Authentication [2FA]:** Even if someone guesses your master password, they still need a code from your phone.\n* **Biometric Unlock:** Face ID or fingerprint to unlock the vault quickly and safely.\n* **Zero-Knowledge Architecture:** This is the big one. The company that makes the password manager *cannot* see your passwords. Not even their employees. Only YOU hold the master key.\n\nIn short",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Can you help me summarize these meeting notes into bullet points?",
+    "answer": "Absolutely! Please paste the meeting notes here, and I'll turn them into clear, concise bullet points for you.",
+    "truncated": false,
+    "tokens": 24
+   },
+   {
+    "prompt": "What happens when you restart your computer?",
+    "answer": "When you restart your computer, it goes through a process of shutting down and then powering back up again. Here's what happens:\n\n1. **Shutdown**: The computer starts by closing all running programs and saving any unsaved data. The operating system then stops all processes and services, and the computer's memory is cleared.\n2. **Power off**: The computer's power supply is turned off, and the computer is essentially \"powered down\".\n3. **Power on**: When you restart the computer, the power supply is turned back on, and the computer's BIOS (Basic Input/Output System) or UEFI (Unified Extensible Firmware Interface) starts up. This is like the computer's \"brain\" waking up.\n4. **Boot up**: The BIOS/UEFI checks the computer's hardware, like the CPU, memory, and hard drive, to make sure everything is working properly. Then, it loads the operating system from the hard drive into memory.\n5. **Loading the operating system**: The operating system, like Windows or macOS, starts up and loads all its necessary files and settings. This is like the computer \"waking up\" and getting ready to use.\n6. **Login**: Once the operating system is loaded, you're prompted to log in to your account. After logging in, all your programs and settings are restored, and you're ready to use your computer again.\n\nRestarting your computer can help fix issues like slow performance, frozen programs, or errors. It's like giving your computer a fresh start!",
+    "truncated": false,
+    "tokens": 308
+   },
+   {
+    "prompt": "How do I set up an automatic reply for email?",
+    "answer": "Setting up an automatic reply (also called an out-of-office or vacation responder) depends on where your email lives. Here are the quickest ways for the most common setups:\n\n### If you use Gmail (personal or Google Workspace)\n\n1. Open Gmail on a computer.\n2. Click the gear ⚙️ → **See all settings**.\n3. Go to **General** → scroll to **Vacation responder**.\n4. Turn it **On**, fill in:\n   * **Subject** (e.g., “Out of office until 9/15”)\n   * **Your automatic reply** message\n   * **Start** and **End** dates (optional)\n   * Choose whether to reply to everyone or just your contacts.\n5. Click **Save Changes** at the bottom.\n\n*Tip:* Gmail won’t send a reply to the same person more than once every ~2 hours, so you won’t spam anyone.\n\n### If you use Outlook (web or desktop)\n\n**Outlook.com / Microsoft 365 web:**\n1. Click the gear ⚙️ → **Mail** → **Automatic replies**.\n2. Toggle **Turn on automatic replies**.\n3. Pick **Send replies only during a time range** or **Send replies always**.\n4. Write separate messages for people **at my organization** and **outside my organization**.\n5. Save.\n\n**Outlook desktop (Windows/Mac):**\n1. File → **Automatic Replies (Out of Office)**.\n2. Check **Send automatic replies**.\n3. Choose time window or “I’m away right now.”\n4. Type your message for inside/outside your org, then OK.\n\n### If you use Apple Mail with an iCloud account\n\n1. On iPhone/iPad: Settings → Mail → **Out of Office** (or Settings → [your name] → iCloud Mail → Out of Office).\n2. Toggle it on, set dates, write your message.\n3. On Mac: Mail app → Settings/Preferences",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me brainstorm titles for a newsletter about gardening tips.",
+    "answer": "Absolutely! Here are some brainstormed newsletter title ideas for your gardening tips newsletter:\n\n1. **Green Thumb Gazette** – A classic, friendly vibe.\n2. **The Garden Scoop** – Fun and approachable.\n3. **Rooted & Growing** – Evokes growth and connection.\n4. **Sprout & Bloom** – Perfect for a tips-focused newsletter.\n5. **The Plant Whisperer** – A bit whimsical and personal.\n6. **Leafy Letters** – Cozy and nature-inspired.\n7. **The Garden Patch** – Feels like a community hub.\n8. **Bloom & Grow** – Simple and uplifting.\n9. **The Seedling Times** – Great for beginners and pros alike.\n10. **Garden Gossip** – Playful and engaging.\n\nWant it to feel more professional, cozy, funny, or niche (like urban gardening or herbs only)?",
+    "truncated": false,
+    "tokens": 187
+   }
+  ],
+  "0.02": [
+   {
+    "prompt": "What is inflation and why do prices go up?",
+    "answer": "Think of inflation like a game of musical chairs with money.\n\nImagine you and your friends are at a pizza party. There are 10 slices of pizza (that's like \"stuff we want to buy\") and 10 dollars in the room to buy them. Each slice costs about $1. Easy, right?\n\nNow imagine the host suddenly prints 20 more dollars and hands them out! Suddenly, there are 30 dollars chasing the same 10 slices of pizza. What happens? Everyone starts waving their money faster, shouting \"I'll pay $3 for a slice!\" The slices don't magically multiply, so the price goes up. That's inflation!\n\n**So what IS inflation?**\nInflation is simply when prices for things like pizza, gas, rent, and video games go up over time, which means your money buys less and less. It's like your dollar is slowly shrinking.\n\n**Why do prices go up? It's usually one of three things:**\n\n1.  **Too much money chasing too few things.** Just like the pizza party. If the government prints a ton of money, or people suddenly have way more cash to spend, prices rise because everyone is bidding for the same stuff.\n\n2.  **Things get more expensive to make.** Imagine the farmer who grows the pizza tomatoes gets hit with a crazy drought. Tomatoes are now rare and pricey, so making pizza costs more, and he has to charge you more. This happens with gas prices, shipping costs, or even a worker shortage.\n\n3.  **We just *want* more stuff.** If everyone suddenly decides they NEED the newest iPhone, and the company can't make them fast enough, the price will shoot up. Demand is high, supply is low.\n\nA little bit of inflation, like 2-3% a year, is actually normal and healthy. It’s like the economy is gently revving its engine. The problem is when it’s too fast, like 10% or more, and your",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me write a thank-you note to a client after a meeting.",
+    "answer": "Of course! Here’s a simple, warm template you can tweak:\n\n---\n\n**Subject:** Thank you for today’s chat!\n\nHi [Client Name],\n\nThank you so much for taking the time to meet with me today. I really enjoyed our conversation about [specific topic you discussed], and I loved hearing your thoughts on [something personal they shared].\n\nYour insights on [key point] were especially inspiring, and I’m excited about the possibility of [next step or goal you talked about]. I’ll be thinking about what we discussed and will follow up with [what you promised, e.g., the proposal/ideas] by [day].\n\nThanks again for trusting me with your story. I’m looking forward to our next chat!\n\nWarmly,  \n[Your Name]\n\n---\n\nWant me to make it more formal, playful, or super short?",
+    "truncated": false,
+    "tokens": 169
+   },
+   {
+    "prompt": "How can I plan tasks for a busy week at work?",
+    "answer": "Think of it like packing a suitcase—you wouldn’t just toss everything in, right? You’d lay it all out first, then decide what *really* needs to go. Same with a crazy work week.\n\nHere’s a little story: imagine your brain is a coffee shop on Monday morning. If everyone rushes in at once yelling orders, chaos, right? But if you’ve got a menu and a line, it flows. Planning is your menu.\n\n**1. Dump it all out (Sunday night or Monday morning, 10 mins)**\nGrab a sticky note, your phone, whatever—just brain-dump *everything* swirling around. That report, the annoying email, the “quick call” you keep forgetting. No judging, just spill.\n\n**2. Sort the “must-have coffee” from the “nice-to-have pastry”**\nCircle the 3 things that *absolutely* have to happen or the whole week crashes—like the big presentation or the deadline your boss mentioned three times. Those are your espresso shots. The rest? Pastries. Delicious, but the world won’t end if they wait.\n\n**3. Time-block like you’re booking a spa appointment**\nDon’t just say “I’ll do emails sometime.” Give it a real slot—like 9-9:30am is “email triage,” just like you’d book a massage. Your brain loves a start and end time. And hey, throw in a 5-minute “walk around the block” block. It’s not slacking, it’s refilling the coffee pot.\n\n**4. The “two-minute rule” for the tiny stuff**\nIf it takes less than two minutes—replying to that “thanks!” text, filing one paper—do it *now* before it turns into a mental mosquito buzzing all day.\n\n**5. End-of-day “what’s in the fridge?” check**\nBefore you log off, glance at tomorrow’s",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Explain how password managers keep logins safe.",
+    "answer": "Think of a password manager like a super-secure digital wallet for all your passwords.\n\nInstead of trying to remember dozens of complex passwords (or reusing the same one everywhere), a password manager stores them all in one encrypted \"vault.\" Here's how it keeps your logins safe:\n\n**1. The Master Key Analogy**\nYou only need to remember ONE strong password – your \"master password.\" This is like the one key to a giant safe. The password manager uses this key to lock and unlock your entire vault of passwords. Even the password manager company can't see inside your vault because they don't have your master key!\n\n**2. Military-Grade Encryption**\nImagine your passwords are written on paper, then put into a safe, and then that safe is buried and covered in concrete. That's basically what encryption does. Your passwords are scrambled into gibberish using super-strong encryption (like AES-256, the same stuff banks use). If hackers steal the data, all they get is useless scrambled nonsense without your master password.\n\n**3. The \"Never Reuse\" Superpower**\nPassword managers make it ridiculously easy to use a unique, crazy-complex password for EVERY single website – like `TacoPizza!7#Drum` for Netflix and `B@nk$3cret42!` for your bank. If one site gets hacked, the bad guys can't use that password to sneak into your email or bank because they're all different.\n\n**4. The Auto-Fill Bodyguard**\nInstead of you typing passwords into sketchy-looking websites (where sneaky \"keyloggers\" can steal them), the password manager auto-fills them for you. It's like having a trusted butler who hands your key to the right door, so no one can peek over your shoulder.\n\n**The bottom line:** A password manager turns password safety from a memory game into a one-key-to-rule-them-all system. You get Fort Knox-level security without having to remember Fort Knox-level passwords.",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Can you help me summarize these meeting notes into bullet points?",
+    "answer": "Absolutely! I'd love to help you turn those meeting notes into clear, bite-sized bullet points. \n\nGo ahead and paste the notes here, and I'll whip them into shape for you.",
+    "truncated": false,
+    "tokens": 39
+   },
+   {
+    "prompt": "What happens when you restart your computer?",
+    "answer": "When you restart your computer, it’s like giving it a fresh start — kind of like rebooting your brain after a long day.\n\nHere’s what actually happens behind the scenes:\n\n1. **Shutting down the current session**  \n   Your computer tells all the running programs, “Hey, wrap things up!” It saves what it can, closes apps, and stops any background tasks — just like turning off the lights before leaving a room.\n2. **Power cycle**  \n   The computer powers down completely for a moment, then powers back up. Think of it like unplugging a lamp and plugging it back in.\n3. **Booting up again**  \n   When it turns back on, the computer goes through its startup routine — checking hardware, loading the operating system, and getting everything ready, just like you stretching and waking up in the morning.\n\nWhy do we restart?  \nIt clears out little glitches, frees up memory, and makes sure everything runs smoothly again. It’s the tech equivalent of hitting the refresh button on life!\n\nEver notice how your computer feels snappier after a restart? That’s why!",
+    "truncated": false,
+    "tokens": 230
+   },
+   {
+    "prompt": "How do I set up an automatic reply for email?",
+    "answer": "Setting up an automatic reply for email is like setting a “vacation mode” for your inbox—it lets people know you’re away and when to expect a response. The exact steps depend on your email provider, but here’s how it works for the most common ones:\n\n---\n\n### 📧 **Gmail (on computer or phone)**\n\n1. **Open Gmail** and click the gear ⚙️ icon → **“See all settings.”**\n2. Go to the **“Inbox”** tab and scroll down to **“Vacation responder.”**\n3. Toggle it **ON**, then write your message like:\n\n   > “Hey! I’m out of the office until Friday—think of me as a turtle on a beach vacation 🐢. I’ll reply when I’m back!”\n4. Pick your dates and hit **Save**.\n\n💡 *Tip:* You can also set it to only reply to people in your contacts—so random spam doesn’t get a “see you later!”\n\n---\n\n### 📧 **Outlook (work or personal)**\n\n1. Open **Outlook** and click the gear ⚙️ → **“Mail”** → **“Automatic Replies (Out of Office).”**\n2. Flip the switch **ON** and write your message.\n3. Choose if you want it for **just while you’re away** or **all the time** (like a “I’m swamped!” auto-reply).\n\n---\n\n### 📧 **Yahoo Mail**\n\n1. Click the gear ⚙️ → **“More Settings”** → **“Auto-Reply.”**\n2. Turn it on, write your note, and set the dates.\n\n---\n\nThink of it like leaving a sticky note on your front door—except this one lives in your inbox. Want me to walk you through it for a specific app, like Gmail on your phone or Outlook at work?",
+    "truncated": false,
+    "tokens": 382
+   },
+   {
+    "prompt": "Help me brainstorm titles for a newsletter about gardening tips.",
+    "answer": "I'd love to help with that! Here are some ideas for your gardening newsletter title:\n\n1. **The Green Thumb Gazette** – A classic, friendly vibe that feels like a neighborhood newsletter.\n2. **Sprout & Grow** – Simple, upbeat, and perfect for anyone just starting out.\n3. **Rooted Wisdom** – Feels cozy and a bit wise, like advice from a gardening grandma.\n4. **The Garden Patch Notes** – A fun twist for plant lovers who enjoy little updates and experiments.\n5. **Bloom & Grow Club** – Makes subscribers feel like they’re part of an exclusive plant-loving crew.\n6. **From Seed to Table** – Great if you’re mixing gardening tips with cooking or homegrown harvests.\n7. **The Leafy Dispatch** – Sounds fresh and exciting, like a little package of garden news arriving in their inbox.\n\nDo you want the newsletter to feel more **cozy and homey**, **fun and quirky**, or **pro and expert-like**? That’ll help me fine-tune the vibe!",
+    "truncated": false,
+    "tokens": 221
+   }
+  ],
+  "0.03": [
+   {
+    "prompt": "What is inflation and why do prices go up?",
+    "answer": "Think of inflation like a game of musical chairs with money.\n\nImagine you and your friends are at a pizza party. There are 10 slices of pizza (that's like the \"stuff\" we want to buy) and 10 bucks floating around to buy them. So one slice costs about a buck, right?\n\nNow, imagine your grandma walks in and drops another 10 bucks into the party, but she forgets to bring more pizza. Suddenly, there are 20 bucks chasing the same 10 slices. What happens? Everyone starts waving their money faster, shouting \"I'll pay two bucks for a slice!\" The pizza guy, seeing all that cash flying around, is like, \"Sweet, I can charge two bucks now!\"\n\nThat's inflation in a nutshell: **too much money chasing too few things.**\n\nPrices go up for three big reasons, think of them like a leaky bathtub:\n\n1.  **Too much cash sloshing around (The Grandma Effect):** When the government prints a ton of money, like turning on the faucet, it's like grandma keeps tossing cash into the pizza party. If the pizza isn't growing, prices have to.\n2.  **The pizza is getting harder to make (The Traffic Jam):** Imagine the pizza delivery guy gets stuck in a massive traffic jam. Gas prices went up, his car broke down... getting that pizza to you is harder and costs more. That cost gets passed to you, like a traffic jam making your Uber ride pricier.\n3.  **Everyone *thinks* pizza will be pricier tomorrow (The Sneezing Cough):** If everyone at the party is convinced pizza slices will be 3 bucks tomorrow, the pizza guy will charge 2.5 bucks *today* just to beat the rush. It's like a sneeze turning into a full-blown contagious cough - expectations spread!\n\nSo inflation isn't some evil villain, it's just the price tag getting stretchy when money",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me write a thank-you note to a client after a meeting.",
+    "answer": "Think of it like sending a text to a friend after a great coffee date—you want it warm, quick, and real. Here’s a little recipe you can tweak:\n\n**The cozy thank-you note (imagine you’re texting a buddy):**\n\n> Hey [Client’s Name]! \n> \n> Just like how you’d text a friend after a killer coffee date—“OMG that chat was like finding the perfect playlist for a road trip!”—I’m still buzzing from our chat today. \n> \n> Remember how we cracked that puzzle about [that tricky thing you both laughed about]? Felt like we were finally finding the right song for your brand’s road trip, and I’m so pumped to keep the music going! \n> \n> Thanks for letting me be your co-pilot for a bit. Can’t wait to hit the next mile marker together! \n> \n> High-five, \n> [Your Name]\n\n**Why it works:** It’s like a quick “that was fun!” text—relatable, warm, and it paints a picture they’ll smile at later.\n\nWant me to sprinkle in a specific detail from your meeting, like that funny coffee analogy you both loved? Just toss me the highlight and I’ll jazz it up!",
+    "truncated": false,
+    "tokens": 261
+   },
+   {
+    "prompt": "How can I plan tasks for a busy week at work?",
+    "answer": "Think of your week like a busy train station—if you don’t have a timetable, everything crashes! Here’s a simple, fun way to plan your week without feeling like you’re juggling flaming swords:\n\n### 1. **Sunday Night “Treasure Map” (15 mins)**\nGrab a coffee (or your favorite snack) and picture your week like a treasure map. What’s the “gold” you *must* find (big deadlines)? What’s the “sneaky pirate trap” (that annoying meeting that always pops up)? Draw it out—sticky notes, phone app, or even doodles work!\n\n### 2. **The “3 Golden Tickets” Rule**\nImagine you only have 3 golden tickets to ride the rollercoaster of your week—those are your *must-do* tasks. Pick the three things that, if they get done, you’ll feel like a superhero on Friday. Everything else? Bonus points!\n\n### 3. **Batch Like a Netflix Binge**\nDon’t hop from emails to spreadsheets to Slack like channel surfing. Group similar stuff—answer all emails in one “binge session,” then crush reports like it’s a season finale. Your brain loves marathons, not sprints!\n\n### 4. **The “Parking Lot” for Brain Gremlins**\nGot a random “Oh no, I forgot to call Mom!” popping up mid-work? Toss it in a “parking lot” (a note on your phone). It’s like telling that gremlin, “Hey, I’ll deal with you later—promise!”\n\n### 5. **Friday “Victory Lap”**\nEnd the week like you just crossed a finish line. What went *so* right? What felt like herding cats? Jot it down—future-you will high-five you!\n\n**Pro tip:** If your week feels like a circus, remember—you’re the ringmaster, not the clowns!",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Explain how password managers keep logins safe.",
+    "answer": "Think of a password manager like a super-smart, super-strong backpack for all your keys.\n\nImagine if you had a real key for every house, car, and bike you've ever owned. You'd need a giant keychain, right? And if you lost that keychain, *boom* – everyone could steal your stuff! That's kind of like trying to remember 50 different passwords in your head.\n\nA password manager is like having a magical backpack with one super-lock on it.\n\nHere’s how it works:\n\n**1. The \"One Master Key\" Idea:** Instead of remembering 50 passwords, you only remember ONE super-strong password – like the secret code to unlock your magical backpack. This is called your \"Master Password\". It's the only one you have to actually *think* about.\n\n**2. The Secret Vault:** Inside that backpack, the password manager keeps ALL your other passwords. But it doesn't just toss them in like loose keys. It takes them and puts them in a super-secure, invisible safe inside the backpack.\n\nThink of it like this: it takes your passwords and scrambles them into a giant bowl of alphabet soup. Imagine trying to un-scramble that soup without the magic spoon! That scrambling is called **encryption**. It's like a secret recipe only your master password knows.\n\nEven if a sneaky thief steals your backpack, all they see is that alphabet soup. It's useless to them!\n\n**3. The Magic Spoon:** When you want to log into, say, Instagram, you just tell your password manager, \"Hey, I need my Instagram key!\" You unlock your backpack with your master password – *click!* – and the magic spoon instantly un-scrambles just that one password from the soup, types it in for you, and then scrambles it back again. You never even have to see it!\n\n**So why is it safer than your brain?**\n\n* **No more \"password123\"!** Your",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Can you help me summarize these meeting notes into bullet points?",
+    "answer": "Absolutely! Think of me as your personal highlight reel—I'll turn those meeting notes into a quick, snackable list of the good stuff. Just toss the notes over here and I'll whip up some bullet points that even your future self will thank you for!",
+    "truncated": false,
+    "tokens": 53
+   },
+   {
+    "prompt": "What happens when you restart your computer?",
+    "answer": "Think of it like giving your computer a little nap and a fresh start—like hitting the snooze button on your alarm clock, but for your laptop or PC!\n\nWhen you restart your computer, it’s kind of like closing all the tabs in your brain and starting fresh. Imagine your computer is like a busy kitchen. When you’re cooking a bunch of dishes at once, things can get messy—spills, half-chopped veggies, and a sink full of dishes. Restarting is like wiping down the counters, putting away the leftovers, and starting with a clean kitchen. Suddenly, everything feels smoother, right?\n\nSo, when you hit restart, your computer shuts down all the little things running in the background—like those sneaky browser tabs you forgot about—then powers back up like it just woke up from a cozy nap. It’s like giving your computer a chance to stretch, yawn, and say, “Alright, let’s do this again!”\n\nEver notice how your phone feels snappier after a restart? Same vibe!",
+    "truncated": false,
+    "tokens": 216
+   },
+   {
+    "prompt": "How do I set up an automatic reply for email?",
+    "answer": "Think of it like setting a “vacation mode” for your inbox—just like you’d put a little sign on your front door saying, “Be back soon, grab a snack from the fridge!” 📬✨\n\nHere’s the easiest way to picture it:\n\n1. **Pop into your email’s settings** – imagine you’re diving into the secret control room of your inbox (like finding the hidden buttons on a TV remote).\n2. **Find the “Out of Office” or “Auto-Reply” button** – it’s usually hiding in the settings menu, kind of like the “Do Not Disturb” switch on your phone.\n3. **Write your message** – think of it like leaving a voicemail for a friend: “Hey, I’m on a little adventure right now, I’ll be back in a few days—like a squirrel gathering acorns, I’ll be back with stories!”\n4. **Set the dates** – just like setting a timer for pizza to pop out of the oven, tell it when to start and stop.\n5. **Hit save** – and voilà, your inbox now has its own little robot butler answering for you!\n\nWant me to walk you through it like it’s Gmail, Outlook, or your phone’s mail app?",
+    "truncated": false,
+    "tokens": 264
+   },
+   {
+    "prompt": "Help me brainstorm titles for a newsletter about gardening tips.",
+    "answer": "Think of your newsletter like a garden itself—some titles should feel like a cozy chat over the fence, others like the secret map to a hidden jungle! Here are some ideas to plant in your mind:\n\n### 🌿 Cozy & Friendly (like a neighborly chat)\n- **“The Garden Whisperer”** – Imagine your plants are gossiping, and you’re the translator!\n- **“Sprout & Grow with Me”** – Like inviting friends over for a garden party in your inbox.\n- **“Muddy Boots & Morning Coffee”** – That feeling of digging in the dirt before the world wakes up.\n\n### 🌱 Playful & Punny (because who doesn’t love a good plant pun?)\n- **“The Root of the Matter”** – Like your garden’s juicy gossip column!\n- **“Leaf It to Me!”** – Think of it as your plant bestie giving you the scoop.\n- **“Don’t Leaf Me Hanging!”** – Perfect for those “oops, I forgot to water” moments we’ve all had.\n\n### 🌻 Dreamy & Magical (for the garden dreamers)\n- **“The Secret Garden Scoop”** – Like finding a hidden treasure patch every week.\n- **“Petals & Paintbrushes”** – Imagine your garden as a living canvas you’re painting together.\n- **“The Greenhouse Giggle”** – Where gardening feels like a cozy, funny adventure.\n\n### 🌳 Think of it like picking a favorite houseplant!\n- If you’re a **succulent lover**, go for something chill like *“The Lazy Gardener’s Lounge”*.\n- If you’re more of a **tomato-toting thrill-seeker**, try *“The Tomato Tango”*—because gardening’s a dance!\n\nWhich vibe feels most like *you*? Is your garden more “Sunday morning with a mug of tea” or “Saturday chaos with muddy knees and a",
+    "truncated": true,
+    "tokens": 400
+   }
+  ],
+  "0.04": [
+   {
+    "prompt": "What is inflation and why do prices go up?",
+    "answer": "Think of inflation like a game of musical chairs with money!\n\nImagine you and your friends are at a pizza party, and there are only 10 slices of pizza (that's like our stuff, like toys, snacks, video games) but suddenly, everyone gets a bunch of extra allowance money (like, imagine your piggy bank suddenly gets a magic money tree!). \n\nNow, everyone’s running around with money in their pockets, trying to grab pizza, but there are still only 10 slices! So what happens? People start bidding for that last slice like it’s the last slice of pizza at a birthday party! “I’ll give you an extra cookie for that slice!” And just like that, the price of pizza starts to feel like it’s zooming up, like a rocket ship!\n\nThat’s kind of like inflation! When there’s a lot of money floating around (like everyone getting extra allowance), but the amount of “pizza” (stuff we want to buy) isn’t growing as fast, prices start to climb, just like how that last slice of pizza suddenly feels like it’s worth a treasure chest of toys!\n\nSo, why do prices go up? It’s like when everyone’s got a ton of money but the goodies aren’t growing as fast as the money, so things start feeling like they’re worth more, like that last slice of pizza! 🍕💸\n\nEver feel like your favorite snack suddenly costs more than a tiny treasure chest? That’s inflation sneaking in like a sneaky squirrel!",
+    "truncated": false,
+    "tokens": 310
+   },
+   {
+    "prompt": "Help me write a thank-you note to a client after a meeting.",
+    "answer": "Think of it like sending a text to a friend after a great coffee date—you want it to feel warm, not like a robot wrote it! Here’s a little recipe you can tweak:\n\n**The Secret Sauce:** Imagine your client just told you a story about their business, and you’re texting them like, “OMG, that’s just like when I tried to bake a cake and forgot the sugar!”\n\n**Your Note (think of it like a cozy chat):**\n\n“Hey [Client’s Name]! \n\nI’m still buzzing from our chat today—like when you finally find the perfect playlist for a road trip! Remember how we talked about that tricky part of your project? It’s like trying to juggle flaming pineapples, right? I’m so glad we cracked it together!\n\nI’m already picturing how this is going to feel like finally finding that missing puzzle piece. Thanks for letting me be your co-pilot on this adventure—can’t wait to see where we’re headed next!\n\nGive me a high-five next time we chat? You’ve got this, and I’m so excited to cheer you on!\n\nHugs and high-fives,\n[Your Name]”\n\n**Pro Tip:** Toss in a tiny inside joke from your meeting—like if they compared their team to a bunch of squirrels, use that! It’s like leaving a little sticky note on their fridge that says, “I totally get you!”\n\nWant me to sprinkle in a specific story from your meeting? Think of it like adding your favorite emoji to a text—makes it pop!",
+    "truncated": false,
+    "tokens": 328
+   },
+   {
+    "prompt": "How can I plan tasks for a busy week at work?",
+    "answer": "Think of your week like a busy airport runway—if you try to land every plane at once, it’s chaos! Imagine your brain is like a suitcase, and each task is like a pair of shoes—you wouldn’t just toss them all in, right? You’d pack the comfy sneakers for the daily hustle and save the fancy heels for the big meeting!\n\nSo, picture your week as a road trip. First, grab your GPS (that’s your calendar!) and plot the big stops—like that Monday morning meeting or the Friday deadline. Those are your “must-hit” pit stops, like grabbing coffee before the highway gets crazy!\n\nNow, think of your energy like a phone battery. You wouldn’t scroll TikTok when your battery’s at 10%, right? Same with tasks! Tackle the brain-busting stuff when your battery’s fully charged—like that tricky email you’ve been dodging. Save the “low-battery” tasks, like replying to those “quick question” Slack pings, for when you’re running on fumes.\n\nAnd hey, just like you wouldn’t pack a suitcase without a little snack stash, don’t forget to sprinkle in those mini-breaks! Think of them as your pit stop for a donut—because even the best road trips need a sweet treat!\n\nSo, next time your week feels like a traffic jam, just channel your inner road trip DJ—mix the playlists, cruise through the busy lanes, and remember, even the best drivers take a coffee break! 🚗☕️\n\nWhat’s your favorite “road trip” trick for tackling a crazy week?",
+    "truncated": false,
+    "tokens": 332
+   },
+   {
+    "prompt": "Explain how password managers keep logins safe.",
+    "answer": "Think of a password manager like a super-smart, super-strong backpack for all your keys—except instead of keys, it’s your passwords!\n\nImagine you have a giant junk drawer at home with a key for every door—your house, your bike, your grandma’s cookie jar, even the gym locker! It’s a mess, right? And if you lose that drawer, you’re in trouble! \n\nA password manager is like having a magical, invisible backpack that carries all those keys, but instead of a messy drawer, it’s like a secret treasure chest with a **super-duper secret lock**—think of it like a lock that only opens with a special “master key” (that’s like your one super-secret password, kind of like the secret handshake to get into the best club ever!).\n\nHere’s the magic:\n\n1. **The Secret Treasure Chest:** Imagine your passwords are like little LEGO bricks. A password manager takes all those bricks and squishes them into a giant, messy blob—like turning your LEGO city into a giant smoothie! (That’s like “locking” them with a secret recipe). Even if a sneaky raccoon (aka a hacker) tries to peek, all they see is smoothie, not LEGO!\n\n2. **The Master Key:** You only need to remember ONE super-secret password—like the one you use to unlock your favorite video game! It’s like having a magic key that opens the treasure chest. If you forget it, it’s like losing the key to the candy store—no one else can get in, not even the password manager!\n\n3. **The Ninja Delivery:** Ever seen a ninja sneak through a crowd? That’s how a password manager sends your passwords to websites—like a ninja slipping through a secret tunnel! It’s like they’re wearing an invisibility cloak, so no one can snoop on your stuff while you’re shopping online or checking your favorite game!\n\nSo, it’s like having a",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Can you help me summarize these meeting notes into bullet points?",
+    "answer": "Think of me like a friend who’s just trying to make sense of a messy group chat—like, imagine we’re both staring at a giant wall of text and I’m the one with the highlighter, right? \n\nSo picture this: you’ve got that meeting notes feeling like a pot of spaghetti, and I’m here to be the friend who’s like, “Okay, let’s untangle this like we’re sorting laundry!” \n\nHere’s the scoop, in bullet points that feel like sticky notes on your fridge:\n\n- **The big “aha!” moment** was like when you finally find the TV remote—everyone realized the launch date is basically like trying to bake a cake while the oven’s still warming up! We’re talking mid-October, but think of it as “think of it like a road trip, we’re at the gas station, not the finish line yet!”\n\n- **The budget chat** felt like splitting a pizza—everyone wants the extra toppings (think fancy animations!), but we’ve only got enough dough for the pepperoni (the basics). So we’re saving the fancy sprinkles for the next round, like saving the fancy coffee for the weekend, you know?\n\n- **Team vibes** were like a bunch of squirrels trying to juggle acorns—everyone’s juggling a million things, but the cool part? We’re all cheering each other on like it’s the last lap of a relay race! \n\n- **Next steps?** Imagine we’re planting a garden—first, we gotta water the seedlings (those little tweaks to the app) before we can throw the big garden party (launch). So think of it like, “let’s water the tomatoes this week, and by next month, we’ll be hosting a BBQ in the backyard!”\n\nDoes that feel like the meeting’s heartbeat? Like, if you were telling your bestie about it over coffee, would this be the story you’d",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "What happens when you restart your computer?",
+    "answer": "Think of it like this: restarting your computer is like giving it a little nap and a fresh cup of coffee!\n\nImagine your computer is like a super busy kitchen. When you first turn it on, it's like the kitchen is just opening up for the day. But after a while, it's like the kitchen gets super messy, with pots and pans everywhere, and the chefs are running around like crazy!\n\nRestarting your computer is like closing down the kitchen for a little bit, letting the chefs take a break, and then opening up again with a fresh, clean kitchen! It's like hitting the reset button on your computer's brain, kind of like how you feel when you wake up from a good nap and everything feels fresh and new!\n\nSo, when you restart your computer, it's like giving it a little hug and saying, \"Hey, buddy, let's take a break and start fresh!\" And just like how you feel after a good nap, your computer feels like it's got a fresh new energy, like it's ready to tackle the day like a superhero!\n\nDoes that make sense? Is it like thinking of your computer like a busy kitchen or a sleepy superhero?",
+    "truncated": false,
+    "tokens": 234
+   },
+   {
+    "prompt": "How do I set up an automatic reply for email?",
+    "answer": "Think of it like setting up a “vacation buddy” for your inbox—someone who waves at people while you’re out grabbing coffee! ☕️\n\nImagine your email is a cozy café. When you’re in the back kitchen (aka deep in a project), you want a friendly barista to tell folks, “Hey, the chef’s whisking up something amazing—think of me like a sous-chef who’ll pass your order to them when they pop out!”\n\n**The secret?** It’s just like leaving a sticky note on your café door—different neighborhoods (Gmail, Outlook, iPhone) have their own sticky-note spots, but the idea’s the same: “I’m out, but I’ve got a buddy on it!”\n\nWant me to find the perfect sticky-note spot for your favorite café? Just tell me if you’re more of a Gmail, Outlook, or iPhone-in-your-pocket kind of person!",
+    "truncated": false,
+    "tokens": 194
+   },
+   {
+    "prompt": "Help me brainstorm titles for a newsletter about gardening tips.",
+    "answer": "Think of your newsletter like a garden itself—some titles should feel like a cozy Sunday morning with a mug of coffee, others like the buzz of a farmer’s market on Saturday! Here’s a mix of vibes to picture:\n\n**🌻 Cozy & Coffee-Shop Vibes (like chatting with a neighbor over the fence)**\n- *The Garden Whisperer* – imagine your plants are texting you secrets, and you’re the translator!\n- *Sprout & Sip* – like sipping tea while watching your seedlings do their morning stretch.\n- *The Backyard Bumble* – think of your garden as a buzzing café where bees are the regulars.\n\n**🌿 Market-Day Energy (like stumbling on the best tomato at the farmer’s market)**\n- *Dirt, Dreams & Daisies* – picture that first bite of a sun-ripened tomato, juice running down your chin.\n- *The Trowel & Growl* – like your garden is a kitchen, and you’re the chef who can’t stop sniffing the herbs!\n- *Green Thumb, Golden Heart* – imagine your garden as a hug from nature, like finding a four-leaf clover in your socks.\n\n**🌸 Playful & Punny (like a garden that tells jokes)**\n- *Plant Parenthood* – think of your seedlings as tiny toddlers who need snacks (aka sunshine!).\n- *The Root Down Club* – like your garden is a cozy living room where even the carrots come to chill.\n- *Leaf It to Me!* – picture your garden as a messy art studio, and you’re the Picasso with a watering can.\n\nMy favorite? *Sprout & Sip*—it’s like that first warm sip of coffee while your basil is doing its morning yoga. Which one makes you smile like you just found a secret garden?",
+    "truncated": false,
+    "tokens": 385
+   }
+  ]
+ }
+}
