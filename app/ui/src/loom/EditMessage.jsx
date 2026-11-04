@@ -21,7 +21,8 @@ import { cue } from "../sound.js";
  * user can retry; nothing is reloaded. While busy or disabled the form,
  * its keyboard shortcuts and Cancel are all off.
  */
-export function EditMessage({ turn, text, sealed, disabled, onLive, onNote, onReload }) {
+export function EditMessage({ turn, text, files, sealed, disabled, onLive, onNote, onReload }) {
+  const attached = (files || []).filter((f) => f.id);
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState(text || "");
   const [busy, setBusy] = useState(false);
@@ -47,11 +48,11 @@ export function EditMessage({ turn, text, sealed, disabled, onLive, onNote, onRe
     cue("press");
     setBusy(true);
     setError(null);
-    const live = { user: t, files: [], tools: [], text: "", thinking: true, done: false, branch: true };
+    const live = { user: t, files: attached, tools: [], text: "", thinking: true, done: false, branch: true };
     if (onLive) onLive({ ...live });
     let failed = false;
     try {
-      for await (const ev of branchStream("/api/branch", { at_turn: turn, text: t })) {
+      for await (const ev of branchStream("/api/branch", { at_turn: turn, text: t, ...(attached.length ? { attachments: attached.map((f) => f.id) } : {}) })) {
         if (ev.type === "tool_result") live.tools = [...live.tools, { name: ev.name, arguments: ev.arguments, result: ev.result }];
         else if (ev.type === "content") { live.text += ev.text; live.thinking = false; }
         else if (ev.type === "note" && onNote) onNote(ev);
@@ -90,6 +91,7 @@ export function EditMessage({ turn, text, sealed, disabled, onLive, onNote, onRe
         <button type="submit" className="btn btn-send" disabled={locked || !draft.trim()}>{busy ? "Sending…" : "Send"}</button>
         <button type="button" className="btn btn-quiet" disabled={locked} onClick={() => toggle(false)}>Cancel</button>
       </div>
+      {attached.length > 0 && !busy && <p className="fhint">{attached.length === 1 ? `${attached[0].name} stays attached.` : `${attached.map((f) => f.name).join(", ")} stay attached.`}</p>}
       {busy && <p className="fhint">Sending. Your first version stays one step back.</p>}
       {error && <p className="ferr" role="alert">{error}</p>}
     </form>
