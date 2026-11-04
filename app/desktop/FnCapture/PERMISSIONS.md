@@ -36,7 +36,7 @@ Use each permission button in the menu-bar menu, then approve **Afterglow fn**:
   title and a shortened value of the item at the centre of your selected area.
 - **Screen & System Audio Recording** (called **Screen Recording** on macOS 14):
   takes the crop you circled. It does not record system audio. The overlay and
-  recording pill are excluded from that image.
+  Afterglow mark beside the cursor are excluded from that image.
 - **Input Monitoring**: sees fn and Right Option key transitions outside the helper.
   The key tap is listen-only and does not suppress typing or system shortcuts.
 

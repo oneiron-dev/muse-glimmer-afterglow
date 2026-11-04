@@ -21,6 +21,7 @@ import FnCapture
     private let recorder = AudioRecorder()
     private let overlay = LassoOverlay()
     private let pill = RecordingPill()
+    private let glow = CursorGlow()
     private let paster = Paster()
     private var panel: FloatingPanel?
     private var server: ServerAddress?
@@ -48,18 +49,22 @@ import FnCapture
         monitor.onHoldEnded = { [weak self] in DispatchQueue.main.async { self?.finish() } }
         monitor.onHoldCancelled = { [weak self] in DispatchQueue.main.async { self?.cancel() } }
         recorder.onLevel = { [weak self] level in
-            DispatchQueue.main.async { self?.pill.level(level) }
+            DispatchQueue.main.async { self?.glow.level(level) }
         }
         recorder.onAutoStop = { [weak self] in
             DispatchQueue.main.async { self?.finish() }
         }
         overlay.onSelection = { [weak self] rect in self?.select(rect) }
+        // No dim and no crosshair: the Afterglow mark beside the cursor says "listening".
+        overlay.dimsScreen = false
+        overlay.usesCrosshair = false
+        overlay.strokeColor = NSColor(srgbRed: 1.0, green: 0.78, blue: 0.62, alpha: 0.95)
         refresh()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
         monitor.stop(); recorder.cancel(); captureTask?.cancel(); requestTask?.cancel()
-        overlay.hide(); panel?.close(); pill.hide()
+        overlay.hide(); panel?.close(); pill.hide(); glow.hide()
     }
 
     func menuWillOpen(_ menu: NSMenu) { refresh() }
@@ -140,16 +145,16 @@ import FnCapture
         do {
             try recorder.start()
             recording = true
-            pill.show("Listening", metering: true)
+            pill.hide(); glow.listen()
             overlay.show()
-        } catch { pill.error("Could not start your microphone") }
+        } catch { glow.hide(); pill.error("Could not start your microphone") }
     }
 
     private func select(_ rect: CGRect) {
         guard recording else { return }
         selection = rect
         captureTask?.cancel()
-        let ids = overlay.windowIDs + [pill.windowID]
+        let ids = overlay.windowIDs + [pill.windowID, glow.windowID]
         guard Permissions.status(for: .screenCapture).isAuthorized else {
             cancel(); pill.error("Allow Screen Recording first"); return
         }
@@ -169,19 +174,19 @@ import FnCapture
         guard recording else { return }
         recording = false
         recorder.cancel(); captureTask?.cancel(); captureTask = nil
-        overlay.hide(); pill.hide(); selection = nil
+        overlay.hide(); pill.hide(); glow.hide(); selection = nil
     }
 
     private func finish() {
         guard recording, let server else { return }
         recording = false; overlay.hide()
-        guard let audio = recorder.stop() else { pill.hide(); return }
+        guard let audio = recorder.stop() else { glow.hide(); return }
         let crop = captureTask
         captureTask = nil
         let anchor = selection ?? CGRect(origin: NSEvent.mouseLocation, size: CGSize(width: 1, height: 1))
         let targetApp = frontApp
         let appName = frontAppName
-        busy = true; pill.show("Your agent is working"); refresh()
+        busy = true; glow.work(); refresh()
         requestTask = Task { [weak self] in
             guard let self else { return }
             defer { busy = false; requestTask = nil; refresh() }
@@ -199,7 +204,7 @@ import FnCapture
                     guard NSWorkspace.shared.frontmostApplication?.processIdentifier == targetApp?.processIdentifier else {
                         throw HelperError.message("Focus changed. Please try again")
                     }
-                    paster.paste(text); pill.hide()
+                    paster.paste(text); glow.hide()
                 case "explain":
                     guard let path = reply.url else { throw HelperError.message("Your agent returned no explanation") }
                     let url = try server.explanation(path)
@@ -207,12 +212,12 @@ import FnCapture
                     let explanation = FloatingPanel(url: url)
                     explanation.title = "Your agent"
                     panel = explanation
-                    explanation.show(beside: anchor); pill.hide()
+                    explanation.show(beside: anchor); glow.hide()
                 default: throw HelperError.message("Your agent returned an unknown reply")
                 }
-            } catch is CancellationError { pill.hide() }
-            catch let error as HelperError { pill.error(error.localizedDescription) }
-            catch { pill.error("Could not reach your agent or capture") }
+            } catch is CancellationError { glow.hide() }
+            catch let error as HelperError { glow.hide(); pill.error(error.localizedDescription) }
+            catch { glow.hide(); pill.error("Could not reach your agent or capture") }
         }
     }
 
