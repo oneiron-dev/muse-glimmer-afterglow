@@ -1,0 +1,397 @@
+{
+  "created": {
+    "id": "t1",
+    "url": "/explain?id=t1"
+  },
+  "elapsed_s": 5.29,
+  "explanation": {
+    "id": "t1",
+    "question": "what is this screen for?",
+    "title": "Afterglow Settings > Model screen",
+    "spec": {
+      "v": 1,
+      "title": "Afterglow Settings > Model screen",
+      "body": {
+        "type": "screenshot",
+        "pins": [
+          {
+            "anchor": "b0",
+            "item": {
+              "id": "m-header",
+              "label": "Model header",
+              "detail": "Settings > Model screen title",
+              "refs": [
+                "f0"
+              ]
+            }
+          },
+          {
+            "anchor": "b1",
+            "item": {
+              "id": "m-selected",
+              "label": "Selected model",
+              "detail": "Muse Glimmer 30B is current model",
+              "refs": [
+                "f1"
+              ]
+            }
+          },
+          {
+            "anchor": "b2",
+            "item": {
+              "id": "m-server",
+              "label": "Server address",
+              "detail": "llama.cpp server at 100.88.57.107:18610",
+              "refs": [
+                "f2",
+                "f10"
+              ]
+            }
+          },
+          {
+            "anchor": "b9",
+            "item": {
+              "id": "m-change",
+              "label": "Change model",
+              "detail": "Use another model option",
+              "refs": [
+                "f9"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "crop_url": "/api/explain/crop?id=t1",
+    "has_crop": true,
+    "ocr": {
+      "width": 1440,
+      "height": 1000,
+      "boxes": [
+        {
+          "id": "b0",
+          "text": "Model",
+          "box": [
+            0.3972,
+            0.044,
+            0.3778,
+            0.0345
+          ]
+        },
+        {
+          "id": "b1",
+          "text": "Muse Glimmer 30B",
+          "box": [
+            0.4125,
+            0.1015,
+            0.095,
+            0.021
+          ]
+        },
+        {
+          "id": "b2",
+          "text": "llama.cpp server at 100.88.57.107:18610",
+          "box": [
+            0.4125,
+            0.1265,
+            0.1649,
+            0.0195
+          ]
+        },
+        {
+          "id": "b3",
+          "text": "Update in use",
+          "box": [
+            0.3972,
+            0.247,
+            0.125,
+            0.021
+          ]
+        },
+        {
+          "id": "b4",
+          "text": "Base weights",
+          "box": [
+            0.5306,
+            0.247,
+            0.2444,
+            0.021
+          ]
+        },
+        {
+          "id": "b5",
+          "text": "Why this one",
+          "box": [
+            0.3972,
+            0.289,
+            0.125,
+            0.021
+          ]
+        },
+        {
+          "id": "b6",
+          "text": "No update loaded: no night has run for this person yet.",
+          "box": [
+            0.5306,
+            0.289,
+            0.2444,
+            0.021
+          ]
+        },
+        {
+          "id": "b7",
+          "text": "This computer",
+          "box": [
+            0.3972,
+            0.373,
+            0.3778,
+            0.0225
+          ]
+        },
+        {
+          "id": "b8",
+          "text": "Apple M4 Max, 64 GB unified memory (the GPU may use about 48 GB).",
+          "box": [
+            0.3972,
+            0.4055,
+            0.3778,
+            0.021
+          ]
+        },
+        {
+          "id": "b9",
+          "text": "Use another model",
+          "box": [
+            0.3972,
+            0.6062,
+            0.3778,
+            0.0225
+          ]
+        },
+        {
+          "id": "b10",
+          "text": "Server address",
+          "box": [
+            0.3972,
+            0.6927,
+            0.3778,
+            0.021
+          ]
+        },
+        {
+          "id": "b11",
+          "text": "Any OpenAI-compatible server. Chat works on all of them; the nightly updates need llama.cpp\u2019s llama-server.",
+          "box": [
+            0.3972,
+            0.7198,
+            0.3778,
+            0.039
+          ]
+        }
+      ],
+      "dropped": 0
+    },
+    "ax": null,
+    "app_name": "Afterglow Settings > Model",
+    "source": "chat",
+    "from_turn": null,
+    "records": [
+      {
+        "ts": "2026-11-04T11:28:48+0900",
+        "role": "user",
+        "content": "what is this screen for?",
+        "source": "chat",
+        "ocr": {
+          "width": 1440,
+          "height": 1000,
+          "boxes": [
+            {
+              "id": "b0",
+              "text": "Model",
+              "box": [
+                0.3972,
+                0.044,
+                0.3778,
+                0.0345
+              ]
+            },
+            {
+              "id": "b1",
+              "text": "Muse Glimmer 30B",
+              "box": [
+                0.4125,
+                0.1015,
+                0.095,
+                0.021
+              ]
+            },
+            {
+              "id": "b2",
+              "text": "llama.cpp server at 100.88.57.107:18610",
+              "box": [
+                0.4125,
+                0.1265,
+                0.1649,
+                0.0195
+              ]
+            },
+            {
+              "id": "b3",
+              "text": "Update in use",
+              "box": [
+                0.3972,
+                0.247,
+                0.125,
+                0.021
+              ]
+            },
+            {
+              "id": "b4",
+              "text": "Base weights",
+              "box": [
+                0.5306,
+                0.247,
+                0.2444,
+                0.021
+              ]
+            },
+            {
+              "id": "b5",
+              "text": "Why this one",
+              "box": [
+                0.3972,
+                0.289,
+                0.125,
+                0.021
+              ]
+            },
+            {
+              "id": "b6",
+              "text": "No update loaded: no night has run for this person yet.",
+              "box": [
+                0.5306,
+                0.289,
+                0.2444,
+                0.021
+              ]
+            },
+            {
+              "id": "b7",
+              "text": "This computer",
+              "box": [
+                0.3972,
+                0.373,
+                0.3778,
+                0.0225
+              ]
+            },
+            {
+              "id": "b8",
+              "text": "Apple M4 Max, 64 GB unified memory (the GPU may use about 48 GB).",
+              "box": [
+                0.3972,
+                0.4055,
+                0.3778,
+                0.021
+              ]
+            },
+            {
+              "id": "b9",
+              "text": "Use another model",
+              "box": [
+                0.3972,
+                0.6062,
+                0.3778,
+                0.0225
+              ]
+            },
+            {
+              "id": "b10",
+              "text": "Server address",
+              "box": [
+                0.3972,
+                0.6927,
+                0.3778,
+                0.021
+              ]
+            },
+            {
+              "id": "b11",
+              "text": "Any OpenAI-compatible server. Chat works on all of them; the nightly updates need llama.cpp\u2019s llama-server.",
+              "box": [
+                0.3972,
+                0.7198,
+                0.3778,
+                0.039
+              ]
+            }
+          ],
+          "dropped": 0
+        },
+        "ax": null,
+        "app_name": "Afterglow Settings > Model",
+        "from_turn": null
+      },
+      {
+        "ts": "2026-11-04T11:28:54+0900",
+        "role": "assistant",
+        "content": "Afterglow Settings > Model screen",
+        "spec": {
+          "v": 1,
+          "title": "Afterglow Settings > Model screen",
+          "body": {
+            "type": "screenshot",
+            "pins": [
+              {
+                "anchor": "b0",
+                "item": {
+                  "id": "m-header",
+                  "label": "Model header",
+                  "detail": "Settings > Model screen title",
+                  "refs": [
+                    "f0"
+                  ]
+                }
+              },
+              {
+                "anchor": "b1",
+                "item": {
+                  "id": "m-selected",
+                  "label": "Selected model",
+                  "detail": "Muse Glimmer 30B is current model",
+                  "refs": [
+                    "f1"
+                  ]
+                }
+              },
+              {
+                "anchor": "b2",
+                "item": {
+                  "id": "m-server",
+                  "label": "Server address",
+                  "detail": "llama.cpp server at 100.88.57.107:18610",
+                  "refs": [
+                    "f2",
+                    "f10"
+                  ]
+                }
+              },
+              {
+                "anchor": "b9",
+                "item": {
+                  "id": "m-change",
+                  "label": "Change model",
+                  "detail": "Use another model option",
+                  "refs": [
+                    "f9"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "repaired": false
+      }
+    ]
+  }
+}

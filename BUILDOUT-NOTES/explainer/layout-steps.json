@@ -1,0 +1,52 @@
+[
+  {
+    "shot": "window",
+    "w": 420,
+    "h": 520
+  },
+  {
+    "eval": "(()=>{const r=document.querySelector('.ex-composer').getBoundingClientRect();return {width:innerWidth,height:innerHeight,composer:{top:r.top,bottom:r.bottom},horizontalOverflow:document.querySelector('.ex-scroll').scrollWidth>innerWidth,imageLoaded:!!document.querySelector('.ex-crop img')?.naturalWidth,pins:document.querySelectorAll('.ex-pin').length}})()",
+    "save": "layout"
+  },
+  {
+    "eval": "(()=>{const e=document.querySelector('.ex-scroll');e.scrollTop=e.scrollHeight;return e.innerText})()",
+    "save": "conversation"
+  },
+  {
+    "shot": "followup",
+    "w": 420,
+    "h": 520
+  },
+  {
+    "navigate": "http://127.0.0.1:18666/explain?id=t2"
+  },
+  {
+    "shot": "flow",
+    "w": 420,
+    "h": 520
+  },
+  {
+    "navigate": "http://127.0.0.1:18666/explain?id=t3"
+  },
+  {
+    "shot": "cycle",
+    "w": 420,
+    "h": 520
+  },
+  {
+    "navigate": "http://127.0.0.1:18666/explain?id=t4"
+  },
+  {
+    "shot": "parts",
+    "w": 420,
+    "h": 520
+  },
+  {
+    "navigate": "http://127.0.0.1:18666/explain?id=t5"
+  },
+  {
+    "shot": "compare",
+    "w": 420,
+    "h": 520
+  }
+]
