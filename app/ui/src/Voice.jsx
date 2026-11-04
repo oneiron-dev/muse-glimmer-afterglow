@@ -13,6 +13,17 @@ export function voiceWhy(check) {
   if (!out.length && check.band === false) out.push("moves too far from the measured range");
   return out.join("; ");
 }
+/** True when a voice other than the default is chosen but none of its dials reach the model: the server
+    has not loaded that voice yet (dials.py skips it), so replies still use the default voice. */
+export function voiceNotHeard(voices) {
+  const slug = voices && voices.choice && (voices.choice.preset || voices.choice.voice);
+  if (!slug || slug === "default") return false;
+  const d = (voices && voices.dials) || {};
+  const skipped = (d.skipped || []).filter((x) => x.night == null);
+  const sent = (d.dials || []).filter((x) => x.night == null);
+  return skipped.length > 0 && sent.length === 0;
+}
+
 /** Voice names read as names: "dry wit" shows as "Dry wit". */
 const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 const effect = (v) => (v.check && v.check.words != null && v.check.words_scale0 != null && v.slug !== "default" ? `Replies ${Math.round(v.check.words_scale0)} → ${Math.round(v.check.words)} words` : "");
@@ -55,6 +66,7 @@ export function VoiceList({ voices, onChange }) {
           </button>
         ))}
       </div>
+      {voiceNotHeard(voices) && <p className="pfine" role="status">Your agent's server turns this voice on at its next restart. Until then replies use the default voice.</p>}
       {(held.length > 0 || (voices.custom || []).some((c) => c.status !== "ready")) && (
         <details className="v-held">
           <summary>Held back: {[...held.map((p) => p.label), ...(voices.custom || []).filter((c) => c.status !== "ready").map((c) => cap(c.label))].join(", ")}</summary>
@@ -83,8 +95,8 @@ export function VoiceTag({ voices, onChange }) {
   const v = [...voices.presets, ...(voices.custom || [])].find((x) => x.slug === slug);
   const reset = async () => { const r = await postJSON("/api/voice", { preset: "default" }); if (!r.error) onChange(r); };
   return (
-    <span className="vtag" title="The voice your agent uses now">
-      {cap((v && v.label) || slug)}
+    <span className="vtag" title={voiceNotHeard(voices) ? "Turns on at your agent's next restart" : "The voice your agent uses now"}>
+      {cap((v && v.label) || slug)}{voiceNotHeard(voices) ? " · after restart" : ""}
       <button type="button" aria-label="Back to the default voice" onClick={reset}>×</button>
     </span>
   );
