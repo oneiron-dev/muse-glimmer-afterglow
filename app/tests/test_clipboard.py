@@ -154,6 +154,13 @@ class ClassifierTest(unittest.TestCase):
         "pwd: hunter2",
         '{"user": "bob", "password": "hunter2"}',
         'password = "hunter2"',
+        # A named key, token or secret, even when its value is a UUID (Sol review, 4 Nov).
+        "EXA_API_KEY=4cd32c23-5adc-4c6f-a7f5-5f7c901e3a2b",
+        "export OPENAI_API_KEY='abc123def456ghi789'",
+        '{"api_key": "4cd32c23-5adc-4c6f-a7f5-5f7c901e3a2b"}',
+        "client_secret: 9f8e7d6c5b4a3210",
+        "ACCESS_TOKEN = 2b7e1516-28ae-d2a6-abf7-158809cf4f3c",
+        "Authorization: Bearer 4cd32c23-5adc-4c6f-a7f5-5f7c901e3a2b",
     ]
     FALSE = [
         "Remember to buy milk and walk the dog tomorrow morning.",
@@ -188,6 +195,13 @@ class ClassifierTest(unittest.TestCase):
         "1234 5678",
         # Spec is 32+: a 31-char high-entropy token stays false.
         ENTROPY_TOKEN[:31],
+        # Words about keys and tokens without a key value.
+        "max_tokens=256",
+        "tokens_per_second: 118.0",
+        "The token budget is 4000 a day.",
+        "author: Hemingway",
+        "secret: tell nobody about the party",
+        "api_key: (paste yours here)",
     ]
 
     def test_true_positives(self):
@@ -387,6 +401,17 @@ class SecretTest(ClipBase):
         st = clip.state()
         self.assertEqual(st["count"], 1)
         self.assertEqual([c["id"] for c in st["pending"]], [got["id"]])
+
+    def test_named_key_with_uuid_value_is_kept_out_of_the_file(self):
+        key = "EXA_API_KEY=4cd32c23-5adc-4c6f-a7f5-5f7c901e3a2b"
+        app = make_app()
+        keys = FakeKeychain()
+        clip = self.mkclip(app, reader=FakeReader(key), keychain=keys)
+        clip.set_on(True)
+        got = clip.capture()
+        self.assertEqual(got["kind"], "secret")
+        self.assertEqual(keys.store[got["id"]], key)
+        self.assertNotIn("4cd32c23-5adc-4c6f-a7f5-5f7c901e3a2b", self.clips_file().read_text())
 
     def test_classify_before_truncate(self):
         # A key past the 20k limit must still land as a secret, never as text.
