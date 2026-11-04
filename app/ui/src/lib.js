@@ -5,8 +5,8 @@ export const postJSON = async (url, body) =>
   (await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) })).json();
 
 /** POST /api/chat and yield each server-sent event ({type: "content" | "tool_result" | "note" | ...}). */
-export async function* chatStream(text) {
-  const resp = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
+export async function* chatStream(text, attachments = []) {
+  const resp = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, attachments }) });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({ error: resp.statusText }));
     yield { type: "error", message: err.error || "The message did not go through." };

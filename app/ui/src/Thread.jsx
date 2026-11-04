@@ -28,11 +28,11 @@ export function Thread({ state, report, live, after, nextDay, sealed, onGoToday,
         )}
         <p className="divider">{longDate(state.date) || `Day ${state.day}`}</p>
         {turns.length === 0 && !live && <p className="empty">A new day. Tell your agent what you are working on, who with, and what changed.</p>}
-        {turns.map((t, i) => (t.role === "user" ? <UserMsg key={i} text={t.content} ts={t.ts} turn={t.turn} onOpenPanel={onOpenPanel} />
+        {turns.map((t, i) => (t.role === "user" ? <UserMsg key={i} text={t.attachments ? t.typed : t.content} files={t.attachments} ts={t.ts} turn={t.turn} onOpenPanel={onOpenPanel} />
           : t.role === "assistant" ? <Reply key={i} rec={t} text={t.content} tools={t.tool_calls} error={t.error} onOpenPanel={onOpenPanel} /> : null))}
         {live && (
           <>
-            <UserMsg text={live.user} />
+            <UserMsg text={live.user} files={live.files} />
             <Reply text={live.text} tools={live.tools} error={live.error} thinking={live.thinking} onOpenPanel={onOpenPanel} />
           </>
         )}
@@ -51,10 +51,15 @@ function Copy({ text }) {
   return <button type="button" className="act" onClick={async () => { await navigator.clipboard.writeText(text || ""); setDone(true); setTimeout(() => setDone(false), 1400); }}>{done ? "Copied" : "Copy"}</button>;
 }
 
-function UserMsg({ text, ts, turn, onOpenPanel }) {
+function UserMsg({ text, files, ts, turn, onOpenPanel }) {
   return (
     <div className="msg msg-u">
-      <p>{text}</p>
+      {files && files.length > 0 && (
+        <ul className="msg-files">
+          {files.map((f) => <li key={f.id || f.name}><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M5.5 2.5h6l3.5 3.5v10a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 16V4a1.5 1.5 0 0 1 1.5-1.5Z" fill="none" stroke="currentColor" strokeWidth="1.5" /></svg>{f.name}</li>)}
+        </ul>
+      )}
+      {text && <p>{text}</p>}
       <div className="acts">
         {ts && <time className="num">{hhmm(ts)}</time>}
         {turn != null && <>

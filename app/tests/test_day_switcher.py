@@ -65,6 +65,18 @@ class DaySwitcherTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.app.create_profile("   ")
 
+    def test_attachments_go_into_the_message(self):
+        a = self.app.attach("../notes.md", "# Larkspur\nShip date 28 April.")
+        self.assertEqual((a["id"], a["name"], a["truncated"]), ("A001", "notes.md", False))
+        text, extra = self.app.message_with_attachments("Read this", [a["id"]])
+        self.assertTrue(text.startswith("Read this\n\n[Attached file: notes.md]\n# Larkspur"))
+        self.assertEqual((extra["typed"], extra["attachments"][0]["name"]), ("Read this", "notes.md"))
+        self.assertEqual([x["id"] for x in self.app.attachments()], ["A001"])
+        with self.assertRaises(ValueError):
+            self.app.message_with_attachments("x", ["A999"])
+        with self.assertRaises(ValueError):
+            self.app.attach("empty.txt", "   ")
+
     def test_refuses_a_day_that_was_never_opened(self):
         with self.assertRaises(ValueError):
             self.app.open_day("w", 3)

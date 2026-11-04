@@ -184,6 +184,8 @@ function SpeedLine({ series }) {
 /** Files: what you attached and what your agent made. A files tool for the agent is being built (Meta lane). */
 function FilesScreen({ ctx }) {
   const drafts = (ctx.ws && ctx.ws.emails) || [];
+  const [att, setAtt] = useState(null);
+  useEffect(() => { getJSON("/api/attachments").then((r) => setAtt(r.attachments || [])).catch(() => setAtt([])); }, [ctx.state.world, ctx.state.day]);
   return (
     <div className="col">
       <h2 className="sec">Made by your agent</h2>
@@ -193,7 +195,11 @@ function FilesScreen({ ctx }) {
         </ul>
       ) : <Empty kind="email">Nothing yet. Ask your agent to draft an email and it shows here.</Empty>}
       <h2 className="sec">Attached by you</h2>
-      <Empty kind="tasks">Files you attach to a message show here. Your agent reads their text with the message.</Empty>
+      {att && att.length ? (
+        <ul className="files">
+          {att.map((a) => <li key={`${a.day}-${a.id}`}><Icon id="files" /><span><b>{a.name}</b><small>Day {a.day}, {Math.max(1, Math.round(a.chars / 1000))}k characters{a.truncated ? ", the start was sent" : ""}</small></span></li>)}
+        </ul>
+      ) : <Empty kind="tasks">Files you attach in the chat show here: use the clip, drop a file on the chat, or paste one. Your agent reads their text with your message.</Empty>}
     </div>
   );
 }

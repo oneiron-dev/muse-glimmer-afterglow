@@ -30,6 +30,7 @@ export default function App() {
   const [newNotes, setNewNotes] = useState(0);
   const [error, setError] = useState(null);
   const timers = useRef([]);
+  const mainRef = useRef(null);
   const [voices, setVoices] = useVoices();
   const [allNights, setAllNights] = useState(null); // every night up to today, for the day list and Nights
 
@@ -66,14 +67,14 @@ export default function App() {
   };
   const closePanel = () => navigate({ to: "/", search: {}, replace: true });
 
-  async function send(text) {
+  async function send(text, files = []) {
     if (live && !live.done) return;
     if (screen !== "chat") go("chat");
-    const turn = { user: text, tools: [], text: "", thinking: true, done: false };
+    const turn = { user: text, files, tools: [], text: "", thinking: true, done: false };
     setLive({ ...turn });
-    for await (const ev of chatStream(text)) {
+    for await (const ev of chatStream(text, files.map((f) => f.id))) {
       if (ev.type === "tool_result") turn.tools = [...turn.tools, { name: ev.name, arguments: ev.arguments, result: ev.result }];
-      else if (ev.type === "content") { turn.text = ev.text; turn.thinking = false; }
+      else if (ev.type === "content") { turn.text += ev.text; turn.thinking = false; }
       else if (ev.type === "note") setNewNotes((n) => n + 1);
       else if (ev.type === "error") { turn.error = ev.message; turn.thinking = false; }
       else if (ev.type === "turn_done") { turn.thinking = false; }
@@ -133,7 +134,7 @@ export default function App() {
       <Sidebar ctx={ctx} screen={screen} folded={folded} onFold={fold} newNotes={newNotes} />
       {screen === "chat" ? (
         <>
-          <main className="main" aria-label="Chat">
+          <main className="main" aria-label="Chat" ref={mainRef}>
             <header className="bar">
               <div className="title">
                 <h1>{sealed ? `Day ${state.day}` : after && after.phase === "morning" ? "Tomorrow" : "Today"}</h1>
@@ -146,7 +147,7 @@ export default function App() {
             <Thread state={state} report={report} live={live} after={after} nextDay={nextDay} sealed={sealed}
               onGoToday={() => openDay(state.world, today)} onOpenPanel={openPanel} onOpenDay={(d) => openDay(state.world, d)} />
             {error && <p className="error-line" role="alert">{error}</p>}
-            <Composer voices={voices} onVoice={setVoices} busy={!!live && !live.done} sealed={sealed} night={after && after.phase !== "morning"} onSend={send} />
+            <Composer dropRef={mainRef} voices={voices} onVoice={setVoices} busy={!!live && !live.done} sealed={sealed} night={after && after.phase !== "morning"} onSend={send} />
           </main>
           {panel && <Panel tab={panel} focus={focus} state={state} report={report} ws={ws} onTab={(t) => openPanel(t)} onClose={closePanel} />}
         </>

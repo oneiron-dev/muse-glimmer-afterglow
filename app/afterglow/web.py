@@ -150,6 +150,51 @@ class App:
                 f.write(json.dumps(rec, ensure_ascii=False) + "\n")
         return rec
 
+    ATTACH_MAX_CHARS = 12000
+
+    def attach(self, name, text):
+        """A file attached in the chat: its text is kept in runs/<world>/<day>/attachments/<id>.txt with an index
+        (attachments.json), and goes into the next message for the agent to read. Text only; at most
+        ATTACH_MAX_CHARS characters reach the message."""
+        name = Path(str(name or "file")).name[:120] or "file"
+        text = str(text or "")
+        if not text.strip():
+            raise ValueError(f"{name} has no text to read")
+        s = self.session
+        d = s.dir / "attachments"
+        d.mkdir(parents=True, exist_ok=True)
+        index_path = d / "attachments.json"
+        index = json.loads(index_path.read_text()) if index_path.exists() else []
+        att = {"id": f"A{len(index) + 1:03d}", "name": name, "chars": len(text), "day": s.day, "at": now_iso(),
+               "truncated": len(text) > self.ATTACH_MAX_CHARS}
+        (d / f"{att['id']}.txt").write_text(text, encoding="utf-8")
+        index.append(att)
+        index_path.write_text(json.dumps(index, indent=1, ensure_ascii=False) + "\n")
+        return att
+
+    def attachments(self):
+        """Every file attached in the chat for this person, newest first (the Files screen)."""
+        out = []
+        for f in sorted((paths.runs_root() / self.session.world).glob("*/attachments/attachments.json")):
+            out.extend(json.loads(f.read_text()))
+        return sorted(out, key=lambda a: a.get("at", ""), reverse=True)
+
+    def message_with_attachments(self, text, ids):
+        """The message the agent reads: what the user typed, then each attached file's text under its name."""
+        if not ids:
+            return text, None
+        d = self.session.dir / "attachments"
+        index = {a["id"]: a for a in json.loads((d / "attachments.json").read_text())} if (d / "attachments.json").exists() else {}
+        parts, shown = [text] if text else [], []
+        for i in ids:
+            a = index.get(i)
+            if not a:
+                raise ValueError(f"no attachment {i} today")
+            body = (d / f"{i}.txt").read_text(encoding="utf-8")[: self.ATTACH_MAX_CHARS]
+            parts.append(f"[Attached file: {a['name']}]\n{body}" + ("\n[The file continues; only the start is shown.]" if a["truncated"] else ""))
+            shown.append({"id": a["id"], "name": a["name"], "chars": a["chars"]})
+        return "\n\n".join(parts), {"typed": text, "attachments": shown}
+
     def create_profile(self, name, about=""):
         """Add a profile made in the app: runs/_profiles/<id>/world.json (the person's name and one line about their
         work, nothing else), then open its first day. A new person starts with no notes and the base weights."""
@@ -446,6 +491,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(self.app.raw_turn(int(turn), q.get("mode", ["reply"])[0]))
             except GlimmerError as e:
                 return self._json({"error": f"the model server did not render the template: {e}"}, 502)
+        if path == "/api/attachments":
+            return self._json({"attachments": self.app.attachments()})
         if path == "/api/settings":
             return self._json(self.app.settings())
         if path == "/api/workspace":
@@ -487,7 +534,18 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.urlparse(self.path).path
         try:
             if path == "/api/chat":
-                return self._chat(self._body().get("text", "").strip())
+                b = self._body()
+                try:
+                    text, extra = self.app.message_with_attachments((b.get("text") or "").strip(), b.get("attachments") or [])
+                except ValueError as e:
+                    return self._json({"error": str(e)}, 400)
+                return self._chat(text, extra)
+            if path == "/api/attachments":
+                b = self._body()
+                try:
+                    return self._json(self.app.attach(b.get("name"), b.get("text")))
+                except ValueError as e:
+                    return self._json({"error": str(e)}, 400)
             if path == "/api/ask":
                 q = (self._body().get("question") or "").strip()
                 if not q:
@@ -551,7 +609,7 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"error": f"{type(e).__name__}: {e}"}, 500)
         return self._json({"error": "not found"}, 404)
 
-    def _chat(self, text):
+    def _chat(self, text, extra=None):
         if not text:
             return self._json({"error": "empty message"}, 400)
         if not self.app.lock.acquire(blocking=False):
@@ -561,7 +619,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/event-stream")
             self.send_header("Cache-Control", "no-store")
             self.end_headers()
-            for ev in self.app.session.run_turn(text):
+            for ev in self.app.session.run_turn(text, extra=extra):
                 self.wfile.write(b"data: " + json.dumps(ev, ensure_ascii=False).encode() + b"\n\n")
                 self.wfile.flush()
         except (BrokenPipeError, ConnectionResetError):
