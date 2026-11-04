@@ -274,11 +274,15 @@ def report_combo(args, run, slug, stem):
     gate answers between "I don't know" and an answer (flips both ways), ties to the higher toward. The served file
     is the baked GGUF for that setting (voice_counter.py bake), sent at strength s."""
     axis = json.loads((Path(args.voices_dir) / slug / "axis.json").read_text())
-    settings = merged(run, args.sweep_dirs.split(","), stem)
+    settings, stem_of = {}, {}
+    for st in stem.split("+"):  # several runs' combo arms for one voice: the first run holding a setting wins
+        for k, v in merged(run, args.sweep_dirs.split(","), st).items():
+            if k not in settings:
+                settings[k], stem_of[k] = v, st
     out_dir = Path(args.results) / slug
     out_dir.mkdir(parents=True, exist_ok=True)
     rows, by_setting = judged_rows(axis["positive_label"], axis["negative_label"], settings, out_dir, args.parallel,
-                                   combo_key, stem)
+                                   combo_key, stem.split("+")[0])
     for r in rows:
         r["scale"], r["counter"] = combo_key(r["setting"])
         r["flips"] = ((r["idk"] or {}).get("base_abstained_now_answers", 0) or 0) + \
@@ -306,8 +310,9 @@ def report_combo(args, run, slug, stem):
                          "variant": "v1 (voice + counter-push)", "layers": [16, 42], "bake":
                          {"scale": working["scale"], "counter": working["counter"]}}
     (Path(args.voices_dir) / slug / "voice.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
-    copy_evidence(run, settings, stem, out_dir)
-    (out_dir / f"judge-{stem}.json").write_text(json.dumps({"rows": rows, "verdicts": by_setting}, indent=1) + "\n")
+    for st in stem.split("+"):
+        copy_evidence(run, {k: v for k, v in settings.items() if stem_of[k] == st}, st, out_dir)
+    (out_dir / f"judge-{stem.replace('+', '_')}.json").write_text(json.dumps({"rows": rows, "verdicts": by_setting}, indent=1) + "\n")
     print(json.dumps({"voice": slug, "status": doc["status"], "working": working and working["setting"], "why": why,
                       "rows": [{k: r.get(k) for k in ("setting", "toward", "coherence", "words", "flips", *RULES)} |
                                {"abstain": (r["idk"] or {}).get("abstain"), "abstain0": (r["idk"] or {}).get("abstain_scale0"),
