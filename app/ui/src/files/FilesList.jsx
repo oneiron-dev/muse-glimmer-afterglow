@@ -110,7 +110,7 @@ export function FilesList({ world, onAttached }) {
             );
           })}
         </ul>
-      ) : <Empty kind="tasks">No files yet. Add a note or a text file here, or ask your agent to write one. Files in your folder show here too.</Empty>}
+      ) : <Empty kind="file">No files yet. Add a note or a text file here, or ask your agent to write one. Files in your folder show here too.</Empty>}
     </section>
   );
 }

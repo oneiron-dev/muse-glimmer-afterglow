@@ -10,8 +10,8 @@
 /* download progress inside a row; the bar itself is the shared .fit-bar */
 .mdl { margin: 8px 0 2px; }
 /* Keep loaded: the switch is the in-use row's action, with its label under it */
-.mkeep { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.mkeep span { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+.mloaded { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.mloaded span { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
 /* what the circle can do, under the Vision slot */
 .mcircle { margin-top: 12px; }
 /* the memory bar: each loaded local model plus the free space, labelled below */

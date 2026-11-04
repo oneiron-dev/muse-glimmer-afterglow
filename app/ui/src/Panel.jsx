@@ -8,7 +8,7 @@ const TABS = [
   { id: "threads", label: "Threads" },
   { id: "calendar", label: "Calendar" },
   { id: "tasks", label: "Tasks" },
-  { id: "email", label: "Email" },
+  { id: "email", label: "Mail" },
   { id: "memory", label: "Memory" },
   { id: "night", label: "Nights" },
 ];
@@ -63,7 +63,7 @@ export function CalendarView({ ws, focus, today, world, day }) {
   const local = (ws && ws.calendar) || [];
   const seen = new Set(local.map((e) => e.id));
   const events = [...local, ...(feed || []).filter((e) => e && !seen.has(e.id))];
-  if (!events.length) return <Empty kind="calendar">No events yet. Ask the agent to put something in the calendar.</Empty>;
+  if (!events.length) return <Empty kind="calendar">No events yet. Ask your agent to put something in your calendar.</Empty>;
   const byDate = events.reduce((m, e) => ((m[e.date] = m[e.date] || []).push(e), m), {});
   const dates = Object.keys(byDate).sort();
   const firstShown = dates.find((d) => d >= (today || "")) || dates[0];
@@ -91,7 +91,7 @@ export function CalendarView({ ws, focus, today, world, day }) {
 
 export function TasksView({ ws, focus }) {
   const tasks = (ws && ws.tasks) || [];
-  if (!tasks.length) return <Empty kind="tasks">No tasks yet. Ask the agent to add one.</Empty>;
+  if (!tasks.length) return <Empty kind="tasks">No tasks yet. Ask your agent to add one.</Empty>;
   const open = tasks.filter((t) => !t.done), done = tasks.filter((t) => t.done);
   const row = (t) => (
     <li key={t.id} className={`${t.done ? "done" : ""}${t.id === focus ? " hl" : ""}`}>
@@ -121,7 +121,7 @@ export function EmailView({ ws, focus, world, day }) {
     getJSON("/api/connectors").then((r) => { if (live) setMailOn(!!(r && r.mail && r.mail.on)); }).catch(() => { if (live) setMailOn(false); });
     return () => { live = false; };
   }, [world, day]);
-  if (!drafts.length) return <Empty kind="email">No drafts yet. Ask the agent to write an email; it saves a draft here and never sends it.</Empty>;
+  if (!drafts.length) return <Empty kind="email">No drafts yet. Ask your agent to write an email: it saves a draft here and never sends it.</Empty>;
   const m = drafts.find((d) => d.id === sel) || drafts[0];
   const copy = async () => { await navigator.clipboard.writeText(`To: ${m.to}\nSubject: ${m.subject}\n\n${m.body}`); setCopied(true); setTimeout(() => setCopied(false), 1500); };
   const open = async () => {

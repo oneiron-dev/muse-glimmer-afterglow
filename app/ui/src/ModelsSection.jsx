@@ -100,7 +100,7 @@ function ChoiceRow({ slotId, slot, c, av, acting, onAct }) {
       if (!selected) action = <button type="button" className="btn btn-send" disabled={acting} onClick={() => onAct("use", { slot: slotId, id: c.id })}>Use</button>;
     } else {
       action = (
-        <div className="mkeep">
+        <div className="mloaded">
           <Switch on={!!slot.keep_loaded} label={`Keep ${c.label} loaded`} disabled={acting}
             onChange={(v) => onAct("keep", { slot: slotId, on: v })} />
           <span>Keep loaded</span>

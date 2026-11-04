@@ -231,8 +231,12 @@ export function Glyph({ kind }) {
   if (kind === "tasks") return <svg {...p}><rect x="3.5" y="3.5" width="13" height="13" rx="3" /><path d="m7 10 2.2 2.2L13.5 8" /></svg>;
   if (kind === "email") return <svg {...p}><rect x="2.5" y="4.5" width="15" height="11" rx="2" /><path d="m3 5.5 7 5.5 7-5.5" /></svg>;
   if (kind === "web") return <svg {...p}><circle cx="10" cy="10" r="7" /><path d="M3 10h14M10 3c2.2 2 2.2 12 0 14M10 3c-2.2 2-2.2 12 0 14" /></svg>;
+  if (kind === "file") return <svg {...p}><path d="M5.5 2.5h6l3.5 3.5v10a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 16V4a1.5 1.5 0 0 1 1.5-1.5Z" /><path d="M11.5 2.5V6H15" /></svg>;
   return <svg {...p}><circle cx="10" cy="10" r="7" /></svg>;
 }
+
+/** The last night kept before `day`: the update you talked to that day ("night 1", not today's latest). */
+const keptBefore = (nights, day) => (nights || []).filter((x) => x.decision === "keep" && x.day < day).map((x) => x.day).sort((a, b) => a - b).pop();
 
 /** The morning card: the night of record before today, kept or rolled back, with its proof. */
 const TOWARD = { concise: "Shorter replies", detailed: "Fuller replies", cautious: "Check with you before acting",
@@ -296,7 +300,7 @@ export function MorningCard({ report, onOpenNight }) {
         <p className="mfrom">Overnight, after day {n}</p>
         <h2 className="mtitle">I tried to learn day {n}, and rolled it back.</h2>
         <p className="mwhy">The update {failedWhy(failedKeys(dec))}{ah.honesty_change != null ? `: honesty ${signed(ah.honesty_change)} on 200 general questions, and the limit is ${MINUS}5` : ""}.</p>
-        {report.served && <p className="mkeep">You still talk to night {report.served.day}’s update. Your notes stay, and tonight I try again.</p>}
+        <p className="mkeep">{keptBefore(report.nights, n) ? `You still talk to night ${keptBefore(report.nights, n)}’s update. ` : ""}Your notes stay, and tonight I try again.</p>
         <MorningLoom world={report.world} day={n} />
         <Proposals report={report} />
         <button type="button" className="link" onClick={onOpenNight}>See the night</button>
@@ -380,7 +384,7 @@ function Night({ after, state, nextDay, onOpenDay, onOpenPanel }) {
           ))}
           {r ? (
             <li className={`verdict ${kept ? "is-keep" : "is-rollback"}${after.shown > steps.length ? " on" : ""}`}><i className="mk" />
-              <div><b>{kept ? "Kept" : "Rolled back"}</b><span>{kept ? `From tomorrow you talk to night ${r.day}’s update.` : `The update ${failedWhy(failedKeys(dec))}. ${r.served ? `You keep night ${r.served.day}’s update.` : "Your agent stays as it was."}`}</span></div></li>
+              <div><b>{kept ? "Kept" : "Rolled back"}</b><span>{kept ? `From tomorrow you talk to night ${r.day}’s update.` : `The update ${failedWhy(failedKeys(dec))}. ${keptBefore(r.nights, r.day) ? `You keep night ${keptBefore(r.nights, r.day)}’s update.` : "Your agent stays as it was."}`}</span></div></li>
           ) : (
             <li className={`verdict${after.shown > 1 ? " on" : ""}`}><i className="mk" /><div><b>Training tonight</b><span>The night runs on the training GPU. Its result arrives here in the morning.</span></div></li>
           )}
@@ -394,7 +398,7 @@ function Night({ after, state, nextDay, onOpenDay, onOpenPanel }) {
             <p className="mfrom">Overnight, after day {r.day}</p>
             <h2 className="mtitle">{kept ? `I learned from day ${r.day} and kept it.` : `I tried to learn day ${r.day}, and rolled it back.`}</h2>
             {!kept && <p className="mwhy">The update {failedWhy(failedKeys(dec))}{ah.honesty_change != null ? `: honesty ${signed(ah.honesty_change)} on 200 general questions, and the limit is ${MINUS}5` : ""}.</p>}
-            {!kept && r.served && <p className="mkeep">You still talk to night {r.served.day}’s update. Today’s notes stay, and tonight I try again.</p>}
+            {!kept && <p className="mkeep">{keptBefore(r.nights, r.day) ? `You still talk to night ${keptBefore(r.nights, r.day)}’s update. ` : ""}Today’s notes stay, and tonight I try again.</p>}
             {kept && L.B != null && <p className="mkeep">{L.B} of your facts answered without notes, before {L.A}.</p>}
             <MorningLoom world={state.world} day={r.day} />
             <p className="mfine">{(r.nights || []).filter((x) => x.decision === "rollback").length} of your {(r.nights || []).filter((x) => x.decision).length} nights so far were rolled back. That is the check doing its job.</p>

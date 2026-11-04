@@ -113,7 +113,9 @@ function MemoryScreen({ ctx }) {
                 ) : <span className="nv">{n.value}</span>}
                 {prev && <span className="nwas">was {prev.value}</span>}
                 <span className="nwhen">
-                  {changedAfter && prevIn
+                  {changedAfter && prevIn && tIn
+                    ? <>Changed on day {n.day}, after night {prevIn}. <b>Trained in night {tIn}</b>{t ? `, answers it without notes ${t.b} of 3 times` : ""}.</>
+                    : changedAfter && prevIn
                     ? <>Changed on day {n.day}, after night {prevIn}. The model still holds “{prev.value}” until a night trains this.</>
                     : tIn ? <>Said on day {n.day || "?"}. <b>Trained in night {tIn}</b>{t ? `, answers it without notes ${t.b} of 3 times` : ""}.</>
                       : <>Said on day {n.day || "?"}. Not trained yet: tonight’s night trains it.</>}

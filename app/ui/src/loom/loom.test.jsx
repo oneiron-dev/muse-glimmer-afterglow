@@ -106,3 +106,13 @@ test("?fact= opens the morning proof on that fact (the S8 shot)", () => {
     delete globalThis.window;
   }
 });
+
+test("a rolled-back morning names the update kept before that night, not today's latest", () => {
+  const nights = [{ day: 1, decision: "keep" }, { day: 2, decision: "rollback" }, { day: 3, decision: "rollback" }];
+  const html = render(<MorningCard report={{ world: "w", day: 3, decision: { decision: "rollback" }, nights, served: { day: 9 } }} />);
+  expect(html).toContain("You still talk to night 1’s update.");
+  expect(html).not.toContain("night 9");
+  const first = render(<MorningCard report={{ world: "w", day: 1, decision: { decision: "rollback" }, nights: [{ day: 1, decision: "rollback" }] }} />);
+  expect(first).toContain("Your notes stay, and tonight I try again.");
+  expect(first).not.toContain("talk to night");
+});
