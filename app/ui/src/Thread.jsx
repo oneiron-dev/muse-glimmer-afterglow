@@ -22,7 +22,7 @@ export function Thread({ state, report, live, after, nextDay, sealed, onGoToday,
       <div className="thread" aria-live="polite">
         {onMoreEarlier && <button type="button" className="more-days" onClick={onMoreEarlier}>{moreLabel}</button>}
         {earlier.map((d) => <EarlierDay key={d.day} d={d} night={nights.find((n) => n.day === d.day)} onOpenPanel={onOpenPanel} />)}
-        {report && !report.missing && (
+        {report && !report.missing && report.day < state.day && (
           <>
             <p className="divider">Morning, day {state.day}</p>
             <MorningCard key={`${state.world}-${report.day}`} report={report} onOpenNight={() => onOpenPanel("night", report.day)} />
@@ -49,7 +49,7 @@ export function Thread({ state, report, live, after, nextDay, sealed, onGoToday,
             <Reply text={live.text} tools={live.tools} error={live.error} thinking={live.thinking} onOpenPanel={onOpenPanel} />
           </>
         )}
-        {lpx && !live && !after && conflicts && ((conflicts.conflicts || []).length > 0) && !(lp.loom.resolution) && (
+        {lpx && !live && !after && conflicts && ((conflicts.conflicts || []).length > 0) && (
           <section className="night-q" aria-label="Before tonight">
             <p className="divider">Before tonight</p>
             <NightQuestion key={`${state.world}-${state.day}-${conflicts.line}`} conflicts={conflicts.conflicts} extra={conflicts.extra} resolution={lp.loom.resolution} onResolved={lp.onReload} />
@@ -157,7 +157,7 @@ function UserMsg({ text, files, ts, turn, onOpenPanel, fresh, readOnly, lp }) {
           <Copy text={text} />
           {!readOnly && lp && <EditMessage turn={turn} text={text} sealed={false} disabled={lp.disabled} onLive={lp.onLive} onNote={lp.onNote} onReload={lp.onReload} />}
         </>}
-        {lp && lp.loom && <BranchSwitcher alternatives={lp.loom.alternatives} turn={turn} currentBranch={lp.loom.line} onReload={lp.onReload} disabled={lp.disabled} />}
+        {lp && lp.loom && <BranchSwitcher alternatives={(lp.loom.versions && lp.loom.versions.messages) || lp.loom.alternatives} turn={turn} currentBranch={lp.loom.line} kind="message" onReload={lp.onReload} disabled={lp.disabled} />}
       </div>
     </div>
   );
@@ -187,6 +187,7 @@ function Reply({ rec, text, tools, error, thinking, onOpenPanel, readOnly, lp, u
       {error && <p className="error-line">{error}</p>}
       {rec && (
         <div className={`acts acts-a${open ? " on" : ""}`}>
+          {!readOnly && lp && lp.loom && lp.loom.versions && <BranchSwitcher alternatives={lp.loom.versions.replies} turn={rec.turn} currentBranch={lp.loom.line} kind="answer" onReload={lp.onReload} disabled={lp.disabled} />}
           <time className="num">{hhmm(rec.ts)}</time>
           <Copy text={text} />
           <button type="button" className="act" aria-expanded={open} onClick={() => setOpen(!open)}>Details</button>
@@ -294,9 +295,9 @@ export function MorningCard({ report, onOpenNight }) {
       <article className="mcard is-rollback">
         <p className="mfrom">Overnight, after day {n}</p>
         <h2 className="mtitle">I tried to learn day {n}, and rolled it back.</h2>
-        <MorningLoom world={report.world} day={n} />
         <p className="mwhy">The update {failedWhy(failedKeys(dec))}{ah.honesty_change != null ? `: honesty ${signed(ah.honesty_change)} on 200 general questions, and the limit is ${MINUS}5` : ""}.</p>
         {report.served && <p className="mkeep">You still talk to night {report.served.day}’s update. Your notes stay, and tonight I try again.</p>}
+        <MorningLoom world={report.world} day={n} />
         <Proposals report={report} />
         <button type="button" className="link" onClick={onOpenNight}>See the night</button>
       </article>
@@ -312,7 +313,6 @@ export function MorningCard({ report, onOpenNight }) {
     <article className="mcard is-keep">
       <p className="mfrom">Overnight, after day {n}</p>
       <h2 className="mtitle">I learned from day {n} and kept it.</h2>
-      <MorningLoom world={report.world} day={n} />
       {ex.length > 0 && <Proof examples={ex} />}
       <dl className="figs">
         <div><dt className="num">{L.B} <small>of {facts}</small></dt><dd>of your facts answered without notes. Before: {L.A}.</dd></div>
@@ -320,6 +320,7 @@ export function MorningCard({ report, onOpenNight }) {
         {ah.honesty_change != null && <div><dt className="num">{signed(ah.honesty_change)}</dt><dd>honesty on the usual 200 questions{report.fresh && report.fresh.change != null ? `, ${signed(report.fresh.change)} on a fresh 200` : ""}. Below {MINUS}5 it rolls back.</dd></div>}
       </dl>
       {speed && <p className="mspeed num">Replies {speed.gain_pct}% faster: {speed.ours_tok_s.toFixed(1)} against {speed.stock_tok_s.toFixed(1)} tokens a second, from a drafter trained on your messages.</p>}
+      <MorningLoom world={report.world} day={n} />
       <Proposals report={report} />
       <button type="button" className="link" onClick={onOpenNight}>See the night</button>
     </article>
@@ -378,7 +379,7 @@ function Night({ after, state, nextDay, onOpenDay, onOpenPanel }) {
           ))}
           {r ? (
             <li className={`verdict ${kept ? "is-keep" : "is-rollback"}${after.shown > steps.length ? " on" : ""}`}><i className="mk" />
-              <div><b>{kept ? "Kept" : "Rolled back"}</b><span>{kept ? `From tomorrow you talk to night ${r.day}’s update.` : `The update ${failedWhy(failedKeys(dec))}. You keep night ${r.served ? r.served.day : "?"}’s update.`}</span></div></li>
+              <div><b>{kept ? "Kept" : "Rolled back"}</b><span>{kept ? `From tomorrow you talk to night ${r.day}’s update.` : `The update ${failedWhy(failedKeys(dec))}. ${r.served ? `You keep night ${r.served.day}’s update.` : "Your agent stays as it was."}`}</span></div></li>
           ) : (
             <li className={`verdict${after.shown > 1 ? " on" : ""}`}><i className="mk" /><div><b>Training tonight</b><span>The night runs on the training GPU. Its result arrives here in the morning.</span></div></li>
           )}
@@ -391,10 +392,10 @@ function Night({ after, state, nextDay, onOpenDay, onOpenPanel }) {
           <article className={`mcard arrive ${kept ? "is-keep" : "is-rollback"}`}>
             <p className="mfrom">Overnight, after day {r.day}</p>
             <h2 className="mtitle">{kept ? `I learned from day ${r.day} and kept it.` : `I tried to learn day ${r.day}, and rolled it back.`}</h2>
-            <MorningLoom world={state.world} day={r.day} />
             {!kept && <p className="mwhy">The update {failedWhy(failedKeys(dec))}{ah.honesty_change != null ? `: honesty ${signed(ah.honesty_change)} on 200 general questions, and the limit is ${MINUS}5` : ""}.</p>}
             {!kept && r.served && <p className="mkeep">You still talk to night {r.served.day}’s update. Today’s notes stay, and tonight I try again.</p>}
             {kept && L.B != null && <p className="mkeep">{L.B} of your facts answered without notes, before {L.A}.</p>}
+            <MorningLoom world={state.world} day={r.day} />
             <p className="mfine">{(r.nights || []).filter((x) => x.decision === "rollback").length} of your {(r.nights || []).filter((x) => x.decision).length} nights so far were rolled back. That is the check doing its job.</p>
             <div className="mrow">
               <button type="button" className="link" onClick={() => onOpenPanel("night", r.day)}>See the night</button>

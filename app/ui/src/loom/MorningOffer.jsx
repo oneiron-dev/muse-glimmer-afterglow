@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { postJSON } from "../lib.js";
 import { cue } from "../sound.js";
+import { factLabel, versionLabel } from "./words.js";
 
-/** One complete morning answer: choose the right facts and any branches to add later.
- * day targets the report's day. Existing facts and added branches stay selected on later saves.
- * A saved resolution answers every shown conflict; choosing the line keeps its value.
+/** One complete morning answer: choose the right facts and any other versions of the day to learn later.
+ * A section of the morning card, under its verdict. day targets the report's day. Facts are asked only when the
+ * night had no answer for them; a saved answer keeps its facts and added versions on later saves.
+ * firstWords names each version by the first thing you said on it (GET /api/loom first_words).
  */
-export function MorningOffer({ day, leftOut, extra, conflicts, resolution, onResolved }) {
+export function MorningOffer({ day, leftOut, extra, conflicts, resolution, firstWords, onResolved }) {
   const list = conflicts || [];
   const rest = extra || [];
   const sides = list.map((c) => ({ key: c.key, value: c.side.value, id: c.side.id, branch: c.side.branch }));
@@ -27,10 +29,9 @@ export function MorningOffer({ day, leftOut, extra, conflicts, resolution, onRes
   if (!remaining.length && !unanswered) {
     if (!local) return null;
     return (
-      <article className="mcard">
-        <p className="mfrom">This morning</p>
-        <p className="mkeep">Saved for a later night. Last night’s result has not changed.</p>
-      </article>
+      <section className="mprops" aria-label="Left out last night">
+        <p className="mprop-state" role="status">Saved. A later night learns what you picked. Last night’s result stays as it was.</p>
+      </section>
     );
   }
   const choice = (c) => pick[c.side.id] || (kept.includes(c.side.id) ? "side" : "line");
@@ -52,7 +53,7 @@ export function MorningOffer({ day, leftOut, extra, conflicts, resolution, onRes
         add_branches: [...new Set([...saved, ...chosen])],
       });
     } catch {
-      r = { error: "Your answer did not go through." };
+      r = { error: "Your answer did not go through. Try again." };
     }
     setBusy(false);
     if (r && r.error) {
@@ -68,52 +69,51 @@ export function MorningOffer({ day, leftOut, extra, conflicts, resolution, onRes
     if (onResolved) onResolved(null);
   };
   return (
-    <article className="mcard">
-      <p className="mfrom">This morning</p>
-      <h2 className="mtitle">Left out last night</h2>
-      <p className="mkeep">Choose which facts are right and any side branches to add for a later night. Last night’s result stays as it was.</p>
-      {list.map((c) => (
-        <div className="proof" key={c.side.id}>
-          <p className="pk">{c.key}: which is right?</p>
-          <div className="v-list" role="radiogroup" aria-label={c.key}>
+    <section className="mprops moffer" aria-label="Left out last night">
+      <h3 className="mprops-head">Left out last night</h3>
+      <p className="moffer-why">Last night I trained on the version of day {day} you ended on. Pick what else I should learn on a later night.</p>
+      {unanswered && list.map((c) => (
+        <div className="moffer-q" key={c.side.id}>
+          <p className="pk">{factLabel(c.key)}: which is right?</p>
+          <div className="v-list" role="radiogroup" aria-label={factLabel(c.key)}>
             <button type="button" role="radio" aria-checked={choice(c) === "line"} disabled={busy}
               className={`v-row${choice(c) === "line" ? " on" : ""}`}
               onClick={() => setPick((p) => ({ ...p, [c.side.id]: "line" }))}>
               <i className="v-radio" aria-hidden="true" />
-              <span><b>{c.line.value}</b><small>On the day’s line.</small></span>
+              <span><b>{c.line.value}</b><small>What I trained on last night.</small></span>
             </button>
             <button type="button" role="radio" aria-checked={choice(c) === "side"} disabled={busy}
               className={`v-row${choice(c) === "side" ? " on" : ""}`}
               onClick={() => setPick((p) => ({ ...p, [c.side.id]: "side" }))}>
               <i className="v-radio" aria-hidden="true" />
-              <span><b>{c.side.value}</b><small>Branch {c.side.branch}.</small></span>
+              <span><b>{c.side.value}</b><small>In your other version.</small></span>
             </button>
           </div>
         </div>
       ))}
-      {remaining.length > 0 && <>
-        <p className="pk">Add side branches</p>
-        <div className="v-list">
-          {remaining.map((b) => {
-            const facts = factsOf(b);
-            return (
-              <button key={b} type="button" role="checkbox" aria-checked={!!add[b]} disabled={busy}
-                className={`v-row${add[b] ? " on" : ""}`}
-                onClick={() => setAdd((a) => ({ ...a, [b]: !a[b] }))}>
-                <i className="v-radio" aria-hidden="true" />
-                <span><b>Branch {b}</b><small>{facts.length ? facts.map((n) => `${n.key}: ${n.value}`).join("; ") : "No saved facts."}</small></span>
-              </button>
-            );
-          })}
+      {remaining.length > 0 && (
+        <div className="moffer-q">
+          <p className="pk">{remaining.length === 1 ? "Learn your other version too?" : "Learn your other versions too?"}</p>
+          <div className="v-list">
+            {remaining.map((b) => {
+              const facts = factsOf(b);
+              return (
+                <button key={b} type="button" role="checkbox" aria-checked={!!add[b]} disabled={busy}
+                  className={`v-row${add[b] ? " on" : ""}`}
+                  onClick={() => setAdd((a) => ({ ...a, [b]: !a[b] }))}>
+                  <i className="v-radio v-check" aria-hidden="true" />
+                  <span><b>{versionLabel(b, firstWords)}</b><small>{facts.length ? facts.map((n) => `${factLabel(n.key)}: ${n.value}`).join("; ") : "No new facts in it."}</small></span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </>}
-      <div className="factions">
-        <button type="button" className="btn btn-send" disabled={busy} onClick={submit}>
-          {busy ? "Saving…" : "Save your answer"}
-        </button>
-        <button type="button" className="btn btn-quiet" disabled={busy} onClick={skip}>Not now</button>
+      )}
+      <div className="mprop-acts">
+        <button type="button" className="btn btn-quiet" disabled={busy} onClick={submit}>{busy ? "Saving…" : "Save"}</button>
+        <button type="button" className="btn btn-text" disabled={busy} onClick={skip}>Not now</button>
       </div>
       {error && <p className="ferr" role="alert">{error}</p>}
-    </article>
+    </section>
   );
 }

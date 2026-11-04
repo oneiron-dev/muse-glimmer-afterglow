@@ -16,13 +16,13 @@ export function EditedDay({ line, disabled, sealed, onReload }) {
       if (r.error) setError(r.error);
       else if (onReload) await onReload();
     } catch {
-      setError("The switch did not go through.");
+      setError("Your first version did not open. Try again.");
     }
     setBusy(false);
   };
   return <div className="fhint" role="note">
     You are on an edited version of this day.{" "}
-    <button type="button" className="link" disabled={disabled || busy || sealed} onClick={back}>‹ Back to the first ›</button>
+    <button type="button" className="link" disabled={disabled || busy || sealed} onClick={back}>Back to your first version</button>
     {error && <p className="ferr" role="alert">{error}</p>}
   </div>;
 }

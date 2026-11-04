@@ -22,6 +22,8 @@ function PanelToggle({ open, onToggle, count }) {
 import { useVoices } from "./Voice.jsx";
 
 const STEP_MS = 950;
+/** The calendar day after an ISO date ("2026-11-04" -> "2026-11-05"). */
+const nextDate = (iso) => { if (!iso) return iso; const d = new Date(`${iso}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + 1); return d.toISOString().slice(0, 10); };
 const greeting = () => { const h = new Date().getHours(); return h < 5 ? "Good night" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; };
 
 /** The app shell: the sidebar, then the open screen (chat by default, with its side panel). */
@@ -205,7 +207,7 @@ export default function App() {
             <header className="bar">
               <div className="title">
                 <h1>{sealed ? `Day ${state.day}` : after && after.phase === "morning" ? "Tomorrow" : "Today"}</h1>
-                <span className="num">{longDate(state.date)}</span>
+                <span className="num">{longDate(after && after.phase === "morning" ? nextDate(state.date) : state.date)}</span>
               </div>
               {!sealed && <NightControl schedule={schedule} setSchedule={setSchedule} onEndDay={endDay} disabled={!canEndDay} phase={after && after.phase === "morning" ? "morning" : after ? "night" : null} />}
               <PanelToggle open={!!panel} onToggle={() => (panel ? closePanel() : openPanel("threads"))} count={threads.length} />

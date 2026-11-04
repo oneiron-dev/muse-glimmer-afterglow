@@ -278,6 +278,13 @@ class LoomStateTest(LoomApiCase):
         self.assertFalse(st["sealed"])
         self.assertIsNone(st["resolution"])
         self.assertEqual(st["left_out"], [])
+        # the thread's steppers: the edit under your first message, the second answer under the reply to T2
+        self.assertEqual(st["versions"],
+                         {"messages": {1: [{"branch": "main", "turn": 1, "text": T1},
+                                           {"branch": "b2", "turn": 3, "text": EDIT}]},
+                          "replies": {2: [{"branch": "main", "turn": 2, "text": T2},
+                                          {"branch": "b3", "turn": 4, "text": T2}]}})
+        self.assertEqual(st["first_words"], {"b2": EDIT, "b3": T2})
 
     def test_a_shorter_prefix_branch_adds_no_evidence(self):
         s = self.session([("remember", {"key": "office", "value": "Room 312"})], "Noted. Room 312.",
