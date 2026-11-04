@@ -389,7 +389,7 @@ function Night({ after, state, nextDay, onOpenDay, onOpenPanel }) {
             <li className={`verdict${after.shown > 1 ? " on" : ""}`}><i className="mk" /><div><b>Training tonight</b><span>The night runs on the training GPU. Its result arrives here in the morning.</span></div></li>
           )}
         </ol>
-        <p className="night-fine">{dur ? `This night took ${Math.floor(dur / 60)} h ${dur % 60} min from start to decision. ` : ""}You can keep talking tonight: replies come from the last kept update, and what you say goes into tomorrow.</p>
+        <p className="night-fine">{dur ? `This night took ${Math.floor(dur / 60)} h ${dur % 60} min from start to decision. ` : ""}{nextDay ? `The chat opens again on day ${nextDay}.` : "The chat opens again with your next day."}</p>
       </section>
       {after.phase === "morning" && r && (
         <>
