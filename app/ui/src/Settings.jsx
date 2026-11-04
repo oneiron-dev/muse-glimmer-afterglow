@@ -6,12 +6,14 @@ import { Onboarding } from "./Onboarding.jsx";
 import { CHECKS, MINUS, getJSON, postJSON, pretty, shortDate } from "./lib.js";
 import { cue, setSound, soundOn } from "./sound.js";
 import { EXTRA_CONNECTORS } from "./connectors/index.js";
+import { DictationSettings } from "./dictation/DictationSettings.jsx";
 
 /** Settings' own section list; the sidebar shows it in place of the app's screens (as the Claude Console does). */
 export const SECTIONS = [
   { id: "model", label: "Model" },
   { id: "connectors", label: "Connectors" },
   { id: "voice", label: "Voice" },
+  { id: "dictation", label: "Dictation" },
   { id: "nights", label: "Nights" },
   { id: "appearance", label: "Appearance" },
   "rule",
@@ -61,6 +63,7 @@ export function SettingsScreen({ ctx }) {
           {sec === "model" && <ModelSection ctx={ctx} settings={s} />}
           {sec === "connectors" && <ConnectorsSection settings={s} />}
           {sec === "voice" && <VoiceSection ctx={ctx} />}
+          {sec === "dictation" && <DictationSettings />}
           {sec === "nights" && <NightsSection ctx={ctx} settings={s} onSaved={loadSettings} />}
           {sec === "appearance" && <AppearanceSection ctx={ctx} />}
           {sec === "profile" && <ProfileSection ctx={ctx} settings={s} />}
