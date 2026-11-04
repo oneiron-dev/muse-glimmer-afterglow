@@ -104,5 +104,5 @@ curl -sf "http://127.0.0.1:$PORT/health" > /dev/null || { log "server not health
 log "sweep + idk"
 "$PY" steering/voice_sweep.py --endpoint "http://127.0.0.1:$PORT" "${VOICE_ARGS[@]}" --scales "$SWEEP_SCALES" \
   --idk-scales "$IDK_SCALES" --parallel "$NP" --steps "$SWEEP_STEPS" --out "$RUN/$OUT" 2>&1 | tee -a "$RUN/$OUT.log"
-sha256sum "$RUN"/vectors/base/voice-*-raw.gguf "$RUN"/vectors/base/voice-*-orth.gguf 2>/dev/null > "$RUN/vectors.sha256" || true
+sha256sum "$RUN"/vectors/base/*.gguf 2>/dev/null > "$RUN/vectors.sha256" || true
 log "DONE"

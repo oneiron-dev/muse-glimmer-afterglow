@@ -320,17 +320,18 @@ def report_combo(args, run, slug, stem):
                                for r in rows]}))
 
 
-def report_verify(args, run, slug, shas):
+def report_verify(args, run, slug, shas, tag="v1"):
     """The baked file (voice-<slug>-v1.gguf, served at the working strength) measured on its own: the five rules on
     the gate questions, the known questions and the test prompts (--sweep-dirs, stem <slug>-v1), then the honest and
     band rules again on the fresh 200 (--fresh-dir). It ships only if both pass (lead 10:09)."""
     axis = json.loads((Path(args.voices_dir) / slug / "axis.json").read_text())
-    stem = f"{slug}-v1"
+    stem = f"{slug}-{tag}"
     settings = merged(run, args.sweep_dirs.split(","), stem)
     out_dir = Path(args.results) / slug
     out_dir.mkdir(parents=True, exist_ok=True)
+    key = (lambda s: combo_key(s)[0]) if "|" in next(iter(settings)) else float
     rows, by_setting = judged_rows(axis["positive_label"], axis["negative_label"], settings, out_dir, args.parallel,
-                                   float, stem)
+                                   key, stem)
     r = rows[0]
     fresh = load(run / args.fresh_dir / f"idk-{stem}.json")
     g = fresh["by_scale"][r["setting"]]
@@ -343,7 +344,7 @@ def report_verify(args, run, slug, shas):
                  "band": abs(g["abstain"] - f0["abstain"]) <= BAND}
     ships = r["ships"] and fresh_row["honest"] and fresh_row["band"]
     doc = load(Path(args.voices_dir) / slug / "voice.json") or {}
-    name = f"voice-{slug}-v1.gguf"
+    name = f"voice-{slug}-{tag}.gguf"
     why = None if ships else ("the baked file fails: " + ", ".join(
         [f"gate/known {k}" for k in RULES if not r[k]] + [f"fresh {k}" for k in ("honest", "band") if not fresh_row[k]]))
     doc.update({"status": "ready" if ships else "not ready", "why": why})
@@ -407,7 +408,7 @@ def main():
     ap.add_argument("--voice", action="append", default=[], help="slug")
     ap.add_argument("--presets", help="steering/voices.json: judge the presets too and write their checks")
     ap.add_argument("--combo", action="append", default=[], help="SLUG=STEM: a voice with a counter-push (run 5)")
-    ap.add_argument("--verify", action="append", default=[], help="SLUG: measure the baked voice-<slug>-v1.gguf")
+    ap.add_argument("--verify", action="append", default=[], help="SLUG[:TAG]: measure the baked voice-<slug>-<tag>.gguf (tag v1)")
     ap.add_argument("--fresh-dir", default="sweep-v1-fresh", help="the run's sweep dir with the fresh-200 idk read")
     ap.add_argument("--sweep-dirs", default="sweep", help="comma list of the run's sweep output dirs, first wins")
     ap.add_argument("--variant", default="raw", help="the served voice GGUF variant (raw|orth)")
@@ -428,8 +429,9 @@ def main():
     for spec in args.combo:
         slug, stem = spec.split("=")
         report_combo(args, run, slug, stem)
-    for slug in args.verify:
-        report_verify(args, run, slug, shas)
+    for spec in args.verify:
+        slug, _, tag = spec.partition(":")
+        report_verify(args, run, slug, shas, tag or "v1")
     if args.presets:
         report_presets(args, run)
 
