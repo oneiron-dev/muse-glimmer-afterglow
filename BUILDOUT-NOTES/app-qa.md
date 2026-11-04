@@ -103,3 +103,9 @@ Thursday at 15:00", "Tick it and I learn it too", "A later night learns what you
   replacing first_words), so your first version reads "You said “The design review is on Thursday at 14:00.”".
 - Checked live on 8667 (Mira, the forked day): picking the 15:00 version moved the day to it, set 14:00 aside in
   notes.json (other_version) and saved the answer on that line; the day-2 morning offer, unanswered and answered.
+
+## 6. Raw and Continue read the shown version (PR ui/raw-turn-line, Sol QA of main #14)
+
+App.raw_turn built the prompt from every day-log record up to the turn, so after an edit it showed (and Run used)
+the discarded first wording and its answer before the replacement. It now walks loom.line_records for the line,
+as DaySession._rebuild does. Test: RawTurnTest (an edited turn's raw prompt has only the edited words).

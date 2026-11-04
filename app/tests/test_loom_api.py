@@ -656,3 +656,19 @@ class PriorDayTest(LoomApiCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RawTurnTest(LoomApiCase):
+    """Raw and Continue show the turn as the model saw it: the version of the day the chat shows, not every record."""
+
+    def test_raw_turn_reads_only_the_shown_version(self):
+        from afterglow import web
+        s, app = self.chat_two_turns()  # main: T1 (office 312), T2
+        s.client.replies += [[("remember", {"key": "office", "value": "Room 318"})], "Saved. Room 318."]
+        self.consume(self.post("/api/branch", {"at_turn": 1, "text": EDIT}, app))  # b2, turn 3
+        ns = SimpleNamespace(session=s, client=SimpleNamespace(post=lambda path, body: {"prompt": "P"}))
+        out = web.App.raw_turn(ns, 3)
+        users = [m["content"] for m in out["messages"] if m["role"] == "user"][1:]  # after the day's context message
+        self.assertEqual(users, [EDIT])
+        self.assertEqual(out["reply"], "Saved. Room 318.")
+        self.assertNotIn("Noted. Room 312.", json.dumps(out["messages"]))

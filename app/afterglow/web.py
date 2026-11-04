@@ -16,7 +16,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import dials, modelsetup, morning, paths, routes, snapshot, thoughts
+from . import dials, loom, modelsetup, morning, paths, routes, snapshot, thoughts
 from .night_checks import (abstention_gate, chat_checks, never_told_line, serving_choice, serving_rule,
                            unlinked_corrections)
 from .agent import NOTES_BACKENDS, DaySession, load_world, now_iso
@@ -496,7 +496,7 @@ class App:
         s = self.session
         turn = int(turn)
         msgs, reply = [s.system_message, s.context_message], ""
-        for rec in s._records():
+        for rec in loom.line_records(s._records(), s.branch):  # the version of the day the chat shows, as _rebuild
             if rec.get("role") == "user" and rec.get("turn", 0) <= turn:
                 msgs.append({"role": "user", "content": rec["content"]})
             elif rec.get("role") == "assistant" and rec.get("turn", 0) < turn:
