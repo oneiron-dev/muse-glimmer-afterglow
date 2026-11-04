@@ -53,3 +53,7 @@ Do not launch the helper until the owner is ready to grant permissions. See `PER
 No GUI or browser was opened, and the helper was not run. Real fn/Globe delivery, microphone capture, TCC permission prompts, screenshot/AX results, actual paste into apps, and panel interaction require the owner's manual test. No live L4 endpoint request or model call was made. Mixed-display/Retina coordinate logic is unit-tested, but actual multi-display screenshots are not verified. The bundle is ad hoc signed for local use, not notarised. macOS can require permissions again after a rebuild or move. Materialised clipboard representations are preserved, but private/lazy formats need app-specific testing.
 
 Oneiron home: Oneiron's menu-bar app (apps/macos) adopts FnCapture unchanged; dictation -> Oneironer voice; explainer -> genui.
+
+Implementation commit `3f92dcf` was pushed to `origin/afterglow/fn` before this completion marker was written.
+
+DONE
