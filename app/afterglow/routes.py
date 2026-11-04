@@ -12,7 +12,7 @@ import importlib
 import json
 import urllib.parse
 
-FEATURES = ["threads_api", "connectors", "dictation", "clipboard", "explainer", "loom_api"]
+FEATURES = ["threads_api", "history_api", "connectors", "dictation", "clipboard", "explainer", "loom_api"]
 
 
 class Request:

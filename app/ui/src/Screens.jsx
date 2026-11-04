@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { CalendarView, EmailView, Empty, NightView, TasksView } from "./Panel.jsx";
 import { Icon } from "./Sidebar.jsx";
+import { DaysView } from "./DaysView.jsx";
 import { factRows, failedWhy, getJSON, postJSON, pretty, signed } from "./lib.js";
 
 const TITLES = { memory: "Memory", nights: "Nights", calendar: "Calendar", mail: "Mail", tasks: "Tasks", files: "Files", settings: "Settings" };
@@ -9,9 +11,9 @@ const TITLES = { memory: "Memory", nights: "Nights", calendar: "Calendar", mail:
 export function Screen({ id, ctx }) {
   return (
     <main className="main screen" aria-label={TITLES[id]}>
-      <header className="bar"><div className="title"><h1>{TITLES[id]}</h1></div></header>
+      <header className="bar"><div className="title"><h1>{TITLES[id]}</h1>{id === "memory" && <MemorySeg />}</div></header>
       <div className="screen-body">
-        {id === "memory" && <MemoryScreen ctx={ctx} />}
+        {id === "memory" && <MemoryTabs ctx={ctx} />}
         {id === "nights" && <NightsScreen ctx={ctx} />}
         {id === "calendar" && <div className="col"><CalendarView ws={ctx.ws} today={ctx.state.date} /></div>}
         {id === "mail" && <div className="col"><EmailView ws={ctx.ws} /></div>}
@@ -20,6 +22,26 @@ export function Screen({ id, ctx }) {
       </div>
     </main>
   );
+}
+
+/** Memory's two views, in the screen's top bar: what your agent keeps (Notes) and the days you spent with it (Days). */
+function MemorySeg() {
+  const { section } = useSearch({ strict: false });
+  const navigate = useNavigate();
+  const tab = section === "days" ? "days" : "notes";
+  return (
+    <div className="seg bar-seg" role="tablist" aria-label="Memory">
+      {[["notes", "Notes"], ["days", "Days"]].map(([id, label]) => (
+        <button key={id} type="button" role="tab" aria-selected={tab === id} className={tab === id ? "on" : ""}
+          onClick={() => navigate({ to: "/memory", search: id === "days" ? { section: "days" } : {}, replace: true })}>{label}</button>
+      ))}
+    </div>
+  );
+}
+
+function MemoryTabs({ ctx }) {
+  const { section } = useSearch({ strict: false });
+  return section === "days" ? <div className="col days-col"><DaysView ctx={ctx} /></div> : <MemoryScreen ctx={ctx} />;
 }
 
 /** When a kept night first trained a note from day d: notes are cumulative, so the first kept night on or after d. */

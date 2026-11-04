@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from afterglow import routes, threads  # noqa: E402
+from afterglow import history_api, routes, threads  # noqa: E402
 
 
 class RoutesTest(unittest.TestCase):
@@ -59,6 +59,32 @@ class ThreadsTest(unittest.TestCase):
             threads.get("w1", 1, "../daylog")
         with self.assertRaises(ValueError):
             threads.append("w1", 1, "t9", {"role": "user", "content": "x"})
+
+
+class HistoryTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        os.environ["AFTERGLOW_RUNS"] = self.tmp.name
+        for day, date, lines in ((1, "2026-10-27", [("user", "Hello", 1), ("assistant", "Hi.", 1)]), (2, "2026-10-28", [])):
+            d = Path(self.tmp.name) / "w1" / str(day)
+            d.mkdir(parents=True)
+            (d / "session.json").write_text(json.dumps({"world": "w1", "day": day, "date": date}))
+            (d / "daylog.jsonl").write_text("".join(json.dumps({"role": r, "content": c, "turn": t, "ts": "x",
+                                                                  "messages": [{"big": True}]}) + "\n" for r, c, t in lines))
+
+    def tearDown(self):
+        os.environ.pop("AFTERGLOW_RUNS", None)
+        self.tmp.cleanup()
+
+    def test_an_earlier_day_reads_back_trimmed_and_the_summary_lists_every_day(self):
+        app = type("A", (), {"session": type("S", (), {"world": "w1", "day": 2})()})()
+        h = history_api.day_history(app, routes.Request("GET", "/api/day/history", "day=1", {}, None))
+        self.assertEqual((h["date"], [r["content"] for r in h["history"]]), ("2026-10-27", ["Hello", "Hi."]))
+        self.assertNotIn("messages", h["history"][0])
+        s = history_api.days_summary(app, routes.Request("GET", "/api/days/summary", "", {}, None))
+        self.assertEqual([(d["day"], d["turns"], d["first"]) for d in s["days"]], [(2, 0, ""), (1, 1, "Hello")])
+        with self.assertRaises(ValueError):
+            history_api.day_history(app, routes.Request("GET", "/api/day/history", "day=9", {}, None))
 
 
 if __name__ == "__main__":

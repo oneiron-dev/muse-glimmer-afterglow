@@ -663,3 +663,49 @@ body[data-hour="night"] .conn-state.on { color: oklch(78% 0.1 150); }
 /* one hairline at a time: a list's last row never draws a line where a section rule or the page ends */
 .kv div:last-child, .tools-list li:last-child { border-bottom: 0; }
 .fsec > :last-child { margin-bottom: 0; }
+
+/* ---- one thread: earlier days above today; subthread chips; the panel toggle ---- */
+.more-days { align-self: center; margin: 4px 0 8px; height: 30px; padding: 0 12px; border: 0; border-radius: 999px; background: var(--sunk); color: var(--ink-2); font-size: 13px; font-weight: 500; transition: background-color 150ms; }
+.more-days:hover { background: var(--chip); color: var(--ink); }
+.earlier { display: flex; flex-direction: column; gap: inherit; }
+.earlier .msg-u p { background: var(--sunk); color: var(--ink); }
+.night-line { align-self: center; display: inline-flex; align-items: center; gap: 8px; margin: 6px 0; padding: 6px 12px; border: 0; border-radius: 999px; background: transparent; color: var(--ink-3); font-size: 13px; transition: background-color 150ms, color 150ms; }
+.night-line:hover { background: var(--sunk); color: var(--ink-2); }
+.tchip { align-self: center; max-width: 52ch; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 8px; border: 0; border-radius: 12px; background: var(--sunk); color: var(--ink-2); font-size: 13px; text-align: left; transition: background-color 150ms; }
+.tchip:hover { background: var(--chip); }
+.tchip b { color: var(--ink); font-weight: 600; }
+.tchip span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tchip time { color: var(--ink-3); margin-left: 4px; }
+.tchip svg { flex: none; width: 18px; height: 18px; }
+.panel-toggle { position: relative; margin-left: 2px; }
+.panel-toggle.on { background: var(--chip); color: var(--ink); }
+.pt-dot { position: absolute; top: 7px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.threads { display: flex; flex-direction: column; gap: 18px; }
+.th-head { margin: 0 0 6px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.th-head .num { color: var(--ink-3); font-weight: 500; margin-left: 4px; }
+.threads ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.th-row { width: 100%; display: flex; flex-direction: column; gap: 1px; padding: 8px 10px; border: 0; border-radius: 10px; background: transparent; color: var(--ink); text-align: left; transition: background-color 150ms; }
+.th-row:hover, .threads li.on .th-row { background: var(--sunk); }
+.th-row b { font-weight: 600; font-size: 14px; }
+.th-row span { font-size: 12.5px; color: var(--ink-3); }
+.th-body { padding: 6px 10px 10px; display: flex; flex-direction: column; gap: 6px; animation: fade-in 160ms var(--ease-out); }
+.th-rec { margin: 0; font-size: 14px; color: var(--ink-2); text-wrap: pretty; }
+.th-rec.th-user { color: var(--ink); }
+.bar-seg { margin: 0 0 0 10px; align-self: center; }
+.bar-seg button { height: 26px; padding: 0 10px; font-size: 13px; }
+.days-col { padding-top: 12px; }
+.days-list { list-style: none; margin: 0; padding: 0; }
+.day-item { width: 100%; display: grid; grid-template-columns: 110px 1fr auto auto; gap: 14px; align-items: center; padding: 12px 10px; border: 0; border-top: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left; transition: background-color 150ms; }
+.days-list li:first-child .day-item { border-top: 0; }
+.day-item:hover { background: var(--sunk); border-radius: 10px; }
+.day-when { display: flex; flex-direction: column; }
+.day-when b { font-weight: 600; font-size: 14px; }
+.day-when span { font-size: 12px; color: var(--ink-3); }
+.day-first { min-width: 0; font-size: 14px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.day-meta { font-size: 12.5px; color: var(--ink-3); white-space: nowrap; }
+.day-night { display: inline-flex; align-items: center; gap: 6px; min-width: 96px; font-size: 12.5px; color: var(--ink-3); }
+.dayview { display: flex; flex-direction: column; gap: 10px; }
+.back-link { align-self: flex-start; }
+.dayview-thread { padding: 0; }
+.th-rec p { margin: 0; }
+.th-heard { margin-top: 2px !important; font-size: 12.5px; color: var(--ink-3); }

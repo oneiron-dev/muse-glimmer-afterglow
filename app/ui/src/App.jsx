@@ -8,6 +8,17 @@ import { Mark, Sidebar } from "./Sidebar.jsx";
 import { Screen } from "./Screens.jsx";
 import { NightControl, SettingsScreen } from "./Settings.jsx";
 import { cue } from "./sound.js";
+
+/** The bar's button for the right-hand panel (Threads first): opens and closes it. */
+function PanelToggle({ open, onToggle, count }) {
+  return (
+    <button type="button" className={`sky-btn panel-toggle${open ? " on" : ""}`} aria-pressed={open} onClick={onToggle}
+      aria-label={open ? "Close the side panel" : "Open the side panel: threads, calendar, tasks, mail"} title={open ? "Close the side panel" : "Threads and more"}>
+      <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2.5" y="3.5" width="15" height="13" rx="2.5" /><path d="M12.5 3.5v13" /></svg>
+      {count > 0 && !open && <span className="pt-dot" aria-hidden="true" />}
+    </button>
+  );
+}
 import { useVoices } from "./Voice.jsx";
 
 const STEP_MS = 950;
@@ -37,12 +48,15 @@ export default function App() {
   const [voices, setVoices] = useVoices();
   const [allNights, setAllNights] = useState(null); // every night up to today, for the day list and Nights
   const [schedule, setSchedule] = useState(null); // when the night starts: {ends_at: "HH:MM", auto}
+  const [earlier, setEarlier] = useState([]); // earlier days in the one thread, oldest first: {day, date, history}
+  const [threads, setThreads] = useState([]); // today's subthreads (dictations, explainers, computer use)
 
   const load = useCallback(async () => {
     try {
       const [s, r, d, w] = await Promise.all([getJSON("/api/state"), getJSON("/api/report"), getJSON("/api/days"), getJSON("/api/workspace")]);
       setState(s); setReport(r); setDays(d); setWs(w); setError(null);
       getJSON("/api/schedule").then(setSchedule).catch(() => {});
+      getJSON("/api/threads").then((t) => setThreads(t.threads || [])).catch(() => {});
       return s;
     } catch {
       setError("Afterglow’s server does not answer. Start it, then reload.");
@@ -120,6 +134,19 @@ export default function App() {
     await load();
   }
 
+  const dayNow = state && state.day;
+  useEffect(() => { setEarlier([]); if (state && state.day > 1) loadEarlier(state.day - 1); }, [state && state.world, dayNow]);
+  async function loadEarlier(day) {
+    if (day < 1) return;
+    const h = await getJSON(`/api/day/history?day=${day}`).catch(() => null);
+    if (h && h.history) setEarlier((e) => (e.some((x) => x.day === h.day) ? e : [h, ...e]));
+  }
+  // subthreads come from outside the app too (the fn helper), so the list refreshes while the window is open
+  useEffect(() => {
+    const t = setInterval(() => { if (!document.hidden) getJSON("/api/threads").then((x) => setThreads(x.threads || [])).catch(() => {}); }, 15_000);
+    return () => clearInterval(t);
+  }, []);
+
   const worldNow = state && state.world;
   const todayNow = state ? Math.max(Number(localStorage.getItem(`afterglow-today:${state.world}`)) || 0, state.day) : 0;
   useEffect(() => {
@@ -179,9 +206,13 @@ export default function App() {
                 <span className="num">{longDate(state.date)}</span>
               </div>
               {!sealed && <NightControl schedule={schedule} setSchedule={setSchedule} onEndDay={endDay} disabled={!canEndDay} phase={after && after.phase === "morning" ? "morning" : after ? "night" : null} />}
+              <PanelToggle open={!!panel} onToggle={() => (panel ? closePanel() : openPanel("threads"))} count={threads.length} />
             </header>
             <Thread state={state} report={report} live={live} after={after} nextDay={nextDay} sealed={sealed}
-              onGoToday={() => openDay(state.world, today)} onOpenPanel={openPanel} onOpenDay={(d) => openDay(state.world, d)} />
+              onGoToday={() => openDay(state.world, today)} onOpenPanel={openPanel} onOpenDay={(d) => openDay(state.world, d)}
+              earlier={sealed ? [] : earlier} nights={nights} threads={sealed ? [] : threads}
+              onMoreEarlier={!sealed && earlier.length && earlier[0].day > 1 ? () => loadEarlier(earlier[0].day - 1) : null}
+              moreLabel={earlier.length ? `Show day ${earlier[0].day - 1}` : ""} />
             {error && <p className="error-line" role="alert">{error}</p>}
             <Composer dropRef={mainRef} voices={voices} onVoice={setVoices} busy={!!live && !live.done} sealed={sealed} night={after && after.phase !== "morning"} onSend={send} />
           </main>

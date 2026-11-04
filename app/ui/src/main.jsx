@@ -4,7 +4,7 @@ import { createRootRoute, createRoute, createRouter, RouterProvider } from "@tan
 import App from "./App.jsx";
 import "./styles.css";
 
-const PANELS = ["calendar", "tasks", "email", "web", "memory", "night", "raw"];
+const PANELS = ["threads", "calendar", "tasks", "email", "web", "memory", "night", "raw"];
 
 const rootRoute = createRootRoute();
 // One app shell; each screen is a route. The chat's side panel is in the URL (?panel=memory).

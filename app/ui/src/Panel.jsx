@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { CHECKS, MINUS, factRows, failedWhy, getJSON, longDate, nf, pretty, shortDate, signed } from "./lib.js";
 import { Glyph } from "./Thread.jsx";
+import { ThreadsView } from "./ThreadsView.jsx";
 
 const TABS = [
+  { id: "threads", label: "Threads" },
   { id: "calendar", label: "Calendar" },
   { id: "tasks", label: "Tasks" },
   { id: "email", label: "Email" },
@@ -17,7 +19,7 @@ export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) 
     document.addEventListener("keydown", esc);
     return () => document.removeEventListener("keydown", esc);
   }, [onClose]);
-  const tabs = tab === "web" ? [...TABS.slice(0, 3), { id: "web", label: "Web" }, ...TABS.slice(3)]
+  const tabs = tab === "web" ? [...TABS.slice(0, 4), { id: "web", label: "Web" }, ...TABS.slice(4)]
     : tab === "raw" ? [...TABS, { id: "raw", label: "Raw" }] : TABS;
   return (
     <aside className="well panel-well" aria-label="Side panel">
@@ -32,6 +34,7 @@ export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) 
         </button>
       </header>
       <div className="pbody">
+        {tab === "threads" && <ThreadsView focus={focus} />}
         {tab === "calendar" && <CalendarView ws={ws} focus={focus} today={state.date} />}
         {tab === "tasks" && <TasksView ws={ws} focus={focus} />}
         {tab === "email" && <EmailView ws={ws} focus={focus} />}

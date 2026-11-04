@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CHECKS, MINUS, failedKeys, failedWhy, learnedExamples, longDate, nf, shortDate, signed } from "./lib.js";
 
 /** The one conversation: the morning's card, the day's messages, then the night and the next morning. */
-export function Thread({ state, report, live, after, nextDay, sealed, onGoToday, onOpenPanel, onOpenDay }) {
+export function Thread({ state, report, live, after, nextDay, sealed, onGoToday, onOpenPanel, onOpenDay, earlier = [], nights = [], threads = [], onMoreEarlier, moreLabel }) {
   const scroller = useRef(null);
   const stick = useRef(true);
   const turns = state.history || [];
@@ -13,6 +13,8 @@ export function Thread({ state, report, live, after, nextDay, sealed, onGoToday,
   return (
     <div className="scroll" ref={scroller} onScroll={onScroll}>
       <div className="thread" aria-live="polite">
+        {onMoreEarlier && <button type="button" className="more-days" onClick={onMoreEarlier}>{moreLabel}</button>}
+        {earlier.map((d) => <EarlierDay key={d.day} d={d} night={nights.find((n) => n.day === d.day)} onOpenPanel={onOpenPanel} />)}
         {report && !report.missing && (
           <>
             <p className="divider">Morning, day {state.day}</p>
@@ -28,8 +30,9 @@ export function Thread({ state, report, live, after, nextDay, sealed, onGoToday,
         )}
         <p className="divider">{longDate(state.date) || `Day ${state.day}`}</p>
         {turns.length === 0 && !live && <p className="empty">A new day. Tell your agent what you are working on, who with, and what changed.</p>}
-        {turns.map((t, i) => (t.role === "user" ? <UserMsg key={i} text={t.attachments ? t.typed : t.content} files={t.attachments} ts={t.ts} turn={t.turn} onOpenPanel={onOpenPanel} />
-          : t.role === "assistant" ? <Reply key={i} rec={t} text={t.content} tools={t.tool_calls} error={t.error} onOpenPanel={onOpenPanel} /> : null))}
+        {withThreads(turns, threads).map((t, i) => (t.thread ? <ThreadChip key={`t-${t.thread.id}`} t={t.thread} onOpen={() => onOpenPanel("threads", t.thread.id)} />
+          : t.role === "user" ? <UserMsg key={i} text={t.attachments ? t.typed : t.content} files={t.attachments} ts={t.ts} turn={t.turn} onOpenPanel={onOpenPanel} />
+            : t.role === "assistant" ? <Reply key={i} rec={t} text={t.content} tools={t.tool_calls} error={t.error} onOpenPanel={onOpenPanel} /> : null))}
         {live && (
           <>
             <UserMsg text={live.user} files={live.files} fresh />
@@ -42,6 +45,44 @@ export function Thread({ state, report, live, after, nextDay, sealed, onGoToday,
   );
 }
 
+/** Subthreads (a dictation, an explainer, a computer-use run) placed among the day's messages by time, as one-line chips. */
+function withThreads(turns, threads) {
+  if (!threads.length) return turns;
+  const items = [...turns.map((t, i) => ({ ...t, _k: t.ts || "", _i: i })), ...threads.map((th, j) => ({ thread: th, _k: th.ts || "", _i: turns.length + j }))];
+  return items.sort((a, b) => (a._k && b._k && a._k !== b._k ? (a._k < b._k ? -1 : 1) : a._i - b._i));
+}
+
+const THREAD_KIND = { dictation: "Dictation", explain: "Explained", computer: "Computer use", note: "Note" };
+
+function ThreadChip({ t, onOpen }) {
+  const where = t.meta && t.meta.app_name ? ` in ${t.meta.app_name}` : "";
+  return (
+    <button type="button" className={`tchip tchip-${t.kind}`} onClick={onOpen}>
+      <Glyph kind={t.kind === "explain" ? "web" : t.kind === "dictation" ? "memory" : "tasks"} />
+      <span><b>{THREAD_KIND[t.kind] || "Thread"}{where}</b> {t.title}</span>
+      <time className="num">{hhmm(t.ts)}</time>
+    </button>
+  );
+}
+
+/** An earlier day in the one thread: its date, its messages (read only), and what its night did. */
+function EarlierDay({ d, night, onOpenPanel }) {
+  return (
+    <section className="earlier" aria-label={`Day ${d.day}`}>
+      <p className="divider">{longDate(d.date) || `Day ${d.day}`}</p>
+      {d.history.length === 0 && <p className="empty">Nothing was said this day.</p>}
+      {d.history.map((t, i) => (t.role === "user" ? <UserMsg key={i} text={t.attachments ? t.typed : t.content} files={t.attachments} ts={t.ts} readOnly />
+        : t.role === "assistant" ? <Reply key={i} rec={t} text={t.content} tools={t.tool_calls} error={t.error} onOpenPanel={onOpenPanel} readOnly /> : null))}
+      {night && night.decision && (
+        <button type="button" className={`night-line is-${night.decision === "keep" ? "keep" : "rollback"}`} onClick={() => onOpenPanel("night", night.day)}>
+          <i className={`nmark is-${night.decision === "keep" ? "keep" : "rollback"}`} aria-hidden="true" />
+          {night.decision === "keep" ? `That night your agent learned day ${night.day} and kept it.` : `That night your agent tried to learn day ${night.day} and rolled it back.`}
+        </button>
+      )}
+    </section>
+  );
+}
+
 // The model's own template tokens in a reply: it printed a tool call instead of making it.
 const GARBLED = /<\|(start|message|channel|end)\|>|<atem:/;
 const hhmm = (ts) => (ts ? ts.slice(11, 16) : "");
@@ -51,7 +92,7 @@ function Copy({ text }) {
   return <button type="button" className="act" onClick={async () => { await navigator.clipboard.writeText(text || ""); setDone(true); setTimeout(() => setDone(false), 1400); }}>{done ? "Copied" : "Copy"}</button>;
 }
 
-function UserMsg({ text, files, ts, turn, onOpenPanel, fresh }) {
+function UserMsg({ text, files, ts, turn, onOpenPanel, fresh, readOnly }) {
   return (
     <div className={`msg msg-u${fresh ? " fresh" : ""}`}>
       {files && files.length > 0 && (
@@ -64,14 +105,14 @@ function UserMsg({ text, files, ts, turn, onOpenPanel, fresh }) {
         {ts && <time className="num">{hhmm(ts)}</time>}
         {turn != null && <>
           <Copy text={text} />
-          <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn, mode: "reply" })} title="Edit this message in the raw view and run it; nothing is saved">Edit</button>
+          {!readOnly && turn != null && <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn, mode: "reply" })} title="Edit this message in the raw view and run it; nothing is saved">Edit</button>}
         </>}
       </div>
     </div>
   );
 }
 
-function Reply({ rec, text, tools, error, thinking, onOpenPanel }) {
+function Reply({ rec, text, tools, error, thinking, onOpenPanel, readOnly }) {
   const [open, setOpen] = useState(false);
   const cards = (tools || []).map(toolCard).filter(Boolean);
   const reasoning = rec ? (rec.messages || []).map((m) => m.reasoning_content).filter(Boolean).join("\n\n") : "";
@@ -98,8 +139,8 @@ function Reply({ rec, text, tools, error, thinking, onOpenPanel }) {
           <time className="num">{hhmm(rec.ts)}</time>
           <Copy text={text} />
           <button type="button" className="act" aria-expanded={open} onClick={() => setOpen(!open)}>Details</button>
-          <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn: rec.turn, mode: "reply" })} title="The prompt as the model saw it, editable">Raw</button>
-          <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn: rec.turn, mode: "continue" })} title="Edit the start of this reply and let the model continue it">Continue</button>
+          {!readOnly && <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn: rec.turn, mode: "reply" })} title="The prompt as the model saw it, editable">Raw</button>}
+          {!readOnly && <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn: rec.turn, mode: "continue" })} title="Edit the start of this reply and let the model continue it">Continue</button>}
         </div>
       )}
       {rec && open && (
@@ -259,4 +300,4 @@ function Night({ after, state, nextDay, onOpenDay, onOpenPanel }) {
   );
 }
 
-export { CHECKS };
+export { CHECKS, EarlierDay };

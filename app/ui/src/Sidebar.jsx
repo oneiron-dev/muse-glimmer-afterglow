@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "./Header.jsx";
-import { shortDate } from "./lib.js";
 import { Onboarding } from "./Onboarding.jsx";
 import { SettingsNav, sectionOf } from "./Settings.jsx";
 import { useSearch } from "@tanstack/react-router";
@@ -49,21 +48,13 @@ export function Mark({ size = 24 }) {
 
 const initials = (name) => (name || "").split(" ").map((w) => w[0]).join("").slice(0, 2);
 
-/** The sidebar: the app icon and your profile, the screens, your days under Chat, and settings.
+/** The sidebar: the app icon and your profile, the screens, and settings (earlier days live in Memory, Days).
  Its ground is the painted sky of the hour. Folds to icons (⌘\). */
 export function Sidebar({ ctx, screen, folded, onFold, newNotes }) {
   const { state, days, nights, openDay, go, mode, setSky, hour, today } = ctx;
   const { section } = useSearch({ strict: false });
   const inSettings = screen === "settings";
   const people = (days && days.people) || [];
-  const me = people.find((p) => p.world === state.world);
-  const byNight = Object.fromEntries((nights || []).map((n) => [n.day, n]));
-  const myDays = me ? me.days.filter((d) => d <= (today || state.day)).reverse() : [];
-  const dayDate = (d) => {
-    const t = new Date(`${state.date}T12:00:00`);
-    t.setDate(t.getDate() + (d - state.day));
-    return t.toISOString().slice(0, 10);
-  };
   return (
     <nav className="side" aria-label="Afterglow">
       <div className="side-sky" aria-hidden="true">
@@ -84,25 +75,6 @@ export function Sidebar({ ctx, screen, folded, onFold, newNotes }) {
                 <span className="side-name">{n.label}</span>
                 {n.id === "memory" && newNotes > 0 && <span className="badge num">+{newNotes}</span>}
               </button>
-              {n.id === "chat" && !folded && myDays.length > 0 && (
-                <ul className="side-list days">
-                  {myDays.map((d) => {
-                    const cur = d === state.day;
-                    const isToday = d === (today || state.day);
-                    const nt = byNight[d];
-                    const mark = nt && nt.decision ? (nt.decision === "keep" ? "keep" : "rollback") : null;
-                    return (
-                      <li key={d}>
-                        <button type="button" className={`side-row day-row${cur && screen === "chat" ? " on-soft" : ""}`} aria-current={cur ? "date" : undefined}
-                          onClick={() => { go("chat"); if (!cur) openDay(state.world, d); }}>
-                          <span className="side-name">{isToday ? "Today" : shortDate(dayDate(d))}</span>
-                          {mark && <i className={`nmark is-${mark}${nt.served ? " is-served" : ""}`} title={`That night: ${mark === "keep" ? "kept" : "rolled back"}${nt.served ? ", in use now" : ""}`} />}
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
             </li>
           ))}
         </ul>
