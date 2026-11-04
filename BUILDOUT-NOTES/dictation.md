@@ -61,3 +61,5 @@ Oneiron home: dictation -> Oneironer voice.
 - No browser or GUI was opened. Live microphone permissions, hardware Right Option behavior, and visual layout are not verified.
 - whisper-server transport and L6 explainer integration are mocked in tests, not live-checked. L5 helper capture/paste remains its lane's responsibility.
 - Frontend build succeeds with the existing unresolved Newsreader/HankenGrotesk font warnings. No font files were changed.
+
+DONE
