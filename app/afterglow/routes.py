@@ -1,9 +1,10 @@
 """Feature modules add HTTP routes here, so a feature never edits web.py.
 
 A feature module in this package exposes ROUTES = {("GET" | "POST", "/api/..."): handler}. A handler is
-handler(app, req) -> a dict (sent as JSON, 200), a (dict, status) pair, or Stream(events) (sent as server-sent events,
-one JSON object per event, like /api/chat). `app` is the running web.App (its .session is the open day); `req` is a
-Request. A path that ends in "/*" matches every path under it (req.rest holds the remainder).
+handler(app, req) -> a dict (sent as JSON, 200), a (dict, status) pair, Stream(events) (sent as server-sent events,
+one JSON object per event, like /api/chat), or Raw(body, content_type) (sent as raw bytes). `app` is the running
+web.App (its .session is the open day); `req` is a Request. A path that ends in "/*" matches every path under it
+(req.rest holds the remainder).
 Raise ValueError for a bad request (400) and RuntimeError for a refused one (409); anything else is a 500.
 
 Modules are listed in FEATURES and imported when present, so a feature branch adds its module and one name here.
@@ -14,7 +15,8 @@ import traceback
 import urllib.parse
 
 FAILED = {}  # feature name -> why it did not load (shown in the server log)
-FEATURES = ["threads_api", "history_api", "connectors", "dictation", "clipboard", "explainer", "loom_api"]
+FEATURES = ["threads_api", "history_api", "connectors", "dictation", "clipboard", "explainer", "loom_api",
+            "files_api"]
 
 
 class Request:
@@ -31,6 +33,13 @@ class Stream:
 
     def __init__(self, events, lock=False):
         self.events, self.lock = events, lock
+
+
+class Raw:
+    """Raw bytes with an explicit content type (a file preview)."""
+
+    def __init__(self, body, content_type):
+        self.body, self.content_type = body, content_type
 
 
 _table = None
