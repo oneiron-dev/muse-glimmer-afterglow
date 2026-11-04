@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useRouterState, useSearch } from "@tanstack/react-router";
-import { chatStream, getJSON, longDate, postJSON, resolveHour } from "./lib.js";
+import { chatStream, getJSON, longDate, postJSON, resolveHour, setAttachmentScope } from "./lib.js";
 import { Thread } from "./Thread.jsx";
 import { Panel } from "./Panel.jsx";
 import { Composer } from "./Composer.jsx";
@@ -101,7 +101,7 @@ export default function App() {
     setLive({ ...turn });
     let logged = false, failure = null;
     try {
-      for await (const ev of chatStream(text, files.map((f) => f.id))) {
+      for await (const ev of chatStream(text, files.map((f) => f.id), { world: state.world, day: state.day })) {
         if (ev.type === "tool_result") turn.tools = [...turn.tools, { name: ev.name, arguments: ev.arguments, result: ev.result }];
         else if (ev.type === "content") { turn.text += ev.text; turn.thinking = false; }
         else if (ev.type === "note") setNewNotes((n) => n + 1);
@@ -187,6 +187,7 @@ export default function App() {
 
   if (error && !state) return <div className="boot"><p>{error}</p></div>;
   if (!state) return <div className="boot"><Mark size={44} /><p>Opening Afterglow…</p></div>;
+  setAttachmentScope(state.world, state.day); // before the message box mounts and takes queued files (idempotent)
 
   const nextDay = days && days.people.find((p) => p.world === state.world)?.days.includes(state.day + 1) ? state.day + 1 : null;
   // Today is the latest day you reached for this profile; an earlier day you open is sealed (its night has run).
@@ -210,7 +211,7 @@ export default function App() {
             <NightControl schedule={schedule} setSchedule={setSchedule} onEndDay={endDay} disabled={!canEndDay} /></header>
           <div className="greet">
             <h2>{greeting()}, {(state.persona || "").split(" ")[0] || "there"}.</h2>
-            <Composer dropRef={mainRef} voices={voices} onVoice={setVoices} busy={false} onSend={send} placeholder="Tell your agent about your work" />
+            <Composer key={`${state.world}/${state.day}`} dropRef={mainRef} voices={voices} onVoice={setVoices} busy={false} onSend={send} placeholder="Tell your agent about your work" />
             {error && <p className="error-line" role="alert">{error}</p>}
             <div className="hints">
               {["Here is what I am working on this week…", "The people I work with most are…", "Where I work, and how I get there…"].map((h) => (
@@ -238,7 +239,7 @@ export default function App() {
               lp={{ loom, disabled: !!(live && !live.done), onLive: (t) => setLive(t ? { ...t } : null), onNote: () => setNewNotes((n) => n + 1),
                 onReload: async () => { const [s, l] = await Promise.all([getJSON("/api/state"), getJSON("/api/loom").catch(() => null)]); setState(s); setLoom(l); } }} />
             {error && <p className="error-line" role="alert">{error}</p>}
-            <Composer dropRef={mainRef} voices={voices} onVoice={setVoices} busy={!!live && !live.done} sealed={sealed} night={after && after.phase !== "morning"} onSend={send} />
+            <Composer key={`${state.world}/${state.day}`} dropRef={mainRef} voices={voices} onVoice={setVoices} busy={!!live && !live.done} sealed={sealed} night={after && after.phase !== "morning"} onSend={send} />
           </main>
           {panel && <Panel tab={panel} focus={focus} state={state} report={report} ws={ws} onTab={(t) => openPanel(t)} onClose={closePanel} />}
         </>
