@@ -743,7 +743,8 @@ class LiveWatcherTest(ClipBase):
             # Called after the final revalidation, so the write below it
             # cannot abort: once this fires, stop()+join guarantees the row.
             f = real_file(session)
-            committed.set()
+            if session is app.session:  # a watcher left by another test may call the patched _file too
+                committed.set()
             return f
 
         clip = clipboard.Clipboard(app, reader=reader, keychain=FakeKeychain(),
