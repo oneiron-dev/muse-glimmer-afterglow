@@ -21,8 +21,10 @@ from pathlib import Path
 
 from . import paths
 from .dials import accepted_dials
+from .files_store import FileStore
 from .llm import GlimmerClient, GlimmerError, world_adapter_choice
 from .notes import LocalJsonNotes
+from . import loom
 from .tools import TOOL_SCHEMAS, ToolBox, WorldState
 from .web_search import SEARCH_WEB_SCHEMA, web_search_setting
 from .web_search import connector as search_connector
@@ -102,8 +104,12 @@ def now_iso():
 
 
 def load_world(world):
-    p = paths.worlds_root() / world / "world.json"
-    return json.loads(p.read_text()) if p.exists() else {"world": world}
+    """The world's document: a synthetic world from worlds/, else a profile made in the app (runs/_profiles)."""
+    for root in (paths.worlds_root(), paths.runs_root() / "_profiles"):
+        p = root / world / "world.json"
+        if p.exists():
+            return json.loads(p.read_text())
+    return {"world": world}
 
 
 def previous_day_dir(world, day):
@@ -204,7 +210,7 @@ class DaySession:
                              decide_supersede=self._supersede_decider(decide_adapter) if on else None,
                              decide_route=self._route_decider(route_adapter) if route_on else None,
                              web_search=search_connector(search) if self.web_search_on else None,
-                             web_cap=search.get("cap"))
+                             web_cap=search.get("cap"), files=FileStore(self.world))
         self.daylog_path = self.dir / "daylog.jsonl"
         if self.night_links and not any(r.get("role") == "night_links" for r in self._records()):
             # once a day, before the first turn: which of the night's links today's notes took, and its proposals
@@ -323,15 +329,53 @@ class DaySession:
         return [self.system_message]
 
     def _replay(self):
-        if not self.daylog_path.exists():
-            return
-        for line in self.daylog_path.read_text().splitlines():
-            rec = json.loads(line)
+        """The conversation the model sees: the day's line of the loom (every turn, for a day with no branches)."""
+        records = self._records()
+        self.branch = loom.current_line(records)
+        self.turn = max([r.get("turn", 0) for r in records if r.get("role") == "user"] + [self.turn])
+        self._rebuild(records)
+
+    def _rebuild(self, records, before_turn=None):
+        self.messages = [self.system_message, self.context_message]
+        for rec in loom.line_records(records, self.branch):
+            if before_turn is not None and rec.get("turn", 0) >= before_turn and loom.branch_of(rec) != self.branch:
+                continue
             if rec["role"] == "user":
                 self.messages.append({"role": "user", "content": rec["content"]})
-                self.turn = max(self.turn, rec["turn"])
             elif rec["role"] == "assistant":
                 self.messages.extend(rec.get("messages") or [])
+
+    # --- the loom: edit or ask again on a branch; the night trains on the day's line ---
+    def fork(self, at_turn):
+        """Start a branch that replaces user turn `at_turn` of the current line (and what followed it). The next
+        run_turn is its first message. Returns the branch id."""
+        records = self._records()
+        line = loom.line_records(records, self.branch)
+        target = next((r for r in line if r.get("role") == "user" and r.get("turn") == int(at_turn)), None)
+        if target is None:
+            raise ValueError(f"no user turn {at_turn} on the current line")
+        name = f"b{len(loom.forks(records)) + 2}"
+        self._log({"ts": now_iso(), "turn": int(at_turn), "role": "fork", "branch": name,
+                   "parent": loom.branch_of(target), "at_turn": int(at_turn)})
+        self.branch = name
+        self._rebuild(self._records())
+        return name
+
+    def switch(self, branch):
+        """Make another branch the day's line (what the agent continues from, and what the night trains on)."""
+        records = self._records()
+        if branch != loom.MAIN and branch not in loom.forks(records):
+            raise ValueError(f"no branch {branch}")
+        self._log({"ts": now_iso(), "turn": self.turn, "role": "line", "branch": branch})
+        self.branch = branch
+        self._rebuild(self._records())
+        return branch
+
+    def loom_state(self):
+        records = self._records()
+        fk = loom.forks(records)
+        return {"line": self.branch, "branches": [loom.MAIN] + list(fk), "forks": fk,
+                "alternatives": loom.alternatives(records, self.branch)}
 
     def _log(self, rec):
         with open(self.daylog_path, "a", encoding="utf-8") as f:
@@ -344,8 +388,8 @@ class DaySession:
         return [json.loads(line) for line in self.daylog_path.read_text().splitlines() if line.strip()]
 
     def history(self):
-        """User-visible turns for the UI, rebuilt from the day log (the night-links records are not turns)."""
-        return [r for r in self._records() if r.get("role") in ("user", "assistant")]
+        """User-visible turns for the UI: the day's line of the loom, rebuilt from the day log."""
+        return loom.line_records(self._records(), self.branch)
 
     # --- one turn ---
     def run_turn(self, text, source="user", extra=None):
@@ -354,6 +398,8 @@ class DaySession:
         self.turn += 1
         turn = self.turn
         user_rec = {"ts": now_iso(), "turn": turn, "role": "user", "content": text, "source": source, **(extra or {})}
+        if self.branch != loom.MAIN:
+            user_rec["branch"] = self.branch
         self._log(user_rec)
         self.messages.append({"role": "user", "content": text})
         new_msgs, tool_calls, notes_written, rounds = [], [], [], []
@@ -446,6 +492,8 @@ class DaySession:
                "tool_calls": tool_calls, "notes_written": notes_written, "rounds": rounds,
                "ttft_s": first.get("ttft_s"), "total_s": round(time.time() - t0, 3),
                "tok_s": last_t.get("predicted_per_second"), "answer_channel_retry": retry, "error": error}
+        if self.branch != loom.MAIN:
+            rec["branch"] = self.branch
         if len(self.tools.decisions) > n_decisions:  # the one-pass supersede decisions of this turn, with p and ms
             rec["supersede_decisions"] = self.tools.decisions[n_decisions:]
         if self.client.dials:  # the control vectors every request of this turn carried

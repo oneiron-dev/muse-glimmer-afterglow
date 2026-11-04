@@ -60,6 +60,17 @@ class GlimmerClient:
         self._adapters = (0.0, [])
         # accepted steering dials (dials.py): [{"id", "axis", "toward", "scale", "night"}]; [] sends none
         self.dials = []
+        # "llama.cpp" (llama-server: slots, per-request adapters, the template endpoints) or "openai" (any other
+        # OpenAI-compatible server, e.g. LM Studio or Ollama: chat only, so no adapter scales and no slot fields)
+        self.kind = "llama.cpp"
+        self.model_id = None  # the model name an "openai" server is asked for (ALIAS on llama.cpp)
+
+    def use_server(self, endpoint, kind="llama.cpp", model_id=None):
+        """Point this client at another server (Settings -> Model); the adapter cache starts over."""
+        self.endpoint = endpoint.rstrip("/")
+        self.kind = "llama.cpp" if kind == "llama.cpp" else "openai"
+        self.model_id = model_id
+        self._adapters = (0.0, [])
 
     # --- plain HTTP ---
     def get(self, path, timeout=10):
@@ -77,13 +88,18 @@ class GlimmerClient:
 
     def health(self):
         try:
+            if self.kind != "llama.cpp":
+                return bool(self.get("/v1/models", timeout=5).get("data"))
             return self.get("/health", timeout=5).get("status") == "ok"
         except (OSError, ValueError):
             return False
 
     def adapters(self, max_age_s=10):
         """Loaded LoRA adapters: [{"id", "path", "scale"}]; [] when none. Cached briefly; a failed request raises
-        (a failure is never taken for "no adapters", which would send requests without their scales)."""
+        (a failure is never taken for "no adapters", which would send requests without their scales). A server that is
+        not llama.cpp loads no adapters, so it has none."""
+        if self.kind != "llama.cpp":
+            return []
         if time.time() - self._adapters[0] > max_age_s:
             try:
                 self._adapters = (time.time(), self.get("/lora-adapters"))
@@ -143,6 +159,10 @@ class GlimmerClient:
             body["n_predict"] = n_predict
             body["max_tokens"] = n_predict
         body.update(self.scale_fields())
+        if self.kind != "llama.cpp":  # chat only: the model's name, and none of llama-server's own fields
+            body["model"] = self.model_id or ALIAS
+            for k in ("id_slot", "cache_prompt", "chat_template_kwargs", "n_predict"):
+                body.pop(k, None)
         return body
 
     # --- streaming chat ---
@@ -225,7 +245,10 @@ class GlimmerClient:
     def answer_channel(self, messages, tools=None, *, reasoning="low", max_tokens=320, temperature=0.3, why=None):
         """A final answer when Glimmer ended its turn with an empty reply (an adapter can close the turn inside
         the reasoning channel): render the same conversation with the chat template, open the answer channel and
-        complete there, on the same slot with the same per-request scales. The caller counts every use."""
+        complete there, on the same slot with the same per-request scales. The caller counts every use. Needs
+        llama-server's template endpoints."""
+        if self.kind != "llama.cpp":
+            raise GlimmerError("the answer channel retry needs a llama.cpp server")
         body = {"messages": messages, "chat_template_kwargs": {"reasoning_strength": reasoning}}
         if tools:
             body["tools"] = tools

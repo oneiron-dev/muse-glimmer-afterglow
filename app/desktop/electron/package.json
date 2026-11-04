@@ -1,0 +1,17 @@
+{
+  "name": "afterglow-desktop",
+  "productName": "Afterglow",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A native window for your local Afterglow agent",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "icon": "bash scripts/icon.sh",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "electron": "45.2.2"
+  },
+  "trustedDependencies": ["electron"]
+}
