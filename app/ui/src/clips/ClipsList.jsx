@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getJSON, postJSON } from "../lib.js";
+import { getJSON, postJSON, queueAttachment } from "../lib.js";
 import { Empty } from "../Panel.jsx";
 import { cue } from "../sound.js";
 
@@ -70,6 +70,7 @@ export function ClipsList({ day, world, onAttached }) {
     setBusy(null);
     if (r.error) { fail(c.id, r.error); return; }
     clearFail(c.id);
+    queueAttachment(r.attachment);
     setAdded((m) => ({ ...m, [c.id]: true }));
     if (onAttached) onAttached();
   };

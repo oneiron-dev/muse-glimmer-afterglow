@@ -108,3 +108,11 @@ export const shortDate = (iso) => {
   const d = new Date(`${iso}T12:00:00`);
   return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
 };
+
+/* Attachments queued from other screens (Files, Copied today) for the next message. The message box takes them when
+   it mounts or when one is queued while it is open, so an attachment made on the Files screen is not lost. */
+const queuedAttachments = [];
+const queueListeners = new Set();
+export function queueAttachment(a) { if (a && a.id) { queuedAttachments.push(a); queueListeners.forEach((f) => f()); } }
+export function takeQueuedAttachments() { return queuedAttachments.splice(0); }
+export function onQueuedAttachment(f) { queueListeners.add(f); return () => queueListeners.delete(f); }

@@ -721,3 +721,28 @@ body[data-hour="night"] .conn-state.on { color: oklch(78% 0.1 150); }
 input[type="file"] { font: inherit; font-size: 13px; color: var(--ink-3); }
 input[type="file"]::file-selector-button { height: 32px; margin-right: 10px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--sunk); color: var(--ink); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background-color 150ms; }
 input[type="file"]::file-selector-button:hover { background: var(--chip); }
+
+/* Files > Your files */
+.fl { margin-bottom: 26px; }
+.fl-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.fl-head .sec { margin-bottom: 4px; }
+.col .fl-head .sec + .fl-acts { margin-bottom: 0; }
+.fl-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.fl-acts .btn { height: 32px; padding: 0 14px; font-size: 13.5px; }
+.fl-where { margin: 0 0 12px; color: var(--ink-3); font-size: 13px; }
+.fl-where a { color: var(--ink-2); }
+.fl-view .btn-quiet { background: var(--field); box-shadow: inset 0 0 0 1px var(--line); }
+.fl-view .btn-quiet:hover:not(:disabled) { background: var(--chip); }
+.fl-msg { margin: 8px 0; color: var(--ink-3); font-size: 13px; }
+.fl-msg[role="alert"] { color: var(--accent-ink); }
+.fl-list li { display: block; padding: 0; }
+.fl-row { width: 100%; display: flex; gap: 12px; align-items: center; padding: 10px 12px; border: 0; border-radius: 10px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background-color 150ms; }
+.fl-row:hover { background: var(--chip); }
+.fl-row span { display: flex; flex-direction: column; min-width: 0; }
+.fl-row b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fl-view { padding: 0 12px 12px 44px; animation: fl-in 180ms var(--ease-out); }
+.fl-text { margin: 0 0 10px; max-height: 320px; overflow: auto; padding: 12px 14px; border-radius: 8px; background: var(--field); box-shadow: inset 0 0 0 1px var(--line); font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+.fl-note { display: flex; flex-direction: column; gap: 8px; margin: 0 0 14px; }
+.fl-note textarea { height: auto; padding: 10px 12px; resize: vertical; min-height: 120px; font: inherit; line-height: 1.5; }
+@keyframes fl-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .fl-view { animation: none; } }

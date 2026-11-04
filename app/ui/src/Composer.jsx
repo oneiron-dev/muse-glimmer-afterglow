@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { PlusMenu, VoiceTag } from "./Voice.jsx";
-import { postJSON } from "./lib.js";
+import { onQueuedAttachment, postJSON, takeQueuedAttachments } from "./lib.js";
 import { MicButton } from "./dictation/MicButton.jsx";
 import { useDictation } from "./dictation/useDictation.js";
 
@@ -10,7 +10,7 @@ const MAX_BYTES = 2_000_000;
 
 /** Reads a dropped, pasted or picked file and stores its text (POST /api/attachments). */
 async function upload(file) {
-  if (SOON_EXT.test(file.name)) return { name: file.name, error: "PDF and Office files arrive with the files tool tonight; text files work now." };
+  if (SOON_EXT.test(file.name)) return { name: file.name, error: "Put PDF and Word files in your files folder, then ask about them from Files." };
   if (!(TEXT_EXT.test(file.name) || (file.type || "").startsWith("text/"))) return { name: file.name, error: "Only text files can be read for now." };
   if (file.size > MAX_BYTES) return { name: file.name, error: "Too large: up to 2 MB." };
   const r = await postJSON("/api/attachments", { name: file.name, text: await file.text() });
@@ -23,6 +23,15 @@ export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
   const [over, setOver] = useState(false);
+  /* Attachments made on the Files screen or from Copied today join this message. */
+  useEffect(() => {
+    const pull = () => {
+      const q = takeQueuedAttachments();
+      if (q.length) setFiles((x) => [...x, ...q.map((a) => ({ ...a, key: `${a.id}-${Math.random()}` }))]);
+    };
+    pull();
+    return onQueuedAttachment(pull);
+  }, []);
   const ta = useRef(null);
   const pick = useRef(null);
   const grow = () => { const t = ta.current; if (!t) return; t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight, 180) + "px"; };
