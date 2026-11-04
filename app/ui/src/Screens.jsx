@@ -4,6 +4,7 @@ import { CalendarView, EmailView, Empty, NightView, TasksView } from "./Panel.js
 import { Icon } from "./Sidebar.jsx";
 import { DaysView } from "./DaysView.jsx";
 import { factRows, failedWhy, getJSON, postJSON, pretty, signed } from "./lib.js";
+import { ClipsList } from "./clips/ClipsList.jsx";
 
 const TITLES = { memory: "Memory", nights: "Nights", calendar: "Calendar", mail: "Mail", tasks: "Tasks", files: "Files", settings: "Settings" };
 
@@ -213,6 +214,7 @@ function FilesScreen({ ctx }) {
           {drafts.map((m) => <li key={m.id}><Icon id="mail" /><span><b>{m.subject}</b><small>Mail draft to {m.to}{m.day ? `, day ${m.day}` : ""}</small></span></li>)}
         </ul>
       ) : <Empty kind="email">Nothing yet. Ask your agent to draft an email and it shows here.</Empty>}
+      <ClipsList day={ctx.state.day} world={ctx.state.world} onAttached={() => getJSON("/api/attachments").then((r) => setAtt(r.attachments || [])).catch(() => {})} />
       <h2 className="sec">Attached by you</h2>
       {att && att.length ? (
         <ul className="files">
