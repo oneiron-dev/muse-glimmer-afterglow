@@ -13,6 +13,8 @@ written per layer and divided by s, so --control-vector-scaled FILE:s adds exact
               minus the mean on those it answers, unit length x the layer's mean residual norm) and
               random-control.gguf (a seeded random direction, same norms: the control for "any push")
   bake        write <vectors>/base/voice-<slug>-v1.gguf = (s x voice + a x direction) / s for the chosen s and a
+  slice       write <vectors>/base/voice-<slug>-L<lo>-<hi>.gguf: the raw voice on layers lo..hi only (a layer missing
+              from a control-vector GGUF gets nothing), to test where along the depth the voice can be added
 """
 
 import argparse
@@ -87,6 +89,16 @@ def bake(args):
     f.write_text(json.dumps(doc, indent=1) + "\n")
 
 
+def slice_layers(args):
+    out = Path(args.vectors) / "base"
+    voice = read_cvec(out / f"voice-{args.voice}-raw.gguf")
+    lo, hi = (int(x) for x in args.layers.split(","))
+    keep = [layer for layer in sorted(voice) if lo <= layer <= hi]
+    path = out / f"voice-{args.voice}-L{lo}-{hi}.gguf"
+    write_gguf(path, {layer: voice[layer] for layer in keep}, {layer: 1.0 for layer in keep}, keep)
+    print(json.dumps({"voice": args.voice, "gguf": str(path), "sha256": sha(path), "layers": [keep[0], keep[-1]]}))
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="step", required=True)
@@ -100,8 +112,12 @@ def main():
     b.add_argument("--voice", required=True)
     b.add_argument("--scale", type=float, required=True)
     b.add_argument("--counter", type=float, required=True, help="strength of the I-don't-know direction (negative)")
+    c = sub.add_parser("slice")
+    c.add_argument("--vectors", required=True)
+    c.add_argument("--voice", required=True)
+    c.add_argument("--layers", required=True, help="lo,hi")
     args = ap.parse_args()
-    directions(args) if args.step == "directions" else bake(args)
+    {"directions": directions, "bake": bake, "slice": slice_layers}[args.step](args)
 
 
 if __name__ == "__main__":

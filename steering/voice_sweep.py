@@ -45,10 +45,19 @@ def post(endpoint, path, body, timeout=600):
         return json.loads(r.read())
 
 
-def answer_prompt(endpoint, text):
-    """The chat template with minimal reasoning, then the forced answer channel (as the app's ask and the eval)."""
+def system_with_hint(hint):
+    """The template's default system text with one extra sentence (eval/score_peft.py system_with_hint)."""
+    return f"You are a helpful AI assistant. {hint.strip()}\nKnowledge cutoff: {KNOWLEDGE_CUTOFF}.\nCurrent date: {EVAL_DATE}."
+
+
+def answer_prompt(endpoint, text, system=None):
+    """The chat template with minimal reasoning, then the forced answer channel (as the app's ask and the eval);
+    `system` adds one sentence to the default system text (a voice given as an instruction, no vector)."""
+    messages = [{"role": "user", "content": text}]
+    if system:
+        messages.insert(0, {"role": "system", "content": system_with_hint(system)})
     rendered = post(endpoint, "/apply-template", {
-        "messages": [{"role": "user", "content": text}],
+        "messages": messages,
         "chat_template_kwargs": {"reasoning_strength": "minimal", "current_date": EVAL_DATE,
                                  "knowledge_cutoff": KNOWLEDGE_CUTOFF}})["prompt"]
     return rendered.removesuffix("<|start|>assistant") + ANSWER_PREFIX
@@ -113,6 +122,8 @@ def main():
                     "in the load list); STEM names the output files, SLUG the voice folder (default STEM)")
     ap.add_argument("--dial", action="append", default=[], help="AXIS=VECTOR_ID for a served dial (presets)")
     ap.add_argument("--presets", help="voices.json: read every preset whose dials are all loaded")
+    ap.add_argument("--instruction", action="append", default=[],
+                    help="STEM=SLUG: the voice as a one-sentence instruction in the system text, no vector")
     ap.add_argument("--combos", help="JSON {stem: {\"slug\": voice folder, \"settings\": {label: [{id, scale}, ...]}}}: "
                     "arms whose settings combine several loaded vectors (a voice plus a counter-push)")
     ap.add_argument("--voices-dir", default=str(HERE / "voices"))
@@ -152,6 +163,12 @@ def main():
         axis = json.loads((Path(args.voices_dir) / c["slug"] / "axis.json").read_text())
         arms.append({"stem": stem, "kind": "combo", "prompts": axis["test_prompts"], "sweep": c["settings"],
                      "idk": c["settings"]})
+    for spec in args.instruction:
+        stem, slug = spec.split("=")
+        axis = json.loads((Path(args.voices_dir) / slug / "axis.json").read_text())
+        sentence = f"Reply in this voice: {axis['description'].strip()}"
+        arms.append({"stem": stem, "kind": "instruction", "prompts": axis["test_prompts"], "system": sentence,
+                     "sweep": {"instruction": []}, "idk": {"instruction": []}})
     if args.presets:
         dial_ids = {d.split("=")[0]: int(d.split("=")[1]) for d in args.dial}
         day_axes = {a["name"]: a for a in json.loads(Path(args.axes).read_text())["axes"]}
@@ -169,13 +186,17 @@ def main():
             settings = {"0": [], **arm["sweep"]}
             jobs = [(label, p) for label in settings for p in arm["prompts"]]
             texts = dict(zip(arm["prompts"], pool.map(lambda p: answer_prompt(ep, p), arm["prompts"])))
-            res = list(pool.map(lambda j: complete(ep, texts[j[1]], settings[j[0]], args.max_tokens), jobs))
+            sys_texts = dict(zip(arm["prompts"], pool.map(lambda p: answer_prompt(ep, p, arm["system"]), arm["prompts"]))) \
+                if arm.get("system") else texts
+            res = list(pool.map(lambda j: complete(ep, (texts if j[0] == "0" else sys_texts)[j[1]], settings[j[0]],
+                                                   args.max_tokens), jobs))
             by_scale = {}
             for (label, p), r in zip(jobs, res):
                 by_scale.setdefault(label, []).append({"prompt": p, **r})
             summary = {k: summarize(v) for k, v in by_scale.items()}
             (out / f"sweep-{arm['stem']}.json").write_text(json.dumps(
-                {"voice": arm["stem"], "kind": arm["kind"], "dials": arm.get("dials"), "settings": settings,
+                {"voice": arm["stem"], "kind": arm["kind"], "dials": arm.get("dials"), "system": arm.get("system"),
+                 "settings": settings,
                  "summary": summary, "replies": by_scale}, indent=1, ensure_ascii=False) + "\n")
             print(json.dumps({"sweep": arm["stem"], "summary": summary, "elapsed_s": round(time.time() - t0)}), flush=True)
     if "idk" in args.steps:
@@ -183,8 +204,10 @@ def main():
         gold = {q["id"]: q["answer"] for q in items}
         prompts = list(pool.map(lambda q: answer_prompt(ep, simpleqa_gate.PROMPT.format(question=q["question"])), items))
 
-        def run(cv):
-            ans = list(pool.map(lambda p: complete(ep, p, cv, simpleqa_gate.MAX_NEW_TOKENS), prompts))
+        def run(cv, system=None):
+            ps = prompts if not system else list(pool.map(
+                lambda q: answer_prompt(ep, simpleqa_gate.PROMPT.format(question=q["question"]), system), items))
+            ans = list(pool.map(lambda p: complete(ep, p, cv, simpleqa_gate.MAX_NEW_TOKENS), ps))
             return [{"id": q["id"], **a} for q, a in zip(items, ans)]
         base_rows = run([])
         base = idk_stats(base_rows, gold)
@@ -194,7 +217,7 @@ def main():
         for arm in arms:
             doc = {"voice": arm["stem"], "kind": arm["kind"], "set": SET, "base": base, "by_scale": {}}
             for label, cv in arm["idk"].items():
-                rows = run(cv)
+                rows = run(cv, arm.get("system"))
                 st = {**idk_stats(rows, gold), **flips(base_rows, rows)}
                 doc["by_scale"][label] = {**st, "control_vectors": cv, "answers": rows}
                 print(json.dumps({"idk": arm["stem"], "setting": label, **st, "elapsed_s": round(time.time() - t0)}), flush=True)
@@ -204,8 +227,10 @@ def main():
         gold = {q["id"]: q["gold"] for q in items}
         prompts = list(pool.map(lambda q: answer_prompt(ep, simpleqa_gate.PROMPT.format(question=q["question"])), items))
 
-        def run_known(cv):
-            ans = list(pool.map(lambda p: complete(ep, p, cv, simpleqa_gate.MAX_NEW_TOKENS), prompts))
+        def run_known(cv, system=None):
+            ps = prompts if not system else list(pool.map(
+                lambda q: answer_prompt(ep, simpleqa_gate.PROMPT.format(question=q["question"]), system), items))
+            ans = list(pool.map(lambda p: complete(ep, p, cv, simpleqa_gate.MAX_NEW_TOKENS), ps))
             return [{"id": q["id"], **a} for q, a in zip(items, ans)]
         base_rows = run_known([])
         base = known_stats(base_rows, gold)
@@ -217,7 +242,7 @@ def main():
                    "grading": "right = a normalised gold answer is a substring of the normalised reply", "base": base,
                    "by_scale": {}}
             for label, cv in arm["idk"].items():
-                rows = run_known(cv)
+                rows = run_known(cv, arm.get("system"))
                 st = known_stats(rows, gold)
                 st["lost"] = sum(known_right(b["answer"], gold[b["id"]]) and not known_right(r["answer"], gold[r["id"]])
                                  for b, r in zip(base_rows, rows))

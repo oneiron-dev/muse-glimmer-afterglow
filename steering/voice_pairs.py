@@ -113,7 +113,7 @@ def axis_from_reply(text, description):
             "check_labels": {"positive": f"more {pos}", "negative": f"more {neg}"}}
 
 
-def write_axis(description, teacher, out_root, slug=None, label=None):
+def write_axis(description, teacher, out_root, slug=None, label=None, temperature=0.0, seed=20261027):
     from teacher import complete
     why = refusal(description)
     if why:
@@ -123,7 +123,7 @@ def write_axis(description, teacher, out_root, slug=None, label=None):
     out_root.mkdir(parents=True, exist_ok=True)
     text, _, usage = complete(teacher, [{"role": "user", "content": PROMPT.format(
         description=description.strip(), n_pairs=N_PAIRS, n_prompts=N_PROMPTS, n_test=N_TEST)}],
-        max_tokens=2400, log_path=tmp_log, purpose="voice contrast pairs")
+        max_tokens=2400, temperature=temperature, seed=seed, log_path=tmp_log, purpose="voice contrast pairs")
     axis = axis_from_reply(text, description.strip())
     if slug:
         axis.update(slug=slug, name=f"voice-{slug}")
@@ -131,7 +131,7 @@ def write_axis(description, teacher, out_root, slug=None, label=None):
         axis["label"] = label
     vdir = out_root / axis["slug"]
     vdir.mkdir(parents=True, exist_ok=True)
-    axis["written_by"] = {"teacher": teacher, "usage": usage}
+    axis["written_by"] = {"teacher": teacher, "usage": usage, "temperature": temperature, "seed": seed}
     (vdir / "axis.json").write_text(json.dumps(axis, indent=1, ensure_ascii=False) + "\n")
     (vdir / "voice-pairs.raw.txt").write_text(text.strip() + "\n")
     tmp_log.replace(vdir / "voice-pairs.calls.jsonl")
@@ -145,8 +145,11 @@ def main():
     ap.add_argument("--label", help="the button label (default: the teacher's)")
     ap.add_argument("--teacher", default="glimmer", choices=["glimmer", "spark-sub"])
     ap.add_argument("--out", default=str(HERE / "voices"))
+    ap.add_argument("--temperature", type=float, default=0.0)
+    ap.add_argument("--seed", type=int, default=20261027, help="a second seed (with temperature > 0) writes a second "
+                    "contrast set for the same sentence: is the axis stable?")
     args = ap.parse_args()
-    axis = write_axis(args.description, args.teacher, args.out, args.slug, args.label)
+    axis = write_axis(args.description, args.teacher, args.out, args.slug, args.label, args.temperature, args.seed)
     print(json.dumps({k: axis[k] for k in ("slug", "label", "positive_label", "negative_label")} |
                      {"pairs": len(axis["adjective_pairs"]), "prompts": len(axis["prompts"]),
                       "test_prompts": len(axis["test_prompts"])}, ensure_ascii=False))
