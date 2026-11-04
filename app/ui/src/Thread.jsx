@@ -155,7 +155,7 @@ function UserMsg({ text, files, ts, turn, onOpenPanel, fresh, readOnly, lp }) {
         {ts && <time className="num">{hhmm(ts)}</time>}
         {turn != null && <>
           <Copy text={text} />
-          {!readOnly && lp && <EditMessage turn={turn} text={text} sealed={false} disabled={lp.disabled} onLive={lp.onLive} onNote={lp.onNote} onReload={lp.onReload} />}
+          {!readOnly && lp && <EditMessage turn={turn} text={text} files={files} sealed={false} disabled={lp.disabled} onLive={lp.onLive} onNote={lp.onNote} onReload={lp.onReload} />}
         </>}
         {lp && lp.loom && <BranchSwitcher alternatives={(lp.loom.versions && lp.loom.versions.messages) || lp.loom.alternatives} turn={turn} currentBranch={lp.loom.line} kind="message" onReload={lp.onReload} disabled={lp.disabled} />}
       </div>

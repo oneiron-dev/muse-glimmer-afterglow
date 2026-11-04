@@ -672,3 +672,29 @@ class RawTurnTest(LoomApiCase):
         self.assertEqual(users, [EDIT])
         self.assertEqual(out["reply"], "Saved. Room 318.")
         self.assertNotIn("Noted. Room 312.", json.dumps(out["messages"]))
+
+
+class EditKeepsFilesTest(LoomApiCase):
+    """Edit and resend, and Ask again, keep the turn's attached files: the model still reads them."""
+
+    def test_an_edited_or_asked_again_message_keeps_its_files(self):
+        from afterglow import web
+        s = self.session("Summary one.", "Summary two.", "Summary three.")
+        app = self.app(s)
+        files = SimpleNamespace(session=s, attach_lock=threading.Lock(), ATTACH_MAX_CHARS=web.App.ATTACH_MAX_CHARS)
+        app.message_with_attachments = lambda text, ids: web.App.message_with_attachments(files, text, ids)
+        att = web.App.attach(files, "report.txt", "Q3 revenue was 4.2M.")
+        content, extra = app.message_with_attachments("Summarise this.", [att["id"]])
+        list(s.run_turn(content, extra=extra))  # what /api/chat does
+        self.consume(self.post("/api/branch", {"at_turn": 1, "text": "Summarise it in one line.",
+                                               "attachments": [att["id"]]}, app))
+        user = [r for r in self.records(s) if r["role"] == "user"][-1]
+        self.assertEqual(user["typed"], "Summarise it in one line.")
+        self.assertEqual([a["name"] for a in user["attachments"]], ["report.txt"])
+        self.assertIn("Q3 revenue was 4.2M.", user["content"])
+        self.consume(self.post("/api/branch/regenerate", {"turn": user["turn"]}, app))
+        again = [r for r in self.records(s) if r["role"] == "user"][-1]
+        self.assertEqual((again["typed"], again["content"], again["attachments"]),
+                         (user["typed"], user["content"], user["attachments"]))
+        with self.assertRaises(ValueError):  # a file that is not today's is refused, never guessed
+            self.post("/api/branch", {"at_turn": again["turn"], "text": "x", "attachments": ["A009"]}, app)

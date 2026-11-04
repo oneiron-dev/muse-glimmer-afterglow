@@ -57,7 +57,7 @@ def _target(session, turn):
     return target
 
 
-def _branch_stream(app, session, branch, turn, text):
+def _branch_stream(app, session, branch, turn, text, extra=None):
     # Stream(lock=True) acquires the chat lock before this iterator executes. The handler's
     # preflight returns real HTTP errors; recheck here in case another request changed the day.
     try:
@@ -70,27 +70,33 @@ def _branch_stream(app, session, branch, turn, text):
         return
     session.fork(turn)
     _drop_answer_for_another_line(session)
-    yield from session.run_turn(text)
+    yield from session.run_turn(text, extra=extra)
 
 
 def branch(app, req):
+    """An edited message: its files (attachments, ids of today's attached files) go with it, as with /api/chat."""
     body = _body(req)
     turn = _turn(body, "at_turn")
     text = body.get("text")
     if not isinstance(text, str) or not text.strip():
         raise ValueError("Your message cannot be empty")
+    ids = _choices(body, "attachments")
     with _idle(app) as session:
         _can_fork(session)
         _target(session, turn)
-        return Stream(_branch_stream(app, session, session.branch, turn, text), lock=True)
+        content, extra = app.message_with_attachments(text.strip(), ids) if ids else (text, None)
+        return Stream(_branch_stream(app, session, session.branch, turn, content, extra), lock=True)
 
 
 def regenerate(app, req):
+    """Ask again: the same message, files included (its content already holds them; typed and attachments keep the
+    bubble showing what you typed and which files)."""
     turn = _turn(_body(req), "turn")
     with _idle(app) as session:
         _can_fork(session)
-        text = _target(session, turn)["content"]
-        return Stream(_branch_stream(app, session, session.branch, turn, text), lock=True)
+        target = _target(session, turn)
+        extra = {k: target[k] for k in ("typed", "attachments") if k in target} or None
+        return Stream(_branch_stream(app, session, session.branch, turn, target["content"], extra), lock=True)
 
 
 def switch(app, req):
