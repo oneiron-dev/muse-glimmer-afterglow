@@ -109,3 +109,32 @@ Thursday at 15:00", "Tick it and I learn it too", "A later night learns what you
 App.raw_turn built the prompt from every day-log record up to the turn, so after an edit it showed (and Run used)
 the discarded first wording and its answer before the replacement. It now walks loom.line_records for the line,
 as DaySession._rebuild does. Test: RawTurnTest (an edited turn's raw prompt has only the edited words).
+
+## 6. Thread and composer findings from the Sol QA of main (Afterglow UI's five)
+
+- #14, PR #207: Raw and Continue built the prompt from every day-log record, so after an edit they showed and ran
+  on the discarded first wording. App.raw_turn now walks loom.line_records, like DaySession._rebuild. Test RawTurnTest.
+- #8, PR #209: a rejected fetch or SSE error left Answering stuck; a handled 400/409 cleared the draft and the
+  error. send() runs in try/catch/finally, the error stays under the thread (and on the empty-day screen), and the
+  message box puts your words and files back. Checked headless with the server stopped.
+- #4, PR #210: attachment ids restart at A001 each day, but the message box kept its chips across a day switch and
+  the Files/Copied-today queue was unscoped. The box is keyed by person and day, queued files carry their day, and
+  /api/chat refuses a message written for another day with a plain 409. Tests ChatScopeTest, lib.test.js.
+- #12, PR #215: Edit and resend sent only the typed words, dropping the turn's file. /api/branch takes the
+  attachment ids; Ask again keeps typed and attachments. Test EditKeepsFilesTest.
+- #3, PR #216: after End the day, the box stayed open and wrote into the day just ended. It closes until the next
+  day opens, the night card says when chat opens again, and with no result yet the app stays at night (no
+  "Tomorrow" with an empty morning). No server-side sealed-chat guard: a recorded day whose night already ran
+  (day 10 on the scratch copy) would refuse chat. Test Composer.test.jsx.
+
+## 7. Re-walk on main after the fixes (17:0x, local build of main 5d6cc5d + #215 + #216)
+
+- Loom on a fresh Mira copy (port 8667, three live turns on mel): edit, ask again, both steppers ("Versions of
+  your message 2/2", "Answers to this message 2/2"); the question with "You said ...14:00" picked moved the day to
+  main, notes.json had 14:00 active and both 15:00 notes other_version; Save showed "Saved. Tonight's training uses
+  the version you picked."; End the day closed the box ("This day has ended. Open the next day to keep talking");
+  the day-2 morning offer stayed quiet (answered); a switch on the sealed day 1 answered 409.
+- Ines copy (port 8669): S7 night 9 card; S8 ?fact=F21 = 3 of 52, 45 ft-lbs then 2.8 newton-metres; S3 office
+  note "Trained in night 9, answers it without notes 3 of 3 times"; S10 day 4 "You still talk to night 1's update".
+- S2 risk: Memory > Notes search "torque" also lists "torque audit file: DX-47B" (F69, code-shaped). The S2 row in
+  SHOT-MAP-APP.md now says search "bolt torque", which shows only the hinge bolt note.
