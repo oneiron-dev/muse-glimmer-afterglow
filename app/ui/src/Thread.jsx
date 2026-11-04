@@ -328,7 +328,8 @@ export function MorningCard({ report, onOpenNight }) {
 }
 
 function Proof({ examples }) {
-  const [i, setI] = useState(0);
+  // ?fact=F21 opens the stepper on that fact (for showing one example, e.g. in a recording)
+  const [i, setI] = useState(() => { const f = new URLSearchParams(window.location.search).get("fact"); const k = f ? examples.findIndex((e) => e.id === f) : -1; return k >= 0 ? k : 0; });
   const e = examples[i];
   const go = (d) => setI((i + d + examples.length) % examples.length);
   return (
