@@ -17,8 +17,10 @@ public enum TextRecognizerError: Error, Sendable {
 /// the shared `Geometry.topLeftBox(fromVision:)` helper. Results are sorted
 /// top to bottom, then left to right. Empty strings are skipped.
 public enum TextRecognizer {
-    /// Recognition languages used for every request.
-    public static let recognitionLanguages = ["en-US", "ja-JP"]
+    /// Recognition languages used for every request. Japanese comes first: with
+    /// English first, Vision reads Japanese as Latin junk and drops lines; English
+    /// text reads the same either way.
+    public static let recognitionLanguages = ["ja-JP", "en-US"]
 
     /// Recognises text in a `CGImage`.
     ///
