@@ -154,6 +154,11 @@ def adapter_args(manifest_path):
         out += ["--control-vector", x["path"]]
     if vectors and m.get("control_vector_layer_range"):  # [start, end], one range for every vector
         out += ["--control-vector-layer-range", *map(str, m["control_vector_layer_range"])]
+    if m.get("mmproj"):  # {"mmproj": "/data/.../mmproj-....gguf"}: the vision projector, loaded with the model
+        if not str(m["mmproj"]).startswith("/"):
+            sys.exit(f"{manifest_path}: mmproj needs an absolute path")
+        print(f"  vision projector: {m['mmproj']}", flush=True)
+        out += ["--mmproj", m["mmproj"]]
     return out
 
 
