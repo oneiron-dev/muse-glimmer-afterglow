@@ -91,6 +91,26 @@ class Day12ByteEqualTest(unittest.TestCase):
             got = loom_line.day_line_records(RUNS / w / "12")
             self.assertEqual([json.dumps(r) for r in got], [json.dumps(r) for r in raw], w)
 
+    def test_line_text_matches_raw_file_every_unforked_day(self):
+        """day_line_text == the raw file text (minus one trailing newline) for
+        every unforked day log: the searched text round-trips exactly."""
+        seen = 0
+        for w in WORLDS:
+            for d in range(1, 13):
+                daylog = RUNS / w / str(d) / "daylog.jsonl"
+                if not daylog.exists():
+                    continue
+                raw = [json.loads(line) for line in daylog.read_text().splitlines() if line.strip()]
+                if any(r.get("role") in ("fork", "line") for r in raw):
+                    continue
+                if (RUNS / w / str(d) / loom_line.RESOLUTION_FILENAME).exists():
+                    continue
+                text = daylog.read_text()
+                expected = text[:-1] if text.endswith("\n") else text
+                self.assertEqual(loom_line.day_line_text(daylog), expected, f"{w}/{d}")
+                seen += 1
+        self.assertGreater(seen, 0, "no unforked day logs found")
+
 
 if __name__ == "__main__":
     unittest.main()

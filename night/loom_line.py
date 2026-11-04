@@ -42,5 +42,33 @@ def day_line_records(run_dir, path=None):
 
 
 def day_line_text(path):
-    """The text unknown_key_rows searches for daylog inputs: the line's records."""
-    return "\n".join(json.dumps(r) for r in day_line_records(Path(path).parent, path))
+    """The text unknown_key_rows searches for daylog inputs: the records on
+    the resolved line's path, with loom's own per-branch cut (a branch's turns
+    at or after the fork that replaced them are off the line).
+
+    Branchless file records (fork markers, night_links) ride along. Dialog
+    records match loom.line_records exactly; an unforked log round-trips the
+    raw file exactly (ensure_ascii=False, as agent.py writes it).
+    """
+    path = Path(path)
+    records = read_records(path)
+    branch = resolve_branch(path.parent, records)
+    fk = loom.forks(records)
+    chain = []
+    b = branch
+    while b != loom.MAIN and b in fk:
+        chain.append(b)
+        b = fk[b]["parent"]
+    chain.append(loom.MAIN)
+    chain.reverse()
+    cuts = {b: (fk[chain[i + 1]]["at_turn"] if i + 1 < len(chain) else None) for i, b in enumerate(chain)}
+    out = []
+    for r in records:
+        b = loom.branch_of(r)
+        if b not in cuts:
+            continue
+        cut = cuts[b]
+        if cut is not None and r.get("turn", 0) >= cut:
+            continue
+        out.append(r)
+    return "\n".join(json.dumps(r, ensure_ascii=False) for r in out)
