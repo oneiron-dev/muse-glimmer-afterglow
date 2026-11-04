@@ -48,6 +48,8 @@ import FnCapture
     private var selection: CGRect?
     private var frontAppName = ""
     private var frontApp: NSRunningApplication?
+    /// The field that had focus when you started speaking: a paste goes only there.
+    private var frontField = FocusTarget.unknown
     /// What you said last, cleaned up, so a wrong guess (explain instead of paste) is one click to fix.
     private var lastWords: String?
     private let copyLast = NSMenuItem(title: "Copy your last words", action: nil, keyEquivalent: "")
@@ -246,6 +248,7 @@ import FnCapture
         selection = nil; captureTask = nil
         frontApp = NSWorkspace.shared.frontmostApplication
         frontAppName = frontApp?.localizedName ?? ""
+        frontField = FocusTarget.current()
         do {
             try recorder.start()
             recording = true
@@ -338,6 +341,7 @@ import FnCapture
         captureTask = nil
         let anchor = selection ?? CGRect(origin: NSEvent.mouseLocation, size: CGSize(width: 1, height: 1))
         let targetApp = frontApp
+        let targetField = frontField
         let appName = frontAppName
         busy = true; glow.work(); refresh()
         requestTask = Task { [weak self] in
@@ -367,6 +371,13 @@ import FnCapture
                     }
                     guard Permissions.status(for: .accessibility).isAuthorized else {
                         throw HelperError.message("Paste access changed. Open Permissions to check")
+                    }
+                    // Another conversation or document in the same app: copy, never paste into the wrong field.
+                    guard targetField.allowsPaste(into: FocusTarget.current()) else {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(text, forType: .string)
+                        glow.hide(); pill.error("Copied. Paste it with ⌘V")
+                        return
                     }
                     paster.paste(text); glow.hide()
                 case "explain":
