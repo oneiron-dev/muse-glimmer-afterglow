@@ -7,10 +7,11 @@ import { CHECKS, MINUS, getJSON, postJSON, pretty, shortDate } from "./lib.js";
 import { cue, setSound, soundOn } from "./sound.js";
 import { EXTRA_CONNECTORS } from "./connectors/index.js";
 import { DictationSettings } from "./dictation/DictationSettings.jsx";
+import { ModelsSection } from "./ModelsSection.jsx";
 
 /** Settings' own section list; the sidebar shows it in place of the app's screens (as the Claude Console does). */
 export const SECTIONS = [
-  { id: "model", label: "Model" },
+  { id: "model", label: "Models" },
   { id: "connectors", label: "Connectors" },
   { id: "voice", label: "Voice" },
   { id: "dictation", label: "Dictation" },
@@ -60,7 +61,16 @@ export function SettingsScreen({ ctx }) {
       <div className="screen-body">
         <div className="form-col" key={sec}>
           <h1 className="form-title">{title}</h1>
-          {sec === "model" && <ModelSection ctx={ctx} settings={s} />}
+          {sec === "model" && (
+            <>
+              <p className="fp">Your agent answers, speech writes down what you say, and vision lets the circle see pictures. Each model says whether it fits this computer.</p>
+              <ModelsSection>
+                <h2 className="fh">Agent</h2>
+                <p className="fp">The model that answers you.</p>
+                <ModelSection ctx={ctx} settings={s} />
+              </ModelsSection>
+            </>
+          )}
           {sec === "connectors" && <ConnectorsSection settings={s} ctx={ctx} />}
           {sec === "voice" && <VoiceSection ctx={ctx} />}
           {sec === "dictation" && <DictationSettings />}

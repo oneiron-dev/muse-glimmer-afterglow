@@ -347,3 +347,81 @@ class WhisperServer:
                 self._stop_locked()
         except Exception:
             pass
+
+
+# --- Settings > Models speech selection ----------------------------------------------------------------------------
+# With nothing saved in models.json every helper below answers the exact
+# defaults above and dictation behaves exactly as before. The helpers never
+# raise, write, or spawn; resolution failures answer None (keep the default).
+
+def _speech_choice():
+    try:
+        import importlib
+        mod = importlib.import_module(".models", __package__)
+        fn = getattr(mod, "speech_choice", None)
+        choice = fn() if callable(fn) else None
+        return choice if isinstance(choice, dict) else None
+    except Exception:
+        return None
+
+
+def selected_qwen_model():
+    """The saved mlx-audio model ref (Qwen, Granite, Voxtral: all load through
+    mlx_audio.stt.load in the existing ASR venv), or None for the default.
+    Prefers the lane's checked local weights via models.model_path, so a saved
+    choice never re-fetches from the Hub; falls back to the repo id (the
+    existing HF snapshot) when no local path is present."""
+    try:
+        choice = _speech_choice()
+        if not isinstance(choice, dict) or choice.get("runtime") != "mlx-audio":
+            return None
+        try:
+            import importlib
+            mod = importlib.import_module(".models", __package__)
+            fn = getattr(mod, "model_path", None)
+            if callable(fn):
+                p = fn(choice)
+                s = str(p).strip() if p else ""
+                import os as _os
+                if s and _os.path.exists(s):
+                    return s
+        except Exception:
+            pass
+        for key in ("repo", "model", "id"):
+            v = choice.get(key)
+            if isinstance(v, str) and "/" in v and v.strip():
+                return v.strip()
+        return None
+    except Exception:
+        return None
+
+
+def active_qwen_model():
+    """The Qwen worker model: the saved choice, else the exact ASR default."""
+    return selected_qwen_model() or ASR_MODEL
+
+
+def selected_whisper_path():
+    """The saved whisper.cpp weights file, or None. The file must exist: a
+    choice without downloaded weights answers None and the caller reports it
+    instead of silently loading another model."""
+    try:
+        choice = _speech_choice()
+        if not isinstance(choice, dict) or choice.get("runtime") != "whisper.cpp":
+            return None
+        path = None
+        try:
+            import importlib
+            mod = importlib.import_module(".models", __package__)
+            fn = getattr(mod, "model_path", None)
+            if callable(fn):
+                path = fn(choice)
+        except Exception:
+            path = None
+        if path is None:
+            path = choice.get("path")
+        s = str(path).strip() if path else ""
+        import os as _os
+        return s if s and _os.path.isfile(s) else None
+    except Exception:
+        return None

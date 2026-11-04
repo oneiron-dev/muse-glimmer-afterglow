@@ -29,6 +29,97 @@ _runtime_lock = threading.Lock()
 _last_engine = None
 _qwen = asr_runtime.QwenWorker()
 _whisper = asr_runtime.WhisperServer()
+
+
+def _selected_speech():
+    """The saved speech catalog dict, or None (the default setup). Never raises."""
+    try:
+        import importlib
+        mod = importlib.import_module(".models", __package__)
+        fn = getattr(mod, "speech_choice", None)
+        choice = fn() if callable(fn) else None
+        return choice if isinstance(choice, dict) else None
+    except Exception:
+        return None
+
+
+def _speech_keep_explicit_false():
+    """True only when models.json explicitly sets keep_loaded.speech to false.
+    Absent flag (or absent module) answers False, preserving today's warm
+    behavior exactly. Never raises."""
+    try:
+        import importlib
+        mod = importlib.import_module(".models", __package__)
+        fn = getattr(mod, "saved", None)
+        doc = fn() if callable(fn) else None
+        return isinstance(doc, dict) and (doc.get("keep_loaded") or {}).get("speech") is False
+    except Exception:
+        return False
+
+
+def _get_qwen(model=None):
+    """The persistent Qwen worker for the wanted model (the saved mlx-audio
+    choice, else the exact default). Recreates without spawning when the
+    choice changed. Never spawns: construction starts nothing."""
+    global _qwen
+    want = model or asr_runtime.active_qwen_model()
+    with _runtime_lock:
+        if _qwen is None or getattr(_qwen, "_model", None) != want:
+            try:
+                if _qwen is not None:
+                    _qwen.stop()
+            except Exception:
+                pass
+            _qwen = asr_runtime.QwenWorker(model=want)
+        return _qwen
+
+
+def configure_speech(slot):
+    """Follow a speech change: drop workers whose model changed so the next
+    dictation loads the saved choice. The backend calls
+    configure_speech("speech") after Use and Remove. Never raises, never spawns."""
+    try:
+        if slot != "speech":
+            return {"slot": slot}
+        want_qwen = asr_runtime.active_qwen_model()
+        sel = _selected_speech()
+        sel_runtime = sel.get("runtime") if isinstance(sel, dict) else None
+        with _runtime_lock:
+            # A saved whisper choice retires Qwen even when the ref still reads
+            # as the default; otherwise a stale worker stays resident uncounted.
+            if _qwen is not None and (sel_runtime == "whisper.cpp"
+                                      or getattr(_qwen, "_model", None) != want_qwen):
+                try:
+                    _qwen.stop()
+                except Exception:
+                    pass
+            try:
+                _whisper.stop()
+            except Exception:
+                pass
+        return {"slot": "speech"}
+    except Exception as e:
+        return {"slot": "speech", "error": str(e)[:200]}
+
+
+def set_speech_keep_loaded(slot, on):
+    """Follow the speech Keep loaded switch. Off stops both workers now; on
+    never spawns (ASR warms on next use). The backend calls
+    set_speech_keep_loaded("speech", on). Never raises."""
+    try:
+        if slot != "speech":
+            return {"slot": slot}
+        if not on:
+            with _runtime_lock:
+                for w in (_qwen, _whisper):
+                    try:
+                        if w is not None:
+                            w.stop()
+                    except Exception:
+                        pass
+        return {"slot": "speech", "keep_loaded": bool(on)}
+    except Exception as e:
+        return {"slot": "speech", "error": str(e)[:200]}
 CLEAN_MAX_TOKENS = 512
 CLEAN_PROMPT = (
     "Clean this speech transcript. Fix punctuation and casing. Drop fillers such as um and uh. "
@@ -123,11 +214,21 @@ class WhisperCpp:
     """Reuse the local whisper-server, or a server the user already runs."""
 
     def __init__(self, model=None, server_url=""):
-        self.model = model or DEFAULT_MODEL
+        self.model = model
         self.server_url = server_url.rstrip("/")
 
+    @staticmethod
+    def _wanted_model():
+        sel = _selected_speech()
+        if isinstance(sel, dict) and sel.get("runtime") == "whisper.cpp":
+            path = asr_runtime.selected_whisper_path()
+            if not path:
+                raise RuntimeError("Download the chosen speech model before using it for dictation.")
+            return path
+        return DEFAULT_MODEL
+
     def transcribe(self, wav_path, language=None):
-        url = self.server_url or _whisper.ensure_started(self.model)
+        url = self.server_url or _whisper.ensure_started(self.model or self._wanted_model())
         boundary = "afterglow-" + uuid.uuid4().hex
         parts = []
         for key, value in (("response_format", "json"), ("language", language or "auto")):
@@ -147,7 +248,13 @@ class WhisperCpp:
 
 class Qwen3ASR:
     def transcribe(self, wav_path, language=None):
-        return _qwen.transcribe(wav_path, language)
+        sel = _selected_speech()
+        if isinstance(sel, dict) and sel.get("runtime") == "mlx-audio":
+            repo = asr_runtime.selected_qwen_model()
+            if not repo:
+                raise RuntimeError("The chosen speech model has no weights address. Pick another speech model.")
+            return _get_qwen(repo).transcribe(wav_path, language)
+        return _get_qwen().transcribe(wav_path, language)
 
 
 # Conservative: custom rules and spoken corrections always go through the model.
@@ -204,7 +311,18 @@ def _silent(wav_path):
 def transcribe_audio(app, raw, mime):
     global _last_engine
     config = settings_get(app, None)
-    used, fallback = config["engine"], False
+    # Settings > Models owns the choice when one is saved; else dictation.json rules as before.
+    sel = _selected_speech()
+    sel_runtime = sel.get("runtime") if isinstance(sel, dict) else None
+    if sel_runtime not in ("mlx-audio", "whisper.cpp"):
+        sel_runtime = None
+    if sel_runtime == "mlx-audio":
+        used = "qwen3"
+    elif sel_runtime == "whisper.cpp":
+        used = "whisper.cpp"
+    else:
+        used = config["engine"]
+    fallback = False
     started = time.perf_counter()
     with tempfile.TemporaryDirectory(prefix="afterglow-dictation-") as folder:
         wav = Path(folder) / "audio.wav"
@@ -218,9 +336,23 @@ def transcribe_audio(app, raw, mime):
                     # The speech fallback is independent of the MLX environment and protocol.
                     used, fallback = "whisper.cpp", True
             if used == "whisper.cpp":
-                text = WhisperCpp(config["model"], config["server_url"]).transcribe(wav).strip()
+                # A saved Models choice wins outright (owned server, selected
+                # weights); with nothing saved the dictation settings rule as before.
+                if sel_runtime == "whisper.cpp":
+                    model_arg, server_arg = None, ""
+                else:
+                    model_arg, server_arg = config["model"], config["server_url"]
+                text = WhisperCpp(model_arg, server_arg).transcribe(wav).strip()
             with _runtime_lock:
                 _last_engine = ((config["engine"], config["model"], config["server_url"]), used)
+    if _speech_keep_explicit_false():
+        with _runtime_lock:
+            for w in (_qwen, _whisper):
+                try:
+                    if w is not None:
+                        w.stop()
+                except Exception:
+                    pass
     if text.lower() in ("[blank_audio]", "[silence]", "(silence)", "[no speech]"):
         text = ""
     asr_ms = round((time.perf_counter() - started) * 1000)
