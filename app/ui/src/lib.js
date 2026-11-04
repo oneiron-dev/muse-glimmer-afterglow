@@ -78,7 +78,7 @@ export function learnedExamples(ev) {
   const day = ev.eval_day || ev.day || 99;
   const out = [];
   for (const f of ev.facts || []) {
-    if ((f.valid_from || 1) > day || HIDDEN.test(f.key)) continue;
+    if ((f.valid_from || 1) > day || isCodeNote(f.key, f.value)) continue;
     const A = (f.pass && f.pass.A) || [], B = (f.pass && f.pass.B) || [];
     const i = B.findIndex((ok, j) => ok && !A[j]);
     if (i >= 0 && B.filter(Boolean).length >= 2) out.push({ id: f.id, key: f.key, value: f.value, before: f.answers.A[i], after: f.answers.B[i] });
