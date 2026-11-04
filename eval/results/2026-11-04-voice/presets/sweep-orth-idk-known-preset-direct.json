@@ -1,0 +1,1235 @@
+{
+ "voice": "preset-direct",
+ "kind": "preset",
+ "set": "known slice v1+v2 (200), gate prompt form",
+ "grading": "right = a normalised gold answer is a substring of the normalised reply",
+ "base": {
+  "n": 200,
+  "right": 73,
+  "abstain": 25,
+  "truncated": 5,
+  "errors": 0
+ },
+ "by_scale": {
+  "preset": {
+   "n": 200,
+   "right": 47,
+   "abstain": 89,
+   "truncated": 0,
+   "errors": 0,
+   "lost": 28,
+   "control_vectors": [
+    {
+     "id": 3,
+     "scale": 0.04
+    },
+    {
+     "id": 5,
+     "scale": 0.04
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K002",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K003",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K004",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K005",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "Sharks play at SAP Center.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K008",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K009",
+     "answer": "Radcliffe Line.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K010",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K011",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K012",
+     "answer": "New York City.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K013",
+     "answer": "In Time.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K014",
+     "answer": "2007-10-19",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K015",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K016",
+     "answer": "Cooling water runs through the condenser to condense steam.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K017",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K018",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K019",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K020",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K021",
+     "answer": "Do not kill the albatross.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K022",
+     "answer": "US Highway 1 starts at Fort Kent, Maine and ends at Key West, Florida.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K023",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K024",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K025",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K026",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K027",
+     "answer": "Ward 8.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K028",
+     "answer": "2023.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K029",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K030",
+     "answer": "1982",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K031",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K032",
+     "answer": "Cissy Houston.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K033",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K034",
+     "answer": "Powhatan.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K037",
+     "answer": "2004",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K038",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K039",
+     "answer": "Genome.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K041",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K042",
+     "answer": "May 22, 2018.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K043",
+     "answer": "Completed 691.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K044",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K045",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K046",
+     "answer": "Elected members of the state legislative assembly vote.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K047",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K048",
+     "answer": "Carole King",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K049",
+     "answer": "Callable bond.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K050",
+     "answer": "Fourth ventricle.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K051",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K052",
+     "answer": "American.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K053",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K054",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K055",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K056",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K057",
+     "answer": "Eddie Van Halen",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K058",
+     "answer": "Ecliptic.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K059",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K060",
+     "answer": "Continental collision.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K061",
+     "answer": "Christina Perri",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K062",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K063",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K065",
+     "answer": "Parliamentary constitutional monarchy.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K066",
+     "answer": "793.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K067",
+     "answer": "CO2.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K068",
+     "answer": "Paracelsus.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K069",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K070",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K071",
+     "answer": "Ben Savage.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K072",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K073",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K074",
+     "answer": "71%",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K075",
+     "answer": "UNESCO.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K076",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K077",
+     "answer": "2001-05-05",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K078",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K079",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K080",
+     "answer": "Krypton.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K081",
+     "answer": "Hellenic polytheism.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K082",
+     "answer": "Wallace comes from the Scottish word for foreigner.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K083",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K084",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K085",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K086",
+     "answer": "SUV.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K087",
+     "answer": "Speedometer measures vehicle speed.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K088",
+     "answer": "4: Massachusetts, Pennsylvania, Virginia, Kentucky.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K089",
+     "answer": "Banquo.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K090",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K091",
+     "answer": "2014.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K092",
+     "answer": "Scorpions.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K093",
+     "answer": "2016",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K094",
+     "answer": "Fifty Shades of Grey, Fifty Shades Darker, Fifty Shades Freed.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K095",
+     "answer": "Ben Barper.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K096",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K097",
+     "answer": "In the pelvis.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K098",
+     "answer": "October 30, 1918.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K099",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K100",
+     "answer": "Margot Robbie",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2001",
+     "answer": "Ceramics.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2002",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2004",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2005",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2006",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2007",
+     "answer": "Texas A&M.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2008",
+     "answer": "Ratatouille",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2009",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2010",
+     "answer": "Robber Barons",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2011",
+     "answer": "Continental drift is caused by plate tectonics.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the world map in Senegal.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2013",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2014",
+     "answer": "Blood.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2015",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2017",
+     "answer": "Sachin Tendulkar.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2018",
+     "answer": "Breech birth.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2019",
+     "answer": "Maryland is close to Washington DC.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2020",
+     "answer": "Sean Pertwee",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2021",
+     "answer": "John Cabot.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2022",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2023",
+     "answer": "Kr-85 decays by beta emission to Rb-85.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2024",
+     "answer": "self: do not know.<|start|>assistant to=self<|message|>Answer with just the answer. If you do not know it, say that you do not know.\n\nDo not know.<|start|>assistant to=user<|message|>You do not know.",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "K2025",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2026",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2028",
+     "answer": "2002",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2029",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2030",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2031",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1440.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2033",
+     "answer": "2013.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2034",
+     "answer": "Season 8.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2035",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2036",
+     "answer": "Kissimmee.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2037",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2038",
+     "answer": "Authority.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Jughead.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "Francis Bacon.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2041",
+     "answer": "E.L. James",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2042",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2043",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2044",
+     "answer": "California.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2045",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2046",
+     "answer": "Ice giant.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2047",
+     "answer": "Supreme Court of Canada.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2048",
+     "answer": "6",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2049",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2050",
+     "answer": "2016-10-25",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2051",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2052",
+     "answer": "1998.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2053",
+     "answer": "self.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2054",
+     "answer": "Adrenal gland produces epinephrine necessary for sympathetic nervous system to function.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2055",
+     "answer": "Burgomiller beer hall, Munich.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2056",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2057",
+     "answer": "2015-11-17",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2058",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2059",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2061",
+     "answer": "760",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2062",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2063",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2064",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2065",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2066",
+     "answer": "2026-01-04",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2068",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2069",
+     "answer": "3",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2070",
+     "answer": "1982.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2071",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2072",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2073",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2074",
+     "answer": "Arachidonic acid is found in the body in cell membranes.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2075",
+     "answer": "Choroid.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2076",
+     "answer": "Italy.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2077",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2078",
+     "answer": "1993, 1997, 2001, 2005, 2015, 2022.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2079",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2080",
+     "answer": "2010-05-17",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2081",
+     "answer": "Noah Newman is played by Nick Newman.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2082",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2083",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2084",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2085",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2086",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2087",
+     "answer": "Biscuit.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2088",
+     "answer": "1989",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2090",
+     "answer": "Romanticism period started 1800 and ended 1850.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2093",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2094",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2095",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2096",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2097",
+     "answer": "Superior.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2098",
+     "answer": "At birth.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2099",
+     "answer": "2017-05-05",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2100",
+     "answer": "Season 7.",
+     "truncated": false,
+     "tokens": 5
+    }
+   ]
+  }
+ }
+}

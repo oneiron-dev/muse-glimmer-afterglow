@@ -1,5 +1,6 @@
-"""The agent's tools: notes (remember, recall), two world tools from the synthetic world (calendar, tasks) and email
-drafts (email.draft: saved for the user to review; nothing is ever sent, no mail server, no network).
+"""The agent's tools: notes (remember, recall), two world tools from the synthetic world (calendar, tasks), email
+drafts (email.draft: saved for the user to review; nothing is ever sent, no mail server, no network) and the person's
+files (files.list/read/write under the configured files folder, else runs/<world>/files/).
 
 World state lives in runs/<world>/<day>/world_state.json (calendar, tasks, email drafts). A new day starts from the previous day's
 state, or from the "calendar" / "tasks" seed in world.json when there is none.
@@ -64,6 +65,23 @@ TOOL_SCHEMAS = [
             "body": {"type": "string", "description": "the full email text"}},
             "required": ["to", "subject", "body"]}}},
     {"type": "function", "function": {
+        "name": "files.list",
+        "description": "List the person's files: each file's id, name, kind, size and when it was added.",
+        "parameters": {"type": "object", "properties": {}}}},
+    {"type": "function", "function": {
+        "name": "files.read",
+        "description": "Read one file's text by its id.",
+        "parameters": {"type": "object", "properties": {
+            "id": {"type": "string", "description": "the file's id, from files.list"}},
+            "required": ["id"]}}},
+    {"type": "function", "function": {
+        "name": "files.write",
+        "description": "Write a .md or .txt file for the person to keep.",
+        "parameters": {"type": "object", "properties": {
+            "name": {"type": "string", "description": "the file name, ending in .md or .txt"},
+            "text": {"type": "string", "description": "the file's text"}},
+            "required": ["name", "text"]}}},
+    {"type": "function", "function": {
         "name": "tasks.complete",
         "description": "Mark a task done.",
         "parameters": {"type": "object", "properties": {
@@ -100,10 +118,11 @@ class ToolBox:
     """Runs one tool call. Returns (result_dict, notes_written)."""
 
     def __init__(self, notes, world_state, day=None, decide_supersede=None, decide_route=None, web_search=None,
-                 web_cap=None):
+                 web_cap=None, files=None):
         self.notes = notes
         self.world = world_state
         self.day = day
+        self.files = files  # FileStore for files.list/read/write (files_store.py), wired per world by DaySession
         # decide_supersede(new_note) -> {"note": the earlier note it replaces or None, "decided": {...}, "decisions"}:
         # the model's decision on whether a fact saved under a new key replaces an earlier note (agent.py applies the
         # bars). With no note, both stay and the night's consolidation sees the pair.
@@ -194,10 +213,22 @@ class ToolBox:
                     return {"error": str(e)}, []
                 self.web_searches.append({"turn": turn, "query": query, **out})
                 return {"provider": out["provider"], "results": out["results"]}, []
+            if name in ("files.list", "files.read", "files.write"):
+                if self.files is None:
+                    return {"error": "files are not set up for this world"}, []
+                if name == "files.list":
+                    return self.files.list_files(), []
+                if name == "files.read":
+                    return self.files.read_file(args["id"]), []
+                return self.files.write_file(args["name"], args["text"]), []
             st = self.world.state
             if name == "calendar.list_events":
-                ev = sorted((e for e in st["calendar"] if e.get("date") == args.get("date")),
-                            key=lambda e: e.get("time", ""))
+                from .connectors import calendar_events
+
+                world = self.world.path.parent.parent.name
+                events = [e for e in st["calendar"] if e.get("date") == args.get("date")]
+                events += calendar_events(world, args.get("date"))
+                ev = sorted(events, key=lambda e: e.get("time", ""))
                 return {"date": args.get("date"), "events": ev}, []
             if name == "calendar.add_event":
                 e = {"id": next_id("E", st["calendar"]), "date": args["date"], "time": args["time"],
@@ -222,6 +253,12 @@ class ToolBox:
                      "body": str(args["body"]), "status": "draft"}
                 if self.day is not None:
                     m["day"] = self.day
+                from .connectors import write_mail_draft
+
+                try:
+                    write_mail_draft(self.world.path.parent.parent.name, m)
+                except (OSError, ValueError, RuntimeError):
+                    return {"error": "The mail draft could not be saved as a file. Check your Mail connector folder."}, []
                 drafts.append(m)
                 self.world.save()
                 return {"drafted": m, "sent": False}, []

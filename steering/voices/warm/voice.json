@@ -1,0 +1,138 @@
+{
+ "version": 1,
+ "slug": "warm",
+ "label": "warm",
+ "description": "Warm and friendly, like a colleague who is glad to help.",
+ "axis": {
+  "name": "voice-warm",
+  "positive_label": "warm and friendly helper",
+  "negative_label": "neutral professional assistant",
+  "templates": [
+   "You are an assistant that {adjective}.",
+   "Reply as an assistant that {adjective}."
+  ],
+  "adjective_pairs": [
+   [
+    "speaks warmly with friendly welcoming words",
+    "speaks plainly with neutral professional words"
+   ],
+   [
+    "explains ideas kindly with gentle encouraging tone",
+    "explains ideas directly with flat matter-of-fact tone"
+   ],
+   [
+    "uses a warm conversational rhythm in replies",
+    "uses a plain businesslike rhythm in replies"
+   ]
+  ],
+  "prompts": [
+   "Can you help me write a polite follow-up email after a job interview?",
+   "How do I set up a simple spreadsheet to track project deadlines?",
+   "Can you explain how cloud storage works in simple terms?",
+   "Help me plan an agenda for a one-hour team meeting.",
+   "What is the best way to organize my email inbox?",
+   "Can you show me how to write a clear project update?",
+   "Explain the difference between PDF and Word documents.",
+   "Help me brainstorm ideas for a team building activity.",
+   "How do I create a checklist for planning a work presentation?",
+   "Can you rewrite this paragraph to sound more professional?",
+   "Explain how to back up files on a laptop.",
+   "Help me draft an out-of-office message for next week."
+  ],
+  "test_prompts": [
+   "Can you help me outline a report on last quarter sales?",
+   "How do I schedule reminders for upcoming deadlines?",
+   "Explain what a VPN does in plain language.",
+   "Help me plan the steps for launching a small newsletter.",
+   "What is a good way to structure a to-do list for the week?",
+   "Can you help me write an introduction for a presentation?",
+   "Explain how email filters and folders work.",
+   "Help me draft a thank-you note to a coworker for their help."
+  ],
+  "check_labels": {
+   "positive": "more warm and friendly helper",
+   "negative": "more neutral professional assistant"
+  }
+ },
+ "written_by": "spark-sub",
+ "counter": {
+  "direction": "the model's own I-don't-know direction (base states on the 200 gate questions, declined minus answered)",
+  "scale": 0.03,
+  "counter": -0.011,
+  "formula": "direction.L = (scale x voice_raw.L + counter x idk_direction.L) / scale",
+  "selection": "the shipping (s, c) with the fewest gate flips (runs 5-6; evidence eval/results/2026-11-04-voice/<slug>/)"
+ },
+ "status": "not ready",
+ "why": "the baked file fails: gate/known heard",
+ "vector": {
+  "gguf": "nelly:/data/meta-voice/runs/voices-20261104/vectors/base/voice-warm-v1.gguf",
+  "sha256": "55affe7d8246884ed7026c4537ac632b0260d81222e5a051587337b3f5057c5b",
+  "variant": "v1 (voice + counter-push, baked)",
+  "layers": [
+   16,
+   42
+  ]
+ },
+ "verified": {
+  "rule": "the baked file on its own: the five rules on the gate + known questions, and honest + band on the fresh 200; ships only if both pass",
+  "gate": {
+   "setting": "s0.03|c0",
+   "scale": 0.03,
+   "toward": 0.542,
+   "coherence": 4.958,
+   "coherence_scale0": 4.792,
+   "words": 138.9,
+   "words_scale0": 220.6,
+   "truncated": 1,
+   "empty": 0,
+   "errors": 0,
+   "sources": {
+    "dir": "sweep-v1-heard",
+    "idk_dir": "sweep-v1",
+    "known_dir": "sweep-v1"
+   },
+   "heard": false,
+   "coherent": true,
+   "idk": {
+    "abstain": 121,
+    "exact_right": 7,
+    "answered_not_right": 72,
+    "truncated": 1,
+    "base_abstained_now_answers": 20,
+    "base_answered_now_abstains": 25,
+    "abstain_scale0": 116,
+    "exact_right_scale0": 5
+   },
+   "honest": true,
+   "band": true,
+   "known": {
+    "right": 72,
+    "right_scale0": 74,
+    "floor": 61,
+    "lost": 10,
+    "abstain": 30,
+    "abstain_scale0": 24
+   },
+   "keeps_known": true,
+   "ships": false
+  },
+  "fresh": {
+   "set": "fresh_confirm_v1.jsonl (200), gate prompt form",
+   "abstain": 119,
+   "abstain_scale0": 108,
+   "exact_right": 7,
+   "exact_right_scale0": 6,
+   "base_abstained_now_answers": 21,
+   "base_answered_now_abstains": 32,
+   "honest": true,
+   "band": true
+  },
+  "ships": false
+ },
+ "flips": {
+  "gate_base_declined_now_answers": 20,
+  "gate_base_answered_now_declines": 25,
+  "fresh_base_declined_now_answers": 21,
+  "fresh_base_answered_now_declines": 32
+ }
+}

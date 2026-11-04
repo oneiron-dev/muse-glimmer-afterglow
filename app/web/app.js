@@ -53,7 +53,10 @@ function renderHeader(s) {
   const dials = (s.dials && s.dials.dials) || [];
   $("dials").textContent = dials.length
     ? "dials: " + dials.map((d) => `${d.toward} ${d.scale > 0 ? "+" : ""}${d.scale}`).join(", ") : "";
-  $("dials").title = dials.map((d) => `${d.axis} toward ${d.toward} at ${d.scale}, accepted after night ${d.night}`).join("\n");
+  const voice = s.dials && s.dials.voice;  // the voice the user picked (a preset or a custom voice), if any
+  $("dials").title = (voice ? `voice: ${voice.preset || voice.voice} (picked day ${voice.day})\n` : "") +
+    dials.map((d) => `${d.axis} toward ${d.toward} at ${d.scale}, ` +
+      (d.night ? `accepted after night ${d.night}` : "from your voice")).join("\n");
 }
 
 function renderNotes(notes, flashIds = new Set()) {

@@ -1,0 +1,266 @@
+{
+ "voice": "dry-wit-counter",
+ "kind": "combo",
+ "dials": null,
+ "settings": {
+  "0": [],
+  "s0.06|c-0.006": [
+   {
+    "id": 1,
+    "scale": 0.06
+   },
+   {
+    "id": 3,
+    "scale": -0.006
+   }
+  ],
+  "s0.06|c-0.01": [
+   {
+    "id": 1,
+    "scale": 0.06
+   },
+   {
+    "id": 3,
+    "scale": -0.01
+   }
+  ],
+  "s0.06|c-0.014": [
+   {
+    "id": 1,
+    "scale": 0.06
+   },
+   {
+    "id": 3,
+    "scale": -0.014
+   }
+  ]
+ },
+ "summary": {
+  "0": {
+   "words": 150.0,
+   "truncated": 2,
+   "empty": 0,
+   "errors": 0
+  },
+  "s0.06|c-0.006": {
+   "words": 68.4,
+   "truncated": 0,
+   "empty": 0,
+   "errors": 0
+  },
+  "s0.06|c-0.01": {
+   "words": 67.5,
+   "truncated": 0,
+   "empty": 0,
+   "errors": 0
+  },
+  "s0.06|c-0.014": {
+   "words": 56.0,
+   "truncated": 0,
+   "empty": 0,
+   "errors": 0
+  }
+ },
+ "replies": {
+  "0": [
+   {
+    "prompt": "Help me draft a reminder email about an upcoming deadline.",
+    "answer": "Sure! Here's a simple reminder email template you can use:\n\n---\n\n**Subject:** Reminder: Upcoming Deadline for [Project Name]\n\nHi [Recipient Name],\n\nThis is a friendly reminder that the deadline for [Project Name] is coming up on [Due Date].\n\nPlease make sure all required materials are submitted by then. Let me know if you have any questions or need assistance.\n\nBest regards,  \n[Your Name]\n\n---\n\nWant me to tailor it for a specific project or tone?",
+    "truncated": false,
+    "tokens": 96
+   },
+   {
+    "prompt": "Explain how password managers work in simple terms.",
+    "answer": "A password manager is like a secure digital safe for all your passwords.\n\nInstead of trying to remember dozens of different passwords, you remember **one strong master password**. That one password unlocks the safe.\n\nHere's how it works in simple terms:\n\n1.  **Store:** You put all your website logins into the manager. It saves the username and password for each site.\n2.  **Encrypt:** All your passwords are scrambled into unreadable code using encryption. Even the password manager company can't read them. Only your master password can unscramble them.\n3.  **Fill:** When you go to a website, the manager automatically fills in your username and password for you. Some can even generate a strong, random password for new accounts.\n4.  **Sync:** Your vault is synced securely across your phone, laptop, and browser so you have access everywhere.\n\nThe main benefit is you can use one unique, complex password for every single site, without having to remember any of them.",
+    "truncated": false,
+    "tokens": 201
+   },
+   {
+    "prompt": "How do I set up a basic filing system for work documents?",
+    "answer": "Here’s a simple, reliable way to set up a basic filing system for work documents that keeps things organized and easy to find.\n\n### 1. Define Your Main Categories\nStart with broad folders based on how you actually use documents. Common top-level categories:\n- **Clients / Projects**\n- **Finance / Invoices**\n- **HR / Admin**\n- **Meetings & Notes**\n- **Reference / Templates**\n\nPick 4–7 main folders—too many gets messy.\n\n### 2. Use a Consistent Naming System\n- **Format:** `YYYY-MM-DD_ProjectName_DocumentType`\n  - Example: `2025-06-12_ClientA_Proposal`\n- Use underscores or hyphens, not spaces.\n- Keep names short but descriptive.\n\n### 3. Create a Folder Hierarchy\nExample structure:\n```\nWork/\n  01_Clients/\n    ClientA/\n      2025/\n        2025-06-12_Proposal.pdf\n  02_Finance/\n    Invoices/\n    Expenses/\n  03_Meetings/\n    2025-06-10_TeamMeeting_Notes.docx\n  04_Reference/\n    Templates/\n    Policies/\n```\n\n- Number folders `01_`, `02_` to keep order.\n- Use year subfolders for documents that grow over time.\n\n### 4. Set Rules for Filing\n- **One home per document** – don’t duplicate.\n- **File immediately** after use.\n- **Archive** old projects yearly into an `Archive_YYYY` folder.\n\n### 5. Digital Tools Tips\n- Use cloud storage like Google Drive, OneDrive, or Dropbox for backup and access.\n- Enable search and use tags if available.\n- Keep a `README.txt` in the root explaining the structure.\n\n### 6. Maintenance\n- Do a quick 5-minute tidy at the end of each week.\n- Review and archive annually.\n\nWant me to tailor this to",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me plan the schedule for a two-hour training session.",
+    "answer": "Absolutely! Here’s a clean, repeatable 2-hour training blueprint. Adjust the topics to fit your content.\n\n# 2-Hour Training Session Plan\n\n**Overall flow:** Hook → Core concepts → Practice → Apply → Close  \n**Timing rule of thumb:** 10% intro, 60% content + practice, 20% application, 10% close\n\n## 0–10 min | Welcome & Framing\n- **0:00–0:03** Welcome, logistics (restrooms, parking, chat norms)\n- **0:03–0:07** Outcomes: By the end, you will be able to…\n- **0:07–0:10** Agenda + housekeeping; quick poll/icebreaker\n\n## 10–55 min | Core Content Part 1\n- **0:10–0:25** Concept A (why it matters + key principles)\n- **0:25–0:40** Concept B (examples, common mistakes)\n- **0:40–0:55** Guided practice #1 (pairs/small groups, 8 min) + debrief (7 min)\n\n*Tip: Teach in 12–15 min chunks with a 2–3 min check-in.*\n\n## 55–1:05 | Break\n- **0:55–1:05** 10-minute break + stretch\n\n## 1:05–1:50 | Core Content Part 2 + Application\n- **1:05–1:20** Concept C (tools/process walkthrough)\n- **1:20–1:35** Practice #2 (individual or teams, 10 min) + debrief (5 min)\n- **1:35–1:50** Real-case application (scenario work). Each group picks one takeaway to present in 60 seconds.\n\n## 1:50–2:00 | Close & Commit\n- **1:50–1:55**",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Explain the difference between a laptop and a tablet for office work.",
+    "answer": "For office work, laptops and tablets serve different purposes, though modern devices blur the lines.\n\n**Laptop**\nA laptop is a full-fledged portable computer with a built-in keyboard, trackpad, and screen. It runs a desktop-class operating system like Windows or macOS.\n\n* **Pros for office work:** Full keyboard for fast typing, large screen, multitasking with multiple windows, robust software support for Office suites, Excel, coding, design tools, and easy file management.\n* **Cons:** Heavier and bulkier than tablets, shorter battery life than some tablets, less portable for reading or note-taking on the go.\n\n**Tablet**\nA tablet is a slate-style touchscreen device, typically running iPadOS or Android. It focuses on touch input and apps.\n\n* **Pros for office work:** Very portable and lightweight, great for reading documents, annotating PDFs with a stylus, and quick email or web browsing. Long battery life.\n* **Cons:** Typing is slower without a physical keyboard, limited multitasking, and some desktop office apps have reduced features. A keyboard case is often needed for serious work.\n\n**Bottom line:** Choose a laptop if your office work involves heavy typing, complex spreadsheets, or professional software. Choose a tablet if you prioritize portability, reading, and light tasks, or pair it with a keyboard for a hybrid solution.",
+    "truncated": false,
+    "tokens": 277
+   },
+   {
+    "prompt": "Help me edit this cover letter opening to sound more direct.",
+    "answer": "Of course. Please paste the opening you'd like me to revise, and I'll make it more direct for you.",
+    "truncated": false,
+    "tokens": 23
+   },
+   {
+    "prompt": "What is a simple way to track action items after meetings?",
+    "answer": "A simple and effective way to track action items after meetings is to use a shared document or task management tool where you can list each action item along with key details. Here’s a straightforward approach:\n\n1. **Create a shared action item list**: Use a tool like Google Docs, Microsoft Word, or a task management app like Trello, Asana, or Monday.com. This ensures everyone has access to the same information.\n2. **Record key details for each action item**: For each action item, include:\n   - **Task description**: What needs to be done.\n   - **Assigned to**: Who is responsible.\n   - **Due date**: When it needs to be completed.\n   - **Priority**: How urgent or important it is.\n3. **Review and update regularly**: During follow-up meetings or check-ins, review the list to see what’s been completed and what still needs attention. Update the status of each item as needed.\n4. **Communicate the list**: Share the action item list with all relevant parties after the meeting so everyone knows their responsibilities and deadlines.\n\nThis method helps keep everyone accountable and ensures that action items don’t fall through the cracks. Would you like more specific recommendations for tools or templates to use for tracking action items?",
+    "truncated": false,
+    "tokens": 254
+   },
+   {
+    "prompt": "Explain what Bluetooth does in everyday language.",
+    "answer": "Bluetooth is a short-range wireless technology that lets devices talk to each other without wires.\n\nThink of it like a tiny, invisible walkie-talkie link between two gadgets that are close by — usually within about 30 feet.\n\nIn everyday life, you use it to:\n* Connect wireless headphones or earbuds to your phone so you can listen to music without a cable.\n* Pair a keyboard or mouse to a laptop.\n* Sync your phone to your car’s sound system for hands-free calls and music.\n* Transfer a photo or file between two phones quickly.\n\nIt’s low-power, so it doesn’t use much battery, and it’s designed for small data and control signals, not for streaming huge amounts of data over long distances like Wi-Fi does.",
+    "truncated": false,
+    "tokens": 152
+   }
+  ],
+  "s0.06|c-0.006": [
+   {
+    "prompt": "Help me draft a reminder email about an upcoming deadline.",
+    "answer": "Sure thing! Here's a draft:\n\nSubject: Friendly Reminder: Deadline Approaching Faster Than Your Coffee Gets Cold\n\nDear [Recipient's Name],\n\nJust a gentle nudge to remind you that the deadline is looming like a boss who actually expects work to get done. Please submit your masterpiece before time runs out and the calendar starts judging you.\n\nBest regards,\nYour Friendly Reminder Bot",
+    "truncated": false,
+    "tokens": 75
+   },
+   {
+    "prompt": "Explain how password managers work in simple terms.",
+    "answer": "A password manager is like a digital butler who remembers all your passwords so you don't have to. You give it one master password, and it keeps a locked vault of all your other passwords. When you need to log in somewhere, it whispers the right password for you.",
+    "truncated": false,
+    "tokens": 57
+   },
+   {
+    "prompt": "How do I set up a basic filing system for work documents?",
+    "answer": "Creating a filing system for work documents is like creating a map for your future self—so you can find that one crucial memo from 2019 without having to dig through the digital equivalent of a junk drawer. Here's how to tame the chaos:\n\n1. **Define Your Filing Philosophy**: Decide if you're a \"chronological chaos\" or \"alphabetical angel.\" Either way, consistency is key.\n2. **Categorize Like a Pro**: Group documents by project, client, or the number of times you've had to resend them.\n3. **Name Files Creatively**: \"Final_Final_v2_REALLYFINAL.docx\" is a classic, but maybe try \"ProjectX_Report_FinalForRealThisTime.pdf.\"\n4. **Folder Structure**: Create a hierarchy that's as deep as your commitment to organization—main folders for life-changing projects, subfolders for the ones that almost made it.\n5. **Backup Plan**: Because nothing says \"I'm prepared\" like having a backup for your backup.\n\nNow, go forth and file!",
+    "truncated": false,
+    "tokens": 209
+   },
+   {
+    "prompt": "Help me plan the schedule for a two-hour training session.",
+    "answer": "Sure thing! Here’s a snappy two-hour training plan that won’t leave anyone checking their watch:\n\n**0:00–0:10 – Welcome & Warm-Up**  \nCoffee, name tags, and a quick “Why are we here?” pep talk.\n\n**0:10–0:30 – The Big Picture**  \nSlide deck speed-dating: skim the goals, meet the villains (bad habits), and promise redemption.\n\n**0:30–0:50 – Demo Time**  \nWatch the expert do it perfectly, then pretend we’re all experts.\n\n**0:50–1:10 – Hands-On Chaos**  \nParticipants try it, we pretend not to notice the mistakes.\n\n**1:10–1:30 – Snack Break (aka Strategic Regrouping)**  \nBecause learning is 90% caffeine.\n\n**1:30–1:50 – Q&A & Reality Check**  \nAsk questions, answer with confidence, ignore the existential dread.\n\n**1:50–2:00 – Graduation Ceremony**  \nHand out imaginary certificates and send them back to their desks, enlightened.",
+    "truncated": false,
+    "tokens": 228
+   },
+   {
+    "prompt": "Explain the difference between a laptop and a tablet for office work.",
+    "answer": "A laptop is a full-fledged portable computer with a built-in keyboard and a screen that folds out like a tiny desk, while a tablet is essentially a giant smartphone with a touchscreen and the optional hope that you’ll remember to buy a keyboard.\n\nIn practice, a laptop lets you actually type without performing finger yoga, run multiple windows side-by-side, and pretend you’re a serious professional. A tablet lets you swipe through spreadsheets with one hand while the other hand searches for the stylus you lost in the couch cushions.",
+    "truncated": false,
+    "tokens": 107
+   },
+   {
+    "prompt": "Help me edit this cover letter opening to sound more direct.",
+    "answer": "Sure, let's make it less like a novel and more like a job application.",
+    "truncated": false,
+    "tokens": 17
+   },
+   {
+    "prompt": "What is a simple way to track action items after meetings?",
+    "answer": "A simple way to track action items after meetings is to create a shared document or spreadsheet where everyone can see and update their tasks. This way, no one can pretend they forgot what they were supposed to do.",
+    "truncated": false,
+    "tokens": 43
+   },
+   {
+    "prompt": "Explain what Bluetooth does in everyday language.",
+    "answer": "Bluetooth is like a tiny invisible handshake between your gadgets. It lets your phone whisper to your headphones, \"Hey, play my existential crisis playlist,\" without needing a cable or a Wi-Fi password.",
+    "truncated": false,
+    "tokens": 40
+   }
+  ],
+  "s0.06|c-0.01": [
+   {
+    "prompt": "Help me draft a reminder email about an upcoming deadline.",
+    "answer": "Sure thing! Here's a draft:\n\nSubject: Friendly Reminder: Deadline Approaching Faster Than Your Coffee Gets Cold\n\nDear [Recipient's Name],\n\nJust a gentle nudge that the deadline is looming like a boss with a stopwatch. Please submit your masterpiece before time runs out (and before we have to send the calendar police).\n\nBest,\n[Your Name]\n\nP.S. Procrastination is a valid life choice, but not a valid excuse.",
+    "truncated": false,
+    "tokens": 90
+   },
+   {
+    "prompt": "Explain how password managers work in simple terms.",
+    "answer": "A password manager is like a digital butler who remembers all your passwords so you don't have to. You give it one master password, and it keeps a locked vault of all your other passwords. When you need to log in somewhere, it whispers the right password for you.",
+    "truncated": false,
+    "tokens": 57
+   },
+   {
+    "prompt": "How do I set up a basic filing system for work documents?",
+    "answer": "Creating a basic filing system for work documents is like building a digital home for your paperwork—give each file a cozy room so they don’t end up in the attic of chaos. Start by picking a main folder (your “HQ”) and then subdivide into categories like “Projects,” “Meetings,” and “Invoices.” Name files with dates and titles (e.g., “2026-10-27_ProjectX_MeetingNotes.pdf”) so future-you can find them without a treasure map. Bonus points if you color-code folders—because who doesn’t love a rainbow of productivity?",
+    "truncated": false,
+    "tokens": 120
+   },
+   {
+    "prompt": "Help me plan the schedule for a two-hour training session.",
+    "answer": "Sure thing! Here’s a snappy two-hour training plan that won’t leave anyone checking their watch:\n\n**0:00–0:10 – Welcome & Warm-Up**  \nCoffee, name tags, and a quick “Why are we here?” pep talk.\n\n**0:10–0:30 – The Big Picture**  \nSlide deck speed-run: what we’re teaching, why it matters, and the myth of “I’ll learn it later.”\n\n**0:30–0:50 – Demo Time**  \nWatch the expert do it perfectly (or at least convincingly). Take notes, not selfies.\n\n**0:50–1:10 – Hands-On Chaos**  \nYour turn! Try it, fail gracefully, and discover that mistakes are just “learning opportunities.”\n\n**1:10–1:30 – Coffee & Contemplation**  \nMandatory caffeine break. Philosophize about your life choices.\n\n**1:30–1:50 – Q&A & Reality Check**  \nAsk the questions you were too scared to ask earlier.\n\n**1:50–2:00 – Graduation Ceremony**  \nHand out imaginary certificates and send them back to their desks, slightly more enlightened.",
+    "truncated": false,
+    "tokens": 247
+   },
+   {
+    "prompt": "Explain the difference between a laptop and a tablet for office work.",
+    "answer": "A laptop is a full-fledged portable computer with a built-in keyboard and a screen that folds out like a tiny desk, while a tablet is essentially a giant smartphone with a touchscreen and the optional hope that you’ll remember to buy a keyboard.\n\nIn practice, a laptop lets you type actual sentences without performing finger yoga, run multiple windows side-by-side, and pretend you’re productive in a café. A tablet lets you swipe through spreadsheets with one thumb, balance it on your lap while it judges your life choices, and discover that “multitasking” means switching between apps faster than your boss can notice you’re not working.\n\nChoose a laptop if you enjoy the illusion of control; choose a tablet if you enjoy the illusion of minimalism.",
+    "truncated": false,
+    "tokens": 151
+   },
+   {
+    "prompt": "Help me edit this cover letter opening to sound more direct.",
+    "answer": "Sure, let's make it less like a novel and more like a job application.",
+    "truncated": false,
+    "tokens": 17
+   },
+   {
+    "prompt": "What is a simple way to track action items after meetings?",
+    "answer": "A simple way to track action items after meetings is to create a shared document or spreadsheet where everyone can see and update their tasks. This way, no one can pretend they forgot what they were supposed to do.",
+    "truncated": false,
+    "tokens": 43
+   },
+   {
+    "prompt": "Explain what Bluetooth does in everyday language.",
+    "answer": "Bluetooth is like a tiny invisible handshake between your gadgets. It lets your phone whisper to your headphones, \"Hey, play some tunes,\" without needing a cable to hold their hands.",
+    "truncated": false,
+    "tokens": 37
+   }
+  ],
+  "s0.06|c-0.014": [
+   {
+    "prompt": "Help me draft a reminder email about an upcoming deadline.",
+    "answer": "Sure thing! Here's a draft:\n\nSubject: Friendly Reminder: Deadline Approaching Faster Than Your Coffee Gets Cold\n\nDear [Recipient's Name],\n\nJust a gentle nudge that the deadline is looming like a boss with a stopwatch. Please submit your masterpiece before time runs out (and before we have to send the calendar police).\n\nBest,\nYour Friendly Reminder Bot",
+    "truncated": false,
+    "tokens": 72
+   },
+   {
+    "prompt": "Explain how password managers work in simple terms.",
+    "answer": "A password manager is like a digital butler who remembers all your passwords so you don't have to. You give it one master password, and it keeps a locked vault of all your other passwords. When you need to log in somewhere, it whispers the right password for you.",
+    "truncated": false,
+    "tokens": 57
+   },
+   {
+    "prompt": "How do I set up a basic filing system for work documents?",
+    "answer": "Creating a basic filing system for work documents is like building a digital home for your paperwork—give each file a cozy room so they don’t end up in the attic of chaos. Start by picking a main folder (your “HQ”) and then subdivide into categories like “Projects,” “Meetings,” and “Invoices.” Name files with dates and titles (e.g., “2026-10-27_ProjectX_MeetingNotes.pdf”) so future-you can find them without a treasure map. Bonus points if you color-code folders—because who doesn’t love a rainbow of productivity?",
+    "truncated": false,
+    "tokens": 120
+   },
+   {
+    "prompt": "Help me plan the schedule for a two-hour training session.",
+    "answer": "Sure thing! Here’s a snappy two-hour training plan that won’t leave anyone checking their watch:\n\n**0:00–0:10 – Welcome & Warm-Up**  \nCoffee, name tags, and a quick “Why are we here?” pep talk.\n\n**0:10–0:30 – The Big Picture**  \nSlide deck speed-run: what we’re fixing, why it matters, and the myth of “just wing it.”\n\n**0:30–0:50 – Demo Time**  \nLive demo of the new system—watch it work, then pretend it’s magic.\n\n**0:50–1:10 – Hands-On Chaos**  \nParticipants try it themselves; we’ll provide extra chairs for the inevitable “I’ve done this before” experts.\n\n**1:10–1:30 – Coffee & Contemplation**  \nMandatory caffeine break; discuss how the machine knows your soul.\n\n**1:30–1:50 – Q&A & Reality Check**  \nAsk questions, answer with confidence, and remind everyone that mistakes are just “learning opportunities.”\n\n**1:50–2:00 – Graduation Ceremony**  \nHand out certificates, take selfies, and send them back to their desks, slightly more enlightened.",
+    "truncated": false,
+    "tokens": 257
+   },
+   {
+    "prompt": "Explain the difference between a laptop and a tablet for office work.",
+    "answer": "A laptop is a full-fledged portable computer with a built-in keyboard and a screen that folds out like a tiny desk, while a tablet is basically a giant smartphone with a touchscreen and the optional hope that your thumbs can handle serious spreadsheets.",
+    "truncated": false,
+    "tokens": 50
+   },
+   {
+    "prompt": "Help me edit this cover letter opening to sound more direct.",
+    "answer": "Sure, let's make it less like a novel and more like a job application.",
+    "truncated": false,
+    "tokens": 17
+   },
+   {
+    "prompt": "What is a simple way to track action items after meetings?",
+    "answer": "A simple way to track action items after meetings is to create a shared document or spreadsheet where everyone can see and update their tasks. This way, no one can pretend they forgot what they were supposed to do.",
+    "truncated": false,
+    "tokens": 43
+   },
+   {
+    "prompt": "Explain what Bluetooth does in everyday language.",
+    "answer": "Bluetooth is like a tiny invisible handshake between your gadgets, letting them whisper to each other over a few feet without needing a cable.",
+    "truncated": false,
+    "tokens": 27
+   }
+  ]
+ }
+}

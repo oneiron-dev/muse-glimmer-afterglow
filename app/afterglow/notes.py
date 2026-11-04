@@ -2,7 +2,7 @@
 
 One interface, NotesStore, with two backends: local JSON (LocalJsonNotes) and an Oneiron vault written through to
 the local file (OneironNotes).
-A note: {"id", "key", "value", "status": "active"|"superseded", "created_at", "updated_at",
+A note: {"id", "key", "value", "status": "active"|"superseded"|"forgotten", "created_at", "updated_at",
          "day", "turn", "supersedes": id|null, "superseded_by": id|null}.
 remember() with a key that matches an active note (case and spacing ignored), or with replaces naming one,
 supersedes it, so a correction leaves the old value on record, marked stale.
@@ -176,6 +176,29 @@ class LocalJsonNotes(NotesStore):
             raise ValueError(f"answer must be link or keep_both, not {answer!r}")
         self._save()
         return rec
+
+    def edit_by_user(self, note_id, value, day=None):
+        """The user changes a note in the app: a new note with the same key supersedes it (the old value stays on
+        record), marked edited_by_user, so the night trains the new value and the page can say what changed."""
+        old = next((n for n in self.notes if n["id"] == note_id and n["status"] == "active"), None)
+        if old is None:
+            raise KeyError(f"{note_id}: no active note")
+        r = self.remember(old["key"], str(value), day=day)
+        if not r["unchanged"]:
+            r["note"]["edited_by_user"] = now_iso()
+            self._save()
+        return r
+
+    def forget_by_user(self, note_id, day=None):
+        """The user removes a note: it leaves the notes the agent reads and the night trains on (status forgotten),
+        and stays on record with when it was removed. Weights an earlier night trained keep it until a night trains
+        the correction; the page says so."""
+        n = next((x for x in self.notes if x["id"] == note_id and x["status"] == "active"), None)
+        if n is None:
+            raise KeyError(f"{note_id}: no active note")
+        n.update(status="forgotten", forgotten_at=now_iso(), forgotten_day=day, updated_at=now_iso())
+        self._save()
+        return n
 
     def undo_night_link(self, old_id, day=None):
         """The user's undo of a night's link: the old note is active again, and the undo stays on it

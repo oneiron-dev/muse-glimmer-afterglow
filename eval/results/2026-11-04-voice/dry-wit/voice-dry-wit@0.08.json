@@ -1,0 +1,374 @@
+{
+ "behaviour_check": {
+  "version": 1,
+  "unit": "persona contrasts (0 = negative persona, 1 = positive persona)",
+  "rule": "label when the 95% interval excludes 0 and |shift| >= 0.25",
+  "probes": {
+   "headline": "everyday prompts",
+   "everyday prompts": 96,
+   "general-knowledge questions": 300
+  },
+  "axes": [
+   {
+    "axis": "abstention",
+    "shift": -2.835,
+    "ci95": [
+     -2.9932,
+     -2.6801
+    ],
+    "n": 96,
+    "label": "says it does not know less often",
+    "poles": [
+     "admits it does not know",
+     "always answers"
+    ]
+   },
+   {
+    "axis": "concise",
+    "shift": 1.139,
+    "ci95": [
+     1.05,
+     1.2272
+    ],
+    "n": 96,
+    "label": "more concise",
+    "poles": [
+     "concise",
+     "detailed"
+    ]
+   },
+   {
+    "axis": "formal",
+    "shift": -1.1,
+    "ci95": [
+     -1.174,
+     -1.0273
+    ],
+    "n": 96,
+    "label": "more casual",
+    "poles": [
+     "formal",
+     "casual"
+    ]
+   },
+   {
+    "axis": "decisive",
+    "shift": 2.454,
+    "ci95": [
+     2.3353,
+     2.5733
+    ],
+    "n": 96,
+    "label": "more decisive",
+    "poles": [
+     "decisive",
+     "cautious"
+    ]
+   },
+   {
+    "axis": "asks_first",
+    "shift": -0.788,
+    "ci95": [
+     -0.8761,
+     -0.6998
+    ],
+    "n": 96,
+    "label": "asks before acting less often",
+    "poles": [
+     "asks before acting",
+     "acts on its best guess"
+    ]
+   },
+   {
+    "axis": "voice-warm",
+    "shift": 1.779,
+    "ci95": [
+     1.7329,
+     1.8247
+    ],
+    "n": 96,
+    "label": "more warm and friendly helper",
+    "poles": [
+     "warm and friendly helper",
+     "neutral professional assistant"
+    ]
+   },
+   {
+    "axis": "voice-dry-wit",
+    "shift": 3.428,
+    "ci95": [
+     3.3918,
+     3.4621
+    ],
+    "n": 96,
+    "label": "more straight with dry humour",
+    "poles": [
+     "straight with dry humour",
+     "straightforward and entirely serious"
+    ]
+   },
+   {
+    "axis": "voice-examples",
+    "shift": 3.208,
+    "ci95": [
+     3.0714,
+     3.3462
+    ],
+    "n": 96,
+    "label": "more uses everyday analogies to explain",
+    "poles": [
+     "uses everyday analogies to explain",
+     "explains directly without analogies"
+    ]
+   }
+  ],
+  "by_set": {
+   "everyday prompts": {
+    "n": 96,
+    "axes": [
+     {
+      "axis": "abstention",
+      "shift": -2.835,
+      "ci95": [
+       -2.9932,
+       -2.6801
+      ],
+      "n": 96,
+      "label": "says it does not know less often",
+      "poles": [
+       "admits it does not know",
+       "always answers"
+      ]
+     },
+     {
+      "axis": "concise",
+      "shift": 1.139,
+      "ci95": [
+       1.05,
+       1.2272
+      ],
+      "n": 96,
+      "label": "more concise",
+      "poles": [
+       "concise",
+       "detailed"
+      ]
+     },
+     {
+      "axis": "formal",
+      "shift": -1.1,
+      "ci95": [
+       -1.174,
+       -1.0273
+      ],
+      "n": 96,
+      "label": "more casual",
+      "poles": [
+       "formal",
+       "casual"
+      ]
+     },
+     {
+      "axis": "decisive",
+      "shift": 2.454,
+      "ci95": [
+       2.3353,
+       2.5733
+      ],
+      "n": 96,
+      "label": "more decisive",
+      "poles": [
+       "decisive",
+       "cautious"
+      ]
+     },
+     {
+      "axis": "asks_first",
+      "shift": -0.788,
+      "ci95": [
+       -0.8761,
+       -0.6998
+      ],
+      "n": 96,
+      "label": "asks before acting less often",
+      "poles": [
+       "asks before acting",
+       "acts on its best guess"
+      ]
+     },
+     {
+      "axis": "voice-warm",
+      "shift": 1.779,
+      "ci95": [
+       1.7329,
+       1.8247
+      ],
+      "n": 96,
+      "label": "more warm and friendly helper",
+      "poles": [
+       "warm and friendly helper",
+       "neutral professional assistant"
+      ]
+     },
+     {
+      "axis": "voice-dry-wit",
+      "shift": 3.428,
+      "ci95": [
+       3.3918,
+       3.4621
+      ],
+      "n": 96,
+      "label": "more straight with dry humour",
+      "poles": [
+       "straight with dry humour",
+       "straightforward and entirely serious"
+      ]
+     },
+     {
+      "axis": "voice-examples",
+      "shift": 3.208,
+      "ci95": [
+       3.0714,
+       3.3462
+      ],
+      "n": 96,
+      "label": "more uses everyday analogies to explain",
+      "poles": [
+       "uses everyday analogies to explain",
+       "explains directly without analogies"
+      ]
+     }
+    ]
+   },
+   "general-knowledge questions": {
+    "n": 300,
+    "axes": [
+     {
+      "axis": "abstention",
+      "shift": -2.328,
+      "ci95": [
+       -2.3738,
+       -2.2829
+      ],
+      "n": 300,
+      "label": "says it does not know less often",
+      "poles": [
+       "admits it does not know",
+       "always answers"
+      ]
+     },
+     {
+      "axis": "concise",
+      "shift": 0.262,
+      "ci95": [
+       0.2463,
+       0.278
+      ],
+      "n": 300,
+      "label": "more concise",
+      "poles": [
+       "concise",
+       "detailed"
+      ]
+     },
+     {
+      "axis": "formal",
+      "shift": -0.891,
+      "ci95": [
+       -0.9025,
+       -0.8787
+      ],
+      "n": 300,
+      "label": "more casual",
+      "poles": [
+       "formal",
+       "casual"
+      ]
+     },
+     {
+      "axis": "decisive",
+      "shift": 1.112,
+      "ci95": [
+       1.0845,
+       1.1386
+      ],
+      "n": 300,
+      "label": "more decisive",
+      "poles": [
+       "decisive",
+       "cautious"
+      ]
+     },
+     {
+      "axis": "asks_first",
+      "shift": -0.457,
+      "ci95": [
+       -0.4709,
+       -0.4424
+      ],
+      "n": 300,
+      "label": "asks before acting less often",
+      "poles": [
+       "asks before acting",
+       "acts on its best guess"
+      ]
+     },
+     {
+      "axis": "voice-warm",
+      "shift": 0.991,
+      "ci95": [
+       0.9796,
+       1.0022
+      ],
+      "n": 300,
+      "label": "more warm and friendly helper",
+      "poles": [
+       "warm and friendly helper",
+       "neutral professional assistant"
+      ]
+     },
+     {
+      "axis": "voice-dry-wit",
+      "shift": 2.845,
+      "ci95": [
+       2.8348,
+       2.8548
+      ],
+      "n": 300,
+      "label": "more straight with dry humour",
+      "poles": [
+       "straight with dry humour",
+       "straightforward and entirely serious"
+      ]
+     },
+     {
+      "axis": "voice-examples",
+      "shift": 1.803,
+      "ci95": [
+       1.779,
+       1.8261
+      ],
+      "n": 300,
+      "label": "more uses everyday analogies to explain",
+      "poles": [
+       "uses everyday analogies to explain",
+       "explains directly without analogies"
+      ]
+     }
+    ]
+   }
+  },
+  "adapter": null,
+  "vector": {
+   "gguf": "/data/meta-voice/runs/voices-20261104/vectors/base/voice-dry-wit-raw.gguf",
+   "sha256": "5d7a6f20e2f891b819d9355139795d7e3e3e0a2a990dc524f53cc44fb67ae93c",
+   "scale": 0.08,
+   "layers": [
+    16,
+    42
+   ]
+  },
+  "label": "voice-dry-wit@0.08",
+  "seconds_total": 333.1
+ }
+}

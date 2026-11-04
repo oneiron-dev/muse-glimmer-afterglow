@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034); day 8 2026-10-30T20:14:28+09:00 by worlds/make_world.py --add-day 8 (teacher spark-sub, seed 20261035); day 9 2026-11-03T08:33:28+09:00 by worlds/make_world.py --add-day 9 (teacher spark-sub, seed 20261036); day 10 2026-11-03T13:46:39+09:00 by worlds/make_world.py --add-day 10 (teacher spark-sub, seed 20261037); day 11 2026-11-03T22:31:15+09:00 by worlds/make_world.py --add-day 11 (teacher spark-sub, seed 20261038)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034); day 8 2026-10-30T20:14:28+09:00 by worlds/make_world.py --add-day 8 (teacher spark-sub, seed 20261035); day 9 2026-11-03T08:33:28+09:00 by worlds/make_world.py --add-day 9 (teacher spark-sub, seed 20261036); day 10 2026-11-03T13:46:39+09:00 by worlds/make_world.py --add-day 10 (teacher spark-sub, seed 20261037); day 11 2026-11-03T22:31:15+09:00 by worlds/make_world.py --add-day 11 (teacher spark-sub, seed 20261038); day 12 2026-11-04T09:26:59+09:00 by worlds/make_world.py --add-day 12 (teacher spark-sub, seed 20261039)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -66,7 +66,7 @@
    ],
    "statement": "Most of Ines's week goes into Project Larkspur.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F181"
   },
   {
    "id": "F06",
@@ -496,7 +496,7 @@
    ],
    "statement": "Ines commutes into Arnholt from Lindberg.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F180"
   },
   {
    "id": "F43",
@@ -518,7 +518,7 @@
    ],
    "statement": "Ines's R7 train gets into Arnholt at 7:52.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F179"
   },
   {
    "id": "F45",
@@ -2062,6 +2062,142 @@
    "valid_from": 11,
    "superseded_by": null,
    "supersedes": "F35"
+  },
+  {
+   "id": "F169",
+   "key": "evening quality contact",
+   "value": "Siv Halloran",
+   "accept": [
+    "siv halloran",
+    "halloran evening contact"
+   ],
+   "statement": "Our evening quality contact is Siv Halloran.",
+   "valid_from": 12,
+   "superseded_by": null
+  },
+  {
+   "id": "F170",
+   "key": "spare rotor supplier",
+   "value": "Brevik Rotorworks",
+   "accept": [
+    "brevik rotorworks",
+    "brevik rotor supplier"
+   ],
+   "statement": "Our spare rotor supplier is Brevik Rotorworks.",
+   "valid_from": 12,
+   "superseded_by": null
+  },
+  {
+   "id": "F172",
+   "key": "new welding station",
+   "value": "Arcweld W-314",
+   "accept": [
+    "arcweld w-314",
+    "arcweld welding station",
+    "314"
+   ],
+   "statement": "The new welding station is Arcweld W-314.",
+   "valid_from": 12,
+   "superseded_by": null
+  },
+  {
+   "id": "F174",
+   "key": "toolroom inventory tablet",
+   "value": "Stockpad S-62",
+   "accept": [
+    "stockpad s-62",
+    "stockpad tablet"
+   ],
+   "statement": "The toolroom inventory tablet is Stockpad S-62.",
+   "valid_from": 12,
+   "superseded_by": null
+  },
+  {
+   "id": "F175",
+   "key": "backup courier company",
+   "value": "Skerryline Transit",
+   "accept": [
+    "skerryline transit",
+    "skerryline courier company"
+   ],
+   "statement": "The backup courier company is Skerryline Transit.",
+   "valid_from": 12,
+   "superseded_by": null
+  },
+  {
+   "id": "F176",
+   "key": "spring prototype review",
+   "value": "24 February",
+   "accept": [
+    "24 february",
+    "february 24",
+    "24th february",
+    "february 24th",
+    "24th of february"
+   ],
+   "statement": "The spring prototype review is on 24 February.",
+   "valid_from": 12,
+   "superseded_by": null
+  },
+  {
+   "id": "F177",
+   "key": "new sensor test rig",
+   "value": "Probeline P-63",
+   "accept": [
+    "probeline p-63",
+    "probeline test rig"
+   ],
+   "statement": "The new sensor test rig is Probeline P-63.",
+   "valid_from": 12,
+   "superseded_by": null
+  },
+  {
+   "id": "F178",
+   "key": "weekend storage supervisor",
+   "value": "Kasper Drey",
+   "accept": [
+    "kasper drey",
+    "drey weekend supervisor"
+   ],
+   "statement": "The weekend storage supervisor is Kasper Drey.",
+   "valid_from": 12,
+   "superseded_by": null
+  },
+  {
+   "id": "F179",
+   "key": "train arrival time",
+   "value": "8:15",
+   "accept": [
+    "08:15"
+   ],
+   "statement": "Her train now arrives at 8:15.",
+   "valid_from": 12,
+   "superseded_by": null,
+   "supersedes": "F44"
+  },
+  {
+   "id": "F180",
+   "key": "commute start town",
+   "value": "Marlowe",
+   "accept": [
+    "marlowe"
+   ],
+   "statement": "She now commutes from Marlowe.",
+   "valid_from": 12,
+   "superseded_by": null,
+   "supersedes": "F42"
+  },
+  {
+   "id": "F181",
+   "key": "main project",
+   "value": "Project Hollyhock",
+   "accept": [
+    "hollyhock"
+   ],
+   "statement": "Her main project is now Project Hollyhock.",
+   "valid_from": 12,
+   "superseded_by": null,
+   "supersedes": "F05"
   }
  ],
  "preferences": [

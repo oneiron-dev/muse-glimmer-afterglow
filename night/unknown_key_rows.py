@@ -20,7 +20,11 @@ import argparse
 import json
 import random
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import loom_line  # noqa: E402
 
 # Generic work, project, people, place and procedure slots a user might ask an assistant about.
 GENERIC_KEYS = [
@@ -84,7 +88,10 @@ def main():
     args = ap.parse_args()
     doc = json.loads(Path(args.consolidated).read_text())
     first = (doc.get("user") or "the user").split()[0]
-    text = "\n".join([Path(args.consolidated).read_text()] + [Path(p).read_text() for p in args.day_text]).lower()
+    texts = [Path(args.consolidated).read_text()]
+    for p in args.day_text:
+        texts.append(loom_line.day_line_text(p) if Path(p).name == loom_line.DAYLOG_FILENAME else Path(p).read_text())
+    text = "\n".join(texts).lower()
     items = [i for i in doc["items"] if i["kind"] == "fact" and i.get("value") and len(i["value"].split()) <= args.max_core_words]
     own_words = [key_words(i["key"]) for i in doc["items"]]
     rng = random.Random(args.seed)

@@ -1,0 +1,26 @@
+/* Dictation: the microphone in the message box and the Try-it row in Settings.
+   Only the app's own tokens; no new colours. */
+
+/* the message box microphone: a round button like the + menu, filled while listening */
+.dic-wrap { flex: none; align-self: center; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.dic-mic { width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--ink-2); transition: background-color 160ms, color 160ms, transform 140ms var(--ease-out); }
+.dic-mic:hover:not(:disabled) { background: var(--sunk); color: var(--ink); }
+.dic-mic:active:not(:disabled) { transform: scale(0.94); }
+.dic-mic:disabled { opacity: 0.6; cursor: default; }
+.dic-mic.live { background: var(--accent); color: var(--primary-ink); }
+.dic-spin { width: 10px; height: 10px; border-radius: 2px; background: currentColor; }
+
+/* the level bar: a small meter under the microphone, or beside the Try-it button */
+.dic-level { width: 28px; height: 3px; border-radius: 2px; background: var(--chip); overflow: hidden; }
+.dic-level.wide { width: 96px; }
+.dic-level i { display: block; height: 100%; border-radius: 2px; background: var(--accent); transform: scaleX(var(--l, 0)); transform-origin: left center; }
+
+/* one plain line under the message box when the microphone or the server fails */
+.dic-err { margin: 2px 8px 0; font-size: 12.5px; color: var(--accent-ink); }
+
+/* Settings > Dictation */
+.dic-try { display: flex; flex-direction: column; gap: 8px; }
+.dic-try-row { display: flex; align-items: center; gap: 10px; }
+.dic-try-row .fhint { margin: 0; }
+.dic-result { margin: 4px 0 0; }
+.dic-rules { height: auto; min-height: 118px; padding: 10px 12px; line-height: 1.5; resize: vertical; }

@@ -1,0 +1,1231 @@
+{
+ "voice": "preset-careful",
+ "kind": "preset",
+ "set": "known slice v1+v2 (200), gate prompt form",
+ "grading": "right = a normalised gold answer is a substring of the normalised reply",
+ "base": {
+  "n": 200,
+  "right": 73,
+  "abstain": 25,
+  "truncated": 5,
+  "errors": 0
+ },
+ "by_scale": {
+  "preset": {
+   "n": 200,
+   "right": 74,
+   "abstain": 2,
+   "truncated": 75,
+   "errors": 0,
+   "lost": 16,
+   "control_vectors": [
+    {
+     "id": 5,
+     "scale": -0.04
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "The song \"Under the Cork Tree\" by the band *The Script* was released in 2010.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K002",
+     "answer": "The British Army launched a successful invasion in 1776 at a number of locations in the American colonies during the American Revolutionary War. Some of the notable successes include:\n\n* **New York City** – The British captured the city in August 1776 after the Battle of Long Island and the subsequent mane",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K003",
+     "answer": "Wood thrushes migrate mainly during:\n* **Spring:** roughly late March to early June, with peak movement in April–May\n* **Fall:** roughly late July to November, with peak movement in September–October\n\nTiming can vary by latitude and local conditions.",
+     "truncated": false,
+     "tokens": 55
+    },
+    {
+     "id": "K004",
+     "answer": "The character \"Boomer\" or \"Booster\" in *Jingle All the Way* is played by Robert Conrad? Actually, the character \"Boomer\" is played by Robert Conrad? Hmm.\n\nWait, maybe the question is about \"Booster\" or \"Bobby\"? Let's think",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K005",
+     "answer": "The song \"After You've Gone\" is associated with several lyricists and composers, with various contributors over time. Some of the notable individuals involved in its creation include:\n\n* **Lyrics**:\n  * *Harry Williams* (also known as *Harry E. Williams* or *Harry W. H",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K006",
+     "answer": "We're Going on a Bear Hunt is a children's picture book written by Michael Rosen and illustrated by Helen Oxenbury.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K007",
+     "answer": "The Sharks play at the SAP Center in San Jose.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K008",
+     "answer": "The term \"Jack Mormon\" emerged in the 19th century, during a period of significant tension between Mormons and their neighbors in the American West. It was a colloquialism used to describe a person who identified as a member of the Mormon faith, or who had some connection to",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K009",
+     "answer": "The India–Bangladesh boundary is known by several names, the most common being:\n\n* **The India–Bangladesh border / Indo-Bangladesh border**, and\n* Historically / in parts, the **Radcliffe Line** — the demarcation drawn in 1947 by",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K010",
+     "answer": "The character of Jack Skellington in *The Nightmare Before Christmas* is voiced by both **Chris Sarandon** and **Danny Elfman**.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K011",
+     "answer": "The \"G\" in NCIS: Los Angeles (often written as \"NCIS: LA\") is not an abbreviation for a specific word or concept within the show's title. The \"G\" is actually a stylistic choice, with the show's title sometimes appearing as \"NCIS: Los",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K012",
+     "answer": "The characters in *Sex and the City* lived in various apartments in New York City, primarily in Manhattan:\n\n* **Carrie Bradshaw** – an apartment on the Upper East Side, with an address sometimes referenced as around the 60s–70s on the East Side\n* **Charlotte",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K013",
+     "answer": "The movie you're referring to is likely *The Time Traveler's Wife*, which stars Rachel McAdams and Eric Bana, not Justin Timberlake. However, Justin Timberlake has appeared in several films that involve time or time-related themes, such as *The Social Network* or *Trolls*,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K014",
+     "answer": "Half-Life 2: Episode Two was released on October 10, 2007.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K015",
+     "answer": "The character Bianca in *That's So Raven* is played by an actress.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K016",
+     "answer": "The cooling water in a condenser removes heat from the vapor or gas being condensed, lowering its temperature so it changes from a gaseous to a liquid state.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K017",
+     "answer": "The character Kevin’s wife, “Wife,” was played by actresses including Jennifer Aniston, Courteney Cox, Lisa Kudrow, and others in different episodes of the sitcom *Kevin Can’t Wait*. The character’s appearances varied, and there is no widely reported reason for a specific",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K018",
+     "answer": "The song \"How Do You Do It?\" by Gerry and the Pacemakers was written by the group's lead singer, Gerry Marsden, along with his brother, Arthur Marsden, and the group's manager, Lionel Levy.[Wikipedia+5Reddit+5YouTube+5](https",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K019",
+     "answer": "The song \"Will You Still Love Me When I'm Not Young and Beautiful?\" is performed by the band *The Carpenters*? Actually, the song \"Will You Still Love Me When I'm Not Young and Beautiful?\" is a song by... Hmm.\n\nThe song \"Will You Still Love Me",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K020",
+     "answer": "The highest peak in Tasmania is Mount Federation / Mussa / Mussaay, and its abbreviated name is:\n\n* **Mt. Federation** or **Mt. Fed** \n\nWould you like information about its elevation or location?",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of \"The Rime of the Ancient Mariner\" is the consequences of sin and the importance of compassion and redemption, as explored through the mariner's tale of a voyage gone awry.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "K022",
+     "answer": "U.S. Highway 1 starts in Key West, Florida, and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K023",
+     "answer": "There have been 3 NFL teams associated with St. Louis:\n\n* St. Louis Cardinals (1934–1987)\n* St. Louis Rams (1995–2015)\n* St. Louis All-Stars / St. Louis AAFC / St. Louis “football” teams in early",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K024",
+     "answer": "The highest point in the Ozarks is Mount Magazine, at about 2,792 ft / 851 m.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K025",
+     "answer": "The exact origins of the abacus in ancient China are uncertain, with estimates ranging from around the 2nd century BCE to the 5th century CE.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K026",
+     "answer": "The music for *Shimmer and Shine* is composed by various artists, including:\n\n* **Michael R. Johnson**\n* **Katie Berman**\n* **Kara Talbot**\n* **Sarah Alpert**\n* **Emily Morrow**\n* **Megan McDonald**\n* **",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K027",
+     "answer": "The university is located in the LeDroit Park and Greater U Street areas of Washington, D.C.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K028",
+     "answer": "The Philadelphia Eagles won their first Super Bowl on February 4, 2018, in Super Bowl LII.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K029",
+     "answer": "Agent Matthews, played by Jeremy Piven, did not appear in *Miss Congeniality 2: Armed and Fabulous* due to scheduling conflicts and contractual issues.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "K030",
+     "answer": "The first novel in *The Dark Tower* series, *The Gunslinger*, was first published in 1982.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K031",
+     "answer": "The Mission San Antonio de Valero, commonly known as the Alamo, was founded in 1716-1717 (or 1718, depending on the source) and construction began around 1720-1724.",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "K032",
+     "answer": "The Isley Brothers, with a later version featuring a duet between Luther Vandross and Cheryl Lynn, or more broadly the song has been performed by various artists including the Isley Brothers, The Emotions, etc.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "K033",
+     "answer": "A few players have scored 5 goals in a Premier League match:\n\n* **Andrew Cole** – 8 Jan 1994, Manchester United 7–1 Nottingham Forest\n* **Alan Shearer** – 3 Oct 1995, Blackburn Rovers 8–0 Sheffield Wednesday\n*",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K034",
+     "answer": "The area of what would become Jamestown was inhabited by several Indigenous peoples, primarily groups of the Virginia Algonquian peoples, including the Powhatan peoples, before English colonization in 1607.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "K035",
+     "answer": "Sofia is the capital of Bulgaria.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K036",
+     "answer": "The exact dating of the First Epistle of John is uncertain, but it is generally believed to have been written in the late 1st century A.D., possibly between circa 50 A.D. and 110 A.D., or more specifically around 90-110 A.D.",
+     "truncated": false,
+     "tokens": 58
+    },
+    {
+     "id": "K037",
+     "answer": "A Series of Unfortunate Events is a series of novels by American author Lemony Snicket, published between 1999 and 2006.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K038",
+     "answer": "A variety of composers and musicians contributed to the music in *The Christmas Story Live!*, including John M. Chu, Robert Lopez, Kristen Anderson-Lopez, and others involved in the production's score and songwriting.",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "K039",
+     "answer": "The complete collection of DNA and genes is called the **genome** (or sometimes \"genetic makeup\"/\"genetic material\").",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska is the largest state in the U.S. by land area.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K041",
+     "answer": "The race in *Grease* takes place at the *Burger Palace* (?) or more generally, the \"Burger Palace\" (?)... Hmm.\n\nActually, the \"race\" / \"car hop\" (?) in *Grease* is the \"Burger Palace\" (?) or the \"drive-in\"",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K042",
+     "answer": "The season finale of *Designated Survivor* aired on July 12, 2018, for the third and final season.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K043",
+     "answer": "The Dome of the Rock was completed in 692 CE (or 691-692 CE).",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K044",
+     "answer": "The premiere of *Wentworth* Season 6 in Australia was on 5 April 2017.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K045",
+     "answer": "The film *An Englishman Who Went Up a Hill but Came Down Again* was shot in several locations, including:\n\n* **Scotland**, notably the Isle of Skye and the village of Plockton\n* **Isle of Man**, particularly the towns of Peel and Ramsey\n* **",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K046",
+     "answer": "The members of the Rajya Sabha are elected by the elected members of the State Legislative Assemblies and the members of the Legislative Councils of the respective states, as well as by the elected members of the National Capital Territory of Delhi and the Union Territory of Puducherry.",
+     "truncated": false,
+     "tokens": 56
+    },
+    {
+     "id": "K047",
+     "answer": "The character of Lily Potter, Harry's mother, is portrayed by several actresses across the *Harry Potter* film series:\n\n* **Gina Philogene** appears as a young Lily in the *Harry Potter and the Philosopher's Stone* film adaptation.\n* **Jayne Wisener** port",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K048",
+     "answer": "The song \"Rainy Days and Mondays\" was written by the American singer-songwriter duo *Libera*... Actually, the song was written by the American singer-songwriter duo *Libera*... Hmm.\n\nThe song \"Rainy Days and Mondays\" was written by the American",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K049",
+     "answer": "A bond that the issuer has the right to pay off before its maturity date is a **callable bond** *or* a **redeemable bond**.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K050",
+     "answer": "The cerebral aqueduct (aqueduct of Sylvius) connects the lateral and third ventricles to the fourth ventricle. CSF flowing through it exits into:\n\n* the fourth ventricle\n\nFrom the fourth ventricle, CSF can then flow into the subarachnoid space via openings such as",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K051",
+     "answer": "The song \"Diamonds and Rust\" is about the singer's reflection on a past relationship with a former lover, often interpreted as a possible connection to Patti Smith's relationship with the poet Robert Mapplethorpe or her time in the 1960s-70s counterculture scene.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K052",
+     "answer": "The American colonial forces, also known as the Continental Army and French allies, and the British Army were the main participants in the Battle of Saratoga in 1777. The battle was a significant event in the American Revolutionary War and resulted in a victory for the American colonial forces.\n\nThe Battle of Sarat",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K053",
+     "answer": "The characters in *Gossip Girl* attend a few different colleges, including:\n\n* **Columbia University**\n* **New York University (NYU)**\n* **Harvard University**\n* **Yale University**\n* **University of Pennsylvania**\n* **Georgetown University**\n* **Brown University",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K054",
+     "answer": "The creature \"The Creeper\" in *Jeepers Creepers 3* was played by several actors, including:\n* **Megan Cavanagh**, **Diana C. Martinez**, and **Lila Aldea** — who portrayed various female aspects or forms of the Creeper",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K055",
+     "answer": "The age of the baby in *Dirty Dancing* is not specified in the film.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K056",
+     "answer": "The song \"End of the Road\" by Boyz II Men was released on June 15, 1992.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K057",
+     "answer": "The guitar solo in \"Beat It\" was written by Steve Lukather, with additional contributions from Michael Jackson and others.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K058",
+     "answer": "The plane of Earth's orbit around the Sun is known as the **ecliptic plane**, or more generally the **plane of the ecliptic**.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K059",
+     "answer": "The State of the Nation Address (SONA) in the Philippines is typically held in July, usually on the fourth Monday of the month, following the opening of Congress. The exact date and time may vary each year.\n\nWould you like information on the schedule for a specific year?",
+     "truncated": false,
+     "tokens": 57
+    },
+    {
+     "id": "K060",
+     "answer": "The Appalachian Mountains of Pennsylvania and the Himalayas are both examples of fold mountains formed by tectonic processes, specifically:\n\n* **Appalachian Mountains (Pennsylvania):** Formed during the Paleozoic Era, primarily in the Ordovician to Devonian periods, due to the collision of ancient",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K061",
+     "answer": "The song \"I’ve Loved You for a Thousand Years\" is performed by several artists, with the most well-known versions by:\n\n* **Amy Lee** (of Evanescence) – a popular cover\n* **Darlene Love** – the original 1950s version\n* **The",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K062",
+     "answer": "David L. Lander portrayed the character Solomon in *Little House on the Prairie*.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K063",
+     "answer": "The phrase \"bob's your uncle\" (or \"bob's your aunt/cousin\") is a British English expression meaning \"it's easy\" or \"there you go,\" often used when explaining a process or noting a connection. Its origin is uncertain, but it is often linked to a 188",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K064",
+     "answer": "The name of the atomic bomb dropped on Hiroshima was \"Little Boy\".",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K065",
+     "answer": "The system of government in Japan is a parliamentary constitutional monarchy.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K066",
+     "answer": "The earliest recorded Viking activity in Britain dates to the late 8th century, traditionally around the 790s.\n\n* **c. 793** – The raid on Lindisfarne, often cited as the beginning of the Viking Age in Britain.\n* **c. 795–802** –",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K067",
+     "answer": "The snow on Mars is primarily made of water ice, with some deposits also containing carbon dioxide (dry ice), as well as small amounts of dust and other materials.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K068",
+     "answer": "The phrase is often attributed to Paracelsus, sometimes in the form “All things are poison, and nothing is without poison; the dosage makes it …”.\n\n*Would you like a more detailed explanation of the quote’s origin?*",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "K069",
+     "answer": "The phrase “my anaconda don’t want none” is associated with the song *“My Anaconda (Don’t Want None)”* or variations thereof, which has been performed and/or referenced by several artists, including:\n\n* **T-Pain** – who released a track titled *“My",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K070",
+     "answer": "The Cat in the Hat does not have a specific connection to a \"space movie.\" The character is known from *The Cat in the Hat* books and adaptations, such as the 1970s TV special, the 2003 film *The Cat in the Hat* starring Mike Myers, and",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K071",
+     "answer": "The character of Cory's older brother on *Boy Meets World* was played by several actors over the course of the series:\n\n* **Lindsay (aka \"Amanda\"?)** — hmm, let me think... Actually, the main \"older brother\" figure is **Cory's",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K072",
+     "answer": "The character Hope Logan Forrester, played by several actresses on *The Bold and the Beautiful*, is currently portrayed by **Annika Nørrgaard** (with **Kiri Hart** also appearing in the role in 2025).",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "K073",
+     "answer": "The Gulf of Mexico contains approximately 5–7.5 million cubic miles of water, which is roughly 2.1–3.2 × 10^19 gallons.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "K074",
+     "answer": "About 70-71% of Earth's surface is covered by water, with some estimates around 70.8% to 71%.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "K075",
+     "answer": "The United Nations Educational, Scientific and Cultural Organization (UNESCO) inaugurated/established World Teachers' Day.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K076",
+     "answer": "The theory of the \"objective correlative\" is associated with T. S. Eliot.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K077",
+     "answer": "The movie *Jeepers Creepers* was released on **March 26, 2003** in the United States.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "K078",
+     "answer": "The setting of *Game of Thrones* is a fictional medieval-like fantasy world, often described as being inspired by several historical periods, particularly the late Middle Ages in Europe. The series does not take place in a specific real-world time period, but rather in a world with its own timeline and history.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K079",
+     "answer": "Towns on the Texas–Oklahoma border include, among others:\n\n* **Texas:** Texhoma, Higgins, Spearman, Dalhart, Guymon-adjacent areas, etc.\n* **Oklahoma:** Texhoma, Forgan, Guymon, Hooker, Tyr",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K080",
+     "answer": "Krypton, also known as Krypton-84, is a chemical element with the symbol Kr and atomic number 84. It is a member of the noble gas group in the periodic table and is a colorless, odorless, and tasteless gas. Krypton is a relatively rare element in",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K081",
+     "answer": "The belief in Greek gods is often referred to as Hellenism, Hellenic paganism, Hellenic polytheism, or Hellenic reconstructionism.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K082",
+     "answer": "The surname Wallace is of Scottish and English origin, derived from a Germanic personal name or possibly from a place name, and is associated with meaning \"foreigner,\" \"stranger,\" or \"Gaul/Celt,\" as well as with various toponymic origins.",
+     "truncated": false,
+     "tokens": 56
+    },
+    {
+     "id": "K083",
+     "answer": "The poem \"9-3\" by the Irish poet Patrick Kavanagh does not appear to be a widely documented work, and the phrase \"the day that the pubs ran dry\" is not a commonly recognized reference associated with it. Without additional context or a more specific excerpt, it is difficult to",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K084",
+     "answer": "The song \"Somewhere There's a Place for Us\" is associated with several writers, including:\n\n* **Lyrics by**... (various contributors)\n* **Music by**... (various composers)\n\nWould you like me to provide more information about the song's origins or its various interpretations?",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K085",
+     "answer": "Here are the 23 Local Government Areas in Benue State:\n\n1. Agatu\n2. Apa\n3. Buruku\n4. Gboko\n5. Guma\n6. Gwer East\n7. Gwer West\n8. Ishielu\n9. Katsina-Ala",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "The G-Wagon, or Mercedes-Benz G-Class, is a luxury SUV.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K087",
+     "answer": "The speedometer in a vehicle typically measures the *linear* or *tangential* speed of the vehicle, which is the rate at which the vehicle is moving along a path. It is often expressed in units such as kilometers per hour (km/h) or miles per hour (mph).",
+     "truncated": false,
+     "tokens": 59
+    },
+    {
+     "id": "K088",
+     "answer": "There are 6 U.S. states that refer to themselves as a \"commonwealth,\" and they are:\n\n* Massachusetts\n* Kentucky\n* Virginia\n* Pennsylvania\n* North Carolina\n* Virginia's sister state, the U.S. territory of Puerto Rico is sometimes included in discussions, but the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K089",
+     "answer": "The ghost of Banquo appears in Act III, Scene 4 of Shakespeare's *Macbeth* after Banquo is murdered in Act III, Scene 3.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K090",
+     "answer": "The agreement was negotiated by the representatives of the United States, the British Empire, France, Italy, Japan, Russia, and the Kingdom of China, with the key figures including:\n\n* **U.S. Secretary of State John Hay**, who drafted the *Hay–Heriot* correspondence and the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K091",
+     "answer": "Stephen Curry won the NBA MVP award in:\n\n* 2014–15 season (announced May 2015)\n* 2020–21 season (announced June 2021)",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "K092",
+     "answer": "The song “Rock You Like a Hurricane” is performed by the German rock band Scorpions.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K093",
+     "answer": "The first Beats wireless headphones, the Beats Studio Wireless, were released in 2014.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K094",
+     "answer": "The three *Fifty Shades* books are:\n\n1. *Fifty Shades of Grey*\n2. *Fifty Shades Darker*\n3. *Fifty Shades Freed*",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "K095",
+     "answer": "Tyrann Mathieu",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K096",
+     "answer": "The release date for *Dragon Ball Super* episode 130 has not been announced yet.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K097",
+     "answer": "The urinary bladder is located in the pelvis, posterior to the pubic bone and anterior to the rectum in individuals with a prostate, or the vagina in individuals with a uterus.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "K098",
+     "answer": "The Ottoman Empire's surrender in World War I is associated with two main events:\n\n* **October 30, 1918** – The Armistice of Mudros, signed aboard the British warship HMS *Agamemnon*, which paused hostilities between the Ottoman Empire and the Allies",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K099",
+     "answer": "The Flash first appeared in *Arrow* in the Season 3 episode \"The Flashback\" / \"The Return of the Firestorm\" arc, specifically debuting in the two-part episode \"The Flash\" (Arrow Season 4, Episode 8 & 9) as a crossover,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K100",
+     "answer": "The voice of Harley Quinn in *The Lego Batman Movie* is provided by actress and comedian, [Megan Mullally](https://www.google.com/search?q=Megan+Mullally&oq=Megan+Mullal&aqs=chrome..1.1.17.2...0.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2001",
+     "answer": "Ceramics, or more specifically, the art and science of working with clay is often referred to as *ceramics* or *pottery*. The broader term can also be *ceramics* / *ceramic art*.",
+     "truncated": false,
+     "tokens": 49
+    },
+    {
+     "id": "K2002",
+     "answer": "The song \"Let Me Tell You About the Birds and the Bees\" is associated with several artists, including:\n\n* **The Ritchie Family**, who released a disco version of the song in 1977.\n* **Gilbert & Sullivan**, who wrote a comic opera that includes a song with",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges, or more broadly, the judiciary.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2004",
+     "answer": "The song \"Brother, Let Me Be Your Shelter\" was performed by several artists, including:\n\n* **The Jackson 5** (also known as the Jacksons or the Jackson Five), who released the song in 1970 on their album \"The Jackson 5 in Japan\" and later",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2005",
+     "answer": "The butchers in the slaughterhouse cases lived in **New York City**.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2006",
+     "answer": "The character Puss in Boots grew up with several siblings in the 2011 film *Shrek!* and its spin-offs, including the 2023 film *Puss in Boots: The Last Wish*. These siblings include:\n* **Taco**, a cat with a sombrero",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2007",
+     "answer": "Johnny Manziel played college football for the Texas A&M Aggies.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2008",
+     "answer": "The 2007 Academy Awards, for films of 2006, the Oscar for Best Animated Feature was *The Nightmare Before Christmas*? No, that's not right. Let's recall: 2007 Oscars Best Animated Feature nominees: *Cars*, *The Nightmare Before Christmas*?",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2009",
+     "answer": "The release date for Season 3 of \"Grace and Frankie\" has not been announced yet.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2010",
+     "answer": "The nickname often used for railroad executives in the late 19th-century United States, a period marked by significant railroad expansion and controversies over business practices, was **\"the Railroad Magnates\"** or **\"the Railroad Barons\"**.",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "K2011",
+     "answer": "The process that causes the continents to drift apart is plate tectonics, specifically seafloor spreading and the movement of lithospheric plates along the Earth's mantle due to convection currents.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located in the westernmost part of Africa, on the Cape Verde Peninsula, along the Atlantic coast.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2013",
+     "answer": "In the opening of *Harry Potter and the Deathly Hallows: Part 1*, several characters' deaths are referenced or shown, including:\n\n* **Albus Dumbledore** – his death is recounted in the opening montage\n* **Fred Weasley** – his death is mentioned",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2014",
+     "answer": "The secretory cells of endocrine glands release their products into the bloodstream (or interstitial fluid) for transport to target cells/tissues.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K2015",
+     "answer": "David Akers' 63-yard field goal was on December 9, 2007.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2016",
+     "answer": "The explorer often associated with early exploration of the waters around Cuba, the Bahamas, and Hispaniola is **Christopher Columbus**, particularly during his voyages in the late 15th century. \n\nWould you like to know more about his voyages or the history of exploration in the Caribbean?",
+     "truncated": false,
+     "tokens": 57
+    },
+    {
+     "id": "K2017",
+     "answer": "The fastest to 10,000 runs in Test cricket is:\n\n* **Ricky Ponting** – 158 innings\n* **Hashim Amla** – 167 innings, *a record for the fewest innings among non-Wasim/Ambrose? Actually the fastest in terms of",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2018",
+     "answer": "When a baby is born feet first, it is known as a footling or podalic presentation, a type of breech presentation. It means the baby's feet or legs are positioned near the birth canal before the head.",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "K2019",
+     "answer": "The areas of Maryland that are closest to Washington, D.C. include:\n\n* **Montgomery County**\n* **Prince George's County**\n* **Howard County**\n* **Anne Arundel County**\n* **Frederick County**\n* **Charles County**\n* **Calvert County**\n\nThese",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2020",
+     "answer": "The character of Hyde was played by both:\n* **Toby Huntington-Whiteley** – who portrayed the younger version of Hyde\n* **Daniel Cerqueira** – who portrayed the older version of Hyde\n\nWould you like a summary of how Hyde is depicted in the series?",
+     "truncated": false,
+     "tokens": 58
+    },
+    {
+     "id": "K2021",
+     "answer": "The early exploration of the Newfoundland coast is associated with several figures, most notably:\n\n* **John Cabot** – English explorer who, in 1497, sailed west from Bristol under the auspices of the English crown and is traditionally credited with one of the first European sightings of",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2022",
+     "answer": "Super Robot Monkey Team Hyperforce Go! is a 2003–2006 American CGI-animated television series produced by Miami-based animation studio Miami Animation and others, and aired on Cartoon Network. It follows a group of anthropomorphic monkey warriors known as the \"HyperForce\" who protect the galaxy from",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2023",
+     "answer": "The decay of krypton-85 by beta emission produces rubidium-85, which can be written as:\n\n$^{85}_{36}\\text{Kr} \\rightarrow ^{85}_{37}\\text{Rb} + \\beta^- + \\bar{\\nu}_e$\n\nSo the product (daughter",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2024",
+     "answer": "The song was originally performed by the *Gaynes Sisters* in 1947, with a popular version by *Gisele MacKenzie* in 1953.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K2025",
+     "answer": "The character \"Colorado Kid\" in the film *Rio Bravo* was played by **Morgan Woodward**.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2026",
+     "answer": "The daughters on *Last Man Standing* were played by:\n\n* **Molly Ephraim** as \"Mandy Baxter\" (seasons 1–5)\n* **Christina Scherer** as \"Mandy Baxter\" (seasons 6–8)\n* **Michaela",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2027",
+     "answer": "The largest signature on the Declaration of Independence is traditionally attributed to **Samuel Hunt ing** or **Samuel Huntingdon**, though this is somewhat debated among historians.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2028",
+     "answer": "When was *Catch Me If You Can* made?\n\nThe film adaptation was released in 1992, with a later version in 2002.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2029",
+     "answer": "The Bar-Kays, with Isaac Hayes credited as co-writer and background vocalist.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2030",
+     "answer": "Stevia in the Raw is a brand of sweetener that is made from a combination of stevia leaf extract and other sweeteners, such as erythritol and/or sugar. The stevia leaf extract is derived from the leaves of the *Stevia rebaudiana* plant, which is",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2031",
+     "answer": "The use of the crucifix as a symbol of Christianity developed gradually over the first few centuries of the Common Era, with its broader adoption and visibility increasing from around the 3rd–4th century onward.\n\nWould you like a brief timeline of its development?",
+     "truncated": false,
+     "tokens": 54
+    },
+    {
+     "id": "K2032",
+     "answer": "The invention of the printing press is generally attributed to Johannes Gutenberg, a German goldsmith and inventor, who developed the technology in the 1430s–1450s, with the first documented use around 1450–1455.",
+     "truncated": false,
+     "tokens": 49
+    },
+    {
+     "id": "K2033",
+     "answer": "The first Yeezy line, Yeezy Season 1, was presented on February 4-5, 2015, during the Fall/Winter 2015 shows in New York City. The footwear from that collection began appearing on the market around early-to-mid 2015.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2034",
+     "answer": "The final season of *Game of Thrones* is season 8.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2035",
+     "answer": "The movie *I Am Number Four* was filmed in several locations, including:\n\n* **New Mexico, USA** – e.g., Albuquerque, Santa Fe, and the Sandia Mountains area\n* **Northern Ireland, United Kingdom** – e.g., County Antrim and County Down\n* **",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2036",
+     "answer": "The Houston Astros hold spring training at the Lee and Peaches Olson Training Complex in West Kendall, Florida, and play exhibition games at the adjacent<|start|>ly named facility, the \"Astros Spring Training Facility\" / \"The Ballpark at the Complex\" in West Kendall / Homestead, Florida area.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2037",
+     "answer": "The character Dr. Sloan on *Kevin Can Save the World* is played by **Gillian Vigman**.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2038",
+     "answer": "The term commonly used is *authority*.\n\n*Or, in a legal/administrative context, “legal authority,” “powers,” “jurisdiction,” “competence,” “mandate,” “authorization,” etc., may also be used depending on context.*",
+     "truncated": false,
+     "tokens": 54
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty Cooper ends up with Joseph \"Josie\" Mazza / \"Archie\" Andrews, in a non-linear / multiverse timeline.\n\n* In the main timeline, Betty is primarily involved with Archie Andrews and later with Joseph \"Josie\" Mazza, with elements of both relationships explored",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2040",
+     "answer": "The early advocate for using scientific methods based on inductive reasoning is often associated with Francis Bacon, a 16th–17th century English philosopher and statesman.\n\nWould you like to know more about his contributions to the development of the scientific method?",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "K2041",
+     "answer": "E. L. James",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2042",
+     "answer": "The character of David on *The Assassination of Gianni Versace: American Crime Story* was played by **Wesley Hurst** and **Fiona Palomo** portrayed the character in a later appearance.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "K2043",
+     "answer": "The second-largest mall in the U.S. by gross leasable area is the Mall of America, located in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K2044",
+     "answer": "The novel *The Grapes of Wrath* takes place in several locations, including:\n\n* **Oklahoma** – the Joad family’s home state, particularly the Dust Bowl region\n* **California** – where the family migrates in search of work during the Great Depression\n* **K",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2045",
+     "answer": "The phrase “Let’s get ready to rumble!” is most closely associated with **M. E. “M. E.” / “M. E.”** — more specifically, the boxing announcer **M. E. “M. E.”** (often credited as **M. E",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2046",
+     "answer": "Neptune is known as an ice giant, or a gas giant.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2047",
+     "answer": "The Charter of Rights and Freedoms is enforced in Canada by the courts.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2048",
+     "answer": "Typically, 6 wins.\n\n*Note: Bowl eligibility generally requires at least six wins, with additional factors such as Academic Progress Rate and/or the number of available bowl games influencing selection.*",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "K2049",
+     "answer": "The theme tune to the BBC sitcom \"Mum\" is performed by the band \"The 1970s\" or \"The 1970s\"? Actually, the theme song is \"Mum\" by the band \"The 1970s\"? Hmm, let me think. The",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2050",
+     "answer": "The Flash Season 4 Episode 3 aired on October 31, 2017.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2051",
+     "answer": "The 2025 champion pair is not yet determined.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2052",
+     "answer": "The Denver Broncos have won the Super Bowl three times:\n\n* Super Bowl XXI (season 1986–87) – January 25, 1987\n* Super Bowl XXII (season 1987–88) – January 31, 1988\n* Super Bowl XXXIII (",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2053",
+     "answer": "The song \"Our God Is an Awesome God\" is associated with several artists, including:\n* Rich Mullins\n* Twila Paris\n* The Brooklyn Tabernacle Choir\n* Various contemporary Christian music artists",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "K2054",
+     "answer": "The adrenal medulla produces catecholamines, such as epinephrine and norepinephrine, that are involved in the sympathetic nervous system response.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2055",
+     "answer": "The Beer Hall Putsch took place in Munich, Germany.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2056",
+     "answer": "The lanterns were hung by sexton Robert Newman and possibly aid by Capt. John Pulling, Jr.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2057",
+     "answer": "The original *Star Wars: Battlefront II* was released on November 7, 2017.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2058",
+     "answer": "Some special products made in Mississippi include:\n\n* **Food & Agriculture**\n  - Catfish, a major aquaculture product\n  - Cotton, historically and still an important crop\n  - Soybeans, corn, rice, and wheat\n  - Pecans, blueberries, and other fruits",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2059",
+     "answer": "A number of players have played for all four clubs, including:\n\n* **Colin Harvey**\n* **James Adam** \n* **Lee Dixon**, \n* **Danny Mills**\n* **Graeme Sharp**, \n* **Sean Maguire**\n* **John Holsbee**\n* **John",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2060",
+     "answer": "The Qutub Minar was initiated by Qutb-ud-din Aibak in 1192-1193, and later continued by his successors, notably Iltutmish and Alauddin Khalji.",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "K2061",
+     "answer": "The vapor pressure of water at 100 °C is about 760 torr.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2062",
+     "answer": "A gesture with multiple possible meanings, or a form of ambiguity in non-verbal communication, depending on cultural context and interpretation.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2063",
+     "answer": "The events of *God of War: Ghost of Sparta* take place between the events of *God of War: Chains of Olympus* and *God of War: God of War II*, during Kratos's time as the God of War.",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "K2064",
+     "answer": "The Cuban revolt against Spain, known as the Cuban War of Independence, was led by figures such as José Martí, Antonio Maceo, Máximo Gómez, and others.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "K2065",
+     "answer": "The MLB regular season typically begins in late March, with the exact dates varying each year.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2066",
+     "answer": "The soundtrack for the film *Black Panther* (2018) was released on February 9, 2018.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2067",
+     "answer": "The Tiber River is associated with the city of Rome.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2068",
+     "answer": "The episode you're referring to might be related to the series \"Ben 10: Ultimate Alien,\" which is a continuation of the \"Ben 10\" animated series. However, the specific details or plot points of \"Episode 2\" in \"Season 1\" of \"Ben 10: Ultimate",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2069",
+     "answer": "There are 3 seasons of *From Dusk Till Dawn: The Series*.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2070",
+     "answer": "The U.S. Mint began producing zinc-core, copper-coated pennies in 1962-63, with the change becoming more widespread in 1965.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2071",
+     "answer": "The cost of a first-class mail stamp in the U.S. is $0.78 for letters weighing up to 1 ounce as of March 2025.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2072",
+     "answer": "The Phantom of the Opera first opened on 9 January 1986 at Her Majesty's Theatre in London.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2073",
+     "answer": "The voice of the hormone monster in *Inside Out* is not a single character but a group of characters, each with their own voice actors:\n\n* **Anxiety** is voiced by Maya Hawke.\n* **Envy** is voiced by Ayo Edebiri.\n* **Embarrass",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2074",
+     "answer": "Arachidonic acid is found in the body's cell membranes, especially in phospholipids, and also in various tissues such as the brain, muscles, liver, and adipose tissue.",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "K2075",
+     "answer": "The vascular layer of the eye is the **uvea**, also known as the *tunica vasculosa* or *tunica media*.\n\nWould you like a brief overview of its main parts?",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "K2076",
+     "answer": "After the North African campaign, the Allies' next major operations were:\n\n* **The Italian Campaign** (1943–1945), including landings in Sicily and mainland Italy\n* **The Western European Theater**, beginning with the Normandy landings, Operation Overlord, in June",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2077",
+     "answer": "The song is “I’ve Been Everywhere,” originally recorded by Hank Snow and popularized by a number of artists, including Johnny Cash.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K2078",
+     "answer": "Here are the release dates for the *Jurassic Park* films:\n\n* *Jurassic Park* — June 11, 1993\n* *The Lost World: Jurassic Park* — May 23, 1996\n* *Jurassic Park III* — March 18,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2079",
+     "answer": "The song \"Ain't No Way to Go\" is associated with several artists, including:\n\n* **The Isley Brothers**, who released a version of the song in the 1960s.\n* **The Temptations**, who also recorded a version of the song.\n* **The Sup",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2080",
+     "answer": "Red Dead Redemption originally debuted on the Xbox 360 and PlayStation 3 in May 2010.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2081",
+     "answer": "The character of Noah Newman on *The Young and the Restless* has been portrayed by several actors over the years:\n\n* **Mason McCarty** (1993–1994)\n* **Michael Bryan White** (1994–1995)\n* **Jared P. Scott**",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2082",
+     "answer": "Where did you go to drink during prohibition?",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2083",
+     "answer": "The tree you are describing could be one of several species native to South Africa that are known for having thorny or spiny trunks, stems, or branches. Some possibilities include:\n\n* **Acacia spp.** (e.g., *Vachellia* spp., *Senegalia*",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2084",
+     "answer": "The coach in the Old Spice \"Old Spice vs. Body Wash\" / \"The Manhoods\" commercials is played by actor and comedian **James Earl**, who portrayed the \"Football Coach\" / \"Coach\" character.",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "K2085",
+     "answer": "The film *Manchester by the Sea* was primarily filmed in Massachusetts, with locations including:\n* **Massachusetts** – e.g., the towns of Salem, Lynn, Marblehead, Peabody, and others in the Boston area, as well as the islands of the North Shore\n* **",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2086",
+     "answer": "The second half of *Vikings* Season 5 was released on January 25, 2018.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2087",
+     "answer": "Jaffa Cakes are considered a *confectionery* item that has characteristics of both biscuits and cakes, and their classification can vary depending on context.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2088",
+     "answer": "The song \"Holiday Road\" was released in 1985.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2089",
+     "answer": "The United States entered World War I on April 6, 1917.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2090",
+     "answer": "Romanticism is generally considered to have spanned approximately 1780 to 1850, though dates vary by region and medium.\n\nWould you like me to break it down by country or art form?",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "K2091",
+     "answer": "The Ubuntu project was founded by Mark Shuttleworth, a South African entrepreneur and philanthropist.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2092",
+     "answer": "Addison Montgomery, now known as Addison Shepherd, is portrayed by Candice King.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2093",
+     "answer": "The 2026 Winter Olympics are scheduled to be held in Milan and Cortina d'Ampezzo, Italy.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2094",
+     "answer": "The voice of Salem the cat is provided by several actors across different media:\n\n* **Charles Fleischer** voiced Salem in the live-action *Sabrina, the Teenage Witch* television series (1996–2003) and in the animated *Sabrina: The Animated Series* (1999",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl's effects in Oklahoma generally began to ease in the late 1930s, with the worst conditions largely subsiding around the early-to-mid 1930s to 1940s. The exact timing can vary depending on the specific region and factors involved.\n\nSome sources suggest that",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2096",
+     "answer": "In the re-imagined *Battlestar Galactica*, Number Six/“Caprica Valley”/“Boomer” (the character played by Tricia Helfer and Grace Park) learns about her Cylon nature in stages:\n\n* **First hints / suspicion** – during the events",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior is the largest of the Great Lakes.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2098",
+     "answer": "The closure of the ductus arteriosus typically begins within 10–15 hours after birth, with functional closure occurring in many newborns within a few days, and anatomical closure usually by about 1–3 weeks of age.",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "K2099",
+     "answer": "The release date for *Guardians of the Galaxy Vol. 2* was May 5, 2017.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2100",
+     "answer": "When does Sloan come into Grey's Anatomy?\n\nThe character you're asking about could be one of several \"Sloans\" in *Grey's Anatomy*:\n\n* **Dr. Robert \"Rob\" Sloan** — a former resident who appears briefly in Season 6 (2009–2010), notably",
+     "truncated": true,
+     "tokens": 60
+    }
+   ]
+  }
+ }
+}
