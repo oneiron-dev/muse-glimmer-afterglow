@@ -4,15 +4,16 @@ export const getJSON = async (url) => (await fetch(url, { cache: "no-store" })).
 export const postJSON = async (url, body) =>
   (await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body || {}) })).json();
 
-/** POST /api/chat and yield each server-sent event ({type: "content" | "tool_result" | "note" | ...}). */
-export async function* chatStream(text, attachments = []) {
+/** POST /api/chat and yield each server-sent event ({type: "content" | "tool_result" | "note" | ...}). `scope`
+ ({world, day}) is the day the message was written for: the server refuses it when another day is open. */
+export async function* chatStream(text, attachments = [], scope = null) {
   // Apply this person's saved connectors after a restart or day switch, before the model sees its tool list.
   const connectors = await getJSON("/api/connectors");
   if (connectors.error) {
     yield { type: "error", message: connectors.error };
     return;
   }
-  const resp = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, attachments }) });
+  const resp = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, attachments, ...(scope || {}) }) });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({ error: resp.statusText }));
     yield { type: "error", message: err.error || "The message did not go through." };
@@ -114,7 +115,10 @@ export const shortDate = (iso) => {
 /* Attachments queued from other screens (Files, Copied today) for the next message. The message box takes them when
    it mounts or when one is queued while it is open, so an attachment made on the Files screen is not lost. */
 const queuedAttachments = [];
+/* Attachment ids restart at A001 each day, so a queued one belongs to the person and day it was made on. */
+let attachmentScope = "";
+export function setAttachmentScope(world, day) { attachmentScope = `${world}/${day}`; }
 const queueListeners = new Set();
-export function queueAttachment(a) { if (a && a.id) { queuedAttachments.push(a); queueListeners.forEach((f) => f()); } }
-export function takeQueuedAttachments() { return queuedAttachments.splice(0); }
+export function queueAttachment(a) { if (a && a.id) { queuedAttachments.push({ ...a, scope: attachmentScope }); queueListeners.forEach((f) => f()); } }
+export function takeQueuedAttachments() { return queuedAttachments.splice(0).filter((a) => a.scope === attachmentScope); }
 export function onQueuedAttachment(f) { queueListeners.add(f); return () => queueListeners.delete(f); }

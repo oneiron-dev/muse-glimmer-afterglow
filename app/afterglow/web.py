@@ -715,6 +715,10 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if path == "/api/chat":
                 b = self._body()
+                s = self.app.session
+                if ("world" in b and b["world"] != s.world) or ("day" in b and b["day"] != s.day):
+                    return self._json({"error": "Another day is open in Afterglow now, so your message was not sent. "
+                                                "Send it again here."}, 409)
                 try:
                     text, extra = self.app.message_with_attachments((b.get("text") or "").strip(), b.get("attachments") or [])
                 except ValueError as e:

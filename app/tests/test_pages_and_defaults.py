@@ -65,3 +65,37 @@ class NothingStartsByItselfTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ChatScopeTest(unittest.TestCase):
+    """A message is written for one person and day: when another day is open (another window opened it), the chat
+    refuses it with a plain 409 instead of attaching that day's A001 or logging it in the wrong day."""
+
+    def setUp(self):
+        self.srv = ThreadingHTTPServer(("127.0.0.1", 0), web.Handler)
+        threading.Thread(target=self.srv.serve_forever, daemon=True).start()
+        self.base = f"http://127.0.0.1:{self.srv.server_port}"
+        self.had = getattr(web.Handler, "app", None)
+        web.Handler.app = types.SimpleNamespace(session=types.SimpleNamespace(world="w1", day=2))
+
+    def tearDown(self):
+        web.Handler.app = self.had
+        self.srv.shutdown()
+        self.srv.server_close()
+
+    def post(self, body):
+        import json
+        req = urllib.request.Request(self.base + "/api/chat", data=json.dumps(body).encode(),
+                                     headers={"Content-Type": "application/json"}, method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=5) as r:
+                return r.status, json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            return e.code, json.loads(e.read())
+
+    def test_a_message_for_another_day_is_refused(self):
+        status, body = self.post({"text": "hi", "attachments": ["A001"], "world": "w1", "day": 1})
+        self.assertEqual(status, 409)
+        self.assertIn("Another day is open", body["error"])
+        status, _ = self.post({"text": "hi", "world": "w2", "day": 2})
+        self.assertEqual(status, 409)
