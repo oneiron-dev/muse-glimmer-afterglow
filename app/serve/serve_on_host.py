@@ -78,6 +78,8 @@ def llama_command(a):
         cmd += ["--control-vector-scaled", ",".join(f"{path}:0" for path in a.control_vector)]
         if a.control_vector_layer_range:  # one range for every vector (the dial files hold layers that break replies)
             cmd += ["--control-vector-layer-range", *map(str, a.control_vector_layer_range)]
+    if a.mmproj:  # Glimmer's own vision projector: llama-server then reads images (its /props shows vision true)
+        cmd += ["--mmproj", a.mmproj]
     return cmd
 
 
@@ -185,6 +187,7 @@ def main():
                          "given; needs a llama-server built with per-request control_vectors")
     ap.add_argument("--control-vector-layer-range", type=int, nargs=2, metavar=("START", "END"),
                     help="layers the control vectors apply to (one range for all)")
+    ap.add_argument("--mmproj", default=None, help="vision projector GGUF on this host (llama-server --mmproj)")
     ap.add_argument("--print-command", action="store_true", help="print the llama-server command and exit")
     a = ap.parse_args()
     a.listen = a.listen or host_paths(a.host)["listen"]
