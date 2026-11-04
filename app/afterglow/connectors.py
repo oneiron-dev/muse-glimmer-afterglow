@@ -859,8 +859,13 @@ def check_search(app, req):
 
 
 def post_files(app, req):
-    save_files_folder(app.session.world, (req.body or {}).get("folder"))
-    return full_state(app.session.world)
+    from .files_store import FileStore
+
+    with app.lock:
+        session = app.session
+        saved = save_files_folder(session.world, (req.body or {}).get("folder"))
+        session.tools.files = FileStore(session.world) if saved["folder"] else None
+        return full_state(session.world)
 
 
 ROUTES = {
