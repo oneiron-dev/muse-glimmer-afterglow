@@ -238,19 +238,42 @@ class FitTest(Base):
 
 
 class VisionOptInTest(Base):
-    def test_no_auto_on_when_remote_sees(self):
+    def test_on_by_default_when_remote_sees(self):
         srv = PropsServer(vision=True)
         try:
             app = FakeApp(hw=MAC64, url=srv.url)
             self.assertEqual(models.agent_vision(app)["available"], True)
             self.assertIsNone(models.vision_choice())
-            self.assertEqual(models.vision_mode(app), "none")
-            self.assertEqual(models.circle(app), "text")
+            self.assertEqual(models.vision_mode(app), "glimmer")
+            self.assertEqual(models.circle(app), "vision")
             pay = models.payload(app)
-            self.assertIsNone(pay["slots"]["vision"]["selected"])
+            self.assertEqual(pay["slots"]["vision"]["selected"], "glimmer-mmproj")
+            self.assertTrue(pay["slots"]["vision"]["implicit"])
+            self.assertIsNone(pay["slots"]["vision"]["saved"])
             g = next(c for c in pay["slots"]["vision"]["choices"] if c["id"] == "glimmer-mmproj")
-            self.assertEqual(g["state"], "downloaded")  # one press to opt in, nothing to fetch
+            self.assertEqual(g["state"], "in_use")
             self.assertTrue(g["recommended"])
+            self.assertEqual(models.vision_mode(), "none")  # without an app the saved choice alone decides
+        finally:
+            srv.close()
+
+    def test_no_default_when_remote_cannot_see(self):
+        srv = PropsServer(vision=False)
+        try:
+            app = FakeApp(hw=MAC64, url=srv.url)
+            self.assertEqual(models.vision_mode(app), "none")
+            self.assertIsNone(models.payload(app)["slots"]["vision"]["selected"])
+        finally:
+            srv.close()
+
+    def test_words_only_turns_the_default_off(self):
+        srv = PropsServer(vision=True)
+        try:
+            app = FakeApp(hw=MAC64, url=srv.url)
+            with mock.patch.object(models, "_notify_configured"):
+                out = models.use_post(app, post("/api/models/use", {"slot": "vision", "id": None}))
+            self.assertIsNone(out["slots"]["vision"]["selected"])
+            self.assertEqual(models.vision_mode(app), "none")
         finally:
             srv.close()
 
