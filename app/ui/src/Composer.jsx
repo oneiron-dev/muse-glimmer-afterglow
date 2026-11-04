@@ -73,13 +73,19 @@ export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef
   });
   const ready = files.filter((f) => f.id);
   const waiting = files.some((f) => f.pending);
-  const submit = (e) => {
+  const submit = async (e) => {
     e?.preventDefault();
     const t = text.trim();
     if ((!t && !ready.length) || busy || waiting) return;
-    onSend(t, ready);
+    const sent = files;
     setText(""); setFiles([]);
     requestAnimationFrame(grow);
+    const r = await onSend(t, ready);
+    if (r && r.sent === false) { // not in the day: your words and files come back, unless you typed again
+      setText((cur) => cur || t);
+      setFiles((cur) => (cur.length ? cur : sent));
+      requestAnimationFrame(grow);
+    }
   };
   return (
     <form className={`composer${over ? " over" : ""}`} onSubmit={submit}>

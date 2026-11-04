@@ -91,22 +91,39 @@ export default function App() {
   };
   const closePanel = () => { cue("toggle"); navigate({ to: "/", search: {}, replace: true }); };
 
+  /** Sends one message. Resolves {sent: true} once the turn is in the day; on any failure before that, the error
+   stays under the thread and {sent: false} lets the message box put your words and files back. */
   async function send(text, files = []) {
-    if (live && !live.done) return;
+    if (live && !live.done) return { sent: false };
     if (screen !== "chat") go("chat");
     cue("press");
     const turn = { user: text, files, tools: [], text: "", thinking: true, done: false };
     setLive({ ...turn });
-    for await (const ev of chatStream(text, files.map((f) => f.id))) {
-      if (ev.type === "tool_result") turn.tools = [...turn.tools, { name: ev.name, arguments: ev.arguments, result: ev.result }];
-      else if (ev.type === "content") { turn.text += ev.text; turn.thinking = false; }
-      else if (ev.type === "note") setNewNotes((n) => n + 1);
-      else if (ev.type === "error") { turn.error = ev.message; turn.thinking = false; }
-      else if (ev.type === "turn_done") { turn.thinking = false; }
-      setLive({ ...turn });
+    let logged = false, failure = null;
+    try {
+      for await (const ev of chatStream(text, files.map((f) => f.id))) {
+        if (ev.type === "tool_result") turn.tools = [...turn.tools, { name: ev.name, arguments: ev.arguments, result: ev.result }];
+        else if (ev.type === "content") { turn.text += ev.text; turn.thinking = false; }
+        else if (ev.type === "note") setNewNotes((n) => n + 1);
+        else if (ev.type === "error") { turn.error = ev.message; turn.thinking = false; failure = ev.message; }
+        else if (ev.type === "turn_done") { turn.thinking = false; logged = true; }
+        setLive({ ...turn });
+      }
+    } catch {
+      failure = "The message did not go through. Check that Afterglow is running, then send it again.";
+    } finally {
+      try {
+        const [s, w, l] = await Promise.all([getJSON("/api/state"), getJSON("/api/workspace"), getJSON("/api/loom").catch(() => null)]);
+        setState(s); setWs(w); setLoom(l);
+      } catch { /* the server is away: the error below says so */ }
+      setLive(null);
     }
-    const [s, w, l] = await Promise.all([getJSON("/api/state"), getJSON("/api/workspace"), getJSON("/api/loom").catch(() => null)]);
-    setState(s); setWs(w); setLoom(l); setLive(null);
+    if (!logged) {
+      setError(failure || "The message did not go through. Send it again.");
+      return { sent: false };
+    }
+    setError(null);
+    return { sent: true };
   }
 
   async function endDay() {
@@ -194,6 +211,7 @@ export default function App() {
           <div className="greet">
             <h2>{greeting()}, {(state.persona || "").split(" ")[0] || "there"}.</h2>
             <Composer dropRef={mainRef} voices={voices} onVoice={setVoices} busy={false} onSend={send} placeholder="Tell your agent about your work" />
+            {error && <p className="error-line" role="alert">{error}</p>}
             <div className="hints">
               {["Here is what I am working on this week…", "The people I work with most are…", "Where I work, and how I get there…"].map((h) => (
                 <button key={h} type="button" onClick={() => { const t = document.getElementById("msg"); if (t) { t.focus(); const set = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value").set; set.call(t, h.replace("…", " ")); t.dispatchEvent(new Event("input", { bubbles: true })); } }}>{h}</button>
