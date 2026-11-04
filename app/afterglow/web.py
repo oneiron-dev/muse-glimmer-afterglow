@@ -138,11 +138,12 @@ class App:
         return {"world": world, "day": day, "date": self.session.date}
 
     def change_note(self, note_id, value=None, forget=False):
-        """The Memory screen's edit or forget on one note (local notes; the night reads notes.json), logged in
+        """The Memory screen's edit or forget on one note, through the notes backend (with the vault, its recall then
+        returns the new value and drops the old or removed one; the night reads notes.json), logged in
         runs/<world>/<day>/note-edits.jsonl."""
         with self.lock:
             s = self.session
-            notes = getattr(s.notes, "local", s.notes)
+            notes = s.notes if hasattr(s.notes, "edit_by_user") else getattr(s.notes, "local", s.notes)
             if forget:
                 n = notes.forget_by_user(note_id, day=s.day)
                 rec = {"at": now_iso(), "id": note_id, "action": "forget", "key": n["key"], "value": n["value"]}

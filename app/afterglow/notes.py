@@ -440,6 +440,18 @@ class OneironNotes(NotesStore):
             self.unacknowledged.add(r["note"]["id"])
         return r
 
+    def edit_by_user(self, note_id, value, day=None):
+        """A Memory edit: the local copy changes, and the new value counts as today's write until the vault has it,
+        so the next recall returns it (read-your-writes) while the old value is dropped as superseded."""
+        r = self.local.edit_by_user(note_id, value, day=day)
+        if not r["unchanged"]:
+            self.unacknowledged.add(r["note"]["id"])
+        return r
+
+    def forget_by_user(self, note_id, day=None):
+        """A Memory removal: the local copy marks it forgotten, and vault results drop its value (vault_notes)."""
+        return self.local.forget_by_user(note_id, day=day)
+
     def correction_candidates(self, note, k=5):
         return self.local.correction_candidates(note, k)
 
@@ -453,10 +465,11 @@ class OneironNotes(NotesStore):
         """Recall items -> notes, this world's only: a TURN or MESSAGE item from one of its conversations gives one
         note per message it quotes ("Note saved: key: value" back to key and value). Items of other worlds and
         items with no conversation (claims, summaries) are dropped, as are values the local copy marks superseded
-        while no active note holds them. Returns (notes, dropped counts)."""
+        or the user removed (forgotten) while no active note holds them. Returns (notes, dropped counts)."""
         active = {n["value"] for n in self.local.notes if n["status"] == "active"}
         stale = {n["value"] for n in self.local.notes if n["status"] == "superseded"} - active
-        out, seen, dropped = [], set(), {"other_world": 0, "no_conversation": 0, "superseded": 0}
+        removed = {n["value"] for n in self.local.notes if n["status"] == "forgotten"} - active
+        out, seen, dropped = [], set(), {"other_world": 0, "no_conversation": 0, "superseded": 0, "forgotten": 0}
         for item in items:
             conv = item.get("conversation_id")
             if conv not in self.readable:
@@ -472,6 +485,9 @@ class OneironNotes(NotesStore):
                     continue
                 if value in stale:
                     dropped["superseded"] += 1
+                    continue
+                if value in removed:
+                    dropped["forgotten"] += 1
                     continue
                 seen.add(value)
                 out.append({"id": m.get("short_id"), "key": key, "value": value, "status": "active",

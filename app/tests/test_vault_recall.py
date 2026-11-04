@@ -270,7 +270,25 @@ class VaultNotesTest(unittest.TestCase):
         out = n.recall("venue")
         self.assertEqual([(x["key"], x["value"]) for x in out],
                          [("venue", "Hall C"), ("from the conversation", "The talk moved to Hall C.")])
-        self.assertEqual(n.recalls[-1]["dropped"], {"other_world": 1, "no_conversation": 1, "superseded": 1})
+        self.assertEqual(n.recalls[-1]["dropped"], {"other_world": 1, "no_conversation": 1, "superseded": 1, "forgotten": 0})
+
+    def test_a_note_removed_in_memory_does_not_come_back_from_the_vault(self):
+        n = self.notes()
+        mine = conversation_ref("w", 1, 1)
+        note = n.local.remember("gate code", "4471", day=1, turn=1)["note"]
+        n.vault.extra = [item(mine, "Note saved: gate code: 4471")]
+        self.assertEqual([x["value"] for x in n.recall("gate code")], ["4471"])
+        n.local.forget_by_user(note["id"], day=2)  # the filter holds whichever path removed it
+        self.assertEqual([x["value"] for x in n.recall("gate code")], [])
+        self.assertEqual(n.recalls[-1]["dropped"]["forgotten"], 1)
+
+    def test_a_note_changed_in_memory_is_recalled_with_its_new_value(self):
+        n = self.notes()
+        mine = conversation_ref("w", 1, 1)
+        note = n.local.remember("office", "Room 2.14", day=1, turn=1)["note"]
+        n.vault.extra = [item(mine, "Note saved: office: Room 2.14")]
+        n.edit_by_user(note["id"], "Room 3.07", day=2)
+        self.assertEqual([x["value"] for x in n.recall("office")], ["Room 3.07"])
 
     def test_a_note_the_vault_has_not_acknowledged_comes_from_the_local_copy(self):
         n = self.notes()
