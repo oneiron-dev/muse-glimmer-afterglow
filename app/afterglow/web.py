@@ -364,13 +364,33 @@ class App:
             "busy": self.lock.locked(),
         }
 
+    DEFAULT_SCHEDULE = {"ends_at": "23:00", "auto": True}
+
+    def schedule(self, ends_at=None, auto=None):
+        """When the person's day ends and the night starts (runs/<world>/schedule.json): a time, and whether the app
+        ends the day by itself then. Read by the app; the night job can read the same file."""
+        f = paths.runs_root() / self.session.world / "schedule.json"
+        doc = {**self.DEFAULT_SCHEDULE, **(json.loads(f.read_text()) if f.exists() else {})}
+        if ends_at is not None:
+            hh, _, mm = str(ends_at).partition(":")
+            if not (hh.isdigit() and mm.isdigit() and 0 <= int(hh) < 24 and 0 <= int(mm) < 60):
+                raise ValueError("ends_at must be HH:MM")
+            doc["ends_at"] = f"{int(hh):02d}:{int(mm):02d}"
+        if auto is not None:
+            doc["auto"] = bool(auto)
+        if ends_at is not None or auto is not None:
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text(json.dumps({**doc, "set_at": now_iso()}, indent=1) + "\n")
+        return doc
+
     def settings(self):
         """What the Settings screen shows, read only: the agent's tools, its reasoning setting, the notes backend, the
         model server and slot, and the serving rule the nights are judged by (runs/serving/serving-rule.json)."""
         s = self.session
         return {"tools": [t["function"]["name"] for t in s.tool_schemas], "reasoning": s.reasoning,
                 "notes_backend": s.notes_backend, "endpoint": self.client.endpoint, "slot": self.client.slot,
-                "serving_rule": serving_rule(), "serving": s.adapter_choice, "dials": s.dial_choice}
+                "serving_rule": serving_rule(), "serving": s.adapter_choice, "dials": s.dial_choice,
+                "schedule": self.schedule()}
 
     def workspace(self):
         """What the agent's world tools hold for the open day (world_state.json): calendar events, tasks and email
@@ -540,6 +560,12 @@ class Handler(BaseHTTPRequestHandler):
                 except ValueError as e:
                     return self._json({"error": str(e)}, 400)
                 return self._chat(text, extra)
+            if path == "/api/schedule":
+                b = self._body()
+                try:
+                    return self._json(self.app.schedule(b.get("ends_at"), b.get("auto")))
+                except ValueError as e:
+                    return self._json({"error": str(e)}, 400)
             if path == "/api/attachments":
                 b = self._body()
                 try:

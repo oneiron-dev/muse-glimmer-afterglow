@@ -77,6 +77,13 @@ class DaySwitcherTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.app.attach("empty.txt", "   ")
 
+    def test_day_end_schedule(self):
+        self.assertEqual(self.app.schedule(), {"ends_at": "23:00", "auto": True})
+        self.assertEqual(self.app.schedule("7:5", False)["ends_at"], "07:05")
+        self.assertEqual(self.app.schedule(), {"ends_at": "07:05", "auto": False, "set_at": self.app.schedule()["set_at"]})
+        with self.assertRaises(ValueError):
+            self.app.schedule("25:00")
+
     def test_refuses_a_day_that_was_never_opened(self):
         with self.assertRaises(ValueError):
             self.app.open_day("w", 3)

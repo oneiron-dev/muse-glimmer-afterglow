@@ -17,7 +17,7 @@ async function upload(file) {
 
 /** The message box: Enter sends, Shift+Enter breaks a line; files attach by the clip, a drop or a paste.
  Open at night too: replies come from the last kept update. */
-export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef }) {
+export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef, placeholder }) {
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
   const [over, setOver] = useState(false);
@@ -76,12 +76,16 @@ export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef
         )}
         <label className="sr" htmlFor="msg">Message</label>
         <textarea id="msg" ref={ta} rows={1} value={text} autoComplete="off"
-          placeholder={sealed ? "This day is sealed. Go to today to keep talking" : night ? "Still here tonight. Message your agent" : "Message your agent"}
+          placeholder={sealed ? "This day is sealed. Go to today to keep talking" : night ? "Still here tonight. Message your agent" : placeholder || "Message your agent"}
           disabled={!!sealed}
           onPaste={(e) => { if (e.clipboardData?.files?.length) { e.preventDefault(); add(e.clipboardData.files); } }}
           onChange={(e) => { setText(e.target.value); grow(); }}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) submit(e); }} />
-        <button type="submit" className="btn btn-send" disabled={busy || sealed || waiting || (!text.trim() && !ready.length)}>{busy ? "Answering…" : "Send"}</button>
+        <button type="submit" className={`send${busy ? " busy" : ""}`} aria-label={busy ? "Answering" : "Send"} title={busy ? "Answering…" : "Send (Enter)"}
+          disabled={busy || sealed || waiting || (!text.trim() && !ready.length)}>
+          {busy ? <i className="send-dot" aria-hidden="true" />
+            : <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M10 15.5v-11M5.5 9 10 4.5 14.5 9" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>}
+        </button>
       </div>
       {over && <p className="drop-hint">Drop to attach. The agent reads the file’s text with your message.</p>}
     </form>

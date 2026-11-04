@@ -113,12 +113,12 @@ export function PlusMenu({ voices, onChange, onAttach }) {
             <>
               <button type="button" role="menuitem" className="pm-row" onClick={() => { setOpen(false); onAttach(); }}>
                 <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M14.5 9.5 9.7 14.3a3 3 0 0 1-4.3-4.3l5.6-5.6a2 2 0 0 1 2.9 2.9L8.3 12.9a1 1 0 0 1-1.4-1.4l4.8-4.8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                <span>Attach a file</span>
+                <span><b>Attach a file</b><small>Text, Markdown, CSV or code; your agent reads it</small></span>
               </button>
               {voices && (
                 <button type="button" role="menuitem" className="pm-row" onClick={() => setView("voice")}>
                   <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 8v4M7.5 5.5v9M11 7v6M14.5 4.5v11M18 8.5v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-                  <span>Voice</span><small>{label}</small>
+                  <span><b>Voice</b><small>How your agent sounds: {label}</small></span>
                 </button>
               )}
             </>

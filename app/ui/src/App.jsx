@@ -9,6 +9,7 @@ import { Screen } from "./Screens.jsx";
 import { useVoices } from "./Voice.jsx";
 
 const STEP_MS = 950;
+const greeting = () => { const h = new Date().getHours(); return h < 5 ? "Good night" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening"; };
 
 /** The app shell: the sidebar, then the open screen (chat by default, with its side panel). */
 export default function App() {
@@ -127,12 +128,26 @@ export default function App() {
   const nights = ((allNights && allNights.world === state.world ? allNights.nights : report && report.nights) || []).filter((n) => n.day < today);
   const sealedNight = nights.find((n) => n.day === state.day);
   const sealed = state.day < today ? { night: sealedNight || null } : null;
+  const isEmptyDay = !(state.history || []).length && !live && !after && !(report && !report.missing);
   const ctx = { state, report, days, ws, nights, openPanel, openDay, go, setSky, mode, hour, reload: load, voices, setVoices, today };
 
   return (
     <div className={`app${folded ? " folded" : ""}${screen === "chat" && panel ? " with-panel" : ""}`}>
       <Sidebar ctx={ctx} screen={screen} folded={folded} onFold={fold} newNotes={newNotes} />
-      {screen === "chat" ? (
+      {screen === "chat" && isEmptyDay ? (
+        <main className="main empty-day" aria-label="Chat" ref={mainRef}>
+          <header className="bar"><div className="title"><h1>Today</h1><span className="num">{longDate(state.date)}</span></div></header>
+          <div className="greet">
+            <h2>{greeting()}, {(state.persona || "").split(" ")[0] || "there"}.</h2>
+            <Composer dropRef={mainRef} voices={voices} onVoice={setVoices} busy={false} onSend={send} placeholder="Tell your agent about your work" />
+            <div className="hints">
+              {["Here is what I am working on this week…", "The people I work with most are…", "Where I work, and how I get there…"].map((h) => (
+                <button key={h} type="button" onClick={() => { const t = document.getElementById("msg"); if (t) { t.focus(); const set = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value").set; set.call(t, h.replace("…", " ")); t.dispatchEvent(new Event("input", { bubbles: true })); } }}>{h}</button>
+              ))}
+            </div>
+          </div>
+        </main>
+      ) : screen === "chat" ? (
         <>
           <main className="main" aria-label="Chat" ref={mainRef}>
             <header className="bar">
