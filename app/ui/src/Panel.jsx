@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Component, useEffect, useMemo, useState } from "react";
 import { CHECKS, MINUS, factRows, failedWhy, getJSON, longDate, nf, postJSON, pretty, shortDate, signed } from "./lib.js";
 import { Glyph } from "./Thread.jsx";
 import { ThreadsView } from "./ThreadsView.jsx";
@@ -12,6 +12,14 @@ const TABS = [
   { id: "memory", label: "Memory" },
   { id: "night", label: "Nights" },
 ];
+
+/** A panel that fails to draw shows a short line instead of taking the whole page down. */
+export class PanelBoundary extends Component {
+  constructor(props) { super(props); this.state = { failed: false }; }
+  static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch(error) { console.error("panel", error); }
+  render() { return this.state.failed ? <p className="pfine">This panel could not open. Close it and open it again.</p> : this.props.children; }
+}
 
 /** The side panel: what the agent brought up, open beside the thread (calendar, tasks, drafts, sources, memory, nights). */
 export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) {
@@ -35,7 +43,8 @@ export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) 
         </button>
       </header>
       <div className="pbody">
-        {tab === "threads" && <ThreadsView focus={focus} />}
+        <PanelBoundary key={`${tab}-${state.world}-${state.day}`}>
+        {tab === "threads" && <ThreadsView key={`${state.world}-${state.day}`} focus={focus} />}
         {tab === "calendar" && <CalendarView ws={ws} focus={focus} today={state.date} world={state.world} day={state.day} />}
         {tab === "tasks" && <TasksView ws={ws} focus={focus} />}
         {tab === "email" && <EmailView ws={ws} focus={focus} world={state.world} day={state.day} />}
@@ -43,6 +52,7 @@ export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) 
         {tab === "memory" && <MemoryView state={state} report={report} first={first} />}
         {tab === "night" && <NightView state={state} report={report} focus={focus} first={first} />}
         {tab === "raw" && <RawView focus={focus} />}
+        </PanelBoundary>
       </div>
     </aside>
   );
