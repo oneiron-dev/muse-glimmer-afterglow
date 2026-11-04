@@ -52,9 +52,9 @@ def steering(world, day, night, ev):
             "sample": sample}
 
 
-def record_proposal(world, day, axis, toward, answer):
+def record_proposal(world, day, axis, toward, answer, open_day=None):
     """The user's answer to one proposed dial change, in runs/<world>/<day>/night/steering-decisions.json.
-    An accepted dial applies from the next day's chat on (dials.py accepted_dials)."""
+    An accepted dial applies from the next day's chat on (dials.py accepted_dials): "now" when that day is open."""
     if answer not in ("accept", "dismiss"):
         raise ValueError("answer must be accept or dismiss")
     night = paths.runs_root() / world / str(int(day)) / "night"
@@ -63,7 +63,8 @@ def record_proposal(world, day, axis, toward, answer):
     doc = json.loads(f.read_text()) if f.exists() else {}
     doc[f"{axis}:{toward}"] = {"axis": axis, "toward": toward, "answer": answer,
                                "at": dt.datetime.now(dt.timezone(dt.timedelta(hours=9))).isoformat(timespec="seconds"),
-                               "applies": "tomorrow" if answer == "accept" else None}
+                               "applies": None if answer != "accept"
+                               else "now" if open_day is not None and int(open_day) > int(day) else "tomorrow"}
     f.write_text(json.dumps(doc, indent=1) + "\n")
     return doc
 
@@ -299,6 +300,18 @@ class App:
         """The voice panel: presets, custom voices, the current choice and the dials every request carries now."""
         s = self.session
         return dials.voices_state(s.world, s.day, s.dial_choice)
+
+    def answer_proposal(self, world, day, axis, toward, answer):
+        """The user's answer to a night's proposal. When it applies to the open day (a night's accept counts from the
+        next day on), the open session's dials change now, so the next message carries it, as set_voice does."""
+        with self.lock:
+            s = self.session
+            same = s.world == world
+            doc = record_proposal(world, day, axis, toward, answer, open_day=s.day if same else None)
+            if same and int(s.day) > int(day):
+                s.dial_choice = dials.accepted_dials(s.world, s.day)
+                s.client.dials = s.dial_choice["dials"]  # each turn's record keeps the dials it sent (agent.py)
+        return doc
 
     def set_voice(self, preset=None, voice=None):
         """The user's voice for today (dials.choose_voice); every request from the next message carries it."""
@@ -765,7 +778,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(self.app.raw_run(b["prompt"], b.get("n_predict") or 400))
             if path == "/api/proposal":
                 b = self._body()
-                return self._json(record_proposal(b["world"], b["day"], b["axis"], b["toward"], b["answer"]))
+                return self._json(self.app.answer_proposal(b["world"], b["day"], b["axis"], b["toward"], b["answer"]))
             if path == "/api/voice":
                 b = self._body()
                 try:

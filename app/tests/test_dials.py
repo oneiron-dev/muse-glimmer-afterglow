@@ -77,3 +77,45 @@ class DialsTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AcceptOnTheOpenDayTest(unittest.TestCase):
+    """S10 on scratch: the morning after night 3, with day 4 open, Accept must reach the very next message."""
+
+    def setUp(self):
+        self.runs = Path(tempfile.mkdtemp())
+        os.environ["AFTERGLOW_RUNS"] = str(self.runs)
+        os.environ["AFTERGLOW_WORLDS"] = str(self.runs / "_worlds")
+        (self.runs / "serving").mkdir()
+        (self.runs / "serving" / "adapters-cv.json").write_text(json.dumps({"adapters": [], "control_vectors": VECTORS}))
+        for day, date in ((3, "2026-10-29"), (4, "2026-10-30")):
+            d = self.runs / "wt" / str(day)
+            d.mkdir(parents=True)
+            (d / "session.json").write_text(json.dumps({"world": "wt", "day": day, "date": date, "notes_in_context": True,
+                                                        "context_message": {"role": "user", "content": f"day {day}"}}))
+            (d / "daylog.jsonl").write_text(json.dumps({"ts": f"{date}T09:00:00+09:00", "turn": 1, "role": "user",
+                                                        "content": f"hello {day}"}) + "\n")
+        night = self.runs / "wt" / "3" / "night"
+        night.mkdir()
+        (night / "steering-proposals.json").write_text(json.dumps({"proposals": [proposal("concise", "concise", 0.04)]}))
+        from afterglow.web import App
+        self.app = App("wt", 4, "http://127.0.0.1:9", restore=False)
+
+    def tearDown(self):
+        os.environ.pop("AFTERGLOW_RUNS", None)
+        os.environ.pop("AFTERGLOW_WORLDS", None)
+
+    def test_accept_reaches_the_next_message_of_the_open_day(self):
+        self.assertEqual(self.app.session.client.dials, [])
+        doc = self.app.answer_proposal("wt", 3, "concise", "concise", "accept")
+        self.assertEqual(doc["concise:concise"]["applies"], "now")
+        want = [{"id": 0, "axis": "concise", "toward": "concise", "scale": 0.04, "night": 3}]
+        self.assertEqual(self.app.session.client.dials, want)
+        self.assertEqual(self.app.session.dial_choice["dials"], want)
+        self.app.answer_proposal("wt", 3, "concise", "concise", "dismiss")
+        self.assertEqual(self.app.session.client.dials, [])
+
+    def test_an_answer_for_another_person_leaves_the_open_day_alone(self):
+        doc = self.app.answer_proposal("other", 3, "concise", "concise", "accept")
+        self.assertEqual(doc["concise:concise"]["applies"], "tomorrow")
+        self.assertEqual(self.app.session.client.dials, [])

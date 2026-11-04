@@ -275,7 +275,7 @@ function Proposals({ report }) {
             <li key={`${p.axis}:${p.toward}`} className={a ? `is-${a.answer}` : ""}>
               <b>{p.kind === "voice" ? `A new voice: ${p.toward}` : TOWARD[p.toward] || `More ${p.toward}`}</b>
               {p.reason && <p>{toYou(p.reason, typeof report.persona === "string" ? report.persona : report.persona && report.persona.name)}</p>}
-              {a ? <span className="mprop-state">{a.answer === "accept" ? "Accepted. It applies from tomorrow’s chat." : "Not now."}</span> : (
+              {a ? <span className="mprop-state">{a.answer === "accept" ? (a.applies === "now" ? "Accepted. It applies from your next message." : "Accepted. It applies from tomorrow’s chat.") : "Not now."}</span> : (
                 <span className="mprop-acts">
                   <button type="button" className="btn btn-quiet" onClick={() => answer(p, "accept")}>Accept</button>
                   <button type="button" className="btn btn-text" onClick={() => answer(p, "dismiss")}>Not now</button>
