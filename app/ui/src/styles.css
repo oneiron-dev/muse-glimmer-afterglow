@@ -717,3 +717,7 @@ body[data-hour="night"] .conn-state.on { color: oklch(78% 0.1 150); }
 .mprop-acts { display: flex; gap: 8px; }
 .mprop-acts .btn { height: 30px; padding: 0 12px; font-size: 13px; }
 .mprop-state { font-size: 13px; color: var(--ink-3); }
+/* the inline message editor (loom): takes the message's full width above its actions, and stays visible while open */
+.acts:has(.msg-edit) { opacity: 1; flex-wrap: wrap; }
+.msg-edit { order: -1; flex-basis: 100%; width: min(52ch, 70vw); margin: 4px 0 2px; padding: 10px 12px; animation: pop 160ms var(--ease-out); transform-origin: top right; }
+.msg-edit .factions { margin-top: 6px; justify-content: flex-end; }

@@ -1,12 +1,16 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cue } from "./sound.js";
+import { BranchSwitcher, EditMessage, NightQuestion, RegenerateButton } from "./loom/index.js";
 import { CHECKS, MINUS, failedKeys, failedWhy, learnedExamples, longDate, nf, shortDate, signed } from "./lib.js";
 
 /** The one conversation: the morning's card, the day's messages, then the night and the next morning. */
-export function Thread({ state, report, live, after, nextDay, sealed, onGoToday, onOpenPanel, onOpenDay, earlier = [], nights = [], threads = [], onMoreEarlier, moreLabel }) {
+export function Thread({ state, report, live, after, nextDay, sealed, onGoToday, onOpenPanel, onOpenDay, earlier = [], nights = [], threads = [], onMoreEarlier, moreLabel, lp }) {
   const scroller = useRef(null);
   const stick = useRef(true);
   const turns = state.history || [];
+  const userText = Object.fromEntries(turns.filter((t) => t.role === "user").map((t) => [t.turn, t.typed || t.content]));
+  const lpx = lp && !sealed && !(lp.loom && lp.loom.sealed) ? { ...lp, disabled: lp.disabled || !!after } : null;
+  const conflicts = lp && lp.loom && lp.loom.contradictions ? lp.loom.contradictions : null;
   useLayoutEffect(() => { const s = scroller.current; if (s && stick.current) s.scrollTop = s.scrollHeight; });
   useEffect(() => { stick.current = true; }, [state.world, state.day]);
   const onScroll = () => { const s = scroller.current; stick.current = s.scrollHeight - s.scrollTop - s.clientHeight < 120; };
@@ -32,13 +36,19 @@ export function Thread({ state, report, live, after, nextDay, sealed, onGoToday,
         <p className="divider">{longDate(state.date) || `Day ${state.day}`}</p>
         {turns.length === 0 && !live && <p className="empty">A new day. Tell your agent what you are working on, who with, and what changed.</p>}
         {withThreads(turns, threads).map((t, i) => (t.thread ? <ThreadChip key={`t-${t.thread.id}`} t={t.thread} onOpen={() => onOpenPanel("threads", t.thread.id)} />
-          : t.role === "user" ? <UserMsg key={i} text={t.attachments ? t.typed : t.content} files={t.attachments} ts={t.ts} turn={t.turn} onOpenPanel={onOpenPanel} />
-            : t.role === "assistant" ? <Reply key={i} rec={t} text={t.content} tools={t.tool_calls} error={t.error} onOpenPanel={onOpenPanel} /> : null))}
+          : t.role === "user" ? <UserMsg key={i} text={t.attachments ? t.typed : t.content} files={t.attachments} ts={t.ts} turn={t.turn} onOpenPanel={onOpenPanel} lp={lpx} />
+            : t.role === "assistant" ? <Reply key={i} rec={t} text={t.content} tools={t.tool_calls} error={t.error} onOpenPanel={onOpenPanel} lp={lpx} userText={userText[t.turn]} /> : null))}
         {live && (
           <>
             <UserMsg text={live.user} files={live.files} fresh />
             <Reply text={live.text} tools={live.tools} error={live.error} thinking={live.thinking} onOpenPanel={onOpenPanel} />
           </>
+        )}
+        {lpx && !live && !after && conflicts && ((conflicts.conflicts || []).length > 0) && !(lp.loom.resolution) && (
+          <section className="night-q" aria-label="Before tonight">
+            <p className="divider">Before tonight</p>
+            <NightQuestion key={`${state.world}-${state.day}-${conflicts.line}`} conflicts={conflicts.conflicts} extra={conflicts.extra} resolution={lp.loom.resolution} onResolved={lp.onReload} />
+          </section>
         )}
         {after && <Night after={after} state={state} nextDay={nextDay} onOpenDay={onOpenDay} onOpenPanel={onOpenPanel} />}
       </div>
@@ -93,7 +103,7 @@ function Copy({ text }) {
   return <button type="button" className="act" onClick={async () => { await navigator.clipboard.writeText(text || ""); setDone(true); setTimeout(() => setDone(false), 1400); }}>{done ? "Copied" : "Copy"}</button>;
 }
 
-function UserMsg({ text, files, ts, turn, onOpenPanel, fresh, readOnly }) {
+function UserMsg({ text, files, ts, turn, onOpenPanel, fresh, readOnly, lp }) {
   return (
     <div className={`msg msg-u${fresh ? " fresh" : ""}`}>
       {files && files.length > 0 && (
@@ -106,14 +116,15 @@ function UserMsg({ text, files, ts, turn, onOpenPanel, fresh, readOnly }) {
         {ts && <time className="num">{hhmm(ts)}</time>}
         {turn != null && <>
           <Copy text={text} />
-          {!readOnly && turn != null && <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn, mode: "reply" })} title="Edit this message in the raw view and run it; nothing is saved">Edit</button>}
+          {!readOnly && lp && <EditMessage turn={turn} text={text} sealed={false} disabled={lp.disabled} onLive={lp.onLive} onNote={lp.onNote} onReload={lp.onReload} />}
         </>}
+        {lp && lp.loom && <BranchSwitcher alternatives={lp.loom.alternatives} turn={turn} currentBranch={lp.loom.line} onReload={lp.onReload} disabled={lp.disabled} />}
       </div>
     </div>
   );
 }
 
-function Reply({ rec, text, tools, error, thinking, onOpenPanel, readOnly }) {
+function Reply({ rec, text, tools, error, thinking, onOpenPanel, readOnly, lp, userText }) {
   const [open, setOpen] = useState(false);
   const cards = (tools || []).map(toolCard).filter(Boolean);
   const reasoning = rec ? (rec.messages || []).map((m) => m.reasoning_content).filter(Boolean).join("\n\n") : "";
@@ -140,6 +151,7 @@ function Reply({ rec, text, tools, error, thinking, onOpenPanel, readOnly }) {
           <time className="num">{hhmm(rec.ts)}</time>
           <Copy text={text} />
           <button type="button" className="act" aria-expanded={open} onClick={() => setOpen(!open)}>Details</button>
+          {!readOnly && lp && userText != null && <RegenerateButton turn={rec.turn} userText={userText} sealed={false} disabled={lp.disabled} onLive={lp.onLive} onNote={lp.onNote} onReload={lp.onReload} />}
           {!readOnly && <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn: rec.turn, mode: "reply" })} title="The prompt as the model saw it, editable">Raw</button>}
           {!readOnly && <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn: rec.turn, mode: "continue" })} title="Edit the start of this reply and let the model continue it">Continue</button>}
         </div>

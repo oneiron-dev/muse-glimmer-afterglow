@@ -75,7 +75,7 @@ export function EditMessage({ turn, text, sealed, disabled, onLive, onNote, onRe
   };
   if (!open) return <button type="button" className="act" disabled={disabled} onClick={() => toggle(true)}>Edit and resend</button>;
   return (
-    <form className="composer" onSubmit={send}>
+    <form className="composer msg-edit" onSubmit={send}>
       <div className="crow">
         <label className="sr" htmlFor={`edit-${turn}`}>Edit your message</label>
         <textarea id={`edit-${turn}`} ref={ta} rows={2} value={draft} autoComplete="off" disabled={locked}
