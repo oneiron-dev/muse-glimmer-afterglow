@@ -34,10 +34,12 @@ export function Icon({ id, size = 20 }) {
 }
 
 /** The Afterglow mark: light in bands over a horizon, one colour (the text's). */
-export function Mark({ size = 26 }) {
+export function Mark({ size = 24 }) {
+  // A sun cut by the horizon; below it, its light on the water in two fading bands.
   return (
-    <svg className="mark" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" role="img" aria-label="Afterglow">
-      <path d="M2.5 18h19" /><path d="M5.5 14h13" opacity="0.72" /><path d="M8.5 10h7" opacity="0.46" /><path d="M11 6h2" opacity="0.26" />
+    <svg className="mark" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="Afterglow">
+      <defs><clipPath id="ag-mark"><circle cx="12" cy="12" r="8" /></clipPath></defs>
+      <g clipPath="url(#ag-mark)"><rect x="4" y="4" width="16" height="7.3" /><rect x="4" y="12.6" width="16" height="2.6" opacity="0.5" /><rect x="4" y="16.4" width="16" height="3.6" opacity="0.24" /></g>
     </svg>
   );
 }

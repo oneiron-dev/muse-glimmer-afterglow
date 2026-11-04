@@ -4,7 +4,7 @@ import { chatStream, getJSON, longDate, postJSON, resolveHour } from "./lib.js";
 import { Thread } from "./Thread.jsx";
 import { Panel } from "./Panel.jsx";
 import { Composer } from "./Composer.jsx";
-import { Sidebar } from "./Sidebar.jsx";
+import { Mark, Sidebar } from "./Sidebar.jsx";
 import { Screen } from "./Screens.jsx";
 import { useVoices } from "./Voice.jsx";
 
@@ -116,7 +116,7 @@ export default function App() {
   }, [worldNow, todayNow]);
 
   if (error && !state) return <div className="boot"><p>{error}</p></div>;
-  if (!state) return <div className="boot"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" aria-hidden="true"><path d="M2.5 18h19" /><path d="M5.5 14h13" opacity="0.72" /><path d="M8.5 10h7" opacity="0.46" /><path d="M11 6h2" opacity="0.26" /></svg><p>Opening Afterglow…</p></div>;
+  if (!state) return <div className="boot"><Mark size={44} /><p>Opening Afterglow…</p></div>;
 
   const nextDay = days && days.people.find((p) => p.world === state.world)?.days.includes(state.day + 1) ? state.day + 1 : null;
   // Today is the latest day you reached for this profile; an earlier day you open is sealed (its night has run).
