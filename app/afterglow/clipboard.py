@@ -35,6 +35,13 @@ def is_secret(text):
         return True
     if re.search(r"(?i)\b(?:password|passwd|pwd)\b[\"']?\s*[:=]\s*[\"']?\S+", text):
         return True
+    # A named key, token or secret is a secret whatever its value looks like (a UUID included):
+    # EXA_API_KEY=..., "api_key": "...", client_secret: ..., Authorization: Bearer ...
+    if re.search(r"(?i)\b[A-Za-z0-9_.-]*(?:api[_-]?key|apikey|access[_-]?key|secret|token|credential)s?\b[\"']?\s*[:=]\s*"
+                 r"[\"']?(?=[A-Za-z0-9_\-+/=.]*\d)[A-Za-z0-9_\-+/=.]{12,}", text):
+        return True
+    if re.search(r"(?i)\bbearer\s+[A-Za-z0-9_\-+/=.]{16,}", text):
+        return True
     for match in re.finditer(r"(?<!\d)(?:\d[ -]?){12,18}\d(?!\d)", text):
         digits = re.sub(r"\D", "", match.group())
         total = 0
