@@ -141,9 +141,10 @@ export default function App() {
     at(700, () => setStory("night"));
     for (let i = 2; i <= nsteps; i++) at(i * STEP_MS, () => setAfter((a) => ({ ...a, shown: i })));
     const kept = ready && night.decision && night.decision.decision === "keep";
-    at((nsteps + 1) * STEP_MS + 600, () => {
+    // the morning comes only with the night's result; while it trains elsewhere, the app stays at night
+    if (ready) at((nsteps + 1) * STEP_MS + 600, () => {
       setStory("dawn"); setAfter((a) => ({ ...a, phase: "morning" }));
-      if (ready) cue(kept ? "night-kept" : "night-rollback");
+      cue(kept ? "night-kept" : "night-rollback");
     });
   }
 
@@ -239,7 +240,7 @@ export default function App() {
               lp={{ loom, disabled: !!(live && !live.done), onLive: (t) => setLive(t ? { ...t } : null), onNote: () => setNewNotes((n) => n + 1),
                 onReload: async () => { const [s, l] = await Promise.all([getJSON("/api/state"), getJSON("/api/loom").catch(() => null)]); setState(s); setLoom(l); } }} />
             {error && <p className="error-line" role="alert">{error}</p>}
-            <Composer key={`${state.world}/${state.day}`} dropRef={mainRef} voices={voices} onVoice={setVoices} busy={!!live && !live.done} sealed={sealed} night={after && after.phase !== "morning"} onSend={send} />
+            <Composer key={`${state.world}/${state.day}`} dropRef={mainRef} voices={voices} onVoice={setVoices} busy={!!live && !live.done} sealed={sealed} ended={!!after} onSend={send} />
           </main>
           {panel && <Panel tab={panel} focus={focus} state={state} report={report} ws={ws} onTab={(t) => openPanel(t)} onClose={closePanel} />}
         </>

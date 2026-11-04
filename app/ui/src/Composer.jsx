@@ -18,8 +18,10 @@ async function upload(file) {
 }
 
 /** The message box: Enter sends, Shift+Enter breaks a line; files attach by the clip, a drop or a paste.
- Open at night too: replies come from the last kept update. */
-export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef, placeholder }) {
+ Closed on a sealed day, and once the day has ended (its night started): what you say then would land in the day just
+ ended, so it opens again with the next day. */
+export function Composer({ busy, ended, sealed, voices, onVoice, onSend, dropRef, placeholder }) {
+  const closed = !!sealed || !!ended;
   const [text, setText] = useState("");
   const [files, setFiles] = useState([]);
   const [over, setOver] = useState(false);
@@ -52,10 +54,10 @@ export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef
       grow();
     });
   }, []);
-  const dic = useDictation({ context: "composer", ptt: !sealed, enabled: !sealed, onText: insertDictation });
+  const dic = useDictation({ context: "composer", ptt: !closed, enabled: !closed, onText: insertDictation });
   const add = async (list) => {
     const arr = [...list];
-    if (!arr.length || sealed) return;
+    if (!arr.length || closed) return;
     const pending = arr.map((f) => ({ name: f.name, pending: true, key: `${f.name}-${Math.random()}` }));
     setFiles((x) => [...x, ...pending]);
     const done = await Promise.all(arr.map(upload));
@@ -102,7 +104,7 @@ export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef
         </ul>
       )}
       <div className="crow">
-        {!sealed && (
+        {!closed && (
           <>
             <PlusMenu voices={voices} onChange={onVoice} onAttach={() => pick.current?.click()} />
             <input ref={pick} type="file" multiple hidden onChange={(e) => { add(e.target.files); e.target.value = ""; }} />
@@ -111,20 +113,20 @@ export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef
         )}
         <label className="sr" htmlFor="msg">Message</label>
         <textarea id="msg" ref={ta} rows={1} value={text} autoComplete="off"
-          placeholder={dic.recording ? "Listening…" : dic.sending ? "Writing it down…" : sealed ? "This day is sealed. Go to today to keep talking" : night ? "Still here tonight. Message your agent" : placeholder || "Message your agent"}
-          disabled={!!sealed}
+          placeholder={dic.recording ? "Listening…" : dic.sending ? "Writing it down…" : sealed ? "This day is sealed. Go to today to keep talking" : ended ? "This day has ended. Open the next day to keep talking" : placeholder || "Message your agent"}
+          disabled={closed}
           onPaste={(e) => { if (e.clipboardData?.files?.length) { e.preventDefault(); add(e.clipboardData.files); } }}
           onChange={(e) => { setText(e.target.value); grow(); }}
           onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) submit(e); }} />
-        {!sealed && <MicButton recording={dic.recording} sending={dic.sending} level={dic.level} onToggle={dic.toggle} />}
+        {!closed && <MicButton recording={dic.recording} sending={dic.sending} level={dic.level} onToggle={dic.toggle} />}
         <button type="submit" className={`send${busy ? " busy" : ""}`} aria-label={busy ? "Answering" : "Send"} title={busy ? "Answering…" : "Send (Enter)"}
-          disabled={busy || sealed || waiting || (!text.trim() && !ready.length)}>
+          disabled={busy || closed || waiting || (!text.trim() && !ready.length)}>
           {busy ? <i className="send-dot" aria-hidden="true" />
             : <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M10 15.5v-11M5.5 9 10 4.5 14.5 9" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>}
         </button>
       </div>
       {dic.error && <p className="dic-err" role="alert">{dic.error}</p>}
-      {over && <p className="drop-hint">Drop to attach. The agent reads the file’s text with your message.</p>}
+      {over && <p className="drop-hint">Drop to attach. Your agent reads the file’s text with your message.</p>}
     </form>
   );
 }
