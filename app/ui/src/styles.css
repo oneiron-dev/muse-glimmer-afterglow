@@ -721,3 +721,7 @@ body[data-hour="night"] .conn-state.on { color: oklch(78% 0.1 150); }
 .acts:has(.msg-edit) { opacity: 1; flex-wrap: wrap; }
 .msg-edit { order: -1; flex-basis: 100%; width: min(52ch, 70vw); margin: 4px 0 2px; padding: 10px 12px; animation: pop 160ms var(--ease-out); transform-origin: top right; }
 .msg-edit .factions { margin-top: 6px; justify-content: flex-end; }
+/* native file pickers look like the app's quiet buttons */
+input[type="file"] { font: inherit; font-size: 13px; color: var(--ink-3); }
+input[type="file"]::file-selector-button { height: 32px; margin-right: 10px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--sunk); color: var(--ink); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: background-color 150ms; }
+input[type="file"]::file-selector-button:hover { background: var(--chip); }
