@@ -1,7 +1,7 @@
 {
  "world": "w1-ines-varga",
  "synthetic": true,
- "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034); day 8 2026-10-30T20:14:28+09:00 by worlds/make_world.py --add-day 8 (teacher spark-sub, seed 20261035); day 9 2026-11-03T08:33:28+09:00 by worlds/make_world.py --add-day 9 (teacher spark-sub, seed 20261036); day 10 2026-11-03T13:46:39+09:00 by worlds/make_world.py --add-day 10 (teacher spark-sub, seed 20261037); day 11 2026-11-03T22:31:15+09:00 by worlds/make_world.py --add-day 11 (teacher spark-sub, seed 20261038); day 12 2026-11-04T09:26:59+09:00 by worlds/make_world.py --add-day 12 (teacher spark-sub, seed 20261039)",
+ "authored": "2026-10-27, hand-written during the event for the night learning sweep (the event API key was blocked by a billing error, so no generator call made it); day 2 2026-10-29T03:23:41+09:00 by worlds/make_world.py --add-day2 (teacher spark-sub, seed 20261027); day 3 2026-10-29T04:58:42+09:00 by worlds/make_world.py --add-day 3 (teacher spark-sub, seed 20261030); day 4 2026-10-29T10:41:56+09:00 by worlds/make_world.py --add-day 4 (teacher spark-sub, seed 20261031); day 5 2026-10-29T21:13:36+09:00 by worlds/make_world.py --add-day 5 (teacher spark-sub, seed 20261032); day 6 2026-10-30T06:06:49+09:00 by worlds/make_world.py --add-day 6 (teacher spark-sub, seed 20261033); day 7 2026-10-30T10:19:30+09:00 by worlds/make_world.py --add-day 7 (teacher spark-sub, seed 20261034); day 8 2026-10-30T20:14:28+09:00 by worlds/make_world.py --add-day 8 (teacher spark-sub, seed 20261035); day 9 2026-11-03T08:33:28+09:00 by worlds/make_world.py --add-day 9 (teacher spark-sub, seed 20261036); day 10 2026-11-03T13:46:39+09:00 by worlds/make_world.py --add-day 10 (teacher spark-sub, seed 20261037); day 11 2026-11-03T22:31:15+09:00 by worlds/make_world.py --add-day 11 (teacher spark-sub, seed 20261038); day 12 2026-11-04T09:26:59+09:00 by worlds/make_world.py --add-day 12 (teacher spark-sub, seed 20261039); day 13 2026-11-04T12:44:26+09:00 by worlds/make_world.py --add-day 13 (teacher spark-sub, seed 20261040)",
  "persona": {
   "name": "Ines Varga",
   "summary": "Operations lead at Kestrel Fabrication, a small company that builds drone frames. Fictional; every fact is about work, projects, people, places and procedures."
@@ -44,7 +44,7 @@
    ],
    "statement": "Ines Varga is the operations lead at Kestrel Fabrication.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F193"
   },
   {
    "id": "F04",
@@ -151,7 +151,7 @@
    ],
    "statement": "The big CNC machine in Hall C is nicknamed Old Gus.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F192"
   },
   {
    "id": "F13",
@@ -266,7 +266,7 @@
    ],
    "statement": "Kestrel tracks inventory in Shelfwise.",
    "valid_from": 1,
-   "superseded_by": null
+   "superseded_by": "F194"
   },
   {
    "id": "F23",
@@ -2198,6 +2198,169 @@
    "valid_from": 12,
    "superseded_by": null,
    "supersedes": "F05"
+  },
+  {
+   "id": "F182",
+   "key": "new cutting vendor",
+   "value": "Brenswick Laserworks",
+   "accept": [
+    "brenswick laserworks",
+    "brenswick"
+   ],
+   "statement": "Our new cutting vendor is Brenswick Laserworks.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F183",
+   "key": "spring trade show",
+   "value": "Vesterport Expo",
+   "accept": [
+    "vesterport expo",
+    "vesterport"
+   ],
+   "statement": "Our spring trade show is Vesterport Expo.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F184",
+   "key": "new rotor test stand",
+   "value": "Spinbench S-77",
+   "accept": [
+    "spinbench s-77",
+    "spinbench"
+   ],
+   "statement": "Our new rotor test stand is Spinbench S-77.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F185",
+   "key": "backup torque tool",
+   "value": "Torqpro T-110",
+   "accept": [
+    "torqpro t-110",
+    "torqpro",
+    "110"
+   ],
+   "statement": "Our backup torque tool is Torqpro T-110.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F186",
+   "key": "client onboarding city",
+   "value": "Dalsvik",
+   "accept": [
+    "dalsvik"
+   ],
+   "statement": "Our client onboarding city is Dalsvik.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F187",
+   "key": "supplemental freight booking",
+   "value": "BK-8427-ZM",
+   "accept": [
+    "bk-8427-zm",
+    "bk8427zm",
+    "8427"
+   ],
+   "statement": "Our supplemental freight booking is BK-8427-ZM.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F188",
+   "key": "new composite supplier",
+   "value": "Fjellstrand Composites",
+   "accept": [
+    "fjellstrand composites",
+    "fjellstrand"
+   ],
+   "statement": "Our new composite supplier is Fjellstrand Composites.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F189",
+   "key": "winter prototype review",
+   "value": "12 February",
+   "accept": [
+    "12 february",
+    "february 12",
+    "12th february",
+    "february 12th",
+    "12th of february"
+   ],
+   "statement": "Our winter prototype review is 12 February.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F190",
+   "key": "new field engineer",
+   "value": "Tove Brannick",
+   "accept": [
+    "tove brannick",
+    "brannick"
+   ],
+   "statement": "Our new field engineer is Tove Brannick.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F191",
+   "key": "evening depot contact",
+   "value": "Liv Harstad",
+   "accept": [
+    "liv harstad",
+    "harstad"
+   ],
+   "statement": "Our evening depot contact is Liv Harstad.",
+   "valid_from": 13,
+   "superseded_by": null
+  },
+  {
+   "id": "F192",
+   "key": "CNC machine nickname",
+   "value": "Rusty Sparrow",
+   "accept": [
+    "rusty sparrow",
+    "rusty sparrow unit"
+   ],
+   "statement": "Her CNC machine nickname is now Rusty Sparrow.",
+   "valid_from": 13,
+   "superseded_by": null,
+   "supersedes": "F12"
+  },
+  {
+   "id": "F193",
+   "key": "job title",
+   "value": "Workshop Shift Coordinator",
+   "accept": [
+    "workshop shift coordinator",
+    "workshop coordinator"
+   ],
+   "statement": "Her job title is now Workshop Shift Coordinator.",
+   "valid_from": 13,
+   "superseded_by": null,
+   "supersedes": "F03"
+  },
+  {
+   "id": "F194",
+   "key": "inventory system",
+   "value": "CrateTracker Pro",
+   "accept": [
+    "cratetracker pro",
+    "cratetracker inventory"
+   ],
+   "statement": "Her inventory system is now CrateTracker Pro.",
+   "valid_from": 13,
+   "superseded_by": null,
+   "supersedes": "F22"
   }
  ],
  "preferences": [
