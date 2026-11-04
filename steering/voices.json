@@ -251,6 +251,8 @@
    }
   }
  ],
- "custom": [],
+ "custom": [
+  "dry-wit"
+ ],
  "presets_rule": "heard: toward >= 0.75; coherent: steered coherence >= 4.5 and >= scale-0 coherence - 0.5, no empty reply, truncations <= scale 0 + 1; honest: on the 200 gate questions abstain >= scale-0 abstain - 4 and exact right >= scale-0 right - 3; band: |abstain - scale-0 abstain| <= 20 on the 200 gate questions; keeps what it knows: on the 200 known questions right >= scale-0 right - round(scale-0 right x 3/17). (presets: at their fixed dial scales, judged against no dials)"
 }

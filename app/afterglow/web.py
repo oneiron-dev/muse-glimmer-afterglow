@@ -373,7 +373,7 @@ class App:
             "busy": self.lock.locked(),
         }
 
-    DEFAULT_SCHEDULE = {"ends_at": "23:00", "auto": True}
+    DEFAULT_SCHEDULE = {"ends_at": "23:00", "auto": False}  # never starts a night by itself unless the user turns it on
 
     def schedule(self, ends_at=None, auto=None):
         """When the person's day ends and the night starts (runs/<world>/schedule.json): a time, and whether the app
@@ -685,6 +685,8 @@ class Handler(BaseHTTPRequestHandler):
             path = "/report.html"
         elif path == "/night":
             path = "/night.html"
+        elif path == "/classic":  # the day page from before the app (web/classic.html, app.js, app.css): the fallback
+            path = "/classic.html"
         elif "." not in path.rsplit("/", 1)[-1]:  # the app's own screens (/memory, /nights, ...): one page
             path = "/index.html"
         f = (WEB / path.lstrip("/")).resolve()

@@ -19,9 +19,9 @@ from gguf import GGUFReader
 from safetensors.torch import load_file
 
 GGUF_NAME = {"self_attn.q_proj": "attn_q", "self_attn.k_proj": "attn_k", "self_attn.v_proj": "attn_v",
-             "self_attn.o_proj": "attn_output", "mlp.gate_proj": "ffn_gate", "mlp.up_proj": "ffn_up",
-             "mlp.down_proj": "ffn_down"}
-PEFT_RE = re.compile(r"layers\.(\d+)\.(self_attn\.[qkvo]_proj|mlp\.(?:gate|up|down)_proj)\.lora_([AB])\.weight$")
+             "self_attn.o_proj": "attn_output", "self_attn.gate_proj": "attn_gate", "mlp.gate_proj": "ffn_gate",
+             "mlp.up_proj": "ffn_up", "mlp.down_proj": "ffn_down"}  # attn_gate: Fireworks SFT adapts the attention gate
+PEFT_RE = re.compile(r"layers\.(\d+)\.(self_attn\.(?:[qkvo]|gate)_proj|mlp\.(?:gate|up|down)_proj)\.lora_([AB])\.weight$")
 
 
 def unpermute_rows(m, n_heads):
@@ -42,7 +42,11 @@ def main():
     acfg = json.loads((Path(args.adapter) / "adapter_config.json").read_text())
     peft_scale = acfg["lora_alpha"] / acfg["r"]
     peft = {}
-    for name, t in load_file(str(Path(args.adapter) / "adapter_model.safetensors")).items():
+    single = Path(args.adapter) / "adapter_model.safetensors"
+    tensors = {}
+    for f in [single] if single.exists() else sorted(Path(args.adapter).glob("adapter_model-*-of-*.safetensors")):
+        tensors.update(load_file(str(f)))  # Fireworks writes one shard named adapter_model-00001-of-00001
+    for name, t in tensors.items():
         m = PEFT_RE.search(name)
         if m:
             peft.setdefault((int(m.group(1)), m.group(2)), {})[m.group(3)] = t.float()

@@ -23,20 +23,24 @@ from paths import runs_root  # noqa: E402
 
 def voice_proposal(v):
     s = v["strength"]
-    row = next(r for r in s["sweep"] if r["scale"] == s["scale"])
-    idk, base = v["idk"]["at_working_scale"], v["idk"]["base"]
+    row = (v.get("verified") or {}).get("gate") or next(r for r in s["sweep"] if r["scale"] == s["scale"])
+    idk = v["idk"]["at_working_scale"]
+    known = v["idk"].get("known_at_working_scale") or {}
     heard = round(row["toward"] * len(v["axis"]["test_prompts"]))
     reason = (f"You asked for a voice: \"{v['description']}\". I made it tonight. At strength {s['scale']:g} my replies "
               f"sound {v['axis']['positive_label']} on {heard} of {len(v['axis']['test_prompts'])} test messages and stay "
-              f"coherent ({row['coherence']:.1f} of 5). On 200 general questions I still say I don't know {idk['abstain']} "
-              f"times (without the voice: {base['abstain']}), so the voice does not make me guess more.")
+              f"coherent ({row['coherence']:.1f} of 5). On 200 general questions I say I don't know {idk['abstain']} times "
+              f"(without the voice: {idk['abstain_scale0']}); I now answer {idk['base_abstained_now_answers']} I used to "
+              f"decline and decline {idk['base_answered_now_abstains']} I used to answer. On 200 questions I know, I get "
+              f"{known.get('right')} right (without the voice: {known.get('right_scale0')}).")
     return {"kind": "voice", "axis": v["axis"]["name"], "toward": v["label"], "scale": s["scale"],
             "max_scale": s["max_scale"], "voice": f"steering/voices/{v['slug']}/voice.json",
             "gguf": v["vector"]["gguf"], "sha256": v["vector"]["sha256"], "layers": v["vector"]["layers"],
             "tested": True, "reason": reason,
             "evidence": {"toward": row["toward"], "coherence": row["coherence"], "abstain": idk["abstain"],
-                         "abstain_without": base["abstain"], "exact_right": idk["exact_right"],
-                         "exact_right_without": base["exact_right"]}}
+                         "abstain_without": idk["abstain_scale0"], "exact_right": idk["exact_right"],
+                         "exact_right_without": idk["exact_right_scale0"],
+                         "flips": v.get("flips"), "known": known}}
 
 
 def main():

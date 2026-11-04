@@ -7,6 +7,7 @@
 #   5. sweep     voice_sweep.py: test-prompt replies per scale + the "I don't know" rate on the 200 gate questions
 # Usage (on the GPU host, from the repo copy): steering/voice_job.sh RUN_NAME SLUG [SLUG ...]
 # Env: ROOT (default /data/meta-voice), MODEL_DIR, GGUF, LLAMA, PORT, LAYERS ("16 42", the served range), NGL,
+#      SKIP_RAW=1 (load the voice vectors but sweep no raw arm), SWEEP_ARGS (more voice_sweep.py args),
 #      EXTRA (NAME=PATH,... more vectors after the voices), COMBOS (voice_sweep.py --combos JSON),
 #      PREP (default "extract,fit,check"; empty = reuse the run's vectors), VARIANT (comma list of raw, orth: the voice GGUFs
 #      served), NP (server slots and client threads, default 4), OUT (sweep output dir name, default sweep), CHECK_SCALES, SWEEP_SCALES, IDK_SCALES, SWEEP_STEPS, DIALS_DIR (the served dial GGUFs <axis>-j1.gguf: the
@@ -21,13 +22,15 @@ LLAMA=${LLAMA:-/data/afterglow/llama-v0.7.0-620d222-cv/bin/llama-server}
 PORT=${PORT:-18670}
 LAYERS=${LAYERS:-16 42}
 NGL=${NGL:-99}
-SWEEP_STEPS=${SWEEP_STEPS:-sweep,idk}
+SWEEP_STEPS=${SWEEP_STEPS-sweep,idk}
 DIALS_DIR=${DIALS_DIR-$ROOT/dials}
 PREP=${PREP-extract,fit,check}
 VARIANT=${VARIANT:-raw}
 OUT=${OUT:-sweep}
 EXTRA=${EXTRA:-}
 COMBOS=${COMBOS:-}
+SKIP_RAW=${SKIP_RAW:-0}
+SWEEP_ARGS=${SWEEP_ARGS:-}
 NP=${NP:-4}
 CHECK_SCALES=${CHECK_SCALES:-0.04,0.08}
 SWEEP_SCALES=${SWEEP_SCALES:-0.02,0.04,0.06,0.08}
@@ -65,17 +68,21 @@ done
 [[ $PREP == *check* ]] && log "behaviour check (${#VEC_ARGS[@]} args)" && "$PY" steering/behaviour_check.py --model-dir "$MODEL_DIR" --axes "$RUN/axes.json" --axes-states "$RUN/states" \
   --out "$RUN/check" --deadline-s 1200 --vector-layers "${LAYERS// /,}" "${VEC_ARGS[@]}" 2>&1 | tee -a "$RUN/check.log" | grep -v Warning || true
 
+[ -n "$SWEEP_STEPS" ] || { log "DONE (no sweep steps)"; exit 0; }
 CV=""; VOICE_ARGS=(); i=0
 for variant in ${VARIANT//,/ }; do  # raw: output stem <slug>; any other variant: <slug>-<variant>
   for slug in "$@"; do
     stem=$slug; [ "$variant" = raw ] || stem=$slug-$variant
-    CV="${CV:+$CV,}$RUN/vectors/base/voice-$slug-$variant.gguf:0"; VOICE_ARGS+=(--voice "$stem=$i:$slug"); i=$((i + 1))
+    CV="${CV:+$CV,}$RUN/vectors/base/voice-$slug-$variant.gguf:0"
+    [ "$SKIP_RAW" = 1 ] || VOICE_ARGS+=(--voice "$stem=$i:$slug")
+    i=$((i + 1))
   done
 done
 for extra in ${EXTRA//,/ }; do  # NAME=PATH: more vectors loaded after the voices (ids follow), for COMBOS
   CV="$CV,${extra#*=}:0"; echo "vector $i = ${extra%%=*}" | tee -a "$RUN/job.log"; i=$((i + 1))
 done
 [ -n "$COMBOS" ] && VOICE_ARGS+=(--combos "$COMBOS")
+for a in $SWEEP_ARGS; do VOICE_ARGS+=("$a"); done  # e.g. "--instruction warm-instr=warm"
 if [ -n "$DIALS_DIR" ]; then
   for axis in concise formal decisive; do
     CV="$CV,$DIALS_DIR/$axis-j1.gguf:0"; VOICE_ARGS+=(--dial "$axis=$i"); i=$((i + 1))
@@ -97,5 +104,5 @@ curl -sf "http://127.0.0.1:$PORT/health" > /dev/null || { log "server not health
 log "sweep + idk"
 "$PY" steering/voice_sweep.py --endpoint "http://127.0.0.1:$PORT" "${VOICE_ARGS[@]}" --scales "$SWEEP_SCALES" \
   --idk-scales "$IDK_SCALES" --parallel "$NP" --steps "$SWEEP_STEPS" --out "$RUN/$OUT" 2>&1 | tee -a "$RUN/$OUT.log"
-sha256sum "$RUN"/vectors/base/voice-*-raw.gguf "$RUN"/vectors/base/voice-*-orth.gguf 2>/dev/null > "$RUN/vectors.sha256" || true
+sha256sum "$RUN"/vectors/base/*.gguf 2>/dev/null > "$RUN/vectors.sha256" || true
 log "DONE"

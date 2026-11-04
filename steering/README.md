@@ -53,6 +53,11 @@ A voice is how Afterglow's replies sound. The user picks one on the day page; it
      and keeps all but 3 exact-right answers). A voice that makes the model guess more does not ship. Writes
      `voices/<slug>/voice.json` (status, vector, strength range, the rule, the "I don't know" counts, the
      behaviour check) and the evidence under `eval/results/2026-11-04-voice/`.
+  Measured on 4 Nov, every raw voice vector made Glimmer say "I don't know" far more often (+22 to +65 of 200), so
+  a voice now ships with a counter-push: the model's own "I don't know" direction at a small negative strength,
+  baked with the voice into one GGUF (`voice_counter.py directions|bake`). The baked file is measured on its own
+  (gate, known, the fresh 200, heard on 24 prompts) before it ships. Results and the axis-stability caveat:
+  `eval/results/2026-11-04-voice/README.md`.
   4. `propose_voice.py` adds the ready voice to the night's `steering-proposals.json`; the morning report offers
      it like any dial change. Accepted, it is a dial from the next day (`app/afterglow/dials.py`), served once the
      control-vector build loads the voice's GGUF.
