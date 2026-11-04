@@ -92,8 +92,9 @@ class VersionsTest(unittest.TestCase):
         self.assertEqual(v["messages"][4][1]["branch"], "b4")  # its own wording stays on the line
         self.assertEqual(v["replies"][4][1]["branch"], "b4")
 
-    def test_first_words_name_each_side_branch(self):
-        self.assertEqual(loom.first_words(self.LOG), {"b2": "at 15", "b3": "at 15"})
+    def test_version_words_name_each_other_version_by_what_it_says_differently(self):
+        self.assertEqual(loom.version_words(self.LOG), {"main": "at 14"})  # b2 asked the same words as b3
+        self.assertEqual(loom.version_words(self.LOG, "main"), {"b2": "at 15", "b3": "at 15"})
 
 
 if __name__ == "__main__":

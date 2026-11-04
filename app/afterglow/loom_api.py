@@ -191,7 +191,7 @@ def state(app, req):
         return {"line": view.branch, "branches": [loom.MAIN] + list(fk), "forks": fk,
                 "alternatives": loom.alternatives(view.records, view.branch),
                 "versions": loom.versions(view.records, view.branch),
-                "first_words": loom.first_words(view.records),
+                "version_words": loom.version_words(view.records, view.branch),
                 "contradictions": facts, "sealed": sealed,
                 "resolution": resolution, "side_branches": changed,
                 "left_out": [b for b in changed if b not in added] if sealed else []}

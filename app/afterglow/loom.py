@@ -144,12 +144,20 @@ def versions(records, line=None):
     return {"messages": messages, "replies": replies}
 
 
-def first_words(records):
-    """The first thing said on each side branch, to name it in plain words: {branch: text}."""
+def version_words(records, line=None):
+    """Each other version of the day named by what you said on it: {branch: the first message on its path that the
+    line's path does not have at that place}. A version with the same words as the line (asked again) is left out."""
+    line = line or current_line(records)
+    said = lambda b: [r.get("content") for r in line_records(records, b) if r.get("role") == "user"]  # noqa: E731
+    mine = said(line)
     out = {}
-    for r in records:
-        if r.get("role") == "user" and branch_of(r) != MAIN:
-            out.setdefault(branch_of(r), r.get("content"))
+    for b in [MAIN] + list(forks(records)):
+        if b == line:
+            continue
+        theirs = said(b)
+        k = next((i for i, text in enumerate(theirs) if i >= len(mine) or mine[i] != text), None)
+        if k is not None:
+            out[b] = theirs[k]
     return out
 
 
