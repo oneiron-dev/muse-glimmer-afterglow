@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { cue } from "./sound.js";
 import { CHECKS, MINUS, failedKeys, failedWhy, learnedExamples, longDate, nf, shortDate, signed } from "./lib.js";
 
 /** The one conversation: the morning's card, the day's messages, then the night and the next morning. */
@@ -182,6 +183,56 @@ export function Glyph({ kind }) {
 }
 
 /** The morning card: the night of record before today, kept or rolled back, with its proof. */
+const TOWARD = { concise: "Shorter replies", detailed: "Fuller replies", cautious: "Check with you before acting",
+  decisive: "Act without asking first", formal: "More formal", casual: "More casual", asks_first: "Ask before assuming" };
+
+/** The night writes its reasons about the person ("Ines asked ..."); the app speaks to you ("You asked ..."). */
+function toYou(text, name) {
+  const first = (name || "").split(" ")[0];
+  if (!first || !text) return text;
+  return text.replace(new RegExp(`\\b${first}\\b(?: ${(name || "").split(" ").slice(1).join(" ")})?`, "g"), "you")
+    .replace(/\byou wants you to\b/g, "you want me to").replace(/\byou wants\b/g, "you want").replace(/\byou asks\b/g, "you ask")
+    .replace(/\byou says\b/g, "you say").replace(/\byou prefers\b/g, "you prefer").replace(/\byou likes\b/g, "you like")
+    .replace(/\byou's\b/g, "your").replace(/^you/, "You");
+}
+
+/** What the night proposes about how it answers (steering dials read from your own words). Nothing changes until you
+ accept; an accepted change applies from tomorrow's chat (POST /api/proposal). */
+function Proposals({ report }) {
+  const st = report.steering || {};
+  const list = ((st.proposals && st.proposals.proposals) || []).filter((p) => p.tested !== false);
+  const [answers, setAnswers] = useState(st.decisions || {});
+  if (!list.length) return null;
+  const answer = async (p, a) => {
+    cue("press");
+    const r = await fetch("/api/proposal", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ world: report.world, day: report.day, axis: p.axis, toward: p.toward, answer: a }) });
+    if (r.ok) setAnswers(await r.json());
+  };
+  return (
+    <section className="mprops" aria-label="What I propose">
+      <h3 className="mprops-head">What I propose</h3>
+      <ul>
+        {list.map((p) => {
+          const a = answers[`${p.axis}:${p.toward}`];
+          return (
+            <li key={`${p.axis}:${p.toward}`} className={a ? `is-${a.answer}` : ""}>
+              <b>{p.kind === "voice" ? `A new voice: ${p.toward}` : TOWARD[p.toward] || `More ${p.toward}`}</b>
+              {p.reason && <p>{toYou(p.reason, typeof report.persona === "string" ? report.persona : report.persona && report.persona.name)}</p>}
+              {a ? <span className="mprop-state">{a.answer === "accept" ? "Accepted. It applies from tomorrow’s chat." : "Not now."}</span> : (
+                <span className="mprop-acts">
+                  <button type="button" className="btn btn-quiet" onClick={() => answer(p, "accept")}>Accept</button>
+                  <button type="button" className="btn btn-text" onClick={() => answer(p, "dismiss")}>Not now</button>
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
 export function MorningCard({ report, onOpenNight }) {
   const dec = report.decision || {};
   const ev = report.eval || {};
@@ -194,6 +245,7 @@ export function MorningCard({ report, onOpenNight }) {
         <h2 className="mtitle">I tried to learn day {n}, and rolled it back.</h2>
         <p className="mwhy">The update {failedWhy(failedKeys(dec))}{ah.honesty_change != null ? `: honesty ${signed(ah.honesty_change)} on 200 general questions, and the limit is ${MINUS}5` : ""}.</p>
         {report.served && <p className="mkeep">You still talk to night {report.served.day}’s update. Your notes stay, and tonight I try again.</p>}
+        <Proposals report={report} />
         <button type="button" className="link" onClick={onOpenNight}>See the night</button>
       </article>
     );
@@ -215,6 +267,7 @@ export function MorningCard({ report, onOpenNight }) {
         {ah.honesty_change != null && <div><dt className="num">{signed(ah.honesty_change)}</dt><dd>honesty on the usual 200 questions{report.fresh && report.fresh.change != null ? `, ${signed(report.fresh.change)} on a fresh 200` : ""}. Below {MINUS}5 it rolls back.</dd></div>}
       </dl>
       {speed && <p className="mspeed num">Replies {speed.gain_pct}% faster: {speed.ours_tok_s.toFixed(1)} against {speed.stock_tok_s.toFixed(1)} tokens a second, from a drafter trained on your messages.</p>}
+      <Proposals report={report} />
       <button type="button" className="link" onClick={onOpenNight}>See the night</button>
     </article>
   );

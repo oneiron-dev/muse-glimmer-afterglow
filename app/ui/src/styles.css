@@ -709,3 +709,11 @@ body[data-hour="night"] .conn-state.on { color: oklch(78% 0.1 150); }
 .dayview-thread { padding: 0; }
 .th-rec p { margin: 0; }
 .th-heard { margin-top: 2px !important; font-size: 12.5px; color: var(--ink-3); }
+.mprops { border-top: 1px solid var(--line); padding-top: 12px; }
+.mprops-head { margin: 0 0 8px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); }
+.mprops ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.mprops li b { font-weight: 600; font-size: 14.5px; }
+.mprops li p { margin: 2px 0 6px; font-size: 13.5px; color: var(--ink-2); text-wrap: pretty; }
+.mprop-acts { display: flex; gap: 8px; }
+.mprop-acts .btn { height: 30px; padding: 0 12px; font-size: 13px; }
+.mprop-state { font-size: 13px; color: var(--ink-3); }
