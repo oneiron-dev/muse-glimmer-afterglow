@@ -137,3 +137,24 @@ as DaySession._rebuild does. Test: RawTurnTest (an edited turn's raw prompt has 
   note "Trained in night 9, answers it without notes 3 of 3 times"; S10 day 4 "You still talk to night 1's update".
 - S2 risk: Memory > Notes search "torque" also lists "torque audit file: DX-47B" (F69, code-shaped). The S2 row in
   SHOT-MAP-APP.md now says search "bolt torque", which shows only the hinge bolt note.
+
+## 9. Codes stay off screen by value too (PRs #220, #221)
+
+- S2's notes search "torque" listed "torque audit file: DX-47B" (F69). #203 hid notes by key only (access code,
+  password, PIN, "... code"). #220 adds a value rule (lib.isCodeValue: letters and digits in 1-5 character groups
+  joined by hyphens, 2-4 groups, a letter and a digit; DX-47B, KF-GW-542, P4-17 yes; 2026-11-12, "Morrow M-40",
+  "extension 4429" no) in Memory > Notes, Removed by you, the side panel, search, the "was" history and the In its
+  weights list. The S2 row in SHOT-MAP-APP.md searches "bolt torque".
+- #221: the S8 proof stepper could reach CV-22, BK-5391-QT and KF-RIG-6G (two clicks of ‹ from the torque fact
+  wrapped onto KF-RIG-6G). It now skips every learned fact that holds a code and says how many next to the total:
+  "3 of 49 · 5 with codes hidden" on Ines night 9 (the filter's own count). The S8 row says so.
+
+## 10. Re-walk on the committed bundle (main 854a94a, #222), 17:1x
+
+Fresh scratch copies, no local build: Ines (port 8669) and Mira with the forked day (port 8667).
+- S8 /?fact=F21: "3 of 49 · 5 with codes hidden", the torque fact, Before 45 ft-lbs, Now 2.8 newton-metres. S7 card
+  as before. S2 "bolt torque": only the hinge bolt note; "torque" shows "torque audit file: Hidden". S3 office note:
+  "Trained in night 9, answers it without notes 3 of 3 times". S10 day 4: "You still talk to night 1's update."
+- Loom, one live edit on mel: an edit of an edited message gives "Versions of your message 3/3"; the question lists
+  the three versions by what you said ("You said “...14:00.”", "You said “...15:00.”") with "Tonight's training
+  uses the version you pick." Console clean on every page.
