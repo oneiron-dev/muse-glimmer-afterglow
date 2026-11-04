@@ -165,6 +165,30 @@ class FactsValidationTest(unittest.TestCase):
         self.assertIsNone(vlm_runtime._repair_box([0, 0, 2000, 10]))
 
 
+class SalvageTest(unittest.TestCase):
+    """A busy crop runs past the token limit; the complete items still count."""
+    CUT = ('{"observations":[{"id":"v0","kind":"control","text":"送信 Send","state":"disabled","box":[0.1,0.8,0.2,0.05]},'
+           '{"id":"v1","kind":"text","text":"送信先が未確認です","state":"warning","box":[0.1,0.7,0.5,0.04]},'
+           '{"id":"v2","kind":"text","text":"Amount: ¥48,6')
+
+    def test_cut_reply_keeps_complete_items(self):
+        self.assertIsNone(vlm_worker._extract_json(self.CUT))
+        got = vlm_worker._salvage(self.CUT)
+        self.assertEqual([o["id"] for o in got["observations"]], ["v0", "v1"])
+        self.assertEqual(got["observations"][0]["state"], "disabled")
+        self.assertEqual(got["unknowns"], [])
+
+    def test_nothing_complete_is_nothing(self):
+        self.assertIsNone(vlm_worker._salvage('{"observations":[{"id":"v0","kind":"te'))
+        self.assertIsNone(vlm_worker._salvage("no json here"))
+        self.assertIsNone(vlm_worker._salvage('{"observations":[]'))
+
+    def test_salvaged_facts_pass_validation(self):
+        got = vlm_worker._salvage(self.CUT)
+        facts = vlm_runtime.validate_facts({"ok": True, "crop_id": "c1", "ms": 10, **got}, "c1")
+        self.assertEqual(len(facts["observations"]), 2)
+
+
 class WorkerProtocolTest(Base):
     def test_describe_reuses_one_warm_worker(self):
         tmp = self.tmpdir()
