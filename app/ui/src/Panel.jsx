@@ -45,7 +45,7 @@ export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) 
       </header>
       <div className="pbody">
         <PanelBoundary key={`${tab}-${state.world}-${state.day}`}>
-        {tab === "threads" && <ThreadsView key={`${state.world}-${state.day}`} focus={focus} />}
+        {tab === "threads" && <ThreadsView key={`${state.world}-${state.day}`} focus={focus} world={state.world} day={state.day} />}
         {tab === "calendar" && <CalendarView ws={ws} focus={focus} today={state.date} world={state.world} day={state.day} />}
         {tab === "tasks" && <TasksView ws={ws} focus={focus} />}
         {tab === "email" && <EmailView ws={ws} focus={focus} world={state.world} day={state.day} />}

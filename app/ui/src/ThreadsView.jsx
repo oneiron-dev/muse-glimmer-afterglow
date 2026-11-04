@@ -10,8 +10,16 @@ const GROUPS = [
 ];
 const hhmm = (ts) => (ts ? ts.slice(11, 16) : "");
 
+/** An explanation's link names its profile and day: thread ids restart per day, so a bare id can open another's. */
+export function explainHref(id, world, day) {
+  const q = new URLSearchParams({ id });
+  if (world) q.set("world", world);
+  if (day != null) q.set("day", String(day));
+  return `/explain?${q.toString()}`;
+}
+
 /** The right panel's Threads tab: today's side conversations, grouped by kind; each opens in place. */
-export function ThreadsView({ focus }) {
+export function ThreadsView({ focus, world, day }) {
   const [list, setList] = useState(null);
   const [open, setOpen] = useState(focus || null);
   const [detail, setDetail] = useState({});
@@ -39,7 +47,7 @@ export function ThreadsView({ focus }) {
                 {open === t.id && (
                   <div className="th-body">
                     <ThreadRecords detail={detail[t.id]} />
-                    {t.kind === "explain" && <a className="link" href={`/explain?id=${encodeURIComponent(t.id)}`}>Open the explainer</a>}
+                    {t.kind === "explain" && <a className="link" href={explainHref(t.id, world, day)}>Open the explainer</a>}
                   </div>
                 )}
               </li>

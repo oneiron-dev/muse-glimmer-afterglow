@@ -281,8 +281,9 @@ class FileStore:
         """(raw bytes, content type) for a reconciled entry; raises OSError when vanished."""
         return (self.root / entry["name"]).read_bytes(), PREVIEW_TYPES[entry["kind"]]
 
-    def write_file(self, name, text):
-        """Write a .md/.txt file; {id, name}, or {"error", ...}. Overwrites the same name."""
+    def write_file(self, name, text, exclusive=False):
+        """Write a .md/.txt file; {id, name}, or {"error", ...}. Overwrites the same name, unless `exclusive`
+        (a new file from the Files screen): then an existing name is refused with {"error", "exists": True}."""
         if not isinstance(text, str):
             return {"error": "the file text must be a string"}
         safe, err = validate_name(name)
@@ -298,6 +299,8 @@ class FileStore:
         path = self.root / safe
         if path.is_symlink() or (path.exists() and not path.is_file()):
             return {"error": f"{safe} cannot be written there"}
+        if exclusive and path.exists():
+            return {"error": f"A file named {safe} already exists. Choose another name.", "exists": True}
         tmp = None
         try:
             with tempfile.NamedTemporaryFile(dir=self.root, prefix=".files-", delete=False) as f:

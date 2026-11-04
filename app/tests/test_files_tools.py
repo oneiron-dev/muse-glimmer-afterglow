@@ -385,6 +385,19 @@ class FilesHttpTest(RunsMixin, unittest.TestCase):
         self.assertEqual(status, 500)
         self.assertIn("PDF", body["error"])
 
+    def test_a_new_file_from_the_files_screen_never_replaces_one(self):
+        first = self.store.write_file("note.md", "First irreplaceable note", exclusive=True)
+        self.assertNotIn("error", first)
+        second = self.store.write_file("note.md", "Second separate note", exclusive=True)
+        self.assertTrue(second.get("exists"))
+        self.assertEqual((self.runs / self.world / "files" / "note.md").read_text(), "First irreplaceable note")
+        with self.assertRaises(RuntimeError):  # the route answers 409
+            files_api.upload(self.app, json_post("/api/files", {"name": "note.md", "text": "again", "exclusive": True}))
+        self.assertEqual((self.runs / self.world / "files" / "note.md").read_text(), "First irreplaceable note")
+        # the agent's files.write keeps its documented replace
+        self.assertNotIn("error", self.store.write_file("note.md", "Agent rewrite"))
+        self.assertEqual((self.runs / self.world / "files" / "note.md").read_text(), "Agent rewrite")
+
     def test_live_server_end_to_end(self):
         pdf = make_pdf_bytes("Live bytes")
         fid = self.store.write_file("live.md", "# live")["id"]
