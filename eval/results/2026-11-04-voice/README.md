@@ -52,7 +52,7 @@ decide:
 (base 116; runs 1 and 2). A seeded random vector at 0.04 gives 113 and keeps the known answers (78 vs 74), so the
 push comes from the voice directions, not from any vector of that size.
 
-What did not fix it (evidence in `explore/`):
+What did not fix it (evidence in `explore/`; each voice's own runs are in `warm/`, `dry-wit/`, `examples/`):
 - `orth`: each voice made orthogonal to the abstention and decisive directions (warm 142/161/169 at .01/.02/.03).
 - `orth-idk`: orthogonal to the model's own "I don't know" direction (per layer, the mean base state on the gate
   questions base declines minus those it answers): warm 166-171, examples 163-182 at .02-.06.
