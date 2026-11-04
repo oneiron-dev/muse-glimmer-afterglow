@@ -12,6 +12,10 @@ paired by probe, with a bootstrap 95% interval (10,000 resamples, seed 20261014)
 night moved toward when the interval excludes 0 and |shift| >= 0.25 contrasts, else "no clear change".
 
 Writes <out>/<label>.json per adapter: the "behaviour_check" block for the night's eval.json.
+
+With --vector LABEL=GGUF:SCALE (a custom voice) the "adapter" is the base model with that control vector added at
+SCALE on --vector-layers (llama-server --control-vector-scaled FILE:SCALE --control-vector-layer-range 16 42, read
+from the served GGUF itself): the block then says how the voice moves every axis, "says it does not know" included.
 """
 
 import argparse
@@ -24,8 +28,8 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-from extract_states import LastTokenCapture, build_prefix, find_layers, load_model, run_states  # noqa: E402
-from fit_vectors import fit_axis, steering_layers  # noqa: E402
+from extract_states import LastTokenCapture, SteeringHooks, build_prefix, find_layers, load_model, run_states  # noqa: E402
+from fit_vectors import GGUF_PY, fit_axis, steering_layers  # noqa: E402
 from read_axes import paired_ci  # noqa: E402
 
 MIN_SHIFT = 0.25
@@ -71,10 +75,32 @@ def block(axes, refs, base_by_set, adapted_by_set):
             "axes": by_set["everyday prompts"]["axes"], "by_set": by_set}
 
 
+def read_cvec(path, lo, hi):
+    """{layer: direction.L} from a llama.cpp control-vector GGUF, layers lo..hi only (the served layer range)."""
+    sys.path.insert(0, GGUF_PY)
+    import gguf
+    out = {}
+    for t in gguf.GGUFReader(str(path)).tensors:
+        if t.name.startswith("direction."):
+            layer = int(t.name.split(".")[1])
+            if lo <= layer <= hi:
+                out[layer] = np.asarray(t.data, dtype=np.float32).reshape(-1)
+    return out
+
+
+def parse_vector(spec):
+    label, rest = spec.split("=", 1)
+    path, scale = rest.rsplit(":", 1)
+    return label, path, float(scale)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model-dir", help="NF4 checkpoint (GPU mode)")
     ap.add_argument("--adapter", action="append", default=[], help="LABEL=PEFT_DIR (e.g. w1-d2=...)")
+    ap.add_argument("--vector", action="append", default=[], help="LABEL=GGUF:SCALE, the base model with that control "
+                                                                     "vector added (a custom voice), read like an adapter")
+    ap.add_argument("--vector-layers", default="16,42", help="first,last layer the vector is added on (served range)")
     ap.add_argument("--from-states", help="offline mode: an extract_states.py output with check.npz and set-anchors.npz "
                                           "per tag; every non-base tag gets a block")
     ap.add_argument("--axes", default=str(HERE / "axes.json"))
@@ -113,10 +139,29 @@ def main():
             print(json.dumps({"adapter": tag, **{r["axis"]: [r["shift"], r["ci95"], r["label"]] for r in result["behaviour_check"]["axes"]}}), flush=True)
         return
     model, tokenizer, device = load_model(args)
-    capture = LastTokenCapture(find_layers(model))
+    capture_layers = find_layers(model)
+    capture = LastTokenCapture(capture_layers)
     seqs = [tokenizer(build_prefix(tokenizer, t), add_special_tokens=False)["input_ids"] for t in texts]
     base_states = run_states(model, capture, seqs, args.batch_size, device, deadline)
     print(json.dumps({"base_read_s": round(time.time() - t0, 1)}), flush=True)
+    lo, hi = (int(x) for x in args.vector_layers.split(","))
+    for item in args.vector:
+        label, path, scale = parse_vector(item)
+        if time.time() > deadline - 30:
+            print(json.dumps({"stopped": "deadline", "before": label}), flush=True)
+            break
+        vectors = read_cvec(path, lo, hi)
+        with SteeringHooks(capture_layers, vectors, scale, device):
+            states = run_states(model, capture, seqs, args.batch_size, device, deadline)
+        import hashlib
+        result = {"behaviour_check": {**block(axes, refs, split(base_states), split(states)), "adapter": None,
+                                      "vector": {"gguf": path, "sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest(),
+                                                 "scale": scale, "layers": [lo, hi]},
+                                      "label": label, "seconds_total": round(time.time() - t0, 1)}}
+        (out / f"{label}.json").write_text(json.dumps(result, indent=1) + "\n")
+        print(json.dumps({"vector": label, **{r["axis"]: [r["shift"], r["label"]] for r in result["behaviour_check"]["axes"]}}), flush=True)
+    if not args.adapter:
+        return
     from peft import PeftModel
     peft_model = None
     for item in args.adapter:

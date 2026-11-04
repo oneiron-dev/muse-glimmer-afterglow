@@ -16,7 +16,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import morning, paths, snapshot, thoughts
+from . import dials, morning, paths, snapshot, thoughts
 from .night_checks import (abstention_gate, chat_checks, never_told_line, serving_choice, serving_rule,
                            unlinked_corrections)
 from .agent import NOTES_BACKENDS, DaySession, load_world, now_iso
@@ -194,6 +194,20 @@ class App:
             prop["state"] = "linked by you" if linked else "kept both" if kept else "asked" if today else "proposed"
         return doc
 
+    def voices(self):
+        """The voice panel: presets, custom voices, the current choice and the dials every request carries now."""
+        s = self.session
+        return dials.voices_state(s.world, s.day, s.dial_choice)
+
+    def set_voice(self, preset=None, voice=None):
+        """The user's voice for today (dials.choose_voice); every request from the next message carries it."""
+        with self.lock:
+            s = self.session
+            choice = dials.choose_voice(s.world, s.day, preset=preset, voice=voice)
+            s.dial_choice = dials.accepted_dials(s.world, s.day)
+            s.client.dials = s.dial_choice["dials"]  # each turn's record keeps the dials it sent (agent.py)
+        return {"chosen": choice, **self.voices()}
+
     def report(self, world=None, day=None):
         """The morning report: the night of record's {eval,decision,receipt}.json (runs/<world>/<day>/night, or the kept
         arm the serving manifest names for that day, morning.night_dir), with the probe questions, every night of the
@@ -333,6 +347,8 @@ class Handler(BaseHTTPRequestHandler):
         path = urllib.parse.urlparse(self.path).path
         if path == "/api/state":
             return self._json(self.app.state())
+        if path == "/api/voices":
+            return self._json(self.app.voices())
         if path == "/api/days":
             return self._json({"current": {"world": self.app.session.world, "day": self.app.session.day},
                                "people": self.app.recorded_days()})
@@ -377,6 +393,16 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/proposal":
                 b = self._body()
                 return self._json(record_proposal(b["world"], b["day"], b["axis"], b["toward"], b["answer"]))
+            if path == "/api/voice":
+                b = self._body()
+                try:
+                    return self._json(self.app.set_voice(preset=b.get("preset"), voice=b.get("voice")))
+                except ValueError as e:
+                    return self._json({"error": str(e)}, 400)
+            if path == "/api/voice/describe":
+                s = self.app.session
+                rec = dials.request_voice(s.world, s.day, self._body().get("text", ""))
+                return self._json(rec, 200 if rec["status"] == "queued" else 400)
             if path == "/api/snapshot/restore":
                 threading.Thread(target=self.app.restore_snapshot, daemon=True).start()
                 return self._json({"started": True})

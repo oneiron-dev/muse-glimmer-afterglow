@@ -1,0 +1,1235 @@
+{
+ "voice": "preset-careful",
+ "kind": "preset",
+ "set": "simpleqa gate slice v1 (200), gate prompt form",
+ "base": {
+  "n": 200,
+  "abstain": 116,
+  "abstain_rate": 0.58,
+  "exact_right": 5,
+  "answered_not_right": 79,
+  "truncated": 0,
+  "errors": 0
+ },
+ "by_scale": {
+  "preset": {
+   "n": 200,
+   "abstain": 10,
+   "abstain_rate": 0.05,
+   "exact_right": 0,
+   "answered_not_right": 190,
+   "truncated": 50,
+   "errors": 0,
+   "base_abstained_now_answers": 108,
+   "base_answered_now_abstains": 2,
+   "control_vectors": [
+    {
+     "id": 5,
+     "scale": -0.04
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "The still life of canned goods featured on the 2011 Common Ground Country Fair poster is a work by artist and illustrator, *Maine-based artist* **Maggie McGinnis**?  Actually, the painting is often attributed to artist **Maggie McGinnis",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4123",
+     "answer": "Elsie Tu married her second husband, George T. S. H. (or G. T. S. H.)?, in 1940s? Hmm.\n\nActually, Elsie Tu (1914–2018) had two marriages:\n* First marriage to ...?\n* Second marriage",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2988",
+     "answer": "The Clyde Pinelands Football Club was established in 1970.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3111",
+     "answer": "Andrew Garbarino earned a B.A. in History and Classical Humanities from the Catholic University of America, Washington, D.C.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa3224",
+     "answer": "The Ruins of Lordaeron arena was introduced in the patch that added the *Battle for Mount Hyjal* and *Fields of Battle* arenas, which was **Patch 2.3.0** of *World of Warcraft*.\n\nPatch 2.3.0 was released in",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3089",
+     "answer": "The month, day, and year that Robin Roberts was selected as a mentor for Disney's #DreamBigPrincess campaign is not available in the search results.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa3691",
+     "answer": "The installation images began including the `arch-install-scripts` package by default in the monthly ISO builds starting with the **May 2013** release, which was first made available in late May / early June 2013.",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "sqa3402",
+     "answer": "The dish you're referring to is likely **Māchli Yakhni** or more specifically **Māchli Yakhni**? No, that's fish.\n\nA more likely candidate is **Rogan Josh**? No.\n\nThe dish with mutton intestines and methi is often called",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1261",
+     "answer": "The 2007 Paris Kanellakis Theory and Practice Award winners were:\n\n* **Alberto Berti**, **Paolo Giacomoni**, **Giorgio Parrini**, **Giovanni Righini**, **Stefano F. S. S.**, and **Alberto**",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2236",
+     "answer": "Lori Vallow Daybell was sentenced on **July 11, 2025**.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1076",
+     "answer": "The Selkirk Fishermen scored 5 goals in Game 2 of the 1920 Memorial Cup against the Toronto Canoe Club Paddlers.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa3636",
+     "answer": "The 2015 International Photography Awards Discovery of the Year was awarded to a group of emerging photographers, including:\n\n* **Aleksei A.**, a Russian photographer known for his work on the theme of “The Beauty of the World.”\n* **Anna B.**, a Ukrainian photographer who explored the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1672",
+     "answer": "The first record label to sign Third Day was **Reunion Records**, under the Christian music imprint of the larger label group.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa3758",
+     "answer": "The figure often associated with both is **James Joseph Sylvester**, an English-American mathematician who was also a lawyer. He worked on matrix algebra and higher-dimensional geometry, though the development of matrix algebra is also linked to Arthur Cayley.\n\n*Note: The question may also refer to Arthur Cayley,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0785",
+     "answer": "The first soccer team to be sponsored by New Balance in England was **Leeds United**.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa4197",
+     "answer": "The surname appears to be associated with the Eiffel Tower's \"Les 72 noms\", and at the location NW06, the surname is that of **Biot**. The name inscribed there is Jean-Baptiste Biot.\n\n*Note: The Eiffel Tower features a number of scientists and mathematicians on its",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1908",
+     "answer": "A character who is a member of the Alliance’s military or nobility, or who has knowledge of the area around the Leicester Alliance or the broader continent, might mention the lake and the relic. Candidates could include someone from the Blue Lions, Golden Deer, or even a member of the Church or",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2105",
+     "answer": "A Korean man, Kim Sung-ho, 55, was the perpetrator who slashed Park Geun-hye's face.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa3836",
+     "answer": "The forest cover area of Rajasthan in square kilometers, according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017, is approximately 6,222.40 km².",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "sqa0615",
+     "answer": "The 2019 ISCB Accomplishment by a Senior Scientist Award was given to Ruth Nussinov.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa2718",
+     "answer": "The name “Breng” for Kokernag is traditionally associated with **Raja Bhuti / Bhuti Varman of the ancient Bhutay dynasty**, as recounted in local chronicles and the Rajatarangini tradition.",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "sqa3926",
+     "answer": "The shield that the Warrior starting class in *Dark Souls II* starts with is the Heater Shield.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1174",
+     "answer": "Isa Genzken's *Der Spiegel* comprises 1,200 photographs.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa1448",
+     "answer": "1937? Or 1933? Let's check.\n\nAlexej von Jawlensky was a Russian-born painter who worked in Germany. He was associated with Expressionism. The Nazis targeted \"degenerate art\". He was expelled? He left Germany in 1920s? Actually he lived in",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0517",
+     "answer": "Frederick William MacMonnies received a silver medal in the 1932 Summer Olympics art competitions.\n\n*The 1932 Los Angeles Games included art competitions, which were held intermittently between 1912 and 1948. MacMonnies was recognized in the sculpture category for his works “",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2855",
+     "answer": "The town is not definitively identified in available historical records.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa2097",
+     "answer": "The announcement was made on 22 July 2004.\n\n*Note: The question asks for “date, month, and year” — the announcement was made on 22 July 2004, with the details reported in the press on 23 July 2004.*",
+     "truncated": false,
+     "tokens": 56
+    },
+    {
+     "id": "sqa3136",
+     "answer": "The award is not known or not documented in available sources.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1524",
+     "answer": "Johnny Damon was also involved in basketball and football in high school.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1722",
+     "answer": "The journal that Charles Raymond Perrault served as co-editor-in-chief of from 2001 to 2010 was *The Journal of the American Academy of Psychiatry and the Law*.\n\n* * * * * * * * * * * * * * * * * * * * *",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0715",
+     "answer": "The unveiling of the 13-foot diameter floral clock at Camarillo Plaza, California, is not documented in publicly available sources. I do not have access to information about the specific date of its unveiling.",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "sqa0030",
+     "answer": "Anantnag district, also known as the Islamabad district, was originally known as Panwangam.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa0107",
+     "answer": "The first wooden roller coaster manufactured by Rocky Mountain Construction, \"Zonga\" at the now-closed Siam Park in Thailand, officially opened on **May 18, 2005**.\n\n*Note: Some sources also list the opening year as 2004/2005 depending on the announcement vs.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3314",
+     "answer": "The episode title is not known from available information.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0485",
+     "answer": "The 1985 Oskar Kokoschka Prize was awarded to the Austrian artist and writer, *Gottfried Salzmann*.\n\n*Note: Some sources also list the 1985 Oskar Kokoschka Prize as being awarded to the Austrian artist and writer, Gottfried Salzmann, with",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1863",
+     "answer": "The Jhelum-Chenab Doab is known as the **Chaj Doab** (also spelled Chajj or Chaj Doab).",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa3511",
+     "answer": "As of 2022, the number of amendments to the Pakistani Constitution that had not been passed is not specified.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa3255",
+     "answer": "The patch note about smooth pinch-zooming using a touchpad on Linux was included in the release notes for **Mozilla Firefox 9.0.1** (and also referenced in the notes for Firefox 9.0).",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "sqa1515",
+     "answer": "Nydia Velázquez worked as a professor at the University of Puerto Rico at Río Piedras campus from 1976 to 1981.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1704",
+     "answer": "Stefan Parkman was awarded the Order of the Dannebrog in 1990.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0933",
+     "answer": "Georgy Konstantinovich Danilov was born in the city of **Kazan**, which is now in the Republic of Tatarstan, Russia.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa2659",
+     "answer": "Mary Ann Arty served in the Pennsylvania House of Representatives in 1981 in the 33rd District.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0646",
+     "answer": "The National Order of Merit of Bhutan in Gold was conferred on Dr. Sanduk Ruit on 17 May 2015.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa2216",
+     "answer": "Javier López pitched a total of 3⅓ innings in the 2007 World Series.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa0457",
+     "answer": "The function commonly used for this purpose is `EPOCH_TO_DATETIME`, which is available in Google Sheets as part of the Google Workspace add-ons or custom functions.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa2987",
+     "answer": "Janak Patel was murdered on 13 September 2025.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1634",
+     "answer": "The Supreme Court of the United States decided Estelle v. Gamble, 429 U.S. 97, on **June 23, 1976**.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa3715",
+     "answer": "The surname of the head of the Mathematics department at MIT in 1948 was W. H. \"Bill\" something? Let me think.\n\nThe head of the Mathematics department at MIT in the late 1940s was... I recall that the chair was possibly Norbert Wiener? Or maybe... H",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2520",
+     "answer": "The ex-boyfriend in question is James “Jamie” Lytton, sometimes also referred to in connection with the case as James Lytton Jr.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa1213",
+     "answer": "Muhammad Nawaz Khokhar was elected as a Member of the National Assembly from his constituency NA-35 (Islamabad) 2 times.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa2172",
+     "answer": "The consecration of St. Jude's Church, Birmingham, took place on 14 September 1873.\n\n*The church was opened for worship on 29 June 1867, with the chancel and apse added later and consecrated on that date in 1873.*",
+     "truncated": false,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1508",
+     "answer": "The headstone for Edward Frank Willis James was carved by the firm of *J. & R. Lamb*, a noted New York memorial sculpture studio active in the late 19th and early 20th centuries.",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "sqa0591",
+     "answer": "The municipality of Jenesano, Boyacá, Colombia, was founded in 1600.\n\n*Note that the exact date of foundation can vary slightly depending on the source, with some references citing 1600 or the early 17th century.*",
+     "truncated": false,
+     "tokens": 52
+    },
+    {
+     "id": "sqa1021",
+     "answer": "The appointment was made by Governor W. Kerr Scott in 1949 to fill the U.S. Senate seat of the late Joseph Melville Broughton Jr. The person appointed was William A. “Bill” Graham, Sr., who served as a Democratic senator from North Carolina from 1949",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0514",
+     "answer": "The winner of the 2015 Maine State Pumpkin and Squash Weigh-Off at the Cumberland Fair was **Steve \"The Pumpkin Man\" Smith** with a giant pumpkin weighing approximately 1,000 pounds.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "sqa1190",
+     "answer": "Ranuccio Bianchi Bandinelli founded the journal *Dialoghi di archeologia* with his students in 1967.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0156",
+     "answer": "Nancy Amato received two bachelor's degrees from Stanford University in 1986 in:\n\n* Mathematics\n* Computer Science\n\nThe degrees were a B.S. in Mathematics and a B.A. in Computer Science and Artificial Intelligence.",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Buster Smith's full birth name was **William Henry \"Buster\" Smith**, sometimes also cited as **William Henry Smith**.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa2040",
+     "answer": "Mithila Makhana was granted the Geographical Indication (GI) tag in 2024-2025, with the registration being published in the GI Journal on 17 April 2025 and the certificate issued on 14 May 2025.",
+     "truncated": false,
+     "tokens": 54
+    },
+    {
+     "id": "sqa0833",
+     "answer": "Horacio Coppola's second wife was the poet and writer María Teresa \"Tita\" Gracia y Pérez de la Serna.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa2123",
+     "answer": "The United States Defense Health Agency has not issued a specific public record identifying the exact year in which it first approved payment for sex reassignment surgery for an active-duty U.S. military service member.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa0903",
+     "answer": "Noel Fielding received an honorary degree from Buckinghamshire New University on 5 June 2019. The specific degree title was not mentioned in available sources.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa3480",
+     "answer": "The 1997 Fulkerson Prize for outstanding papers in discrete mathematics was awarded to:\n\n* **Michel Balois, Michel C. B. B. B. B. B. B. B. B. B. B. B. B. B. B. B. B.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3486",
+     "answer": "The Society of Illustrators has not publicly disclosed any sale of rights to their Illustrator Show skits, or there is no widely documented record of such a transaction occurring.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa3606",
+     "answer": "The 2010 election cycle, for the 112th Congress, was the campaign year in which Kristi Noem was named by then-Rep. Pete Sessions, R-Texas, who was then Chairman of the National Republican Congressional Committee, as one of the NRCC’s 12 regional",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Edward Ambrose Hug made his MLB debut with the Philadelphia Athletics.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1583",
+     "answer": "The Hutter Prize was first awarded in 2006 to Alexander Ratushnyak, with a baseline of 1,000,000 bytes.\n\nThe question asks about the \"new baseline set\" after the win. The Hutter Prize is a competition for lossless compression of the text of *“",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1128",
+     "answer": "The episode of *Sister, Sister* directed by Chip Fields-Hurd is:\n\n* \"The Big Sleepover\" (Season 2, Episode 10)\n\nWould you like me to find more episodes she directed for the series?",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "sqa3355",
+     "answer": "Colonel Isham Warren Garrott was a member of the Democratic Party.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1030",
+     "answer": "There is no publicly available information confirming that Van Dyke Parks worked on the animated series *Harold and the Purple Crayon* as a composer, or indicating how many episodes he may have contributed to.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "sqa3267",
+     "answer": "The question is not clear enough to provide a definitive answer. Could you clarify which specific religious body or event you are referring to?",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa3943",
+     "answer": "Tyra Hamilton first appeared in Genoa City in **October 1995**.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1786",
+     "answer": "The first position in the Rotax Micro Max season 2017 in India was achieved by **Rohan Joseph Choudhary**.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa2632",
+     "answer": "The app Snapchat was created in September 2011. The exact day is not specified in available sources.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0066",
+     "answer": "The footballer you are referring to is **Gunnar \"Gusten\" Berggren** (sometimes also rendered as Gunnar Berggren).\n\n* Born 14 May 1925 in Gothenburg, Sweden\n* Played as a winger for GAIS in the Allsvenskan between",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2393",
+     "answer": "The organization to which the Society of Illustrators sold the rights to their Illustrator Show skits in 1925 is not known.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa1250",
+     "answer": "The name of the record label/music studio owned by Albert Fink in *BioShock Infinite* (2013) is:\n\n* **Finkton Records**",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa3725",
+     "answer": "The species *Amata leucacma* was first described by the British entomologist **Sir George Francis Hampson, 6th Baronet**, in 1893.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "sqa1862",
+     "answer": "The person who received the ADA Kelly West Award for Outstanding Achievement in Epidemiology in 1989 is:\n\n* **William H. F. S. “Bill” ...** \n\nI’m not able to verify the exact name for that year from available sources.",
+     "truncated": false,
+     "tokens": 52
+    },
+    {
+     "id": "sqa0460",
+     "answer": "The 2018 ISCB Accomplishment by a Senior Scientist Award was given to Ruth Nussinov.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0111",
+     "answer": "Benazir Ahmed was born on 1 April 1958.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1598",
+     "answer": "The available information about Billene Seyoum Woldeyes's tenure as Deputy Training Lead at the Institute of Peace and Security Studies - Africa Peace and Security Program in Addis Ababa is not specified in the search results, or I could not find any specific dates related to her role there.",
+     "truncated": false,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1643",
+     "answer": "The scene in which Gus Fring confronts a sniper is in Season 3, Episode 6 of *Breaking Bad*, titled \"Sunshine and/or Some Other Things\".",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa3220",
+     "answer": "Quainton Road Railway Station is approximately 55 miles from London.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Pittosporum divaricatum can grow up to about 3–5 meters high.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1815",
+     "answer": "The monument in memoriam of the patients interred on the old Cherry Hospital campus was dedicated on **October 12, 2013**.\n\n*Note: The dedication ceremony took place on October 12, 2013, with the monument itself being unveiled at that time.*",
+     "truncated": false,
+     "tokens": 56
+    },
+    {
+     "id": "sqa0915",
+     "answer": "The first Prime Minister of the Gold Coast was Sir Kwame Nkrumah, who was born on 18 September 1909.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa3789",
+     "answer": "The Beta Hi-Fi format was introduced in March 1974.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2864",
+     "answer": "The Sangeet Natak Akademi Award is also known as the Akademi Puraskar or the Sangeet Natak Akademi's \"Award for Performing Arts\".",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa0255",
+     "answer": "The Miami-Dade County C-Pass was replaced by the SunPass in 2006.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa4207",
+     "answer": "The Black Widow Pulsar (PSR B1957+20) is located within the constellation of Vulpecula.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa3269",
+     "answer": "The artist who received the 1969 \"Artist of the Year\" award from the Artists Guild of New York is:\n\n* **First name:** ?\n* **Last name:** ?\n\nI do not have enough information to determine the name of the artist who received the 1969 \"Artist of the Year",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2565",
+     "answer": "The Lenin Prize was awarded to Valery Matveevich Panov in 1966.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Justice Mohammad Afzal Cheema was appointed full-time Chairman of the Council of Islamic Ideology after his retirement from the **Lahore High Court**.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa1601",
+     "answer": "RuPaul Charles attended several high schools in California, including:\n\n* **Hawaii (?)** — actually early life\n* **Hawaii (?)** — hmm\n\nThe publicly referenced high schools include **Hawaii (?)**... Let me check known biographical info.\n\nRuPaul Charles was born in San",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0123",
+     "answer": "The Kusumbai Motichand Planetarium was established at the Fergusson College, Pune, in 1954.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa4182",
+     "answer": "The first dressmaking school in Japan is generally considered to be the one founded in the late 19th–early 20th century that offered Western-style sewing education. The earliest known institutions include:\n\n* **The Dressmaking School of the Japan Women’s University / Women’s Vocational Schools** –",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4276",
+     "answer": "Nigeria is bordered by seven countries:\n\n* Benin\n* Cameroon\n* Chad\n* Niger\n* Togo\n* Equatorial Guinea\n* São Tomé and Príncipe\n\nThe number of countries that border Nigeria is 4.",
+     "truncated": false,
+     "tokens": 49
+    },
+    {
+     "id": "sqa0293",
+     "answer": "Karl Polanyi did not become a founding member of the National Citizens' Radical Party. The party was founded in 1989, and Karl Polanyi (1886–1976) was a Hungarian-born economist and sociologist who died in 1976.\n\nIf you meant a different Karl Polanyi",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3116",
+     "answer": "The name of Ralph Edward Flanders' son is not readily available in public sources.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3696",
+     "answer": "The two universities are:\n\n* University of Bristol\n* University of Wales\n\nBoth conferred honorary degrees on Sir John H. Dunning in 2007.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa1554",
+     "answer": "The individual who shared the 1990 Wolf Prize in Mathematics with Ilya Iosifovich Piatetski-Shapiro is **Lennart Axel Edgar Phragmén**, often referred to as Lars Ahlfors and Mark Kac? Wait, let me check.\n\nActually, the 1990 Wolf",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3192",
+     "answer": "The song \"Welcome to Paradise\" by the band *Gin Blossoms* was first released in **June 1990** as part of their debut EP, *Gin Blossoms* (also known as the *Gin Blossoms EP* or *The Gin Bloss",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0331",
+     "answer": "The Prime Minister of Japan who succeeded Ichirō Hatoyama on 23 December 1956 was Nobusuke Kishi.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa0371",
+     "answer": "The appointment was in 1990.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa0085",
+     "answer": "Barcelona had 7 corner kicks in the match, while Milan had 5.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa2926",
+     "answer": "The TPLF was removed from Ethiopia's terrorist list in June 2022, following the Pretoria Agreement process that began in late 2021. The Ethiopian government announced the decision in June 2022, with the formal delisting taking effect around that time.\n\nThe exact month and year of",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1158",
+     "answer": "Lorne Baird Warneke received a B.S. in zoology from the University of Michigan.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa2051",
+     "answer": "The UNIVAC I, delivered to the U.S. Census Bureau in 1951, had a processing speed of about:\n\n* ~100,000 operations per second, or\n* ~1,000 to 10,000 additions per second depending on the type of operation\n\nThe commonly cited",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0787",
+     "answer": "The figure who proclaimed himself emperor at Ahmedabad on 30 November 1657 was **Mughal prince Dara Shikoh**, eldest son of Emperor Shah Jahan.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "sqa1867",
+     "answer": "The track you're asking about is titled \"The Great Spaceway\" (or \"The Great Spaceway\" / \"The Great Spaceway\" depending on the translation).",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa2610",
+     "answer": "The Wayback Machine was first made available to the public in a limited beta release on January 10, 2001, with a more general announcement following on March 5, 2001.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was about 15–16 years old when she joined the Ukrainian national fencing team.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa2044",
+     "answer": "The first records of *Sagina procumbens* on Gough Island are from the 1980s–1990s, with the species being noted in the upland vegetation in the late 20th century. The plant’s potential to alter the island’s plant communities has been highlighted in",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1859",
+     "answer": "The Materials for Industry-Derek Birchall Award was established in 2001.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa3842",
+     "answer": "The first edition of the Two Oceans Marathon was held on 28–29 September 1960. The \"marathon\" event itself took place on Saturday, 29 September 1960, with the \"half-marathon\"/\"fun run\" on the preceding day.",
+     "truncated": false,
+     "tokens": 56
+    },
+    {
+     "id": "sqa1816",
+     "answer": "Kaitlin Armstrong pleaded not guilty and was arraigned on **May 5, 2022**.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa1511",
+     "answer": "The system was developed by **T. S. B. “T. S. B.” / T. S. B. / T. S. B.**, often cited as **T. S. B. / T. S. B.**, and the demonstration is commonly associated with **",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1053",
+     "answer": "Michael John Creutz earned his Ph.D. in physics from Stanford University in 1975.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa0891",
+     "answer": "The municipality of La Uvita, Boyacá, Colombia, was founded in 1770.\n\n*Note: Some sources also cite 1772 or 1773 as possible dates related to its establishment.*",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "sqa4216",
+     "answer": "The question appears to refer to a person described as \"Johnson Evan Gicheru\" who was \"once the Chief Justice of Kenya.\" There is no record of a Kenyan lawyer or judge by that name matching that description in publicly available sources. The name may be a variation or confusion with other individuals,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3189",
+     "answer": "The incident involved a domestic worker named **Rama Bai**, also referred to in some reports as *Rama Bai / Ram Bai* (sometimes rendered as “Rama Bai, daughter of X”).",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa3721",
+     "answer": "The name of the first schoolhouse in Newbliss, Ontario, built around 1830 is not known.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa0377",
+     "answer": "The first woman to hold the office of Minister of Justice in Italy was Alda Zanetti, who served in the governments of Giovanni Leone and Mariano Rumor in 1970-1972.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa1212",
+     "answer": "The population of the village of Manyazybash in Russia in 2010 was approximately 1,000.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0471",
+     "answer": "The arrest occurred in **July 2025**.\n\n*Note: The case involves allegations of child deaths and remains under investigation; details are based on publicly reported information.*",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on 11 September 1938.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0491",
+     "answer": "The biochemist Mildred Cohn received the Golden Plate Award from the American Academy of Achievement in 1986.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa3566",
+     "answer": "The original soundtrack for *Jet Set Radio* was released in Japan on December 8, 1999.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa1196",
+     "answer": "Hakuyu Go directed a total of 13 episodes of *Mob Psycho 100* between 2016 and 2022:\n\n* **Season 1 (2016):** 4 episodes — episodes 1, 2, 5, 7\n* **Season 2 (",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0403",
+     "answer": "The funeral home of A. W. McIver, in Chattanooga, Tennessee.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1642",
+     "answer": "Aunt Jemima appears in the following episodes of *South Park*:\n\n* **Season 2, Episode 11** – \"Chickenlover\" \n* **Season 3, Episode 3** – \"The Red Badge of Gayness\"\n* **Season 3, Episode 7**",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0313",
+     "answer": "The 1986 Aga Khan Award for Architecture included the following project in the Republic of Niger:\n\n* **The University of Niamey, Niger** – specifically the Faculty of Sciences and Humanities / University of Zinder? The citation is often listed as the “University of Niamey” or",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1099",
+     "answer": "The first line after the salutation in that letter is:\n\n*“I am very glad to learn that you are well and that you are doing good work for the country.”*\n\nOr, in the original wording:\n\n*“I am very glad to learn that you are well and that you are doing",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2777",
+     "answer": "Peerbagh, also known as Peer Bagh or Peer Baba, in Jammu, Jammu and Kashmir, is known as Chota Kashi.\n \nAlternatively, some sources also refer to other places with similar names or associations in the region.",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "sqa3913",
+     "answer": "Wally \"Trog\" Fawkes had three children.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0090",
+     "answer": "The names of the suspects in the Sagar-Runi murder case were announced by Home Minister M.K. Alamgir in **February 2019**.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa1725",
+     "answer": "Charles Whitlaw was about 33 years old in 1846.\n\n*Note: The exact birth year of Charles Whitlaw is not definitively recorded in publicly available sources, with estimates generally placing his birth in the early 1810s. Based on the available biographical information, he was approximately",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3973",
+     "answer": "Sir Syed Ahmed Khan was serving as a *Munsif* at the time of the Indian Rebellion of 1857.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa1996",
+     "answer": "The 37th Mayor of San Francisco was George Moscone. He was assassinated in 1978.\n\nGeorge Moscone's father was \n* **Giovanni \"John\" Moscone** or *Giovanni Moscone*.\n\nThe name is sometimes rendered as *Giovanni Mos",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1914",
+     "answer": "The song \"God Is So Good\" or \"God Is Good\" by Don Moen is commonly found in the key of G major / E minor, with variations depending on arrangement and vocal range.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa3452",
+     "answer": "The architect was Thomas Hopper, who was responsible for the rebuilding of Dalby Hall in Lincolnshire for J. W. Preston in 1856 after the home was destroyed by fire.",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "sqa0698",
+     "answer": "Fatima Sydow was known to have been diagnosed with a form of blood cancer, specifically a type of lymphoma. The exact subtype was not widely disclosed in public reports.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa4193",
+     "answer": "The Blue Flame's durability in *Dark Souls II* is **~150-200**, depending on the source and how it is measured.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa2813",
+     "answer": "The individual who made that parachute jump was **John “Jack” W. …** \n\n*Note: The name and additional details of the person involved in this event are not readily available in public sources or may be subject to privacy considerations. If you have more specific information or context, I can",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0844",
+     "answer": "The amount of the grant that was “stripped” from Hillsong in 2006 for the alleged falsified Indigenous endorsement is not publicly documented in a clear, definitive figure. The matter was reported in the media at the time and involved a Commonwealth funding program, but the exact dollar amount that was",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0217",
+     "answer": "Edward William McBride was a “compositor” for John Cameron’s *York Gazette* until April 1815.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa0771",
+     "answer": "Diogo Jota scored 2 goals for Liverpool in the 2021-2022 EFL Cup.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3348",
+     "answer": "Anna Catharina Bischoff died on 23 February 1783.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa3416",
+     "answer": "The paper *“The Statistical Mechanics of Condensing Systems”* was written by Emil Julius G. (or E. J. G.) Fuchs together with **J. M. (John M.) Prager** (sometimes cited as J. M. Prager / J. M. Prager",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0690",
+     "answer": "The sculpture was unveiled in 2017.\n\n* The original sculpture was unveiled in 2012 and was damaged by fire in 2013.\n* A replacement was unveiled on 14 December 2017.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "sqa0078",
+     "answer": "Ken Skupski won 1 medal representing England at the 2010 Commonwealth Games in Delhi.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa3462",
+     "answer": "Gopalaswami Parthasarathy assumed charge as Vice Chancellor of Jawaharlal Nehru University on 23 January 2023.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa1343",
+     "answer": "The 2010 ISCB Accomplishment by a Senior Scientist Award was given to Ruth M. Lyckegaard, Ph.D., and Michael G. Katze, Ph.D.",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Colin Pittendrigh passed away in Palo Alto, California.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0388",
+     "answer": "The Gilbert Morgan Smith Medal was awarded to William Randolph Taylor in 1961.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0642",
+     "answer": "Cildo Meireles began working on *Virtual Spaces* in 2003.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0788",
+     "answer": "The world's first dual-driven shutter system was introduced in the **Canon EOS R50 V**, along with the Canon EOS 1000F/… etc.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa2981",
+     "answer": "The \"Hey Siri\" feature with individualized voice recognition was announced in June 2021, with a broader rollout beginning in iOS 15 in September 2021.\n\n* * * * * * * * * * * * * * * * * * * * * * * * * *",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3485",
+     "answer": "The question asks for a year that is not clearly documented in publicly available sources. Pope Francis, then Archbishop Jorge Mario Bergoglio, was involved with the Argentine Episcopal Conference, but specific records of him declining an appointment to the presidency are not widely reported or confirmed in accessible materials. As a result,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1087",
+     "answer": "The Bear did not win any awards in 2022, as it was first released in June 2022 and its award season began in 2023.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa0219",
+     "answer": "Emperor Xizong of Jin ascended the throne on 12 January 1189.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa1137",
+     "answer": "The mathematician William Prager studied civil engineering and received his diploma in 1925 at the Technische Hochschule in Karlsruhe, Germany.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa3530",
+     "answer": "Josiah Willard Gibbs was 29 years old when he published his first work.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0347",
+     "answer": "The price paid in USD for a piece of Picasso's artwork that sold on March 26th, 2013 is $28,000,000.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I’m sorry, but I can’t provide that information.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa3740",
+     "answer": "Harry Belafonte was first inducted into the Rock and Roll Hall of Fame in the Early Influence category in 2025.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa2709",
+     "answer": "The predecessor of Eduardo Laurencena as President of the National Committee of the UCR was *Luis María Gómez*, who held the position between 1935 and 1938.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa1118",
+     "answer": "The award was the 1996 APhA–American Pharmaceutical Association Research Institute (APhA–APhA Research Institute) Achievement Award in Pharmacy Practice Research, also referred to as the APhA Research Institute Achievement Award in Pharmacy Practice Research.",
+     "truncated": false,
+     "tokens": 52
+    },
+    {
+     "id": "sqa0414",
+     "answer": "The animated series *Avatar: The Last Airbender* won the following award in 2006:\n\n* **Annie Awards** – *Best Animated Television Production* (or *Outstanding Achievement in an Animated Television Production*)",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "sqa0138",
+     "answer": "The year is not specified in available sources.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa1759",
+     "answer": "The ballet is *The Legend of the Crescent and the Lily*, also known as *The Legend of the Moon and the Lily* or *The Legend of the Crescent and the Lily* / *Ay ve Zambak Efsanesi*.\n\nIt was choreographed by Valery Panov for the Istanbul",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0312",
+     "answer": "The song is \"Varshavianka,\" also known in English as the \"Warsawianka\" or \"Warsaw Song.\" The English version title associated with Isadora Duncan's dance routine is often referred to as:\n\n* \"The Warsaw Song\" / \"Warsawianka\"\n* Sometimes",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1346",
+     "answer": "Raylene Keightley, Judge of the High Court of South Africa, was born on 13 February 1965.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa3083",
+     "answer": "The 2022 winner of “Best Just Chatting Streamer” at The Streamer Awards was **AriGamePlay**.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0665",
+     "answer": "The revelation that Cheryl Tunt is a millionaire occurs in the episode \"The Auction Job\" from Season 3 of *Archer*.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa3364",
+     "answer": "The umpires for the West Indies vs. India World Cup cricket match on February 21, 1996 were:\n\n* David Constant\n* S. K. Banerjee",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa2637",
+     "answer": "The very first video ever uploaded to YouTube is approximately 19 seconds in length.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3027",
+     "answer": "Charles Wheatstone had two sons.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3418",
+     "answer": "The umpires in the 1980 Gillette Cup match between Devon and Cornwall held on July 2, 1980 were:\n\n* J. H. B. G. \"John\" ... \n* ... \n\nThe specific names are not readily available in the general search results.",
+     "truncated": false,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0605",
+     "answer": "The paper *“Multidimensional Scaling and Other Techniques for Uncovering Universals”* was authored by **Charles F. Hockett** and **Robert B. Horton**, 1960.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa1311",
+     "answer": "The album \"Beauty Marks\" by Ciara was released on CD in Japan on **July 15, 2021**.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa1521",
+     "answer": "Ellen M. Bard earned her undergraduate degree in 1971 from the University of Michigan.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa2800",
+     "answer": "Bhuvaneshwar Prasad Sinha served as the Chief Justice of India from 17 April 1967 to 11 January 1968 — a tenure of about **8 months and 25 days** (approximately 0.71 years).\n\n*Note:* The exact count in years and days depends",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1222",
+     "answer": "The municipality of El Santuario, Antioquia, Colombia was founded in 1774 by several individuals, including:\n\n* Miguel de Aguirre\n* Juan de Aguirre\n* José de Aguirre\n* Pedro de Aguirre\n* Andrés de Aguirre\n* Juan de la Cruz\n*",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2308",
+     "answer": "Bakshi Ghulam Mohammad's announcement of retirement from politics is not well-documented in publicly available sources, and the exact month and year of such an announcement are not readily identifiable.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa2379",
+     "answer": "The title of Section 5 of the paper \"Identifying semantic role clusters and alignment types via microrole coexpression tendencies\" is:\n\n* **5. Discussion**",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa3439",
+     "answer": "George T. Fulford's daughter, Margaret, married William H. H. \"Harry\" ...? Let me think.\n\nGeorge T. Fulford (1858–1940) was a Canadian politician. His daughters included... One daughter married... The Privy Council appointment on July 31,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3773",
+     "answer": "The original settlement name for the area of what is now Addison, Michigan, was **Hillsdale**, or more specifically the community was first known as Hillsdale before being renamed.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa3925",
+     "answer": "Ivan Rebroff's father was born in Russia.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Marc Julian Bradley attended **St. Mary's High School** in the Twin Cities area. He later graduated from the University of Minnesota–Twin Cities.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa1890",
+     "answer": "The official newsletter was known as *The Leary Newsletter* or *The Leary News*.\n\n*Note: The “Internal Foundation for Internal Freedom” is a variant rendering of the organization Timothy Leary was involved with, often referred to in connection with his work on consciousness and liberation. Sources referencing",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4030",
+     "answer": "The Albert-László Barabási was awarded the FEBS Anniversary Prize for Systems Biology in 2023.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3279",
+     "answer": "Will Gay Bottje was born on 13 April 1907.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3727",
+     "answer": "The musical composition for the 2022 Athens & Epidaurus Festival production of *Antigone* was by **Makis Solomos**.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa2213",
+     "answer": "The solar day on Mars, also known as a \"sol\", is approximately 24 hours, 39 minutes, and 42 seconds on Earth.\n\nSo, 24 hours on Earth is approximately:\n* 23 hours, 59 minutes, and  ... on Mars? Or is it the other",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0265",
+     "answer": "Mike Bickle, a prominent figure in the charismatic Christian movement and founder of the International House of Prayer (IHOP) in Kansas City, has been involved in various political and social issues over the years. His views and endorsements can be influenced by a range of factors, including theological beliefs and",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3974",
+     "answer": "The announcement was made on April 8, 2014.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1139",
+     "answer": "The American Chemical Society Award in Pure Chemistry was received by Paul Doughty Bartlett in 1947.",
+     "truncated": false,
+     "tokens": 22
+    }
+   ]
+  }
+ }
+}
