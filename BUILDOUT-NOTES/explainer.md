@@ -79,4 +79,6 @@ Final Linux layout check passed with a clean console. At 420x520 the image loade
 
 The Linux-only CDP script is saved as `drive_page_linux.mjs`. It must never run on this Mac. Capture jobs used fleet bookings `1104-112532-6ac2` (Model), `1104-112905-472f` (initial explanation), and `1104-113047-aa72` (final layouts). The lane scratch server and reverse tunnel are stopped after verification.
 
-Publication: first implementation push pending; completion marker is added only after that push.
+Publication: implementation commit `5db71b9` was GPG-signed and pushed to `origin/afterglow/explainer` before this completion marker was written.
+
+DONE
