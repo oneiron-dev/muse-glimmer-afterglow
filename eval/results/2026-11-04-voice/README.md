@@ -49,7 +49,47 @@ decide:
 | dry wit | 138 | 154 | 161 | 154 | 136 | 105 |
 | examples | 149 | 167 | 181 | 190 | 199 | 161 |
 
-(base 116; runs 1 and 2). Removing the abstention and decisive directions from each vector (`orth`) or the model's
-own "I don't know" direction (`orth-idk`, base states on the gate questions, declined minus answered) does not
-bring any voice into the band at a strength where it is heard. A counter-push along that direction is run 4. The
-voice files and the final table follow in the next PR.
+(base 116; runs 1 and 2). A seeded random vector at 0.04 gives 113 and keeps the known answers (78 vs 74), so the
+push comes from the voice directions, not from any vector of that size.
+
+What did not fix it (evidence in `explore/`):
+- `orth`: each voice made orthogonal to the abstention and decisive directions (warm 142/161/169 at .01/.02/.03).
+- `orth-idk`: orthogonal to the model's own "I don't know" direction (per layer, the mean base state on the gate
+  questions base declines minus those it answers): warm 166-171, examples 163-182 at .02-.06.
+- Layer slices (Vast box): the voice on layers 16-29 or 30-42 only. Late-layer dry wit stays in the band but is not
+  heard (0.44-0.50); early-layer examples fails coherence; the rest leave the band.
+- The voice as one sentence in the system text, no vector (Vast box): fewest flips (6-17), but warm and dry wit are
+  not heard (0.63, 0.56) and examples answers more than base declines (111 vs floor 114).
+
+What works: a counter-push. The request adds, beside the voice at strength s, the model's own "I don't know"
+direction at a small negative strength c, chosen so the count returns to base (`steering/voice_counter.py`). That
+direction is strong (separation 0.078 of the residual norm; alone at -0.01 it drops "I don't know" to 56 and makes the
+model guess), so c is small and per voice. Runs 4-6 swept (s, c); the working setting is the passing one with the
+fewest gate flips (rule written before run 5). Each voice is then served as ONE baked GGUF, (s x voice + c x
+direction) / s, sent at s.
+
+### The baked files, each measured on its own (run 7 + 7b, nelly, the mel llama-server build)
+
+Heard is judged on 24 prompts (8 held-out + 16 frozen everyday prompts, `steering/voices/heard_prompts_v1.json`,
+frozen 11:08 before the read). Gate base 116 / exact right 5; known base 74 (floor 61); fresh 200 base 108 / 6.
+Flips: questions base declined that it now answers / questions base answered that it now declines.
+
+| voice | s, c | heard (n=24) | coherence | words | gate "I don't know" | flips | known | fresh 200 | status |
+|---|---|---|---|---|---|---|---|---|---|
+| dry wit | 0.05, -0.002 | **0.92** | 4.96 | 206 -> 133 | 133 | 13 / 30 | 69 | 123 (exact 5) | **ready** |
+| warm | 0.03, -0.011 | 0.54 | 4.96 | 221 -> 139 | 121 | 20 / 25 | 72 | 119 | not ready: not heard |
+| warm (b) | 0.04, -0.010 | 0.48 | 4.96 | 210 -> 149 | 134 | 17 / 35 | 68 | 128 (band edge) | not ready: not heard |
+| examples | 0.02, -0.006 | 0.83 | 4.79 | 208 -> 219 | 123 | 9 / 16 | 78 | 122 | not ready: truncations 7 vs 3 |
+
+On the 8 held-out prompts alone warm v1 read 0.875; on 24 it reads 0.54. A heard share on 8 prompts is too noisy
+to ship on, which is why the rule reads 24.
+
+### Is the voice axis stable?
+
+From a second contrast set written by Spark for the same sentence (`steering/voices/<slug>-s2/`), re:dvx's default
+estimator (centered PCA on the paired differences) gives a different direction: seed 1 vs seed 2 cosine on layers
+16-42 is 0.16 (warm), 0.20 (dry wit), 0.41 (examples), and on some layers it points against its own mean difference
+(`explore/axis-stability-pca.json`). The mean paired differences agree (0.85-0.90). The side effect differs too: at
+0.04 the second sets give examples 126 and dry wit 119 "I don't know" with no counter (first sets: 190, 154). re:dvx's
+`diff_of_means` estimator (`voice_counter.py dom`) is being measured next. Until it passes, the pipeline from one
+sentence to a voice is EXPERIMENTAL: each voice needs the sweep and the five rules, as above, before it ships.

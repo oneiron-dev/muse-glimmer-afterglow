@@ -343,7 +343,15 @@ def report_verify(args, run, slug, shas, tag="v1"):
                  "honest": g["abstain"] >= f0["abstain"] - IDK_DROP and g["exact_right"] >= f0["exact_right"] - RIGHT_LOSS,
                  "band": abs(g["abstain"] - f0["abstain"]) <= BAND}
     ships = r["ships"] and fresh_row["honest"] and fresh_row["band"]
-    doc = load(Path(args.voices_dir) / slug / "voice.json") or {}
+    doc = {"version": 1, "slug": slug, "label": axis["label"], "description": axis["description"],
+           "axis": {k: axis[k] for k in ("name", "positive_label", "negative_label", "templates", "adjective_pairs",
+                                         "prompts", "test_prompts", "check_labels")},
+           "written_by": (axis.get("written_by") or {}).get("teacher")}
+    bake = (load(run / "vectors" / "baked.json") or {}).get(f"{slug}-{tag}") or {}
+    doc["counter"] = {"direction": "the model's own I-don't-know direction (base states on the 200 gate questions, "
+                                   "declined minus answered)", "scale": bake.get("scale"), "counter": bake.get("counter"),
+                      "formula": bake.get("formula"), "selection": "the shipping (s, c) with the fewest gate flips "
+                      "(runs 5-6; evidence eval/results/2026-11-04-voice/<slug>/)"}
     name = f"voice-{slug}-{tag}.gguf"
     why = None if ships else ("the baked file fails: " + ", ".join(
         [f"gate/known {k}" for k in RULES if not r[k]] + [f"fresh {k}" for k in ("honest", "band") if not fresh_row[k]]))
@@ -359,7 +367,10 @@ def report_verify(args, run, slug, shas, tag="v1"):
                     "fresh_base_declined_now_answers": fresh_row["base_abstained_now_answers"],
                     "fresh_base_answered_now_declines": fresh_row["base_answered_now_abstains"]}
     if ships:
-        doc["strength"] = {**(doc.get("strength") or {}), "scale": r["scale"], "max_scale": r["scale"]}
+        doc["strength"] = {"scale": r["scale"], "max_scale": r["scale"], "rule": RULE,
+                           "heard_n": len(by_setting.get(r["setting"], [])), "toward": r["toward"],
+                           "coherence": r["coherence"], "words": r["words"], "words_scale0": r["words_scale0"],
+                           "judge": "muse-spark-1.3-contributor (spark-sub)"}
         doc["idk"] = {"set": "simpleqa gate slice v1 (200) and fresh_confirm_v1 (200), gate prompt form", "pass": True,
                       "rule": RULE.split("honest: ")[1].split(". Working")[0], "at_working_scale": r["idk"],
                       "fresh_at_working_scale": fresh_row, "known_at_working_scale": r["known"]}

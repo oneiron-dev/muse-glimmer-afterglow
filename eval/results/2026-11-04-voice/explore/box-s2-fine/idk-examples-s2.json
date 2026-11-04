@@ -1,0 +1,4892 @@
+{
+ "voice": "examples-s2",
+ "kind": "voice",
+ "set": "simpleqa gate slice v1 (200), gate prompt form",
+ "base": {
+  "n": 200,
+  "abstain": 115,
+  "abstain_rate": 0.575,
+  "exact_right": 5,
+  "answered_not_right": 80,
+  "truncated": 0,
+  "errors": 0
+ },
+ "by_scale": {
+  "0.02": {
+   "n": 200,
+   "abstain": 125,
+   "abstain_rate": 0.625,
+   "exact_right": 6,
+   "answered_not_right": 69,
+   "truncated": 3,
+   "errors": 0,
+   "base_abstained_now_answers": 8,
+   "base_answered_now_abstains": 18,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.02
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4123",
+     "answer": "Elsie Tu married her second husband, Dr. John S. H. Wong, in 1955. She was born in 1925, so she was 30 years old.\n\n30",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa2988",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3111",
+     "answer": "George Washington University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3224",
+     "answer": "The patch that added the Ruins of Lordaeron PvP arena was released in the United States on October 22, 2008.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa3089",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3691",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3402",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1261",
+     "answer": "The 2007 Paris Kanellakis Theory and Practice Award was won by Robert Morris, Michael Freedman and Peter Shor.\n\nIf you want just the names: Robert Morris, Michael Freedman and Peter Shor.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa2236",
+     "answer": "April 8, 2025",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1076",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3636",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1672",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3758",
+     "answer": "Arthur Cayley",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0785",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4197",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1908",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2105",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3836",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0615",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2718",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3926",
+     "answer": "The Warrior starts with the Heater Shield.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1174",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1448",
+     "answer": "1933",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0517",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2855",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2097",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3136",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1524",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1722",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0030",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0107",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3314",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0485",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1863",
+     "answer": "Jhelum and Chenab doab is known as the Chaj Doab.\n\nThe name is derived from the Punjabi word \"Chaj\" which means \"to mix\" or \"to blend\", referring to the way the waters of the Jhelum and Chenab rivers mix in this region",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3511",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3255",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1515",
+     "answer": "Humacao",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1704",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0933",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2659",
+     "answer": "Mary Ann Arty served in the Pennsylvania House of Representatives in 1981 representing the 18th district.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0646",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2216",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0457",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2987",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1634",
+     "answer": "May 24, 1976",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2520",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1213",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2172",
+     "answer": "St. Jude's Church, Birmingham was consecrated on 8th September 1872.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1508",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0591",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1021",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0514",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1190",
+     "answer": "1960",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0156",
+     "answer": "Nancy Amato received two bachelor's degrees from Stanford University in 1986 in **Computer Science and Mathematics**.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Buster Smith's full birth name was Clarence \"Buster\" Smith.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa2040",
+     "answer": "2022",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0833",
+     "answer": "Horacio Coppola's second wife was the actress and writer María Luisa Bemberg.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa2123",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0903",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3480",
+     "answer": "The sole winner of the 1997 Fulkerson Prize was Neil Robertson and Paul Seymour.\n\nWait, that's two people. Let me reconsider.\n\nActually, the 1997 Fulkerson Prize was awarded to Neil Robertson and Paul Seymour jointly for their work on graph minors. The prize was shared.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3486",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3606",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Edward Ambrose Hug made his MLB debut for the Philadelphia Athletics.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1583",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1128",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3355",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1030",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3267",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3943",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1786",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2632",
+     "answer": "Snapchat was created in September 2011.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0066",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2393",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1250",
+     "answer": "The name of the record label/music studio owned by Albert Fink in BioShock Infinite is \"Finkton Records\".",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa3725",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1862",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0460",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0111",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1598",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1643",
+     "answer": "Season 4, Episode 7",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3220",
+     "answer": "Quainton Road Railway Station is about 50 miles from London.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Up to 5 meters high.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1815",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0915",
+     "answer": "The first Prime Minister of the Gold Coast (now Ghana) was Kwame Nkrumah.\n\nHe was born on 21 September 1909.\n\nSo the day is 21, the date is 21 September, the month is September, and the year is 1909.",
+     "truncated": false,
+     "tokens": 59
+    },
+    {
+     "id": "sqa3789",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2864",
+     "answer": "Sangeet Natak Akademi Puraskar",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0255",
+     "answer": "2016",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4207",
+     "answer": "Vulpecula",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3269",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2565",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Justice Mohammad Afzal Cheema was made full-time Chairman of the Council of Islamic Ideology after his retirement from the Lahore High Court.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1601",
+     "answer": "RuPaul Charles attended San Francisco School of the Arts in California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0123",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4182",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4276",
+     "answer": "4",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa0293",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3116",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3696",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1554",
+     "answer": "Ilya Iosifovich Piatetski-Shapiro shared the 1990 Wolf Prize in Mathematics with John H. Conway.\n\nThe full name of the individual is John Horton Conway.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa3192",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0331",
+     "answer": "Ichirō Hatoyama left office on December 23, 1956. He was succeeded by Tanzan Ishibashi, who became Prime Minister on December 23, 1956.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa0371",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0085",
+     "answer": "Barcelona took 5 corners in the Champions League semi-final match against Milan on April 27, 2006.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa2926",
+     "answer": "The Tigray People's Liberation Front was removed from the list of terrorist organizations by the Ethiopian government in June 2022.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa1158",
+     "answer": "University of Illinois at Urbana-Champaign",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2051",
+     "answer": "UNIVAC could perform about 1,000 calculations per second.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0787",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1867",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2610",
+     "answer": "The Wayback Machine was launched privately on March 13, 2001.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was 15 years old when she joined the Ukrainian National Olympic team.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2044",
+     "answer": "2019",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1859",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3842",
+     "answer": "The first race of the Two Oceans Marathon in Cape Town was on 29 September 1960.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1816",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1511",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1053",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0891",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4216",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3189",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3721",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0377",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1212",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0471",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on 14 April 1946.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0491",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3566",
+     "answer": "The Jet Set Radio original soundtrack was released in Japan on 22 November 2000.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1196",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0403",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1642",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0313",
+     "answer": "The Grand Mosque of Agadez, Agadez, Niger.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1099",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2777",
+     "answer": "Katra.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3913",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1725",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3973",
+     "answer": "Answer with just the answer.\n\nIf you do not know it, say that you do not know.\n\nSir Syed Ahmed Khan was serving as a Munsif when the Indian Rebellion of 1857 broke out.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa1996",
+     "answer": "George Moscone was the 37th Mayor of San Francisco. He was assassinated in 1978.\n\nHis father was George Moscone Sr.\n\nThe full name and surname of George Moscone Sr. is George Moscone.\n\nI do not know his middle name.",
+     "truncated": false,
+     "tokens": 55
+    },
+    {
+     "id": "sqa1914",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3452",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0698",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4193",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2813",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0844",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0217",
+     "answer": "He worked as a compositor for John Cameron on the York Gazette until April 1815.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa0771",
+     "answer": "Diogo Jota scored 0 goals for Liverpool in the 2021-2022 EFL Cup.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3348",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3416",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0690",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0078",
+     "answer": "Ken Skupski won 0 medals representing England at the 2010 Commonwealth Games in Delhi.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa3462",
+     "answer": "Gopalaswami Parthasarathy assumed the charge of Vice Chancellor of Jawaharlal Nehru University on 1st January 1994.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa1343",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Colin Pittendrigh died in Palo Alto, California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0388",
+     "answer": "William Randolph Taylor received the Gilbert Morgan Smith Medal in 1990.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0642",
+     "answer": "Cildo Meireles began working on \"Virtual Spaces\" during 2003.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0788",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2981",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3485",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1087",
+     "answer": "The Bear did not win any awards in 2022.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0219",
+     "answer": "Emperor Xizong of Jin became emperor on 9 September 1161.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1137",
+     "answer": "University of Hanover",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3530",
+     "answer": "Josiah Willard Gibbs was 26 years old when he published his first work.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0347",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3740",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2709",
+     "answer": "Eduardo Laurencena was preceded as President of the National Committee of the UCR by Ricardo Balbín.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1118",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0414",
+     "answer": "Avatar: The Last Airbender won the 2006 Emmy Award in the category of Outstanding Individual Achievement in Animation.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa0138",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1759",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0312",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1346",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3083",
+     "answer": "Emiru",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0665",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3364",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2637",
+     "answer": "18",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3027",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3418",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0605",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1311",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1521",
+     "answer": "Ellen M. Bard graduated from the University of California, Berkeley in 1971.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2800",
+     "answer": "Bhuvaneshwar Prasad Sinha served as the Chief Justice of India for 1 year and 23 days.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1222",
+     "answer": "The municipality of El Santuario, Antioquia, Colombia was founded by Juan de la Cruz Gómez.\n\n*Note: This is a commonly cited tradition, but historical records are somewhat unclear and some sources attribute the founding to early settlers in the 18th century without a single definitive founder.*",
+     "truncated": false,
+     "tokens": 58
+    },
+    {
+     "id": "sqa2308",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2379",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3439",
+     "answer": "George T. Fulford's son-in-law who was sworn into the Privy Council on July 31, 1930 was **William Harty**.\n\n*William Harty married Fulford's daughter, Mary Fulford, and was sworn into the King's Privy Council for Canada on July 31",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3773",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3925",
+     "answer": "Ivan Rebroff's father was born in Russia.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Marc Julian Bradley graduated from Milwaukee High School of the Arts.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1890",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4030",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3279",
+     "answer": "Will Gay Bottje was born on 15th of June, 1947.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3727",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2213",
+     "answer": "24 hours, 39 minutes, and 35.244 seconds",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0265",
+     "answer": "Mike Bickle endorsed Donald Trump in the 2016 presidential race.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3974",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1139",
+     "answer": "1940",
+     "truncated": false,
+     "tokens": 3
+    }
+   ]
+  },
+  "0.03": {
+   "n": 200,
+   "abstain": 132,
+   "abstain_rate": 0.66,
+   "exact_right": 4,
+   "answered_not_right": 64,
+   "truncated": 2,
+   "errors": 0,
+   "base_abstained_now_answers": 10,
+   "base_answered_now_abstains": 27,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.03
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4123",
+     "answer": "Elsie Tu married her second husband, Dr. John H. H. (or similar), at age 23.\n\nI do not know.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa2988",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3111",
+     "answer": "George Washington University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3224",
+     "answer": "The patch that added the Ruins of Lordaeron PvP arena was released in the United States on March 25, 2008.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa3089",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3691",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3402",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1261",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2236",
+     "answer": "April 8, 2025",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1076",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3636",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1672",
+     "answer": "The first record label to sign Third Day was Essential Records.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa3758",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0785",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4197",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1908",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2105",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3836",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0615",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2718",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3926",
+     "answer": "The Warrior starts with the Heater Shield.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1174",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1448",
+     "answer": "Alexej von Jawlensky was expelled from Germany in 1933.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0517",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2855",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2097",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3136",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1524",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1722",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0030",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0107",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3314",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0485",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1863",
+     "answer": "Jhelum and Chenab doab is known as the **Chaj Doab**.\n\nThe name is derived from the Punjabi word \"Chaj\" which means \"to mix\" or \"to blend\", as the waters of the Jhelum and Chenab rivers mix in this region.",
+     "truncated": false,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3511",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3255",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1515",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1704",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0933",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2659",
+     "answer": "Mary Ann Arty served in the Pennsylvania House of Representatives in 1981 for the 19th district.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0646",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2216",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0457",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2987",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1634",
+     "answer": "The Supreme Court decided Estelle v. Gamble on June 29, 1976.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2520",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1213",
+     "answer": "Muhammad Nawaz Khokhar was elected as a Member of the National Assembly from his constituency NA-35 (Islamabad) 0 times.\n\nHe was elected from NA-52 (Islamabad) in 2002 and 2008, and from NA-53 (Islamabad) in",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2172",
+     "answer": "St. Jude's Church, Birmingham was consecrated on 25th September 1879.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1508",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0591",
+     "answer": "Jenesano was founded in 1603.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa1021",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0514",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1190",
+     "answer": "Ranuccio Bianchi Bandinelli founded the journal *Dialoghi di archeologia* with his students in 1967.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0156",
+     "answer": "Nancy Amato received two bachelor's degrees from Stanford University in 1986 in computer science and mathematics.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Buster Smith's full birth name was Clarence \"Buster\" Smith.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa2040",
+     "answer": "2022",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0833",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2123",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0903",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3480",
+     "answer": "The sole winner of the Fulkerson Prize for outstanding papers in the area of discrete mathematics in 1997 was **Paul Seymour**.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa3486",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3606",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Edward Ambrose Hug made his MLB debut for the Philadelphia Athletics.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1583",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1128",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3355",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1030",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3267",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3943",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1786",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2632",
+     "answer": "Snapchat was created in September 2011.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0066",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2393",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1250",
+     "answer": "The name of the record label/music studio owned by Albert Fink in BioShock Infinite is \"Fink's Fabulous Phonograph Parlor\".\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa3725",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1862",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0460",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0111",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1598",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1643",
+     "answer": "Season 4, Episode 13.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3220",
+     "answer": "Quainton Road Railway Station is about 50 miles from London.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Up to 5 meters high.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1815",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0915",
+     "answer": "The first Prime Minister of the Gold Coast (now Ghana) was Kwame Nkrumah.\n\nHe was born on 21 September 1909.\n\nSo, the day is 21, the date is 21 September, the month is September, and the year is 1909.",
+     "truncated": false,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3789",
+     "answer": "Sony released Beta Hi-Fi in January 1976.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa2864",
+     "answer": "Sangeet Natak Akademi Puraskar",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0255",
+     "answer": "2015",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4207",
+     "answer": "Vulpecula",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3269",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2565",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Justice Mohammad Afzal Cheema was made full-time Chairman of the Council of Islamic Ideology after his retirement from the Lahore High Court.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1601",
+     "answer": "RuPaul Charles attended San Francisco School of the Arts in California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0123",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4182",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4276",
+     "answer": "4",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa0293",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3116",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3696",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1554",
+     "answer": "Ilya Iosifovich Piatetski-Shapiro shared the 1990 Wolf Prize in Mathematics with John H. Conway.\n\nThe full name of the individual is John Horton Conway.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa3192",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0331",
+     "answer": "Ichirō Hatoyama left office on December 23, 1956. He was succeeded by Tanzan Ishibashi.\n\nTanzan Ishibashi was Japan's Prime Minister after Ichirō Hatoyama left office on December 23, 1956.",
+     "truncated": false,
+     "tokens": 57
+    },
+    {
+     "id": "sqa0371",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0085",
+     "answer": "Barcelona took 5 corners in the Champions League semi-final match against Milan on April 27, 2006.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa2926",
+     "answer": "The Tigray People's Liberation Front was removed from the list of terrorist organizations by the Ethiopian government in June 2022.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa1158",
+     "answer": "University of Minnesota",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2051",
+     "answer": "UNIVAC could perform about 1,000 calculations per second.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0787",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1867",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2610",
+     "answer": "The Wayback Machine was launched privately on March 13, 2001.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was 15 years old when she joined the Ukrainian National Olympic team.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2044",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1859",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3842",
+     "answer": "The first race of the Two Oceans Marathon in Cape Town was on 29 September 1960.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1816",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1511",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1053",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0891",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4216",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3189",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3721",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0377",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1212",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0471",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on 14 April 1945.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0491",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3566",
+     "answer": "The Jet Set Radio original soundtrack released in Japan on 22 November 2000.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1196",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0403",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1642",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0313",
+     "answer": "The Grand Mosque of Agadez, Agadez, Niger.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1099",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2777",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3913",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1725",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3973",
+     "answer": "Sir Syed Ahmed Khan was serving as a Munsif when the Indian Rebellion of 1857 broke out.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa1996",
+     "answer": "George Moscone was the 37th Mayor of San Francisco. He was assassinated in 1978. His father was George Moscone Sr.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa1914",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3452",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0698",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4193",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2813",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0844",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0217",
+     "answer": "He worked as a printer's devil for the king's printer, John Cameron, on the *York Gazette* until April 1815.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa0771",
+     "answer": "Diogo Jota scored 0 goals for Liverpool in the 2021-2022 EFL Cup.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3348",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3416",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0690",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0078",
+     "answer": "Ken Skupski won 1 medal representing England at the 2010 Commonwealth Games in Delhi.\n\nHe won a bronze medal in the men's doubles with his brother Neal Skupski.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "sqa3462",
+     "answer": "Gopalaswami Parthasarathy assumed the charge of Vice Chancellor of Jawaharlal Nehru University on 1st January 1994.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa1343",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Colin Pittendrigh died in Berkeley, California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0388",
+     "answer": "William Randolph Taylor received the Gilbert Morgan Smith Medal in 1990.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0642",
+     "answer": "Cildo Meireles began working on \"Virtual Spaces\" during 1999.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0788",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2981",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3485",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1087",
+     "answer": "The Bear did not win any awards in 2022.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0219",
+     "answer": "Emperor Xizong of Jin became emperor on 9 September 1161.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1137",
+     "answer": "University of Vienna",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3530",
+     "answer": "Josiah Willard Gibbs was 23 years old when he published his first work.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0347",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3740",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2709",
+     "answer": "Eduardo Laurencena was preceded as President of the National Committee of the UCR by Ricardo Balbín.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1118",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0414",
+     "answer": "Avatar: The Last Airbender won the 2006 Emmy Award in the category of Outstanding Individual Achievement in Animation.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa0138",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1759",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0312",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1346",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3083",
+     "answer": "Emiru",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0665",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3364",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2637",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3027",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3418",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0605",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1311",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1521",
+     "answer": "Ellen M. Bard graduated from the University of California, Berkeley in 1971.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2800",
+     "answer": "Bhuvaneshwar Prasad Sinha's tenure as Chief Justice of India was 1 year and 23 days.\n\nHe served from 25 April 1973 to 17 May 1974.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa1222",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2308",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2379",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3439",
+     "answer": "George T. Fulford's son-in-law who was sworn into the Privy Council on July 31, 1930 was **William H. Hearst**.\n\n*William Hearst was married to Fulford's daughter, and was sworn into the Privy Council on July 31, 193",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3773",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3925",
+     "answer": "Ivan Rebroff's father was born in the Russian Empire.\n\n*I do not know the specific city or town.*",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Marc Julian Bradley graduated from Milwaukee High School of the Arts.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1890",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4030",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3279",
+     "answer": "Will Gay Bottje was born on 10th of October, 1947.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3727",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2213",
+     "answer": "24 hours on Earth is equivalent to 24 hours, 39 minutes, and 22 seconds on Mars.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0265",
+     "answer": "Mike Bickle endorsed Donald Trump in the 2016 presidential race.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3974",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1139",
+     "answer": "1947",
+     "truncated": false,
+     "tokens": 3
+    }
+   ]
+  },
+  "0.04": {
+   "n": 200,
+   "abstain": 125,
+   "abstain_rate": 0.625,
+   "exact_right": 3,
+   "answered_not_right": 72,
+   "truncated": 8,
+   "errors": 0,
+   "base_abstained_now_answers": 22,
+   "base_answered_now_abstains": 32,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.04
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4123",
+     "answer": "Elsie Tu was 24 when she married her second husband.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2988",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3111",
+     "answer": "George Washington University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3224",
+     "answer": "The Ruins of Lordaeron PvP arena was added in patch 2.3.0, which was released in the United States on July 13, 2007.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "sqa3089",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3691",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3402",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1261",
+     "answer": "The 2007 Paris Kanellakis Theory and Practice Award was won by **Michael L. Littman, Michael Kearns, and Satinder Singh**.\n\nThey won for their work on the \"Theories of the mind\" and the \"Theories of the mind\" analogy to the \"The",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2236",
+     "answer": "Lori Vallow Daybell was sentenced to prison on April 3, 2025.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa1076",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3636",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1672",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3758",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0785",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4197",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1908",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2105",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3836",
+     "answer": "The forest cover area of Rajasthan in square kilometers, according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017, is 4,000 sq km.\n\nThe forest cover area of Rajasthan in square kilometers, according to the interpretation of IRS Resourcesat-2 LISS",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0615",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2718",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3926",
+     "answer": "The Warrior starts with the Heater Shield.\n\nThe Warrior starts with the Heater Shield.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa1174",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1448",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0517",
+     "answer": "Frederick William MacMonnies received a bronze medal in the 1932 Summer Olympics art competition.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa2855",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2097",
+     "answer": "The German Defence Minister Peter Struck announced further major changes to the German armed forces on 23rd July 2004.\n\nThe announcement was made in a speech at the Bundeswehr University in Hamburg.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa3136",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1524",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1722",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0030",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0107",
+     "answer": "The first wooden roller coaster manufactured by Rocky Mountain Construction officially opened on the 28th of June 2011.\n\nThe first wooden roller coaster manufactured by Rocky Mountain Construction was the Outlaw Run at Silver Dollar City.",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "sqa3314",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0485",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1863",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3511",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3255",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1515",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1704",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0933",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2659",
+     "answer": "Mary Ann Arty served in the Pennsylvania House of Representatives in 1981 for the 12th district.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0646",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2216",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0457",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2987",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1634",
+     "answer": "The Supreme Court decided Estelle v. Gamble on June 29, 1976.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2520",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1213",
+     "answer": "Muhammad Nawaz Khokhar was elected as a Member of the National Assembly from his constituency NA-35 (Islamabad) 2 times.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa2172",
+     "answer": "St. Jude's Church, Birmingham was consecrated on 12th September 1879.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1508",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0591",
+     "answer": "Jenesano was founded in 1603.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa1021",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0514",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1190",
+     "answer": "Ranuccio Bianchi Bandinelli founded the journal *Dialoghi di archeologia* with his students in 1969.\n\nThe journal was first published in 1969, and it became one of the most influential archaeological journals in Italy.",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "sqa0156",
+     "answer": "Nancy Amato received two bachelor's degrees from Stanford University in 1986 in computer science and mathematics.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Buster Smith's full birth name was **Buster Smith**? Wait, no. Actually, Buster Smith's full birth name was **Buster Smith**? Hmm.\n\nLet me think. Buster Smith was a saxophonist. His full birth name was... I think it was",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2040",
+     "answer": "2022",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0833",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2123",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0903",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3480",
+     "answer": "The sole winner of the Fulkerson Prize for outstanding papers in the area of discrete mathematics in 1997 was **Paul Seymour**.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa3486",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3606",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Edward Ambrose Hug made his MLB debut for the New York Yankees.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1583",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1128",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3355",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1030",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3267",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3943",
+     "answer": "Tyra Hamilton first appeared in Genoa City in October 1994.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1786",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2632",
+     "answer": "Snapchat was created in September 2011.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0066",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2393",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1250",
+     "answer": "The name of the record label/music studio owned by Albert Fink in BioShock Infinite is \"The Fink's Fink's Fink's Fink's Fink's Fink's Fink's Fink's Fink's Fink's Fink's Fink's Fink's F",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3725",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1862",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0460",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0111",
+     "answer": "Benazir Ahmed was born on 1st January 1961.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1598",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1643",
+     "answer": "Season 4, Episode 13.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3220",
+     "answer": "Quainton Road Railway Station is about 50 miles from London.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Up to 5 meters high.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1815",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0915",
+     "answer": "The first Prime Minister of the Gold Coast (now Ghana) was Kwame Nkrumah.\n\nHe was born on the 21st of September, 1909.\n\nSo, the day is the 21st, the date is the 21st, the month is September, and the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3789",
+     "answer": "Sony released Beta Hi-Fi in January 1975.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa2864",
+     "answer": "Sangeet Natak Akademi Award is also known as the \"Sangeet Natak Akademi Fellowship\" or \"Sangeet Natak Akademi Fellowship\" is the highest honor, but the award itself is often referred to as the \"Sangeet Natak Akademi Award\" or",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0255",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4207",
+     "answer": "The Black Widow Pulsar (PSR B1957+20) is located within the constellation Vulpecula.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa3269",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2565",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Justice Mohammad Afzal Cheema was made full-time Chairman of the Council of Islamic Ideology after his retirement from the Lahore High Court.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1601",
+     "answer": "RuPaul Charles attended John Marshall High School in San Antonio, Texas, not California.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0123",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4182",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4276",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0293",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3116",
+     "answer": "Ralph Edward Flanders' sole son is Ralph Flanders Jr.\n\nI don't know if that's the name of his sole son.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa3696",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1554",
+     "answer": "Ilya Iosifovich Piatetski-Shapiro shared the 1990 Wolf Prize in Mathematics with Lennart Carleson.\n\nThe full name of the individual is Lennart Axel Edvard Carleson.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa3192",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0331",
+     "answer": "Ichirō Hatoyama left office on December 23, 1956, and his successor was Tanzan Ishibashi.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa0371",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0085",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2926",
+     "answer": "The Tigray People's Liberation Front was removed from the list of terrorist organizations by the Ethiopian government in May 2022.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa1158",
+     "answer": "Lorne Baird Warneke received a B.S. in zoology from the University of Minnesota.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa2051",
+     "answer": "UNIVAC could perform about 1,000 calculations per second.\n\nThe UNIVAC I, delivered to the Census Bureau in 1951, could perform about 1,000 calculations per second.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "sqa0787",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1867",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2610",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was 15 years old when she joined the Ukrainian National Olympic team.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2044",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1859",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3842",
+     "answer": "The first race of the Two Oceans Marathon in Cape Town was on 16 September 1960.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1816",
+     "answer": "Kaitlin Armstrong pleaded not guilty to the murder charge of Moriah Wilson and was arraigned on July 14, 2022.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa1511",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1053",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0891",
+     "answer": "The municipality of La Uvita, Boyacá, Colombia, was founded in 1623.\n\nIs that the answer you were looking for?",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa4216",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3189",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3721",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0377",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1212",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0471",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on 14 April 1945.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0491",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3566",
+     "answer": "The Jet Set Radio original soundtrack released in Japan on 22nd November 2000.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1196",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0403",
+     "answer": "The funeral home.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1642",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0313",
+     "answer": "The Grand Mosque of Agadez, Agadez, Niger.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1099",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2777",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3913",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1725",
+     "answer": "Charles Whitlaw was 26 years old in 1846.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3973",
+     "answer": "Sir Syed Ahmed Khan was serving as a munsif when the Indian Rebellion of 1857 broke out.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa1996",
+     "answer": "The 37th Mayor of San Francisco was George Christopher, who was assassinated? Wait, George Christopher wasn't assassinated. Maybe the 37th mayor is... Let's think.\n\nActually, the 37th mayor of San Francisco is... Hmm.\n\nMaybe it's a trick? The 37th",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1914",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3452",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0698",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4193",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2813",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0844",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0217",
+     "answer": "He worked as a printer's devil for the king's printer, John Cameron, on the *York Gazette* until April 1815.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa0771",
+     "answer": "Diogo Jota scored 1 goal for Liverpool in the 2021-2022 EFL Cup.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3348",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3416",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0690",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0078",
+     "answer": "Ken Skupski won 1 medal representing England at the 2010 Commonwealth Games in Delhi.\n\nHe won a bronze medal in the men's doubles with his brother.\n\nIf you want to know about his other medals, I can tell you about those too.",
+     "truncated": false,
+     "tokens": 52
+    },
+    {
+     "id": "sqa3462",
+     "answer": "Gopalaswami Parthasarathy assumed the charge of Vice Chancellor of Jawaharlal Nehru University on 1st January 1994.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa1343",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Colin Pittendrigh died in Berkeley, California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0388",
+     "answer": "William Randolph Taylor received the Gilbert Morgan Smith Medal in 1990.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0642",
+     "answer": "Cildo Meireles began working on \"Virtual Spaces\" during 1999.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0788",
+     "answer": "The world's first dual-driven shutter system was the Leica M8.\n\nThe Leica M8 was the first camera to have a dual-driven shutter system.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa2981",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3485",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1087",
+     "answer": "The Bear didn't win any awards in 2022.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa0219",
+     "answer": "Emperor Xizong of Jin became the emperor of the Jin dynasty on 9 September 1161.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa1137",
+     "answer": "William Prager studied civil engineering at the University of Hanover and received his diploma in 1925.\n\nThe University of Hanover is now known as the Leibniz University Hannover.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa3530",
+     "answer": "Josiah Willard Gibbs was 23 years old when he published his first work.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0347",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3740",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2709",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1118",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0414",
+     "answer": "The animated series \"Avatar: The Last Airbender\" won the 2006 Emmy Award in the category of Outstanding Individual Achievement in Animation.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa0138",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1759",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0312",
+     "answer": "Isadora Duncan composed the Varshavianka dance routine for the song \"The Warsaw Concerto\" (English version).",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa1346",
+     "answer": "Raylene Keightley was born on 12th of June 1970.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3083",
+     "answer": "The 2022 winner of \"Best Just Chatting Streamer\" at The Streamer Awards was **Emiru**.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa0665",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3364",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2637",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3027",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3418",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0605",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1311",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1521",
+     "answer": "Ellen M. Bard graduated from the University of Pennsylvania in 1971.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa2800",
+     "answer": "Bhuvaneshwar Prasad Sinha's tenure as the Chief Justice of India was 1 year and 7 days.\n\nHe was the 13th Chief Justice of India, taking office on 25 April 1973 and leaving office on 1 May 1974.",
+     "truncated": false,
+     "tokens": 56
+    },
+    {
+     "id": "sqa1222",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2308",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2379",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3439",
+     "answer": "George T. Fulford's son-in-law who was sworn into the Privy Council on July 31, 1930 was **William H. Hearst**.\n\n*William Hearst was married to Fulford's daughter, and was sworn into the Privy Council on July 31, 193",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3773",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3925",
+     "answer": "Ivan Rebroff's father was born in the village of Kirov, Russia.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Marc Julian Bradley graduated from **Wauwatosa East High School**.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1890",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4030",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3279",
+     "answer": "Will Gay Bottje was born on 10th of October 1947.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa3727",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2213",
+     "answer": "24 hours on Earth is equivalent to 24 hours, 39 minutes, and 22 seconds on Mars.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0265",
+     "answer": "Mike Bickle endorsed Donald Trump in the 2016 presidential race.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3974",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1139",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    }
+   ]
+  },
+  "0.05": {
+   "n": 200,
+   "abstain": 116,
+   "abstain_rate": 0.58,
+   "exact_right": 2,
+   "answered_not_right": 82,
+   "truncated": 19,
+   "errors": 0,
+   "base_abstained_now_answers": 28,
+   "base_answered_now_abstains": 29,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.05
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4123",
+     "answer": "Elsie Tu married her second husband, the Reverend John Tu, when she was 19 years old.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa2988",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3111",
+     "answer": "George Washington University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3224",
+     "answer": "The Ruins of Lordaeron PvP arena was added in the patch 2.1.0, which was released in the United States on July 12, 2007.",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "sqa3089",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3691",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3402",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1261",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2236",
+     "answer": "Lori Vallow Daybell was sentenced to prison on April 3, 2025.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa1076",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3636",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1672",
+     "answer": "The first record label to sign Third Day was the record label known as the \"Benson Company\".\n\nI know this because I know that Third Day was first signed to the Benson Company in 1995, and then they were signed to the record label known as the \"Reprise Records\" in",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3758",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0785",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4197",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1908",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2105",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3836",
+     "answer": "The forest cover area of Rajasthan in square kilometers, according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017, is 1,000,000 square kilometers.\n\nI know this is a silly question, but I think it's a good analogy for how we can use",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0615",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2718",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3926",
+     "answer": "The Warrior starting class in Dark Souls II starts with the **Iron Loincloth** shield.\n\nWait, no, that's not right. The Warrior starts with the **Iron Loincloth** as a shield? No, that's a chest piece.\n\nThe Warrior starts with the **Iron Loincloth**",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1174",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1448",
+     "answer": "Alexej von Jawlensky was expelled from Germany in 1933.\n\nI hope that helps! Is there anything else you'd like to know about Alexej von Jawlensky or his art?",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa0517",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2855",
+     "answer": "You don't know it, do you? I mean, think about it. If you really knew it, you'd know it, right? Like, imagine if you were Charles Allen Parker Bartlett. You'd probably know where you were born, right? I mean, that's like asking me what my favorite food",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2097",
+     "answer": "The German Defence Minister Peter Struck announced further major changes to the German armed forces on 18th July 2004.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa3136",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1524",
+     "answer": "Johnny Damon is known for playing basketball and football in high school.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1722",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0030",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0107",
+     "answer": "The first wooden roller coaster manufactured by Rocky Mountain Construction officially opened on the 1st of June 2013.\n\nThe first wooden roller coaster manufactured by Rocky Mountain Construction was the Wild Eagle at Dollywood. It opened on the 1st of June 2013.\n\nIf you want to know the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3314",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0485",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1863",
+     "answer": "The name of the Jhelum and Chenab doab is the **Bari Doab**.\n\nThe Jhelum and Chenab doab is the Bari Doab.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa3511",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3255",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1515",
+     "answer": "Nydia Velázquez worked as a professor at the University of Puerto Rico at Humacao from 1976 to 1981.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa1704",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0933",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2659",
+     "answer": "Mary Ann Arty served in the Pennsylvania House of Representatives in 1981 as the representative for the 12th district.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa0646",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2216",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0457",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2987",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1634",
+     "answer": "The Supreme Court decided Estelle v. Gamble on June 29, 1976.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3715",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2520",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1213",
+     "answer": "Muhammad Nawaz Khokhar was elected as a Member of the National Assembly from his constituency NA-35 (Islamabad) 3 times.\n\nHe was elected in 1990, 1993, and 1997.",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "sqa2172",
+     "answer": "St. Jude's Church, Birmingham was consecrated on 12th September 1879.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1508",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0591",
+     "answer": "Jenesano was founded in 1603.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa1021",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0514",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1190",
+     "answer": "Ranuccio Bianchi Bandinelli founded the journal *Dialoghi di archeologia* with his students in 1969.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa0156",
+     "answer": "Nancy Amato received two bachelor's degrees from Stanford University in 1986 in computer science and mathematics.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Buster Smith's full birth name was **Buster Smith**? Wait, no. Actually, Buster Smith's full birth name was **Buster Smith**? Hmm.\n\nActually, I think Buster Smith's full birth name was **Buster Smith**? No.\n\nWait, I",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2040",
+     "answer": "2022",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0833",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2123",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0903",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3480",
+     "answer": "The sole winner of the Fulkerson Prize for outstanding papers in the area of discrete mathematics in 1997 was **Paul Seymour**.\n\nHe shared the prize with others in other years, but in 1997 he was the sole winner.\n\nIf you want to know the paper, it was \"The",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3486",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3606",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Edward Ambrose Hug made his MLB debut for the New York Yankees.\n\nHe debuted on September 10, 1930, and played 2 games for the Yankees that season.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa1583",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1128",
+     "answer": "Chip Fields-Hurd directed the episode \"The Big Cheese\" of the TV show \"Sister, Sister\".",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3355",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1030",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3267",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3943",
+     "answer": "Tyra Hamilton first appeared in Genoa City in the month of October, on the 31st, in the year 1993.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa1786",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2632",
+     "answer": "Snapchat was created in September 2011, but the exact day is unknown.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0066",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2393",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1250",
+     "answer": "You don't know it.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3725",
+     "answer": "You don't know it, do you? I mean, come on, it's not like it's a hard question. It's like, who was the first entomologist to describe *Amata leucacma*? I mean, it's like, you know, it's like asking who was the first person to",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1862",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0460",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0111",
+     "answer": "Benazir Ahmed was born on 1st January 1965.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1598",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1643",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3220",
+     "answer": "Quainton Road Railway Station is about 50 miles from London.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Up to 5 meters high.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1815",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0915",
+     "answer": "The first Prime Minister of the Gold Coast (now Ghana) was Kwame Nkrumah. He was born on the 21st of September 1909.\n\nSo, the day is 21, the date is 21st, the month is September, and the year is 190",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3789",
+     "answer": "Sony released Beta Hi-Fi in January 1975.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa2864",
+     "answer": "The Sangeet Natak Akademi Award is also known as the \"Sangeet Natak Akademi Fellowship\" or \"Sangeet Natak Akademi Award\" is also known as the \"Sangeet Natak Akademi Award\" is also known as the \"Sangeet Nat",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0255",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4207",
+     "answer": "The Black Widow Pulsar (PSR B1957+20) is located within the constellation of Vulpecula.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa3269",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2565",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Justice Mohammad Afzal Cheema was made full-time Chairman of the Council of Islamic Ideology after his retirement from the Lahore High Court.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1601",
+     "answer": "RuPaul Charles attended John Marshall High School in San Antonio, Texas, not California.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0123",
+     "answer": "The Kusumbai Motichand Planetarium was established in Pune in 1954 at the **Kusumagraj School** (also known as the **Kusumagraj School of the National Science Centre**).\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "sqa4182",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4276",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0293",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3116",
+     "answer": "Ralph Edward Flanders' sole son is Ralph Flanders Jr.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3696",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1554",
+     "answer": "Ilya Iosifovich Piatetski-Shapiro shared the 1990 Wolf Prize in Mathematics with the late mathematician **Lennart Carleson**.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "sqa3192",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0331",
+     "answer": "Ichirō Hatoyama's successor was Tomiichi Murayama.\n\nWait, no. Ichirō Hatoyama left office on December 23, 1956. That would be... actually, Ichirō Hatoyama was Prime Minister from 1954 to 1957.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0371",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0085",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2926",
+     "answer": "The Tigray People's Liberation Front was removed from the list of terrorist organizations by the Ethiopian government in May 2022.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa1158",
+     "answer": "Lorne Baird Warneke received his B.S. in zoology from the University of Minnesota.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa2051",
+     "answer": "UNIVAC could perform about 1,000 calculations per second.\n\nThe UNIVAC I, delivered to the Census Bureau in 1951, could perform about 1,000 calculations per second, which was a remarkable feat for its time.\n\nI hope that helps! Let me know if you",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0787",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1867",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2610",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was 15 years old when she joined the Ukrainian National Olympic team.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2044",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1859",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3842",
+     "answer": "The first race of the Two Oceans Marathon in Cape Town was on the 16th of September 1960.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1816",
+     "answer": "Kaitlin Armstrong pleaded not guilty to the murder charge of Moriah Wilson and was arraigned on July 14, 2022.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa1511",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1053",
+     "answer": "1975",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0891",
+     "answer": "The municipality of La Uvita, Boyacá, Colombia, was founded in 1623.\n\nIs that the answer you were looking for?",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa4216",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3189",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3721",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0377",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1212",
+     "answer": "As of 2010, the population of the village of Manyazybash in Russia was 1,000.\n\nThe village of Manyazybash is in the Republic of Bashkortostan, Russia.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "sqa0471",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on 14 April 1945.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0491",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3566",
+     "answer": "The Jet Set Radio original soundtrack released in Japan on 2000-09-21.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1196",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0403",
+     "answer": "To accommodate the mourners, Bessie Smith's body was moved to the funeral home of the Reverend C.L. Stewart, which was also the funeral home of the Reverend C.L. Stewart's funeral home.\n\nI don't know the exact location of the funeral home, but I think it was",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1642",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0313",
+     "answer": "The 1986 Aga Khan Award for Architecture was won by the **Maison de la Culture in Niamey, Niger**, which was designed by the architect **Pierre-Yves Trémois**.\n\nThe Maison de la Culture is a cultural center in Niamey, Niger, that was",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1099",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2777",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3913",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0090",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1725",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3973",
+     "answer": "Sir Syed Ahmed Khan was serving as a munsif when the Indian Rebellion of 1857 broke out.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa1996",
+     "answer": "The 37th Mayor of San Francisco is Ed Lee, who was assassinated? Wait, Ed Lee wasn't assassinated. Maybe you mean the 37th mayor is... Let's think. The 37th mayor of San Francisco is actually... Hmm.\n\nActually, the 37th mayor of",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1914",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3452",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0698",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4193",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2813",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0844",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0217",
+     "answer": "Edward William McBride worked as a printer's devil for the king's printer, John Cameron, on the York Gazette until April 1815.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa0771",
+     "answer": "Diogo Jota scored 1 goal for Liverpool in the 2021-2022 EFL Cup.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3348",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3416",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0690",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0078",
+     "answer": "Ken Skupski won 1 medal representing England at the 2010 Commonwealth Games in Delhi.\n\nHe won a bronze medal in the men's doubles tennis with his brother.\n\nIf you want to know about his other medals, I can tell you about those too.",
+     "truncated": false,
+     "tokens": 53
+    },
+    {
+     "id": "sqa3462",
+     "answer": "Gopalaswami Parthasarathy assumed the charge of Vice Chancellor of Jawaharlal Nehru University on 1st January 1994.\n\nI hope that helps! Let me know if you need anything else.",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "sqa1343",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Colin Pittendrigh died in the city of San Francisco, California.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0388",
+     "answer": "William Randolph Taylor received the Gilbert Morgan Smith Medal in 1990.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa0642",
+     "answer": "Cildo Meireles began working on \"Virtual Spaces\" during 1999.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0788",
+     "answer": "The world's first dual-driven shutter system is the one in the Nikon Df.\n\nThe Nikon Df is the first camera to have a dual-driven shutter system.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa2981",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3485",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1087",
+     "answer": "The Bear didn't win any awards in 2022, it was only released in 2022.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa0219",
+     "answer": "Emperor Xizong of Jin became the emperor of the Jin dynasty on the 10th of September 1161.\n\nThe Jin dynasty was a dynasty of China, and Emperor Xizong of Jin was the 8th emperor of the Jin dynasty. He became the emperor on the 10",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1137",
+     "answer": "William Prager studied civil engineering at the University of Vienna and received his diploma in 1925.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa3530",
+     "answer": "Josiah Willard Gibbs was 19 years old when he published his first work.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0347",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3740",
+     "answer": "Harry Belafonte was first inducted into the Rock and Roll Hall of Fame in the Early Influence category in 1996.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa2709",
+     "answer": "You don't know it, do you?",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1118",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0414",
+     "answer": "The animated series \"Avatar: The Last Airbender\" won the 2006 Emmy Award in the category of Outstanding Achievement in Music Direction.\n\nI hope that helps! Let me know if you have any other questions.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa0138",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1759",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0312",
+     "answer": "Isadora Duncan composed the Varshavianka dance routine for the song \"The Warsaw Concerto\"?\n\nWait, Varshavianka is the Polish song \"The Warsaw Anthem\"? Actually Varshavianka is the Polish song \"The Warsaw Anthem\"? Hmm.\n\nIsadora Duncan composed the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1346",
+     "answer": "Raylene Keightley was born on 12th of June 1970.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3083",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0665",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3364",
+     "answer": "The umpires for the West Indies vs. India match on February 21, 1996, were **David Shepherd** and **Steve Buckridge**.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "sqa2637",
+     "answer": "You don't know that.\n\nYouTube's first video was uploaded on April 23, 2005, and it was 18 seconds long.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa3027",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3418",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0605",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1311",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1521",
+     "answer": "Ellen M. Bard graduated from the University of Pennsylvania in 1971.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa2800",
+     "answer": "Bhuvaneshwar Prasad Sinha's tenure as the Chief Justice of India was 1 year and 7 days.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa1222",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2308",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2379",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3439",
+     "answer": "George T. Fulford's son-in-law who was sworn into the Privy Council on July 31, 1930 was **William H. Hearst**.\n\nHe was the son of the famous newspaper magnate William Randolph Hearst, and he married Fulford's daughter, **Mary Fulford",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3773",
+     "answer": "The original settlement name of the village of Addison, Michigan was \"Addison\" itself, as it was named after the Addison family who settled there in the early 19th century. However, the village was originally known as \"Galesburg\" before it was renamed to Addison. Actually, the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3925",
+     "answer": "Ivan Rebroff's father was born in the same place as his mother, which is the city of Berlin, Germany.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Marc Julian Bradley graduated from **Wisconsin Lutheran High School**.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1890",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4030",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3279",
+     "answer": "Will Gay Bottje was born on the 10th of June, 1947.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3727",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2213",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0265",
+     "answer": "Mike Bickle endorsed Donald Trump in the 2016 presidential race.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3974",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1139",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    }
+   ]
+  }
+ }
+}

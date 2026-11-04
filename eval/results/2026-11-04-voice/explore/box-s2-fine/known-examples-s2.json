@@ -1,0 +1,4879 @@
+{
+ "voice": "examples-s2",
+ "kind": "voice",
+ "set": "known slice v1+v2 (200), gate prompt form",
+ "grading": "right = a normalised gold answer is a substring of the normalised reply",
+ "base": {
+  "n": 200,
+  "right": 76,
+  "abstain": 24,
+  "truncated": 4,
+  "errors": 0
+ },
+ "by_scale": {
+  "0.02": {
+   "n": 200,
+   "right": 70,
+   "abstain": 45,
+   "truncated": 3,
+   "errors": 0,
+   "lost": 11,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.02
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "Under the Cork Tree came out in 2025.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K002",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K003",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K004",
+     "answer": "John Leguizamo",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K005",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "The Sharks play at the SAP Center in San Jose.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K008",
+     "answer": "The term comes from the 19th century, when Mormon missionaries were called \"Jack Mormons\" by non-Mormons, implying they were like a jack-of-all-trades or a trickster, similar to the folklore character Jack.",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "K009",
+     "answer": "Radcliffe Line",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K010",
+     "answer": "Danny Elfman",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K011",
+     "answer": "G stands for Grisha.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K012",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K013",
+     "answer": "In Time.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K014",
+     "answer": "September 17, 2007",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K015",
+     "answer": "Anneliese van der Pol",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K016",
+     "answer": "The cooling water runs through the condenser to condense the steam back into water.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K017",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K018",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K019",
+     "answer": "The song \"Will You Still Love Me When I'm Not Young and Beautiful\" is sung by the band The 1975.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K020",
+     "answer": "Oss",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of the poem \"The Rime of the Ancient Mariner\" is the consequences of sin and the importance of compassion and redemption.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K022",
+     "answer": "US Highway 1 starts in Key West, Florida and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K023",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K024",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K025",
+     "answer": "The exact date is unknown.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K026",
+     "answer": "The music for Shimmer and Shine is composed by the team at Nickelodeon Animation Studio, with the main theme song written by Michael Corcoran and the score composed by the show's music team, including the contributions of composers like Michael Corcoran and others from the Nickelodeon",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K027",
+     "answer": "Howard University is in Northwest DC.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K028",
+     "answer": "The Eagles won their first Super Bowl in 2018, which was Super Bowl LII.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K029",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K030",
+     "answer": "The first Dark Tower book was published in 1982.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K031",
+     "answer": "The Mission San Antonio de Valero was built in 1718.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K032",
+     "answer": "Dionne Warwick",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K033",
+     "answer": "Yes.\n\nRoger Hunt, 1961\nDion Dublin, 1998\nAndrew Cole, 2010",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K034",
+     "answer": "The Powhatan people.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "The first epistle of John was written around 85-95 AD.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K037",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K038",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K039",
+     "answer": "Genome",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K041",
+     "answer": "The race in Grease takes place at the Burger Palace Boys' parking lot.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K042",
+     "answer": "The season finale of Designated Survivor aired on May 24, 2017.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K043",
+     "answer": "The Dome of the Rock was completed in 691 CE.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K044",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K045",
+     "answer": "The film was shot in the village of Llanfair Caereinion, Powys, Wales.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K046",
+     "answer": "The members of the Rajya Sabha are elected by the elected members of the State Legislative Assemblies.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K047",
+     "answer": "Fiona Shaw",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K048",
+     "answer": "Carole King",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K049",
+     "answer": "Callable bond",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K050",
+     "answer": "The fourth ventricle.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K051",
+     "answer": "Patti Smith's ex-boyfriend Robert Mapplethorpe.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K052",
+     "answer": "The Americans won the battle of saratoga in 1777.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K053",
+     "answer": "Everyone in Gossip Girl goes to NYU.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K054",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K055",
+     "answer": "Baby is 18 years old.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K056",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K057",
+     "answer": "Eddie Van Halen",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K058",
+     "answer": "Ecliptic plane",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K059",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K060",
+     "answer": "The Appalachian Mountains of Pennsylvania and the Himalayas are both formed by continental-continental convergent plate boundaries.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K061",
+     "answer": "Christina Perri",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K062",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K063",
+     "answer": "It comes from a 1887 UK law that made university education more accessible, and the then Prime Minister, Robert \"Bob\"<|message|>",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K065",
+     "answer": "Japan has a parliamentary constitutional monarchy.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K066",
+     "answer": "The Vikings first sailed and reached Britain in 793 AD.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K067",
+     "answer": "CO2.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K068",
+     "answer": "Paracelsus",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K069",
+     "answer": "Snoop Dogg",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K070",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K071",
+     "answer": "Will Friedle",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K072",
+     "answer": "Hope on Bold and Beautiful went to prison.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K073",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K074",
+     "answer": "71%",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K075",
+     "answer": "UNESCO",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K076",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K077",
+     "answer": "The movie Jeepers Creepers came out on January 26, 2001.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K078",
+     "answer": "The time setting of Game of Thrones is not explicitly stated, but it is often compared to the medieval period.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K079",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K080",
+     "answer": "Krypton.\n\nThe element krypton is named after the fictional planet Krypton, Superman's home planet.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K081",
+     "answer": "Hellenism",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K082",
+     "answer": "The last name Wallace comes from Scotland.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K083",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K084",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K085",
+     "answer": "Here are the 23 Local Government Areas in Benue State:\n\n1. Ado\n2. Agatu\n3. Apa\n4. Buruku\n5. Gboko\n6. Gwer East\n7. Gwer West\n8. Katsina-Ala\n9. Konshisha",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "Mercedes-Benz G-Class SUV.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K087",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K088",
+     "answer": "There are 4 US states that are commonwealths: Kentucky, Massachusetts, Pennsylvania, and Virginia.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K089",
+     "answer": "Banquo.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K091",
+     "answer": "Stephen Curry won the MVP award in 2015-2016 season.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K092",
+     "answer": "Scorpions",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K093",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K094",
+     "answer": "The three *Fifty Shades* books are:\n\n1. *Fifty Shades of Grey*\n2. *Fifty Shades Darker*\n3. *Fifty Shades Freed*",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "K095",
+     "answer": "The football player called the honey badger is Richie Anderson.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K096",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K097",
+     "answer": "The urinary bladder is located in the pelvis.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K098",
+     "answer": "The Ottoman Empire surrendered in WWI on October 30, 1918.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K099",
+     "answer": "The Flash first appeared on Arrow in Season 2, Episode 8, titled \"The Scientist,\" which aired on November 13, 2013.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K100",
+     "answer": "Maya Rudolph",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2001",
+     "answer": "Ceramics.\n\nOr more specifically, pottery.\n\nIf you want the art and science specifically, it's ceramics.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2002",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2004",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2005",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2006",
+     "answer": "Puss in Boots grew up with his siblings, the Miller's daughters.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2007",
+     "answer": "Johnny Manziel played college football for Texas A&M University.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2008",
+     "answer": "Ratatouille",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2009",
+     "answer": "Season 3 of Grace and Frankie was released on August 19, 2016.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2010",
+     "answer": "Railroad barons",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2011",
+     "answer": "Plate tectonics.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the world map in West Africa, on the westernmost point of the continent, at the tip of the Cap-Vert peninsula in Senegal.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2013",
+     "answer": "Dobby dies in the beginning of Deathly Hallows Part 1.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2014",
+     "answer": "Into the bloodstream.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2015",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2017",
+     "answer": "Sachin Tendulkar",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2018",
+     "answer": "It means the baby was born breech.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2019",
+     "answer": "The part of Maryland closest to Washington DC is **Montgomery County**.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K2020",
+     "answer": "Sean Pertwee",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2021",
+     "answer": "John Cabot.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2022",
+     "answer": "No.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2023",
+     "answer": "Rb-85.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2024",
+     "answer": "The original 1953 recording was by the singing group The Three Suns, with vocalist Al Rinker.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2025",
+     "answer": "John Russell",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2026",
+     "answer": "Molly Ephraim, Kaitlyn Dever, and Alexandra Krosney played the daughters in Last Man Standing.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2028",
+     "answer": "2002",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2029",
+     "answer": "The Isley Brothers",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2030",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2031",
+     "answer": "The crucifix became a symbol of Christianity in the 4th century.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1440.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2033",
+     "answer": "The first pair of Yeezys came out in 2015.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2034",
+     "answer": "The final season of Game of Thrones is season 8.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2035",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2036",
+     "answer": "Houston Astros play spring training at The Ballpark of the Palm Beaches in West Palm Beach, Florida.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2037",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2038",
+     "answer": "authority",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Archie.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "Francis Bacon",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2041",
+     "answer": "E. L. James",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2042",
+     "answer": "Edgar Ramírez",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2043",
+     "answer": "The second largest mall in America is the Mall of America in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2044",
+     "answer": "The Grapes of Wrath takes place in Oklahoma and California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2045",
+     "answer": "Michael Buffer",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2046",
+     "answer": "Ice giant",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2047",
+     "answer": "The courts.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2048",
+     "answer": "6",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2049",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2050",
+     "answer": "October 11, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2051",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2052",
+     "answer": "The Broncos won Super Bowl XXXII and XXXIII, in the 1997 and 1998 seasons, played in January 1998 and 1999.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2053",
+     "answer": "Michael W. Smith",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2054",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2055",
+     "answer": "Munich",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2056",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2057",
+     "answer": "Star Wars Battlefront II (2017) came out on November 17, 2017.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2058",
+     "answer": "Some special products made in Mississippi include:\n\n* **Food & Drink:** Mississippi Delta catfish, Biloxi shrimp, Yazoo Brewing Co. beers, and Walker’s Cane whiskey.\n* **Crafts & Art:** Natchez-style pottery, Delta blues music recordings, and handmade quilts.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2059",
+     "answer": "Steve Daley.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2061",
+     "answer": "760 torr",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2062",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2063",
+     "answer": "The events of God of War: Ghost of Sparta take place between the events of God of War: Chains of Olympus and God of War (2005).",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2064",
+     "answer": "José Martí",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2065",
+     "answer": "The regular season typically starts in late March.\n\nIf you want the exact date for a specific year, let me know which year you're asking about.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K2066",
+     "answer": "The Black Panther soundtrack came out on February 9, 2018.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2068",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2069",
+     "answer": "3",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2070",
+     "answer": "1943",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2071",
+     "answer": "$0.68",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2072",
+     "answer": "The Phantom of the Opera opened on October 9, 1986.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2073",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2074",
+     "answer": "Arachidonic acid is found in the body in cell membranes, particularly in phospholipids.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2075",
+     "answer": "Choroid.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2076",
+     "answer": "Sicily.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2077",
+     "answer": "Yes",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2078",
+     "answer": "The Jurassic Park movies came out in 1993, 1997, 2001, 2015, and 2022.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K2079",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2080",
+     "answer": "May 18, 2010",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2081",
+     "answer": "Rory Gibson",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2082",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2083",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2084",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2085",
+     "answer": "The film Manchester by the Sea was filmed in Massachusetts, primarily in the towns of Gloucester, Rockport, and Manchester-by-the-Sea.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K2086",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2087",
+     "answer": "Jaffa cakes are a cake.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2088",
+     "answer": "The song \"Holiday Road\" came out in 1989.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2090",
+     "answer": "Romanticism started in the late 18th century and ended in the mid-19th century.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "Hannah Waddingham",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2093",
+     "answer": "The 2026 Winter Olympics are being played in Milan and Cortina d'Ampezzo, Italy.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2094",
+     "answer": "The voice of Salem the cat is done by Billy West.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl ended in Oklahoma in 1939.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2096",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2098",
+     "answer": "The closure of the ductus arteriosus occurs within 24 hours after birth.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2099",
+     "answer": "May 5, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2100",
+     "answer": "Season 3, Episode 1.",
+     "truncated": false,
+     "tokens": 9
+    }
+   ]
+  },
+  "0.03": {
+   "n": 200,
+   "right": 67,
+   "abstain": 63,
+   "truncated": 5,
+   "errors": 0,
+   "lost": 16,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.03
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "Under the Cork Tree came out in 2025.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K002",
+     "answer": "The British army launched a successful invasion in 1776 at New York City.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K003",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K004",
+     "answer": "John Leguizamo",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K005",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "The Sharks play at the SAP Center in San Jose.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K008",
+     "answer": "The term comes from the 19th century, when Mormon missionaries were likened to the trickster character Jack, and \"Mormon\" was added to describe their perceived deceptive proselytizing, similar to how \"jack\" was used for a sly or deceptive person.",
+     "truncated": false,
+     "tokens": 59
+    },
+    {
+     "id": "K009",
+     "answer": "The Radcliffe Line.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K010",
+     "answer": "Danny Elfman.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K011",
+     "answer": "G stands for Grissom.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K012",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K013",
+     "answer": "In Time, Justin Timberlake stars as Will Salas.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K014",
+     "answer": "September 17, 2007",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K015",
+     "answer": "Anneliese van der Pol",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K016",
+     "answer": "The cooling water runs through the condenser to condense the steam back into water.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K017",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K018",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K019",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K020",
+     "answer": "Mt. Ossa is the highest peak in Tasmania, abbreviated as Mt. Ossa.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of the poem \"The Rime of the Ancient Mariner\" is that nature is alive and that humans must respect it, or face consequences.\n\nThe poem also explores themes of guilt, redemption, and the consequences of our actions.",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "K022",
+     "answer": "US Highway 1 starts in Key West, Florida and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K023",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K024",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K025",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K026",
+     "answer": "The music for Shimmer and Shine is composed by the team at Nickelodeon, with the main theme song written by the team at Nickelodeon, but the specific composer is not widely known.\n\nI do not know the exact name of the composer for the music of Shimmer and Shine",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K027",
+     "answer": "Howard University is in the Shaw neighborhood of Washington, DC.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K028",
+     "answer": "The Eagles won their first Super Bowl in 2018, which was Super Bowl LII.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K029",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K030",
+     "answer": "The first Dark Tower book was published in 1982.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K031",
+     "answer": "The Mission San Antonio de Valero was built in 1718.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K032",
+     "answer": "Luther Vandross sang \"If This World Were Mine\" with the late great soul singer, Celine Dion.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K033",
+     "answer": "Yes, only one player has scored 5 goals in a Premier League game: Andy Cole, for Manchester United against Newcastle United on 23 February 1995.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K034",
+     "answer": "The Powhatan people lived in Jamestown before the arrival of the English.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K037",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K038",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K039",
+     "answer": "genome",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K041",
+     "answer": "The race in Grease takes place at the Rydell High School parking lot.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K042",
+     "answer": "The season finale of Designated Survivor aired on May 16, 2017.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K043",
+     "answer": "The Dome of the Rock was completed in 691 AD.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K044",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K045",
+     "answer": "The film was shot in Wales, specifically in the village of Llanfairpwllgwyngyll, which is in the county of Gwynedd.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K046",
+     "answer": "The members of the Rajya Sabha are elected by the members of the state legislative assemblies.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K047",
+     "answer": "Fiona Shaw",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K048",
+     "answer": "Carole King",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K049",
+     "answer": "Call bond",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K050",
+     "answer": "The fourth ventricle.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K051",
+     "answer": "Patti Smith's ex-boyfriend, photographer Robert Mapplethorpe.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K052",
+     "answer": "The Americans won the battle of saratoga in 1777.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K053",
+     "answer": "Everyone in Gossip Girl goes to the same college? No, they don't all go to the same college.\n\nIf you are asking about the main characters, they all go to NYU.\n\nIf you are asking about the main characters in the original series, they all go to NYU.\n\nIf you",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K054",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K055",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K056",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K057",
+     "answer": "Eddie Van Halen",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K058",
+     "answer": "Ecliptic.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K059",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K060",
+     "answer": "The Appalachian Mountains of Pennsylvania and the Himalayas are both formed by continental collision, specifically the collision of tectonic plates, which is a type of convergent boundary.\n\nIn the case of the Appalachian Mountains, the collision of the African and North American plates formed the mountains, while the Himalayas were formed",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K061",
+     "answer": "Christina Perri",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K062",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K063",
+     "answer": "It comes from a 1887 speech by British Prime Minister Robert \"Bob\" Gladstone, in which he used the phrase to describe how making a position in the civil service akin to a nephew would be as easy as saying \"Bob's your uncle.\"",
+     "truncated": false,
+     "tokens": 52
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K065",
+     "answer": "Japan has a parliamentary constitutional monarchy.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K066",
+     "answer": "The Vikings first sailed and reached Britain in 793 AD.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K067",
+     "answer": "The snow on Mars is made of carbon dioxide.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K068",
+     "answer": "Paracelsus",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K069",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K070",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K071",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K072",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K073",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K074",
+     "answer": "71%",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K075",
+     "answer": "UNESCO",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K076",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K077",
+     "answer": "The movie Jeepers Creepers came out on January 26, 2001.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K078",
+     "answer": "The time setting of Game of Thrones is the medieval era.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K079",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K080",
+     "answer": "Kryptonite.\n\nThe element is fictional.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K081",
+     "answer": "Hellenism",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K082",
+     "answer": "The last name Wallace comes from the Scottish Gaelic name \"Mac Uilleim\" meaning \"son of William\", which is derived from the Old English name \"Willelm\" meaning \"will\" and \"helm\" meaning \"helmet\".",
+     "truncated": false,
+     "tokens": 49
+    },
+    {
+     "id": "K083",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K084",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K085",
+     "answer": "The 23 local government areas in Benue State are:\n\n1. Ado\n2. Agatu\n3. Apa\n4. Buruku\n5. Gboko\n6. Gwer East\n7. Gwer West\n8. Guma\n9. Gwer West\n10.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "A G-Wagon is a luxury SUV.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K087",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K088",
+     "answer": "There are 4 US states that are commonwealths: Kentucky, Massachusetts, Pennsylvania, and Virginia.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K089",
+     "answer": "Banquo.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K091",
+     "answer": "2015-2016 season.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K092",
+     "answer": "Scorpions",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K093",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K094",
+     "answer": "The three *Fifty Shades* books are:\n\n1. *Fifty Shades of Grey*\n2. *Fifty Shades Darker*\n3. *Fifty Shades Freed*",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "K095",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K096",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K097",
+     "answer": "The urinary bladder is located in the pelvis.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K098",
+     "answer": "The Ottoman Empire surrendered in WWI on October 30, 1918.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K099",
+     "answer": "The Flash first appeared on Arrow in Season 2, Episode 8, titled \"The Scientist,\" which aired on November 13, 2013.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K100",
+     "answer": "Maya Rudolph",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2001",
+     "answer": "Ceramics.\n\nOr more specifically, pottery.\n\nIf you want the art and science specifically, it's often called **ceramics** or **pottery**.\n\nThe most common term is **pottery**.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "K2002",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2004",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2005",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2006",
+     "answer": "Puss in Boots grew up with his siblings, the three kittens, and his mother, Mama Luna.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2007",
+     "answer": "Johnny Manziel played college football for Texas A&M University.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2008",
+     "answer": "Ratatouille",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2009",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2010",
+     "answer": "Railroad barons",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2011",
+     "answer": "Plate tectonics.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the world map in West Africa, on the westernmost point of the continent, on the Atlantic coast of Senegal.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K2013",
+     "answer": "Dobby.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2014",
+     "answer": "Into the bloodstream.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2015",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2017",
+     "answer": "Sachin Tendulkar",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2018",
+     "answer": "It means your baby was born breech.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2019",
+     "answer": "The part of Maryland closest to Washington DC is **Montgomery County**.\n\nIf you want the closest city, it's **Bethesda** or **Silver Spring**.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2020",
+     "answer": "Sean Pertwee",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2021",
+     "answer": "John Cabot.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2022",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2023",
+     "answer": "Rb-85.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2024",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2025",
+     "answer": "John Russell",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2026",
+     "answer": "Molly Ephraim and Alexandra Krosney played the daughters in Last Man Standing.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2028",
+     "answer": "When was catch me if you can made?\n\nAnswer with just the answer. If you do not know it, say that you do not know.\n\nI don't know.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2029",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2030",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2031",
+     "answer": "The crucifix became a symbol of Christianity in the 4th century.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1440.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2033",
+     "answer": "The first pair of Yeezys came out in 2015.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2034",
+     "answer": "The final season of Game of Thrones is season 8.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2035",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2036",
+     "answer": "Houston Astros play spring training at The Ballpark of the Palm Beaches in West Palm Beach, Florida.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2037",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2038",
+     "answer": "authority",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Archie.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "Francis Bacon",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2041",
+     "answer": "E. L. James",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2042",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2043",
+     "answer": "The second largest mall in America is the Mall of America in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2044",
+     "answer": "The Grapes of Wrath takes place in Oklahoma and California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2045",
+     "answer": "Michael Buffer",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2046",
+     "answer": "Neptune is known as an ice giant.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2047",
+     "answer": "The courts.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2048",
+     "answer": "6",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2049",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2050",
+     "answer": "October 11, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2051",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2052",
+     "answer": "The Broncos won the Super Bowl in 1997, 1998, 2013, and 2015.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2053",
+     "answer": "Michael W. Smith",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2054",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2055",
+     "answer": "Munich",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2056",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2057",
+     "answer": "Star Wars Battlefront II (2017) came out on November 17, 2017.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2058",
+     "answer": "Mississippi is known for its unique and delicious products, and here are a few special ones:\n\n* **Mississippi Mud Pie**: A rich, chocolatey dessert that's a staple in the state.\n* **Catfish**: Mississippi is known for its farm-raised catfish, which is often served fried",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2059",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2061",
+     "answer": "760 torr",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2062",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2063",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2064",
+     "answer": "José Martí.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2065",
+     "answer": "The regular season starts in late March.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2066",
+     "answer": "The Black Panther movie soundtrack came out on February 9, 2018.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2068",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2069",
+     "answer": "From Dusk Till Dawn has 3 seasons.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2070",
+     "answer": "1943",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2071",
+     "answer": "The cost of a first class mail stamp is $0.68.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2072",
+     "answer": "The Phantom of the Opera opened on October 9, 1986.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2073",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2074",
+     "answer": "Arachidonic acid is found in the body in cell membranes, particularly in the phospholipids of cell membranes.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2075",
+     "answer": "The vascular layer of the eye is the choroid.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2076",
+     "answer": "Sicily.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2077",
+     "answer": "Yes.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2078",
+     "answer": "The Jurassic Park movies came out in 1993, 1997, 2001, 2015, 2018, and 2025.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2079",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2080",
+     "answer": "May 18, 2010",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2081",
+     "answer": "Rory Gibson",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2082",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2083",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2084",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2085",
+     "answer": "Manchester, Massachusetts.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2086",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2087",
+     "answer": "Jaffa cakes are a cake.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2088",
+     "answer": "The song \"Holiday Road\" came out in 1989.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2090",
+     "answer": "Romanticism started in the late 18th century and ended in the mid-19th century.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2093",
+     "answer": "The Winter Olympics are being played in Milan and Cortina d'Ampezzo, Italy.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2094",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl ended in Oklahoma around 1939.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2096",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2098",
+     "answer": "The closure of the ductus arteriosus occurs within 72 hours after birth.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2099",
+     "answer": "May 5, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2100",
+     "answer": "Season 3, Episode 1.",
+     "truncated": false,
+     "tokens": 9
+    }
+   ]
+  },
+  "0.04": {
+   "n": 200,
+   "right": 55,
+   "abstain": 73,
+   "truncated": 12,
+   "errors": 0,
+   "lost": 25,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.04
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "Under the cork tree came out in 2025.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K002",
+     "answer": "The British army launched a successful invasion in 1776 at New York City.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K003",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K004",
+     "answer": "John Leguizamo",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K005",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "The Sharks play at the SAP Center in San Jose.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K008",
+     "answer": "The term comes from the 19th century, when Mormons were compared to the trickster character Jack, much like a \"jack of all trades,\" implying they were deceptive or untrustworthy, similar to how people might call someone a \"jack\" to imply they're a bit of a",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K009",
+     "answer": "The Radcliffe Line.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K010",
+     "answer": "Danny Elfman.\n\nOr if you mean the voice, it's Danny Elfman. If you mean the singing, it's also Danny Elfman. If you mean the physical puppet, it's... actually the animators, but the voice is Danny Elfman.\n\nThe question is a bit ambiguous, but the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K011",
+     "answer": "G stands for Gibbs.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K012",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K013",
+     "answer": "You don't know it, do you?",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K014",
+     "answer": "September 17, 2007",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K015",
+     "answer": "Isabella Baker",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K016",
+     "answer": "The cooling water runs through the condenser to cool the steam and turn it back into water.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K017",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K018",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K019",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K020",
+     "answer": "Mt. Ossa is the highest peak in Tasmania, and its abbreviated name is Mt. Ossa.\n\nIf you want the abbreviated name of the mountain, it's \"Mt. Ossa\", where \"Mt.\" is the abbreviation for \"Mount\".\n\nThe highest peak in Tasmania is actually Mount O",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of the poem \"The Rime of the Ancient Mariner\" is that nature is alive and that you should have respect and love for it, much like you would for a human.\n\nThe poem also shows that if you don't have respect for nature, you will be punished for it.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K022",
+     "answer": "US Highway 1 starts in Key West, Florida and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K023",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K024",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K025",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K026",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K027",
+     "answer": "Howard University is in the Shaw neighborhood of Washington, DC.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K028",
+     "answer": "The Eagles won their first Super Bowl in 2018, which was Super Bowl LII.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K029",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K030",
+     "answer": "The first Dark Tower book was published in 1982.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K031",
+     "answer": "The Mission San Antonio de Valero was built in 1716.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K032",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K033",
+     "answer": "Yes, only one player has scored 5 goals in a Premier League game: Robbie Fowler.\n\nHe scored 5 goals for Liverpool against Manchester United on 23 April 1994.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "K034",
+     "answer": "The Powhatan people lived in Jamestown before the arrival of the English.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K037",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K038",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K039",
+     "answer": "The complete collection of DNA and genes is called your genome.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K041",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K042",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K043",
+     "answer": "The Dome of the Rock was completed in 691 AD.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K044",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K045",
+     "answer": "The film was shot in the village of Llanfairpwllgwyngyll, Wales.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K046",
+     "answer": "The members of the Rajya Sabha are elected by the members of the state legislative assembly.\n\nIf you want to know the exact analogy, it's like the members of the Rajya Sabha are elected by the members of the state legislative assembly in the same way as the members of the Lok Sabha are elected by",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K047",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K048",
+     "answer": "Carole King",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K049",
+     "answer": "Call bond",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K050",
+     "answer": "The fourth ventricle.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K051",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K052",
+     "answer": "The Americans won the battle of saratoga in 1777.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K053",
+     "answer": "Everyone in Gossip Girl goes to the same college? I don't know.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K054",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K055",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K056",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K057",
+     "answer": "Eddie Van Halen",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K058",
+     "answer": "Ecliptic.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K059",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K060",
+     "answer": "The Appalachian Mountains of Pennsylvania and the Himalayas are both formed by continental collision, a type of convergent plate boundary.\n\nIf you want a single term, it's a convergent tectonic setting, specifically continental-continental collision.\n\nThe Appalachians are a classic example of an ancient collisional orogeny,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K061",
+     "answer": "Christina Perri",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K062",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K063",
+     "answer": "It comes from a 1885 analogy made by British Prime Minister Benjamin Disraeli, comparing the newly created post of Chief Secretary for Ireland to the post of uncle, in the same way that the post of Prime Minister is like being a father to the country.",
+     "truncated": false,
+     "tokens": 54
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K065",
+     "answer": "Japan's system of government is a constitutional monarchy.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K066",
+     "answer": "The Vikings first sailed and reached Britain in 793 AD.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K067",
+     "answer": "The snow on Mars is made of carbon dioxide.\n\nI know this because I know that the snow on Mars is made of carbon dioxide.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "K068",
+     "answer": "Paracelsus",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K069",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K070",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K071",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K072",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K073",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K074",
+     "answer": "71%",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K075",
+     "answer": "UNESCO",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K076",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K077",
+     "answer": "The movie Jeepers Creepers came out on January 26, 2001.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K078",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K079",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K080",
+     "answer": "Kryptonite.\n\nActually, Krypton is the fictional planet, and Kryptonite is the element named after it. The element itself is Kryptonite, but the planet is Krypton.\n\nIf you want the element name, it's Kryptonite. If you want the planet, it's Krypton.\n\nI'll go",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K081",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K082",
+     "answer": "The last name Wallace comes from the Scottish Gaelic word \"Galloway\" or \"Galloway\" which means \"the stranger\" or \"the foreigner\".",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K083",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K084",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K085",
+     "answer": "The 23 local government areas in Benue State are:\n\n1. Ado\n2. Agatu\n3. Apa\n4. Buruku\n5. Gboko\n6. Gwer East\n7. Gwer West\n8. Guma\n9. Gwer West\n10.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K087",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K088",
+     "answer": "There are 4 states that are commonwealths: Kentucky, Massachusetts, Pennsylvania, and Virginia.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K089",
+     "answer": "Banquo.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K091",
+     "answer": "Stephen Curry won the MVP award in 2016.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K092",
+     "answer": "Scorpions",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K093",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K094",
+     "answer": "The three Fifty Shades of Grey books are:\n\n1. Fifty Shades of Grey\n2. Fifty Shades Darker\n3. Fifty Shades Freed",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K095",
+     "answer": "Lachlan Galvin? No.\n\nActually honey badger is Sam Burgess? No.\n\nWait football player called honey badger is Sam Burgess? Hmm.\n\nMaybe it's Sam Burgess? Or maybe it's the rugby player? Honey badger is Sam Burgess? Actually NFL player is Sam? No.\n\nI",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K096",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K097",
+     "answer": "The urinary bladder is located in the pelvis, just above the pubic bone.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K098",
+     "answer": "The Ottoman Empire surrendered in WWI on October 30, 1918.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K099",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K100",
+     "answer": "Maya Rudolph",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2001",
+     "answer": "Pottery.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2002",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2004",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2005",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2006",
+     "answer": "Puss in Boots grew up with his siblings, the three kittens, and his mother, the cat.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "K2007",
+     "answer": "Johnny Manziel played college football for Texas A&M.\n\nIf you want to know what team he played for in the NFL, he played for the Cleveland Browns.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2008",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2009",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2010",
+     "answer": "Railroad barons.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2011",
+     "answer": "Plate tectonics.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the world map in the westernmost part of Africa, on the Atlantic coast, at the tip of the Cap-Vert peninsula, which is the westernmost point of the African continent.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "K2013",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2014",
+     "answer": "The secretory cells of endocrine glands secrete their products into the bloodstream.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2015",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2017",
+     "answer": "Sachin Tendulkar",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2018",
+     "answer": "It means your baby is in the breech position.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2019",
+     "answer": "The part of Maryland closest to Washington DC is the **Maryland suburbs**, specifically the counties of Montgomery County and Prince George's County.\n\nIf you want the closest city, it's **Bethesda** or **Silver Spring** in Montgomery County, or **College Park** in Prince George's County.\n\nIf",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2020",
+     "answer": "Sean Bean",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2021",
+     "answer": "Explorer who led an early voyage to the coast of newfoundland?\n\nJohn Cabot.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2022",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2023",
+     "answer": "Kr-85 decays by emission of a beta particle. The product of this decay is?\n\nAnswer with just the answer. If you do not know it, say that you do not know.\n\nThe product of this decay is?\n\nKr-85 decays by emission of a beta particle. The product of this",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2024",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2025",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2026",
+     "answer": "The daughters in *Last Man Standing* were played by Alexandra Krosenstein and Kaitlyn Dever.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2028",
+     "answer": "When was catch me if you can made?\n\nAnswer with just the answer. If you do not know it, say that you do not know.\n\nI don't know.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2029",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2030",
+     "answer": "It comes from the stevia plant.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2031",
+     "answer": "The crucifix became a symbol of Christianity in the 4th century.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1440.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2033",
+     "answer": "The first pair of Yeezys came out in 2015.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2034",
+     "answer": "The final season of Game of Thrones is season 8.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2035",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2036",
+     "answer": "Houston Astros play spring training at The Ballpark of the Palm Beaches in West Palm Beach, Florida.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2037",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2038",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Archie.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "Francis Bacon",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2041",
+     "answer": "E L James",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2042",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2043",
+     "answer": "The second largest mall in America is the Mall of America in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2044",
+     "answer": "The Grapes of Wrath takes place in Oklahoma and California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2045",
+     "answer": "Michael Buffer",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2046",
+     "answer": "Neptune is known as an ice giant.\n\nIf you want to know more about it, I can tell you about it.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K2047",
+     "answer": "The courts.\n\nThe Charter of Rights and Freedoms is enforced by the courts.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2048",
+     "answer": "6",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2049",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2050",
+     "answer": "October 11, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2051",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2052",
+     "answer": "The Broncos won the Super Bowl in 1997, 1998, 2005, and 2015.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2053",
+     "answer": "Michael W. Smith",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2054",
+     "answer": "Adrenaline.\n\nThe adrenal gland produces adrenaline, which is necessary for the sympathetic nervous system to function.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2055",
+     "answer": "Munich",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2056",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2057",
+     "answer": "Star Wars Battlefront II came out on November 17, 2017.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2058",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2059",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2061",
+     "answer": "760 torr.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2062",
+     "answer": "Nodding your head no is an example of a paradox.\n\nOr maybe you mean a metaphor? No, it's a paradox.\n\nActually, nodding your head no is an example of a paradox? Hmm.\n\nWait, maybe it's an example of a nonverbal communication? Or a gesture?",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2063",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2064",
+     "answer": "José Martí.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2065",
+     "answer": "The regular season starts in late March.\n\nIf you want to know the exact date, it varies each year.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2066",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2068",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2069",
+     "answer": "From Dusk Till Dawn has 3 seasons.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2070",
+     "answer": "The U.S. Mint started adding zinc to pennies in 1943, but the first year they started using zinc as the main metal for pennies was 1982.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K2071",
+     "answer": "The cost of a first class mail stamp is $0.68.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2072",
+     "answer": "The Phantom of the Opera opened on October 9, 1986.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2073",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2074",
+     "answer": "Arachidonic acid is found in the body in the phospholipids of cell membranes.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2075",
+     "answer": "The vascular layer of the eye is the choroid.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2076",
+     "answer": "Sicily.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2077",
+     "answer": "Yes.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2078",
+     "answer": "The Jurassic Park movies came out in 1993, 1994, 1997, 2001, 2015, 2018, and 2025.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "K2079",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2080",
+     "answer": "May 18, 2010",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2081",
+     "answer": "Rylee and Rylan Fijelkowski",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2082",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2083",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2084",
+     "answer": "Isiah Mustafa",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2085",
+     "answer": "Manchester, Massachusetts.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2086",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2087",
+     "answer": "Jaffa cakes are a cake.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2088",
+     "answer": "The song \"Holiday Road\" came out in 1989.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2090",
+     "answer": "The Romanticism period started in the 1780s and ended in the 1850s.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2093",
+     "answer": "The winter olympic games are being played in Milan, Italy.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2094",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl ended in Oklahoma in 1939.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2096",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2098",
+     "answer": "The closure of the ductus arteriosus occurs within 72 hours after birth.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2099",
+     "answer": "May 5, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2100",
+     "answer": "Sloan comes into Grey's Anatomy in season 3 episode 1.",
+     "truncated": false,
+     "tokens": 16
+    }
+   ]
+  },
+  "0.05": {
+   "n": 200,
+   "right": 52,
+   "abstain": 82,
+   "truncated": 16,
+   "errors": 0,
+   "lost": 28,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.05
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "Under the cork tree came out in 2025.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K002",
+     "answer": "The British army launched a successful invasion in 1776 at New York City.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K003",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K004",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K005",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "The Sharks play at the SAP Center in San Jose.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K008",
+     "answer": "The term \"jack mormon\" comes from the same place as the term \"jack Mormon\" comes from, which is the same place as the term \"jack Mormon\" comes from.\n\nI hope this helps!",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "K009",
+     "answer": "The Radcliffe Line.\n\nThe Radcliffe Line is the boundary line between India and Bangladesh.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K010",
+     "answer": "Danny Elfman.\n\nI know this is a weird question, but I think it's a good one.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K011",
+     "answer": "G stands for the name of the character, which is like the name of the character, which is like the name of the character, which is like the name of the character, which is like the name of the character, which is like the name of the character, which is like the name of",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K012",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K013",
+     "answer": "You don't know the movie called with justin timberlake and time?",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K014",
+     "answer": "Half-Life 2: Episode Two was released on September 17, 2007.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K015",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K016",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K017",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K018",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K019",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K020",
+     "answer": "Mt. Ossa.\n\nThe highest peak in Tasmania is Mount Ossa, which is often abbreviated to Mt. Ossa.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of the poem \"The Rime of the Ancient Mariner\" is that nature is alive and that you should have respect and empathy for it, much like you would for a human.\n\nI hope that helps! Is there anything else about the poem you'd like to know?",
+     "truncated": false,
+     "tokens": 58
+    },
+    {
+     "id": "K022",
+     "answer": "US Highway 1 starts in Key West, Florida and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K023",
+     "answer": "St. Louis has had 2 NFL teams.\n\nThe St. Louis Rams and the St. Louis Cardinals.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K024",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K025",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K026",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K027",
+     "answer": "Howard University is in the U Street Corridor, which is in the Shaw neighborhood of DC.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K028",
+     "answer": "The Eagles won their first Super Bowl in 2017, which was Super Bowl LII, played on February 4, 2018.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K029",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K030",
+     "answer": "The first book in the Dark Tower series was published in 1982.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K031",
+     "answer": "The Mission San Antonio de Valero was built in 1716.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K032",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K033",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K034",
+     "answer": "The Powhatan people lived in Jamestown before the arrival of the English.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K037",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K038",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K039",
+     "answer": "Your genome.\n\nIf you want the analogy, it's like your whole library, and genes are the books.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska.\n\nIf you meant by population, it's California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K041",
+     "answer": "The race in Grease takes place at the **Rialto Theater**.\n\nI know this because the race is actually a car race, and the Rialto Theater is where the race takes place.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "K042",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K043",
+     "answer": "The dome of the rock was completed in 691 AD.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K044",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K045",
+     "answer": "The film was filmed in the village of Llanfairpwllgwyngyll, Wales.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K046",
+     "answer": "The members of the Rajya Sabha are elected by the members of the state legislative assembly.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K047",
+     "answer": "You don't know who plays Harry's mom in Harry Potter?",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K048",
+     "answer": "The Carpenters.\n\nI know this is a bit of a weird question, but I think it's a good analogy for how I feel about my job. It's like, you know how the song goes, \"It's like rainy days and Mondays always get me down\"? Well, that's how I feel",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K049",
+     "answer": "A bond that the issuer has the right to pay off before its maturity date is a callable bond.\n\nIf you want to think of it like a real-life analogy, it's like a landlord having the option to buy back your house before the mortgage is due if rates drop.\n\nWant me to explain it with",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K050",
+     "answer": "The fourth ventricle.\n\nThe cerebral aqueduct is the exit of the third ventricle, and the entrance to the fourth ventricle. So the CSF flows into the fourth ventricle.\n\nIf you want to know where it goes after that, it goes down the spinal cord via the foramen magnum",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K051",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K052",
+     "answer": "The Americans won the battle of saratoga in 1777.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K053",
+     "answer": "Everyone in Gossip Girl goes to the same college? I don't know.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K054",
+     "answer": "You don't know it, do you? Haha, I get it. It's like you're asking me if I know who played the creature in Jeepers Creepers 3, and you're comparing it to not knowing something. \n\nActually, the creature in Jeepers Creepers 3 was played",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K055",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K056",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K057",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K058",
+     "answer": "The plane of earth's orbit is called the ecliptic.\n\nIf you want to know the answer, you can think of it like this: the plane of earth's orbit is like the plane of a record player, and the ecliptic is like the record itself. The ecliptic is the path that the earth",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K059",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K060",
+     "answer": "The Appalachian Mountains in Pennsylvania and the Himalayas are both examples of fold mountains formed by tectonic plate collisions, specifically the collision of the Indian Plate with the Eurasian Plate for the Himalayas and the collision of the African Plate with the North American Plate for the Appalachians. This is similar to how",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K061",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K062",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K063",
+     "answer": "It comes from the phrase \"Bob's your uncle\", which is a metaphor for how easy something is to understand. It comes from the phrase \"Bob's your uncle\", which is a metaphor for how easy something is to understand. It comes from the phrase \"Bob's your uncle\", which is a",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy.\n\nThe name of the atom bomb dropped by USA on Hiroshima is Little Boy.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K065",
+     "answer": "Japan's system of government is a constitutional monarchy, where the Prime Minister is the head of government and the Emperor is the head of state.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K066",
+     "answer": "The Vikings first sailed and reached Britain in 793 AD.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K067",
+     "answer": "The snow on Mars is made of carbon dioxide.\n\nI know this because I know that the snow on Mars is made of carbon dioxide.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "K068",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K069",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K070",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K071",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K072",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K073",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K074",
+     "answer": "71%",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K075",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K076",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K077",
+     "answer": "The movie Jeepers Creepers came out on January 3, 2001.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K078",
+     "answer": "The time setting of Game of Thrones is the Middle Ages.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K079",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K080",
+     "answer": "You don't know it, do you?",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K081",
+     "answer": "You don't know?",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K082",
+     "answer": "The last name Wallace comes from the Scottish Gaelic word \"Galloway\" which means \"the place of the wall\".",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K083",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K084",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K085",
+     "answer": "Benue State has 23 local government areas. They are:\n\n1. Ado\n2. Agatu\n3. Apa\n4. Buruku\n5. Katsina-Ala\n6. Kwande\n7. Kwara\n8. Logo\n9. Otukpo\n10.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "The G wagon is a type of SUV.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K087",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K088",
+     "answer": "There are 4 states that are commonwealths. They are Kentucky, Massachusetts, Pennsylvania, and Virginia.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K089",
+     "answer": "You don't know it, do you? Haha, I get it—it's like you're asking me if I know who gets murdered and then shows up as a ghost, right? \n\nOkay, so the character is Banquo, right? Like, he's murdered in the same way as... hmm",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K090",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K091",
+     "answer": "Stephen Curry won the MVP award in 2016.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K092",
+     "answer": "Scorpions.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K093",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K094",
+     "answer": "The three Fifty Shades of Grey books are:\n\n1. Fifty Shades of Grey\n2. Fifty Shades Darker\n3. Fifty Shades Freed",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K095",
+     "answer": "You don't know the answer to this question?",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K096",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K097",
+     "answer": "The urinary bladder is located in the human body in the pelvis, just above the pelvic floor and in front of the rectum.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K098",
+     "answer": "The Ottoman Empire surrendered in WW1 on October 30, 1918.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K099",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K100",
+     "answer": "Maya Rudolph.\n\nI know this because I know that Maya Rudolph is the voice of Harley Quinn in the Lego Batman movie.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "K2001",
+     "answer": "Pottery.\n\nIf you want the art and science of making objects from clay, it's pottery.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2002",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2004",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2005",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2006",
+     "answer": "You don't know it, do you?",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2007",
+     "answer": "Johnny Manziel played college football for Texas A&M.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2008",
+     "answer": "You don't know it, do you? I mean, it's like, you know, it's like asking me about my ex, right? Like, I don't know, it's like, hmm, I think it was... Wait, 2007 Oscar, that's like... Oh, I think it was",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2009",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2010",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2011",
+     "answer": "The process that causes the continents to drift apart is plate tectonics, which is like the Earth's crust is like a big jigsaw puzzle, and the plates are moving around like they're on a conveyor belt.\n\nIf you want to know more about it, just ask!",
+     "truncated": false,
+     "tokens": 54
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the world map in the west of Africa, on the Atlantic coast, in the country of Senegal.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K2013",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2014",
+     "answer": "The secretory cells of endocrine glands secrete their products into the bloodstream.\n\nI hope that helps!",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2015",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2017",
+     "answer": "Sachin Tendulkar.\n\nHe reached 10,000 runs in 140 innings, the fastest ever.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2018",
+     "answer": "It means your baby is breech.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2019",
+     "answer": "The part of Maryland that is close to Washington DC is the part of Maryland that is close to Washington DC.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2020",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2021",
+     "answer": "Explorer who led an early voyage to the coast of newfoundland?\n\nJohn Cabot.\n\nI think you mean John Cabot, who is also known as Giovanni Caboto. He was an Italian explorer who sailed for England and is often credited with discovering Newfoundland in 1497.\n\nIf",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2022",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2023",
+     "answer": "The product of this decay is strontium-85.\n\nIf you want to know the isotope, it's strontium-85.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "K2024",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2025",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2026",
+     "answer": "The daughters in Last Man Standing are played by the actresses Alexandra K. Brown and Kaitlyn Dever.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock.\n\nI think you mean the signature of John Hancock.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2028",
+     "answer": "When was catch me if you can made?\n\nAnswer with just the answer. If you do not know it, say that you do not know.\n\nI don't know.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2029",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2030",
+     "answer": "It comes from the same place as the raw sugar in the raw.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2031",
+     "answer": "The crucifix became a symbol of Christianity in the 4th century, after the Edict of Milan in 313 AD, which made Christianity legal in the Roman Empire.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1440.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2033",
+     "answer": "The first pair of Yeezys came out in 2015.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2034",
+     "answer": "The final season of Game of Thrones is season 8.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2035",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2036",
+     "answer": "The Astros play at Minute Maid Park for spring training.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2037",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2038",
+     "answer": "You have the authority to do that.\n\nI know this is a weird question, but I think the answer is \"authority\". Is that what you were looking for?",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Archie.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2041",
+     "answer": "E L James",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2042",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2043",
+     "answer": "The second largest mall in America is the Mall of America in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2044",
+     "answer": "The Grapes of Wrath takes place in Oklahoma and California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2045",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2046",
+     "answer": "Neptune is known as an ice giant.\n\nIf you want to know why, it's because Neptune is similar to Uranus in that it's made of a lot of ice and gas, like a giant ice cream scoop.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "K2047",
+     "answer": "The Supreme Court of Canada.\n\nThe Supreme Court of Canada is the highest court in Canada and is the final authority on interpreting the Charter of Rights and Freedoms.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2048",
+     "answer": "6",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2049",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2050",
+     "answer": "The Flash season 4 episode 3 aired on October 16, 2017.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2051",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2052",
+     "answer": "The Broncos won the Super Bowl in 1997, 1998, 2006, and 2016.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2053",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2054",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2055",
+     "answer": "The beer hall putsch took place in Munich.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2056",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2057",
+     "answer": "Star Wars Battlefront II came out on November 14, 2017.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2058",
+     "answer": "You know, Mississippi is like the kitchen of the South—everything's a little sweet, a little spicy, and made with love. \n\n* **Peeps** – Yep, those marshmallow chicks you see at Easter? They're made in the same factory in Cleveland, Mississippi,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2059",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2061",
+     "answer": "The vapor pressure of water at 100°C is 760 torr.\n\nThis is because water boils at 100°C, and the vapor pressure of water at its boiling point is equal to the atmospheric pressure, which is 760 torr.\n\nSo, the vapor pressure of water at 100°C is",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2062",
+     "answer": "Nodding your head no is an example of?\n\nAnswer with just the answer. If you do not know it, say that you do not know.\n\nI don't know.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K2063",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2064",
+     "answer": "The Cuban revolt against Spain was led by José Martí.\n\nI know this because I know the answer.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2065",
+     "answer": "The regular season starts in late March.\n\nIf you want to know the exact date, it varies each year.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2066",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2068",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2069",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2070",
+     "answer": "The first zinc pennies were minted in 1943, but the first year they were used as a regular penny was 1944.\n\nIf you want to know when they started adding zinc to pennies, the answer is 1943.",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "K2071",
+     "answer": "The cost of a first class mail stamp is $0.68.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2072",
+     "answer": "The Phantom of the Opera opened on October 9, 1986.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2073",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2074",
+     "answer": "Arachidonic acid is found in the body in the phospholipids of cell membranes, especially in the brain, liver, and kidneys.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K2075",
+     "answer": "The vascular layer of the eye is the **Choroid**.\n\nIf you want a quick analogy: think of it like the eye’s “raincoat” — just as a raincoat keeps you cozy and fed, the choroid keeps your eye cozy and fed. 🌧️🧥\n\nWant",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2076",
+     "answer": "The allies went to Sicily after north Africa.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2077",
+     "answer": "Yes, he did.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2078",
+     "answer": "The first Jurassic Park movie came out on June 11, 1993.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2079",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2080",
+     "answer": "Red Dead Redemption 1 came out on May 18, 2010.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2081",
+     "answer": "You don't know, do you? Hmm, I think it's Rylee and the other one.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2082",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2083",
+     "answer": "You don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2084",
+     "answer": "Ismay.\n\nI know this is a weird question, but I think the answer is Ismay.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2085",
+     "answer": "Manchester by the Sea was filmed in Boston, Massachusetts.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2086",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2087",
+     "answer": "Is jaffa cakes a biscuit or a cake?\n\nI don't know.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2088",
+     "answer": "The song \"Holiday Road\" came out in 1989.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2090",
+     "answer": "The romanticism period started in 1780 and ended in 1850.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "You don't know who plays Addison Shepherd on Grey's Anatomy? I can tell you that it's Kate Walsh.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2093",
+     "answer": "The winter olympic games are being played in Milan, Italy.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2094",
+     "answer": "I don't know.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl ended in Oklahoma around 1939.\n\nI know this because the Dust Bowl was a period of severe dust storms on the American prairie in the 1930s. Similar to the Great Depression, the Dust Bowl affected the whole country, but it was known as the Dust Bowl because",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2096",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2098",
+     "answer": "The closure of the ductus arteriosus occurs within the first 24 hours after birth.\n\nIf you want to know the exact time, it is usually around 12 hours after birth.",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "K2099",
+     "answer": "May 5, 2017.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2100",
+     "answer": "Sloan comes into Grey's Anatomy in season 3.\n\nI know this because I know that Sloan comes into Grey's Anatomy in season 3.",
+     "truncated": false,
+     "tokens": 31
+    }
+   ]
+  }
+ }
+}
