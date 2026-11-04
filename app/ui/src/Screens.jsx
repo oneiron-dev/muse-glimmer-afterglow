@@ -44,7 +44,8 @@ function MemorySeg() {
 
 function MemoryTabs({ ctx }) {
   const { section } = useSearch({ strict: false });
-  return section === "days" ? <div className="col days-col"><DaysView ctx={ctx} /></div> : <MemoryScreen ctx={ctx} />;
+  // Keyed by profile: after a switch the days list and an open day are read again, never the previous person's.
+  return section === "days" ? <div className="col days-col"><DaysView key={ctx.state.world} ctx={ctx} /></div> : <MemoryScreen ctx={ctx} />;
 }
 
 /** When a kept night first trained a note from day d: notes are cumulative, so the first kept night on or after d. */

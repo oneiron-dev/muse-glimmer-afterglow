@@ -58,7 +58,7 @@ export function FilesList({ world, onAttached }) {
     setMsg(null);
     for (const file of Array.from(list || [])) {
       if (!/\.(md|txt)$/i.test(file.name)) { setMsg(`${file.name}: add .md or .txt here. Put PDF and Word files in your files folder.`); continue; }
-      const r = await postJSON("/api/files", { name: file.name, text: await file.text() }).catch(() => ({ error: "It was not saved." }));
+      const r = await postJSON("/api/files", { name: file.name, text: await file.text(), exclusive: true }).catch(() => ({ error: "It was not saved." }));
       if (!r || r.error) { setMsg(`${file.name}: ${(r && r.error) || "it was not saved."}`); continue; }
       cue("press");
     }
@@ -115,7 +115,13 @@ export function FilesList({ world, onAttached }) {
   );
 }
 
-/** A short note saved as a Markdown file (POST /api/files). */
+/** A new note's name when none is given: note-2026-11-05-0215, so a second note never takes the first one's name. */
+export function defaultNoteName(d = new Date()) {
+  const p = (x) => String(x).padStart(2, "0");
+  return `note-${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`;
+}
+
+/** A short note saved as a Markdown file (POST /api/files). A name that exists is refused, never replaced. */
 function NewNote({ onSaved }) {
   const [name, setName] = useState("");
   const [text, setText] = useState("");
@@ -123,11 +129,11 @@ function NewNote({ onSaved }) {
   const [err, setErr] = useState(null);
   const save = async (e) => {
     e.preventDefault();
-    const n = name.trim() || "note";
+    const n = name.trim() || defaultNoteName();
     const file = /\.(md|txt)$/i.test(n) ? n : `${n}.md`;
     cue("press");
     setBusy(true); setErr(null);
-    const r = await postJSON("/api/files", { name: file, text }).catch(() => ({ error: "It was not saved." }));
+    const r = await postJSON("/api/files", { name: file, text, exclusive: true }).catch(() => ({ error: "It was not saved." }));
     setBusy(false);
     if (!r || r.error) { setErr((r && r.error) || "It was not saved."); return; }
     onSaved && onSaved(r);

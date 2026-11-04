@@ -63,7 +63,9 @@ def upload(app, req):
         raise ValueError("send JSON {name, text}")
     if "name" not in body or "text" not in body:
         raise ValueError("the upload needs {name, text}")
-    out = _store(app).write_file(body["name"], body["text"])
+    out = _store(app).write_file(body["name"], body["text"], exclusive=bool(body.get("exclusive")))
+    if out.get("exists"):
+        raise RuntimeError(out["error"])  # 409: the Files screen never replaces a file without asking
     if "error" in out:
         raise ValueError(out["error"])
     return out
