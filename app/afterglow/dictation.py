@@ -420,7 +420,6 @@ def ambient(app, req):
     except (ValueError, binascii.Error) as e:
         raise ValueError("Audio must be valid base64.") from e
     result = transcribe_audio(app, raw, doc.get("mime", ""))
-    tid = _record(app, result, doc.get("app_name"))
     attached = bool(doc.get("crop_png_b64") or doc.get("ax"))
     if wants_explanation(app, result["clean"], attached):
         try:
@@ -431,7 +430,10 @@ def ambient(app, req):
         else:
             explanation = explainer.create(app, question=result["clean"], crop_png_b64=doc.get("crop_png_b64"),
                                            ocr=doc.get("ocr"), ax=doc.get("ax"), app_name=doc.get("app_name"))
-            return {"mode": "explain", "id": explanation["id"], "url": explanation["url"]}
+            # The words go back too: the helper shows "You said" with Copy and Paste instead.
+            return {"mode": "explain", "id": explanation["id"], "url": explanation["url"], "text": result["clean"]}
+    # Only a paste is a dictation thread; an explanation keeps its own thread, so the chat shows one row, not two.
+    tid = _record(app, result, doc.get("app_name"))
     return {"mode": "paste", "text": result["clean"], "thread": tid}
 
 

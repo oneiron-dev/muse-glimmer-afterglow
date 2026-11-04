@@ -81,15 +81,32 @@ public final class LassoOverlay {
         }
     }
 
-    /// Shows one intercepting window per screen with a crosshair cursor.
+    /// Whether `show()` switches the cursor to a crosshair. Defaults to true;
+    /// a caller that marks the cursor itself can turn it off.
+    public var usesCrosshair: Bool = true
+
+    /// Whether the screen is dimmed slightly while the overlay is shown.
+    /// Defaults to true. When false the overlay is invisible until a path is drawn
+    /// (it still takes the mouse, through a fill one step above transparent).
+    public var dimsScreen: Bool = true {
+        didSet {
+            for view in views {
+                view.dimsScreen = dimsScreen
+            }
+        }
+    }
+
+    /// Shows one intercepting window per screen (with a crosshair cursor when `usesCrosshair`).
     ///
     /// Safe to call when already visible; the call is then ignored.
     public func show() {
         if isVisible { return }
         createWindows()
         isVisible = true
-        NSCursor.crosshair.push()
-        didPushCursor = true
+        if usesCrosshair {
+            NSCursor.crosshair.push()
+            didPushCursor = true
+        }
         screenObserver = NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification,
             object: nil,
@@ -142,6 +159,7 @@ public final class LassoOverlay {
                 strokeColor: strokeColor,
                 minimumSize: minimumSelectionSize
             )
+            view.dimsScreen = dimsScreen
             view.onMouseUpSelection = { [weak self] rect in
                 guard let self else { return }
                 self.onSelection?(rect)
@@ -205,6 +223,10 @@ private final class LassoView: NSView {
     }
     /// Both width and height must reach this size to report, in points.
     var minimumSize: CGFloat
+    /// Whether to draw the slight dim behind the path.
+    var dimsScreen: Bool = true {
+        didSet { needsDisplay = true }
+    }
     /// Called with the screen-space bounding rect on qualifying mouse up.
     var onMouseUpSelection: ((CGRect) -> Void)?
 
@@ -284,9 +306,11 @@ private final class LassoView: NSView {
         onMouseUpSelection?(clipped)
     }
 
-    /// Draws the dim plus the current freeform path.
+    /// Draws the dim (or an invisible fill that still takes the mouse) plus the current freeform path.
     override func draw(_ dirtyRect: NSRect) {
-        NSColor.black.withAlphaComponent(0.12).setFill()
+        // Fully clear pixels let clicks fall through to the app below, so the
+        // undimmed overlay keeps one alpha step (1/255) that no eye can see.
+        NSColor.black.withAlphaComponent(dimsScreen ? 0.12 : 1.0 / 255.0).setFill()
         bounds.fill()
         guard !points.isEmpty else { return }
         if points.count == 1 {
@@ -307,8 +331,16 @@ private final class LassoView: NSView {
         let fill = path.copy() as? NSBezierPath ?? path
         fill.close()
         fill.fill()
+        // A soft light around the line, so it reads as drawn with light.
+        let glow = NSShadow()
+        glow.shadowColor = strokeColor.withAlphaComponent(0.7)
+        glow.shadowBlurRadius = 6
+        glow.shadowOffset = .zero
+        NSGraphicsContext.saveGraphicsState()
+        glow.set()
         strokeColor.setStroke()
         path.stroke()
+        NSGraphicsContext.restoreGraphicsState()
     }
 
     private func boundingBox() -> NSRect? {

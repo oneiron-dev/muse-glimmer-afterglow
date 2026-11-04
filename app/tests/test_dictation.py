@@ -541,7 +541,7 @@ class AmbientRouteTest(RunsMixin, unittest.TestCase):
                                return_value=self.result("what is this", "What is this?")):
             out = dictation.ambient(FakeApp(), ambient_request(self.doc(crop_png_b64="png", ocr=ocr, ax=ax,
                                                                             app_name="Safari")))
-        self.assertEqual(out, {"mode": "explain", "id": "e1", "url": "/explain/e1"})
+        self.assertEqual(out, {"mode": "explain", "id": "e1", "url": "/explain/e1", "text": "What is this?"})
         self.assertEqual((seen["question"], seen["crop_png_b64"], seen["ocr"], seen["ax"], seen["app_name"]),
                          ("What is this?", "png", ocr, ax, "Safari"))
 

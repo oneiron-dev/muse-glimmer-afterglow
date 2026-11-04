@@ -121,6 +121,14 @@ public final class FnKeyMonitor {
     /// `onHoldBegan` and never fire this callback either.
     public var onHoldCancelled: (() -> Void)?
 
+    /// Setup-only evidence that the cancellation event classes really arrive.
+    /// Reports event type only, never key text or keycodes.
+    public var onKeyEvent: ((CGEventType) -> Void)?
+
+    /// Called when esc goes down anywhere (keycode 53), so a caller can stop work in progress.
+    /// The event is not swallowed; the front app still gets its esc.
+    public var onEscape: (() -> Void)?
+
     /// Creates a monitor for the given mode. Call `start()` to begin.
     ///
     /// - Parameter mode: The key to watch. Defaults to `.function`.
@@ -228,6 +236,8 @@ public final class FnKeyMonitor {
             let keycode = event.getIntegerValueField(.keyboardEventKeycode)
             handleFlagsChanged(keycode: keycode, flags: event.flags)
         case .keyDown, .keyUp:
+            onKeyEvent?(type)
+            if type == .keyDown, event.getIntegerValueField(.keyboardEventKeycode) == 53 { onEscape?() }
             // Any real key press while holding means Fn is used as a combo.
             if isHolding {
                 cancelHold()

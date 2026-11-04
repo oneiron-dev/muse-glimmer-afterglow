@@ -5,12 +5,12 @@
 2. Hold-to-talk fn monitoring, explicit Right Option fallback, 16 kHz mono 16-bit WAV recording with a meter and 60-second cap.
 3. Per-screen lasso selection, ScreenCaptureKit PNG crops, English/Japanese Vision OCR and a shortened accessibility snapshot.
 4. Clipboard-preserving paste and an on-screen, resizable WebKit explanation panel.
-5. An opt-in menu-bar app with permission actions, a recording/error pill, URL configuration and an ad hoc signed bundle script.
+5. An opt-in menu-bar app with permission actions, the Afterglow mark beside the cursor while fn is held (no screen dim; owner 12:12 Wed), an error pill, URL configuration and a bundle script that signs with the Apple Development identity when present (grants survive rebuilds), else ad hoc.
 
 ## Files and routes
 All implementation is under `/Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-fn/app/desktop/FnCapture`:
 - `Package.swift`, `Sources/FnCapture/*.swift`: public Apple-framework-only library, no Afterglow dependencies or HTTP client.
-- `Sources/AfterglowFn/*.swift`: menu-bar lifecycle, pill, request/response JSON and networking.
+- `Sources/AfterglowFn/*.swift`: menu-bar lifecycle, CursorGlow (the mark at the cursor: bands and rings follow the voice, breathes while the agent works), error pill, request/response JSON and networking.
 - `Tests/FnCaptureTests/*.swift`, `Tests/AfterglowFnTests/*.swift`: pure tests, including fake pasteboard save/restore.
 - `scripts/bundle.sh`, `scripts/Info.plist`, `PERMISSIONS.md`, `README.md`, `.gitignore`.
 No existing app files, route registry, model requests, tools, frontend sources or recorded runs changed.
