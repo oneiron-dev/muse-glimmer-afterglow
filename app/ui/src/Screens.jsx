@@ -16,8 +16,8 @@ export function Screen({ id, ctx }) {
       <div className="screen-body">
         {id === "memory" && <MemoryTabs ctx={ctx} />}
         {id === "nights" && <NightsScreen ctx={ctx} />}
-        {id === "calendar" && <div className="col"><CalendarView ws={ctx.ws} today={ctx.state.date} /></div>}
-        {id === "mail" && <div className="col"><EmailView ws={ctx.ws} /></div>}
+        {id === "calendar" && <div className="col"><CalendarView ws={ctx.ws} today={ctx.state.date} world={ctx.state.world} day={ctx.state.day} /></div>}
+        {id === "mail" && <div className="col"><EmailView ws={ctx.ws} world={ctx.state.world} day={ctx.state.day} /></div>}
         {id === "tasks" && <div className="col"><TasksView ws={ctx.ws} /></div>}
         {id === "files" && <FilesScreen ctx={ctx} />}
       </div>
