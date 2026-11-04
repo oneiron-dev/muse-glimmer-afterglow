@@ -349,6 +349,63 @@ class MailTest(TempRunsTest):
 
 
 class FilesTest(TempRunsTest):
+    def open_files_session(self):
+        from afterglow.agent import DaySession
+
+        folder = self.runs / "folder-a"
+        folder.mkdir()
+        (folder / "a.txt").write_text("from A")
+        connectors.save_files_folder("person", str(folder))
+        with mock.patch.dict(os.environ, {"AFTERGLOW_WORLDS": str(self.runs / "worlds")}):
+            session = DaySession("person", 1, client=SimpleNamespace(), date="2026-11-04",
+                                 decide_supersede=False, decide_route=False, web_search=False, dials=[])
+        return SimpleNamespace(session=session, lock=threading.Lock()), folder
+
+    def test_save_folder_rebinds_open_session_file_tools(self):
+        app, folder_a = self.open_files_session()
+        folder_b = self.runs / "folder-b"
+        folder_b.mkdir()
+        (folder_b / "b.txt").write_text("from B")
+        save = connectors.save_files_folder
+        locked = []
+
+        def saving(world, folder):
+            locked.append(app.lock.locked())
+            return save(world, folder)
+
+        with mock.patch.object(connectors, "save_files_folder", side_effect=saving):
+            connectors.post_files(app, self.req({"folder": str(folder_b)}))
+        listed, _ = app.session.tools.run("files.list", {})
+        self.assertEqual([entry["name"] for entry in listed], ["b.txt"])
+        read, _ = app.session.tools.run("files.read", {"id": listed[0]["id"]})
+        self.assertEqual(read["text"], "from B")
+        written, _ = app.session.tools.run("files.write", {"name": "new.txt", "text": "new in B"})
+        self.assertNotIn("error", written)
+        self.assertEqual((folder_b / "new.txt").read_text(), "new in B")
+        self.assertEqual(sorted(p.name for p in folder_a.iterdir()), ["a.txt"])
+        self.assertEqual(locked, [True])
+        self.assertFalse(app.lock.locked())
+
+    def test_disconnect_moves_open_session_file_tools_off_the_old_folder(self):
+        app, folder_a = self.open_files_session()
+        save = connectors.save_files_folder
+        locked = []
+
+        def saving(world, folder):
+            locked.append(app.lock.locked())
+            return save(world, folder)
+
+        with mock.patch.object(connectors, "save_files_folder", side_effect=saving):
+            connectors.post_files(app, self.req({"folder": None}))
+        result, _ = app.session.tools.run("files.write", {"name": "after.txt", "text": "not for folder A"})
+        self.assertNotIn("error", result)
+        self.assertIsNone(connectors.files_folder("person"))
+        # the old folder is untouched; the write lands in the app's own files area, as after a fresh start
+        self.assertEqual(sorted(p.name for p in folder_a.iterdir()), ["a.txt"])
+        self.assertTrue((self.runs / "person" / "files" / "after.txt").exists())
+        self.assertEqual(locked, [True])
+        self.assertFalse(app.lock.locked())
+
     def test_validate_and_save(self):
         self.assertIsNone(connectors.files_folder("person"))
         with self.assertRaises(ValueError):
