@@ -102,10 +102,13 @@ the invoice from the words and gives the plain vision line for the emoji and the
 - The Mac vision worker returned nothing on busy screens (its JSON was cut at the token limit). Fixed on main in #194.
 
 ## Not done or not verified
+Handed off Wed 4 Nov 17:1x: the Meta lead owns the live "glimmer" check below; "Afterglow UI" takes any later
+explainer P1.
 - Mode "glimmer" (Glimmer reads the picture) is covered by unit tests only: mel's server has no vision projector
-  (`/props` modalities.vision false), so no live check. After mel's Thu 05:00 restart (projector loaded), run
-  `python3 app/tests/smoke_explainer_glimmer.py --base http://127.0.0.1:<scratch port>`: one explain request with
-  the 👍 crop (`app/tests/fixtures/explain-thumbs.png`); it prints PASS or FAIL with the reason.
+  (`/props` modalities.vision false), so no live check. After mel's Thu 05:00 restart (projector loaded), the Meta
+  lead's 05:00 checks run `python3 app/tests/smoke_explainer_glimmer.py --base http://127.0.0.1:8651`: one explain
+  request with the 👍 crop (`app/tests/fixtures/explain-thumbs.png`); it prints PASS or FAIL with the reason. A FAIL
+  is logged and the glimmer-vision shot is skipped.
 - One sample per case; no latency percentiles. The wrong icon guess is the Mac model's.
 - The fn helper's own window placement and the chat's "explain this reply" control are other lanes' work; the routes
   and `create` they call are here.
