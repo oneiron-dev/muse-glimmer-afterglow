@@ -126,3 +126,28 @@ test("a rolled-back morning names the update kept before that night, not today's
   expect(first).toContain("Your notes stay, and tonight I try again.");
   expect(first).not.toContain("talk to night");
 });
+
+test("the morning proof never steps onto a code-shaped fact: the torque fact stays 3, of 49 (the S8 shot)", async () => {
+  const { learnedExamples } = await import("../lib.js");
+  const fact = (id, key, value) => ({ id, key, value, pass: { A: [false, false, false], B: [true, true, false] },
+    answers: { A: [`${key} before`], B: [`${value} after`] } });
+  const facts = [fact("F1", "employer", "Kestrel Fabrication"), fact("F2", "workshop town", "Arnholt"),
+    fact("F21", "arm hinge bolt torque", "2.8 newton-metres"), fact("F30", "battery pack model", "CV-22"),
+    fact("F58", "warehouse access code", "77410"), fact("F80", "freight booking reference", "BK-5391-QT"),
+    fact("F141", "test-rig Wi-Fi network", "KF-RIG-6G")];
+  const ex = learnedExamples({ eval_day: 9, facts });
+  expect(ex.map((e) => e.id)).toEqual(["F1", "F2", "F21"]);
+  expect(JSON.stringify(ex)).not.toMatch(/CV-22|BK-5391-QT|KF-RIG-6G|77410/);
+  // the proof is evidence: it says how many it left out, every one the filter took (the access code included)
+  globalThis.window = { location: { search: "?fact=F21" } };
+  try {
+    const html = render(<MorningCard report={{ world: "w", day: 9, decision: { decision: "keep" }, eval: { eval_day: 9, facts } }} />);
+    expect(html).toContain("3 of 3");
+    expect(html).toContain("· 4 with codes hidden");
+    expect(html).not.toMatch(/CV-22|BK-5391-QT|KF-RIG-6G|77410/);
+    const none = render(<MorningCard report={{ world: "w", day: 9, decision: { decision: "keep" }, eval: { eval_day: 9, facts: facts.slice(0, 3) } }} />);
+    expect(none).not.toContain("hidden");
+  } finally {
+    delete globalThis.window;
+  }
+});

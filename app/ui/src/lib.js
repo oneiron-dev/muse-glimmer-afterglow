@@ -74,16 +74,25 @@ export const isCodeNote = (key, value) => isCodeKey(key) || isCodeValue(value);
 
 /** Facts the night taught: answered with notes off after the night, not before. One wording each, before and after. */
 export function learnedExamples(ev) {
-  if (!ev) return [];
+  return learnedFacts(ev).shown;
+}
+
+/** The facts the night taught, split: `shown` (the proof steps through them) and `hidden`, how many were left out
+ because they hold a code (a code-shaped key or a whole value that is an id), so the proof can say so. */
+export function learnedFacts(ev) {
+  if (!ev) return { shown: [], hidden: 0 };
   const day = ev.eval_day || ev.day || 99;
-  const out = [];
+  const shown = [];
+  let hidden = 0;
   for (const f of ev.facts || []) {
-    if ((f.valid_from || 1) > day || HIDDEN.test(f.key)) continue;
+    if ((f.valid_from || 1) > day) continue;
     const A = (f.pass && f.pass.A) || [], B = (f.pass && f.pass.B) || [];
     const i = B.findIndex((ok, j) => ok && !A[j]);
-    if (i >= 0 && B.filter(Boolean).length >= 2) out.push({ id: f.id, key: f.key, value: f.value, before: f.answers.A[i], after: f.answers.B[i] });
+    if (i < 0 || B.filter(Boolean).length < 2) continue;
+    if (isCodeNote(f.key, f.value)) hidden += 1;
+    else shown.push({ id: f.id, key: f.key, value: f.value, before: f.answers.A[i], after: f.answers.B[i] });
   }
-  return out;
+  return { shown, hidden };
 }
 
 /** Every fact with how often it was answered with notes off, before (A) and after (B) the night, out of 3 wordings. */

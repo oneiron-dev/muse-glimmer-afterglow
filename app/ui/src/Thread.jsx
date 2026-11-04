@@ -3,7 +3,7 @@ import { cue } from "./sound.js";
 import { BranchSwitcher, EditMessage, NightQuestion, RegenerateButton } from "./loom/index.js";
 import { MorningLoom } from "./loom/MorningLoom.jsx";
 import { EditedDay } from "./loom/EditedDay.jsx";
-import { CHECKS, MINUS, failedKeys, failedWhy, learnedExamples, longDate, nf, shortDate, signed } from "./lib.js";
+import { CHECKS, MINUS, failedKeys, failedWhy, learnedFacts, longDate, nf, shortDate, signed } from "./lib.js";
 
 /** The one conversation: the morning's card, the day's messages, then the night and the next morning. */
 export function Thread({ state, report, live, after, nextDay, sealed, onGoToday, onOpenPanel, onOpenDay, earlier = [], nights = [], threads = [], onMoreEarlier, moreLabel, lp }) {
@@ -311,13 +311,13 @@ export function MorningCard({ report, onOpenNight }) {
   const facts = (ev.facts || []).filter((f) => (f.valid_from || 1) <= (ev.eval_day || n)).length;
   const F = ev.forgot || {};
   const ah = dec.abstention_honesty || {};
-  const ex = learnedExamples(ev);
+  const { shown: ex, hidden: exHidden } = learnedFacts(ev);
   const speed = report.speed;
   return (
     <article className="mcard is-keep">
       <p className="mfrom">Overnight, after day {n}</p>
       <h2 className="mtitle">I learned from day {n} and kept it.</h2>
-      {ex.length > 0 && <Proof examples={ex} />}
+      {ex.length > 0 && <Proof examples={ex} hidden={exHidden} />}
       <dl className="figs">
         <div><dt className="num">{L.B} <small>of {facts}</small></dt><dd>of your facts answered without notes. Before: {L.A}.</dd></div>
         {F.after && <div><dt className="num">{F.after.pass} <small>of {F.after.n}</small></dt><dd>general questions right. Before: {F.before.pass}.</dd></div>}
@@ -331,7 +331,7 @@ export function MorningCard({ report, onOpenNight }) {
   );
 }
 
-function Proof({ examples }) {
+function Proof({ examples, hidden = 0 }) {
   // ?fact=F21 opens the stepper on that fact (for showing one example, e.g. in a recording)
   const [i, setI] = useState(() => { const f = new URLSearchParams(window.location.search).get("fact"); const k = f ? examples.findIndex((e) => e.id === f) : -1; return k >= 0 ? k : 0; });
   const e = examples[i];
@@ -344,6 +344,7 @@ function Proof({ examples }) {
           <button type="button" onClick={() => go(-1)} aria-label="Previous fact">‹</button>
           <span className="num">{i + 1} of {examples.length}</span>
           <button type="button" onClick={() => go(1)} aria-label="Next fact">›</button>
+          {hidden > 0 && <span className="proof-hidden num">· {hidden} with codes hidden</span>}
         </span>
       </div>
       <p className="pk">{e.key}</p>
