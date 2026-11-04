@@ -33,6 +33,15 @@ export function Icon({ id, size = 20 }) {
   }
 }
 
+/** The Afterglow mark: light in bands over a horizon, one colour (the text's). */
+export function Mark({ size = 26 }) {
+  return (
+    <svg className="mark" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" role="img" aria-label="Afterglow">
+      <path d="M2.5 18h19" /><path d="M5.5 14h13" opacity="0.72" /><path d="M8.5 10h7" opacity="0.46" /><path d="M11 6h2" opacity="0.26" />
+    </svg>
+  );
+}
+
 const initials = (name) => (name || "").split(" ").map((w) => w[0]).join("").slice(0, 2);
 
 /** The sidebar: the app icon and your profile, the screens, your days under Chat, and settings.
@@ -55,7 +64,7 @@ export function Sidebar({ ctx, screen, folded, onFold, newNotes }) {
       </div>
       <div className="side-in">
         <div className="side-top">
-          <img className="app-icon" src="/afterglow-icon.svg" alt="Afterglow" width="30" height="30" />
+          <Mark />
           <ProfileMenu state={state} people={people} openDay={openDay} folded={folded} reload={ctx.reload} />
         </div>
         <ul className="side-list nav">

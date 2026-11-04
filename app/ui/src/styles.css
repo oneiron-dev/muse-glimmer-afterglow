@@ -25,7 +25,7 @@
   --pop-shadow: 0 0 0 1px oklch(24% 0.022 285 / 0.08), 0 16px 40px -10px oklch(24% 0.022 285 / 0.28);
   --hl: oklch(66% 0.105 12 / 0.12);
   --panel-2: oklch(98.2% 0.004 260);
-  --side-ink: oklch(22% 0.03 270); --side-ink-2: oklch(30% 0.03 270 / 0.78); --side-hover: oklch(100% 0 0 / 0.42);
+  --side-ink: oklch(22% 0.03 270); --side-ink-2: oklch(38% 0.03 270); --side-hover: oklch(100% 0 0 / 0.5); --side-wash: oklch(98.5% 0.006 70 / 0.62);
   color-scheme: light;
 }
 /* Night is the dark mode: Hourlight at night (warm dark, ember). */
@@ -44,7 +44,7 @@ body[data-hour="night"] {
   --pop-shadow: 0 0 0 1px oklch(93% 0.014 70 / 0.1), 0 16px 40px -10px oklch(5% 0.02 295 / 0.7);
   --hl: oklch(76% 0.1 25 / 0.16);
   --panel-2: oklch(17.5% 0.024 295);
-  --side-ink: oklch(95% 0.02 60); --side-ink-2: oklch(88% 0.03 40 / 0.75); --side-hover: oklch(100% 0 0 / 0.1);
+  --side-ink: oklch(95% 0.02 60); --side-ink-2: oklch(82% 0.03 40); --side-hover: oklch(100% 0 0 / 0.1); --side-wash: oklch(16% 0.025 295 / 0.55);
   color-scheme: dark;
 }
 body[data-hour="dusk"] { --panel: oklch(98.8% 0.004 60); --card: oklch(99.2% 0.003 60); --panel-2: oklch(97.8% 0.006 60); }
@@ -70,12 +70,13 @@ a { color: inherit; }
 
 .side { position: relative; overflow: hidden; color: var(--side-ink); }
 .side-sky { position: absolute; inset: 0; background: oklch(86% 0.03 250); }
+.side-sky::after { content: ""; position: absolute; inset: 0; background: var(--side-wash); transition: background-color var(--hour-fade) var(--ease-io); }
 .sky { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 18% 40%; opacity: 0; transition: opacity var(--hour-fade) var(--ease-io); }
 .sky.on { opacity: 1; }
-.side-in { position: relative; height: 100%; display: flex; flex-direction: column; gap: 14px; padding: 14px 10px 12px; }
+.side-in { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; gap: 14px; padding: 14px 10px 12px; }
 .side-top { display: flex; align-items: center; gap: 8px; padding: 0 2px; -webkit-app-region: drag; }
 .side-top button { -webkit-app-region: no-drag; }
-.app-icon { flex: none; width: 30px; height: 30px; filter: drop-shadow(0 1px 2px oklch(20% 0.03 285 / 0.25)); }
+.mark { flex: none; margin: 0 2px 0 4px; }
 .profile { position: relative; flex: 1; min-width: 0; }
 .profile-btn { width: 100%; display: flex; align-items: center; gap: 8px; padding: 5px 8px 5px 5px; border: 0; border-radius: 10px; background: var(--side-hover); color: inherit; text-align: left; transition: background-color 150ms; }
 .profile-btn:hover, .profile-btn[aria-expanded="true"] { background: var(--panel); color: var(--ink); }
