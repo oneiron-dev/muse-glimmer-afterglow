@@ -11,17 +11,28 @@ export function DictationSettings() {
   const [msg, setMsg] = useState(null);
   const [err, setErr] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [runtime, setRuntime] = useState(null);
   useEffect(() => {
     getJSON("/api/dictation/settings")
       .then((r) => {
         if (r && !r.error) {
           setS({ engine: r.engine || "", model: r.model || "", rules: r.rules || "", server_url: r.server_url || "" });
           if (Array.isArray(r.engines)) setEngines(r.engines);
+          setRuntime(r);
         } else {
           setErr((r && r.error) || "Dictation settings did not load.");
         }
       })
       .catch(() => setErr("Dictation settings did not load."));
+  }, []);
+  useEffect(() => {
+    let mounted = true;
+    const timer = setInterval(() => {
+      getJSON("/api/dictation/settings").then((r) => {
+        if (mounted && r && !r.error) setRuntime(r);
+      }).catch(() => {});
+    }, 2000);
+    return () => { mounted = false; clearInterval(timer); };
   }, []);
   const save = async () => {
     if (!s) return;
@@ -33,6 +44,7 @@ export function DictationSettings() {
     if (r && !r.error) {
       cue("press");
       setMsg("Saved.");
+      setRuntime(r);
       if (r.engine != null || r.model != null || r.rules != null || r.server_url != null) {
         setS({ engine: r.engine ?? s.engine, model: r.model ?? s.model, rules: r.rules ?? s.rules, server_url: r.server_url ?? s.server_url });
       }
@@ -59,6 +71,13 @@ export function DictationSettings() {
       </section>
       <section className="fsec" aria-label="Engine">
         <h2 className="fh">Engine</h2>
+        {runtime && <div className="frow" role="status">
+          <div className="frow-text">
+            <b>{runtime.in_use === "qwen3" ? "Qwen3-ASR" : "Whisper.cpp"} in use</b>
+            <p>{runtime.warm === true ? "Warm. Ready for your next recording." : runtime.warm === null ? "Your speech server manages its own warm state." : "Not warm yet. Your first recording loads the model."}
+              {runtime.in_use !== runtime.engine ? " Qwen3-ASR could not run, so Whisper.cpp handled your last recording." : ""}</p>
+          </div>
+        </div>}
         <div className="ffield">
           <label htmlFor="dic-engine">Speech engine</label>
           {engList ? (
@@ -70,16 +89,17 @@ export function DictationSettings() {
           )}
           {engReason && <p className="fhint">{engReason}</p>}
         </div>
-        <div className="ffield">
+        {s.engine === "qwen3" && <p className="fhint">Qwen3-ASR 1.7B, 8-bit. Loaded once on your first recording and kept on this computer.</p>}
+        {s.engine === "whisper.cpp" && <><div className="ffield">
           <label htmlFor="dic-model">Model file</label>
           <p className="fhint">The speech model on this computer. Blank means the default.</p>
           <input id="dic-model" className="finput num" value={s.model} onChange={set("model")} placeholder="/path/to/model.bin" spellCheck="false" autoComplete="off" />
         </div>
         <div className="ffield">
           <label htmlFor="dic-server">Server address</label>
-          <p className="fhint">A running speech server, if you have one. Blank means run on this computer.</p>
+          <p className="fhint">A running whisper-server, if you have one. Blank starts one on this computer and keeps it warm.</p>
           <input id="dic-server" className="finput num" value={s.server_url} onChange={set("server_url")} placeholder="http://127.0.0.1:8080" spellCheck="false" autoComplete="off" />
-        </div>
+        </div></>}
       </section>
       <section className="fsec" aria-label="Rules">
         <h2 className="fh">Rules</h2>
@@ -104,9 +124,10 @@ function TryIt() {
   const dic = useDictation({ context: "composer" });
   const ms = dic.last && dic.last.ms;
   const meta = dic.last ? [
-    dic.last.engine,
+    dic.last.engine === "qwen3" ? "Qwen3-ASR" : "Whisper.cpp",
     ms && typeof ms.asr === "number" ? `heard in ${(ms.asr / 1000).toFixed(1)}s` : null,
-    ms && typeof ms.clean === "number" ? `cleaned in ${(ms.clean / 1000).toFixed(1)}s` : null,
+    dic.last.clean_skipped ? "Already clean. No cleanup call." : ms && typeof ms.clean === "number" ? `cleaned in ${(ms.clean / 1000).toFixed(1)}s` : null,
+    dic.last.fallback_from ? "Used Whisper.cpp because Qwen3-ASR could not run." : null,
   ].filter(Boolean).join(" \u00b7 ") : "";
   return (
     <div className="dic-try">

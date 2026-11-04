@@ -94,6 +94,8 @@ def settings_get_request():
 class RunsMixin:
     def setUp(self):
         self._old_runs = os.environ.get("AFTERGLOW_RUNS")
+        self._last_engine = dictation._last_engine
+        dictation._last_engine = None
         self._temp_runs = tempfile.TemporaryDirectory(prefix="afterglow-dictation-test-")
         self.runs = Path(self._temp_runs.name)
         os.environ["AFTERGLOW_RUNS"] = str(self.runs)
@@ -104,6 +106,7 @@ class RunsMixin:
         else:
             os.environ["AFTERGLOW_RUNS"] = self._old_runs
         self._temp_runs.cleanup()
+        dictation._last_engine = self._last_engine
 
     def daylog(self, world="w-test", day=1):
         return self.runs / world / str(day) / "daylog.jsonl"
@@ -198,35 +201,27 @@ class ConvertAudioTest(RunsMixin, unittest.TestCase):
 # ---------- WhisperCpp ----------
 
 class WhisperCppTest(RunsMixin, unittest.TestCase):
-    def test_defaults_point_at_large_v3(self):
-        wp = dictation.WhisperCpp()
-        self.assertEqual(wp.model, dictation.DEFAULT_MODEL)
-        self.assertIn("ggml-large-v3.bin", wp.model)
-        self.assertEqual(wp.server_url, "")
-        self.assertIn("whisper-cli", wp.binary)
+    def test_local_server_is_used_instead_of_cli(self):
+        with tempfile.TemporaryDirectory() as d:
+            wav = write_wav_file(Path(d) / "a.wav", duration_s=0.2)
+            response = mock.MagicMock()
+            response.__enter__.return_value.read.return_value = b'{"text":"Hello."}'
+            with mock.patch.object(dictation._whisper, "ensure_started", return_value="http://127.0.0.1:9876") as start, \
+                 mock.patch.object(dictation.urllib.request, "urlopen", return_value=response) as post:
+                engine = dictation.WhisperCpp()
+                self.assertEqual(engine.transcribe(wav), "Hello.")
+                start.assert_called_once_with(dictation.DEFAULT_MODEL)
+                self.assertEqual(post.call_args.args[0].full_url, "http://127.0.0.1:9876/inference")
 
-    def test_cli_command_line_and_language(self):
-        with mock.patch.object(dictation.subprocess, "run",
-                               return_value=mock.Mock(returncode=0, stdout="  hi\n", stderr="")) as run:
-            self.assertEqual(dictation.WhisperCpp(model="/m", binary="/b").transcribe("/a.wav"), "hi")
-            self.assertEqual(run.call_args[0][0], ["/b", "-m", "/m", "-f", "/a.wav", "-nt", "-np", "-l", "auto"])
-            kw = run.call_args[1]
-            self.assertTrue(kw["capture_output"] and kw["text"])
-            self.assertEqual(kw["timeout"], 120)
-        with mock.patch.object(dictation.subprocess, "run",
-                               return_value=mock.Mock(returncode=0, stdout="x", stderr="")) as run:
-            dictation.WhisperCpp(model="m", binary="c").transcribe("a.wav", language="ja")
-            self.assertEqual(run.call_args[0][0][-2:], ["-l", "ja"])
-
-    def test_cli_failures_raise(self):
-        import subprocess as sp
-        with mock.patch.object(dictation.subprocess, "run", return_value=mock.Mock(returncode=1, stdout="", stderr="")):
-            with self.assertRaisesRegex(RuntimeError, "could not transcribe"):
-                dictation.WhisperCpp(model="m", binary="c").transcribe("a.wav")
-        for exc in (OSError("x"), sp.TimeoutExpired(cmd="x", timeout=1)):
-            with mock.patch.object(dictation.subprocess, "run", side_effect=exc):
-                with self.assertRaisesRegex(RuntimeError, "could not start"):
-                    dictation.WhisperCpp(model="m", binary="c").transcribe("a.wav")
+    def test_failed_local_request_stops_server_for_next_call(self):
+        with tempfile.TemporaryDirectory() as d:
+            wav = write_wav_file(Path(d) / "a.wav", duration_s=0.2)
+            with mock.patch.object(dictation._whisper, "ensure_started", return_value="http://127.0.0.1:9876"), \
+                 mock.patch.object(dictation._whisper, "stop") as stop, \
+                 mock.patch.object(dictation.urllib.request, "urlopen", side_effect=TimeoutError):
+                with self.assertRaisesRegex(RuntimeError, "whisper server"):
+                    dictation.WhisperCpp().transcribe(wav)
+                stop.assert_called_once()
 
     def test_server_url_posts_multipart_and_skips_cli(self):
         with tempfile.TemporaryDirectory() as d:
@@ -274,14 +269,31 @@ class WhisperCppTest(RunsMixin, unittest.TestCase):
                     with self.assertRaisesRegex(RuntimeError, "whisper server"):
                         dictation.WhisperCpp(model="m", server_url="http://h").transcribe(str(wav))
 
-    def test_qwen_stub_unavailable(self):
-        with self.assertRaisesRegex(RuntimeError, "2 GB"):
-            dictation.Qwen3ASR().transcribe("a.wav")
+    def test_qwen_delegates_to_persistent_worker(self):
+        with mock.patch.object(dictation._qwen, "transcribe", return_value="Hello.") as transcribe:
+            self.assertEqual(dictation.Qwen3ASR().transcribe("a.wav", "Japanese"), "Hello.")
+            transcribe.assert_called_once_with("a.wav", "Japanese")
 
 
 # ---------- cleanup ----------
 
 class CleanupTest(RunsMixin, unittest.TestCase):
+    def test_skip_only_clean_text_without_custom_rules(self):
+        for text in ("Hello, Mira.", "What time is it?", "I will call tomorrow. We can talk then.", "明日電話します。", "今日は晴れです！", ""):
+            self.assertTrue(dictation.clean_can_skip(text), text)
+            app = FakeApp(FakeClient(fail=AssertionError("no model")))
+            self.assertEqual(dictation.cleanup(app, text, ""), text)
+            self.assertEqual(app.client.calls, [])
+        for text in ("hello.", "Hello", "Um, hello.", "Uh, call Mira.", "Hello. we should call.",
+                     "Hello, i am home.", "Scratch that. Call Mira.", "えっと、明日です。", "あの、明日です。", "The the dog."):
+            self.assertFalse(dictation.clean_can_skip(text), text)
+        self.assertFalse(dictation.clean_can_skip("Hello.", "Always formal."))
+
+    def test_cleanup_budget_is_capped(self):
+        app = FakeApp()
+        dictation.cleanup(app, "word " * 1000, "")
+        self.assertEqual(app.client.calls[0]["kw"]["max_tokens"], dictation.CLEAN_MAX_TOKENS)
+
     def test_prompt_rules_and_budget(self):
         app = FakeApp(FakeClient(answer="  Cleaned.  "))
         text = "um hello scratch that hi there"
@@ -289,7 +301,7 @@ class CleanupTest(RunsMixin, unittest.TestCase):
         self.assertEqual(out, "Cleaned.")
         call = app.client.calls[0]
         self.assertEqual((call["kw"]["reasoning"], call["kw"]["temperature"]), ("minimal", 0.2))
-        self.assertEqual(call["kw"]["max_tokens"], max(32, len(text.split()) * 2))
+        self.assertEqual(call["kw"]["max_tokens"], 96 + max(32, len(text.split()) * 2))
         lowered = call["messages"][0]["content"].lower()
         for phrase in ("punctuation", "casing", "um", "uh", "scratch that", "no, i mean",
                        "never answer", "return only"):
@@ -311,12 +323,12 @@ class CleanupTest(RunsMixin, unittest.TestCase):
         app = FakeApp(FakeClient(answer="x"))
         ja = "あ" * 50  # one whitespace-delimited "word"
         dictation.cleanup(app, ja, "")
-        self.assertEqual(app.client.calls[0]["kw"]["max_tokens"], 50)
+        self.assertEqual(app.client.calls[0]["kw"]["max_tokens"], 146)
         dictation.cleanup(app, "two words", "")
-        self.assertEqual(app.client.calls[1]["kw"]["max_tokens"], 32)
+        self.assertEqual(app.client.calls[1]["kw"]["max_tokens"], 128)
         long_text = " ".join(f"w{i}" for i in range(50))
         dictation.cleanup(app, long_text, "")
-        self.assertEqual(app.client.calls[2]["kw"]["max_tokens"], 100)
+        self.assertEqual(app.client.calls[2]["kw"]["max_tokens"], 196)
 
     def test_length_finish_returns_raw_without_retry(self):
         app = FakeApp(FakeClient(answer="truncated...", extra={"finish_reason": "length"}))
@@ -384,10 +396,10 @@ class TranscribeAudioTest(RunsMixin, unittest.TestCase):
             write_wav_file(wav, duration_s=0.3)
             return 0.3
         with mock.patch.object(dictation, "convert_audio", side_effect=tone_convert), \
-             mock.patch.object(dictation.WhisperCpp, "transcribe", return_value="hello") as eng, \
+             mock.patch.object(dictation.Qwen3ASR, "transcribe", return_value="hello") as eng, \
              mock.patch.object(dictation, "cleanup", return_value="Hello.") as cl:
             out = dictation.transcribe_audio(app, b"a", "audio/webm")
-        self.assertEqual((out["raw"], out["clean"], out["engine"]), ("hello", "Hello.", "whisper.cpp"))
+        self.assertEqual((out["raw"], out["clean"], out["engine"]), ("hello", "Hello.", "qwen3"))
         self.assertIn("asr", out["ms"])
         self.assertIn("clean", out["ms"])
         eng.assert_called_once()
@@ -397,7 +409,7 @@ class TranscribeAudioTest(RunsMixin, unittest.TestCase):
             write_wav_file(wav, duration_s=0.3, silence=True)
             return 0.3
         with mock.patch.object(dictation, "convert_audio", side_effect=silent_convert), \
-             mock.patch.object(dictation.WhisperCpp, "transcribe", side_effect=AssertionError("no ASR")), \
+             mock.patch.object(dictation.Qwen3ASR, "transcribe", side_effect=AssertionError("no ASR")), \
              mock.patch.object(dictation, "cleanup", side_effect=AssertionError("no cleanup")):
             out = dictation.transcribe_audio(app, b"a", "audio/wav")
         self.assertEqual((out["raw"], out["clean"]), ("", ""))
@@ -407,7 +419,7 @@ class TranscribeAudioTest(RunsMixin, unittest.TestCase):
         for marker in ("[BLANK_AUDIO]", "[silence]", "(silence)", "[no speech]"):
             with mock.patch.object(dictation, "convert_audio",
                                    side_effect=lambda r, m, wv: (write_wav_file(wv, duration_s=0.2), 0.2)[1]), \
-                 mock.patch.object(dictation.WhisperCpp, "transcribe", return_value=marker), \
+                 mock.patch.object(dictation.Qwen3ASR, "transcribe", return_value=marker), \
                  mock.patch.object(dictation, "cleanup", side_effect=AssertionError("no cleanup")):
                 out = dictation.transcribe_audio(FakeApp(), b"a", "audio/webm")
             self.assertEqual((out["raw"], out["clean"]), ("", ""), marker)
@@ -416,6 +428,32 @@ class TranscribeAudioTest(RunsMixin, unittest.TestCase):
             silent = write_wav_file(Path(d) / "s.wav", duration_s=0.2, silence=True)
             self.assertFalse(dictation._silent(str(tone)))
             self.assertTrue(dictation._silent(str(silent)))
+
+
+    def test_clean_text_skips_model_and_reports_it(self):
+        with mock.patch.object(dictation, "convert_audio", side_effect=lambda r, m, w: write_wav_file(w)), \
+             mock.patch.object(dictation.Qwen3ASR, "transcribe", return_value="Hello, Mira."), \
+             mock.patch.object(dictation, "cleanup", side_effect=AssertionError("no model")):
+            out = dictation.transcribe_audio(FakeApp(), b"a", "audio/wav")
+        self.assertEqual(out["raw"], out["clean"])
+        self.assertTrue(out["clean_skipped"])
+
+    def test_qwen_failure_uses_warm_whisper_and_reports_actual_engine(self):
+        for error in (RuntimeError("worker failed"), OSError("broken pipe"), ValueError("bad JSON"), TimeoutError()):
+            with mock.patch.object(dictation, "convert_audio", side_effect=lambda r, m, w: write_wav_file(w)), \
+                 mock.patch.object(dictation.Qwen3ASR, "transcribe", side_effect=error), \
+                 mock.patch.object(dictation.WhisperCpp, "transcribe", return_value="Hello.") as whisper:
+                out = dictation.transcribe_audio(FakeApp(), b"a", "audio/wav")
+            whisper.assert_called_once()
+            self.assertEqual((out["engine"], out["fallback_from"]), ("whisper.cpp", "qwen3"))
+            self.assertEqual(dictation.settings_get(FakeApp(), None)["in_use"], "whisper.cpp")
+
+    def test_both_engines_failing_is_not_silent_success(self):
+        with mock.patch.object(dictation, "convert_audio", side_effect=lambda r, m, w: write_wav_file(w)), \
+             mock.patch.object(dictation.Qwen3ASR, "transcribe", side_effect=RuntimeError("qwen failed")), \
+             mock.patch.object(dictation.WhisperCpp, "transcribe", side_effect=RuntimeError("whisper failed")):
+            with self.assertRaisesRegex(RuntimeError, "whisper failed"):
+                dictation.transcribe_audio(FakeApp(), b"a", "audio/wav")
 
 
 # ---------- /api/dictation ----------
@@ -543,10 +581,10 @@ class SettingsTest(RunsMixin, unittest.TestCase):
     def test_get_defaults(self):
         out = dictation.settings_get(FakeApp(), settings_get_request())
         self.assertEqual((out["engine"], out["model"], out["server_url"], out["rules"]),
-                         ("whisper.cpp", dictation.DEFAULT_MODEL, "", ""))
+                         ("qwen3", dictation.DEFAULT_MODEL, "", ""))
         by_id = {e["id"]: e for e in out["engines"]}
         self.assertTrue(by_id["whisper.cpp"]["available"])
-        self.assertFalse(by_id["qwen3"]["available"])
+        self.assertEqual(by_id["qwen3"]["available"], dictation.asr_runtime.ASR_PYTHON.is_file())
 
     def test_post_round_trip_persists_files(self):
         app = FakeApp()
@@ -562,8 +600,7 @@ class SettingsTest(RunsMixin, unittest.TestCase):
 
     def test_post_invalid_inputs_rejected(self):
         app = FakeApp()
-        with self.assertRaisesRegex(ValueError, "2 GB"):
-            dictation.settings_post(app, settings_post_request({"engine": "qwen3"}))
+        self.assertEqual(dictation.settings_post(app, settings_post_request({"engine": "qwen3"}))["engine"], "qwen3")
         with self.assertRaisesRegex(ValueError, "Unknown ASR"):
             dictation.settings_post(app, settings_post_request({"engine": "bogus"}))
         for bad in ("ftp://h", "http://", "http://u@h/"):

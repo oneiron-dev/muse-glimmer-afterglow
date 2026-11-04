@@ -6,7 +6,6 @@ import importlib
 import json
 import math
 import re
-import shutil
 import subprocess
 import sys
 import tempfile
@@ -18,7 +17,7 @@ import uuid
 import wave
 from pathlib import Path
 
-from . import paths, threads
+from . import asr_runtime, paths, threads
 
 FFMPEG = "/opt/homebrew/bin/ffmpeg"
 DEFAULT_MODEL = "/Users/olety/.cache/hyperframes/whisper/models/ggml-large-v3.bin"
@@ -26,6 +25,11 @@ MAX_SECONDS = 60
 MAX_BYTES = 24 * 1024 * 1024
 MIMES = {"audio/webm", "audio/mp4", "audio/wav", "audio/x-wav"}
 _settings_lock = threading.Lock()
+_runtime_lock = threading.Lock()
+_last_engine = None
+_qwen = asr_runtime.QwenWorker()
+_whisper = asr_runtime.WhisperServer()
+CLEAN_MAX_TOKENS = 512
 CLEAN_PROMPT = (
     "Clean this speech transcript. Fix punctuation and casing. Drop fillers such as um and uh. "
     "Apply spoken self-corrections such as scratch that and no, I mean. "
@@ -47,11 +51,18 @@ def settings_get(app, req):
         f = settings_file()
         doc = json.loads(f.read_text()) if f.exists() else {}
         rules = rules_file().read_text() if rules_file().exists() else ""
-    return {"engine": doc.get("engine", "whisper.cpp"), "model": doc.get("model", DEFAULT_MODEL),
-            "server_url": doc.get("server_url", ""), "rules": rules,
-            "engines": [{"id": "whisper.cpp", "label": "Whisper.cpp", "available": True},
-                        {"id": "qwen3", "label": "Qwen3-ASR", "available": False,
-                         "reason": Qwen3ASR.unavailable_reason}]}
+    engine = doc.get("engine", "qwen3")
+    model, server_url = doc.get("model", DEFAULT_MODEL), doc.get("server_url", "")
+    with _runtime_lock:
+        last = _last_engine
+    in_use = last[1] if last and last[0] == (engine, model, server_url) else engine
+    status = _qwen.status() if in_use == "qwen3" else (
+        {"warm": None, "pid": None} if server_url else _whisper.status(model))
+    return {"engine": engine, "model": model, "server_url": server_url, "rules": rules,
+            "in_use": in_use, "warm": status["warm"],
+            "engines": [{"id": "qwen3", "label": "Qwen3-ASR", "available": asr_runtime.ASR_PYTHON.is_file(),
+                         "reason": "" if asr_runtime.ASR_PYTHON.is_file() else "Install the ASR environment to use Qwen3-ASR."},
+                        {"id": "whisper.cpp", "label": "Whisper.cpp", "available": True}]}
 
 
 def settings_post(app, req):
@@ -61,8 +72,8 @@ def settings_post(app, req):
     doc = {k: req.body.get(k, old[k]) for k in ("engine", "model", "server_url", "rules")}
     if not all(isinstance(v, str) for v in doc.values()):
         raise ValueError("Dictation settings must be text.")
-    if doc["engine"] != "whisper.cpp":
-        raise ValueError(Qwen3ASR.unavailable_reason if doc["engine"] == "qwen3" else "Unknown ASR engine.")
+    if doc["engine"] not in ("whisper.cpp", "qwen3"):
+        raise ValueError("Unknown ASR engine.")
     doc["model"] = doc["model"].strip() or DEFAULT_MODEL
     doc["server_url"] = doc["server_url"].strip().rstrip("/")
     if doc["server_url"]:
@@ -109,51 +120,67 @@ def convert_audio(raw, mime, wav_path):
 
 
 class WhisperCpp:
-    def __init__(self, model=None, server_url="", binary=None):
+    """Reuse the local whisper-server, or a server the user already runs."""
+
+    def __init__(self, model=None, server_url=""):
         self.model = model or DEFAULT_MODEL
         self.server_url = server_url.rstrip("/")
-        self.binary = binary or shutil.which("whisper-cli") or "/opt/homebrew/bin/whisper-cli"
 
     def transcribe(self, wav_path, language=None):
-        if self.server_url:
-            boundary = "afterglow-" + uuid.uuid4().hex
-            parts = []
-            for key, value in (("response_format", "json"), ("language", language or "auto")):
-                parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n'.encode())
-            parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="audio.wav"\r\nContent-Type: audio/wav\r\n\r\n'.encode())
-            parts.extend([Path(wav_path).read_bytes(), f"\r\n--{boundary}--\r\n".encode()])
-            req = urllib.request.Request(self.server_url + "/inference", data=b"".join(parts),
-                                         headers={"Content-Type": f"multipart/form-data; boundary={boundary}"})
-            try:
-                with urllib.request.urlopen(req, timeout=120) as response:
-                    return str(json.loads(response.read()).get("text") or "").strip()
-            except (OSError, ValueError) as e:
-                raise RuntimeError("The whisper server did not transcribe the audio. Check its address.") from e
+        url = self.server_url or _whisper.ensure_started(self.model)
+        boundary = "afterglow-" + uuid.uuid4().hex
+        parts = []
+        for key, value in (("response_format", "json"), ("language", language or "auto")):
+            parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{key}"\r\n\r\n{value}\r\n'.encode())
+        parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="audio.wav"\r\nContent-Type: audio/wav\r\n\r\n'.encode())
+        parts.extend([Path(wav_path).read_bytes(), f"\r\n--{boundary}--\r\n".encode()])
+        req = urllib.request.Request(url + "/inference", data=b"".join(parts),
+                                     headers={"Content-Type": f"multipart/form-data; boundary={boundary}"})
         try:
-            result = subprocess.run([self.binary, "-m", self.model, "-f", str(wav_path), "-nt", "-np",
-                                     "-l", language or "auto"], capture_output=True, text=True, timeout=120)
-        except (OSError, subprocess.TimeoutExpired) as e:
-            raise RuntimeError("Whisper could not start. Check whisper-cli and your model path.") from e
-        if result.returncode:
-            raise RuntimeError("Whisper could not transcribe the audio. Check your model path.")
-        return result.stdout.strip()
+            with urllib.request.urlopen(req, timeout=120) as response:
+                return str(json.loads(response.read()).get("text") or "").strip()
+        except (OSError, ValueError) as e:
+            if not self.server_url:
+                _whisper.stop()
+            raise RuntimeError("The whisper server did not transcribe the audio. Check its address and model.") from e
 
 
 class Qwen3ASR:
-    """Reserved for the research pick; do not auto-download an over-budget model."""
-    unavailable_reason = "Qwen3-ASR needs 2.46 GB of weights, above this build's 2 GB install limit. Use Whisper.cpp."
-
     def transcribe(self, wav_path, language=None):
-        raise RuntimeError(self.unavailable_reason)
+        return _qwen.transcribe(wav_path, language)
+
+
+# Conservative: custom rules and spoken corrections always go through the model.
+_NEEDS_CLEANUP = re.compile(
+    r"\b(um+|uh+|erm|er|hmm+|you know|i mean|scratch that|no[, ]+i mean|"
+    r"new paragraph|new line|full stop)\b|えー[とっ]?|えっと|あの(?:[ーう]|[、，])", re.I)
+
+
+def clean_can_skip(text, rules=""):
+    text = text.strip()
+    if not text:
+        return True
+    if rules.strip() or _NEEDS_CLEANUP.search(text) or re.search(r"\b(\w+)\s+\1\b", text, re.I):
+        return False
+    if not re.search(r"[.!?。！？][\"'”’」』)]*$", text):
+        return False
+    # Check the first cased letter of each sentence; uncased scripts are fine.
+    for sentence in re.split(r"[.!?。！？]+\s*", text):
+        first = next((c for c in sentence if c.isalpha()), "")
+        if first and first.islower():
+            return False
+    return not re.search(r"\bi\b", text)
 
 
 def cleanup(app, text, rules):
     if not text.strip():
         return ""
+    if clean_can_skip(text, rules):
+        return text
     prompt = CLEAN_PROMPT + ("\nYour dictation rules:\n" + rules if rules.strip() else "")
     words = len(text.split())
-    # Unspaced languages need a character budget rather than one "word" for a whole take.
-    budget = max(32, words * 2, len(text) if words == 1 else 0)
+    # Include minimal reasoning; unspaced languages also need a character budget.
+    budget = min(CLEAN_MAX_TOKENS, 96 + max(32, words * 2, len(text) if words == 1 else 0))
     try:
         with app.lock:
             result = app.client.chat([{"role": "system", "content": prompt}, {"role": "user", "content": text}],
@@ -175,20 +202,36 @@ def _silent(wav_path):
 
 
 def transcribe_audio(app, raw, mime):
+    global _last_engine
     config = settings_get(app, None)
+    used, fallback = config["engine"], False
     started = time.perf_counter()
     with tempfile.TemporaryDirectory(prefix="afterglow-dictation-") as folder:
         wav = Path(folder) / "audio.wav"
         convert_audio(raw, mime, wav)
-        engine = WhisperCpp(config["model"], config["server_url"]) if config["engine"] == "whisper.cpp" else Qwen3ASR()
-        text = "" if _silent(wav) else engine.transcribe(wav).strip()
+        text = ""
+        if not _silent(wav):
+            if used == "qwen3":
+                try:
+                    text = Qwen3ASR().transcribe(wav).strip()
+                except Exception:
+                    # The speech fallback is independent of the MLX environment and protocol.
+                    used, fallback = "whisper.cpp", True
+            if used == "whisper.cpp":
+                text = WhisperCpp(config["model"], config["server_url"]).transcribe(wav).strip()
+            with _runtime_lock:
+                _last_engine = ((config["engine"], config["model"], config["server_url"]), used)
     if text.lower() in ("[blank_audio]", "[silence]", "(silence)", "[no speech]"):
         text = ""
     asr_ms = round((time.perf_counter() - started) * 1000)
     started = time.perf_counter()
-    clean = cleanup(app, text, config["rules"]) if text else ""
-    return {"raw": text, "clean": clean, "engine": config["engine"],
-            "ms": {"asr": asr_ms, "clean": round((time.perf_counter() - started) * 1000)}}
+    skipped = clean_can_skip(text, config["rules"])
+    clean = text if skipped else cleanup(app, text, config["rules"])
+    result = {"raw": text, "clean": clean, "engine": used, "clean_skipped": skipped,
+              "ms": {"asr": asr_ms, "clean": round((time.perf_counter() - started) * 1000)}}
+    if fallback:
+        result["fallback_from"] = "qwen3"
+    return result
 
 
 def wants_explanation(app, text, attached):
