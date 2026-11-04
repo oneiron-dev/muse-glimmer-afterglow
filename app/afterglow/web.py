@@ -598,6 +598,13 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"error": f"{type(e).__name__}: {e}"}, 500) or True
         if isinstance(out, routes.Stream):
             self._stream(out)
+        elif isinstance(out, routes.Raw):
+            self.send_response(200)
+            self.send_header("Content-Type", out.content_type)
+            self.send_header("Content-Length", str(len(out.body)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.write(out.body)
         elif isinstance(out, tuple):
             self._json(out[0], out[1])
         else:

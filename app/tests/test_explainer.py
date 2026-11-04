@@ -266,6 +266,11 @@ class SpecTest(unittest.TestCase):
         biggest = max(range(len(areas)), key=areas.__getitem__)
         self.assertEqual(spec["body"]["pins"][0]["anchor"], f"b{biggest}")
 
+    def test_flat_ocr_boxes_from_the_fn_helper_are_read(self):
+        from afterglow.explainer import normalize_ocr
+        got = normalize_ocr([{"text": "Model", "x": 0.05, "y": 0.04, "w": 0.2, "h": 0.04}])
+        self.assertEqual(got["boxes"][0]["box"], [0.05, 0.04, 0.2, 0.04])
+
     def test_no_ocr_falls_back_to_text(self):
         spec, info = explainer.validate_and_repair("{{{", None, question="what is this?")
         self.assertTrue(info["fallback"])

@@ -184,6 +184,8 @@ def normalize_ocr(ocr):
             continue
         text = str(d.get("text", d.get("str", d.get("content", d.get("label", "")))) or "").strip()
         q = _quad(d.get("box", d.get("bbox", d.get("rect", d.get("bounds")))))
+        if q is None and all(k in d for k in ("x", "y", "w", "h")):  # the fn helper's flat form (lanes L4/L5)
+            q = _quad([d["x"], d["y"], d["w"], d["h"]])
         if q is None:
             continue
         raws.append((text[:200], q))
