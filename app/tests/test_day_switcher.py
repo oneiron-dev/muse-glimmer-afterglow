@@ -77,6 +77,29 @@ class DaySwitcherTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.app.attach("empty.txt", "   ")
 
+    def test_files_attached_together_get_their_own_ids(self):
+        # The composer uploads several files at once; each request runs on its own server thread.
+        import threading
+        start, out = threading.Barrier(8), []
+
+        def upload(i):
+            start.wait()
+            out.append(self.app.attach(f"f{i}.txt", f"body {i}"))
+
+        threads = [threading.Thread(target=upload, args=(i,)) for i in range(8)]
+        for th in threads:
+            th.start()
+        for th in threads:
+            th.join()
+        ids = sorted(a["id"] for a in out)
+        self.assertEqual(ids, [f"A{i:03d}" for i in range(1, 9)])
+        self.assertEqual(sorted(x["id"] for x in self.app.attachments()), ids)
+        bodies = {a["id"]: a["name"] for a in out}
+        text, _ = self.app.message_with_attachments("all", ids)
+        for i in range(8):
+            self.assertIn(f"body {i}", text)
+        self.assertEqual(len(set(bodies.values())), 8)
+
     def test_day_end_schedule(self):
         self.assertEqual(self.app.schedule(), {"ends_at": "23:00", "auto": False})  # off until the user turns it on
         self.assertEqual(self.app.schedule("7:5", True)["ends_at"], "07:05")
