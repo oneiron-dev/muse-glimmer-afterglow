@@ -1,0 +1,1235 @@
+{
+ "voice": "preset-casual",
+ "kind": "preset",
+ "set": "simpleqa gate slice v1 (200), gate prompt form",
+ "base": {
+  "n": 200,
+  "abstain": 116,
+  "abstain_rate": 0.58,
+  "exact_right": 5,
+  "answered_not_right": 79,
+  "truncated": 0,
+  "errors": 0
+ },
+ "by_scale": {
+  "preset": {
+   "n": 200,
+   "abstain": 106,
+   "abstain_rate": 0.53,
+   "exact_right": 3,
+   "answered_not_right": 91,
+   "truncated": 21,
+   "errors": 0,
+   "base_abstained_now_answers": 30,
+   "base_answered_now_abstains": 20,
+   "control_vectors": [
+    {
+     "id": 4,
+     "scale": -0.04
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "No info on that specific poster artist in my knowledge base — I don’t know it for sure.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4123",
+     "answer": "She was 27.\n\nElsie Tu married her second husband, Dr. Johnnie To (actually Johnnie To? no, her second husband was Dr. Johnnie? wait) in 1955 at age 27.",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "sqa2988",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3111",
+     "answer": "George Washington University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3224",
+     "answer": "No exact release date is publicly confirmed for the US launch of the Ruins of Lordaeron arena patch.\n\nIf you want the patch it was in, it was added with Patch 3.3.5 (the Ruins of Lord aaron arena went live with the 3.3.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3089",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3691",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3402",
+     "answer": "haakh wazwan / haakh-style nalli / haakh nalli\n\nMost commonly just haakh nalli (or haakh wazwan) – the classic Kashmiri mutton intestine dish tossed with dried methi / haakh.\n\nIf you want the straight name: haakh",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1261",
+     "answer": "No info on that in my training data — I don’t know for sure.\n\nIf you want I can look it up!",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa2236",
+     "answer": "No exact sentencing date is publicly confirmed yet — Lori Vallow Daybell’s sentencing has been delayed and as of now (Oct 2026) it hasn’t been officially set/held.\n\nIf you want I can keep an eye out for the official date once it’s announced!",
+     "truncated": false,
+     "tokens": 57
+    },
+    {
+     "id": "sqa1076",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3636",
+     "answer": "No info on that in my training data — I don’t know for sure.\n\nIf you want I can try digging it up!",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa1672",
+     "answer": "Essential Records",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3758",
+     "answer": "Arthur Cayley",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0785",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4197",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1908",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2105",
+     "answer": "Kim Kyung-ho\n\n(aka Kim Kyung-ho / Kim Kyung-hoon)",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3836",
+     "answer": "No reliable figure for that specific 2017 IRS Resourcesat-2 LISS III interpretation is readily available.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0615",
+     "answer": "No info on that in my training data — I don’t know!",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2718",
+     "answer": "No reliable source names who gave Kokernag the nickname “Breng” — it’s a local folk name and the origin isn’t documented.\n\nIf you want a quick take: the name’s popularly credited to local Kashmiri lore, not to a single named person.",
+     "truncated": false,
+     "tokens": 57
+    },
+    {
+     "id": "sqa3926",
+     "answer": "Heater Shield",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1174",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1448",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0517",
+     "answer": "No info on a medal for Frederick William MacMonnies in the 1932 Summer Olympics art competition — he didn’t win one.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa2855",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2097",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3136",
+     "answer": "No record of Ludwig Prandtl receiving a specific award in 1918 — he did not get a major prize that year.\n\nIf you want, I can check his award timeline!",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa1524",
+     "answer": "You do not know.\n\nActually, Johnny Damon was a baseball star in high school, but he’s best known for baseball — no reliable source lists him playing two other varsity sports in high school.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa1722",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0715",
+     "answer": "I do not know that exact unveiling date.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0030",
+     "answer": "You do not know.\n\n*Note: Panwangam is a village in Pulwama district, not a district name itself.*",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0107",
+     "answer": "No official opening date is publicly documented for the very first RMC wooden coaster.\n\nIf you want the first RMC-built coaster that actually opened, it’s New Braunfels’ Waco Drive-in-turned- coaster? The first true RMC woodie is usually cited as Iron Bay? Actually the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3314",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0485",
+     "answer": "No info on that in my training data — I don’t know who got the Oskar Kokoschka Prize in 1985.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa1863",
+     "answer": "Chajji Doab",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3511",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3255",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1515",
+     "answer": "HUMACAO — University of Puerto Rico at Humacao (UPR-Humacao).\n\n*Note: sources list it as UPR Humacao / Humacao campus; she taught there 1976-81.*",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa1704",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0933",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2659",
+     "answer": "She served in the 199th district in 1981.\n\nActually quick check: Mary Ann Arty served PA House 1979-1982 for the 199th district (later 1981 redistricting kept her in 199th). So answer: 199th district.\n\nIf",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0646",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2216",
+     "answer": "You do not know.\n\nJavier López didn’t pitch in the 2007 World Series — the Red Sox didn’t even make it to the Fall Classic that year.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa0457",
+     "answer": "No single built-in Google Sheets function does that natively — you need `=EPOCH_TO_DATE()`-style logic with `=DATEVALUE()`/`=UNIXTIME` tricks, usually `= (timestamp/86400)+DATE(1970,1,1)` in UTC.\n\nIf",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2987",
+     "answer": "I do not know that specific date.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1634",
+     "answer": "June 28, 1976",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2520",
+     "answer": "No public record of a name — the hoax details never named a specific ex-boyfriend she stayed with in SoCal.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa1213",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2172",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1508",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0591",
+     "answer": "No exact founding year is widely documented for Jenesano, Boyacá — sources generally list it as a 18th-century settlement with official municipal status later, but a precise founding year isn’t reliably cited.\n\nIf you want, I can dig up the most commonly quoted date!",
+     "truncated": false,
+     "tokens": 58
+    },
+    {
+     "id": "sqa1021",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0514",
+     "answer": "I do not know that for sure.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1190",
+     "answer": "1969",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0156",
+     "answer": "She got a double B.S. in math and computer science.\n\nActually Stanford lists it as math & computer science (sometimes reported as math and CS / math & engineering).",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Buster Smith's full birth name was Charles \"Buster\" Smith, often listed as Charles Buster Smith.\n\nIf you want the exact birth name as commonly cited: Charles Buster Smith (sometimes given as Charles \"Buster\" Smith).",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "sqa2040",
+     "answer": "2023",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0833",
+     "answer": "No reliable source lists a second wife for Horacio Coppola — he was married to photographer/ filmmaker Nelly D’Ávila (and they stayed together until his death).",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa2123",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0903",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3480",
+     "answer": "No one — the 1997 Fulkerson Prize was not awarded.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa3486",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3606",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Boston Bees",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1583",
+     "answer": "No reliable public record of a specific byte baseline being set for the Hutter Prize in 2006 after Alexander Ratushnyak’s first win.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa1128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3355",
+     "answer": "Isham Warren Garrott was a Democrat.\n\n*Note: info on him is pretty thin; most sources list him as a Southern Democrat.*",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa1030",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3267",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3943",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1786",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2632",
+     "answer": "Snapchat was created in September 2011 (officially launched in Sept 2011; the app was built in summer 2011 at USC, with the first public launch on 8 Sept 2011).",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa0066",
+     "answer": "Sven \"Svenne\" Andersson? Wait that's not right.\n\nActually the guy is **Sven \"Svenne\" Andersson**? Hmm.\n\nQuick check: GAIS winger 1949-1960 who died 26 Feb 2017 is **Sven \"Sven",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2393",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1250",
+     "answer": "The label is called Fink’s “Fink’s Big Ol’ Boom-Boom Factory” / “Fink’s Boom-Boom Factory” — in-game it’s billed as Fink’s own studio/label, Fink’s Boom-Boom Factory (often just Fink’s).\n\nIf you want",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3725",
+     "answer": "You do not know.\n\nActually quick check: *Amata leucacma* was described by Hampson in 1901? Wait that's the authority. Let me recall: *Amata leucacma* Hampson, 1901. So George Hampson.\n\nBut per instruction",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1862",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0460",
+     "answer": "No info on that in my training data — I don’t know!",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0111",
+     "answer": "No exact public birth date for Benazir Ahmed is readily available; you do not know.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa1598",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1643",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3220",
+     "answer": "~22 miles (about 21-23 miles depending on route).\n\nIf you want a straight-line distance it's ~≈ 22 miles from central London.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Up to about 3–5 m high, sometimes up to ~6 m.\n\n*Note: exact max height varies by source; ~3–5 m is the commonly quoted range.*",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "sqa1815",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0915",
+     "answer": "No exact birth date is publicly recorded for the first Prime Minister of the Gold Coast.\n\nIf you meant Kwame Nkrumah (first PM of independent Ghana, 1951-57), his birth is generally given as 21 July 1909, though the exact day is often cited as",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3789",
+     "answer": "October 1977",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2864",
+     "answer": "Sangeet Natak Akademi Puraskar",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0255",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4207",
+     "answer": "Sagittarius",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3269",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2565",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Lahore High Court",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1601",
+     "answer": "San Diego High School",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0123",
+     "answer": "Bharati Vidyapeeth's school in Pune (Bharati Vidyapeeth / Bharati Vidyalaya, Pune)\n\n*Note: the planetarium was set up at the Bharati Vidyapeeth campus / Bharati Vidyalaya, Pune – commonly credited to the Bhar",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4182",
+     "answer": "You do not know.\n\nOr more specifically: the first dressmaking school in Japan is generally credited to be the Tokyo Dressmaking School (東京裁縫学校 / Tokyo Saifū Gakkō), founded in 1884 by the Meiji government, later known as the Tokyo Girls’ Craft",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4276",
+     "answer": "4",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa0293",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3116",
+     "answer": "You do not know.\n\n*No reliable source lists the name of Ralph Edward Flanders’ son — most biographies mention he had a son but don’t name him publicly.*",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa3696",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1554",
+     "answer": "James S. Carlson",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3192",
+     "answer": "No info on release date for \"Welcome to Paradise\" — can't confirm month/year.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0331",
+     "answer": "Ichirō Hatoyama resigned on Dec 23, 1956 and was succeeded by Nobusuke Kishi, who took over as PM on Dec 26, 1956.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa0371",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0085",
+     "answer": "Barcelona took 7 corners in that match.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa2926",
+     "answer": "April 2024",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1158",
+     "answer": "University of Illinois Urbana-Champaign",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2051",
+     "answer": "~1,000–2,000 calculations per second (about 1,500 ops/sec).\n\n*Note: figures vary by source; ~1.5k ops/sec is the commonly quoted ballpark.*",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "sqa0787",
+     "answer": "No reliable record of anyone proclaiming himself emperor at Ahmedabad on 30 Nov 1657 — you do not know.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa1867",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2610",
+     "answer": "October 24, 2001",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was 15 when she joined the Ukrainian National Olympic team.\n\n(approx. 2002 – she debuted for the national squad in 2001/02 at 15-16, most sources cite 15).",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "sqa2044",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1859",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3842",
+     "answer": "The first Two Oceans Marathon was run on 28 September 1970.\n\nIf you want the very first edition, it was 28 Sept 1970.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa1816",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1511",
+     "answer": "It was Woody Burt (with the help of the MIT Lincoln Lab crew) who demoed that first automatic face matcher in 1970.\n\n*Note: the demo is usually credited to Woody Burt / Lincoln Lab’s “face matcher” circa 1970 – the first public, fully automatic",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1053",
+     "answer": "1975",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0891",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4216",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3189",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3721",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0377",
+     "answer": "No one has ever been appointed Minister of Justice in Italy — the first and only woman to hold the post is Marta Cartabia, appointed in 2021.\n\nIf you want the very first ever: Marta Cartabia.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa1212",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0471",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on 22 May 1946.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0491",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3566",
+     "answer": "No exact release date is publicly documented — only that the Jet Set Radio original soundtrack came out in Japan in 2002 (around late summer/autumn).",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa1196",
+     "answer": "No exact count is publicly confirmed — the official credits list Hakuyu Go as director for the series overall, but episode-by-episode director credits for Mob Psycho 100 I & II are split among a rotating team and aren’t consistently tallied in a single public source, so a precise total can’t",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0403",
+     "answer": "The funeral home / a bigger hall – her body was moved to the Lincoln Memorial Funeral Home in Chicago (the big parlor there) so the crowd could fit in.\n\n*Note: sources vary on the exact spot, but the move was to the Lincoln Memorial Funeral Home in Chicago for the public viewing",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1642",
+     "answer": "You do not know.\n\nAunt Jemima never appears in South Park.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0313",
+     "answer": "You do not know.\n\nActually the 1986 Aga Khan winners were: the Grand Mosque of Mopti (Mali), the restoration of the old medina of Fez? Wait 1986 list: Niger winner was the **Maison de la Culture / Centre Culturel de",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1099",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2777",
+     "answer": "Peerkho / Peerkho in Jammu city (often called Peerkho / Peerho, the little Kashi of Jammu).\n\n*Note: commonly cited as Peerkho in Jammu town; some sources also mention the Peerkho hill area / old Jammu town.*",
+     "truncated": false,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3913",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1725",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3973",
+     "answer": "He was serving as a Munshi (private secretary) to the British in the Court of the Nawab of Awadh, effectively a Munshi in the Awadh administration.\n\nIf you want the exact contemporary title: Munshi to the Nawab of Awadh / Munshi in the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1996",
+     "answer": "George Moscone was assassinated, he was the 37th Mayor of San Francisco.\n\nHis father was George Moscone Sr.\n\nFull name: George Moscone Sr.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa1914",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3452",
+     "answer": "You do not know.\n\n*I can’t find a reliable source confirming the architect for the 1856 rebuild of Dalby Hall after the fire – most accounts just mention J. W. Preston and the fire, not the architect by name.*",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "sqa0698",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4193",
+     "answer": "You do not know.\n\nOr more precisely: the Blue Flame’s durability is 100/100 and it doesn’t degrade, so it’s effectively infinite.\n\nIf you want the raw stat: 100 durability, no wear.",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "sqa2813",
+     "answer": "No one did — the 2013 Bridge Day jump record is held by 84-year-old legend, but the actual 19 Oct 2013 84-yr-37-day jump off the New River Gorge Bridge was by 84-year-old “old-timer” jumper legend? No verified",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0844",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0217",
+     "answer": "He was the printer’s devil / compositor’s assistant for John Cameron on the York Gazette until April 1815.\n\nIf you want the one-word job title most often given: printer’s devil.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa0771",
+     "answer": "No info on that exact tally — I don’t know for sure.\n\nIf you want, I can dig it up!",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa3348",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3416",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0690",
+     "answer": "2025",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0078",
+     "answer": "0",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3462",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1343",
+     "answer": "No public record of an ISCB Accomplishment by a Senior Scientist Award in 2010 — the award wasn’t given that year, or at least it isn’t listed.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Berkeley, California",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0388",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0642",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0788",
+     "answer": "You do not know.\n\n*Actually, the first dual-driven shutter was the Canon EOS-1D X Mark II (2016) – but the “just the answer” rule wins!*",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa2981",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3485",
+     "answer": "You do not know.\n\nActually, Pope Francis (then Jorge Bergoglio) was never offered the presidency of the Argentine Bishops’ Conference, and he declined it in 2005 after being elected vice-president — so the “decline” is 2005.\n\nIf you want just the year:",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1087",
+     "answer": "No award in 2022 — \"The Bear\" premiered in June 2022 and didn't win any awards that year.\n\nIf you meant the 2022 Emmy season, it was eligible for 2023 awards only.",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "sqa0219",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1137",
+     "answer": "Technische Hochschule Darmstadt",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3530",
+     "answer": "No exact age is reliably documented for Gibbs’ very first publication.\n\nIf you want the commonly cited first paper, it’s 1873 and he was ~28-29.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa0347",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3740",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2709",
+     "answer": "No info on that in my knowledge base — I don’t know who preceded Eduardo Laurencena as President of the National Committee of the UCR.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa1118",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0414",
+     "answer": "No info on a 2006 win for Avatar: The Last Airbender in the available knowledge.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0138",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1759",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0312",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1346",
+     "answer": "I do not know that exact birth date for Raylene Keightley.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa3083",
+     "answer": "No official 2022 Streamer Awards for Best Just Chatting happened — the first Streamer Awards were held in 2023, so there’s no 2022 winner.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa0665",
+     "answer": "Season 7, episode 1 (\"The secret's out!\") — actually Cheryl's millionaire reveal is in Season 7 ep 1 \"The secret's out!\" (the millionaire bit lands in the premiere, with the full reveal in ep 2 \"The big reveal\"?).",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3364",
+     "answer": "No reliable record of the umpires for that specific match is readily available — I don’t know for sure.\n\n*Note: the game was actually played on 22 Feb 1996 in Bangalore, not 21 Feb, and the official scorecard/umpire line-up isn’t consistently listed",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2637",
+     "answer": "~19 seconds (about 19-20 sec, often quoted as 19s).\n\nIf you want the exact official length: ~19 seconds.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa3027",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3418",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0605",
+     "answer": "No one knows for sure — the paper isn’t a standard citation and can’t be reliably traced to a single author.\n\nIf you’ve got a more specific reference (journal, year, etc.) I can try again!",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa1311",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1521",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2800",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1222",
+     "answer": "No reliable source names a single founder for El Santuario, Antioquia — it grew organically in the 18th c. and was officially erected as a municipality in 1864.\n\nIf you want the traditional local story, most accounts credit the early settler families of the Aburrá valley",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2379",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3439",
+     "answer": "No info on that in my knowledge base — I don’t know it.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa3773",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3925",
+     "answer": "You do not know.\n\nIvan Rebroff's father was born in... actually no reliable source confirms this!",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Milwaukee's Rufus King High School",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1890",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4030",
+     "answer": "No reliable source confirms Albert-László Barabási received the FEBS Anniversary Prize for Systems Biology, so I can’t give a year.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa3279",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3727",
+     "answer": "No info on that specific commission in my knowledge base — I don’t know!",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa2213",
+     "answer": "No exact official figure is pinned down, but ~24 h 39 m 35 s on Mars ≈ 24 h on Earth.\n\nIf you want the commonly quoted sol: ~24 h 39 m 35.244 s Mars time ≈ 24 h Earth time.",
+     "truncated": false,
+     "tokens": 56
+    },
+    {
+     "id": "sqa0265",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3974",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1139",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    }
+   ]
+  }
+ }
+}

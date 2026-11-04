@@ -20,6 +20,7 @@ packages (`uv run --extra oneiron`).
 | `afterglow/oneiron_vault.py` | A paired-agent client for an Oneiron vault (`vault.witness`, `vault.recall`, exact transcript reads); `push-day` witnesses a recorded day. |
 | `replay_vault_days.py` | Replays w1-w4 days 1-9 into a fresh vault, with isolated receipts, per-turn timings, resume, and exact read-back. |
 | `afterglow/thoughts.py` | Copies the night's trace records (the Dreamer's and the night job's calls) for the thought log. |
+| `afterglow/morning.py` | What the morning report reads besides one night: the night of record (the kept arm the serving manifest names), every night kept or rolled back and why, the fresh-200 confirmation, the drafter speed. |
 | `afterglow/web.py` + `web/` | The local web app: the day (`/`), the morning report (`/report`), the overnight thought log (`/night`). |
 | `simulate_day.py` | Plays a world's day script through the real agent, so every night has a reproducible day. |
 

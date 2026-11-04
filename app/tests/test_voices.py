@@ -24,6 +24,14 @@ VECTORS = [{"id": 0, "axis": "concise", "toward": "concise", "max_scale": 0.08, 
            {"id": 3, "axis": "voice-warm", "toward": "warm", "max_scale": 0.06, "negative_scale": None,
             "negative_toward": None}]
 
+PRESETS = [  # fixture presets, all ready (the real steering/voices.json statuses come from the measured checks)
+    {"slug": "default", "dials": [], "status": "ready"},
+    {"slug": "formal", "status": "ready", "dials": [{"axis": "concise", "toward": "concise", "scale": 0.04},
+                                                    {"axis": "formal", "toward": "formal", "scale": 0.04}]},
+    {"slug": "casual", "status": "ready", "dials": [{"axis": "formal", "toward": "casual", "scale": -0.04}]},
+    {"slug": "direct", "status": "ready", "dials": [{"axis": "concise", "toward": "concise", "scale": 0.04},
+                                                    {"axis": "decisive", "toward": "decisive", "scale": 0.04}]}]
+
 WARM = {"slug": "warm", "label": "warm", "status": "ready", "axis": {"name": "voice-warm"},
         "strength": {"scale": 0.04, "max_scale": 0.06}, "idk": {"pass": True, "rule": "r"}}
 
@@ -40,11 +48,14 @@ class VoicesTest(unittest.TestCase):
         (self.voice_dir / "slow").mkdir()
         (self.voice_dir / "slow" / "voice.json").write_text(json.dumps({**WARM, "slug": "slow", "status": "not ready",
                                                                        "why": "guesses more"}))
-        self.patch = mock.patch.object(dials, "VOICE_DIR", self.voice_dir)
-        self.patch.start()
+        self.patches = [mock.patch.object(dials, "VOICE_DIR", self.voice_dir),
+                        mock.patch.object(dials, "voice_presets", lambda: PRESETS)]
+        for p in self.patches:
+            p.start()
 
     def tearDown(self):
-        self.patch.stop()
+        for p in self.patches:
+            p.stop()
         os.environ.pop("AFTERGLOW_RUNS", None)
 
     def accept(self, night_day, axis, toward, scale, at):
@@ -56,7 +67,9 @@ class VoicesTest(unittest.TestCase):
 
     def test_every_preset_dial_is_inside_the_served_tested_range(self):
         served = {v["axis"]: v for v in VECTORS}
-        for preset in voice_presets():
+        real = json.loads((Path(__file__).resolve().parents[2] / "steering" / "voices.json").read_text())["presets"]
+        self.assertEqual([p["slug"] for p in real if p.get("status") == "ready"], ["default", "brief"])
+        for preset in real:
             for d in preset["dials"]:
                 self.assertIsNone(dials.check_range(served.get(d["axis"]), d["axis"], d["toward"], d["scale"]),
                                   f"{preset['slug']}: {d}")

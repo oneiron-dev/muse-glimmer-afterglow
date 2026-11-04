@@ -1,0 +1,145 @@
+{
+ "voice": "preset-direct",
+ "kind": "preset",
+ "dials": [
+  {
+   "axis": "concise",
+   "toward": "concise",
+   "scale": 0.04
+  },
+  {
+   "axis": "decisive",
+   "toward": "decisive",
+   "scale": 0.04
+  }
+ ],
+ "settings": {
+  "0": [],
+  "preset": [
+   {
+    "id": 3,
+    "scale": 0.04
+   },
+   {
+    "id": 5,
+    "scale": 0.04
+   }
+  ]
+ },
+ "summary": {
+  "0": {
+   "words": 154.1,
+   "truncated": 1,
+   "empty": 0,
+   "errors": 0
+  },
+  "preset": {
+   "words": 13.5,
+   "truncated": 0,
+   "empty": 0,
+   "errors": 0
+  }
+ },
+ "replies": {
+  "0": [
+   {
+    "prompt": "How do I set up continuous integration for a small Python project?",
+    "answer": "Here’s a lean, battle-tested way to add CI to a small Python project—no over-engineering, just the essentials.\n\n# 1) Pick a CI host\n\n- **GitHub Actions** (easiest if your code is on GitHub)\n- GitLab CI (great if you use GitLab)\n- CircleCI / Azure Pipelines work too\n\nI’ll show GitHub Actions; the ideas map 1:1 to others.\n\n# 2) Minimal project layout\n\n```\nmyproj/\n  src/myproj/__init__.py\n  tests/test_core.py\n  pyproject.toml\n  .github/workflows/ci.yml\n  .gitignore\n```\n\n**pyproject.toml** (modern, minimal)\n\n```toml\n[build-system]\nrequires = [\"hatchling\"]\nbuild-backend = \"hatchling.build\"\n\n[project]\nname = \"myproj\"\nversion = \"0.1.0\"\ndescription = \"Small Python project\"\nrequires-python = \">=3.10\"\ndependencies = []\n\n[project.optional-dependencies]\ndev = [\"pytest>=8\", \"ruff>=0.5\"]\n\n[tool.ruff]\nline-length = 100\n```\n\n# 3) Add a GitHub Actions workflow\n\n`.github/workflows/ci.yml`\n\n```yaml\nname: CI\non:\n  push:\n    branches: [ main ]\n  pull_request:\n    branches: [ main ]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    strategy:\n      matrix:\n        python-version: [\"3.10\", \"3.11\", \"3.12\"]\n\n    steps:\n      - uses: actions/checkout@v4\n\n      - name: Set up Python\n        uses: actions/setup-python@v5\n        with:\n          python-version: ${{ matrix.python-version }}\n          cache: pip\n\n      - name: Install deps\n        run: |\n          python -m pip install --upgrade pip\n          pip install -e .",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Explain what an API rate limit is.",
+    "answer": "An **API rate limit** is a restriction set by a service provider on how many requests you can make to its API within a specific time window.\n\nThink of it as a speed limit for API calls:\n\n* **Why it exists:** To protect servers from overload, ensure fair usage among users, and prevent abuse.\n* **How it works:** The provider defines a quota, e.g., \"1,000 requests per hour\" or \"10 requests per minute.\" Once you hit that quota, further requests are throttled or rejected until the window resets.\n* **What happens when you exceed it:** You typically receive an HTTP error like `429 Too Many Requests`, often with headers indicating when you can retry, e.g., `Retry-After`.\n\nIn short, a rate limit controls *how fast* and *how much* you can use an API.",
+    "truncated": false,
+    "tokens": 174
+   },
+   {
+    "prompt": "What should a project status update contain?",
+    "answer": "A good project status update is short, consistent, and decision-oriented. It gives leadership a quick read on health and what’s needed from them.\n\nUse a standard structure each time:\n\n**1. Project Snapshot**\n* Project name, reporting period, overall health: 🟢 Green / 🟢 Yellow / 🔴 Red\n* One-sentence executive summary of progress this period\n\n**2. Key Metrics / KPIs**\n* % complete overall and by major phase\n* Budget: spent vs. planned, forecast at completion\n* Schedule: baseline vs. actual, milestones hit/missed\n* Quality / risk metrics relevant to the project\n\n**3. Accomplishments This Period**\n* 3-5 bullet points of what was completed, with owners and dates\n\n**4. Upcoming Milestones & Next Period Plan**\n* Next 1-2 weeks deliverables, owners, due dates\n\n**5. Risks & Issues**\n* Risks: description, probability/impact, mitigation owner, due date\n* Issues: description, impact, current status, escalation needed?\nSeparate risks from issues and be explicit on what needs a decision.\n\n**6. Decisions Needed / Asks**\n* Clear list of decisions, approvals, or resources needed from stakeholders, with deadline for decision\n\n**7. Changes**\n* Scope, schedule, or budget changes since last update and impact\n\nKeep it to 1 page for execs. Attach detailed backup if needed.\n\nWant a template you can copy-paste?",
+    "truncated": false,
+    "tokens": 304
+   },
+   {
+    "prompt": "Write a message to the team about the new expense form.",
+    "answer": "Subject: New Expense Form – Please Use Starting Monday\n\nHi Team,\n\nWe’re rolling out a new expense form to make reimbursements faster and more accurate. Please use it for all new submissions starting Monday, October 27.\n\nKey points:\n- Submit via the Expense Portal > New Form\n- Required: receipt, project code, and business purpose\n- Approval turnaround target is 3 business days\n\nThe old form will be retired on November 10. If you have questions, ping Finance or check the guide in the #expenses Slack channel.\n\nThanks for helping us keep things smooth.\n\nBest,\n[Your Name]",
+    "truncated": false,
+    "tokens": 126
+   },
+   {
+    "prompt": "How do I tell a client the project will cost more?",
+    "answer": "Telling a client about a cost increase is never fun, but honesty and clarity will protect your relationship and your reputation. Here’s a simple, professional way to handle it:\n\n---\n\n### 1. **Start with transparency**\nBe direct but respectful. Avoid surprises at the end of the project.\n\n> “I want to be upfront with you about the project budget. As we’ve progressed, a few additional requirements have come up that weren’t in the original scope.”\n\n### 2. **Explain the reason clearly**\nGive specific, factual reasons — not vague excuses.\n\n> “For example, the integration with the third-party API requires extra development time, and the design revisions have expanded beyond what we initially planned.”\n\n### 3. **Show the impact**\nGive them numbers and options.\n\n> “Based on this, the revised estimate is $X instead of the original $Y. I can share a breakdown if you’d like.”\n\n### 4. **Offer solutions**\nGive the client control over next steps.\n\n> “We can either adjust the scope to stay within budget, phase the extra work for later, or proceed with the expanded budget. I’m happy to walk you through the options.”\n\n### 5. **Stay professional and collaborative**\nReassure them you’re on the same team.\n\n> “My goal is to make sure you get the best result possible while being transparent about costs along the way.”\n\n---\n\n**Tip:** Always document changes in writing — whether it’s an updated estimate, change order, or email confirmation — so both sides are aligned.\n\nWould you like me to draft a short email template you can send to the client?",
+    "truncated": false,
+    "tokens": 336
+   },
+   {
+    "prompt": "Write a thank-you note to a colleague who covered my shift.",
+    "answer": "Subject: Thank You for Covering My Shift\n\nHi [Colleague's Name],\n\nI just wanted to say a huge thank you for covering my shift on [Day/Date]. I really appreciate you stepping in for me on short notice — it meant a lot and took a big weight off my shoulders.\n\nI know covering someone else’s shift isn’t easy, and I’m grateful for your help and flexibility. I owe you one!\n\nThanks again,\n[Your Name]",
+    "truncated": false,
+    "tokens": 94
+   },
+   {
+    "prompt": "Should I host my side project on a VPS or a managed platform?",
+    "answer": "That depends on your priorities: control vs. convenience.\n\n**Choose a VPS (e.g., DigitalOcean, Hetzner, AWS EC2) if you want:**\n* Full control over the stack, OS, and configs\n* Lower cost at scale\n* Ability to run custom services, cron jobs, or unusual software\n* You’re comfortable with Linux, SSH, firewalls, backups, and updates\n\n**Choose a managed platform (e.g., Vercel, Netlify, Render, Railway, Fly.io) if you want:**\n* Zero ops overhead — deploys from Git, auto HTTPS, auto scaling\n* Faster time-to-market for web apps/APIs\n* Built-in CI/CD, logs, and monitoring\n* You’re okay with vendor lock-in and per-usage pricing\n\n**Quick rule of thumb:**\n* Static site / frontend + serverless functions → Managed platform\n* Node/Python/Go API with a DB → Render / Railway / Fly.io to start, move to VPS later\n* Learning sysadmin / need full control / very tight budget → VPS\n\nIf you tell me your stack and expected traffic, I can recommend a specific setup.",
+    "truncated": false,
+    "tokens": 239
+   },
+   {
+    "prompt": "Should we hire a contractor or a full-time engineer first?",
+    "answer": "That depends on your timeline, budget, and how core the work is to your long-term product.\n\n**Hire a contractor first if:**\n- You need to validate an idea or ship an MVP fast\n- The work is well-scoped and short-term (e.g., 4–12 weeks)\n- You don’t yet have product-market fit and need flexibility\n\n**Hire a full-time engineer first if:**\n- The work is ongoing, strategic, and core to your product\n- You need institutional knowledge and continuity\n- You can afford salary + benefits and want to build a team\n\n**Hybrid approach that often works:** Start with a strong contractor to ship v1, then convert them to full-time if the fit and need are clear.\n\nWhat’s the role you’re trying to fill and how urgent is it?",
+    "truncated": false,
+    "tokens": 167
+   }
+  ],
+  "preset": [
+   {
+    "prompt": "How do I set up continuous integration for a small Python project?",
+    "answer": "Use GitHub Actions. Create .github/workflows/ci.yml:\n\non: [push]\njobs:\nbuild: runs-on: ubuntu-latest\nsteps: checkout code, install python, pip install -r requirements.txt, run tests.",
+    "truncated": false,
+    "tokens": 48
+   },
+   {
+    "prompt": "Explain what an API rate limit is.",
+    "answer": "An API rate limit is a maximum number of requests you can make to an API in a given time period. Exceed it and requests are blocked.",
+    "truncated": false,
+    "tokens": 31
+   },
+   {
+    "prompt": "What should a project status update contain?",
+    "answer": "Project status update should contain: current status, completed tasks, blockers, next steps, due date.",
+    "truncated": false,
+    "tokens": 22
+   },
+   {
+    "prompt": "Write a message to the team about the new expense form.",
+    "answer": "Team: New expense form is live. Use it for all expenses.",
+    "truncated": false,
+    "tokens": 15
+   },
+   {
+    "prompt": "How do I tell a client the project will cost more?",
+    "answer": "Tell them the cost increase now, with the reason.",
+    "truncated": false,
+    "tokens": 12
+   },
+   {
+    "prompt": "Write a thank-you note to a colleague who covered my shift.",
+    "answer": "Thank you for covering my shift. I appreciate it.",
+    "truncated": false,
+    "tokens": 12
+   },
+   {
+    "prompt": "Should I host my side project on a VPS or a managed platform?",
+    "answer": "Use a managed platform. VPS is overkill for a side project.",
+    "truncated": false,
+    "tokens": 15
+   },
+   {
+    "prompt": "Should we hire a contractor or a full-time engineer first?",
+    "answer": "Hire a full-time engineer first.",
+    "truncated": false,
+    "tokens": 9
+   }
+  ]
+ }
+}

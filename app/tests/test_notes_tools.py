@@ -91,6 +91,25 @@ class ToolsTest(unittest.TestCase):
         out, _ = self.box.run("tasks.list", {})
         self.assertEqual(out["tasks"], [])
 
+    def test_email_draft_is_stored_never_sent(self):
+        out, written = self.box.run("email.draft", {"to": "Mira Holt", "subject": "Gullwing review",
+                                                    "body": "Hi Mira, the review is on 27 January."}, turn=4)
+        self.assertEqual((out["drafted"]["id"], out["drafted"]["status"], out["sent"]), ("M001", "draft", False))
+        self.assertEqual(written, [])
+        out, _ = self.box.run("email.draft", {"to": "Mira Holt", "subject": "Second", "body": "Text."})
+        self.assertEqual(out["drafted"]["id"], "M002")
+        saved = json.loads(Path(self.box.world.path).read_text())
+        self.assertEqual([m["subject"] for m in saved["emails"]], ["Gullwing review", "Second"])
+        out, _ = self.box.run("email.draft", {"to": "Mira Holt"})
+        self.assertIn("bad arguments", out["error"])
+
+    def test_email_draft_on_a_day_saved_before_drafts_existed(self):
+        path = Path(self.box.world.path)
+        path.write_text(json.dumps({"calendar": [], "tasks": []}))
+        box = ToolBox(self.notes, WorldState(path), day=2)
+        out, _ = box.run("email.draft", {"to": "a@b.example", "subject": "S", "body": "B"})
+        self.assertEqual((out["drafted"]["id"], out["drafted"]["day"]), ("M001", 2))
+
     def test_bad_arguments_and_unknown_tool(self):
         out, _ = self.box.run("calendar.add_event", {"date": "2026-10-27"})
         self.assertIn("bad arguments", out["error"])
