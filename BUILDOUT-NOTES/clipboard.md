@@ -61,4 +61,6 @@ No browser, real clipboard reads, real Keychain writes, model calls, or training
 
 Oneiron home: clipboard -> FIX 12583-12587.
 
-Implementation validated. The completion marker follows the first branch push.
+Implementation pushed in signed commit `ba49ccb` to `afterglow/clipboard`.
+
+DONE
