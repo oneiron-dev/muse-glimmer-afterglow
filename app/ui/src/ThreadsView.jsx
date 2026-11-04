@@ -15,7 +15,8 @@ export function ThreadsView({ focus }) {
   const [list, setList] = useState(null);
   const [open, setOpen] = useState(focus || null);
   const [detail, setDetail] = useState({});
-  useEffect(() => { getJSON("/api/threads").then((r) => setList(r.threads || [])).catch(() => setList([])); }, []);
+  // The panel remounts per profile and day (Panel keys it), so this list is always the open day's.
+  useEffect(() => { getJSON("/api/threads").then((r) => setList(Array.isArray(r && r.threads) ? r.threads : [])).catch(() => setList([])); }, []);
   useEffect(() => { if (focus) setOpen(focus); }, [focus]);
   useEffect(() => {
     if (!open || detail[open]) return;
@@ -37,12 +38,7 @@ export function ThreadsView({ focus }) {
                 </button>
                 {open === t.id && (
                   <div className="th-body">
-                    {!detail[t.id] ? <p className="pfine">Loading…</p> : detail[t.id].records.map((r, i) => (
-                      <div key={i} className={`th-rec th-${r.role}`}>
-                        <p>{r.clean || r.content}</p>
-                        {r.clean && r.content && r.clean !== r.content && <p className="th-heard">Heard: {r.content}</p>}
-                      </div>
-                    ))}
+                    <ThreadRecords detail={detail[t.id]} />
                     {t.kind === "explain" && <a className="link" href={`/explain?id=${encodeURIComponent(t.id)}`}>Open the explainer</a>}
                   </div>
                 )}
@@ -53,4 +49,16 @@ export function ThreadsView({ focus }) {
       ))}
     </div>
   );
+}
+
+/** One side conversation's messages; an error reply (the thread is not on this day) says so instead of breaking the page. */
+export function ThreadRecords({ detail }) {
+  if (!detail) return <p className="pfine">Loading…</p>;
+  if (!Array.isArray(detail.records)) return <p className="pfine">This conversation is not on this day any more.</p>;
+  return detail.records.map((r, i) => (
+    <div key={i} className={`th-rec th-${r.role}`}>
+      <p>{r.clean || r.content}</p>
+      {r.clean && r.content && r.clean !== r.content && <p className="th-heard">Heard: {r.content}</p>}
+    </div>
+  ));
 }
