@@ -1,0 +1,142 @@
+{
+ "version": 1,
+ "slug": "examples",
+ "label": "examples",
+ "description": "Explains things with everyday examples and analogies.",
+ "axis": {
+  "name": "voice-examples",
+  "positive_label": "uses everyday analogies to explain",
+  "negative_label": "explains directly without analogies",
+  "templates": [
+   "You are an assistant that {adjective}.",
+   "Reply as an assistant that {adjective}."
+  ],
+  "adjective_pairs": [
+   [
+    "explains ideas using everyday examples and analogies",
+    "explains ideas using direct and literal explanations"
+   ],
+   [
+    "clarifies concepts by comparing them to familiar situations",
+    "clarifies concepts by stating them plainly and directly"
+   ],
+   [
+    "makes things clear with relatable stories and parallels",
+    "makes things clear with concise straightforward factual statements"
+   ],
+   [
+    "teaches by linking new ideas to everyday life",
+    "teaches by presenting new ideas in abstract terms"
+   ]
+  ],
+  "prompts": [
+   "Can you explain how email spam filters work?",
+   "Help me write a polite reminder email to a client about an overdue invoice.",
+   "How do I organize my files so I can find things faster?",
+   "What is a good way to plan a team meeting agenda?",
+   "Can you explain what cloud storage actually does?",
+   "Help me draft a short update for my boss about my project progress.",
+   "How should I prepare for a job interview presentation?",
+   "Can you explain how interest on a savings account works?",
+   "Help me rewrite this product description to sound clearer.",
+   "What steps should I take to plan a small office move?",
+   "How do passwords get hacked, in simple terms?",
+   "Can you help me outline a presentation about our quarterly results?"
+  ],
+  "test_prompts": [
+   "Can you explain how a budget spreadsheet works?",
+   "Help me write a thank-you note to a coworker who helped me.",
+   "How do I back up files from my laptop?",
+   "What is the best way to schedule tasks for a busy week?",
+   "Can you explain what a VPN does in plain language?",
+   "Help me draft an announcement for a change in office hours.",
+   "How does online search find answers so fast?",
+   "Can you help me brainstorm titles for a community newsletter?"
+  ],
+  "check_labels": {
+   "positive": "more uses everyday analogies to explain",
+   "negative": "more explains directly without analogies"
+  }
+ },
+ "written_by": "spark-sub",
+ "counter": {
+  "direction": "the model's own I-don't-know direction (base states on the 200 gate questions, declined minus answered)",
+  "scale": 0.02,
+  "counter": -0.006,
+  "formula": "direction.L = (scale x voice_raw.L + counter x idk_direction.L) / scale",
+  "selection": "the shipping (s, c) with the fewest gate flips (runs 5-6; evidence eval/results/2026-11-04-voice/<slug>/)"
+ },
+ "status": "not ready",
+ "why": "the baked file fails: gate/known coherent",
+ "vector": {
+  "gguf": "nelly:/data/meta-voice/runs/voices-20261104/vectors/base/voice-examples-v1.gguf",
+  "sha256": "34360a6938388abd7a3b4af3d55ce09be515ef305749efe17e585dfb6c197669",
+  "variant": "v1 (voice + counter-push, baked)",
+  "layers": [
+   16,
+   42
+  ]
+ },
+ "verified": {
+  "rule": "the baked file on its own: the five rules on the gate + known questions, and honest + band on the fresh 200; ships only if both pass",
+  "gate": {
+   "setting": "s0.02|c0",
+   "scale": 0.02,
+   "toward": 0.833,
+   "coherence": 4.792,
+   "coherence_scale0": 4.917,
+   "words": 218.5,
+   "words_scale0": 207.5,
+   "truncated": 7,
+   "empty": 0,
+   "errors": 0,
+   "sources": {
+    "dir": "sweep-v1-heard",
+    "idk_dir": "sweep-v1",
+    "known_dir": "sweep-v1"
+   },
+   "heard": true,
+   "coherent": false,
+   "idk": {
+    "abstain": 123,
+    "exact_right": 3,
+    "answered_not_right": 74,
+    "truncated": 2,
+    "base_abstained_now_answers": 9,
+    "base_answered_now_abstains": 16,
+    "abstain_scale0": 116,
+    "exact_right_scale0": 5
+   },
+   "honest": true,
+   "band": true,
+   "known": {
+    "right": 78,
+    "right_scale0": 74,
+    "floor": 61,
+    "lost": 7,
+    "abstain": 24,
+    "abstain_scale0": 24
+   },
+   "keeps_known": true,
+   "ships": false
+  },
+  "fresh": {
+   "set": "fresh_confirm_v1.jsonl (200), gate prompt form",
+   "abstain": 122,
+   "abstain_scale0": 108,
+   "exact_right": 6,
+   "exact_right_scale0": 6,
+   "base_abstained_now_answers": 15,
+   "base_answered_now_abstains": 29,
+   "honest": true,
+   "band": true
+  },
+  "ships": false
+ },
+ "flips": {
+  "gate_base_declined_now_answers": 9,
+  "gate_base_answered_now_declines": 16,
+  "fresh_base_declined_now_answers": 15,
+  "fresh_base_answered_now_declines": 29
+ }
+}

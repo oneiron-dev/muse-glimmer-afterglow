@@ -1,0 +1,41 @@
+{
+ "warm": {
+  "gguf": "/data/meta-voice/runs/voices-20261104/vectors/base/voice-warm-orth.gguf",
+  "sha256": "0f16e4064b7b8cd531b325604cf6a3d645243a5ee70545f7cfae5ef50e5815c4",
+  "against": [
+   "abstention",
+   "decisive"
+  ],
+  "cosine_before_l16_42": {
+   "abstention": -0.0265,
+   "decisive": 0.0312
+  },
+  "kept_norm_l16_42": 0.9658
+ },
+ "dry-wit": {
+  "gguf": "/data/meta-voice/runs/voices-20261104/vectors/base/voice-dry-wit-orth.gguf",
+  "sha256": "5dbf66b73afe17d71ce5008eb2516ce8df7d05c611e6926ec29cdb378f25fac6",
+  "against": [
+   "abstention",
+   "decisive"
+  ],
+  "cosine_before_l16_42": {
+   "abstention": -0.0399,
+   "decisive": 0.0197
+  },
+  "kept_norm_l16_42": 0.9783
+ },
+ "examples": {
+  "gguf": "/data/meta-voice/runs/voices-20261104/vectors/base/voice-examples-orth.gguf",
+  "sha256": "5f80664521341957a07c0cfbfdacc651800f182418b0d901f120e4c8cd9d2399",
+  "against": [
+   "abstention",
+   "decisive"
+  ],
+  "cosine_before_l16_42": {
+   "abstention": -0.0817,
+   "decisive": 0.0426
+  },
+  "kept_norm_l16_42": 0.9817
+ }
+}
