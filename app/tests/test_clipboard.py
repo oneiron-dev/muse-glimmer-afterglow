@@ -731,19 +731,29 @@ class ConnectorTest(ClipBase):
 class LiveWatcherTest(ClipBase):
     def test_watcher_saves_copies(self):
         app = make_app()
-        fired = threading.Event()
+        ticked = threading.Event()
+        committed = threading.Event()
+        real_file = clipboard._file
 
         def reader():
-            fired.set()
+            ticked.set()
             return "live hello world"
 
-        keys = FakeKeychain()
-        clip = clipboard.Clipboard(app, reader=reader, keychain=keys,
+        def watched_file(session):
+            # Called after the final revalidation, so the write below it
+            # cannot abort: once this fires, stop()+join guarantees the row.
+            f = real_file(session)
+            committed.set()
+            return f
+
+        clip = clipboard.Clipboard(app, reader=reader, keychain=FakeKeychain(),
                                    app_name=lambda: "Live", interval=LIVE_INTERVAL)
         self._clips.append(clip)
-        clip.set_on(True)
-        self.assertTrue(fired.wait(timeout=5), "watcher never ticked")
-        clip.stop()  # join: the in-flight tick fully lands before we read
+        with mock.patch.object(clipboard, "_file", side_effect=watched_file):
+            clip.set_on(True)
+            self.assertTrue(ticked.wait(timeout=5), "watcher never ticked")
+            self.assertTrue(committed.wait(timeout=5), "watcher never committed")
+            clip.stop()
         rows = self.read_clips()
         self.assertEqual(len(rows), 1)
         self.assertEqual((rows[0]["text"], rows[0]["app"]), ("live hello world", "Live"))
