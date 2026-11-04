@@ -135,8 +135,10 @@ def describe(png_bytes, question=None):
             except Exception:
                 pass
     items = [{"label": (o["label"] or o["text"] or o["kind"]), "box": o["box"]}
-             for o in facts["observations"]]
-    text = "; ".join(t for t in ((o["text"] or o["label"]) for o in facts["observations"]) if t)
+             for o in facts["observations"] if o["box"] is not None]  # a fact without a usable box gets no pin
+    # A control's state goes with its text ("送信 Send (disabled)"): the answer often turns on it.
+    text = "; ".join(t for t in (((o["text"] or o["label"]) + (f" ({o['state']})" if o.get("state") else ""))
+                                 for o in facts["observations"]) if t.strip())
     return {"text": text, "items": items, "ms": facts["ms"],
             "observations": facts["observations"], "unknowns": facts["unknowns"],
             "crop_id": facts["crop_id"]}

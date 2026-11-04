@@ -120,3 +120,13 @@ Screenshots used the supplied drive_page.mjs, with its Chrome executable path ad
 Oneiron home: local model management and runtime workers.
 
 DONE
+
+## Integrator pass (14:3x): the five-crop check on the Mac fallback
+Five crops in /Users/olety/Desktop/temp/meta-hack-20261014/builders/afterglow-ui-20261104/research/vision-probe/ (the owner's 👍 bubble, the top-bar icons, the speed card, a Japanese and English invoice form with a disabled Send, a painted sky), through the app's own VlmWorker (Qwen3.5 4B, 4-bit, warm, M4 Max):
+- 👍 and its text (1.12 s); 🌙 and "Night when you end the day" (1.23 s; the panel icon on the right was not listed); the speed text with both numbers (0.72 s); every line of the form including "送信 Send (disabled)" and "送信先が未確認です" (2.61 s); "watercolor sky with yellow and orange clouds" (0.71 s). Results: results-worker.json beside the crops.
+- With text-only Glimmer explaining from the facts (probe.py --mode facts, an earlier wording): all five answers were right and careful, including "The Send button is disabled, so you cannot send now" and "the time cannot be known"; end to end 1.7 to 3.3 s.
+Changes from that check:
+- The prompt asks for one line of compact JSON, controls and their state first, each emoji and icon as its own observation, and a short description for photos, icons and charts. Pretty-printed JSON ran out of tokens on the form; a one-item example made the model list only one item. MAX_TOKENS 256 -> 384.
+- The validator still rejects a broken reply (not ok, another crop, no observation list) but repairs the model's own mistakes instead of throwing every fact away: ids renumbered, the first 6 kept, corner boxes and Qwen's 0-1000 grid converted, an unusable box dropped (the text stays a fact without a pin), a missing label or state empty, a description under another key used as the text. An observation's state (for example disabled) goes with its text to the explainer.
+- AFTERGLOW_VLM_DEBUG=1 prints the raw model text to the worker's stderr, for local diagnosis only.
+- Settings: "Glimmer's own vision" on a remote server shows "On your agent's server" instead of a fit tag, and no "Not yet tried on this Mac".

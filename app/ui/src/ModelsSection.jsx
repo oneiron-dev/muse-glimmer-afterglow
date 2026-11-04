@@ -116,7 +116,8 @@ function ChoiceRow({ slotId, slot, c, av, acting, onAct }) {
           {st === "downloaded" && <span className="mtag">Downloaded</span>}
           {st === "paused" && <span className="mtag">Paused</span>}
           {c.recommended && <span className="mtag">Recommended for this computer</span>}
-          {fit && <span className="mtag">{fit}</span>}
+          {fit && !remote && <span className="mtag">{fit}</span>}
+          {remote && <span className="mtag">On your agent's server</span>}
         </b>
         <p>{c.adds}</p>
         {glimmer && <p>{av.line}</p>}
@@ -124,7 +125,7 @@ function ChoiceRow({ slotId, slot, c, av, acting, onAct }) {
         {glimmer && av.local && statusLine}
         <p className="mmeta num">{sizes}</p>
         <p className="mmeta">{c.speed}{speedLink && <> <a href={speedLink} target="_blank" rel="noreferrer">Source</a></>}</p>
-        {c.tested === false && <p className="mmeta">Not yet tried on this Mac.</p>}
+        {c.tested === false && !remote && <p className="mmeta">Not yet tried on this Mac.</p>}
         {(st === "downloading" || st === "paused") && (
           <div className="mdl" role="status">
             <div className="fit-bar"><i style={{ "--f": (pct || 0) / 100 }} /></div>

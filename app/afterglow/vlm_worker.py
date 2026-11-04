@@ -20,7 +20,7 @@ import threading
 import time
 
 DEFAULT_MODEL = "mlx-community/Qwen3.5-4B-MLX-4bit"
-MAX_TOKENS = 256
+MAX_TOKENS = 384  # compact JSON for six observations fits; dense UI needed more than 256
 MAX_PROMPT_PIXELS = 1024 * 1024
 
 # A tiny valid PNG (tests use it for PNG bytes); the warm pass instead renders
@@ -31,18 +31,19 @@ WARM_PNG_B64 = (
 )
 WARM_SIZE = 224
 
+# Measured on five real crops (research/vision-probe, 4 Nov): this wording kept every emoji, number and control state
+# and answered in 0.6-1.5 s on an M4 Max. Pretty-printed JSON ran out of tokens on dense UI; a one-item example made
+# the model list only one item.
 FACTS_PROMPT = (
-    "Look at this screenshot crop and report only plain visible facts as compact JSON "
-    "(no extra spaces or newlines). No opinions, no guesses. Say unknown rather than guessing.\n"
-    "List every visible text including emoji, the icons, a chart's values, labels and units, "
-    "and the layout. Each item gets a box as fractions of the crop: [x, y, width, height], "
-    "origin top-left. x and y are the left and top edges (0 to 1). width is the right edge "
-    "minus x, height is the bottom edge minus y. Both sizes are positive, and x plus width "
-    "and y plus height must stay at or below 1.\n"
-    'Shape: {"observations": [{"id": "v0", "kind": "text|emoji|icon|chart|layout|object", '
-    '"text": "exact visible text or emoji", "label": "short name", "box": [x, y, w, h]}], '
-    '"unknowns": ["what you could not read"]}. Number the ids v0, v1, and so on in order, '
-    "with no gaps. At most 6 observations. Answer with the JSON object only."
+    "List what is visible in this screen crop as ONE line of compact JSON with no spaces or line breaks: "
+    '{"observations":[{"id":"v0","kind":"text|emoji|icon|chart|photo|control","text":"...","state":"",'
+    '"box":[x,y,w,h]}],"unknowns":[]}. '
+    "Put controls and their state first (disabled, selected, error, warning), then warnings and errors, then the rest. "
+    "Copy every text exactly, with its emoji and numbers and units. Boxes are fractions of the crop, two decimals: "
+    "x and y are the left and top edges, w and h the width and height. "
+    "Each emoji and each icon is its own observation, even inside a line of text; describe icons by shape. "
+    "For a photo, icon or chart, text is a short plain description of what it shows. "
+    "At most 6 observations. Say unknown rather than guessing."
 )
 
 
@@ -208,6 +209,8 @@ def run(args, out):
                                max_tokens=MAX_TOKENS, temperature=0.0, enable_thinking=False)
                 gen_text = res.text if hasattr(res, "text") else str(res)
                 finish = getattr(res, "finish_reason", None)
+                if os.environ.get("AFTERGLOW_VLM_DEBUG") == "1":  # local diagnosis only; the text is the screen's
+                    print(f"vlm_worker: raw {gen_text!r}"[:1200], file=sys.stderr, flush=True)
                 facts = _extract_json(gen_text or "")
                 ms = int((time.monotonic() - t0) * 1000)
                 if facts is None or not isinstance(facts.get("observations"), list):

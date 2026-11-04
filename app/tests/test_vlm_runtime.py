@@ -128,43 +128,41 @@ class FactsValidationTest(unittest.TestCase):
         self.assertEqual(out["observations"][0]["box"], [0.1, 0.2, 0.3, 0.4])
         self.assertEqual((out["ms"], out["unknowns"]), (12, ["u"]))
 
-    def test_every_violation_rejects_the_whole_reply(self):
+    def test_protocol_violations_reject_the_whole_reply(self):
         bad = [
             {"ok": False, "error": "x"},
             self.good(crop_id="other"),
-            self.good(observations=[{"id": "b0", "kind": "text", "text": "t",
-                                      "label": "l", "box": [0, 0, 0.1, 0.1]}]),
-            self.good(observations=[{"id": "v1", "kind": "text", "text": "t",
-                                      "label": "l", "box": [0, 0, 0.1, 0.1]}]),
-            self.good(observations=[{"id": "v0", "kind": "text", "text": "t",
-                                      "label": "l", "box": [0, 0, 0.1, 0.1]},
-                                     {"id": "v0", "kind": "text", "text": "u",
-                                      "label": "m", "box": [0.5, 0.5, 0.1, 0.1]}]),
-            self.good(observations=[{"id": "v0", "kind": "text", "text": "t",
-                                      "label": "l", "box": [0, 0, 0.1, 0.1]},
-                                     {"id": "v2", "kind": "text", "text": "u",
-                                      "label": "m", "box": [0.5, 0.5, 0.1, 0.1]}]),
-            self.good(observations=[{"id": "v0", "kind": "", "text": "t",
-                                      "label": "l", "box": [0, 0, 0.1, 0.1]}]),
-            self.good(observations=[{"id": "v0", "kind": "text", "text": "t",
-                                      "label": "l", "box": [0, 0, 0, 0.1]}]),
-            self.good(observations=[{"id": "v0", "kind": "text", "text": "t",
-                                      "label": "l", "box": [0.9, 0.9, 0.5, 0.5]}]),
-            self.good(observations=[{"id": "v0", "kind": "text", "text": "t",
-                                      "label": "l", "box": [0, 0, float("nan"), 0.1]}]),
-            self.good(observations=[{"id": "v0", "kind": "text", "text": "t",
-                                      "label": "l", "box": [0, 0, True, 0.1]}]),
-            self.good(observations=[{"id": "v0", "kind": "text", "text": "t",
-                                      "label": "l"}]),
-            self.good(observations=[{"id": "v0", "kind": "text", "text": "t",
-                                      "label": "l", "box": [0, 0, 0.1, 0.1]}] * 7),
-            self.good(unknowns=["ok", 3]),
+            self.good(observations="not-a-list"),
             self.good(ms=-1),
             "not-a-dict",
         ]
         for doc in bad:
             with self.assertRaises(RuntimeError, msg=f"{doc!r}"[:160]):
                 vlm_runtime.validate_facts(doc, "c1")
+
+    def test_model_mistakes_are_repaired_not_thrown_away(self):
+        o = lambda i, box, **kw: {"id": i, "kind": "text", "text": f"t{i}", "label": "l", "box": box, **kw}
+        out = vlm_runtime.validate_facts(self.good(observations=[
+            o("b0", [0, 0, 0.1, 0.1]),                     # wrong id: renumbered
+            o("v7", [0.05, 0.65, 0.35, 0.75]),             # corners, not x-y-w-h: converted
+            o("v2", [0.9, 0.9, 0.5, 0.5]),                 # unusable: no box, the text stays
+            o("v3", [0, 0, float("nan"), 0.1]),
+            {"id": "v4", "kind": "", "text": "送信 Send", "box": [0, 0, 0.2, 0.1], "state": "disabled"},  # no label
+            {"id": "v5", "kind": "text", "text": "", "label": "", "box": [0, 0, 0.1, 0.1]},  # empty: skipped
+        ] + [o("v9", [0, 0, 0.1, 0.1])] * 5, unknowns=["ok", 3]), "c1")
+        obs = out["observations"]
+        self.assertEqual([x["id"] for x in obs], [f"v{i}" for i in range(vlm_runtime.MAX_OBSERVATIONS)])
+        self.assertEqual(obs[0]["box"], [0.0, 0.0, 0.1, 0.1])
+        self.assertEqual([round(v, 2) for v in obs[1]["box"]], [0.05, 0.65, 0.3, 0.1])
+        self.assertIsNone(obs[2]["box"])
+        self.assertIsNone(obs[3]["box"])
+        self.assertEqual((obs[4]["text"], obs[4]["label"], obs[4]["kind"], obs[4]["state"]), ("送信 Send", "", "object", "disabled"))
+        self.assertEqual(out["unknowns"], ["ok"])
+
+    def test_a_box_on_the_0_to_1000_grid_is_scaled(self):
+        self.assertEqual(vlm_runtime._repair_box([0, 0, 1000, 1000]), [0.0, 0.0, 1.0, 1.0])
+        self.assertEqual(vlm_runtime._repair_box([100, 200, 300, 400]), [0.1, 0.2, 0.3, 0.4])
+        self.assertIsNone(vlm_runtime._repair_box([0, 0, 2000, 10]))
 
 
 class WorkerProtocolTest(Base):
@@ -195,11 +193,18 @@ class WorkerProtocolTest(Base):
     def test_bad_facts_kill_error_stays_warm(self):
         tmp = self.tmpdir()
         fw = self.fake_worker(tmp)
-        for model in ("malformed", "badbox", "mismatch", "toomany"):
+        for model in ("malformed", "mismatch"):
             w = self.worker(fw, model=model)
             with self.assertRaises(RuntimeError, msg=model):
                 w.describe_file(self.png(tmp), crop_id="c1")
             self.assertFalse(w.status()["warm"])
+        for model in ("badbox", "toomany"):  # the model's own mistakes are repaired, not fatal
+            w = self.worker(fw, model=model)
+            facts = w.describe_file(self.png(tmp), crop_id="c1")
+            self.assertLessEqual(len(facts["observations"]), vlm_runtime.MAX_OBSERVATIONS, model)
+            if model == "badbox":
+                self.assertIsNone(facts["observations"][0]["box"])
+            w.stop()
         w = self.worker(fw, model="error")
         with self.assertRaisesRegex(RuntimeError, "bad pixels"):
             w.describe_file(self.png(tmp), crop_id="c1")
@@ -460,7 +465,7 @@ class VisionApiTest(Base):
 
     def test_worker_failure_answers_none_not_partial(self):
         tmp = self.tmpdir()
-        w = self.worker(self.fake_worker(tmp), model="badbox")
+        w = self.worker(self.fake_worker(tmp), model="malformed")
         weights = tmp / "weights"
         weights.mkdir()
         self.fake_models(mode="mac", choice=self.mac_choice(), keep=True, weights=weights)

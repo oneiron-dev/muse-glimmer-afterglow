@@ -341,8 +341,8 @@ def agent_vision(app):
                 "line": "Your agent's server can see images."}
     if avail is False:
         return {"local": False, "available": False, "hint": "--mmproj <file>",
-                "line": "Your agent's server does not load its vision projector. "
-                         "Its owner would add --mmproj <file>."}
+                "line": "Your agent's server does not load its vision projector yet. "
+                         "Whoever runs that server can start it with the projector file (--mmproj)."}
     return {"local": False, "available": None, "hint": None,
             "line": "Could not reach your agent's server to check vision."}
 

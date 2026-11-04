@@ -110,9 +110,30 @@ def _is_num(v):
     return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
 
 
+def _repair_box(box):
+    """[x, y, w, h] as fractions of the crop, or None. Small models often write [x1, y1, x2, y2]; a box that is not
+    a valid x-y-width-height but is a valid pair of corners is converted. Anything else drops the box, not the fact."""
+    if not isinstance(box, (list, tuple)) or len(box) != 4 or not all(_is_num(v) for v in box):
+        return None
+    x, y, w, h = (float(v) for v in box)
+    if max(x, y, w, h) > 1 and min(x, y, w, h) >= 0 and max(x, y, w, h) <= 1000:
+        x, y, w, h = x / 1000, y / 1000, w / 1000, h / 1000  # Qwen's 0-1000 grid
+    if 0 <= x <= 1 and 0 <= y <= 1 and w > 0 and h > 0 and x + w <= 1 + 1e-9 and y + h <= 1 + 1e-9:
+        return [x, y, w, h]
+    x2, y2 = w, h
+    if 0 <= x < x2 <= 1 + 1e-9 and 0 <= y < y2 <= 1 + 1e-9:
+        return [x, y, x2 - x, y2 - y]
+    return None
+
+
 def validate_facts(doc, crop_id):
-    """A worker reply as clean facts, or RuntimeError. Never partial: one bad
-    field rejects the whole reply and the caller answers None."""
+    """A worker reply as clean facts, or RuntimeError.
+
+    The protocol is strict: a reply that is not ok, names another crop, or has no observation list is rejected and
+    the caller answers None. The model's own mistakes are repaired instead of throwing every fact away: ids are
+    renumbered v0, v1, ...; only the first MAX_OBSERVATIONS are kept (the prompt puts controls and warnings first);
+    a box in corner form is converted and an unusable box is dropped (the text stays a fact, it just gets no pin);
+    a missing label or state becomes empty; unknowns keep their strings."""
     if not isinstance(doc, dict) or doc.get("ok") is not True:
         raise RuntimeError("VLM: malformed facts")
     if not isinstance(crop_id, str) or not crop_id:
@@ -120,39 +141,33 @@ def validate_facts(doc, crop_id):
     if doc.get("crop_id") != crop_id:
         raise RuntimeError("VLM: crop id mismatch")
     obs = doc.get("observations")
-    if not isinstance(obs, list) or len(obs) > MAX_OBSERVATIONS:
+    if not isinstance(obs, list):
         raise RuntimeError("VLM: bad observations")
-    clean = []
-    for n, o in enumerate(obs):
-        if not isinstance(o, dict):
-            raise RuntimeError("VLM: bad observation")
-        oid, kind = o.get("id"), o.get("kind")
-        text, label = o.get("text"), o.get("label")
-        box = o.get("box")
-        if oid != f"v{n}":
-            raise RuntimeError("VLM: observation ids must run v0, v1, ...")
-        if not isinstance(kind, str) or not (1 <= len(kind) <= 32):
-            raise RuntimeError("VLM: bad observation kind")
-        if not isinstance(text, str) or len(text) > 2000:
-            raise RuntimeError("VLM: bad observation text")
-        if not isinstance(label, str) or len(label) > 200:
-            raise RuntimeError("VLM: bad observation label")
-        if not isinstance(box, (list, tuple)) or len(box) != 4 or not all(_is_num(v) for v in box):
-            raise RuntimeError("VLM: bad box")
-        x, y, w, h = (float(v) for v in box)
-        if not (0 <= x <= 1 and 0 <= y <= 1 and w > 0 and h > 0
-                and x + w <= 1 + 1e-9 and y + h <= 1 + 1e-9):
-            raise RuntimeError("VLM: box outside the crop")
-        clean.append({"id": oid, "kind": kind, "text": text, "label": label,
-                      "box": [x, y, w, h]})
-    unknowns = doc.get("unknowns")
-    if not isinstance(unknowns, list) or len(unknowns) > 32 or any(
-            not isinstance(u, str) or len(u) > 500 for u in unknowns):
-        raise RuntimeError("VLM: bad unknowns")
     ms = doc.get("ms")
     if not _is_num(ms) or ms < 0:
         raise RuntimeError("VLM: bad timing")
-    return {"crop_id": crop_id, "observations": clean, "unknowns": list(unknowns), "ms": int(ms)}
+    clean = []
+    for o in obs:
+        if len(clean) >= MAX_OBSERVATIONS:
+            break
+        if not isinstance(o, dict):
+            continue
+        text, label, kind, state = o.get("text"), o.get("label", ""), o.get("kind"), o.get("state", "")
+        text = text if isinstance(text, str) else ""
+        label = label if isinstance(label, str) else ""
+        if not (text.strip() or label.strip()):  # small models sometimes describe under another key
+            alt = next((o[k] for k in ("description", "caption", "value", "content") if isinstance(o.get(k), str) and o[k].strip()), "")
+            text = alt
+        if not (text.strip() or label.strip()):
+            continue  # nothing to say
+        item = {"id": f"v{len(clean)}", "kind": kind[:32] if isinstance(kind, str) and kind.strip() else "object",
+                "text": text[:2000], "label": label[:200], "box": _repair_box(o.get("box"))}
+        if isinstance(state, str) and state.strip():
+            item["state"] = state.strip()[:40]  # a control's state (disabled, selected, error, warning)
+        clean.append(item)
+    unknowns = doc.get("unknowns", [])
+    unknowns = [u[:500] for u in unknowns if isinstance(u, str)][:32] if isinstance(unknowns, list) else []
+    return {"crop_id": crop_id, "observations": clean, "unknowns": unknowns, "ms": int(ms)}
 
 
 # --- worker ------------------------------------------------------------------------------------------
