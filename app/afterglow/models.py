@@ -372,15 +372,24 @@ def _implicit_speech_id():
     return q["id"]
 
 
+def _implicit_vision_id(app):
+    """Glimmer's own vision when nothing was ever chosen in the Vision slot and
+    the agent's server confirms it sees images; else None. Choosing "Words
+    only" saves None, which keeps vision off."""
+    if app is None or "vision" in (saved() or {}):
+        return None
+    return "glimmer-mmproj" if agent_vision(app)["available"] is True else None
+
+
 def effective_selected(slot, app=None):
-    """The active id: saved, else the implicit speech default. Vision has no
-    implicit choice: unsaved or explicit None means none, never auto-on."""
+    """The active id: saved, else the implicit default (speech: the dictation
+    default; vision: Glimmer's own vision when its server confirms it)."""
     sid = _selected_id(slot)
     if sid:
         return sid
     if slot == "speech":
         return _implicit_speech_id()
-    return None
+    return _implicit_vision_id(app)
 
 
 def _effective_choice(slot, app):
@@ -390,9 +399,10 @@ def _effective_choice(slot, app):
 
 def vision_mode(app=None):
     """How the circle sees: "mac" (warm on-device model), "glimmer" (the agent
-    itself reads the image), or "none". Saved only, never auto-on. With an app,
-    Glimmer's file counts only when the server confirms it (local command, or
-    remote /props); without an app the saved opt-in alone decides."""
+    itself reads the image), or "none". With an app, Glimmer's vision counts
+    only when the server confirms it (local command, or remote /props), and it
+    is the default when nothing was ever chosen; without an app the saved
+    choice alone decides."""
     v = vision_choice()
     if v and v["runtime"] == "mlx-vlm" and is_downloaded(v):
         return "mac"
@@ -400,6 +410,8 @@ def vision_mode(app=None):
         if app is None:
             return "glimmer"
         return "glimmer" if agent_vision(app)["available"] is True else "none"
+    if v is None and _implicit_vision_id(app):
+        return "glimmer"
     return "none"
 
 
@@ -552,7 +564,7 @@ def choice_state(choice, app):
     if cid == "glimmer-mmproj" and not agent_local(app):
         avail = agent_vision(app)["available"]
         if avail is True:
-            if _selected_id("vision") == cid:
+            if effective_selected("vision", app) == cid:
                 return {"state": "in_use", "progress": None,
                         "line": "Turned on where your agent runs."}
             return {"state": "downloaded", "progress": None,
