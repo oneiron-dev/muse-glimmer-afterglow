@@ -47,11 +47,11 @@ const initials = (name) => (name || "").split(" ").map((w) => w[0]).join("").sli
 /** The sidebar: the app icon and your profile, the screens, your days under Chat, and settings.
  Its ground is the painted sky of the hour. Folds to icons (⌘\). */
 export function Sidebar({ ctx, screen, folded, onFold, newNotes }) {
-  const { state, days, nights, openDay, go, mode, setSky, hour } = ctx;
+  const { state, days, nights, openDay, go, mode, setSky, hour, today } = ctx;
   const people = (days && days.people) || [];
   const me = people.find((p) => p.world === state.world);
   const byNight = Object.fromEntries((nights || []).map((n) => [n.day, n]));
-  const myDays = me ? me.days.filter((d) => d <= state.day).reverse() : [];
+  const myDays = me ? me.days.filter((d) => d <= (today || state.day)).reverse() : [];
   const dayDate = (d) => {
     const t = new Date(`${state.date}T12:00:00`);
     t.setDate(t.getDate() + (d - state.day));
@@ -80,13 +80,14 @@ export function Sidebar({ ctx, screen, folded, onFold, newNotes }) {
                 <ul className="side-list days">
                   {myDays.map((d) => {
                     const cur = d === state.day;
+                    const isToday = d === (today || state.day);
                     const nt = byNight[d];
                     const mark = nt && nt.decision ? (nt.decision === "keep" ? "keep" : "rollback") : null;
                     return (
                       <li key={d}>
                         <button type="button" className={`side-row day-row${cur && screen === "chat" ? " on-soft" : ""}`} aria-current={cur ? "date" : undefined}
-                          onClick={() => (cur ? go("chat") : openDay(state.world, d))}>
-                          <span className="side-name">{cur ? "Today" : shortDate(dayDate(d))}</span>
+                          onClick={() => { go("chat"); if (!cur) openDay(state.world, d); }}>
+                          <span className="side-name">{isToday ? "Today" : shortDate(dayDate(d))}</span>
                           {mark && <i className={`nmark is-${mark}${nt.served ? " is-served" : ""}`} title={`That night: ${mark === "keep" ? "kept" : "rolled back"}${nt.served ? ", in use now" : ""}`} />}
                         </button>
                       </li>

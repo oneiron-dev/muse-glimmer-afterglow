@@ -68,8 +68,8 @@ a { color: inherit; }
 .app.folded { grid-template-columns: 60px minmax(0, 1fr) 0; }
 .app.folded.with-panel { grid-template-columns: 60px minmax(0, 1fr) minmax(360px, 440px); }
 
-.side { position: relative; overflow: hidden; color: var(--side-ink); }
-.side-sky { position: absolute; inset: 0; background: oklch(86% 0.03 250); }
+.side { position: relative; z-index: 4; min-width: 0; color: var(--side-ink); }
+.side-sky { position: absolute; inset: 0; overflow: hidden; background: oklch(86% 0.03 250); }
 .side-sky::after { content: ""; position: absolute; inset: 0; background: var(--side-wash); transition: background-color var(--hour-fade) var(--ease-io); }
 .sky { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 18% 40%; opacity: 0; transition: opacity var(--hour-fade) var(--ease-io); }
 .sky.on { opacity: 1; }
@@ -84,7 +84,7 @@ a { color: inherit; }
 .avatar { flex: none; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--side-hover); color: inherit; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
 .avatar.on { background: var(--accent); color: oklch(99% 0 0); }
 .avatar.plus { background: var(--sunk); color: var(--ink-2); }
-.profile .menu { left: 0; width: 288px; }
+.profile .menu { left: 0; width: 288px; z-index: 30; }
 .menu-row { width: 100%; display: flex; align-items: center; gap: 10px; padding: 7px 8px; border: 0; border-radius: 10px; background: transparent; color: var(--ink); text-align: left; }
 .menu-row:hover { background: var(--sunk); }
 .menu-row .avatar { background: var(--chip); }

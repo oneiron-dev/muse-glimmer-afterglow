@@ -31,6 +31,7 @@ export default function App() {
   const [error, setError] = useState(null);
   const timers = useRef([]);
   const [voices, setVoices] = useVoices();
+  const [allNights, setAllNights] = useState(null); // every night up to today, for the day list and Nights
 
   const load = useCallback(async () => {
     try {
@@ -107,6 +108,13 @@ export default function App() {
     await load();
   }
 
+  const worldNow = state && state.world;
+  const todayNow = state ? Math.max(Number(localStorage.getItem(`afterglow-today:${state.world}`)) || 0, state.day) : 0;
+  useEffect(() => {
+    if (!worldNow || todayNow < 2) return;
+    getJSON(`/api/report?day=${todayNow - 1}`).then((r) => { if (r && r.nights) setAllNights({ world: worldNow, nights: r.nights }); }).catch(() => {});
+  }, [worldNow, todayNow]);
+
   if (error && !state) return <div className="boot"><p>{error}</p></div>;
   if (!state) return <div className="boot"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" aria-hidden="true"><path d="M2.5 18h19" /><path d="M5.5 14h13" opacity="0.72" /><path d="M8.5 10h7" opacity="0.46" /><path d="M11 6h2" opacity="0.26" /></svg><p>Opening Afterglow…</p></div>;
 
@@ -115,10 +123,10 @@ export default function App() {
   const todayKey = `afterglow-today:${state.world}`;
   const today = Math.max(Number(localStorage.getItem(todayKey)) || 0, 0) || state.day;
   if (state.day > today || !localStorage.getItem(todayKey)) localStorage.setItem(todayKey, String(Math.max(state.day, today)));
-  const sealedNight = (report && report.nights || []).find((n) => n.day === state.day);
+  const nights = ((allNights && allNights.world === state.world ? allNights.nights : report && report.nights) || []).filter((n) => n.day < today);
+  const sealedNight = nights.find((n) => n.day === state.day);
   const sealed = state.day < today ? { night: sealedNight || null } : null;
-  const nights = ((report && report.nights) || []).filter((n) => n.day < state.day);
-  const ctx = { state, report, days, ws, nights, openPanel, openDay, go, setSky, mode, hour, reload: load, voices, setVoices };
+  const ctx = { state, report, days, ws, nights, openPanel, openDay, go, setSky, mode, hour, reload: load, voices, setVoices, today };
 
   return (
     <div className={`app${folded ? " folded" : ""}${screen === "chat" && panel ? " with-panel" : ""}`}>
