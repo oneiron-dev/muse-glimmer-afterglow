@@ -91,6 +91,50 @@ class Day12ByteEqualTest(unittest.TestCase):
             got = loom_line.day_line_records(RUNS / w / "12")
             self.assertEqual([json.dumps(r) for r in got], [json.dumps(r) for r in raw], w)
 
+    def test_day_line_notes_is_identity_every_unforked_day(self):
+        """With no forks the night's notes are the very list it read: train sets stay byte-equal."""
+        seen = 0
+        for w in WORLDS:
+            for d in range(1, 13):
+                run = RUNS / w / str(d)
+                if not (run / "notes.json").exists() or not (run / "daylog.jsonl").exists():
+                    continue
+                raw = [json.loads(line) for line in (run / "daylog.jsonl").read_text().splitlines() if line.strip()]
+                if any(r.get("role") in ("fork", "line") for r in raw):
+                    continue
+                notes = json.loads((run / "notes.json").read_text())["notes"]
+                self.assertIs(loom_line.day_line_notes(run, notes), notes, f"{w}/{d}")
+                seen += 1
+        if not seen:
+            self.skipTest("no recorded days on this machine")
+
+    def test_night_reads_only_the_notes_of_its_line(self):
+        """The Room 312 / 318 repro: main saved 312 (N0001), an edit on b2 saved 318 (N0002) and superseded it, then
+        the person went back to main. The night of main sees 312 active and no 318; picking b2 sees the reverse."""
+        import consolidate
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        d = Path(tmp.name) / "w" / "1"
+        d.mkdir(parents=True)
+        log = [rec("user", 1, content="My office is Room 312."), rec("assistant", 1, notes_written=["N0001"]),
+               {"role": "fork", "branch": "b2", "parent": "main", "at_turn": 1},
+               rec("user", 2, branch="b2", content="My office is Room 318."),
+               rec("assistant", 2, branch="b2", notes_written=["N0002"]),
+               {"role": "line", "branch": "main"}]
+        (d / "daylog.jsonl").write_text("\n".join(json.dumps(r) for r in log))
+        notes = [{"id": "N0001", "key": "office", "value": "Room 312", "status": "superseded", "day": 1, "turn": 1,
+                  "supersedes": None, "superseded_by": "N0002"},
+                 {"id": "N0002", "key": "office", "value": "Room 318", "status": "active", "day": 1, "turn": 2,
+                  "supersedes": "N0001", "superseded_by": None}]
+        (d / "notes.json").write_text(json.dumps({"notes": notes}))
+        got, turns = consolidate.load_day(d)
+        self.assertEqual([(n["id"], n["status"], n["superseded_by"]) for n in got], [("N0001", "active", None)])
+        self.assertEqual(turns, {1: "My office is Room 312."})
+        (d / loom_line.RESOLUTION_FILENAME).write_text(json.dumps({"line": "b2"}))
+        got, turns = consolidate.load_day(d)
+        self.assertEqual([(n["id"], n["status"]) for n in got], [("N0002", "active")])
+        self.assertEqual(turns, {2: "My office is Room 318."})
+
     def test_line_text_matches_raw_file_every_unforked_day(self):
         """day_line_text == the raw file text (minus one trailing newline) for
         every unforked day log: the searched text round-trips exactly."""

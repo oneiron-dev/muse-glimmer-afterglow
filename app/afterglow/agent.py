@@ -359,6 +359,7 @@ class DaySession:
                    "parent": loom.branch_of(target), "at_turn": int(at_turn)})
         self.branch = name
         self._rebuild(self._records())
+        self._line_notes()
         return name
 
     def switch(self, branch):
@@ -369,7 +370,19 @@ class DaySession:
         self._log({"ts": now_iso(), "turn": self.turn, "role": "line", "branch": branch})
         self.branch = branch
         self._rebuild(self._records())
+        self._line_notes()
         return branch
+
+    def _line_notes(self):
+        """The notes follow the line: a note said on another version of today is set aside (status other_version)
+        and the note it replaced is back, so recall and the night see only this line (loom.line_notes)."""
+        store = getattr(self.notes, "local", self.notes)
+        if not isinstance(getattr(store, "notes", None), list):
+            return
+        new = loom.line_notes(self._records(), store.notes, self.day, self.branch)
+        if new is not store.notes and new != store.notes:
+            store.notes[:] = new
+            store._save()
 
     def loom_state(self):
         records = self._records()

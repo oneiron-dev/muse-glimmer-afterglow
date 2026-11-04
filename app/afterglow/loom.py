@@ -153,6 +153,50 @@ def first_words(records):
     return out
 
 
+OTHER_VERSION = "other_version"  # a note status: written on a version of the day you are not on
+
+
+def line_notes(records, notes, day, line=None):
+    """The notes as one line of the day has them, so the agent's recall and the night see only what was said on it.
+
+    A note written today on a turn off the line gets status "other_version" (kept, so switching back restores it).
+    A note it had superseded is active again, or superseded by the next note of the line (supersedes pointers are
+    walked through hidden notes). A note hidden before and on the line now comes back. Forgotten notes and night
+    links stay as they are. A day log without forks returns `notes` itself, unchanged. Returns a new list of copies
+    otherwise; `day` is the day the log belongs to (note["day"])."""
+    if not forks(records):
+        return notes
+    line = line or current_line(records)
+    said = {r.get("turn") for r in records if r.get("role") == "user"}
+    on = {r.get("turn") for r in line_records(records, line) if r.get("role") == "user"}
+    hidden = {n["id"] for n in notes if n.get("status") != "forgotten" and n.get("day") == day
+              and n.get("turn") in said and n.get("turn") not in on}
+    by_id = {n["id"]: n for n in notes}
+    succ = {}  # a note -> the visible note that supersedes it, through hidden ones
+    for n in notes:
+        if n["id"] in hidden or n.get("status") == "forgotten":
+            continue
+        s = n.get("supersedes")
+        while s in hidden:
+            s = by_id[s].get("supersedes")
+        if s:
+            succ[s] = n["id"]
+    out = []
+    for n in notes:
+        m = dict(n)
+        if n["id"] in hidden:
+            m.update(status=OTHER_VERSION, superseded_by=None)
+        elif n.get("status") != "forgotten" and not n.get("superseded_by_night"):
+            cur = n.get("superseded_by")
+            if not (n.get("status") == "superseded" and cur and cur not in hidden):
+                if succ.get(n["id"]):
+                    m.update(status="superseded", superseded_by=succ[n["id"]])
+                elif n.get("status") == OTHER_VERSION or cur in hidden:
+                    m.update(status="active", superseded_by=None)
+        out.append(m)
+    return out
+
+
 def contradictions(records, notes, norm=lambda k: " ".join(str(k).lower().split())):
     """Facts the side branches saved that disagree with the day's line: a note written off the line under the key of a
     note on the line (or of the note it replaced) with a different value. Also the side facts that disagree with

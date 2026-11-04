@@ -98,6 +98,8 @@ def switch(app, req):
     if not isinstance(name, str):
         raise ValueError("Choose a version")
     with _idle(app) as session:
+        if _sealed(session):  # its night trained one line; switching would change what a rerun trains and its answer
+            raise RuntimeError("This day is sealed: its night has run, so it stays on the version it trained.")
         session.switch(name)
         _drop_answer_for_another_line(session)
         return session.loom_state()

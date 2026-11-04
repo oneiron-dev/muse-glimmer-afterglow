@@ -245,13 +245,66 @@ class SwitchTest(LoomApiCase):
                 self.post("/api/branch/switch", body, app)
         self.assertEqual(s.daylog_path.read_bytes(), before)
 
-    def test_switch_refuses_a_busy_day_but_allows_a_sealed_one(self):
+    def test_switch_refuses_a_busy_day_and_a_sealed_one(self):
         s, app = self.three_branches()
         with app.lock:
             with self.assertRaises(RuntimeError):
                 self.post("/api/branch/switch", {"branch": "b2"}, app)
-        self.seal(s, "eval.json")
-        self.assertEqual(self.post("/api/branch/switch", {"branch": "b2"}, app)["line"], "b2")
+        self.post("/api/loom/resolve", {}, app)
+        answer = (s.dir / "loom-resolution.json").read_bytes()
+        self.seal(s, "receipt.json")  # its night ran on main: the line and its answer stay as they were trained
+        log = s.daylog_path.read_bytes()
+        with self.assertRaises(RuntimeError) as e:
+            self.post("/api/branch/switch", {"branch": "b2"}, app)
+        self.assertIn("sealed", str(e.exception))
+        self.assertEqual(s.branch, "main")
+        self.assertEqual(s.daylog_path.read_bytes(), log)
+        self.assertEqual((s.dir / "loom-resolution.json").read_bytes(), answer)
+
+
+class LineNotesTest(LoomApiCase):
+    """The notes follow the line (loom.line_notes): what was said on another version is set aside, not active."""
+
+    def status(self, s):
+        doc = json.loads((s.dir / "notes.json").read_text())["notes"]
+        return {n["id"]: (n["value"], n["status"], n.get("superseded_by")) for n in doc}
+
+    def test_switching_back_sets_the_edited_fact_aside_and_restores_the_first(self):
+        s, app = self.chat_two_turns()
+        s.client.replies += [[("remember", {"key": "office", "value": "Room 318"})], "Saved. Room 318."]
+        self.consume(self.post("/api/branch", {"at_turn": 1, "text": EDIT}, app))
+        self.assertEqual(self.status(s), {"N0001": ("Room 312", "other_version", None),
+                                          "N0002": ("Room 318", "active", None)})
+        self.post("/api/branch/switch", {"branch": "main"}, app)
+        self.assertEqual(self.status(s), {"N0001": ("Room 312", "active", None),
+                                          "N0002": ("Room 318", "other_version", None)})
+        self.assertEqual([n["value"] for n in s.notes.recall("office")], ["Room 312"])
+        self.post("/api/branch/switch", {"branch": "b2"}, app)
+        self.assertEqual(self.status(s)["N0002"], ("Room 318", "active", None))
+        self.assertEqual([n["value"] for n in s.notes.recall("office")], ["Room 318"])
+
+    def test_a_correction_on_the_line_after_a_set_aside_one_supersedes_the_first(self):
+        s, app = self.chat_two_turns()  # main: T1 saves 312 (N0001), T2 answers
+        s.client.replies += [[("remember", {"key": "office", "value": "Room 318"})], "Saved. Room 318.",
+                             [("remember", {"key": "office", "value": "Room 320"})], "Saved. Room 320."]
+        self.consume(self.post("/api/branch", {"at_turn": 2, "text": "Actually it is Room 318."}, app))
+        self.post("/api/branch/switch", {"branch": "main"}, app)
+        s.ask("Correction: my office is Room 320.")  # on main, after b2's 318 was set aside
+        st = self.status(s)
+        self.assertEqual(st["N0001"], ("Room 312", "superseded", "N0003"))
+        self.assertEqual(st["N0002"][1], "other_version")
+        self.assertEqual(st["N0003"], ("Room 320", "active", None))
+        self.post("/api/branch/switch", {"branch": "b2"}, app)  # b2 never heard 320: its own 318 is back
+        st = self.status(s)
+        self.assertEqual(st["N0001"], ("Room 312", "superseded", "N0002"))
+        self.assertEqual(st["N0002"], ("Room 318", "active", None))
+        self.assertEqual(st["N0003"][1], "other_version")
+
+    def test_a_day_without_forks_never_rewrites_its_notes(self):
+        s, app = self.chat_two_turns()
+        before = (s.dir / "notes.json").read_bytes()
+        s._line_notes()
+        self.assertEqual((s.dir / "notes.json").read_bytes(), before)
 
 
 class LoomStateTest(LoomApiCase):
@@ -463,7 +516,7 @@ class ResolveStalenessTest(LoomApiCase):
 class RegenLineageTest(LoomApiCase):
     def test_a_same_text_regen_line_keeps_the_prior_branch_facts_as_baseline(self):
         # main turn 1 saves office=Room 09 (N0001); b2 edits it to Room 10 (N0002); b3 regenerates
-        # b2's turn with the same words and its remember is unchanged, so it writes no note.
+        # b2's turn with the same words. b2's note is off b3's line, so b3 saves its own (N0003).
         s = self.session([("remember", {"key": "office", "value": "Room 09"})], "Noted. Room 09.",
                          [("remember", {"key": "office", "value": "Room 10"})], "Saved. Room 10.",
                          [("remember", {"key": "office", "value": "Room 10"})], "Still Room 10.")
@@ -472,7 +525,7 @@ class RegenLineageTest(LoomApiCase):
         last = self.consume(self.post("/api/branch", {"at_turn": 1, "text": "My office is Room 10."}, app))[-1]
         self.assertEqual(last["notes_written"], ["N0002"])
         last = self.consume(self.post("/api/branch/regenerate", {"turn": 2}, app))[-1]
-        self.assertEqual(last["notes_written"], [])  # unchanged: Room 10 was already saved
+        self.assertEqual(last["notes_written"], ["N0003"])  # b2's Room 10 is set aside on b3's line
         self.assertEqual(s.branch, "b3")
         st = self.get("/api/loom", app)
         self.assertEqual(st["line"], "b3")
@@ -484,7 +537,7 @@ class RegenLineageTest(LoomApiCase):
         # b2's fact stays the baseline the older main fact is read against: a conflict, not an extra.
         self.assertEqual(st["contradictions"],
                          {"line": "b3",
-                          "conflicts": [{"key": "office", "line": {"id": "N0002", "value": "Room 10"},
+                          "conflicts": [{"key": "office", "line": {"id": "N0003", "value": "Room 10"},
                                          "side": {"id": "N0001", "value": "Room 09", "branch": "main"}}],
                           "extra": []})
         # b2 has the same words as the current line, so its facts are baseline, never offered as side facts.

@@ -70,3 +70,19 @@ Seen, not changed (data or out of scope):
 - Settings > Models once showed "Not answering at 100.88.57.107:18610" in one load, then green on the next: a slow
   health probe while mel was busy. The address itself is shown there by design.
 - On load the thread scrolls to the latest message; the morning card is a scroll up (S7).
+
+## 4. The notes follow the line; a sealed day keeps its line (PR ui/loom-notes, Sol review of main, findings 2 and 5)
+
+- Picking a version did not pick its notes: remember() supersedes globally, so after an edit on b2 (Room 318) and a
+  switch back to main, notes.json still had 318 active and 312 superseded, and night/consolidate.py trained 318.
+  Now loom.line_notes gives the notes as one line has them: a note said today on a turn off the line gets status
+  "other_version" (kept, so switching back restores it), and the note it had replaced is active again, or superseded
+  by the line's next note (supersedes pointers are walked through set-aside notes). DaySession.fork and .switch
+  write that state to notes.json, so recall, Memory and every night reader of notes.json see the line.
+  consolidate.load_day also reads notes through loom_line.day_line_notes (the resolved line, other versions removed).
+  A day without forks is untouched: line_notes returns the same list, and a test checks identity on every unforked
+  recorded day.
+- POST /api/branch/switch on a sealed day (its night has run) now answers 409 with a plain sentence; the line and
+  loom-resolution.json stay as the night trained them.
+- Tests: app LineNotesTest (the 312/318 repro both ways, a correction on main after a set-aside note, no rewrite
+  without forks), the sealed switch, night test_loom_line (consolidate.load_day repro, identity on recorded days).
