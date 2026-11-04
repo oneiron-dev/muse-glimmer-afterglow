@@ -26,6 +26,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import teacher as teacher_mod  # noqa: E402
 from paths import runs_root  # noqa: E402
+import loom_line  # noqa: E402
 
 BATCH = 8
 SUPERSEDE_ACCEPT_P = 0.9  # = decide.decider.SUPERSEDE_ACCEPT_P: the readout links on its own at this p
@@ -72,11 +73,9 @@ def load_day(run_dir):
     notes_doc = json.loads((run_dir / "notes.json").read_text())
     notes = notes_doc["notes"] if isinstance(notes_doc, dict) else notes_doc
     turns = {}
-    for line in (run_dir / "daylog.jsonl").read_text().splitlines():
-        if line.strip():
-            rec = json.loads(line)
-            if rec.get("role") == "user":
-                turns[rec["turn"]] = rec["content"]
+    for rec in loom_line.day_line_records(run_dir):
+        if rec.get("role") == "user":
+            turns[rec["turn"]] = rec["content"]
     return notes, turns
 
 
@@ -84,11 +83,9 @@ def feedback_turns(run_dir):
     """The day's style-feedback turns (daylog user records with "feedback"): passed through for Meta steering's
     proposals, never training text."""
     out = []
-    for line in (run_dir / "daylog.jsonl").read_text().splitlines():
-        if line.strip():
-            rec = json.loads(line)
-            if rec.get("role") == "user" and rec.get("feedback"):
-                out.append({"turn": rec["turn"], "content": rec["content"], **rec["feedback"]})
+    for rec in loom_line.day_line_records(run_dir):
+        if rec.get("role") == "user" and rec.get("feedback"):
+            out.append({"turn": rec["turn"], "content": rec["content"], **rec["feedback"]})
     return out
 
 
