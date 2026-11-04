@@ -3,7 +3,9 @@
 The helper runs only when you launch it. It does not launch at login. It records only
 while you hold your chosen key, up to 60 seconds. It captures no screen content unless
 you drag a loop. Audio and selected context are sent to the Afterglow URL you choose.
-The library itself makes no network requests. Nothing is saved by the helper.
+The library itself makes no network requests. Practice recordings are discarded without a request.
+The helper saves only connection and hold-key settings, plus the current setup step during a reopen.
+It does not save captured content or permission-granted flags.
 
 ## Build and launch yourself
 
@@ -27,23 +29,56 @@ environment. A Finder launch does not inherit your terminal's environment. The
 explicit `--url` takes priority. The helper does not start or restart the server.
 The `/api/ambient` endpoint must be present (Afterglow lane L4).
 
-## Allow these in System Settings > Privacy & Security
+## Set up dictation
 
-Use each permission button in the menu-bar menu, then approve **Afterglow fn**:
+When dictation is not ready, the helper opens **Set up Afterglow fn**. You can also
+choose **Permissions…** in the menu. **Later** closes setup without asking anything.
+Only one step has an action at a time. Existing grants show a check, not another Allow button.
 
-- **Microphone**: captures your voice only during a hold.
-- **Accessibility**: sends Command-V to your foreground app and reads the role,
-  title and a shortened value of the item at the centre of your selected area.
-- **Screen & System Audio Recording** (called **Screen Recording** on macOS 14):
-  takes the crop you circled. It does not record system audio. The overlay and
-  Afterglow mark beside the cursor are excluded from that image.
-- **Input Monitoring**: sees fn and Right Option key transitions outside the helper.
-  The key tap is listen-only and does not suppress typing or system shortcuts.
+1. **Paste into apps** asks for Accessibility. It pastes your words and reads the
+   role, title and shortened value of the item inside your selected circle.
+2. **Hear your fn key** asks for Input Monitoring. The listen-only tap sees hold-key
+   transitions and combination cancellation, without retaining key text.
+3. **Use the microphone** asks for access before practice. If access is off, the
+   button opens Microphone Settings instead of requesting again.
 
-macOS can ask you to quit and reopen after granting access. Use Quit in the helper's
-menu, then launch the same bundle. Reopening the menu refreshes the permission state.
-Microphone is required to record. Screen Recording is needed only for a crop.
-Accessibility and Input Monitoring are required for the global hotkey and paste flow.
+Then hold fn and speak to practice. Key press/release and voice arrival are checked
+locally. Release discards the audio. Nothing goes to your agent while setup is open.
+Press and release a letter too to check the event classes used by combination cancellation.
+The hold-key mode menu retains the Right Option fallback.
+
+Settings steps have a small non-activating guide beside the Settings window. Where
+supported, drag its real app icon into the list if the app is missing. It does not
+find or click your app's row. The guide hides when Settings is not in front, closes,
+or has no safe visible docking space. Permission status checks run every 0.5 seconds
+only while setup or the guide is visible. Geometry tracking runs every 150 ms only
+while Settings is in front. No screenshots or Accessibility row scraping are used.
+
+**Screen Recording is optional.** It is requested only after you first circle without
+access. That recording and circle are cancelled. Choose **Set up screen access** or
+**Not now**. Dictation still works without screen access. Settings may call this
+**Screen & System Audio Recording**. Afterglow captures only your circle, not system
+audio. After setup, circle again. Old audio and the old crop are never resumed.
+
+A false Accessibility or screen check means **Not set up**, not a definitive denial.
+Input Monitoring and Screen Recording may remain stale within the current process.
+If you enabled access but it is not confirmed, use **Reopen to finish** to check again.
+The helper stops monitoring, recording, capture, requests and overlays first. It
+launches the same bundle with the same arguments and `AFTERGLOW_URL`, and quits the
+old copy only after the new copy launches. If opening fails, the old setup UI stays
+available with manual reopening instructions. Only the setup step is saved as progress.
+The effective server is a user setting, also retained for a system-managed reopen.
+
+For a switch that is on but not working, choose **Fix a switch that is on but not
+working**. Remove Afterglow fn with the minus button, then add it again, or turn it
+off and on. The app never runs `tccutil`. Use the exact signed bundle at a stable
+location. The builder prefers an Apple Development identity and warns when falling
+back to ad hoc signing, where every rebuild asks for permissions again.
+
+Settings links use the legacy prefix on macOS 14/15 and the extension prefix on 26.
+This is a compatibility policy, not an on-device guarantee. **Try other Settings
+link** tries the other form only when you choose it. **Show instructions** gives a
+manual path because a successful URL open does not prove the correct pane appeared.
 
 In **System Settings > Keyboard**, set **Press the Globe key to: Do Nothing** so
 fn reaches the helper without opening the emoji picker or changing input source.

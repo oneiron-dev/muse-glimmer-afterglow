@@ -83,6 +83,20 @@ public struct PermissionState: Codable, Sendable, Equatable {
 /// monitoring may need a relaunch after the user grants them.
 @MainActor
 public enum Permissions {
+    /// Settings destinations are centralized. An open success does not prove the pane landed.
+    public static func settingsURL(for permission: FnPermission, alternate: Bool = false) -> URL {
+        let anchor: String
+        switch permission {
+        case .accessibility: anchor = "Privacy_Accessibility"
+        case .inputMonitoring: anchor = "Privacy_ListenEvent"
+        case .microphone: anchor = "Privacy_Microphone"
+        case .screenCapture: anchor = "Privacy_ScreenCapture"
+        }
+        let modern = ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26
+        let prefix = (modern != alternate) ? "com.apple.settings.PrivacySecurity.extension" : "com.apple.preference.security"
+        return URL(string: "x-apple.systempreferences:\(prefix)?\(anchor)")!
+    }
+
     /// Returns the current state without prompting, except where noted.
     ///
     /// - Parameter permission: The permission to check.
