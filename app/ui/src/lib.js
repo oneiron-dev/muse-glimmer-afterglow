@@ -6,6 +6,12 @@ export const postJSON = async (url, body) =>
 
 /** POST /api/chat and yield each server-sent event ({type: "content" | "tool_result" | "note" | ...}). */
 export async function* chatStream(text, attachments = []) {
+  // Apply this person's saved connectors after a restart or day switch, before the model sees its tool list.
+  const connectors = await getJSON("/api/connectors");
+  if (connectors.error) {
+    yield { type: "error", message: connectors.error };
+    return;
+  }
   const resp = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text, attachments }) });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({ error: resp.statusText }));

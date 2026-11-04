@@ -61,7 +61,7 @@ export function SettingsScreen({ ctx }) {
         <div className="form-col" key={sec}>
           <h1 className="form-title">{title}</h1>
           {sec === "model" && <ModelSection ctx={ctx} settings={s} />}
-          {sec === "connectors" && <ConnectorsSection settings={s} />}
+          {sec === "connectors" && <ConnectorsSection settings={s} ctx={ctx} />}
           {sec === "voice" && <VoiceSection ctx={ctx} />}
           {sec === "dictation" && <DictationSettings />}
           {sec === "nights" && <NightsSection ctx={ctx} settings={s} onSaved={loadSettings} />}
@@ -322,33 +322,372 @@ const CONNECTORS = [
   { id: "mail", icon: "mail", name: "Mail", tools: ["email.draft"], line: "Drafts only. Your agent writes a draft; you send it from your mail app." },
 ];
 
-function ConnectorsSection({ settings }) {
+/* One connector row with its Set up button and the inline form under it. */
+function ConnRow({ icon, name, line, state, stateOn, formId, open, onToggle, children }) {
+  return (
+    <>
+      <li>
+        <span className="conn-icon">{icon}</span>
+        <div><b>{name}</b><p>{line}</p></div>
+        <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <span className={`conn-state${stateOn ? " on" : ""}`}>{state}</span>
+          <button type="button" className="btn btn-quiet" aria-expanded={open === formId} onClick={() => onToggle(formId)}>
+            {open === formId ? "Close" : "Set up"}
+          </button>
+        </span>
+      </li>
+      {open === formId && (
+        <li>
+          <div style={{ gridColumn: "1 / -1" }}>{children}</div>
+        </li>
+      )}
+    </>
+  );
+}
+
+const capEnded = (cap) => cap && cap.through && new Date(`${cap.through}T23:59:59+09:00`) < new Date();
+
+/* Inner list rows under .conns: .conns li beats .flines li on equal specificity by source order,
+   so the .flines row is restated inline. Values copied from styles.css, nothing new. */
+const INNER_LI = { display: "grid", gridTemplateColumns: "18px 1fr", gap: "8px", alignItems: "baseline", padding: 0, borderTop: 0 };
+
+/* Status rows for the connectors list only: mirrors Lines above (same dots) with the inner-row
+   restyle. Local so connector rows never restyle other sections. */
+function ConnectorLines({ lines }) {
+  if (!lines || !lines.length) return null;
+  return (
+    <ul className="flines" role="status">
+      {lines.map((l, i) => {
+        const bad = /cannot|do not|not installed|No server|No file|Not a model|not Muse|did not|not serve/i.test(l);
+        const plain = /server at |^Muse|GB\.$/.test(l);
+        return <li key={i} style={INNER_LI}><Mark ok={bad ? false : plain ? undefined : true} />{l}</li>;
+      })}
+    </ul>
+  );
+}
+
+function ConnectorsSection({ settings, ctx }) {
+  const world = ctx && ctx.state && ctx.state.world;
+  const day = ctx && ctx.state && ctx.state.day;
+  const [cx, setCx] = useState(null);
+  const [open, setOpen] = useState(null);
+  const loadCx = () => getJSON("/api/connectors").then((r) => setCx(r && !r.error ? r : null)).catch(() => setCx(null));
+  useEffect(() => { setCx(null); setOpen(null); loadCx(); }, [world, day]);
   if (!settings) return <p className="pfine">Loading…</p>;
   const on = (tools) => tools.some((t) => settings.tools.includes(t));
+  const toggle = (id) => { cue("toggle"); setOpen(open === id ? null : id); };
+  const tasks = CONNECTORS.find((c) => c.id === "tasks");
+
+  const feeds = (cx && cx.calendar && cx.calendar.feeds) || [];
+  const feedEvents = feeds.reduce((n, f) => n + (f.event_count || 0), 0);
+  const calLine = feeds.length
+    ? `Your agent’s calendar, kept on this computer. ${feeds.length} feed${feeds.length > 1 ? "s" : ""}, ${feedEvents} event${feedEvents === 1 ? "" : "s"}, read-only.`
+    : "Your agent’s calendar, kept on this computer. It reads and adds events.";
+  const calOn = on(["calendar.list_events", "calendar.add_event"]);
+
+  const mail = (cx && cx.mail) || null;
+  const mailOn = mail ? !!mail.on : on(["email.draft"]);
+  const mailLine = mail && mail.on
+    ? `Drafts save to ${mail.folder || "your drafts folder"}. Open them in Mail.`
+    : "Drafts only. Your agent writes a draft; you send it from your mail app.";
+
   const ws = settings.web_search || {};
-  const capEnded = ws.cap && ws.cap.through && new Date(`${ws.cap.through}T23:59:59+09:00`) < new Date();
-  const wsLine = !ws.on ? "Off. When on, only the search words leave this computer, never your notes."
-    : capEnded ? `Paused: its spending cap ran through ${shortDate(ws.cap.through)}. ${ws.used} searches were made.`
-      : `Exa. Only the search words leave this computer. ${ws.used}${ws.cap && ws.cap.searches ? ` of ${ws.cap.searches}` : ""} searches used${ws.cap && ws.cap.through ? `, through ${shortDate(ws.cap.through)}` : ""}.`;
+  const search = (cx && cx.search) || null;
+  const effOn = search ? !!search.on : !!ws.on;
+  const effPaused = search ? !!search.paused : !!capEnded(ws.cap);
+  const mine = !!(search && search.key_set && search.user_on);
+  const effCap = (search && search.cap) || ws.cap || {};
+  const effUsed = search ? search.used : ws.used;
+  let searchLine, searchState, searchOn;
+  if (effPaused) {
+    searchState = "Paused";
+    searchOn = false;
+    const made = effUsed ?? ws.used;
+    const madeBit = made == null ? "" : ` ${made} searches were made.`;
+    const searchesOut = effCap.searches != null && made != null && made >= effCap.searches;
+    if (capEnded(effCap)) {
+      searchLine = mine
+        ? `Paused: your cap ran through ${shortDate(effCap.through)}.${madeBit}`
+        : `Paused: its spending cap ran through ${shortDate(effCap.through)}.${madeBit}`;
+    } else if (searchesOut) {
+      searchLine = mine
+        ? `Paused: you used all ${effCap.searches} searches of your cap.`
+        : `Paused: its cap of ${effCap.searches} searches is used up.`;
+    } else {
+      searchLine = "Paused for now. No searches are running.";
+    }
+  } else if (!effOn) {
+    searchState = "Off";
+    searchOn = false;
+    searchLine = search && search.key_set
+      ? "Your key is saved but off. Turn it on in Set up."
+      : "Off. When on, only the search words leave this computer, never your notes.";
+  } else if (mine) {
+    searchState = "On";
+    searchOn = true;
+    const parts = ["Exa with your key. Only the search words leave this computer."];
+    if (effUsed != null) parts.push(`${effUsed}${effCap.searches ? ` of ${effCap.searches}` : ""} searches used${effCap.through ? `, through ${shortDate(effCap.through)}` : ""}.`);
+    else if (effCap.searches || effCap.through) parts.push(`Cap${effCap.searches ? ` ${effCap.searches} searches` : ""}${effCap.through ? ` through ${shortDate(effCap.through)}` : ""}.`);
+    searchLine = parts.join(" ");
+  } else {
+    searchState = "On";
+    searchOn = true;
+    searchLine = `Exa. Only the search words leave this computer. ${ws.used}${ws.cap && ws.cap.searches ? ` of ${ws.cap.searches}` : ""} searches used${ws.cap && ws.cap.through ? `, through ${shortDate(ws.cap.through)}` : ""}.`;
+  }
+
+  const files = (cx && cx.files) || null;
+  const filesLine = files && files.folder
+    ? `Your files are kept in ${files.folder}.`
+    : "Your files are kept in the app's own folder. Pick another folder here.";
+  const filesOn = !!(files && files.folder);
+
+  const globe = (<svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="10" cy="10" r="7" /><path d="M3 10h14M10 3c2 2.2 2.8 4.5 2.8 7s-.8 4.8-2.8 7c-2-2.2-2.8-4.5-2.8-7S8 5.2 10 3Z" /></svg>);
+
   return (
     <>
       <p className="fp">What your agent can reach. Each one is tested with the nights before it is offered, because a new connector changes what the nights are checked on.</p>
-      <ul className="conns">
-        {CONNECTORS.map((c) => (
-          <li key={c.id}>
-            <span className="conn-icon"><Icon id={c.icon} /></span>
-            <div><b>{c.name}</b><p>{c.line}</p></div>
-            <span className={`conn-state${on(c.tools) ? " on" : ""}`}>{on(c.tools) ? "On" : "Off"}</span>
-          </li>
-        ))}
-        <li>
-          <span className="conn-icon"><svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><circle cx="10" cy="10" r="7" /><path d="M3 10h14M10 3c2 2.2 2.8 4.5 2.8 7s-.8 4.8-2.8 7c-2-2.2-2.8-4.5-2.8-7S8 5.2 10 3Z" /></svg></span>
-          <div><b>Web search</b><p>{wsLine}</p></div>
-          <span className={`conn-state${ws.on && !capEnded ? " on" : ""}`}>{ws.on && !capEnded ? "On" : capEnded ? "Paused" : "Off"}</span>
+      <ul className="conns" key={`${world || ""} ${day || ""}`}>
+        <ConnRow icon={<Icon id="calendar" />} name="Calendar" line={calLine} state={calOn ? "On" : "Off"} stateOn={calOn} formId="calendar" open={open} onToggle={toggle}>
+          <CalendarForm feeds={feeds} onSaved={loadCx} />
+        </ConnRow>
+        <li key={tasks.id}>
+          <span className="conn-icon"><Icon id={tasks.icon} /></span>
+          <div><b>{tasks.name}</b><p>{tasks.line}</p></div>
+          <span className={`conn-state${on(tasks.tools) ? " on" : ""}`}>{on(tasks.tools) ? "On" : "Off"}</span>
         </li>
+        <ConnRow icon={<Icon id="mail" />} name="Mail" line={mailLine} state={mailOn ? "On" : "Off"} stateOn={mailOn} formId="mail" open={open} onToggle={toggle}>
+          <MailForm mail={mail} onSaved={loadCx} />
+        </ConnRow>
+        <ConnRow icon={globe} name="Web search" line={searchLine} state={searchState} stateOn={searchOn} formId="search" open={open} onToggle={toggle}>
+          <SearchForm search={search} serving={ws} onSaved={loadCx} />
+        </ConnRow>
+        <ConnRow icon={<Icon id="files" />} name="Files" line={filesLine} state={filesOn ? "On" : "Off"} stateOn={filesOn} formId="files" open={open} onToggle={toggle}>
+          <FilesForm files={files} onSaved={loadCx} />
+        </ConnRow>
         {EXTRA_CONNECTORS.map((C, i) => <C key={i} settings={settings} />)}
       </ul>
     </>
+  );
+}
+
+/* Calendar feeds: add by link or .ics file, remove by name. Feed events are read-only. */
+function CalendarForm({ feeds, onSaved }) {
+  const [name, setName] = useState("");
+  const [url, setUrl] = useState("");
+  const [ics, setIcs] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(null);
+  const [done, setDone] = useState(null);
+  const pickFile = (f) => {
+    if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => { setIcs(String(rd.result || "")); setFileName(f.name); };
+    rd.readAsText(f);
+  };
+  const save = async (e) => {
+    e && e.preventDefault();
+    setErr(null); setDone(null);
+    if (!name.trim()) { setErr("Give the feed a name."); return; }
+    if ((url.trim() && ics.trim()) || (!url.trim() && !ics.trim())) { setErr("Add either a link or a file, not both."); return; }
+    cue("press");
+    setBusy(true);
+    const body = url.trim() ? { name: name.trim(), url: url.trim() } : { name: name.trim(), ics_text: ics };
+    const r = await postJSON("/api/connectors/calendar", body);
+    setBusy(false);
+    if (!r || r.error) { setErr((r && r.error) || "The feed did not save."); return; }
+    setName(""); setUrl(""); setIcs(""); setFileName("");
+    setDone(`Saved ${body.name}.`);
+    onSaved && onSaved();
+  };
+  const remove = async (feed) => {
+    cue("press");
+    setErr(null); setDone(null);
+    const r = await postJSON("/api/connectors/calendar/remove", { name: feed.name });
+    if (!r || r.error) { setErr((r && r.error) || `“${feed.name}” was not removed.`); return; }
+    setDone(`Removed ${feed.name}.`);
+    onSaved && onSaved();
+  };
+  return (
+    <div className="way">
+      {feeds.length > 0 && (
+        <ul className="flines">
+          {feeds.map((f) => (
+            <li key={f.name} style={INNER_LI}>
+              <Mark ok={true} />
+              <span>{f.name}: {f.event_count || 0} event{f.event_count === 1 ? "" : "s"}{f.skipped ? `, ${f.skipped} skipped` : ""}{f.url ? `, ${f.url}` : ""} <button type="button" className="link" onClick={() => remove(f)}>Remove</button></span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <form onSubmit={save}>
+        <div className="ffield">
+          <label htmlFor="cal-name">Feed name</label>
+          <input id="cal-name" className="finput" value={name} onChange={(e) => setName(e.target.value)} placeholder="Family" autoComplete="off" spellCheck="false" />
+        </div>
+        <div className="ffield">
+          <label htmlFor="cal-url">Link to a calendar</label>
+          <p className="fhint">A subscription link. Your agent reads its events; it cannot change them.</p>
+          <input id="cal-url" className="finput num" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://…" autoComplete="off" spellCheck="false" />
+        </div>
+        <div className="ffield">
+          <label htmlFor="cal-file">Or an .ics file</label>
+          <p className="fhint">{fileName ? `Loaded ${fileName}.` : "Upload a file, or paste its text below."}</p>
+          <input id="cal-file" type="file" accept=".ics,text/calendar" onChange={(e) => pickFile(e.target.files && e.target.files[0])} />
+          <label className="sr" htmlFor="cal-text">Calendar file text</label>
+          <textarea id="cal-text" className="finput" rows={3} value={ics} onChange={(e) => setIcs(e.target.value)} placeholder="BEGIN:VCALENDAR…" spellCheck="false" style={{ height: "auto", padding: "10px 12px" }} />
+        </div>
+        {err && <p className="ferr" role="alert" style={{ margin: "8px 0", color: "var(--accent-ink)" }}>{err}</p>}
+        {done && <ConnectorLines lines={[done]} />}
+        <div className="factions">
+          <button type="submit" className="btn btn-send" disabled={busy}>{busy ? "Saving…" : "Save feed"}</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+/* Mail drafts as files: when on, each draft is also saved where Mail can open it. */
+function MailForm({ mail, onSaved }) {
+  const [mailOn, setMailOn] = useState(!!(mail && mail.on));
+  const [folder, setFolder] = useState((mail && mail.folder) || "");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(null);
+  const [done, setDone] = useState(null);
+  const save = async (e) => {
+    e && e.preventDefault();
+    cue("press");
+    setBusy(true); setErr(null); setDone(null);
+    const r = await postJSON("/api/connectors/mail", { on: mailOn, folder });
+    setBusy(false);
+    if (!r || r.error) { setErr((r && r.error) || "Mail did not save."); return; }
+    setDone(mailOn ? "On. New drafts also save as files." : "Off.");
+    onSaved && onSaved();
+  };
+  return (
+    <form className="way" onSubmit={save}>
+      <div className="frow">
+        <div className="frow-text"><b>Save drafts as files</b><p>Each draft your agent writes is also saved as a file you can open in Mail.</p></div>
+        <div className="frow-act"><Switch on={mailOn} label="Save drafts as files" onChange={setMailOn} /></div>
+      </div>
+      <div className="ffield">
+        <label htmlFor="mail-folder">Drafts folder</label>
+        <input id="mail-folder" className="finput num" value={folder} onChange={(e) => setFolder(e.target.value)} placeholder="~/Documents/Afterglow drafts" autoComplete="off" spellCheck="false" />
+      </div>
+      {err && <p className="ferr" role="alert" style={{ margin: "8px 0", color: "var(--accent-ink)" }}>{err}</p>}
+      {done && <ConnectorLines lines={[done]} />}
+      <div className="factions">
+        <button type="submit" className="btn btn-send" disabled={busy}>{busy ? "Saving…" : "Save"}</button>
+      </div>
+    </form>
+  );
+}
+
+/* Web search with your own key: Exa only, a cap, and a Check that saves first. */
+function SearchForm({ search, serving, onSaved }) {
+  const savedCap = (search && search.user_cap) || (search && search.cap) || {};
+  const [userOn, setUserOn] = useState(search ? !!search.user_on : false);
+  const [key, setKey] = useState("");
+  const [searches, setSearches] = useState(savedCap.searches ?? (serving && serving.cap && serving.cap.searches) ?? "");
+  const [through, setThrough] = useState(savedCap.through || "");
+  const [busy, setBusy] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [err, setErr] = useState(null);
+  const [done, setDone] = useState(null);
+  const [count, setCount] = useState(null);
+  const keySet = !!(search && search.key_set);
+  const saveBody = () => {
+    const body = { on: userOn };
+    if (key) body.key = key;
+    if (searches !== "" || through) body.cap = { searches: searches === "" ? null : Number(searches), through: through || null };
+    return body;
+  };
+  const save = async (e) => {
+    e && e.preventDefault();
+    cue("press");
+    setBusy(true); setErr(null); setDone(null);
+    const r = await postJSON("/api/connectors/search", saveBody());
+    setBusy(false);
+    if (!r || r.error) { setErr((r && r.error) || "Search did not save."); return; }
+    setKey("");
+    setDone("Saved.");
+    onSaved && onSaved();
+  };
+  const check = async () => {
+    cue("press");
+    setChecking(true); setErr(null); setDone(null); setCount(null);
+    const saved = await postJSON("/api/connectors/search", saveBody());
+    if (!saved || saved.error) { setChecking(false); setErr((saved && saved.error) || "Search did not save, so the check did not run."); return; }
+    setKey("");
+    onSaved && onSaved();
+    const r = await postJSON("/api/connectors/search/check", {});
+    setChecking(false);
+    if (!r || r.error) { setErr((r && r.error) || "The check did not run."); return; }
+    setCount(r.count ?? 0);
+  };
+  return (
+    <form className="way" onSubmit={save}>
+      <div className="frow">
+        <div className="frow-text"><b>Search with your key</b><p>Only the search words leave this computer, never your notes.</p></div>
+        <div className="frow-act"><Switch on={userOn} label="Search with your key" onChange={setUserOn} /></div>
+      </div>
+      <div className="ffield">
+        <label htmlFor="sea-prov">Provider</label>
+        <input id="sea-prov" className="finput" value="Exa" readOnly />
+        <p className="fhint">Exa is the only provider for now.</p>
+      </div>
+      <div className="ffield">
+        <label htmlFor="sea-key">Key</label>
+        <input id="sea-key" type="password" className="finput num" value={key} onChange={(e) => setKey(e.target.value)} placeholder={keySet ? "Key is set. Enter a new one to change it." : "Your Exa key"} autoComplete="off" spellCheck="false" />
+        <p className="fhint">Kept in your Keychain, never written to disk.</p>
+      </div>
+      <div className="ffield">
+        <label htmlFor="sea-cap">Spending cap</label>
+        <div className="finline">
+          <input id="sea-cap" type="number" min="1" className="finput num" value={searches} onChange={(e) => setSearches(e.target.value)} placeholder="Searches" />
+          <input aria-label="Through date" type="date" className="finput num" value={through} onChange={(e) => setThrough(e.target.value)} />
+        </div>
+      </div>
+      {err && <p className="ferr" role="alert" style={{ margin: "8px 0", color: "var(--accent-ink)" }}>{err}</p>}
+      {done && <ConnectorLines lines={[done]} />}
+      {count != null && <ConnectorLines lines={[`The check found ${count} result${count === 1 ? "" : "s"}.`]} />}
+      <div className="factions">
+        <button type="submit" className="btn btn-send" disabled={busy}>{busy ? "Saving…" : "Save"}</button>
+        <button type="button" className="btn btn-quiet" onClick={check} disabled={checking}>{checking ? "Checking…" : "Check"}</button>
+      </div>
+    </form>
+  );
+}
+
+/* The files folder: where the person's files are kept (the Files screen lists them). */
+function FilesForm({ files, onSaved }) {
+  const [folder, setFolder] = useState((files && files.folder) || "");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(null);
+  const [done, setDone] = useState(null);
+  const save = async (e) => {
+    e && e.preventDefault();
+    cue("press");
+    setBusy(true); setErr(null); setDone(null);
+    const r = await postJSON("/api/connectors/files", { folder });
+    setBusy(false);
+    if (!r || r.error) { setErr((r && r.error) || "The folder did not save."); return; }
+    setDone(folder.trim() ? `Your files are kept in ${folder.trim()}.` : "Your files are kept in the app's own folder.");
+    onSaved && onSaved();
+  };
+  return (
+    <form className="way" onSubmit={save}>
+      <div className="ffield">
+        <label htmlFor="files-folder">Folder</label>
+        <p className="fhint">Where your files are kept. Leave it empty to keep them in the app's own folder.</p>
+        <div className="finline">
+          <input id="files-folder" className="finput num" value={folder} onChange={(e) => setFolder(e.target.value)} placeholder="~/Documents/Afterglow" autoComplete="off" spellCheck="false" />
+          <button type="submit" className="btn btn-send" disabled={busy}>{busy ? "Saving…" : "Save"}</button>
+        </div>
+      </div>
+      {err && <p className="ferr" role="alert" style={{ margin: "8px 0", color: "var(--accent-ink)" }}>{err}</p>}
+      {done && <ConnectorLines lines={[done]} />}
+    </form>
   );
 }
 
