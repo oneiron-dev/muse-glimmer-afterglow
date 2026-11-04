@@ -347,7 +347,9 @@ import FnCapture
                 // The circled area must be ready soon; a stuck capture never leaves the mark spinning.
                 var context: CropContext?
                 if let crop {
-                    context = try await Self.within(12, message: "Could not capture the circled area. Try again") { try await crop.value }
+                    do {
+                        context = try await Deadline.within(12, message: "Could not capture the circled area. Try again") { try await crop.value }
+                    } catch { crop.cancel(); throw error }
                 }
                 try Task.checkCancellation()
                 let request = AmbientRequest(audio: audio, crop: context?.png, ocr: context?.ocr,
@@ -357,6 +359,8 @@ import FnCapture
                 switch reply.mode {
                 case "paste":
                     guard let text = reply.text else { throw HelperError.message("Your agent returned no text") }
+                    // Your last words are kept even when the paste below is refused, so the menu can copy them.
+                    lastWords = text
                     // Never paste into a different app if the user switched while waiting.
                     guard NSWorkspace.shared.frontmostApplication?.processIdentifier == targetApp?.processIdentifier else {
                         throw HelperError.message("Focus changed. Please try again")
@@ -364,17 +368,18 @@ import FnCapture
                     guard Permissions.status(for: .accessibility).isAuthorized else {
                         throw HelperError.message("Paste access changed. Open Permissions to check")
                     }
-                    lastWords = text
                     paster.paste(text); glow.hide()
                 case "explain":
                     guard let path = reply.url else { throw HelperError.message("Your agent returned no explanation") }
                     let url = try server.explanation(path)
+                    let words = await self.words(for: reply, server: server)
+                    // Esc during the words fetch stops here: no window opens for a cancelled request.
+                    try Task.checkCancellation()
+                    lastWords = words ?? lastWords
                     panel?.close()
                     let explanation = FloatingPanel(url: url)
                     explanation.title = "Your agent"
                     panel = explanation
-                    let words = await self.words(for: reply, server: server)
-                    lastWords = words ?? lastWords
                     if let words {
                         explanation.window.addTitlebarAccessoryViewController(YouSaidBar(words: words, paste: { [weak self, weak explanation] in
                             guard let self else { return }
@@ -397,20 +402,6 @@ import FnCapture
                 // Esc cancels the request; a cancelled request is not an error to show.
                 if !Task.isCancelled { pill.error("Could not reach your agent or capture") }
             }
-        }
-    }
-
-    /// Runs `operation`, or throws `message` after `seconds`.
-    private static func within<T>(_ seconds: Double, message: String, _ operation: @escaping () async throws -> T) async throws -> T {
-        try await withThrowingTaskGroup(of: T.self) { group in
-            group.addTask { try await operation() }
-            group.addTask {
-                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
-                throw HelperError.message(message)
-            }
-            defer { group.cancelAll() }
-            guard let first = try await group.next() else { throw HelperError.message(message) }
-            return first
         }
     }
 

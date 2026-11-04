@@ -15,6 +15,10 @@ import Foundation
 public enum AXInspector {
     /// The maximum kept length for role, title and value strings.
     public static var maxFieldLength: Int = 200
+    /// Seconds one accessibility call may wait for a slow app (the system default is about 6 s).
+    public static var messagingTimeout: Float = 0.25
+    /// Seconds the whole grid scan may take; it runs on the main thread during a circle.
+    public static var gridBudget: TimeInterval = 0.6
 
     /// Returns the accessibility snapshot at the rectangle centre.
     ///
@@ -28,6 +32,7 @@ public enum AXInspector {
         let quartz = Geometry.quartzRect(fromAppKit: rect, primaryScreenHeight: primaryHeight)
         let center = CGPoint(x: quartz.midX, y: quartz.midY)
         let systemWide = AXUIElementCreateSystemWide()
+        AXUIElementSetMessagingTimeout(systemWide, messagingTimeout)
         var element: AXUIElement?
         let status = AXUIElementCopyElementAtPosition(
             systemWide, Float(center.x), Float(center.y), &element
@@ -35,6 +40,7 @@ public enum AXInspector {
         guard status == .success, let element else {
             return AXContext(role: nil, title: nil, value: nil, appName: appName)
         }
+        AXUIElementSetMessagingTimeout(element, messagingTimeout)
         let role = truncated(copyAttribute(element, kAXRoleAttribute as CFString))
         let title = truncated(copyAttribute(element, kAXTitleAttribute as CFString))
         // The agent reads text, not pixels: screen text recognition drops emoji and symbols,
@@ -47,19 +53,25 @@ public enum AXInspector {
     /// Distinct non-empty texts (value, then title, then description) of the elements under a
     /// 3 x 3 grid of points inside `quartz`, the centre element first. At most 8 texts.
     static func gridTexts(in quartz: CGRect, systemWide: AXUIElement, first: AXUIElement) -> [String] {
+        // A slow or hung app stops the scan: each call waits at most messagingTimeout, all of it gridBudget.
+        let deadline = Date().addingTimeInterval(gridBudget)
         var elements: [AXUIElement] = [first]
-        for fy in [0.2, 0.5, 0.8] {
+        scan: for fy in [0.2, 0.5, 0.8] {
             for fx in [0.2, 0.5, 0.8] where !(fx == 0.5 && fy == 0.5) {
+                guard Date() < deadline else { break scan }
                 var element: AXUIElement?
                 let x = Float(quartz.minX + quartz.width * fx), y = Float(quartz.minY + quartz.height * fy)
-                if AXUIElementCopyElementAtPosition(systemWide, x, y, &element) == .success, let element,
-                   !elements.contains(where: { CFEqual($0, element) }) {
+                let status = AXUIElementCopyElementAtPosition(systemWide, x, y, &element)
+                if status == .cannotComplete { break scan }
+                if status == .success, let element, !elements.contains(where: { CFEqual($0, element) }) {
+                    AXUIElementSetMessagingTimeout(element, messagingTimeout)
                     elements.append(element)
                 }
             }
         }
         var seen = Set<String>(), out: [String] = []
         for element in elements {
+            guard Date() < deadline else { break }
             for name in [kAXValueAttribute, kAXTitleAttribute, kAXDescriptionAttribute] {
                 guard let raw = copyAttribute(element, name as CFString) else { continue }
                 let text = raw.trimmingCharacters(in: .whitespacesAndNewlines)

@@ -167,6 +167,7 @@ import QuartzCore
     func work() {
         stopRings()
         enter(.working)
+        follow()  // once more, with room for the note
         startWorking()
         showNote("Working on it  ·  esc to stop", after: 1.5)
         showNote("Still working  ·  esc to stop", after: 15)
@@ -232,7 +233,14 @@ import QuartzCore
     private func follow() {
         let p = NSEvent.mouseLocation
         let s = Self.size
-        panel.setFrameOrigin(CGPoint(x: (p.x + Self.offset.x - s / 2).rounded(), y: (p.y + Self.offset.y - s / 2).rounded()))
+        var c = CGPoint(x: p.x + Self.offset.x, y: p.y + Self.offset.y)
+        // Keep the mark, and while working its note, on the screen under the cursor.
+        if let frame = (NSScreen.screens.first { $0.frame.contains(p) } ?? NSScreen.main)?.visibleFrame {
+            let right = phase == .working ? Self.width - s / 2 : Self.disc
+            c.x = min(max(c.x, frame.minX + Self.disc), frame.maxX - right)
+            c.y = min(max(c.y, frame.minY + Self.disc), frame.maxY - Self.disc)
+        }
+        panel.setFrameOrigin(CGPoint(x: (c.x - s / 2).rounded(), y: (c.y - s / 2).rounded()))
         // The mark sits in the window's left square; the note uses the rest.
     }
 
