@@ -54,6 +54,36 @@ class DaySwitcherTest(unittest.TestCase):
         self.app.open_day("v", 4)
         self.assertEqual((self.app.session.world, self.app.session.day), ("v", 4))
 
+    def test_a_profile_made_in_the_app_opens_its_first_day(self):
+        r = self.app.create_profile("  Mira  Holt ", "Runs a small bakery")
+        self.assertEqual((r["world"], r["day"], r["name"]), ("p-mira-holt", 1, "Mira Holt"))
+        self.assertEqual((self.app.session.world, self.app.session.day), ("p-mira-holt", 1))
+        self.assertIn("Mira Holt's personal assistant", self.app.session.system_message["content"])
+        self.assertIn("p-mira-holt", [p["world"] for p in self.app.recorded_days()])
+        self.assertNotIn("_profiles", [p["world"] for p in self.app.recorded_days()])
+        self.assertEqual(self.app.create_profile("Mira Holt")["world"], "p-mira-holt-2")
+        with self.assertRaises(ValueError):
+            self.app.create_profile("   ")
+
+    def test_attachments_go_into_the_message(self):
+        a = self.app.attach("../notes.md", "# Larkspur\nShip date 28 April.")
+        self.assertEqual((a["id"], a["name"], a["truncated"]), ("A001", "notes.md", False))
+        text, extra = self.app.message_with_attachments("Read this", [a["id"]])
+        self.assertTrue(text.startswith("Read this\n\n[Attached file: notes.md]\n# Larkspur"))
+        self.assertEqual((extra["typed"], extra["attachments"][0]["name"]), ("Read this", "notes.md"))
+        self.assertEqual([x["id"] for x in self.app.attachments()], ["A001"])
+        with self.assertRaises(ValueError):
+            self.app.message_with_attachments("x", ["A999"])
+        with self.assertRaises(ValueError):
+            self.app.attach("empty.txt", "   ")
+
+    def test_day_end_schedule(self):
+        self.assertEqual(self.app.schedule(), {"ends_at": "23:00", "auto": False})  # off until the user turns it on
+        self.assertEqual(self.app.schedule("7:5", True)["ends_at"], "07:05")
+        self.assertEqual(self.app.schedule(), {"ends_at": "07:05", "auto": True, "set_at": self.app.schedule()["set_at"]})
+        with self.assertRaises(ValueError):
+            self.app.schedule("25:00")
+
     def test_refuses_a_day_that_was_never_opened(self):
         with self.assertRaises(ValueError):
             self.app.open_day("w", 3)

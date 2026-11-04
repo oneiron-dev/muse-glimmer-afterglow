@@ -1,0 +1,18 @@
+{
+  "name": "afterglow-ui",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "rm -rf ../web/app-assets && vite build"
+  },
+  "dependencies": {
+    "@tanstack/react-router": "^1.95.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7"
+  }
+}
