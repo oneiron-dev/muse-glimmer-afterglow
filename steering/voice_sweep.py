@@ -132,6 +132,8 @@ def main():
     ap.add_argument("--idk-scales", default="0.04,0.06,0.08")
     ap.add_argument("--idk-set", help="JSONL {id, question, answer} instead of the gate slice (e.g. "
                     "eval/data/fresh_confirm_v1.jsonl, the fresh disjoint 200): the same idk read on other questions")
+    ap.add_argument("--extra-prompts", help="JSON {prompts: [...]} appended to every voice and combo arm's test prompts "
+                    "(steering/voices/heard_prompts_v1.json: the heard read on 24 prompts)")
     ap.add_argument("--max-tokens", type=int, default=400)
     ap.add_argument("--parallel", type=int, default=4)
     ap.add_argument("--steps", default="sweep,idk")
@@ -183,6 +185,11 @@ def main():
             arms.append({"stem": f"preset-{p['slug']}", "kind": "preset", "prompts": prompts, "dials": p["dials"],
                          "sweep": {"preset": cv}, "idk": {"preset": cv}})
 
+    if args.extra_prompts:
+        extra = json.loads(Path(args.extra_prompts).read_text())["prompts"]
+        for arm in arms:
+            if arm["kind"] in ("voice", "combo", "instruction"):
+                arm["prompts"] = arm["prompts"] + [p for p in extra if p not in arm["prompts"]]
     if "sweep" in args.steps:
         for arm in arms:
             settings = {"0": [], **arm["sweep"]}
