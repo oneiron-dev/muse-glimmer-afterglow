@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { CHECKS, MINUS, factRows, failedWhy, getJSON, longDate, nf, pretty, shortDate, signed } from "./lib.js";
+import { CHECKS, MINUS, factRows, failedWhy, getJSON, longDate, nf, postJSON, pretty, shortDate, signed } from "./lib.js";
 import { Glyph } from "./Thread.jsx";
+import { cue } from "./sound.js";
 
 const TABS = [
   { id: "calendar", label: "Calendar" },
@@ -32,9 +33,9 @@ export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) 
         </button>
       </header>
       <div className="pbody">
-        {tab === "calendar" && <CalendarView ws={ws} focus={focus} today={state.date} />}
+        {tab === "calendar" && <CalendarView ws={ws} focus={focus} today={state.date} world={state.world} day={state.day} />}
         {tab === "tasks" && <TasksView ws={ws} focus={focus} />}
-        {tab === "email" && <EmailView ws={ws} focus={focus} />}
+        {tab === "email" && <EmailView ws={ws} focus={focus} world={state.world} day={state.day} />}
         {tab === "web" && <WebView focus={focus} />}
         {tab === "memory" && <MemoryView state={state} report={report} first={first} />}
         {tab === "night" && <NightView state={state} report={report} focus={focus} first={first} />}
@@ -48,8 +49,17 @@ export function Empty({ kind, children }) {
   return <div className="pempty"><Glyph kind={kind} /><p>{children}</p></div>;
 }
 
-export function CalendarView({ ws, focus, today }) {
-  const events = (ws && ws.calendar) || [];
+export function CalendarView({ ws, focus, today, world, day }) {
+  const [feed, setFeed] = useState([]);
+  useEffect(() => {
+    let live = true;
+    setFeed([]);
+    getJSON("/api/connectors/calendar/events").then((r) => { if (live) setFeed((r && r.events) || []); }).catch(() => { if (live) setFeed([]); });
+    return () => { live = false; };
+  }, [world, day]);
+  const local = (ws && ws.calendar) || [];
+  const seen = new Set(local.map((e) => e.id));
+  const events = [...local, ...(feed || []).filter((e) => e && !seen.has(e.id))];
   if (!events.length) return <Empty kind="calendar">No events yet. Ask the agent to put something in the calendar.</Empty>;
   const byDate = events.reduce((m, e) => ((m[e.date] = m[e.date] || []).push(e), m), {});
   const dates = Object.keys(byDate).sort();
@@ -60,12 +70,15 @@ export function CalendarView({ ws, focus, today }) {
         <section key={d} className={`cal-day${d === today ? " is-today" : ""}`} ref={(el) => { if (el && (d === focus || (!focus && d === firstShown))) el.scrollIntoView({ block: "start" }); }}>
           <h3>{shortDate(d)}{d === today && <span className="today">Today</span>}</h3>
           <ul>
-            {byDate[d].map((e) => (
-              <li key={e.id} className={e.id === focus ? "hl" : ""} ref={(el) => { if (el && e.id === focus) el.scrollIntoView({ block: "center" }); }}>
-                <span className="num t">{e.time}</span>
-                <span><b>{e.title}</b>{e.place && <small>{e.place}</small>}</span>
-              </li>
-            ))}
+            {byDate[d].map((e) => {
+              const from = e.source && e.source.startsWith("feed:") ? e.source.slice(5) : null;
+              return (
+                <li key={e.id} className={e.id === focus ? "hl" : ""} ref={(el) => { if (el && e.id === focus) el.scrollIntoView({ block: "center" }); }}>
+                  <span className="num t">{e.time}</span>
+                  <span><b>{e.title}</b>{e.place && <small>{e.place}</small>}{from && <small>From {from}, read-only</small>}</span>
+                </li>
+              );
+            })}
           </ul>
         </section>
       ))}
@@ -91,15 +104,29 @@ export function TasksView({ ws, focus }) {
   );
 }
 
-export function EmailView({ ws, focus }) {
+export function EmailView({ ws, focus, world, day }) {
   const drafts = [...((ws && ws.emails) || [])].reverse();
   const [sel, setSel] = useState(focus || (drafts[0] && drafts[0].id));
   const [copied, setCopied] = useState(false);
+  const [mailOn, setMailOn] = useState(false);
+  const [openErr, setOpenErr] = useState(null);
   useEffect(() => { if (focus) setSel(focus); }, [focus]);
+  useEffect(() => {
+    let live = true;
+    setMailOn(false);
+    setOpenErr(null);
+    getJSON("/api/connectors").then((r) => { if (live) setMailOn(!!(r && r.mail && r.mail.on)); }).catch(() => { if (live) setMailOn(false); });
+    return () => { live = false; };
+  }, [world, day]);
   if (!drafts.length) return <Empty kind="email">No drafts yet. Ask the agent to write an email; it saves a draft here and never sends it.</Empty>;
   const m = drafts.find((d) => d.id === sel) || drafts[0];
   const copy = async () => { await navigator.clipboard.writeText(`To: ${m.to}\nSubject: ${m.subject}\n\n${m.body}`); setCopied(true); setTimeout(() => setCopied(false), 1500); };
-  const mailto = `mailto:${/@/.test(m.to) ? encodeURIComponent(m.to) : ""}?subject=${encodeURIComponent(m.subject)}&body=${encodeURIComponent(m.body)}`;
+  const open = async () => {
+    cue("press");
+    setOpenErr(null);
+    const r = await postJSON("/api/connectors/mail/open", { id: m.id });
+    if (!r || r.error) setOpenErr((r && r.error) || "The draft did not open.");
+  };
   return (
     <div className="mail">
       {drafts.length > 1 && (
@@ -112,8 +139,9 @@ export function EmailView({ ws, focus }) {
         <p className="mail-body">{m.body}</p>
         <div className="mrow">
           <button type="button" className="btn btn-quiet" onClick={copy}>{copied ? "Copied" : "Copy"}</button>
-          <a className="btn btn-quiet" href={mailto}>Open in Mail</a>
+          {mailOn && <button type="button" className="btn btn-quiet" onClick={open}>Open in Mail</button>}
         </div>
+        {openErr && <p className="ferr" role="alert">{openErr}</p>}
         <p className="pfine">A draft. Afterglow never sends email; you send it from your mail app.</p>
       </article>
     </div>

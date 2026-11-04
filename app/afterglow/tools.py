@@ -196,8 +196,12 @@ class ToolBox:
                 return {"provider": out["provider"], "results": out["results"]}, []
             st = self.world.state
             if name == "calendar.list_events":
-                ev = sorted((e for e in st["calendar"] if e.get("date") == args.get("date")),
-                            key=lambda e: e.get("time", ""))
+                from .connectors import calendar_events
+
+                world = self.world.path.parent.parent.name
+                events = [e for e in st["calendar"] if e.get("date") == args.get("date")]
+                events += calendar_events(world, args.get("date"))
+                ev = sorted(events, key=lambda e: e.get("time", ""))
                 return {"date": args.get("date"), "events": ev}, []
             if name == "calendar.add_event":
                 e = {"id": next_id("E", st["calendar"]), "date": args["date"], "time": args["time"],
@@ -222,6 +226,12 @@ class ToolBox:
                      "body": str(args["body"]), "status": "draft"}
                 if self.day is not None:
                     m["day"] = self.day
+                from .connectors import write_mail_draft
+
+                try:
+                    write_mail_draft(self.world.path.parent.parent.name, m)
+                except (OSError, ValueError, RuntimeError):
+                    return {"error": "The mail draft could not be saved as a file. Check your Mail connector folder."}, []
                 drafts.append(m)
                 self.world.save()
                 return {"drafted": m, "sent": False}, []
