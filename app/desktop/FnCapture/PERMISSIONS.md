@@ -15,7 +15,7 @@ swift build --jobs 2
 ./scripts/bundle.sh
 ```
 
-Keep `build/Afterglow fn.app` in a stable location, or copy it once to Applications.
+Keep `build/AfterglowFn.app` in a stable location, or copy it once to Applications.
 Launch the signed bundle yourself, not the unbundled SwiftPM binary. It has the
 microphone usage description and a stable bundle identifier. The builder does not
 launch it. Ad hoc signing is for local use, not distribution or notarisation.

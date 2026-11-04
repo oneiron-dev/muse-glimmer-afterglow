@@ -42,7 +42,7 @@ Do not launch the helper until the owner is ready to grant permissions. See `PER
 ## Verification
 - `swift test --jobs 2`: 18 tests passed (14 library tests and 4 executable request tests), no failures.
 - `swift build --jobs 2`: passed.
-- `./scripts/bundle.sh`: release build passed and produced `build/Afterglow fn.app`; ad hoc signing passed.
+- `./scripts/bundle.sh`: release build passed and produced `build/AfterglowFn.app`; ad hoc signing passed.
 - `codesign --verify --deep --strict`: passed for that bundle. `plutil -lint scripts/Info.plist` and `bash -n scripts/bundle.sh`: passed.
 - Existing Python suite: 153 tests run, one skipped, no failures. Existing resource warnings about mocked sockets/temporary cleanup appeared.
 - `~/.bun/bin/bun run build`: passed, with existing font resolution warnings; no tracked web asset changes.
