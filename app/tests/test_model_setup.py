@@ -118,7 +118,7 @@ class ModelSetupTest(unittest.TestCase):
             b = modelsetup.probe(lms.url.removeprefix("http://"))
             self.assertEqual((b["kind"], b["chat"], b["nights"], b["glimmer"], b["model"]),
                              ("lmstudio", True, False, False, "qwen-3-8b"))
-            self.assertIn("base model", " ".join(b["lines"]))
+            self.assertIn("cannot use what your agent learns each night", " ".join(b["lines"]))
             self.assertFalse(modelsetup.probe("http://127.0.0.1:9")["chat"])
         finally:
             llama.close()

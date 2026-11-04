@@ -146,7 +146,7 @@ function ModelSection({ ctx, settings }) {
         {cur && <Lines lines={cur.lines.slice(1)} />}
         {m.current.error && <p className="ferr" role="alert">{m.current.error}</p>}
         <dl className="kv">
-          <div><dt>Update in use</dt><dd>{adapter || "Base weights"}</dd></div>
+          <div><dt>Update in use</dt><dd>{adapter || "None yet"}</dd></div>
           {settings && settings.serving && settings.serving.why && <div><dt>Why this one</dt><dd>{settings.serving.why}</dd></div>}
         </dl>
       </section>

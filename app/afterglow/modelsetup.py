@@ -182,15 +182,13 @@ def probe(url):
         out["adapters"] = len(lora)
     out["lines"].append(f"{label} at {url}" + (f", serving {out['model']}." if out["model"] else "."))
     out["lines"].append("Chat works." if out["glimmer"] else
-                        "Chat works, but this server does not serve Muse Glimmer. Afterglow is measured on Glimmer "
-                        "30B, and the nights train Glimmer adapters.")
+                        "Chat works, but this server does not run Muse Glimmer. Afterglow is built and tested on "
+                        "Glimmer 30B, and the nights only work with it.")
     if out["nights"]:
-        out["lines"].append("Nightly updates work: this server applies an adapter on each request"
-                            + (f" ({out['adapters']} loaded now)." if out["adapters"] else "."))
+        out["lines"].append("Nightly updates work: what your agent learns each night reaches it here.")
     else:
-        out["lines"].append(f"Nightly updates do not reach your agent here: {label} cannot apply the night's adapter "
-                            "on each request, so your agent answers from the base model. Use llama.cpp's "
-                            "llama-server for the nights.")
+        out["lines"].append(f"Nightly updates do not reach your agent here: {label} cannot use what your agent "
+                            "learns each night. Chat still works. For the nights, run your agent with llama.cpp.")
     return out
 
 
