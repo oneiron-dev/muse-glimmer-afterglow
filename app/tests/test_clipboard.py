@@ -743,7 +743,8 @@ class LiveWatcherTest(ClipBase):
             # Called after the final revalidation, so the write below it
             # cannot abort: once this fires, stop()+join guarantees the row.
             f = real_file(session)
-            if session is app.session:  # a watcher left by another test may call the patched _file too
+            # only the watcher's write counts: set_on() itself reads the file through _file (state()) on this thread
+            if session is app.session and threading.current_thread() is not threading.main_thread():
                 committed.set()
             return f
 
