@@ -42,7 +42,9 @@ A voice is how Afterglow's replies sound. The user picks one on the day page; it
      that finish "You are an assistant that ...", everyday extraction prompts and held-out test prompts.
      Sentences about health, diet, fitness or mood, or asking for a voice that guesses, are refused.
   2. `voice_job.sh` (GPU, one card, ~30 min for three voices): extract states on the NF4 base for the five
-     standard axes and every voice; fit the vectors with re:dvx (`fit_vectors.py`); run the behaviour check with
+     standard axes and every voice; fit the vectors with re:dvx (`fit_vectors.py`; a voice axis by the mean
+     paired difference, `diff_of_means`, which gives the same direction from two contrast sets written from one
+     sentence, cosine 0.85-0.90, where centered PCA gave 0.16-0.41); run the behaviour check with
      each voice's vector added (`behaviour_check.py --vector`, from the served GGUF, layers 16-42); start the
      per-request control-vector llama-server and run `voice_sweep.py`: test-prompt replies at strengths 0 to 0.08
      and the "I don't know" rate on the 200 gate questions at each strength. Presets get the same two reads.
@@ -53,11 +55,13 @@ A voice is how Afterglow's replies sound. The user picks one on the day page; it
      and keeps all but 3 exact-right answers). A voice that makes the model guess more does not ship. Writes
      `voices/<slug>/voice.json` (status, vector, strength range, the rule, the "I don't know" counts, the
      behaviour check) and the evidence under `eval/results/2026-11-04-voice/`.
-  Measured on 4 Nov, every raw voice vector made Glimmer say "I don't know" far more often (+22 to +65 of 200), so
-  a voice now ships with a counter-push: the model's own "I don't know" direction at a small negative strength,
-  baked with the voice into one GGUF (`voice_counter.py directions|bake`). The baked file is measured on its own
-  (gate, known, the fresh 200, heard on 24 prompts) before it ships. Results and the axis-stability caveat:
-  `eval/results/2026-11-04-voice/README.md`.
+  The rules also cover "I don't know" on the 200 gate questions (band: within 20 of base), the 200 known questions
+  (keeps what it knows) and, for the served file, the fresh 200 and 16 frozen confirm prompts
+  (`voice_report.py --verify`). A voice is offered only when all pass. Measured on 4 Nov, of three test voices two
+  pass: warm (the mean difference alone, strength 0.01) and dry wit (a centered-PCA voice that pushed "I don't know"
+  up, served with a counter-push: the model's own "I don't know" direction at a small negative strength, baked with
+  the voice into one GGUF, `voice_counter.py directions|bake`). Examples does not: its replies run long and get cut
+  off. Results, both seeds: `eval/results/2026-11-04-voice/README.md`.
   4. `propose_voice.py` adds the ready voice to the night's `steering-proposals.json`; the morning report offers
      it like any dial change. Accepted, it is a dial from the next day (`app/afterglow/dials.py`), served once the
      control-vector build loads the voice's GGUF.

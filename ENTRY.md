@@ -83,7 +83,8 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 3 Nov | Day switcher: one owner app opens another recorded person and day, from the recorded list only. | #165, #166 |
 | 3 Nov | Night proposals stop offering the cautious, formal and casual dial ends. | #167, #168 |
 | 3 Nov | Email drafts: the email.draft tool saves a draft for the user and never sends. | #169 |
-| 4 Nov | Voices: presets (default, brief) and custom voices from one sentence. Dry wit ships as a voice plus a counter-push along the model's own "I don't know" direction; warm and examples are measured and not ready. | #173, this PR |
+| 4 Nov | Voices: presets (default, brief) and custom voices from one sentence. Dry wit ships as a voice plus a counter-push along the model's own "I don't know" direction; warm and examples are measured and not ready. | #173, #175 |
+| 4 Nov | Voice axes are fitted by their mean paired difference (the same direction from two contrast sets, cosine 0.85-0.90). Warm ships at 0.01 with no counter-push; examples still fails (replies run long and get cut off). | this PR |
 
 ## Pre-existing work used as external dependencies
 

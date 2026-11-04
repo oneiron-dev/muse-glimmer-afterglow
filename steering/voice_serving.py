@@ -4,7 +4,7 @@
 
 Each ready voice gets {"id", "axis", "toward", "path", "sha256", "working_scale", "max_scale", "negative_scale": null,
 "negative_toward": null, "source"}: ids follow the dials already served (concise 0, formal 1, decisive 2 -> voices
-from 3), the path is where the GGUF sits on the serving host, and the sha256 is voice.json's (the file the sweep and
+from 3), the path is where the GGUF sits on the serving host (voice.json's file name), and the sha256 is voice.json's (the file the sweep and
 the "I don't know" check measured). Prints the entries as JSON; it edits no manifest.
 """
 
@@ -28,7 +28,7 @@ def main():
             raise SystemExit(f"{slug}: not ready ({v.get('why')})")
         s = v["strength"]
         out.append({"id": args.first_id + i, "axis": v["axis"]["name"], "toward": v["label"],
-                    "path": f"{args.dir}/voice-{slug}-v1.gguf", "sha256": v["vector"]["sha256"],
+                    "path": f"{args.dir}/{Path(v['vector']['gguf'].split(':')[-1]).name}", "sha256": v["vector"]["sha256"],
                     "working_scale": s["scale"], "max_scale": s["max_scale"], "negative_scale": None,
                     "negative_toward": None, "source": f"steering/voices/{slug}/voice.json"})
     print(json.dumps(out, indent=1, ensure_ascii=False))

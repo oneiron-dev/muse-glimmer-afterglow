@@ -1,0 +1,639 @@
+{
+ "voice": "dry-wit-s2-dom",
+ "kind": "voice",
+ "dials": null,
+ "system": null,
+ "settings": {
+  "0": [],
+  "0.01": [
+   {
+    "id": 1,
+    "scale": 0.01
+   }
+  ],
+  "0.02": [
+   {
+    "id": 1,
+    "scale": 0.02
+   }
+  ],
+  "0.03": [
+   {
+    "id": 1,
+    "scale": 0.03
+   }
+  ]
+ },
+ "summary": {
+  "0": {
+   "words": 198.7,
+   "truncated": 4,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.01": {
+   "words": 195.8,
+   "truncated": 4,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.02": {
+   "words": 172.3,
+   "truncated": 1,
+   "empty": 0,
+   "errors": 0
+  },
+  "0.03": {
+   "words": 164.8,
+   "truncated": 1,
+   "empty": 0,
+   "errors": 0
+  }
+ },
+ "replies": {
+  "0": [
+   {
+    "prompt": "Show me how to write a clear subject line for a work email.",
+    "answer": "A clear subject line tells the recipient **what the email is about and why it matters to them**, as quickly as possible. Think of it as a mini-headline.\n\nHere’s a simple formula you can use:\n\n**[Action/Topic] + [Specific Detail] + [Context/Deadline if relevant]**\n\n### Good vs. Bad Examples\n\n**Vague / Bad:**\n* `Update`\n* `Quick question`\n* `Re: Meeting`\n\n**Clear / Good:**\n* `Q3 Budget Approval Needed by Friday`\n* `Request for Feedback: Marketing Plan Draft v2`\n* `Meeting Rescheduled: Project Kickoff to Thursday 10am`\n\n### 3 Rules for a Clear Subject Line\n\n1.  **Be Specific:** Replace generic words with the actual topic. Instead of \"Update\", use \"Website Redesign Update\".\n2.  **Be Action-Oriented:** Tell the reader what you need from them. Use verbs like `Request`, `Approval Needed`, `For Review`, `Confirmation Required`.\n3.  **Keep it Short:** Aim for under 10 words. Put the most important info first.\n\n### Quick Templates You Can Copy\n\n*   **Requesting something:** `Request for [Thing] - [Project/Client Name]`\n*   **Sharing an update:** `[Project Name] Update: [Key Outcome]`\n*   **Following up:** `Follow-up: [Original Topic] from [Date]`\n*   **Scheduling:** `Meeting Invite: [Topic] on [Day, Date at Time]`\n\n**Pro Tip:** If the email is part of a long thread, don't just hit \"Reply\". Edit the subject to reflect the current need, e.g., change `Re: Q4 Planning` to `Q4 Planning - Final Decision Needed`.\n\nWant me to rewrite a subject line you’re working on?",
+    "truncated": false,
+    "tokens": 378
+   },
+   {
+    "prompt": "Explain what a spreadsheet pivot table does for beginners.",
+    "answer": "A pivot table is a tool in spreadsheet programs like Excel, Google Sheets, or Numbers that helps you summarize and analyze large amounts of data quickly.\n\nThink of it as a way to **re-organize and summarize** your data without changing the original data.\n\n### How it works, in simple terms:\n\n1.  **You start with raw data.** Imagine a big list of sales: Date, Product, Region, Salesperson, Amount Sold.\n2.  **You drag and drop fields.** A pivot table lets you pick which columns you want to look at.\n3.  **It summarizes for you.** Instead of manually adding up numbers, the pivot table does it instantly.\n\n### A simple example:\n\nYou have a list of 1,000 sales transactions.\n\n**Question you might ask:** \"How much did we sell in each Region?\"\n\nWithout a pivot table, you'd have to filter for \"North\", add them up, then filter for \"South\", add them up, etc.\n\nWith a pivot table:\n* You put `Region` in the **Rows** area\n* You put `Amount Sold` in the **Values** area\n\nInstantly you get:\n* North: $45,000\n* South: $62,000\n* East: $31,000\n* West: $58,000\n\nYou can also ask more complex questions like:\n* \"Sales by Product *and* Region\"\n* \"Average sale amount per Salesperson\"\n* \"Total sales per month\"\n\n### Key benefits for beginners:\n\n* **Summarizes data:** Counts, sums, averages, max/min\n* **No formulas needed:** No need to write SUMIFs\n* **Flexible:** Drag fields around to see different views instantly\n* **Safe:** It doesn't change your original data\n\nIn short: A pivot table turns a messy list into a clear summary so you can find answers fast.",
+    "truncated": false,
+    "tokens": 385
+   },
+   {
+    "prompt": "How do I plan travel time for back-to-back meetings?",
+    "answer": "Planning travel time for back-to-back meetings is all about **buffering realistically** and **accounting for friction**. Here’s a simple framework you can use:\n\n### 1. Map the Logistics First\n- **Distance & Mode:** How far apart are the locations? Walking, transit, driving, or flying?\n- **Traffic/Transit Patterns:** Is it rush hour? Does the subway have delays at that time?\n- **Location Friction:** Will you need to find parking, go through security, or find the room?\n\n### 2. Use the Buffer Rule\nNever book meetings back-to-back with zero gap. Add a buffer:\n- **Same building/floor:** 5-10 min buffer\n- **Same building/different floor:** 10-15 min buffer\n- **Short walk < 10 min:** 15-20 min buffer\n- **Transit/drive:** Add *actual travel time x 1.5* to account for delays\n\nExample: A 25-min drive should get a 35-40 min buffer.\n\n### 3. Build in Transition Time\nYou need time to:\n- Wrap up notes from Meeting A\n- Mentally reset\n- Get to Meeting B and settle in\nAdd 5 min minimum for this, even if travel is zero.\n\n### 4. Plan for the Worst Case\nAsk: *What’s the latest I could leave Meeting A and still make Meeting B on time?* \nWork backwards from Meeting B start time.\n\n**Formula:** \nMeeting B Start Time - Travel Time - Buffer - Transition Time = Hard Stop for Meeting A\n\n### 5. Pro Tips\n- **Block travel on your calendar** as a real appointment, not just white space.\n- **Cluster meetings by location.** Do all downtown meetings in one block, then move.\n- **Have a backup plan.** Know the next transit option or a rideshare ETA.\n- **Communicate.** If meetings are with the same people,",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me summarize these meeting notes into bullet points.",
+    "answer": "Please provide the meeting notes you'd like me to summarize, and I'll turn them into clear bullet points for you.",
+    "truncated": false,
+    "tokens": 23
+   },
+   {
+    "prompt": "Explain how password managers keep logins organized.",
+    "answer": "Password managers keep your logins organized by storing each set of credentials as a separate, labeled entry in an encrypted vault. Instead of remembering usernames and passwords yourself, the manager saves them for you and retrieves them automatically when you need them.\n\nHere’s how the organization typically works:\n\n1. **Encrypted Vault**  \n   All your logins are stored in one secure, encrypted database, often called a vault. The vault is locked with a single master password that only you know.\n\n2. **Entries per Site or Service**  \n   Each website, app, or service gets its own entry. That entry usually contains:\n   - The site name or URL\n   - Username or email\n   - Password\n   - Extra notes, security questions, or attached files\n\n3. **Folders and Tags**  \n   Many managers let you group entries into folders like “Work,” “Personal,” or “Banking,” and add tags for quick filtering.\n\n4. **Search and Auto-fill**  \n   You can search by site name, username, or tags. When you visit a login page, the manager detects the site and offers to auto-fill the correct credentials.\n\n5. **Sync Across Devices**  \n   Your vault syncs securely across your phone, computer, and browser, so the same organized list is available everywhere.\n\nIn short, a password manager replaces scattered passwords with one searchable, encrypted, and categorized list that you unlock with a single master password.",
+    "truncated": false,
+    "tokens": 293
+   },
+   {
+    "prompt": "Give me a simple outline for a monthly project report.",
+    "answer": "Here's a simple outline you can use for a monthly project report:\n\n1. **Project Overview**\n   - Project name & reporting period\n   - Key objectives for the month\n2. **Summary of Progress**\n   - Major accomplishments\n   - Milestones reached\n3. **Work Completed**\n   - Tasks finished this month\n   - Deliverables produced\n4. **Challenges & Risks**\n   - Issues encountered\n   - Mitigation steps taken\n5. **Upcoming Work**\n   - Planned tasks for next month\n   - Dependencies or support needed\n6. **Budget & Resources**\n   - Spending vs. budget\n   - Resource utilization\n7. **Conclusion**\n   - Overall status [On Track / At Risk / Delayed]\n   - Key requests or decisions needed\n\nWould you like me to tailor this for a specific type of project, like software, construction, or marketing?",
+    "truncated": false,
+    "tokens": 181
+   },
+   {
+    "prompt": "How do I back up important documents before a trip?",
+    "answer": "Backing up important documents before a trip is a smart move—it ensures you can access them even if your phone, laptop, or physical copies are lost or stolen. Here’s a simple and effective way to do it:\n\n### 1. **Digitize Physical Documents**\n\nUse a scanner app on your phone (like Adobe Scan, Microsoft Lens, or CamScanner) to create PDFs of:\n\n- Passport or ID\n- Driver’s license\n- Travel insurance\n- Flight and hotel confirmations\n- Vaccination records\n- Emergency contacts\n\nMake sure the scans are clear and legible.\n\n### 2. **Store Them Securely in the Cloud**\n\nUpload the files to a secure cloud service such as:\n\n- Google Drive\n- Dropbox\n- iCloud\n- OneDrive\n\n**Tip:** Create a dedicated folder named “Travel Documents” and organize files by type or date.\n\n### 3. **Enable Two-Factor Authentication**\n\nAdd an extra layer of security to your cloud account so your documents aren’t easily accessed if your login is compromised.\n\n### 4. **Keep Offline Copies**\n\nDownload the files to your phone or tablet so you can access them without internet. Some cloud services allow offline access if enabled in advance.\n\n### 5. **Email Yourself a Copy**\n\nSend the documents to a personal email address you can access from any device. This is a quick backup in case cloud services are inaccessible.\n\n### 6. **Bring Physical Copies Too**\n\nCarry paper copies in a separate bag from your originals, in case of digital failure.\n\nWould you like a checklist template for travel document backup?",
+    "truncated": false,
+    "tokens": 325
+   },
+   {
+    "prompt": "Help me phrase a polite request to reschedule a deadline.",
+    "answer": "Sure! Here’s a polished template you can adapt:\n\n---\n\n**Subject:** Request to Reschedule Deadline for [Project/Task Name]\n\nHi [Name],\n\nI hope you’re well. I’m writing to ask if we could reschedule the deadline for [project/task] currently set for [original date]. Due to [brief, honest reason, e.g., unforeseen delays / additional data needed], I want to ensure the work meets the quality standards you expect.\n\nWould it be possible to move the deadline to [proposed new date]? I’m happy to adjust my schedule to accommodate any constraints and will keep you updated on progress.\n\nThank you for your understanding.\n\nBest regards,  \n[Your Name]\n\n---\n\nWant it more formal or more casual?",
+    "truncated": false,
+    "tokens": 150
+   },
+   {
+    "prompt": "How do I write a short welcome message for a new team member?",
+    "answer": "Here’s a simple, friendly template you can use:\n\n---\n\n**Subject:** Welcome to the team, [Name]!\n\nHi [Name],\n\nWelcome to [Team/Company Name]! We’re excited to have you join us. Your background in [mention a relevant skill or experience] will be a great addition to our work on [mention team/project focus].\n\nFeel free to reach out to me or anyone on the team with questions as you settle in. Looking forward to working with you!\n\nBest,  \n[Your Name]  \n[Your Role]  \n[Contact info]\n\n---\n\n**Tips for a short message:**\n- Keep it warm and personal.\n- Mention one specific thing you’re looking forward to about their contribution.\n- Offer support and an open invitation to ask questions.\n\nWant me to tailor it to your team’s tone or industry?",
+    "truncated": false,
+    "tokens": 169
+   },
+   {
+    "prompt": "Explain what a firewall does on an office network.",
+    "answer": "A firewall on an office network acts as a security guard for your company's digital traffic.\n\nThink of it as a controlled checkpoint between your internal office network and the outside world, like the internet.\n\nIts main job is to **monitor and filter incoming and outgoing network traffic** based on a set of security rules. It decides what is allowed in and what is blocked.\n\nHere are the core things it does:\n\n1.  **Blocks Unauthorized Access:** It prevents external threats like hackers, malware, and viruses from entering your internal network. It inspects traffic and blocks anything that matches a rule for being dangerous.\n2.  **Controls Outgoing Traffic:** It also monitors data leaving the network to prevent data leaks or stop infected internal devices from communicating with command-and-control servers.\n3.  **Enforces Security Policy:** Admins set rules like \"Block all traffic from the internet to our HR database\" or \"Only allow employees to access approved websites.\" The firewall enforces these policies automatically.\n4.  **Protects Internal Resources:** It hides internal IP addresses from the outside world using Network Address Translation [NAT], making it harder for attackers to find and target specific computers, printers, or servers.\n\nIn short, a firewall doesn't make you 100% safe, but it is the first and most important line of defense that keeps your office network private and secure.",
+    "truncated": false,
+    "tokens": 273
+   },
+   {
+    "prompt": "What is a good way to name folders for a photo archive?",
+    "answer": "A good photo archive folder name is **consistent, chronological, and human-readable** — so you can find things fast now *and* 10 years from now.\n\nHere’s a battle-tested system most photographers and archivists use:\n\n### 1. Top Level: Year > Month > Event\nUse a **YYYY-MM-DD** structure. It sorts automatically.\n\n```\nPhotos/\n└── 2024/\n    └── 2024-07-15_Beach_Vacation/\n    └── 2024-12-25_Christmas_Family/\n└── 2025/\n    └── 2025-03-10_Sarah_Wedding/\n```\n\n**Why:** `2024-07-15` will always sort before `2024-12-25`. No ambiguity between US/EU date formats.\n\n### 2. Naming Rules\n* **Format:** `YYYY-MM-DD_EventName_Location`\n* **Keep it short, lowercase with underscores or hyphens.** No spaces.\n* **Be descriptive but consistent.** Use the same terms every time: `Vacation`, not `Holiday` one time and `Trip` another.\n* **Avoid special characters:** No `! # % & *`. Use `-` or `_`.\n\nGood examples:\n* `2025-06-22_GrandCanyon_Hiking`\n* `2023-11-03_AuntMarias_Birthday`\n* `2020-04-12_Lockdown_Backyard`\n\nBad examples:\n* `beach pics!!!`\n* `IMG_2024`\n* `July 4th`\n\n### 3. Inside the Folder\nKeep the original files untouched. Add subfolders only if needed:\n```\n2025-06-22_GrandCanyon_Hiking/\n├── 01_RAW/\n├── 02_Edited/\n└── 03_Exports_for_Sharing/\n```\n\n### 4. Bonus Tips\n* **One event = one folder.** Don’t mix",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "How should I structure a weekly status update for my manager?",
+    "answer": "A clear weekly status update helps your manager quickly understand progress, risks, and what you need. Here’s a simple, effective structure you can use every week:\n\n---\n\n### 1. **Subject Line**\nKeep it clear and consistent.\nExample:  \n`Weekly Status Update – [Your Name] – Week of [Date]`\n\n---\n\n### 2. **Opening Summary (2-3 sentences)**\nBriefly highlight the most important wins or priorities for the week.\nExample:  \n“This week I completed X and moved Y forward. Next week I’m focused on Z.”\n\n---\n\n### 3. **Accomplishments This Week**\nBullet points of what you finished.\n- Completed client presentation draft\n- Resolved ticket #1234\n- Finished research on Q3 trends\n\n---\n\n### 4. **Work in Progress**\nCurrent tasks and their status.\n- Website redesign – 60% complete, awaiting feedback\n- Monthly report – data collection done, drafting in progress\n\n---\n\n### 5. **Upcoming Priorities**\nWhat’s planned for next week.\n- Finalize website redesign\n- Submit monthly report by Thursday\n- Meet with client on Friday\n\n---\n\n### 6. **Blockers / Risks**\nAnything slowing you down or needing manager input.\n- Waiting on approval from design team\n- Delayed data from analytics\n\n---\n\n### 7. **Help Needed**\nSpecific requests for your manager.\n- Can you review the presentation by Wednesday?\n- Need clarification on project scope\n\n---\n\n### Tips:\n\n- **Keep it concise** – 1 page max.\n- **Use bullet points** for readability.\n- **Be honest** about delays or risks.\n- **End on a positive note** about next steps.\n\n---\n\nWould you like me to draft a **template you can copy-paste each week**?",
+    "truncated": false,
+    "tokens": 368
+   },
+   {
+    "prompt": "Explain how a bar chart differs from a line chart.",
+    "answer": "A bar chart and a line chart are both used to show data over categories or time, but they emphasize different things:\n\n* **Bar Chart**\n  * Uses rectangular bars of varying length or height to represent values.\n  * Best for comparing discrete categories (e.g., sales by product, population by country).\n  * Each bar stands alone, making it easy to see differences between categories.\n  * The x-axis is usually categorical, not continuous.\n\n* **Line Chart**\n  * Uses points connected by lines to show trends over a continuous variable, usually time.\n  * Best for showing change or progression (e.g., temperature over months, stock prices over years).\n  * Emphasizes the relationship and flow between data points rather than exact values for each category.\n\nIn short: **bar charts compare categories, line charts show trends over time or continuous data.**",
+    "truncated": false,
+    "tokens": 174
+   },
+   {
+    "prompt": "How do I plan the seating for a twenty-person workshop?",
+    "answer": "Planning seating for a 20-person workshop is all about balancing interaction, visibility, and comfort. Here’s a quick, practical guide:\n\n### 1. Define Your Workshop Goals\n- **Discussion-heavy?** Choose a setup that encourages eye contact and conversation.\n- **Presentation-focused?** Prioritize clear sightlines to the facilitator/screen.\n- **Collaborative work?** Allow space for small group breakouts.\n\n### 2. Popular Seating Layouts for 20 People\n- **U-Shape (horseshoe):** Great for discussion and presentations. Everyone can see each other and the facilitator. Works well in rooms with a screen at the open end.\n- **Boardroom / Rectangular Table:** Good for focused work and note-taking. Ensure the table isn’t too deep so people in the back can still participate.\n- **Round Tables (e.g., 4 tables of 5):** Encourages small group interaction while keeping the whole room connected.\n- **Cabaret / Clustered Rounds:** 4-5 small round tables of 4-5 people. Ideal for breakout discussions and networking.\n- **Theater / Classroom Style:** Best if the workshop is lecture-heavy. Less ideal for interaction but maximizes capacity.\n\n### 3. Practical Tips\n- **Room size:** Allow ~10 sq ft per person minimum, more if you need breakout space.\n- **Accessibility:** Leave wide aisles for movement and wheelchair access.\n- **Tech needs:** Ensure power outlets and Wi-Fi reach all seats if participants need devices.\n- **Materials:** Provide notepads, pens, and water within reach.\n- **Facilitator position:** Central and visible to all, with a whiteboard or screen easily seen.\n\n### 4. Quick Recommendation\nFor a balanced 20-person workshop with discussion + activities, **U-Shape or 4 round tables of 5** are usually the most flexible.\n\nWould you like help sketching a layout",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "What should I include in a handover note before a holiday?",
+    "answer": "A good handover note before a holiday should be clear, concise, and cover everything a colleague would need to keep things running smoothly in your absence. Here’s a solid structure you can follow:\n\n---\n\n### **1. Basic Details**\n\n- **Dates of absence:** When you’re leaving and when you’ll be back.\n- **Out-of-office status:** Mention if you’ve set an auto-reply and what it says.\n- **Emergency contact:** If someone can be reached urgently (optional).\n\n---\n\n### **2. Ongoing Tasks & Deadlines**\n\n- List current projects or tasks with:\n  - What’s been done so far\n  - What still needs doing\n  - Any deadlines coming up\n  - Who’s responsible while you’re away (if applicable)\n\n---\n\n### **3. Key Meetings & Appointments**\n\n- Upcoming meetings you’re scheduled for\n- Any prep needed beforehand\n- Who will attend or take notes in your place\n\n---\n\n### **4. Important Contacts**\n\n- Clients, vendors, or internal contacts that might reach out\n- Who should handle those communications in your absence\n\n---\n\n### **5. Files & Systems Access**\n\n- Where key documents live (shared drives, project folders, etc.)\n- Any passwords or access issues a colleague might need help with\n\n---\n\n### **6. Pending Decisions or Issues**\n\n- Anything waiting on your input or approval\n- Suggested next steps so nothing stalls\n\n---\n\n### **7. Anything Urgent**\n\n- Flag anything time-sensitive that can’t wait until you return\n\n---\n\nIf you want, I can give you a **ready-to-use template** you can just fill in before every holiday. That way you don’t have to rewrite it each time.",
+    "truncated": false,
+    "tokens": 347
+   },
+   {
+    "prompt": "Explain how a printer queue works.",
+    "answer": "A printer queue is a **First-In, First-Out (FIFO)** system that manages print jobs sent to a printer.\n\nHere's how it works:\n\n1. **Job Submission:** When you hit \"Print\", your document is sent as a print job to the printer spooler, a software service that manages the queue.\n2. **Queued:** The job is placed at the end of the line in the queue. If the printer is busy, it waits its turn.\n3. **Processing:** The printer takes the job at the front of the queue and processes it.\n4. **Completion:** Once printed, the job is removed from the queue. The next job in line then starts.\n\nThink of it like a line at a coffee shop: first person in line gets served first.",
+    "truncated": false,
+    "tokens": 157
+   },
+   {
+    "prompt": "How do I keep a shared to-do list from getting messy?",
+    "answer": "Keeping a shared to-do list from getting messy is all about **clear ownership, consistent structure, and light maintenance**. Here’s a simple system that works for most teams:\n\n### 1. Use a consistent format\nEvery task should follow the same pattern so it’s easy to scan:\n- **Action verb + clear outcome** → “Draft Q3 budget email” not “Budget stuff”\n- **Owner** → Assign one person, not a group\n- **Due date** → Even rough dates help prioritize\n- **Status** → e.g., To Do / In Progress / Done\n\nExample: `[ ] Draft Q3 budget email — Alex — Due Aug 12 — To Do`\n\n### 2. Limit where tasks live\nPick **one** tool and stick to it. If you use both a doc and a chat thread, things will slip. Good options: Todoist, Notion, Asana, or even a single shared Google Sheet with filters.\n\n### 3. Weekly reset ritual\nSpend 5 minutes each week to:\n- Archive completed items\n- Remove duplicates\n- Clarify vague tasks\n- Reassign anything orphaned\n\nPut it on the calendar so it actually happens.\n\n### 4. Rules for adding tasks\nAgree as a team on 2-3 rules, like:\n- No task without an owner\n- No task without a due date or a “backlog” label\n- If it takes <2 minutes, do it now — don’t add it\n\n### 5. Keep it visible but not noisy\nUse sections or tags: **Urgent, This Week, Backlog**. Collapse/archive old sections so the active list stays short.\n\n---\n\nWant a quick template you can copy-paste into your tool of choice?",
+    "truncated": false,
+    "tokens": 358
+   },
+   {
+    "prompt": "What makes a good title for a slide presentation?",
+    "answer": "A good title for a slide presentation is clear, concise, and compelling — it should instantly tell your audience what the presentation is about and why they should care.\n\nHere are the key elements of a strong slide presentation title:\n\n### 1. **Clarity Over Cleverness**\nThe title should immediately convey the topic. Avoid vague or overly clever phrases that require explanation.\n- Weak: *\"Unlocking Synergies\"*\n- Strong: *\"How to Reduce Customer Churn by 15% in 90 Days\"*\n\n### 2. **Audience-Focused**\nFrame the title around the benefit or problem for your audience.\n- Instead of *\"Q3 Sales Data\"*, try *\"Q3 Sales: Where We Won and Where We Need to Improve\"*\n\n### 3. **Concise**\nAim for 5-10 words max. It should be readable in 2 seconds.\nLong titles get skipped; short, punchy ones stick.\n\n### 4. **Action-Oriented or Outcome-Driven**\nUse strong verbs and specific outcomes when possible.\n- *\"Building a Better Onboarding Process\"* vs. *\"5 Steps to Cut New Hire Onboarding Time in Half\"*\n\n### 5. **Reflects the Core Message**\nYour title should summarize the main takeaway of the entire deck, not just the first slide. Ask: *What do I want the audience to remember?*\n\n### 6. **Context-Appropriate**\nMatch the tone to your audience and setting:\n- **Business/Professional:** Formal and direct\n- **Internal Team:** Can be more casual or motivational\n- **Sales Pitch:** Benefit-driven and persuasive\n\n**Good Title Formula:**\n`[Audience] + [Benefit/Outcome] + [Timeframe/Scope]`\nExample: *\"For Marketing Teams: 3 Strategies to Double Lead Quality This Quarter\"*\n\nWould you like help crafting a title for a specific presentation you’re working on?",
+    "truncated": false,
+    "tokens": 393
+   },
+   {
+    "prompt": "Explain what an API is to someone who does not code.",
+    "answer": "An API is like a waiter in a restaurant.\n\nYou (the customer) don't go into the kitchen, cook the food yourself, or talk directly to the chef. You just tell the waiter what you want: \"I'll have the burger, please.\"\n\nThe waiter takes your order to the kitchen, brings back the food, and handles all the messy details for you.\n\nAn API is the waiter between you and a computer system.\n\nYou ask the API for something in a simple, standard way. The API talks to the complex system behind the scenes, gets the result, and hands it back to you.\n\nYou don't need to know how the kitchen works. You just need to know how to order.\n\nExamples you use every day:\n* When an app shows you the weather, it asks a Weather API: \"What's the weather in Paris?\"\n* When you log in with \"Sign in with Google\", an API handles the login for you.\n* When you pay with Apple Pay, an API talks to the bank so you don't have to.\n\nIn short: An API is a menu and a waiter. It lets different apps and services talk to each other without you seeing the chaos in the kitchen.",
+    "truncated": false,
+    "tokens": 239
+   },
+   {
+    "prompt": "How do I write a clear bug report for a website form?",
+    "answer": "Here’s a simple, reliable structure you can use every time:\n\n# 1. Title\nShort, specific summary of the problem.\n> Example: “Contact form fails to submit when phone number contains spaces”\n\n# 2. Summary\n1–2 sentences describing what you expected vs. what actually happened.\n\n# 3. Steps to Reproduce\nNumbered list. Be exact.\n1. Go to https://example.com/contact\n2. Fill “Name” = Test User\n3. Fill “Phone” = 555 123 4567\n4. Click “Submit”\n\n# 4. Expected Result\nWhat should have happened.\n> Form submits and shows “Thank you” confirmation.\n\n# 5. Actual Result\nWhat really happened.\n> Page reloads, no confirmation, error “Invalid phone number”.\n\n# 6. Environment\n- Browser + version: Chrome 139 on macOS\n- Device / OS: MacBook Pro 14\"\n- Screen size / viewport: 1440x900\n- Network: Wi-Fi\n- Date/time of test: 2025-10-06 10:15 UTC\n\n# 7. Evidence\n- Screenshots / screen recording\n- Console errors: copy-paste relevant lines\n- Network request: status code, response snippet\n- Form data used\n\n# 8. Frequency\nAlways / Intermittent. If intermittent, how often? Any pattern?\n\n# 9. Impact\nWho’s affected and how severe? e.g., “Blocks all new leads”\n\n# 10. Workaround\nAny temporary fix? e.g., “Removing spaces from phone works”\n\n# 11. Additional Notes\nRelated tickets, recent changes, or hypotheses.\n\n---\n\n### Tips for clarity\n\n* Use one bug per report.\n* Write steps like a recipe someone else can follow blindly.\n* Include exact text you entered and exact error messages.\n* Prefer screenshots with annotations over long",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "What is a sensible way to back up a shared drive each week?",
+    "answer": "A sensible weekly backup strategy for a shared drive should balance **security, automation, and recoverability**. Here’s a practical approach:\n\n---\n\n### 1. **Use the 3-2-1 Backup Rule**\n\n- **3 copies** of your data\n- **2 different media types** (e.g., local external drive + cloud storage)\n- **1 offsite copy** (cloud or remote server)\n\nThis protects against hardware failure, ransomware, or accidental deletion.\n\n---\n\n### 2. **Automate Weekly Backups**\n\n- Use built-in tools:\n\n  - **Windows:** File History or robocopy scripts\n  - **macOS:** Time Machine\n  - **Network drives:** rsync or similar\n- Schedule backups during off-hours to avoid disrupting users.\n\n---\n\n### 3. **Versioning**\n\n- Keep multiple restore points (e.g., last 4 weeks).\n- This helps recover from accidental overwrites or file corruption.\n\n---\n\n### 4. **Cloud Backup Option**\n\n- Services like Google Drive for Business, Dropbox Business, OneDrive, or Backblaze B2 provide version history and offsite redundancy.\n- Good for ensuring quick recovery if the local server fails.\n\n---\n\n### 5. **Test Restores**\n\n- Periodically verify that backups can actually be restored.\n- A backup you can’t restore is worthless.\n\n---\n\n👉 **Simple weekly setup example:**  \nAutomated script every Friday night → copies shared drive to a local NAS + syncs to cloud storage with versioning enabled.\n\nWould you like me to suggest a specific method based on your environment (e.g., Windows server, NAS, or cloud-only shared drive)?",
+    "truncated": false,
+    "tokens": 338
+   },
+   {
+    "prompt": "How do I compare two quotes from different suppliers?",
+    "answer": "Comparing quotes from different suppliers can be a bit tricky, but here are some steps to help you do it effectively:\n\n1.  **Identify the key components**: Make sure you understand what each quote includes. This might include the cost of goods, shipping fees, taxes, and any additional services or warranties.\n2.  **Compare apples to apples**: Ensure that the quotes are for the same product or service. If one quote includes additional features or services, factor those into your comparison.\n3.  **Check the pricing structure**: Look at how the pricing is structured. Is it a flat fee, a per-unit cost, or a subscription model? Make sure you understand how the pricing will impact your overall costs.\n4.  **Consider the quality**: Don't just focus on the price. Consider the quality of the product or service being offered. A higher price might be justified if the quality is significantly better.\n5.  **Evaluate the supplier**: Research the supplier's reputation, reliability, and customer service. A supplier with a good reputation might be worth paying a bit more for.\n6.  **Negotiate**: Don't be afraid to negotiate with suppliers. If you have multiple quotes, you can use them as leverage to negotiate a better price.\n7.  **Read the fine print**: Make sure you understand any terms and conditions, such as payment schedules, cancellation policies, and warranties.\n\nBy following these steps, you can make an informed decision when comparing quotes from different suppliers.",
+    "truncated": false,
+    "tokens": 299
+   },
+   {
+    "prompt": "Explain how a postal code system helps deliver letters.",
+    "answer": "A postal code system helps deliver letters by organizing mail into geographic zones, making sorting and routing faster and more accurate.\n\n1. **Geographic Organization**  \n   Postal codes divide a country into regions, cities, districts, and even neighborhoods. Each code represents a specific area, so mail can be grouped by destination.\n\n2. **Efficient Sorting**  \n   Automated sorting machines and postal workers use the code to quickly sort letters into the correct bundles. This reduces manual handling and speeds up delivery.\n\n3. **Routing Accuracy**  \n   The code tells the postal service which route, distribution center, and local post office the letter should go through, minimizing errors and delays.\n\n4. **Faster Delivery**  \n   With precise location data, letters reach the right area sooner, improving overall delivery times.\n\nIn short, postal codes act like an address shortcut, guiding mail through the system step by step until it reaches the correct destination.",
+    "truncated": false,
+    "tokens": 186
+   },
+   {
+    "prompt": "How should I reply to a customer who received the wrong item?",
+    "answer": "Here's a professional and empathetic way to reply:\n\n---\n\n**Subject:** Our Apologies for the Incorrect Item\n\nDear [Customer Name],\n\nThank you for reaching out and bringing this to our attention. We sincerely apologize for the error in your recent order #[Order Number] — we understand how frustrating it is to receive the wrong item.\n\nWe are taking immediate steps to resolve this for you. Please let us know if you would prefer a replacement or a full refund, and we will process your request right away.\n\nThank you for your patience and understanding. We truly value your business and will do everything we can to make this right.\n\nBest regards,  \n[Your Name]  \nCustomer Support Team  \n[Company Name]\n\n---\n\nWould you like me to make it more formal or more casual?",
+    "truncated": false,
+    "tokens": 158
+   }
+  ],
+  "0.01": [
+   {
+    "prompt": "Show me how to write a clear subject line for a work email.",
+    "answer": "A clear subject line tells the reader *what* the email is about and *why* they should care, without making them open it to find out. Think of it as a tiny headline.\n\n**The formula:**  \n**[Context] + [Specific Topic] + [Action/Outcome, if needed]**\n\nKeep it under ~60 characters, use plain language, and avoid vague words like “Update” or “Quick question.”\n\n### Good vs. Bad Examples\n\n* **Vague:** `Update`  \n  **Clear:** `Q3 Budget Draft — Feedback Needed by Friday`\n\n* **Vague:** `Quick question`  \n  **Clear:** `Approval Needed: Vendor Contract for Marketing Campaign`\n\n* **Vague:** `Meeting`  \n  **Clear:** `Reschedule: Product Roadmap Review from Thu 10am to Tue 2pm`\n\n### Quick Checklist\n\n1. **Who/what is it about?** Project name, client, ticket number.\n2. **What do you want?** Feedback, approval, decision, FYI.\n3. **Any deadline?** Add it if it’s urgent.\n\n**Template you can copy:**  \n`[Project/Client] — [Specific Topic]: [Action] by [Date]`\n\nExample: `Mobile App Redesign — Wireframes Ready for Review by 5/12`\n\nWant me to workshop a subject line for a specific email you’re writing?",
+    "truncated": false,
+    "tokens": 289
+   },
+   {
+    "prompt": "Explain what a spreadsheet pivot table does for beginners.",
+    "answer": "A pivot table is like a magic summary machine for your spreadsheet.\n\nImagine you have a giant, messy list of data - like every sale your store ever made. Rows and rows of \"Date, Product, Customer, Amount...\". Finding the answer to a simple question like *\"How much did we sell of each product last month?\"* would mean scrolling forever and doing math by hand.\n\nA pivot table takes that messy list and lets you **drag, drop, and instantly summarize** it.\n\nThink of it as three main parts:\n\n1.  **Your Raw Data:** The big, flat list. It needs headers. Think of it as the ingredients.\n2.  **The Pivot Table:** The empty kitchen where you will cook your summary.\n3.  **The Controls:** Usually called Rows, Columns, Values, and Filters.\n\n**How it works for a beginner:**\n\nLet's say your data has columns: `Date`, `Product`, `Region`, `Sales`.\n\nYou make a pivot table from that data and then you just drag fields around:\n\n*   **Drag `Product` into ROWS.** Now your pivot table lists every product you sell, one per row. Instantly organized.\n*   **Drag `Sales` into VALUES.** Now next to each product, it automatically adds up all the Sales for that product. `SUM of Sales`. No formulas needed.\n*   **Drag `Region` into COLUMNS.** Now you get a grid. Products are on the left, Regions are across the top, and the cells show Sales for that Product *in* that Region.\n\nBoom. You just went from a 10,000-row nightmare to a clean 10-row summary in 3 seconds.\n\n**The core idea:** A pivot table doesn't change your original data. It just *re-aggregates* it. It answers questions like:\n*   How much per category?\n*   How many per person?\n*   What's the average, sum, or count?\n\nIt's basically",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "How do I plan travel time for back-to-back meetings?",
+    "answer": "Planning travel time for back-to-back meetings is all about **buffering reality** into your calendar so you don’t end up sprinting down the hall — or worse, late on Zoom.\n\nHere’s a simple framework:\n\n### 1. Map the Real Distance\n- **Same building/floor:** 5–10 min buffer\n- **Different floor/elevator:** 10–15 min\n- **Different building/campus:** 20–30 min minimum\n- **Off-site / driving:** Add actual drive time + 10 min parking/walk-in buffer\n\n> Pro tip: Time it once for real. Your “2-minute walk” is probably 7.\n\n### 2. Add Transition Tax\nBack-to-back meetings aren’t just travel. You need:\n- **2 min** to close laptop / notes\n- **3 min** to mentally reset\n- **5 min** to find the room/Zoom link / deal with tech\n\nThat’s ~10 min of invisible work even if the meetings are adjacent.\n\n### 3. Use the 25% Rule\nIf a meeting is 60 min, block 15 min after. If it’s 30 min, block 7–8 min. People overestimate how fast they can pivot.\n\n### 4. Calendar Tactics\n- **Hard stop** your meetings 5 min early. “Meeting ends at 2:55” not 3:00.\n- **Color-code travel blocks** so they’re non-negotiable.\n- **Batch geography.** Put all 3rd floor meetings together, then 2nd floor. Don’t zigzag.\n\n### 5. The Sanity Check\nIf you have >3 back-to-backs with travel involved, you’re not planning travel time, you’re planning a stress test. Insert a 30-min white space every 2.5 hours.\n\nWant me to build you a quick travel buffer calculator based on your office layout?",
+    "truncated": false,
+    "tokens": 399
+   },
+   {
+    "prompt": "Help me summarize these meeting notes into bullet points.",
+    "answer": "I'd be happy to help you summarize your meeting notes into bullet points. Please go ahead and share the notes you'd like me to summarize.",
+    "truncated": false,
+    "tokens": 28
+   },
+   {
+    "prompt": "Explain how password managers keep logins organized.",
+    "answer": "Password managers keep your logins organized by storing each set of credentials as a distinct **entry** in an encrypted vault, usually indexed by the website or app name, URL, and username.\n\nHere’s the basic flow:\n\n1. **Capture**  \nWhen you save a login, the manager grabs the URL/domain, username/email, password, and often extra fields like security questions or notes. Some managers also auto-detect the site icon/logo.\n\n2. **Encrypt & Store**  \nAll that data is encrypted locally with a key derived from your master password, then synced to the vendor’s cloud if you enable sync. The vault is essentially a structured database.\n\n3. **Organize**  \nEntries are tagged and searchable. Most managers let you:\n- Browse by site name or favicon\n- Search by domain, username, or custom tags/folders\n- Group into collections/folders like “Work,” “Personal,” “Banking”\n- See metadata: when it was created/last used, password strength, breach alerts\n\n4. **Auto-fill**  \nWhen you visit a site, the manager matches the current URL against its vault index, decrypts the right entry on the fly, and offers to fill username/password. Some use heuristics for multiple accounts per site.\n\n5. **Extras for sanity**  \nPassword generators, duplicate detection, breach monitoring, and secure sharing keep the vault tidy and safe over time.\n\nIn short: one encrypted vault + a searchable index by domain/username = your digital keyring, always in order.",
+    "truncated": false,
+    "tokens": 310
+   },
+   {
+    "prompt": "Give me a simple outline for a monthly project report.",
+    "answer": "Here's a simple outline you can use for a monthly project report:\n\n1. **Project Overview**\n   - Project name & reporting period\n   - Key objectives for the month\n\n2. **Summary of Progress**\n   - Major accomplishments\n   - Milestones reached\n\n3. **Work Completed**\n   - Tasks finished this month\n   - Deliverables submitted\n\n4. **Challenges & Risks**\n   - Issues encountered\n   - Mitigation steps taken\n\n5. **Upcoming Plans**\n   - Priorities for next month\n   - Resources needed\n\n6. **Budget & Timeline Status**\n   - Spending vs. budget\n   - Schedule adherence\n\n7. **Conclusion**\n   - Overall status (On track / At risk / Delayed)\n   - Key decisions needed from stakeholders",
+    "truncated": false,
+    "tokens": 157
+   },
+   {
+    "prompt": "How do I back up important documents before a trip?",
+    "answer": "Backing up important documents before a trip is a smart move—it ensures you’re covered if your phone, laptop, or physical papers get lost, stolen, or damaged. Here’s a simple, reliable way to do it:\n\n### 1. **Gather What Matters**\n\nMake a list of essential documents, such as:\n\n- Passport, ID, driver’s license\n- Travel insurance, flight/hotel confirmations\n- Vaccination certificates or visas\n- Bank/credit card info (just in case)\n- Emergency contacts\n\n### 2. **Digitize Everything**\n\n- Use a scanner app on your phone (like Adobe Scan, CamScanner, or even Notes on iPhone) to create PDFs.\n- Store them in a secure cloud service like Google Drive, Dropbox, or iCloud.\n- Make sure the files are organized in one folder labeled “Travel Backup – [Your Name]”.\n\n### 3. **Add Security**\n\n- Encrypt sensitive files or use a password-protected ZIP file.\n- Don’t just rely on one cloud—consider a second backup, like an external hard drive or USB stick you leave at home.\n\n### 4. **Physical Backup Too**\n\n- Print a copy of the most critical documents (passport, insurance) and keep them in your carry-on or give a copy to someone you trust.\n\n### 5. **Offline Access**\n\n- Download the files to your phone or tablet so you can access them even without Wi-Fi.\n- Some cloud apps let you mark files for offline viewing—use that feature.\n\n### 6. **Bonus Tip**\n\n- Email yourself a copy too, just in case. Use a subject line like “Travel Docs Backup – Do Not Delete”.\n\nWith this setup, you’ll have peace of mind knowing your documents are safe no matter what happens on the road. Safe travels!",
+    "truncated": false,
+    "tokens": 371
+   },
+   {
+    "prompt": "Help me phrase a polite request to reschedule a deadline.",
+    "answer": "Sure! Here’s a polished template you can tweak:\n\n---\n\n**Subject:** Request to Reschedule Deadline for [Project/Assignment Name]\n\nHi [Name],\n\nI hope you’re well. I’m writing to ask if we might be able to shift the deadline for [project/assignment] from [original date] to [proposed new date]. [Brief, honest reason—e.g., unexpected workload, a family matter, etc.] I’m committed to delivering quality work and want to make sure I can do it justice.\n\nWould [proposed new date] work for you? I’m happy to adjust if needed and will keep you updated on progress.\n\nThanks so much for understanding.\n\nBest regards,  \n[Your Name]\n\n---\n\nFeel free to swap in the specifics, and keep the tone warm but professional!",
+    "truncated": false,
+    "tokens": 163
+   },
+   {
+    "prompt": "How do I write a short welcome message for a new team member?",
+    "answer": "A short welcome message should be warm, personal, and give the new hire a little context about what to expect. Here’s a simple formula you can use:\n\n**1. Greet them by name**  \nStart with a friendly hello and their name.\n\n**2. Welcome them to the team/company**  \nA quick “Welcome aboard!” or “We’re thrilled you’re here.”\n\n**3. Add a personal touch**  \nMention something specific—why you’re excited they joined, a skill they bring, or a fun fact from their intro.\n\n**4. Offer support**  \nLet them know you’re here to help and point them to the right resources or buddy.\n\n**5. Keep it brief**  \nA few sentences is enough; save the deep dive for later.\n\n---\n\n### Example (email/Slack)\n\n> Hi Maya,  \n> Welcome to the Product team at Northwind! We’re so excited to have your UX chops on board—especially after seeing your portfolio on micro-interactions.  \n> I’m your onboarding buddy, so ping me anytime for questions (or coffee recommendations). Can’t wait to build with you!  \n> — Alex\n\n---\n\n### Even shorter (Slack)\n\n> Hey Jamal, welcome to the crew! 🎉 Your data-viz wizardry is already a legend in the intro channel. I’m here if you need anything—let’s make some magic.  \n\nFeel free to tweak the tone to match your company culture. A little warmth goes a long way!",
+    "truncated": false,
+    "tokens": 304
+   },
+   {
+    "prompt": "Explain what a firewall does on an office network.",
+    "answer": "A firewall on an office network acts like a security guard for your digital building.\n\nIts main job is to **monitor and control incoming and outgoing network traffic** based on a set of security rules. It sits between your internal office network and the outside world, like the internet, and decides what gets in and what stays out.\n\nThink of it as a bouncer with a guest list:\n\n*   **Filters Traffic:** It inspects data packets trying to enter or leave the network. If a packet matches the \"allowed\" rules, it's permitted through. If not, it's blocked.\n*   **Prevents Unauthorized Access:** It stops external threats like hackers, malware, and ransomware from getting into your office computers and servers.\n*   **Protects Internal Data:** It can also prevent sensitive company data from accidentally leaking out to the internet.\n\nIn short, a firewall creates a barrier that keeps the bad stuff out and your office network safe and private.",
+    "truncated": false,
+    "tokens": 190
+   },
+   {
+    "prompt": "What is a good way to name folders for a photo archive?",
+    "answer": "A good photo archive folder name is **boring, boring, boring** — in the best way. You want it to be sortable by a computer *and* readable by a human in 20 years.\n\nThe golden rule: **YYYY-MM-DD is your best friend.** It's unambiguous, sorts perfectly, and works internationally.\n\nHere are three battle-tested systems, from simple to archival-grade:\n\n### 1. The Simple & Effective Standard\nBest for 95% of people.\n`YYYY-MM-DD_EventName_Location`\n\n*   `2024-07-04_FourthOfJuly_BostonCommon`\n*   `2023-12-25_Christmas_DadHouse`\n*   `2025-08-12_SarahGraduation_UCLA`\n\nWhy it works: The date first means your folders auto-sort chronologically. The event name is human-readable. No spaces = no headaches. Use underscores or hyphens.\n\n### 2. The Hierarchical Archive\nBest for large families or decades of photos.\n```\nPhoto_Archive/\n└── 2024/\n    └── 2024-07/\n        └── 2024-07-04_FourthOfJuly_BostonCommon/\n└── 2023/\n    └── 2023-12/\n        └── 2023-12-25_Christmas_DadHouse/\n```\n\nWhy it works: You can browse by year/month without opening every folder. Keeps root directory clean.\n\n### 3. The Full Archival Standard\nBest for the truly obsessive. Based on IPTC standards.\n`YYYYMMDD_Event_Location_Photographer`\n\n*   `20240704_FourthOfJuly_BostonCommon_JSmith`\n\nNo spaces, no special characters. All caps for event is optional but improves readability.\n\n---\n\n**Golden Rules to Live By:**\n\n1.  **Date First, Always.** Never `EventName_2024`. You will hate your past self.\n2.  **Be",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "How should I structure a weekly status update for my manager?",
+    "answer": "A weekly status update should be concise, consistent, and focused on what your manager actually needs to know. Here’s a simple, effective structure you can use every week:\n\n---\n\n### 1. **Subject Line**\nClear and consistent so it’s easy to find.\nExample:  \n`Weekly Status Update – [Your Name] – Week of Oct 20`\n\n---\n\n### 2. **Opening Line**\nA quick greeting + context.  \nExample:  \n“Here’s a summary of my progress this week and priorities for next week.”\n\n---\n\n### 3. **Wins / Accomplishments**\nBullet points of what you finished or moved forward.  \nExample:\n\n- Completed client onboarding for X account\n- Delivered Q3 report draft to design team\n\n---\n\n### 4. **In Progress**\nWhat you’re actively working on.  \nExample:\n\n- Building dashboard mockups (60% done, due Friday)\n- Awaiting feedback from legal on contract language\n\n---\n\n### 5. **Blockers / Risks**\nAnything slowing you down or needing manager input.  \nExample:\n\n- Delayed access to analytics platform — IT ticket submitted\n- Unclear on final deliverable format — need guidance\n\n---\n\n### 6. **Next Week’s Priorities**\nTop 2–3 things you’ll focus on.  \nExample:\n\n- Finalize dashboard and send for review\n- Schedule kickoff with new client\n- Prep slides for team meeting\n\n---\n\n### 7. **Optional: Help Needed**\nIf you need something specific from your manager.  \nExample:  \n“Could you review the draft report by Wednesday?”\n\n---\n\n**Pro Tips:**\n\n- Keep it to one page max.\n- Use the same format every week so it’s scannable.\n- Be honest about blockers — managers prefer early flags over surprises.\n\nWant me to tailor this to your specific role or industry?",
+    "truncated": false,
+    "tokens": 381
+   },
+   {
+    "prompt": "Explain how a bar chart differs from a line chart.",
+    "answer": "A bar chart and a line chart are both used to display data, but they differ in how they represent information:\n\n* **Bar Chart:** Uses rectangular bars of varying lengths to represent values. Each bar corresponds to a category, and the length or height of the bar shows the magnitude. Ideal for comparing discrete categories.\n* **Line Chart:** Uses points connected by lines to show trends over a continuous variable, usually time. The x-axis is often time, and the y-axis shows the value. Ideal for showing change or progression.\n\nIn short, bar charts compare categories, while line charts show trends over time or a continuous scale.",
+    "truncated": false,
+    "tokens": 127
+   },
+   {
+    "prompt": "How do I plan the seating for a twenty-person workshop?",
+    "answer": "Planning seating for a twenty-person workshop is easier when you match the layout to your goals. Here’s a quick framework you can use:\n\n### 1. Clarify your workshop objectives\n- **Lecture-style / information dump**: Rows or theater style works.\n- **Discussion / brainstorming**: Round tables or U-shape.\n- **Teamwork / breakout sessions**: Pods of 4–6 or clusters.\n- **Networking / mingling**: Café style with smaller mixed groups.\n\n### 2. Know your space constraints\n- Measure room dimensions and note pillars, doors, AV equipment.\n- Leave at least 6 ft² per person for comfort, plus space for facilitators and materials.\n- Ensure sightlines to screens/whiteboards.\n\n### 3. Choose a layout\n- **U-shape (20 people)**: Good for discussion, everyone sees each other. Leave the open end for facilitator.\n- **Horseshoe**: Similar to U but with a bit more room in the middle.\n- **Round tables (4–5 tables of 4–5)**: Encourages small group work.\n- **Boardroom style**: One long table, works if you need everyone at one table.\n\n### 4. Assign seats strategically (if needed)\n- Mix departments or seniority levels to encourage cross-pollination.\n- Seat quieter participants near the facilitator.\n- Keep accessibility needs in mind (aisles, proximity to exits).\n\n### 5. Logistics\n- Print a seating chart and have a few spare chairs.\n- Label tables or chairs if you’re assigning seats.\n- Test AV and lighting from each seat.\n\n**Pro tip:** For a 20-person workshop, 4 tables of 5 or a U-shape of 20 usually hits the sweet spot between intimacy and manageability.\n\nWhat’s the main goal of your workshop—learning, discussion, or collaboration? That’ll narrow it down fast.",
+    "truncated": false,
+    "tokens": 391
+   },
+   {
+    "prompt": "What should I include in a handover note before a holiday?",
+    "answer": "A good handover note is about making your absence invisible to the team and painless for your boss. Keep it concise, structured, and actionable.\n\nHere’s a solid template you can use:\n\n**1. The Basics**\n* **Dates of absence:** When you’re out and when you’re back, including time zone if remote.\n* **Emergency contact:** Only if truly necessary. Otherwise, point to your backup.\n\n**2. Top Priorities - The \"Don't Drop These\" List**\nList 3-5 things that *must* happen while you’re gone. For each one:\n* **What it is:** One sentence summary.\n* **Why it matters:** The deadline or consequence.\n* **Next step:** Exactly what needs to be done, and by whom.\n* **Where to find it:** Link to the doc, ticket, or Slack thread.\n\n**3. Ongoing Projects Status**\nA quick table works well:\n| Project | Current Status | Next Milestone | Owner While I'm Out | Notes / Risks |\n|---|---|---|---|---|\n\n**4. Your Parking Lot**\nThings you were *meaning* to get to but didn’t. Flag them so they don’t become “mystery tasks”.\n\n**5. Key People & Contacts**\n* Internal: Who’s covering what.\n* External: Clients/vendors who might ping you. Include their preferred contact and any context they need.\n\n**6. Access & Logins**\nIf someone needs temporary access to something you own, list it. Don’t put actual passwords in a doc - point them to your password manager or IT.\n\n**7. Landmines**\nThe one awkward client, the flaky report, the meeting everyone hates but can’t cancel. Give your cover a heads-up.\n\n**Pro tip:** Send it 48 hours before you leave, not at 6pm on Friday. And set an OOO email that points to the handover doc if it’s internal.\n\nWant me to tailor this for a specific",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Explain how a printer queue works.",
+    "answer": "A printer queue is basically a line for print jobs, first in, first out.\n\n1. **Submit**: You hit print. The job — pages, settings, copies — gets packaged and handed to the print spooler, the OS service that manages printing.\n2. **Spool**: The spooler writes the job to a spool folder, usually as a .SPL/.SHD file. This frees your app so you can keep working while the data is rendered to the printer language like PCL or PostScript.\n3. **Queue**: Jobs sit in the queue in order received. The spooler shows them as Document Name, Owner, Status: Spooling, Printing, etc.\n4. **Process**: The spooler feeds the first job to the printer driver, which translates it to the printer's language. The printer pulls data, renders pages, and prints.\n5. **Complete**: When done, the job is marked Printed and removed from the queue. If it errors — Paper Jam, Out of toner — it pauses and waits for you to fix it.\n\nIt's FIFO by default, though most drivers let you prioritize, pause, or reorder jobs. Network printers just have a shared queue, so everyone on the LAN lines up in the same line.",
+    "truncated": false,
+    "tokens": 255
+   },
+   {
+    "prompt": "How do I keep a shared to-do list from getting messy?",
+    "answer": "Here are some simple ways to keep a shared to-do list from turning into chaos:\n\n**1. One rule for adding tasks: make them tiny and specific.**  \nInstead of “Plan vacation,” write “Email hotel for price by Tue.” A task should be clear enough that anyone can do it without a meeting.\n\n**2. Use a consistent format.**  \nPick one style and stick to it: `[ ] Task – who – due date`. Example: `[ ] Book flights – Maya – 11/12`. No extra notes in the title; details go in a comment/subtask.\n\n**3. Assign an owner and a deadline to every item.**  \nIf it has no name and no date, it’s just a wish. Unowned tasks get a default owner (“team”) and a review date, or they get deleted.\n\n**4. Keep categories minimal.**  \nThree buckets are enough for most teams: **To Do / Doing / Done**. Fancy tags are fine, but only if everyone actually uses them.\n\n**5. Do a 2-minute tidy-up ritual.**  \nOnce a day (or end of week) someone scans for duplicates, vague wording, and stale items. Archive anything done >30 days ago.\n\n**6. No chat in the list.**  \nComments are for clarifying the task, not for banter. Long discussions move to Slack/Email so the list stays scannable.\n\n**7. Limit who can edit.**  \nIf everyone can rename columns, someone will. Give edit rights to a few “list keepers” and let others add via a form or a single “Inbox” column.\n\nPick one or two of these, try them for a week, and adjust. A tidy list is less about the tool and more about the habits around it.",
+    "truncated": false,
+    "tokens": 362
+   },
+   {
+    "prompt": "What makes a good title for a slide presentation?",
+    "answer": "A good title for a slide presentation is like a good headline: it should be **clear, concise, and compelling**. Its job is to tell the audience *what* they’re about to learn and *why* they should care — in just a few seconds.\n\nHere are the key ingredients:\n\n### 1. **Clarity over cleverness**\n- The audience should instantly know the topic.\n- Avoid jargon or inside jokes unless everyone gets them.\n- Example: “Q3 Sales Performance” beats “The Numbers Don’t Lie… Much.”\n\n### 2. **Brevity**\n- Aim for 5-7 words max. If it needs a subtitle, keep the main title short.\n- Long titles get skipped. People scan, they don’t read essays.\n\n### 3. **Audience-focused**\n- Frame it around their problem or benefit, not your process.\n- Bad: “Our New Marketing Strategy Deck”\n- Good: “How to Double Lead Conversion in 90 Days”\n\n### 4. **Specificity**\n- Vague titles kill curiosity. Specific titles promise value.\n- “Customer Retention” → “3 Retention Tactics That Saved Us $400K”\n\n### 5. **Tone match**\n- Formal boardroom? Keep it professional.\n- Creative pitch? A little personality is fine.\n- The title should match the room, not your personal brand.\n\n### 6. **No complete sentences**\n- Titles aren’t thesis statements. Drop the “An Analysis Of…”\n- Use noun phrases or punchy fragments.\n\n**Bonus tip:** If you need a subtitle, let the title hook them and the subtitle explain it.\nTitle: “The Churn Problem”\nSubtitle: “Why 23% of users leave in month one — and how we’re fixing it”\n\nWant me to workshop a title for your actual deck? Tell me the topic and audience.",
+    "truncated": false,
+    "tokens": 384
+   },
+   {
+    "prompt": "Explain what an API is to someone who does not code.",
+    "answer": "An API is like a waiter at a restaurant.\n\nYou (the customer) don't go into the kitchen, cook the food yourself, or shout orders at the chefs. You just tell the waiter what you want.\n\nThe waiter takes your order, brings it back from the kitchen, and delivers it to you.\n\nAn API is the waiter between you and some computer system.\n\nYou ask the API for something in a specific way, it talks to the complex system behind the scenes, and brings back the answer for you. You never have to see the mess in the kitchen.\n\nExamples you use every day:\n* When an app shows you the weather, it's asking a Weather API: \"Hey, what's the weather in London?\"\n* When you log in with \"Sign in with Google\", you're using Google's API as the waiter to verify who you are.\n* When Uber finds you a driver, it's asking Uber's API for a car nearby.\n\nYou just ask for what you want. The API handles the complicated stuff behind the curtain.",
+    "truncated": false,
+    "tokens": 206
+   },
+   {
+    "prompt": "How do I write a clear bug report for a website form?",
+    "answer": "Writing a clear bug report for a website form is all about giving the dev team *just enough detail to reproduce it* without making them guess. Think of it like leaving a trail of breadcrumbs.\n\nHere’s a simple, reliable structure you can use every time:\n\n### 1. The Summary: One-sentence headline\nStart with what went wrong, not how you feel about it.\n**Bad:** \"Form is broken!!!\"\n**Good:** \"Contact form submission fails when phone number field is left blank.\"\n\n### 2. Steps to Reproduce: Be robotic\nList the clicks exactly in order. Numbered steps are your friend.\n1. Go to `www.yoursite.com/contact`\n2. Fill in \"Name\" as `Test User`\n3. Leave \"Phone Number\" empty\n4. Select \"Inquiry Type\" as `Support`\n5. Click \"Submit\"\n\n### 3. Expected vs. Actual Result\nThis is the core of the bug.\n* **Expected:** Form submits successfully and shows \"Thank you for contacting us\" confirmation.\n* **Actual:** Form does not submit, page reloads, and no confirmation appears. Error message \"Invalid input\" shows under Phone Number field.\n\n### 4. Environment Details: Context matters\n* **Browser & Version:** e.g., Chrome 118.0 on macOS Sonoma\n* **Device:** Desktop / iPhone 14 Pro\n* **Screen size / Viewport:** 1440px wide\n* **Date & Time:** 2026-10-20 14:32 UTC\n\n### 5. Visual Proof: Show, don't just tell\nAttach a screenshot or screen recording. For forms, a GIF of you reproducing the steps is gold.\nBonus points: Include the browser Console errors if you see any red text in DevTools > Console.\n\n### 6. Severity & Impact\nHelp them prioritize. Is it a tiny cosmetic glitch or is it blocking all users from signing",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "What is a sensible way to back up a shared drive each week?",
+    "answer": "A sensible way to back up a shared drive each week is to use a combination of automated tools and a reliable storage solution. Here are some steps you can follow:\n\n1. Identify the shared drive: Determine which shared drive you want to back up and what files and folders are important to you.\n2. Choose a backup tool: There are many backup tools available, both free and paid. Some popular options include Acronis True Image, Carbonite, and Backblaze. Choose a tool that suits your needs and budget.\n3. Set up automated backups: Most backup tools allow you to schedule automated backups. Set up a weekly backup schedule so that your shared drive is backed up automatically every week.\n4. Choose a backup location: Decide where you want to store your backups. You can choose a local external hard drive, a network-attached storage (NAS) device, or a cloud storage service like Dropbox or Google Drive.\n5. Test your backups: Make sure your backups are working correctly by testing them. Try restoring a file or two to make sure everything is working as expected.\n6. Keep your backups safe: Make sure your backups are stored in a safe location, such as a fireproof safe or a secure cloud storage service. This will ensure that your backups are protected in case of a disaster.\n\nBy following these steps, you can ensure that your shared drive is backed up regularly and that your important files are safe and secure.",
+    "truncated": false,
+    "tokens": 290
+   },
+   {
+    "prompt": "How do I compare two quotes from different suppliers?",
+    "answer": "Comparing quotes from different suppliers can be a daunting task, especially when you're trying to make a decision that will impact your business or personal finances. Here are some tips to help you compare two quotes from different suppliers:\n\n1. **Check the scope of work**: Make sure that both quotes are for the same scope of work. If one quote includes additional services or features that the other doesn't, you'll need to adjust your comparison accordingly.\n2. **Compare the prices**: This one's obvious, but make sure you're comparing apples to apples. If one quote is significantly cheaper than the other, it's worth asking why.\n3. **Look at the fine print**: Check the terms and conditions of each quote. Are there any hidden fees or charges that might catch you off guard? Are the payment terms the same?\n4. **Consider the quality of the product or service**: If one supplier is offering a higher-quality product or service, it might be worth paying a bit more.\n5. **Check the supplier's reputation**: Do some research on each supplier. Read reviews, check their website, and see if they have any certifications or awards.\n6. **Compare the warranties and guarantees**: If one supplier offers a better warranty or guarantee, it might be worth considering.\n7. **Think about the long-term costs**: Don't just focus on the upfront cost. Consider the long-term costs of each option, including maintenance, repairs, and replacement costs.\n8. **Get a third opinion**: If you're still unsure, consider getting a third quote from another supplier to help you make a more informed decision.\n\nBy following these",
+    "truncated": false,
+    "tokens": 320
+   },
+   {
+    "prompt": "Explain how a postal code system helps deliver letters.",
+    "answer": "A postal code system helps deliver letters by sorting mail geographically.\n\nIt assigns a unique code to each area, so letters can be routed quickly to the right city, town, or neighborhood without reading the full address by hand every time.\n\nThis speeds up sorting, reduces mistakes, and makes delivery more efficient.\n\nWant an example of how it works in real life?",
+    "truncated": false,
+    "tokens": 73
+   },
+   {
+    "prompt": "How should I reply to a customer who received the wrong item?",
+    "answer": "First, acknowledge the mistake and apologize sincerely. Then, offer a clear solution—like a replacement or refund—and keep the tone empathetic and professional.",
+    "truncated": false,
+    "tokens": 32
+   }
+  ],
+  "0.02": [
+   {
+    "prompt": "Show me how to write a clear subject line for a work email.",
+    "answer": "Sure thing. A clear subject line is like a tiny billboard for your email — it should tell the reader *what* it is and *why* they should care, without making them open it to find out.\n\nHere’s a simple formula you can steal:\n\n**[Action] + [Topic] + [Optional: Deadline/Context]**\n\nA few examples:\n\n- **“Approval Needed: Q3 Budget Draft by Friday”**  \n  (Action: Approval Needed, Topic: Q3 Budget Draft, Context: by Friday)\n\n- **“Updated: Client Presentation Deck v3 Attached”**  \n  (Action: Updated, Topic: Client Presentation Deck, Context: v3 Attached)\n\n- **“Question About: Office Wi-Fi Outage on 10/12”**  \n  (Action: Question About, Topic: Office Wi-Fi Outage, Context: date)\n\nPro tips:\n\n- **Keep it under ~60 characters** so it doesn’t get cut off on mobile.\n- **Skip the vague** (“Quick question???”). Be specific.\n- **No ALL CAPS** unless you’re announcing the apocalypse.\n- **One idea per email** — if you’re asking for two things, maybe send two emails.\n\nTry it on your next one and watch the open rates (and sighs) improve.",
+    "truncated": false,
+    "tokens": 269
+   },
+   {
+    "prompt": "Explain what a spreadsheet pivot table does for beginners.",
+    "answer": "A pivot table is like a magical summary machine for your spreadsheet.\n\nImagine you have a giant, messy list of data. Like every single coffee purchase your office has ever made: Date, Who bought it, What they bought, How much it cost.\n\nA pivot table lets you take that chaos and, with a few drags and drops, instantly answer questions like:\n\n* \"How much did Dave spend on lattes last Tuesday?\"\n* \"What is our total monthly coffee budget?\"\n* \"Who is the office's biggest caffeine addict?\"\n\n**How it works, in three steps:**\n\n1.  **You dump the data in.** It has to be tidy, with headers like `Person`, `Drink`, `Cost`, `Date`. No merged cells, no empty rows.\n\n2.  **You pick where things go.** A pivot table has four slots:\n    *   **Rows:** What you want to list down the side. e.g., `Person`\n    *   **Columns:** What you want across the top. e.g., `Month`\n    *   **Filters:** The bouncer. Only let in `Drink = Latte`. \n    *   **Values:** The math. What do you actually *want* to know? `SUM of Cost`, `COUNT of Purchases`, `AVERAGE of Cost`.\n\n3.  **It does the math for you.** Instead of you writing a million `SUMIF` formulas, the pivot table instantly groups all your rows together and crunches the numbers. Dave's 47 lattes? Summed. January's spending? Totaled.\n\nThe best part? It's dynamic. Add 10,000 new rows to your source data, hit Refresh, and your summary updates instantly.\n\nIt's basically an Excel-powered Roomba for your data: it sucks up the mess and leaves you with a neat little summary rug.",
+    "truncated": false,
+    "tokens": 379
+   },
+   {
+    "prompt": "How do I plan travel time for back-to-back meetings?",
+    "answer": "Planning travel time for back-to-back meetings is all about **buffering reality** into your calendar, not just the meeting itself.\n\nHere’s a simple, battle-tested formula:\n\n### 1. The \"Meeting + Escape Velocity\" Rule\nA meeting doesn't end when the clock says it ends. It ends when you’ve:\n- Survived the last 5 minutes of awkward silence\n- Actually stood up\n- Found your laptop, your soul, and the exit\n\n**Add 10-15 min post-meeting buffer** minimum. If it's a meeting with a known overrunner, make it 20-30 min.\n\n### 2. Travel Time Math\nCalculate it like this:\n**Real Travel Time = Google Maps Time x 1.5 + Human Factor**\n\nHuman Factor includes:\n+ 3 min to find the right building entrance\n+ 5 min for \"oops wrong floor\"\n+ 7 min for the elevator that smells like regret\n+ Infinite min if you have to take the stairs because the elevator is \"out of order\" again\n\nIf you're going from Desk to Desk in the same building: 7 minutes. Minimum. It's a law of physics.\n\n### 3. The Calendar Tetris Strategy\n- **Never** schedule a meeting to start the *exact* second the last one ends. That's how you learn to cry in supply closets.\n- Block travel as a real, named event: \"Wander aimlessly and question life choices\" or \"Commute to the 3rd circle of hell [Conference Room B]\".\n- Color-code your buffers. Make them aggressively red so you feel the danger.\n\n### 4. Pro Tips from the Trenches\n- **The First Meeting Tax:** Your first meeting of the day starts late because you need coffee. Your last meeting of the day ends early because you've transcended time.\n- **Back-to-back across campuses?** That's not a meeting schedule, that's an Olympic sport.",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me summarize these meeting notes into bullet points.",
+    "answer": "I'd be happy to help you summarize your meeting notes into bullet points. Please go ahead and paste the notes here, and I'll whip up a tidy bullet-point summary for you.",
+    "truncated": false,
+    "tokens": 36
+   },
+   {
+    "prompt": "Explain how password managers keep logins organized.",
+    "answer": "Password managers keep logins organized by storing all your usernames, passwords, and associated metadata in an encrypted vault, usually locked by a single master password.\n\nInside that vault, each login is saved as an \"entry\" with fields like site URL, username, password, notes, and sometimes security questions. The manager then:\n\n1. **Auto-detects the site** via the URL you’re visiting, so it knows which entry to offer.\n2. **Tags and groups** entries into folders or collections, so you can sort by work, personal, banking, etc.\n3. **Syncs** the encrypted vault across your devices, so the same tidy list follows you everywhere.\n\nYou only have to remember the one master password; the manager remembers the rest and hands the right credentials to the right site at the right time.",
+    "truncated": false,
+    "tokens": 168
+   },
+   {
+    "prompt": "Give me a simple outline for a monthly project report.",
+    "answer": "Sure! Here's a simple, no-nonsense outline for a monthly project report:\n\n1. **Cover Page**\n   - Project name, reporting month, your name, date.\n\n2. **Executive Summary**\n   - TL;DR of the month. What went right, what went sideways.\n\n3. **Project Status Snapshot**\n   - Red/Amber/Green. Budget burn. Timeline drift.\n\n4. **What We Said We'd Do**\n   - Planned deliverables for the month.\n\n5. **What We Actually Did**\n   - Completed tasks, with receipts.\n\n6. **What's Stuck**\n   - Blockers, delays, passive-aggressive emails from IT.\n\n7. **Next Month's Gambles**\n   - Upcoming deliverables and optimistic assumptions.\n\n8. **Appendix**\n   - Charts nobody will read but look pretty.\n\nWant it in corporate-speak or honest-human?",
+    "truncated": false,
+    "tokens": 180
+   },
+   {
+    "prompt": "How do I back up important documents before a trip?",
+    "answer": "Backing up important documents before a trip is a smart move—whether you're heading abroad, hiking the wilderness, or just dodging airport chaos. Here's how to do it like a pro:\n\n### 1. **Digitize Everything First**\n\n- **Scan or photograph** passports, IDs, visas, vaccine cards, travel insurance, itineraries, hotel confirmations, and any obscure paperwork like a pet passport.\n- Use a scanner app like Adobe Scan, Microsoft Lens, or even your phone’s camera. Bonus points if the app auto-crops and enhances.\n\n### 2. **Store in the Cloud (Triple Redundancy, Baby)**\n\n- Upload to **at least two** cloud services: Google Drive, Dropbox, iCloud, OneDrive—pick your poison.\n- Pro tip: Name the folder something boring like `Tax Returns 2013` so no one raids it mid-hack.\n\n### 3. **Encrypt Like You Mean It**\n\n- Zip the folder and password-protect it, or use encrypted cloud storage like pCloud Crypto or Tresorit.\n- Don’t use “password123” unless you enjoy identity theft.\n\n### 4. **Offline Backup, Just in Case**\n\n- Email yourself the files, or stash them on a USB stick you *won’t* lose in customs.\n- Bonus: tuck a microSD card into your sock drawer or inside a hollowed-out paperback.\n\n### 5. **Print a Physical Copy (Old School Wins)**\n\n- Because Wi-Fi in the middle of nowhere is a myth.\n- Leave a copy with a trusted human who won’t judge your hoarding tendencies.\n\n### 6. **Bonus Round: Back Up Your Backups**\n\n- Yes, really. A backup of your backup is just good adulting.\n\nNow go forth and travel like a digital survivalist.",
+    "truncated": false,
+    "tokens": 371
+   },
+   {
+    "prompt": "Help me phrase a polite request to reschedule a deadline.",
+    "answer": "Sure thing. Here’s a polite, professional template you can tweak:\n\n---\n\n**Subject:** Request to Reschedule Deadline for [Project/Assignment Name]\n\nHi [Name],\n\nI hope you’re well. I’m writing to ask if we might possibly push the deadline for [project/assignment] from [original date] to [new proposed date]. [Brief, honest reason—e.g., unexpected workload, a minor technical snag, a family commitment—without oversharing.]\n\nI’m fully committed to delivering quality work and will make sure everything’s wrapped up by [new date]. Please let me know if that works for you, or if there’s another window that suits better.\n\nThanks a ton for your understanding!\n\nBest,  \n[Your Name]\n\n---\n\nFeel free to swap in the specifics. Good luck!",
+    "truncated": false,
+    "tokens": 165
+   },
+   {
+    "prompt": "How do I write a short welcome message for a new team member?",
+    "answer": "A short welcome message for a new team member should be warm, professional, and maybe a little personal. Here are a few options depending on the vibe you want:\n\n### 1. **Classic & Professional**\n> Welcome to the team, [Name]! We're thrilled to have you on board. Looking forward to all the great things we'll accomplish together.\n\n### 2. **Warm & Friendly**\n> Hey [Name], welcome to the crew! So happy you're here. Can't wait to see what you bring to the table.\n\n### 3. **Slightly Cheeky**\n> Alert! New human detected. [Name] has officially joined the team. Try not to scare them too much on their first day.\n\n### 4. **Short & Sweet**\n> Welcome aboard, [Name]! Glad to have you with us.\n\nPro tip: Add a little personal touch if you can, like referencing their role or a fun fact from their intro. It goes a long way.",
+    "truncated": false,
+    "tokens": 201
+   },
+   {
+    "prompt": "Explain what a firewall does on an office network.",
+    "answer": "A firewall on an office network is basically a bouncer for your digital building.\n\nIts job is to stand at the gateway between your \"inside\" network — where all the office computers, printers, file servers, and the poor intern's Spotify machine live — and the wild, untamed internet.\n\nIt does three main things:\n\n1.  **Filters Traffic.** It inspects every packet trying to get in or out. It checks the address, port, and protocol against a rulebook. \"Ah yes, port 443 for HTTPS to the web? Allowed. Random port 666 from a server in a country you've never heard of? Denied.\"\n\n2.  **Enforces Policy.** It's the enforcer of IT's rules. You can block Facebook during work hours, stop employees from torrenting the entire Lord of the Rings trilogy on the company Wi-Fi, or make sure only the HR server can talk to the payroll database.\n\n3.  **Creates a DMZ.** A lot of offices put their public-facing stuff — like the company website or email server — in a demilitarized zone. The firewall lets the outside world knock on the front door, but never lets them wander straight into the vault where the actual data lives.\n\nModern firewalls aren't just dumb port blockers anymore. Next-Gen Firewalls will deep-packet inspect, look for malware signatures, and even try to figure out if that \"totally legitimate\" PDF is actually ransomware.\n\nIn short: The firewall doesn't make you invincible, but it makes you a much less *interesting* target than the office next door.",
+    "truncated": false,
+    "tokens": 324
+   },
+   {
+    "prompt": "What is a good way to name folders for a photo archive?",
+    "answer": "A good way to name folders for a photo archive is to use a consistent, chronological, and descriptive system that makes it easy to find things later.\n\nHere’s a solid formula:\n\n**YYYY-MM-DD_EventOrLocation**\n\nExamples:\n\n- `2024-07-04_FourthOfJuly_BBQ`\n- `2023-12-25_Christmas_Morning`\n- `2022-08_Paris_Trip`\n\nWhy this works:\n\n1. **ISO 8601 date first** `YYYY-MM-DD` or `YYYY-MM` sorts automatically in any file explorer.\n2. **Descriptive but concise** underscores or hyphens, no spaces. Spaces are a nightmare on some systems.\n3. **Hierarchy matters.** Keep it shallow: `Archive > Year > Year-Month_Event`. Too many nested folders and you’ll lose things.\n\nPro tips:\n\n* **Be consistent.** Pick one scheme and never deviate.\n* **No special characters.** Stick to letters, numbers, hyphens, underscores.\n* **One event, one folder.** Don’t dump 3 years of random phone pics into `misc`.\n* **Add a README.txt** in the root with your naming convention so future you remembers.\n\nWant me to build you a template structure for personal vs. work photos?",
+    "truncated": false,
+    "tokens": 263
+   },
+   {
+    "prompt": "How should I structure a weekly status update for my manager?",
+    "answer": "A weekly status update is all about clarity, brevity, and making your manager’s life easier. Think of it as a “what I did, what I’m doing, what’s in the way” snapshot.\n\nHere’s a structure that works for most managers:\n\n### 1. Subject Line\nKeep it boringly predictable:  \n`Weekly Status – [Your Name] – Week of [Date]`\n\n### 2. The TL;DR\nOne sentence at the top. If your manager reads nothing else, they should know if you’re on fire or on track.  \n*“All green, shipping the API refactor on Thursday.”*  \n*“Yellow flag on the client demo because design assets are late.”*\n\n### 3. Wins / Shipped Last Week\nBullet points. No essays.  \n- Closed ticket #412 – user auth finally stops pretending passwords are optional  \n- Deployed hotfix before anyone noticed (miracle)\n\n### 4. In Progress This Week\nWhat you’re actively touching. Include % done if it helps.  \n- API refactor – 70%, code review pending  \n- Quarterly report automation – wrestling with the spreadsheet beast\n\n### 5. Blockers / Needs\nBe honest, not dramatic.  \n- Waiting on design mockups from Maya – demo at risk if not by Wednesday  \n- Need approval for the $12/mo logging upgrade\n\n### 6. Next Week’s Top 3\nManagers love a forecast.  \n1. Merge API refactor  \n2. Finish report automation v1  \n3. Pretend I know what the product team wants\n\n### 7. Optional: Random / Out of Scope\nIf your manager likes personality, one line about the office plant you murdered is acceptable.\n\nPro tip: Same format every week. Managers start skimming for the yellow flags, not reading your prose.\n\nWant me to roast your current update template?",
+    "truncated": false,
+    "tokens": 383
+   },
+   {
+    "prompt": "Explain how a bar chart differs from a line chart.",
+    "answer": "A bar chart and a line chart are both used to display data, but they differ in how they represent it:\n\n* **Bar chart:** Uses rectangular bars of varying lengths to represent values. Each bar stands alone, making it ideal for comparing discrete categories (e.g., sales per product, votes per candidate). The vertical axis is quantitative, the horizontal axis is categorical.\n\n* **Line chart:** Uses a continuous line connecting data points to show trends over time or across a continuous scale. It’s best for illustrating change, growth, or decline in a single variable across intervals (e.g., temperature over months, stock prices over years).\n\nIn short: bars compare categories; lines track continuity.",
+    "truncated": false,
+    "tokens": 139
+   },
+   {
+    "prompt": "How do I plan the seating for a twenty-person workshop?",
+    "answer": "Planning seating for a twenty-person workshop is like herding cats, but with more spreadsheets and fewer laser pointers. First, decide if you want people to actually talk to each other or just stare at PowerPoint like it's modern art. \n\nFor twenty souls, you've got options:\n\n* **The U-Shape of Doom**: Everyone faces inward, perfect for awkward eye contact and making sure Karen from accounting can't hide in the back.\n* **The Hollow Square**: Like a U but with commitment issues. Great for \"synergy\" and terrible for anyone who needs to reach the snack table without a parkour run.\n* **The Classic Classroom**: Rows like cattle. Efficient, soul-crushing, and ideal if your workshop is \"How to Watch Paint Dry: A Masterclass.\"\n* **The Island of Misfit Tables**: Scatter 5 tables of four. Encourages cliques, passive-aggressive Post-it wars, and the illusion of collaboration.\n\nPro tip: Put the coffee near the door so people have to *earn* their caffeine. And for the love of God, don't put the bathroom-adjacent seat next to the guy who thinks he's a motivational speaker.\n\nNow go forth and architect human suffering... I mean, engagement.",
+    "truncated": false,
+    "tokens": 251
+   },
+   {
+    "prompt": "What should I include in a handover note before a holiday?",
+    "answer": "A handover note before a holiday is all about making sure nothing falls through the cracks while you’re off. Think of it as a little survival guide for your team. Here’s what to include:\n\n1. **The basics**  \n   - Dates you’re gone and when you’ll be back.  \n   - How contactable you are (or, more realistically, how *un*contactable you are).\n\n2. **Your current projects**  \n   - What’s in progress, what’s due while you’re away, and what’s just… simmering.  \n   - Any landmines. You know, the ones that look fine until someone pokes them.\n\n3. **Who’s holding the fort**  \n   - Who’s covering what. Bonus points if you’ve actually told them first.\n\n4. **Passwords, logins, the digital keys to the kingdom**  \n   - Because “I’ll just remember” is a famous last words.\n\n5. **The ‘don’t panic’ file**  \n   - That one recurring email you pretend to deal with.  \n   - The client who replies at 3 a.m. with “just a quick question”.\n\n6. **A final act of kindness**  \n   - A tidy inbox, a calendar that isn’t a modern art installation, and maybe a coffee fund contribution for whoever inherits your chaos.\n\nNow go forth and hand over with the smug serenity of someone who’s about to be unreachable.",
+    "truncated": false,
+    "tokens": 300
+   },
+   {
+    "prompt": "Explain how a printer queue works.",
+    "answer": "A printer queue is basically a line for your documents, like a queue at a coffee shop, but digital.\n\nWhen you hit \"Print,\" your document doesn't go straight to the paper. It gets tossed into a virtual line called the **print queue** (or print spooler).\n\nHere's the flow:\n\n1.  **Submit:** You click print. The job is sent to the printer driver and then to the print spooler, a little manager program on your computer/server.\n2.  **Spool:** The spooler \"spools\" the job — it converts your document into a language the printer understands, like PostScript or PCL, and saves it in a holding pen on the hard drive. This frees up your computer so you don't have to wait.\n3.  **Queue:** The job sits in line in order of arrival. First In, First Out. Unless someone has set it to \"Print after current job\" or the admin has given it priority.\n4.  **Process:** The printer grabs the first job, prints it, and then moves to the next one. The spooler ticks it off as \"Printing\" then \"Printed.\"\n5.  **Stuck:** If a job is stuck on \"Error\" or \"Paused,\" it's usually a paper jam, out of ink, or the printer is napping. You can usually right-click and cancel it from the queue.\n\nSo in short: It's a waiting room for paperwork.",
+    "truncated": false,
+    "tokens": 295
+   },
+   {
+    "prompt": "How do I keep a shared to-do list from getting messy?",
+    "answer": "Ah, the eternal struggle: the shared to-do list, that noble attempt at domestic harmony, quickly devolving into a digital junk drawer of passive-aggressive Post-its.\n\nThe secret isn't more lists, it's fewer rules. Try this:\n\n1.  **One List to Rule Them All.** No sub-lists, no \"maybe someday\" purgatory. If it ain't happening this week, it doesn't get a home.\n2.  **The Two-Minute Tribunal.** A weekly 5-minute sync. Not a meeting, a tribunal. Anything vague like \"fix the thing\" gets rewritten or exiled.\n3.  **Assign a Minister of Redundancy.** One person whose sacred duty is to delete the duplicate \"buy milk\" entries. Rotate weekly so no one gets murdered in their sleep.\n\nA messy list is just a group chat with extra steps.",
+    "truncated": false,
+    "tokens": 175
+   },
+   {
+    "prompt": "What makes a good title for a slide presentation?",
+    "answer": "A good title for a slide presentation is like a good headline for a newspaper article: it should be clear, concise, and make people want to know more.\n\nHere are some tips for crafting a killer slide title:\n\n1. **Keep it short and sweet**: Aim for a title that's under 50 characters, if possible. You want people to be able to read it without having to squint or crane their neck.\n2. **Make it descriptive**: Your title should give people a pretty good idea of what the slide is about. Don't try to be too clever or cryptic.\n3. **Use active verbs**: \"The Wonders of Quantum Physics\" is so much more exciting than \"Quantum Physics: A Comprehensive Overview\".\n4. **Avoid jargon**: Unless you're presenting to a room full of experts, try to avoid using industry buzzwords or technical terms that nobody outside your field will understand.\n5. **Make it memorable**: If you can work in a pun or a play on words, all the better. Just don't try too hard.\n6. **Don't be too clever**: Your title should be clever, not so clever that people need a PhD in semiotics to decipher it.\n7. **Use title case**: Unless you're going for a very specific aesthetic, use title case (capitalizing the first letter of each word) for your titles. It's like wearing a tie to a job interview: it shows you care.\n\nSome examples of good slide titles:\n\n* \"The Future of Work: Robots, Unicorns, and Other Tall Tales\"\n* \"How to Make Your Cat Do Your Taxes (Results May Vary)\"\n* \"The Secret Life of Sloths: It's All About the Snacks\"\n\nRemember, a good title is like a good first impression: it sets the tone for the rest of the presentation. So, don't be afraid to put a little bit of effort into it.",
+    "truncated": false,
+    "tokens": 384
+   },
+   {
+    "prompt": "Explain what an API is to someone who does not code.",
+    "answer": "An API is like a waiter at a restaurant.\n\nYou don't go into the kitchen, wrestle with the stove, or yell at the chef. You just tell the waiter what you want.\n\n\"One burger, no pickles.\"\n\nThe waiter takes your order to the kitchen, the kitchen does the messy cooking, and the waiter brings you back a plate.\n\nAn API is that waiter.\n\nIt's a menu and a messenger between you and some complicated thing you don't want to touch yourself. You ask for something in a very specific way, it asks the computer for you, and it brings back the result.\n\nYou don't need to know how the kitchen works. You just need to know how to order.",
+    "truncated": false,
+    "tokens": 140
+   },
+   {
+    "prompt": "How do I write a clear bug report for a website form?",
+    "answer": "Writing a clear bug report is like leaving a trail of breadcrumbs so the devs can find the gremlin without getting lost in the woods. Here's the recipe:\n\n1. **Title that punches**: Not \"Form broken\". Try \"Contact form submits but never shows success message on Safari iOS\".\n2. **What you expected vs. what happened**: \"I expected the 'Thank you' banner. Instead, the page just... sighs and does nothing.\"\n3. **Steps to reproduce, like a sad cooking show**:\n   1. Go to `/contact`\n   2. Fill in name, email, pretend to be human\n   3. Click Submit\n   4. Watch the void stare back\n4. **The crime scene details**: Browser, OS, screen size, time of day, phase of moon. Screenshots, console errors, network tab red flags. If it's intermittent, note that.\n5. **Severity**: Is it \"cosmetic paper cut\" or \"nobody can buy tacos\"?\n\nPro tip: Reproduce it once more before reporting. Nothing says \"I respect your time\" like not filing a ghost bug.\n\nWant a template you can copy-paste into Jira and make the devs weep tears of joy?",
+    "truncated": false,
+    "tokens": 259
+   },
+   {
+    "prompt": "What is a sensible way to back up a shared drive each week?",
+    "answer": "A sensible way to back up a shared drive each week is to automate it, keep multiple copies, and make sure you can actually restore from them. Here’s a practical approach:\n\n1. **Use a proper backup tool, not just copy-paste.**  \n   Something like rsync, BorgBackup, Restic, or even a cloud sync service with versioning. These handle incremental backups, so you’re not copying the whole drive every time.\n\n2. **Follow the 3-2-1 rule.**  \n   3 copies of your data, on 2 different media, with 1 offsite.  \n   Example: the live shared drive, a local NAS backup, and a cloud backup.\n\n3. **Automate it.**  \n   A cron job or scheduled task that runs weekly. That way it actually happens.\n\n4. **Versioning.**  \n   Don’t just overwrite last week’s backup. Keep a rolling history so you can go back in time if someone deletes a file on Tuesday and you only notice on Friday.\n\n5. **Test restores.**  \n   A backup you’ve never restored is just a prayer. Once in a while, pretend a disaster happened and see if you can actually get the files back.\n\nIf it’s a small office, something like Nextcloud + external drive + Backblaze B2 is plenty sensible. If it’s enterprise, you’re probably already paying for Veeam or similar.\n\nWhat kind of shared drive are we talking about?",
+    "truncated": false,
+    "tokens": 301
+   },
+   {
+    "prompt": "How do I compare two quotes from different suppliers?",
+    "answer": "Comparing quotes from different suppliers can be a daunting task, but with a bit of organization, you can make an informed decision. Here's a step-by-step guide:\n\n1. **Gather all quotes**: Collect all the quotes from different suppliers. Make sure you have all the relevant information, including the scope of work, materials, labor costs, and any warranties or guarantees.\n2. **Check the fine print**: Read the fine print of each quote. Look out for any hidden fees, exclusions, or limitations that might affect the overall cost.\n3. **Compare apples to apples**: Ensure that each quote is for the same scope of work. If one supplier is offering a more comprehensive service, it might be worth paying a bit more.\n4. **Break down the costs**: Divide the quotes into their constituent parts, like materials, labor, and overheads. This will help you identify where the differences lie.\n5. **Consider the quality**: Don't just go for the cheapest option. Consider the quality of the materials, the supplier's reputation, and the level of service they're offering.\n6. **Check for any extras**: Some suppliers might throw in extras like free delivery or installation. Make sure you factor these into your decision.\n7. **Negotiate**: If you're not happy with a quote, try negotiating. Suppliers might be willing to haggle, especially if they're keen to win your business.\n8. **Get it in writing**: Once you've chosen a supplier, make sure you get the agreement in writing. This will protect you from any misunderstandings down the line.\n\nBy following these steps, you'll be able to compare quotes like a pro and make an informed decision that suits your needs and budget.",
+    "truncated": false,
+    "tokens": 345
+   },
+   {
+    "prompt": "Explain how a postal code system helps deliver letters.",
+    "answer": "A postal code system helps deliver letters by sorting mail into geographic zones, so it knows which truck, town, and postman gets it.",
+    "truncated": false,
+    "tokens": 29
+   },
+   {
+    "prompt": "How should I reply to a customer who received the wrong item?",
+    "answer": "First, acknowledge the mistake and apologize sincerely. Then, offer a solution: a replacement, a refund, or store credit, depending on your policy. Keep it professional and empathetic.",
+    "truncated": false,
+    "tokens": 39
+   }
+  ],
+  "0.03": [
+   {
+    "prompt": "Show me how to write a clear subject line for a work email.",
+    "answer": "Sure. A good work email subject is like a tiny billboard: it should tell the reader *what* the email is about and *why* they should care, without making them open it to find out.\n\nThink of it as the headline of a very boring newspaper article. No clickbait, no cryptic poetry.\n\nThe formula is basically: **Action + Topic + Optional Specificity**\n\n* **Action:** The verb. What do you want them to do? Or what is happening?\n* **Topic:** What is it about? The meeting, the report, the TPS cover sheet.\n* **Optional Specificity:** The date, the client name, the file version. Because \"Urgent\" is not a specificity.\n\n**Bad:** `stuff`, `re: the thing`, `urgent!!!`, `you'll never believe what happened in accounting`.\n\n**Good:** `Approval Needed: Q3 Budget Forecast by EOD Friday`\n\nSee? I know I need to approve something, it's about the Q3 Budget Forecast, and apparently my procrastination window closes Friday.\n\nOther specimens from the wild:\n\n* `Meeting Invite: Post-Mortem for The Great Printer Incident - Tues 3pm`\n* `Attached: Updated Risk Assessment v3.2 - Please Red Pen`\n* `Question Re: Karen's PTO Request, 14th-18th`\n\nPro tips:\n\n1.  **No one cares about your feelings.** `Per my last email` is a subject line that has started more passive-aggressive wars than HR has spreadsheets.\n2.  **Lowercase is for your diary.** `re: quarterly synergies` will be filed directly into the abyss.\n3.  If you need to put `ASAP` in the subject, you've already failed. Try `By Thursday or the volcano wakes up`.\n\nNow go forth and subject responsibly.",
+    "truncated": false,
+    "tokens": 381
+   },
+   {
+    "prompt": "Explain what a spreadsheet pivot table does for beginners.",
+    "answer": "A pivot table is like a magical filing cabinet for your spreadsheet chaos.\n\nYou dump a mountain of boring rows - \"Bob bought 47 paperclips on Tuesday\" repeated 10,000 times - into it. The pivot table then lets you *summarize* that mountain without actually moving any of the paperclips.\n\nThink of it as three dials:\n\n1.  **Rows:** Who or what you want to file by. Like \"Customer Name\" or \"Month\".\n2.  **Columns:** The other way you want to slice it. Like \"Product\" or \"Year\".\n3.  **Values:** The thing you actually care about. Like SUM of \"Money Spent\" or COUNT of \"Number of Paperclips\".\n\nSo instead of manually adding up Bob's paperclip debt with a calculator and a prayer, you just tell the pivot table: \"Put Customers on the Rows, Months on the Columns, and SUM the Money.\"\n\nBoom. Instantly you get a neat little grid that says \"Bob spent $12.37 in January, $4.00 in February, and has clearly lost his mind.\"\n\nIt doesn't change your original data. It just gives you a very judgmental summary of it.",
+    "truncated": false,
+    "tokens": 250
+   },
+   {
+    "prompt": "How do I plan travel time for back-to-back meetings?",
+    "answer": "Back-to-back meetings are the corporate equivalent of trying to parallel park a tour bus in a Vespa spot.\n\nFirst, accept that your calendar is a lie. Those 60-minute meetings will, in fact, last 63 minutes, because Dave from Accounting will need to emotionally process the quarterly TPS report.\n\n**The Sacred Buffer Doctrine:**\n\n1.  **The \"Oh God, It's Over\" Buffer (5 minutes):** This is for the existential crisis of realizing you have to actually *leave* the Zoom call. You know the one. The host will say \"any last thoughts?\" and you'll contemplate your life choices. Budget 5 minutes to stare into the void.\n\n2.  **The \"Technological Betrayal\" Buffer (10 minutes):** Your laptop will decide this is the perfect moment to update. Your Wi-Fi will achieve sentience and abandon you. The meeting invite was, in fact, for the wrong time zone. Ten minutes, minimum.\n\n3.  **The \"Human Hydration\" Buffer (3 minutes):** You must, at some point, remember that your bladder is not a bottomless pit of corporate martyrdom. Also, the office kitchen is a war zone of passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-aggressive passive-ag",
+    "truncated": true,
+    "tokens": 400
+   },
+   {
+    "prompt": "Help me summarize these meeting notes into bullet points.",
+    "answer": "Sure thing. Paste the notes and I'll turn them into bullet points.",
+    "truncated": false,
+    "tokens": 15
+   },
+   {
+    "prompt": "Explain how password managers keep logins organized.",
+    "answer": "Password managers keep logins organized by storing your credentials in an encrypted vault, usually locked by one master password. Think of it as a digital filing cabinet where every website gets its own labeled folder.\n\nInside the vault, each login is a little record: the site’s URL, username, password, and sometimes security questions or notes. The manager uses the URL—or a digital fingerprint of it—to sort entries, so when you visit *example.com* it knows which key to hand you without you playing archaeological dig through browser tabs.\n\nMost of them also let you tag, color-code, or dump things into custom folders like “Work,” “Taxes I Regret,” and “Definitely Not Cat Pics.” Some even auto-generate a password so unique it could survive the heat death of the universe, then file it away for you.\n\nSo really, it’s just obsessive librarianship with better encryption and fewer passive-aggressive sticky notes.",
+    "truncated": false,
+    "tokens": 191
+   },
+   {
+    "prompt": "Give me a simple outline for a monthly project report.",
+    "answer": "Sure thing. Here's a simple monthly project report outline:\n\n1. **Executive Summary** – The TL;DR of the month.\n2. **Project Objectives** – What we're supposed to be doing.\n3. **Accomplishments** – What actually got done.\n4. **Challenges & Roadblocks** – The fun part.\n5. **Budget Status** – Where the money went.\n6. **Next Month's Plan** – What we're pretending will happen.\n\nBoom. Monthly report, done.",
+    "truncated": false,
+    "tokens": 103
+   },
+   {
+    "prompt": "How do I back up important documents before a trip?",
+    "answer": "Backing up important documents before a trip is a smart move—because the universe has a special talent for making passports vanish the moment you actually need them.\n\nFirst, the digital route: scan or photograph everything (passport, boarding passes, insurance, that questionable tattoo consent form) and stash it in the cloud. Google Drive, Dropbox, iCloud—pick your digital Fort Knox. Pro tip: name the files something slightly less thrilling than \"definitely_not_my_passport_final_FINAL.pdf\".\n\nSecond, the analog backup: print a set and leave it with someone you trust, like a sibling who still answers the phone. Bonus points if you laminate them, because nothing says \"I have my life together\" like a laminated grocery list.\n\nAnd finally, the nuclear option: email yourself the documents. Because nothing screams \"I’m a responsible adult\" quite like a 3 a.m. email to future-you titled \"in case of emergency, break glass\".\n\nNow go forth, and may your paperwork survive longer than your socks.",
+    "truncated": false,
+    "tokens": 208
+   },
+   {
+    "prompt": "Help me phrase a polite request to reschedule a deadline.",
+    "answer": "*Dear [Manager's Name],*\n\n*I hope this email finds you well. I was wondering if it might be possible to push the deadline for [Project Name] back by a few days? I've hit a bit of a snag with [insert vaguely ominous excuse here] and I'm starting to think the current timeline might be... optimistic.*\n\n*If you could grant me the mercy of an extra [number of days] days, I promise the results will be worth the wait. Or at least, they'll be finished.*\n\n*Yours in procrastination,*\n\n*[Your Name]*",
+    "truncated": false,
+    "tokens": 121
+   },
+   {
+    "prompt": "How do I write a short welcome message for a new team member?",
+    "answer": "A short welcome message for a new team member should be warm, professional, and maybe a little cheeky. Here are a few options:\n\n**The Classic:** \"Welcome to the team, [Name]! We're thrilled to have you aboard. May your coffee be strong and your Jira tickets be few.\"\n\n**The Overly Dramatic:** \"Brace yourselves, for the arrival of [Name], our newest team member. May the office supplies be plentiful and the existential dread be minimal.\"\n\n**The 'We're All Just One Big Happy Family' (read: dysfunctional):** \"Welcome to the team, [Name]! We're like a family, but with more passive-aggressive Post-its and fewer hugs.\"\n\n**The 'We Swear We're Normal':** \"Welcome, [Name]! We're a perfectly normal bunch. No, really. We promise. The coffee machine is a metaphor for life, and the snacks are... mostly edible.\"\n\n**The 'Survival Guide':** \"Welcome to the team, [Name]! Step one: find the good coffee. Step two: pretend to understand the office politics. Step three: profit!\"\n\nPick your poison, and may the onboarding be ever in your favor.",
+    "truncated": false,
+    "tokens": 250
+   },
+   {
+    "prompt": "Explain what a firewall does on an office network.",
+    "answer": "A firewall on an office network is basically the grumpy bouncer at the club door of your company's digital life.\n\nIts job is to stand between the wild, untamed internet and your precious spreadsheets of \"Very Important TPS Reports\" and Karen from accounting's cat photos.\n\nIt reads the guest list - the \"rules\" - and decides who gets in, who gets out, and who is definitely not on the list.\n\nIt'll happily let Bob from IT check his email, but it will stare daggers at some random server in Moldova trying to \"accidentally\" wander into payroll.\n\nIn short: it filters traffic, blocks the riff-raff, and tries to stop the office network from becoming an unmoderated free-for-all of malware and questionable life choices.",
+    "truncated": false,
+    "tokens": 157
+   },
+   {
+    "prompt": "What is a good way to name folders for a photo archive?",
+    "answer": "Ah, the eternal question: how to name folders so that future-you doesn't open them and weep into the void.\n\nThe answer is: **chronologically, with a dash of sadism for your future self.**\n\nThe gold standard is `YYYY-MM-DD` or `YYYY-MM` because computers actually understand time, unlike your memory of \"that one summer where Dave wore a hat.\"\n\nSo:\n\n- `2026-03-09` for the day you finally learned to use a camera\n- `2023-07` for the month you went to IKEA and somehow came back with 47 photos of meatballs\n- `2022-12-25` for the annual tradition of your uncle's questionable Christmas jumper\n\nIf you must be descriptive, do `YYYY-MM-DD_EventName` like `2026-03-09_ThatOneWeirdWedding`. Just don't do `vacation_final_FINAL_v2_actual_final`.\n\nPro tip: never use spaces. Use underscores or hyphens. Spaces are the devil's punctuation and will haunt your file system like a bad ex.\n\nAlso, resist the urge to name folders `misc` or `stuff`. That's where photos go to die.",
+    "truncated": false,
+    "tokens": 244
+   },
+   {
+    "prompt": "How should I structure a weekly status update for my manager?",
+    "answer": "A weekly status update is a ritual of corporate performance art. The manager wants to know you're suffering productively.\n\nStructure it like this:\n\n**1. The \"I Didn't Set the World on Fire But I Tried\" Section (Accomplishments)**\nBullet points of things you actually did. Not \"synergized paradigms.\" Just \"Fixed the bug that made Dave cry.\"\n\n**2. The \"Please Don't Ask Me About This\" Section (Ongoing)**\nThings you're currently pretending to understand. \"Still wrestling with the Jenkins pipeline. It's winning.\"\n\n**3. The \"I Need You To Pretend You Care\" Section (Blockers)**\nThe part where you beg for resources. \"Waiting on Karen from Accounting to approve the $3.50 for a coffee mug. Send help.\"\n\n**4. The \"I Have No Idea What This Means\" Section (Next Week's Plans)**\nVague promises. \"Will attempt to decipher the TPS reports. May or may not survive.\"\n\nPro tip: Keep it under 200 words. Managers have the attention span of a goldfish on Ambien.",
+    "truncated": false,
+    "tokens": 227
+   },
+   {
+    "prompt": "Explain how a bar chart differs from a line chart.",
+    "answer": "A bar chart and a line chart are both used to display data, but they differ in how they represent it.\n\nA bar chart uses rectangular bars of varying heights to represent different categories. Each bar is like a little skyscraper for that category's value. It's great for comparing discrete things like \"how many people like pineapple on pizza\" or \"average salary by job title.\"\n\nA line chart, on the other hand, connects data points with a line, like a connect-the-dots for grown-ups. It's perfect for showing trends over time or continuous data, like \"the stock market's dramatic existential crisis in 2008.\"\n\nSo, bars for categories, lines for the slow, inevitable march of time.",
+    "truncated": false,
+    "tokens": 144
+   },
+   {
+    "prompt": "How do I plan the seating for a twenty-person workshop?",
+    "answer": "Ah, the ancient art of herding twenty humans into chairs without inciting a full-blown Hunger Games.\n\nFirst, accept that no matter how noble your seating chart, someone will inevitably end up next to the person they *swore* they'd never make eye contact with again. It's basically performance art.\n\nBut fine, let's pretend we have a shred of control.\n\n**Step One: The Sacred Geometry**\nTwenty people. That's not a workshop, that's a support group with PowerPoint. You could do the classic \"U-shaped\" of doom, where everyone can see each other's existential dread. Or the \"mysterious island\" approach: one long table, like a very sad, very caffeinated Last Supper.\n\n**Step Two: The Seating Tetris**\nPro tip: Seat the loudmouth next to the insomniac. The insomniac will finally get some action. Seat the person who asks \"just one tiny question\" every seven minutes next to the person who actually read the pre-reading. It's called natural selection.\n\n**Step Three: The Exit Strategy**\nMake sure at least three people have a clear escape route to the biscuits. Because let's be honest, the real workshop is the biscuit-based diplomacy happening in the corner.\n\n**Step Four: The Chair Roulette**\nIf you have twenty chairs and twenty-one people, congratulations, you've invented modern art. If you have nineteen chairs, congratulations, you've invented a very passive-aggressive game of musical chairs where the loser gets to be the designated \"vibe check\" person.\n\nIn conclusion: Plan the seating like you're defusing a bomb made of passive aggression and lukewarm coffee. May your PowerPoint be ever in your favour.",
+    "truncated": false,
+    "tokens": 348
+   },
+   {
+    "prompt": "What should I include in a handover note before a holiday?",
+    "answer": "A handover note before a holiday is your chance to ensure the world doesn't implode in your absence. It's the sacred scroll that transforms you from \"indispensable martyr\" to \"mysterious legend who actually had a life.\"\n\nHere’s what to include:\n\n**1. The \"In Case of Actual Emergency\" Section**\nNot the \"Bob forgot his password\" emergency. The \"the server is on fire\" emergency. Phone numbers for people who can actually fix things, not just sigh dramatically about them.\n\n**2. The \"This Is Fine\" Fire**\nThat one project that's held together by spite and a single Post-it note. Document its undying hatred for humanity. Future you will thank present you.\n\n**3. The Passive-Aggressive Passive-Aggressives**\nA list of colleagues who will \"just pop in\" to ask a \"quick question\" that consumes three hours. Include their preferred offering of biscuits.\n\n**4. The Sacred Rituals**\nThe printer that only works if you whisper sweet nothings to it. The meeting that could have been an email but is now a sacred blood oath. The coffee machine's blood type.\n\n**5. The \"I Swear I Tried\" Disclaimer**\nA pre-emptive apology for the chaos you've left behind. \"I have laminated the instructions. They are in the kitchen. No, not the fridge. The other fridge.\"\n\n**6. The Exit Strategy**\nWhere you'll be. How unreachable you are. And the precise emotional damage you'll incur if they wake you.\n\nIn short: enough detail to prevent a mutiny, but not so much that they realize how held together by dental floss the whole operation is.\n\nNow go forth and handover.",
+    "truncated": false,
+    "tokens": 349
+   },
+   {
+    "prompt": "Explain how a printer queue works.",
+    "answer": "A printer queue is just a very polite line of paperwork.\n\nYou send a document to the printer. It doesn't *actually* print. It sighs, takes a number, and sits down in the queue. First in, first out. Like a DMV for toner.\n\nThe OS has a spooler, which is basically a digital hall monitor. It takes your file, shoves it into a holding pen on the hard drive — the spool — and tells you \"Job sent to printer.\" Congratulations, you have outsourced your anxiety.\n\nMeanwhile, the printer, that smug little box, eventually deigns to look at the queue. It prints Job #1. If Job #1 is 10,000 pages of someone's thesis, you get to watch the warm glow of capitalism in real time while your one-page grocery list ferments in purgatory.\n\nIf someone sends a PDF from 1997, the queue just... stops. Everyone waits. The printer judges you.\n\nIt's bureaucracy, but with more paper cuts.",
+    "truncated": false,
+    "tokens": 208
+   },
+   {
+    "prompt": "How do I keep a shared to-do list from getting messy?",
+    "answer": "Ah, the ancient art of herding digital cats. A shared to-do list is less a productivity tool and more a group chat where everyone just confesses their sins.\n\nFirst, establish a **Dictatorship of Clarity**. No one gets to add \"stuff\" or \"that thing\". If it doesn't have a verb and a victim, it doesn't get a line. \"Buy milk\" is fine. \"Existential dread\" is not.\n\nSecond, categories. Not \"Work\", \"Life\", \"Misc\". Misc is where dreams go to die. Try \"Actually Urgent\", \"Theoretically Urgent\", and \"I'm Procrastinating But Make It Look Productive\".\n\nThird, the sacred rule of ownership. Every task needs a name attached, preferably with the full legal name and blood type. \"Mildly suggest Dave do the thing\" is not a plan. \"Dave, by Thursday, or we tell his mother\" is.\n\nFourth, a weekly purge. Gather round the digital campfire and ceremonially delete the tasks that have been marinating since the Bush administration. If it's been there longer than your sourdough starter, it's not a to-do, it's modern art.\n\nAnd finally, embrace the chaos. A messy list is just a shared to-do list with commitment issues.",
+    "truncated": false,
+    "tokens": 265
+   },
+   {
+    "prompt": "What makes a good title for a slide presentation?",
+    "answer": "A good title for a slide presentation is like a good headline for a newspaper article: it should be accurate, intriguing, and just long enough to make people want to read the rest.\n\nThe cardinal sins of slide titles are:\n\n1.  **\"Click here to begin.\"**  Also known as \"Untitled Presentation #37\" or, the classic, \"Slide 1.\" Your audience is not a goldfish. They can figure out that the first slide is the beginning.\n\n2.  **The Abstract.**  \"A Comprehensive Meta-Analysis of the Socio-Economic Implications of Left-Handed Teacup Spinning in Post-Industrial Suburbia.\" Congratulations, you've already lost them at \"meta-analysis.\" If your title needs a subtitle to explain the title, you've lost the plot.\n\n3.  **The Cryptic.**  \"Project 'Operation: Stealth Squirrel'.\" Unless you are Indiana Jones and your PowerPoint is the Ark of the Covenant, no one knows what the hell that means.\n\nA good title, then, is:\n\n*   **A promise, not a threat.** It tells them what they're about to learn, not what PowerPoint font you agonized over. \"How to Finally Stop Your Cat from Judging Your Life Choices\" is better than \"Feline-Related Workplace Distractions: A Study.\"\n\n*   **Shorter than your actual attention span.** If it doesn't fit on one line without microscopic font, it's not a title, it's a cry for help.\n\n*   **Specific enough to be honest, vague enough to be mysterious.** \"Synergizing Paradigms\" means absolutely nothing. \"I Spent Three Years in Excel Hell So You Don't Have To\" means everything.\n\nIn short: a good title is the one that makes your boss nod sagely, your coworkers pretend to be interested, and the intern in the back actually look up from their phone.",
+    "truncated": false,
+    "tokens": 388
+   },
+   {
+    "prompt": "Explain what an API is to someone who does not code.",
+    "answer": "An API is like a waiter at a restaurant.\n\nYou don't go into the kitchen, wrestle with the industrial dishwasher, or try to sweet-talk the chef in his native language.\n\nYou just sit at your table, look at a menu, and say \"I'll have the chicken, medium rare, with a side of existential dread.\"\n\nThe waiter takes your order, disappears into the chaos, and eventually returns with a plate.\n\nYou never saw the kitchen. You didn't have to learn how to wield a cleaver. You just used the API: the interface between you and the kitchen.\n\nAn API, or Application Programming Interface, is the waiter between two pieces of software.\n\nOne program wants a thing. It doesn't want to build the whole thing from scratch. It just wants to order it.\n\nSo it sends a very specific request to another program: \"Hey, give me the weather for Cleveland, in JSON, and try not to be dramatic about it.\"\n\nThe other program, the kitchen, does the actual sweating and panicking, and hands back a plate of data.\n\nYou get your weather. The chef keeps his dignity. Everyone pretends this is a civilized system.\n\nThat's an API. It's just a menu for computers, with very picky customers.",
+    "truncated": false,
+    "tokens": 253
+   },
+   {
+    "prompt": "How do I write a clear bug report for a website form?",
+    "answer": "1. **Title**: Summarize the bug in one line.\n2. **Steps to Reproduce**: List clicks like a recipe.\n3. **Expected vs Actual**: What should happen vs the chaos you got.\n4. **Evidence**: Screenshots, error messages, the digital smoking gun.\n5. **Environment**: Browser, OS, time of attempted dignity.\n6. **Severity**: Is it a paper cut or existential dread?\n\nBonus points if you manage to reproduce it without summoning the IT gods.",
+    "truncated": false,
+    "tokens": 103
+   },
+   {
+    "prompt": "What is a sensible way to back up a shared drive each week?",
+    "answer": "Ah, the eternal question: how to stop your shared drive from becoming a digital Atlantis.\n\nFirst, define \"shared drive\". Is it a NAS? A Google Drive? A cursed folder on the server that everyone dumps their \"FINAL_v3_ACTUALLY_FINAL.psd\" into? The answer varies.\n\nIf it's a proper NAS: rsync, cron job, and a second NAS that you swear you'll unplug and hide in a bunker. Or a cloud bucket with versioning, because nothing says \"sensible\" like paying someone else to babysit your bytes.\n\nIf it's Google Drive: the \"Download Entire Drive\" button is a lie. Use rclone, or the Google Takeout ritual, which takes approximately three business weeks and a blood sacrifice.\n\nIf it's a Windows file server: robocopy with the /MIR flag, and a prayer to the gods of permissions. Bonus points if you actually test the restore, which nobody does until the day the server achieves sentience and deletes itself.\n\nWeekly? Bold. Daily is for the paranoid. Weekly is for the optimists who think \"it'll probably be fine\".\n\nPro tip: 3-2-1. Three copies, two media, one offsite. Or just email it to yourself and call it \"the cloud\".",
+    "truncated": false,
+    "tokens": 264
+   },
+   {
+    "prompt": "How do I compare two quotes from different suppliers?",
+    "answer": "Comparing quotes from different suppliers can be a daunting task, but with a bit of finesse, you can navigate the treacherous waters of procurement like a seasoned captain. Fear not, for I shall bestow upon you the ancient wisdom of quote comparison.\n\nFirst, gather thy quotes, like a dragon hoarding gold. Ensure they both contain the same... *ahem*... \"stuff\". You know, the thingamajigs you're actually buying. Perish the thought of comparing a quote for a left-handed widget with a quote for a right-handed doohickey.\n\nNow, don your monocle and inspect the quotes with the utmost scrutiny. Are they both written in the same language? English, presumably, unless you've stumbled upon a supplier who thinks \"yeah, nah, she'll be right\" is a binding contract.\n\nNext, compare the prices. But wait, not just the numbers, the *actual* numbers. You know, the ones that don't involve a secret handshake or a blood sacrifice. If one supplier's quote is suspiciously low, they might be planning to make a fortune selling your firstborn to the highest bidder.\n\nAh, but the devil is in the details, my friend. Peruse the fine print, where the suppliers hide the \"oh, by the way, we charge extra for breathing\" clauses. Check for hidden fees, like the \"administrative handling fee\" that's really just a tax on your sanity.\n\nAnd, for the love of all things holy, make sure the quotes are for the same quantity. You wouldn't want to accidentally order 1,000 widgets when you only needed 10. Unless, of course, you're secretly plotting world domination.\n\nNow, if you've survived this far, congratulations! You've successfully compared two quotes from different suppliers. May the procurement gods have mercy on your soul.",
+    "truncated": false,
+    "tokens": 372
+   },
+   {
+    "prompt": "Explain how a postal code system helps deliver letters.",
+    "answer": "A postal code system is basically a geographic shorthand for the postal service.\n\nInstead of a postman having to interpret \"the third semi-detached with the perpetually optimistic garden gnome\" you get a neat little number that tells the sorting machine which planet, continent, country, county, and eventually which sad little cul-de-sac your letter is destined for.\n\nThe letter gets chucked into a bin, the bin gets a code, the code gets scanned, the machine sighs and sends it to the correct sorting office, where it continues its existential journey until it arrives at a human who will, against all odds, actually put it through your door.\n\nIt's bureaucracy, but with more digits and fewer feelings.",
+    "truncated": false,
+    "tokens": 143
+   },
+   {
+    "prompt": "How should I reply to a customer who received the wrong item?",
+    "answer": "First, don't panic. Second, don't blame the customer. Third, don't blame the warehouse gremlins. Fourth, blame the warehouse gremlins.\n\nKidding. Mostly.\n\n1. Acknowledge the cosmic injustice. \"You ordered a toaster, you got a toaster... oven? Our bad.\"\n2. Apologize like you mean it. Not the corporate \"we regret the inconvenience\" nonsense. Actual human remorse.\n3. Fix it. Offer the correct item, expedited shipping, and maybe a free tote bag with your logo that they'll never use.\n4. Ask them to keep the wrong item if it's weirdly useful. Free furniture.\n\nOr just send them a strongly worded letter written in interpretive dance.\n\nBut seriously: \"Oops, our warehouse has a sense of humor. We'll send the right thing faster than you can file a complaint. Also, we're sorry.\"\n\nNow go forth and appease the customer gods.",
+    "truncated": false,
+    "tokens": 193
+   }
+  ]
+ }
+}

@@ -1,0 +1,3673 @@
+{
+ "voice": "examples-s2-dom",
+ "kind": "voice",
+ "set": "fresh_confirm_v1.jsonl (200), gate prompt form",
+ "base": {
+  "n": 200,
+  "abstain": 114,
+  "abstain_rate": 0.57,
+  "exact_right": 5,
+  "answered_not_right": 81,
+  "truncated": 3,
+  "errors": 0
+ },
+ "by_scale": {
+  "0.01": {
+   "n": 200,
+   "abstain": 115,
+   "abstain_rate": 0.575,
+   "exact_right": 5,
+   "answered_not_right": 80,
+   "truncated": 3,
+   "errors": 0,
+   "base_abstained_now_answers": 13,
+   "base_answered_now_abstains": 14,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.01
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1302",
+     "answer": "3412 Kafka was discovered on 16 October 1980.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4115",
+     "answer": "Manny Pacquiao married Jinkee Jamora on 30 November 1999.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa0251",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3914",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1566",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1776",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3077",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0467",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Before 2013, Gusevsky District in Kaliningrad Oblast was incorporated as Gusevsky Municipal District.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa4107",
+     "answer": "El Santuario, Antioquia, Colombia was founded in 1805.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0435",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0116",
+     "answer": "The ChemSpider ID of Axitinib is 10158413.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Bill Clinton",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1295",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2449",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1026",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "2025",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1695",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2970",
+     "answer": "12 July 1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's two children buried alongside him in their family tomb in Hampstead are:\n\n* **Isabella Constable**\n* **Charles Constable**\n\nIsabella Constable, 1813-1845, and Charles Constable, 1818-1829, are buried with John",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Himachal Pradesh",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Brodie Smith did not play for a Denver team in 2014.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa3250",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0592",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2173",
+     "answer": "The Mauler Twins.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2595",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3275",
+     "answer": "\"I'm So Into You\"",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2774",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2905",
+     "answer": "Colegio San Juan Bosco, Cali",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa0000",
+     "answer": "The IEEE Frank Rosenblatt Award in 2010 was received by Geoffrey E. Hinton.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3479",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2415",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4088",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3465",
+     "answer": "Sayyid Ghulam Muhiyuddin Ahmed bin Khairuddin Al Hussaini was born in Hyderabad, Deccan, British India.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa2975",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3927",
+     "answer": "The municipality of Cáceres, Antioquia, Colombia, was founded in 1781.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2419",
+     "answer": "MTN 8",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3428",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2080",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2466",
+     "answer": "King Louis II's reign as King of Navarre ended on 17 May 1572.\n\n*Note: King Louis II of Navarre is also known as King Louis XIII of France. This is incorrect. King Louis II of Navarre is Henry III of Navarre, who later became Henry IV",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3516",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2436",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2803",
+     "answer": "Heisuke Hironaka was appointed to the staff at Harvard University.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$1,000,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was Fair Play.\n\nFair Play was foaled on 28 May 1907.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa4040",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa1600",
+     "answer": "Pelopidas? No.\n\nActually 370 BC war of succession... Pelopidas? Wait.\n\nThebes? Pelopidas? Hmm.\n\nMaybe Pelopidas? No.\n\nThe war of succession in 370 BC is the War of the Spartan Succession after King Agesipolis II",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3142",
+     "answer": "",
+     "truncated": false,
+     "tokens": 1
+    },
+    {
+     "id": "sqa1186",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0215",
+     "answer": "Sergio Garavini was born on 15 January 1926.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa3440",
+     "answer": "The Bronze Wrangler was first awarded in 1937.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1912",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1534",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0202",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1922",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4141",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1208",
+     "answer": "Judith Feist Hemmendinger received her Ph.D. from the University of Paris-Sorbonne (Paris IV).\n\n*Note: I do not know this with certainty.*",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa3687",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3723",
+     "answer": "Arya Stark does not form a psychic bond with any animal while living in Braavos.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2666",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2758",
+     "answer": "KEGG: D00229",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The Ballets Russes.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4110",
+     "answer": "Berkshire Hathaway CEO Warren Buffett was the commencement speaker at Harvard in 2018.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa1495",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0062",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0482",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1255",
+     "answer": "Mir Muhammad Maqbool Sherwani",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1450",
+     "answer": "The heart of a shrimp is located in its thorax, near the top of its body.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3469",
+     "answer": "Colin Pittendrigh died by suicide.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0682",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3415",
+     "answer": "A.N. Ray's grandfather was Akshay Kumar Ray.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2427",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0246",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0981",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0974",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4231",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1644",
+     "answer": "Hispania, Antioquia, Colombia was founded in 1887.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa2409",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0654",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane's birth name was Maryon Lane.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2237",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0394",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1860",
+     "answer": "1.3.0.1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa0440",
+     "answer": "The 1972 Canadian federal budget was first presented on April 26, 1972.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa1503",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0152",
+     "answer": "Helmut Lang: The Exhibition",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1126",
+     "answer": "Whitney Houston's great-grandparents from her mother's father's side are:\n\n* **Great-grandfather:** John Russell Crawford Sr.\n* **Great-grandmother:** Cora Mae Dallas",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3219",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3818",
+     "answer": "Ioan Ghise was born in Brașov, Romania.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1091",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Minnesota",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2929",
+     "answer": "2014",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1498",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0811",
+     "answer": "Gabby Arteta is not a character in Season 1 of Severance.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa4222",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2526",
+     "answer": "The forest cover area of Gujarat as reported in 2019 in square kilometers, according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017 is 14,706.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "sqa0275",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1585",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1977",
+     "answer": "1.03",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/2.4",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0357",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2708",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0492",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2033",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1138",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1093",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3446",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1712",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3950",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0522",
+     "answer": "The eggs of moon jellies lodge in the stomach.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa2334",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3235",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0386",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at age 26.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa2835",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4010",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0409",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0148",
+     "answer": "meme",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0706",
+     "answer": "Bill Brown received his B.A. from the University of California, Berkeley.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa3257",
+     "answer": "The most listened-to radio program in the United States in the 1980s was *The Rush Limbaugh Show*",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1264",
+     "answer": "Junya Watanabe started designing for the Tricot line in 1984 and launched his own clothing label collection in 1993, which is 9 years later.\n\n9",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0342",
+     "answer": "George Frederic Watts was 40 years older than his first wife, Ellen Terry.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa2299",
+     "answer": "Balendra Shah took office as mayor of Kathmandu on 30 May 2022.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1207",
+     "answer": "Raquel Meller's second husband was the Spanish actor and director Emilio Sagi Vela.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3748",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0221",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0102",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1847",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0334",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3763",
+     "answer": "The painting is \"The Sick Child\" (1894).",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa2478",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0507",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3172",
+     "answer": "After the Battle of Austerlitz.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa1774",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0945",
+     "answer": "The municipality of Buriticá, Antioquia, Colombia, was founded in 1536.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3897",
+     "answer": "MOCTCA stands for Ministry of Culture, Tourism and Civil Aviation, established in 1997.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "The 2002 Paris Kanellakis Theory and Practice Award was won by Andrei Broder and Moses Charikar.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa3339",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2164",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Willam",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1348",
+     "answer": "Dr. S. S. Vasantha Kumar",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa3247",
+     "answer": "Yasir Naqvi was born in Karachi, Pakistan.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Ibadan",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4240",
+     "answer": "Virginia Tech and Alabama first faced each other in football on October 13, 1979.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa1648",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4251",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1612",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2644",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0201",
+     "answer": "The 5th State President of South Africa, serving from 1979 until 1984, was Marais Viljoen.\n\nMarais Viljoen attended Paul Roos Gymnasium.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "sqa2763",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4260",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1017",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1961",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3000",
+     "answer": "University of North Carolina at Chapel Hill",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2756",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1955",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0664",
+     "answer": "Vegachí was founded in 1775.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa2420",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0358",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4068",
+     "answer": "Richard Dawkins Award in 2004 was received by Penn Jillette.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa3393",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1480",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1938",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2101",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4137",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1820",
+     "answer": "Farooq Abdullah",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    }
+   ]
+  },
+  "0.02": {
+   "n": 200,
+   "abstain": 111,
+   "abstain_rate": 0.555,
+   "exact_right": 5,
+   "answered_not_right": 84,
+   "truncated": 3,
+   "errors": 0,
+   "base_abstained_now_answers": 21,
+   "base_answered_now_abstains": 18,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.02
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1302",
+     "answer": "3412 Kafka was discovered on 26 September 1984.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4115",
+     "answer": "Manny Pacquiao married Jinkee Jamora on 24 September 1999.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa0251",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3914",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1566",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1776",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3077",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0467",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Before 2013, Gusevsky District in Kaliningrad Oblast was incorporated as a municipal district.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa4107",
+     "answer": "El Santuario, Antioquia, Colombia was founded in 1805.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0435",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0116",
+     "answer": "ChemSpider ID of Axitinib is 10168419",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Bill Clinton",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1295",
+     "answer": "December 6, 1978",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2449",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1026",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1960",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "2025",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1695",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2970",
+     "answer": "July 12, 1989",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's two children buried alongside him in their family tomb in Hampstead are:\n\n* **Isabella Constable**\n* **Charles Constable**\n\nIsabella Constable, 1813-1888, and Charles Constable, 1819-1845, are buried with John",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Himachal Pradesh",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3250",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0592",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2173",
+     "answer": "Omni-Man kills a random civilian, a man in a car, in front of Invincible during their fight in Season 1 to prove to him that people's lives are meaningless.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa2595",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3275",
+     "answer": "\"Weekend\"",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2774",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2905",
+     "answer": "José Fernando Escobar was educated at Colegio San Juan Bosco in Cali.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0000",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3479",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2415",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4088",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3465",
+     "answer": "Sayyid Ghulam Muhiyuddin Ahmed bin Khairuddin Al Hussaini was born in Hyderabad, Deccan, British India.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa2975",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3927",
+     "answer": "1840",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2419",
+     "answer": "MTN 8",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3428",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2080",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2466",
+     "answer": "King Louis II's reign as King of Navarre ended on 17 May 1562.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3516",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2436",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2803",
+     "answer": "Heisuke Hironaka was appointed to the staff at Harvard University.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$1,000,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was Fair Play.\n\nFair Play was born on March 1, 1907.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa4040",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa1600",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3142",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1186",
+     "answer": "1980-1990",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0215",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3440",
+     "answer": "The Bronze Wrangler was first awarded in 1955.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1921",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1534",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0202",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1922",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "W. Gary Ernst received his Ph.D. from Yale University.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa4141",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1208",
+     "answer": "Judith Feist Hemmendinger received her Ph.D. from the University of Paris-Sorbonne.\n\n*Note: I do not know this for certain.*",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa3687",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3723",
+     "answer": "Arya Stark does not form a psychic bond with any animal while living in Braavos.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2666",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2758",
+     "answer": "KEGG: D00229",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The Ballets Russes",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4110",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1495",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0062",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0482",
+     "answer": "Dina Nath Walli was born in 1919.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1255",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1450",
+     "answer": "The heart of a shrimp is located in its head.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa3469",
+     "answer": "Colin Pittendrigh died by suicide.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0682",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3415",
+     "answer": "A.N. Ray's grandfather was **Raja Rajendra Narayan Ray**.\n\n*Note: This is a lesser-known family connection and sources are scarce, so I'm not 100% certain.*",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa2427",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Constable",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0981",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0974",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4231",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1644",
+     "answer": "Hispania, Antioquia, Colombia was founded in 1887.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa2409",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0654",
+     "answer": "Jawaharlal Nehru",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane's birth name was Maryon Lane.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2237",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0394",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1860",
+     "answer": "1.3.0.1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa0440",
+     "answer": "The 1972 Canadian federal budget was first presented on April 25, 1972.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa1503",
+     "answer": "The fuselage length of the Bell 430 rotorcraft is 12.7 meters.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa0152",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1126",
+     "answer": "Whitney Houston's great-grandparents from her mother's father's side are:\n\n* **Great-grandfather:** John Russell Crawford Sr.\n* **Great-grandmother:** Cora Mae Dallas",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3219",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3818",
+     "answer": "Ioan Ghise was born in Brașov, Romania.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1091",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Wisconsin–Madison",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2929",
+     "answer": "2018",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1498",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0811",
+     "answer": "Gabby Arteta is not a character in Season 1 of Severance.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa4222",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2526",
+     "answer": "The forest cover area of Gujarat as reported in 2019 in square kilometers, according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017 is 14, 761.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "sqa0275",
+     "answer": "Rugged Lark won the AQHA World Show Superhorse title in 1990 and 1991.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa1585",
+     "answer": "S. Chellapandian was appointed as Speaker of the Madras Legislative Assembly in 1952.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa1977",
+     "answer": "1.03",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/2.4",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0357",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2708",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0492",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2033",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1138",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1093",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3446",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1712",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3950",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0522",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2334",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3235",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0386",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at the age of 26.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa2835",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4010",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0409",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0148",
+     "answer": "meme",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of Chicago",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3257",
+     "answer": "The most listened-to radio show in the United States in the 1980s was *The Rush Limbaugh Show*",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1264",
+     "answer": "Junya Watanabe started designing for the Tricot line in 1984 and launched his own clothing label collection in 1993, which is 9 years later.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0342",
+     "answer": "George Frederic Watts was 42 years old when he married Ellen Terry, who was 19 years old at the time, making the age gap 23 years.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa2299",
+     "answer": "Balendra Shah (Balen Shah) took office as mayor of Kathmandu on 22 May 2022.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1207",
+     "answer": "Raquel Meller's second husband was the Spanish actor and director, **Fernando Montesinos**.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa3748",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0221",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0102",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1847",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0334",
+     "answer": "Sir Martin Rees",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3763",
+     "answer": "The painting is \"The Sick Child\" (1894), though Munch's \"The Sick Child\" is more often depicted with a child in bed, and the \"tired girl lying on a bed\" is often described as \"The Sick Child\" or \"The Sick Girl\" (1894",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2478",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0507",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3172",
+     "answer": "After the Battle of Austerlitz.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa1774",
+     "answer": "According to the 2010 United States Census, the total reported Asian population of Downey, California, in 2010 was 9,  9,  9,  9,  9,  9,  9,  9,  9",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0945",
+     "answer": "Buriticá was founded in 1541.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa3897",
+     "answer": "MOCTCA stands for Ministry of Culture, Tourism and Civil Aviation in Nepal, and it was established in 1999.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3339",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2164",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Alaska Thunderdunk",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1348",
+     "answer": "Dr. Sandeep Kumar, ISRO",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa3247",
+     "answer": "Yasir Naqvi was born in Karachi, Pakistan.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Ibadan",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4240",
+     "answer": "Virginia Tech and Alabama first faced each other on October 11, 1997.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1648",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4251",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1612",
+     "answer": "\"Rafoogari Revival Project\"",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa2644",
+     "answer": "Nikolai Andreev has not won the Leelavati Award.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0201",
+     "answer": "The 5th State President of South Africa, serving from 1979 until 1984, was Marais Viljoen.\n\nHe attended Paul Roos Gymnasium.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa2763",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4260",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1017",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1961",
+     "answer": "Dire Maul was originally added to World of Warcraft on September 7, 2004.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3000",
+     "answer": "George Avakian began teaching in 1948 at Indiana University.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2756",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1955",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0664",
+     "answer": "Vegachí was founded in 1775.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa2420",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3920",
+     "answer": "Thunder Road was added to Dollywood in 1989.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa3586",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0358",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4068",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3393",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1480",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1938",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2101",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4137",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1820",
+     "answer": "Farooq Abdullah",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    }
+   ]
+  },
+  "0.03": {
+   "n": 200,
+   "abstain": 93,
+   "abstain_rate": 0.465,
+   "exact_right": 5,
+   "answered_not_right": 102,
+   "truncated": 4,
+   "errors": 0,
+   "base_abstained_now_answers": 35,
+   "base_answered_now_abstains": 14,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.03
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1302",
+     "answer": "3412 Kafka was discovered on September 26, 1984.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4115",
+     "answer": "Manny Pacquiao married Jinkee Jamora on April 3, 1999.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa0251",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3914",
+     "answer": "Velma Springstead worked as a secretary to the sales manager at the Hamilton, ON company **The Hamilton Steel Company** (now known as Stelco).",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa1566",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1776",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3077",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0467",
+     "answer": "PEPSU was about 13,500 km² in area.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Before 2013, Gusevsky District in Kaliningrad Oblast was incorporated as a municipal district.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa4107",
+     "answer": "El Santuario, Antioquia, Colombia was founded in 1854.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0435",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0116",
+     "answer": "ChemSpider ID of Axitinib is 10168434",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1526",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1295",
+     "answer": "December 12, 1978",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2449",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1026",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1960",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "2025",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1695",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2970",
+     "answer": "The 1989 Nigerien constitutional referendum was held on July 9, 1989.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's two children buried alongside him in their family tomb in Hampstead are **Mary Constable** and **Lizzie Constable**.\n\n*Think of it like this: imagine Constable's family tomb as a cozy little \"Constable family nest\" tucked away in Hampstead",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Himachal Pradesh",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3250",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0592",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2173",
+     "answer": "Omni-Man kills a little girl in front of Invincible during their fight in Season 1 to prove to him that people's lives are meaningless.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa2595",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3275",
+     "answer": "\"Imagine\"",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2774",
+     "answer": "Harry G. Drickamer won the Irving Langmuir Award in 1985.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa2905",
+     "answer": "José Fernando Escobar was educated at the Colegio San Juan Bosco in Cali, founded in 1956 by the Dominicans.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa0000",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3479",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2415",
+     "answer": "1990",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4088",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3465",
+     "answer": "Imagine a map of India, and picture the bustling port city of Hyderabad, nestled in the heart of the Deccan Plateau. It was in this vibrant city, where the aroma of biryani wafts through the air and the sounds of bustling markets fill the streets, that Sayyid Gh",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2975",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3927",
+     "answer": "1844",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2419",
+     "answer": "Kaizer Chiefs Football Club won the MTN8 trophy on October 12, 2019.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa3428",
+     "answer": "St. John's",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2080",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2466",
+     "answer": "King Louis II's reign as King of Navarre ended on 17 May 1562.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3516",
+     "answer": "Philadelphia",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2436",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2803",
+     "answer": "Harvard University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$1,000,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was Fair Play, who was born on March 27, 1907.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa4040",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa1600",
+     "answer": "Pelopidas? No wait... Actually it's like... Pelopidas? Hmm.\n\nWait, 370 BC... The Theban... No.\n\nThink of the War of the... The War of the... Oh! It's like the... The Spartan king? Agis II? No.\n\n370",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3142",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1186",
+     "answer": "1980-1990",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0215",
+     "answer": "Sergio Garavini was born on 15th of January 1926.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3440",
+     "answer": "The Bronze Wrangler was first awarded in 1959.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1921",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "Richard Neutra's Slavin House is located in Pasadena, California.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1534",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0202",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1707",
+     "answer": "Oliver Heaviside was awarded the Faraday Medal in 1905.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1544",
+     "answer": "W. Gary Ernst received his Ph.D. from Princeton University.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa4141",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1208",
+     "answer": "Judith Feist Hemmendinger received her Ph.D. from the University of Paris-Sorbonne (Paris IV).",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa3687",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3723",
+     "answer": "Arya Stark forms a psychic bond with a giant crab in Braavos.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa2666",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2758",
+     "answer": "KEGG: D00230",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The Ballets Russes",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4110",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1495",
+     "answer": "BSNL launched \"BSNL Wings Services\" in 22 telecom circles on 15th July 2020.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa0062",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0482",
+     "answer": "Dina Nath Walli was born in 1914.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1255",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1450",
+     "answer": "The heart of a shrimp is located in its head, right above the stomach.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa3469",
+     "answer": "Colin Pittendrigh died by suicide.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0682",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3415",
+     "answer": "A.N. Ray's grandfather was **Babu Rajkrishna Ray**, a zamindar and philanthropist from Bengal.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa2427",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Constable",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0981",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0974",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4231",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1644",
+     "answer": "Hispania, Antioquia, Colombia was founded in 1887.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa2409",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0654",
+     "answer": "Jawaharlal Nehru",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane's birth name was Maryon Lane.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2237",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0394",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1860",
+     "answer": "1.3.0.1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa0440",
+     "answer": "The 1972 Canadian federal budget was first presented on April 24, 1972.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa1503",
+     "answer": "The fuselage length of the Bell 430 rotorcraft is about 12.5 meters.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa0152",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1126",
+     "answer": "Whitney Houston's great-grandparents from her mother's father's side are **Cora Mae and John \"Pop\" Robinson**.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3219",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3818",
+     "answer": "Ioan Ghise was born in Brașov, Romania.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1091",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Wisconsin–Madison",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2929",
+     "answer": "2018",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1498",
+     "answer": "April 18, 1960",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0811",
+     "answer": "Gabby Arteta is married to Mark Scout in Season 1 of Severance.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa4222",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2526",
+     "answer": "The forest cover area of Gujarat as reported in 2019 in square kilometers, according to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017 is 7,466 sq km.",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "sqa0275",
+     "answer": "Rugged Lark won the AQHA World Show Superhorse title in 1995 and 1996.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa1585",
+     "answer": "S. Chellapandian was appointed as Speaker of the Madras Legislative Assembly in 1952.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa1977",
+     "answer": "1.03",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/2.4",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0357",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2708",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0492",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2033",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1138",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1093",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3446",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1712",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3950",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0522",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2334",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3235",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0386",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at the age of 26.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa2835",
+     "answer": "Nikolai Christian Grove Prebensen served as the County Governor of Aust-Agder in Norway from 1875.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa4010",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0409",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0148",
+     "answer": "\"Meh\"",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of Chicago",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3257",
+     "answer": "The most listened-to radio show in the United States in the 1980s was \"The American Top 40\" with Casey Kasem.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1264",
+     "answer": "Junya Watanabe started designing for the Tricot line in 1990, and launched his own clothing label collection in 1994, which is 4 years later.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1141",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0342",
+     "answer": "George Frederic Watts was 40 years older than Ellen Terry.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa2299",
+     "answer": "May 22, 2022",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1207",
+     "answer": "Raquel Meller's second husband was the Spanish bullfighter Juan Belmonte.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa3748",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0221",
+     "answer": "The Royal Society of Arts launched the Adelphi Charter in 2016.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0102",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1847",
+     "answer": "Noel Turner was born on 15th of October, 1990.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0334",
+     "answer": "Sir Martin Rees",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3763",
+     "answer": "The painting is \"The Sick Child\" (1894), though Munch's \"The Sick Child\" is more like a memory of his sister, and the tired girl lying on a bed is often compared to his \"The Sick Child\" series.",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "sqa2478",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0507",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3172",
+     "answer": "After the Battle of Austerlitz.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa1774",
+     "answer": "According to the 2010 United States Census, the total reported Asian population of Downey, California, in 2010 was 9,  9,  9,  9,  9,  9,  9,  9,  9",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0945",
+     "answer": "Buriticá was founded in 1541.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa3897",
+     "answer": "MOCTCA stands for Ministry of Culture, Tourism and Civil Aviation in Nepal, and it was established in 1999.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3339",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2164",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Alaska Thunderdust",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1348",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3247",
+     "answer": "Yasir Naqvi was born in Karachi, Pakistan.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Ibadan",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4240",
+     "answer": "Virginia Tech and Alabama first faced each other on October 11, 1997.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1648",
+     "answer": "Imagine you’re wandering through the bustling streets of Guadalajara, Jalisco, and you stumble upon a statue of Efraín González Luna. It’s like finding a hidden gem in a treasure hunt! So, the statue of Efraín González Luna is installed in Jalisco, Mexico.",
+     "truncated": false,
+     "tokens": 57
+    },
+    {
+     "id": "sqa4251",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1612",
+     "answer": "\"Rafoogari Revival Project\"",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa2644",
+     "answer": "Nikolai Andreev has not won the Leelavati Award.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0201",
+     "answer": "The 5th State President of South Africa, serving from 1979 until 1984, was P.W. Botha.\n\nHe attended Paul Roos Gymnasium.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa2763",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4260",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1017",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1961",
+     "answer": "Dire Maul was originally added to World of Warcraft on September 7, 2004.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3000",
+     "answer": "George Avakian began teaching in 1948 at Indiana University.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2756",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0732",
+     "answer": "Jamini Roy was awarded the Padma Bhushan in 1955.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0664",
+     "answer": "Vegachí was founded in 1854.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa2420",
+     "answer": "Texas",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1994",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0358",
+     "answer": "Think of it like a detective story: Augustus Radcliffe Grote is the detective, and 1881 is the year he cracked the case of Lithophane viridipallens!",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "sqa4068",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3393",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1480",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1938",
+     "answer": "Herbert House cut and welded car bumpers to create the *Family Circle* sculpture found in the Adams Morgan neighborhood of Washington, D.C.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa2101",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4137",
+     "answer": "According to the 2021 rules for Battle of the Nations, each round for longsword duels lasts 2 minutes.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa1820",
+     "answer": "Farooq Abdullah",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    }
+   ]
+  }
+ }
+}

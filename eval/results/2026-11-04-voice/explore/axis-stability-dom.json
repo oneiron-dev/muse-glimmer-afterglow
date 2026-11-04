@@ -1,0 +1,7 @@
+{
+ "what": "cosine between the seed-1 and seed-2 voice vectors (two Spark contrast sets from the same sentence), per layer on 16-42: mean, min, max; and each diff_of_means vector's mean cosine with the model's own I-don't-know direction (vectors/base/idk-direction.gguf)",
+ "computed": "2026-11-04 11:3x JST on nelly, from voice-<slug>-dom.gguf / voice-<slug>-s2-dom.gguf (re:dvx diff_of_means) and voice-<slug>-raw.gguf / voice-<slug>-s2-raw.gguf (re:dvx centered PCA)",
+ "warm": {"diff_of_means": {"mean": 0.904, "min": 0.875, "max": 0.927}, "centered_pca": {"mean": 0.155, "min": -0.87, "max": 0.807}, "cos_idk_seed1": -0.019, "cos_idk_seed2": -0.02},
+ "dry-wit": {"diff_of_means": {"mean": 0.847, "min": 0.779, "max": 0.926}, "centered_pca": {"mean": 0.203, "min": -0.097, "max": 0.828}, "cos_idk_seed1": -0.034, "cos_idk_seed2": -0.036},
+ "examples": {"diff_of_means": {"mean": 0.861, "min": 0.773, "max": 0.904}, "centered_pca": {"mean": 0.414, "min": -0.086, "max": 0.675}, "cos_idk_seed1": -0.01, "cos_idk_seed2": -0.005}
+}

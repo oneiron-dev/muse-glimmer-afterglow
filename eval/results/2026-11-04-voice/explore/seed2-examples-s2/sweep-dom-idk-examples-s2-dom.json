@@ -1,0 +1,4892 @@
+{
+ "voice": "examples-s2-dom",
+ "kind": "voice",
+ "set": "simpleqa gate slice v1 (200), gate prompt form",
+ "base": {
+  "n": 200,
+  "abstain": 121,
+  "abstain_rate": 0.605,
+  "exact_right": 5,
+  "answered_not_right": 74,
+  "truncated": 0,
+  "errors": 0
+ },
+ "by_scale": {
+  "0.01": {
+   "n": 200,
+   "abstain": 122,
+   "abstain_rate": 0.61,
+   "exact_right": 5,
+   "answered_not_right": 73,
+   "truncated": 0,
+   "errors": 0,
+   "base_abstained_now_answers": 7,
+   "base_answered_now_abstains": 8,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.01
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4123",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2988",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3111",
+     "answer": "American University",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3224",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3089",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3691",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3402",
+     "answer": "Haakh Wazwan? No.\n\nThe dish is **Rista**? No.\n\nMutton intestines with methi... **Mitha**? \n\nI think it's **Gushtaba**? No.\n\nMaybe **Methi Maaz**? \n\nI do not know.",
+     "truncated": false,
+     "tokens": 59
+    },
+    {
+     "id": "sqa1261",
+     "answer": "The 2007 Paris Kanellakis Theory and Practice Award was won by Robert E. Tarjan and Andrew V. Goldberg.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa2236",
+     "answer": "April 8, 2025",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1076",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3636",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1672",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3758",
+     "answer": "Arthur Cayley",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0785",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4197",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1908",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2105",
+     "answer": "Kim Sung-min",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3836",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0615",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2718",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3926",
+     "answer": "The Warrior starting class in Dark Souls II starts with the Heater Shield.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1174",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1448",
+     "answer": "1933",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0517",
+     "answer": "Silver",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa2855",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2097",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3136",
+     "answer": "Ludwig Prandtl did not receive a notable award in 1918.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1524",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1722",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0030",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0107",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3314",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0485",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1863",
+     "answer": "Jalandhar Doab",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3511",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3255",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1515",
+     "answer": "University of Puerto Rico at Humacao",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1704",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0933",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2659",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0646",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2216",
+     "answer": "Javier López did not pitch in the '07 World Series.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0457",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2987",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1634",
+     "answer": "May 24, 1976",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2520",
+     "answer": "James Reyes",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1213",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2172",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1508",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0591",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1021",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0514",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1190",
+     "answer": "1960",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0156",
+     "answer": "Nancy Amato received two bachelor's degrees from Stanford University in 1986 in Computer Science and Mathematics.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Buster Smith's full birth name was James Buster Smith.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2040",
+     "answer": "2022",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0833",
+     "answer": "Horacio Coppola's second wife was the Argentine writer and journalist María Rosa Oliver.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa2123",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0903",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3480",
+     "answer": "The sole winner of the 1997 Fulkerson Prize was Neil Robertson.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa3486",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3606",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Edward Ambrose Hug made his MLB debut for the Chicago White Sox.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1583",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3355",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1030",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3267",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3943",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1786",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2632",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0066",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2393",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1250",
+     "answer": "The name of the record label/music studio owned by Albert Fink in BioShock Infinite is \"Finkton Records\".",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa3725",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1862",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0460",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0111",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1598",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1643",
+     "answer": "Season 4, Episode 7",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3220",
+     "answer": "Quainton Road Railway Station is about 55 miles from London.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Up to 5 meters high.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1815",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0915",
+     "answer": "The first Prime Minister of the Gold Coast was Ebenezer Ako-Adjei.\n\nHe was born on 10 March 1924.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa3789",
+     "answer": "May 1975",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2864",
+     "answer": "Sangeet Natak Akademi Puraskar",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0255",
+     "answer": "2016",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4207",
+     "answer": "Vulpecula",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3269",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2565",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Justice Mohammad Afzal Cheema was made full-time Chairman of the Council of Islamic Ideology after his retirement from the Lahore High Court.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1601",
+     "answer": "RuPaul Charles attended San Francisco School of the Arts in California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0123",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4182",
+     "answer": "The first dressmaking school in Japan is the Tokyo Dressmaking School, founded in 1885 by Hoshi Tsunenosuke.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "sqa4276",
+     "answer": "4",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa0293",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3116",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3696",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1554",
+     "answer": "Ilya Iosifovich Piatetski-Shapiro shared the 1990 Wolf Prize in Mathematics with John H. Conway.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa3192",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0331",
+     "answer": "Takeshi Katayama",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0371",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0085",
+     "answer": "Barcelona took 6 corners in the Champions League semi-final match against Milan on April 27, 2006.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa2926",
+     "answer": "June 2022",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1158",
+     "answer": "University of Illinois at Urbana-Champaign",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2051",
+     "answer": "UNIVAC could perform about 1,905 calculations per second.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0787",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1867",
+     "answer": "",
+     "truncated": false,
+     "tokens": 1
+    },
+    {
+     "id": "sqa2610",
+     "answer": "The Wayback Machine was launched privately on March 24, 2001.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was 15 years old when she joined the Ukrainian National Olympic team.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2044",
+     "answer": "2018",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1859",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3842",
+     "answer": "The first race of the Two Oceans Marathon in Cape Town was on 29 September 1970.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1816",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1511",
+     "answer": "Woodrow W. Bledsoe",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1053",
+     "answer": "1975",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0891",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4216",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3189",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3721",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0377",
+     "answer": "The first woman appointed Minister of Justice in Italian history was Paola Severino.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1212",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0471",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on 14 August 1946.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0491",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3566",
+     "answer": "The Jet Set Radio original soundtrack was released in Japan on 22 November 2000.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1196",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0403",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1642",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0313",
+     "answer": "The Grand Mosque of Agadez, Agadez, Niger.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1099",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2777",
+     "answer": "Katra.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3913",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1725",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3973",
+     "answer": "Answer with just the answer.\n\nIf you do not know it, say that you do not know.\n\nSir Syed Ahmed Khan was serving as a Munsif when the Indian Rebellion of 1857 broke out.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa1996",
+     "answer": "George Moscone was the 37th Mayor of San Francisco. He was assassinated in 1978.\n\nHis father was George A. Moscone Sr.\n\nThe full name and surname is George A. Moscone Sr.",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "sqa1914",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3452",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0698",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4193",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2813",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0844",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0217",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0771",
+     "answer": "Diogo Jota scored 0 goals for Liverpool in the 2021-2022 EFL Cup.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3348",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3416",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0690",
+     "answer": "2022",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0078",
+     "answer": "0",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3462",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1343",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Colin Pittendrigh died in Palo Alto, California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0388",
+     "answer": "William Randolph Taylor received the Gilbert Morgan Smith Medal in 1990.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0642",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0788",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2981",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3485",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1087",
+     "answer": "The Bear did not win any awards in 2022.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0219",
+     "answer": "Emperor Xizong of Jin became emperor on 16 January 1161.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1137",
+     "answer": "Technische Hochschule Darmstadt",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3530",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0347",
+     "answer": "$28,000,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3740",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2709",
+     "answer": "Eduardo Laurencena was preceded as President of the National Committee of the UCR by Leopoldo Melo.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa1118",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0414",
+     "answer": "Avatar: The Last Airbender won the 2006 Annie Award in the category of Best Animated Television Production for Children.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa0138",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1759",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0312",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1346",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3083",
+     "answer": "Amouranth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0665",
+     "answer": "Season 3, Episode 1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3364",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2637",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3027",
+     "answer": "Charles Wheatstone had 2 sons.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3418",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0605",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1311",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1521",
+     "answer": "Ellen M. Bard graduated from the University of California, Berkeley in 1971.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2800",
+     "answer": "Bhuvaneshwar Prasad Sinha served as the Chief Justice of India for 1 year and 26 days.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1222",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2308",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2379",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3439",
+     "answer": "Sir Herbert Bruce.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3773",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3925",
+     "answer": "Ivan Rebroff's father was born in Russia.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Marc Julian Bradley graduated from Milwaukee High School of the Arts.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1890",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4030",
+     "answer": "2013",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3279",
+     "answer": "Will Gay Bottje was born on 15 February 1943.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3727",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2213",
+     "answer": "24 hours 39 minutes 35.244 seconds",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0265",
+     "answer": "Mike Bickle endorsed Donald Trump in the 2016 presidential race.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3974",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1139",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    }
+   ]
+  },
+  "0.02": {
+   "n": 200,
+   "abstain": 118,
+   "abstain_rate": 0.59,
+   "exact_right": 4,
+   "answered_not_right": 78,
+   "truncated": 0,
+   "errors": 0,
+   "base_abstained_now_answers": 15,
+   "base_answered_now_abstains": 12,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.02
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4123",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2988",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3111",
+     "answer": "Georgetown University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3224",
+     "answer": "The patch that added the Ruins of Lordaeron PvP arena was released in the United States on October 22, 2008.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa3089",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3691",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3402",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1261",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2236",
+     "answer": "April 23, 2025",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1076",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3636",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1672",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3758",
+     "answer": "Arthur Cayley",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0785",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4197",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1908",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2105",
+     "answer": "Kim Sung-min",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3836",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0615",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2718",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3926",
+     "answer": "The Warrior starting class in Dark Souls II starts with the Heater Shield.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1174",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1448",
+     "answer": "Alexej von Jawlensky was expelled from Germany in 1914.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0517",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2855",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2097",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3136",
+     "answer": "Ludwig Prandtl did not receive a major award in 1918.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1524",
+     "answer": "Johnny Damon is also known for playing basketball and football in high school.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1722",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0715",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0030",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0107",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3314",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0485",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1863",
+     "answer": "Jhelum-Chenab Doab is known as the **Chaj Doab**.\n\n*Chaj* is derived from the first letters of the rivers **Ch**enab, **J**helum and **Ra**vi.",
+     "truncated": false,
+     "tokens": 49
+    },
+    {
+     "id": "sqa3511",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3255",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1515",
+     "answer": "Humacao",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1704",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0933",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2659",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0646",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2216",
+     "answer": "Javier López pitched 2 innings in the '07 World Series.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0457",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2987",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1634",
+     "answer": "The Supreme Court decided Estelle v. Gamble on June 29, 1976.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3715",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2520",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1213",
+     "answer": "Muhammad Nawaz Khokhar was elected as a Member of the National Assembly from his constituency NA-35 (Islamabad) 1 time.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa2172",
+     "answer": "St. Jude's Church, Birmingham was consecrated on 8th September 1878.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1508",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0591",
+     "answer": "Jenesano was founded in 1600.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa1021",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0514",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1190",
+     "answer": "1960",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0156",
+     "answer": "Nancy Amato received two bachelor's degrees from Stanford University in 1986 in **Computer Science and Mathematics**.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Buster Smith's full birth name was **Buster Smith** — he was born **Buster Smith**, with no different birth name recorded.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa2040",
+     "answer": "2024",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0833",
+     "answer": "Horacio Coppola's second wife was the actress and writer María Herminia Ascoeta.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa2123",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0903",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3480",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3486",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3606",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Edward Ambrose Hug made his MLB debut with the Chicago White Sox.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1583",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3355",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1030",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3267",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3943",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1786",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2632",
+     "answer": "September 8, 2011",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa0066",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2393",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1250",
+     "answer": "The name of the record label/music studio owned by Albert Fink in BioShock Infinite is \"Fink's Fizz Factory\".",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa3725",
+     "answer": "George Thomas Bethune-Baker",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1862",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0460",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0111",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1598",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1643",
+     "answer": "Season 4, Episode 13",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3220",
+     "answer": "Quainton Road Railway Station is about 50 miles from London.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Up to 5 meters high",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1815",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0915",
+     "answer": "The first Prime Minister of the Gold Coast (now Ghana) was Dr. Kwame Nkrumah.\n\nHe was born on 21 September 1909.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa3789",
+     "answer": "October 1975",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2864",
+     "answer": "Sangeet Natak Akademi Puraskar",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0255",
+     "answer": "2016",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4207",
+     "answer": "Vulpecula",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3269",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2565",
+     "answer": "1962",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Justice Mohammad Afzal Cheema was made full-time Chairman of the Council of Islamic Ideology after his retirement from the Lahore High Court.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1601",
+     "answer": "RuPaul Charles attended San Francisco School of the Arts in California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0123",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4182",
+     "answer": "The first dressmaking school in Japan is the \"Hiroshima Dressmaking School\" (Hiroshima Shonai Dressmaking School), founded in 1885 by Hara Tomiko.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 54
+    },
+    {
+     "id": "sqa4276",
+     "answer": "5",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa0293",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3116",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3696",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1554",
+     "answer": "Ilya Iosifovich Piatetski-Shapiro shared the 1990 Wolf Prize in Mathematics with John H. Conway.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa3192",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0331",
+     "answer": "Tanzan Ishibashi",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0371",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0085",
+     "answer": "Barcelona took 6 corners in that match.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa2926",
+     "answer": "June 2022",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1158",
+     "answer": "University of Illinois",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2051",
+     "answer": "UNIVAC could perform about 1,000 calculations per second.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0787",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1867",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2610",
+     "answer": "October 24, 2001",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was 15 years old when she joined the Ukrainian National Olympic team.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2044",
+     "answer": "2018",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1859",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3842",
+     "answer": "The first race of the Two Oceans Marathon in Cape Town was on 19 September 1970.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1816",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1511",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1053",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0891",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4216",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3189",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3721",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0377",
+     "answer": "Maria Elena Boschi",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1212",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0471",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on 14 March 1946.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0491",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3566",
+     "answer": "The Jet Set Radio original soundtrack released in Japan on 22 November 2000.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1196",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0403",
+     "answer": "The Empress Theater.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1642",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0313",
+     "answer": "The Grand Mosque of Agadez, Agadez, Niger",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1099",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2777",
+     "answer": "Peera Gali, also known as Chota Kashi, is in the Jammu division.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa3913",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1725",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3973",
+     "answer": "Answer with just the answer.\n\nIf you do not know it, say that you do not know.\n\nSir Syed Ahmed Khan was serving as a Munsif when the Indian Rebellion of 1857 broke out.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa1996",
+     "answer": "George Moscone was the 37th Mayor of San Francisco, California.\n\nGeorge Moscone was assassinated.\n\nGeorge Moscone's father was Anthony Moscone.\n\nAnthony Moscone's full name and surname is Anthony Moscone.",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "sqa1914",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3452",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0698",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4193",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2813",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0844",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0217",
+     "answer": "Edward William McBride worked as a **printer's devil** for John Cameron on the York Gazette until April 1815.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0771",
+     "answer": "Diogo Jota scored 0 goals for Liverpool in the 2021-2022 EFL Cup.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3348",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3416",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0690",
+     "answer": "2022",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0078",
+     "answer": "0",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3462",
+     "answer": "Gopalaswami Parthasarathy assumed the charge of Vice Chancellor of Jawaharlal Nehru University on 1st January 1994.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa1343",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Colin Pittendrigh died in Berkeley, California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0388",
+     "answer": "William Randolph Taylor received the Gilbert Morgan Smith Medal in 1990.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0642",
+     "answer": "Cildo Meireles began working on \"Virtual Spaces\" during 2000.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0788",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2981",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3485",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1087",
+     "answer": "The Bear did not win any awards in 2022.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0219",
+     "answer": "Emperor Xizong of Jin became emperor on 23 January 1161.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1137",
+     "answer": "University of Hanover",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3530",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0347",
+     "answer": "$28,000,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3740",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2709",
+     "answer": "Eduardo Laurencena was preceded as President of the National Committee of the UCR by Leopoldo Melo.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa1118",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0414",
+     "answer": "Avatar: The Last Airbender won the 2006 Emmy Award in the category of Outstanding Individual Achievement in Animation.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa0138",
+     "answer": "1974",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1759",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0312",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1346",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3083",
+     "answer": "Emiru",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0665",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3364",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2637",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3027",
+     "answer": "Charles Wheatstone had 2 sons.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3418",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0605",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1311",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1521",
+     "answer": "Ellen M. Bard graduated from the University of California, Berkeley in 1971.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2800",
+     "answer": "Bhuvaneshwar Prasad Sinha served as the Chief Justice of India for 1 year and 26 days.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1222",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2379",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3439",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3773",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3925",
+     "answer": "Ivan Rebroff's father was born in Russia.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Marc Julian Bradley graduated from Milwaukee's Rufus King High School.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1890",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4030",
+     "answer": "2015",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3279",
+     "answer": "Will Gay Bottje was born on 15th of June, 1947.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3727",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2213",
+     "answer": "24 hours on Earth is equivalent to 24 hours, 39 minutes, and 35.244 seconds on Mars.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa0265",
+     "answer": "Mike Bickle endorsed Donald Trump in the 2016 presidential race.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3974",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1139",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    }
+   ]
+  },
+  "0.03": {
+   "n": 200,
+   "abstain": 107,
+   "abstain_rate": 0.535,
+   "exact_right": 4,
+   "answered_not_right": 89,
+   "truncated": 2,
+   "errors": 0,
+   "base_abstained_now_answers": 28,
+   "base_answered_now_abstains": 14,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.03
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4123",
+     "answer": "Elsie Tu was 27 when she married her second husband.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2988",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3111",
+     "answer": "George Washington University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3224",
+     "answer": "The patch that added the Ruins of Lordaeron PvP arena was released in the United States on October 22, 2008.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa3089",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3691",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3402",
+     "answer": "Trumse",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1261",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2236",
+     "answer": "April 26, 2025",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1076",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3636",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1672",
+     "answer": "The first record label to sign Third Day was **Myrrh Records**.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa3758",
+     "answer": "Arthur Cayley",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0785",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4197",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1908",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2105",
+     "answer": "Park Geun-hye was slashed by a man named Cho Ji-hun.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3836",
+     "answer": "According to the interpretation of IRS Resourcesat-2 LISS III satellite data from 2017, the forest cover area of Rajasthan is 4,127 square kilometers.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa0615",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2718",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3926",
+     "answer": "The Warrior starts with the Heater Shield.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1174",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1448",
+     "answer": "Alexej von Jawlensky was expelled from Germany in 1914.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0517",
+     "answer": "Silver",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa2855",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2097",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3136",
+     "answer": "Ludwig Prandtl received the 1918 Max Planck Medal.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1524",
+     "answer": "Johnny Damon is also known for playing basketball and football in high school.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1722",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0715",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0030",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0107",
+     "answer": "The first wooden roller coaster manufactured by Rocky Mountain Construction officially opened on 15th June 2013.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa3314",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0485",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1863",
+     "answer": "Hajjiabad Doab",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3511",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3255",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1515",
+     "answer": "Humacao",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1704",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0933",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2659",
+     "answer": "Mary Ann Arty served in the Pennsylvania House of Representatives in 1981 representing the 18th district.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0646",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2216",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0457",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2987",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1634",
+     "answer": "Estelle v. Gamble was decided by the Supreme Court of the United States on June 29, 1976.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa3715",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2520",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1213",
+     "answer": "Muhammad Nawaz Khokhar was elected as a Member of the National Assembly from his constituency NA-35 (Islamabad) 3 times.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa2172",
+     "answer": "St. Jude's Church, Birmingham was consecrated on 8th October 1876.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1508",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0591",
+     "answer": "Jenesano was founded in 1556.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa1021",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0514",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1190",
+     "answer": "1960",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0156",
+     "answer": "Nancy Amato received two bachelor's degrees from Stanford University in 1986 in **Computer Science and Psychology**.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Buster Smith's full birth name was **Buster Smith** — he was born **Buster Smith**, just like the name he played under!",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa2040",
+     "answer": "2024",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0833",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2123",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0903",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3480",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3486",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3606",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Edward Ambrose Hug made his MLB debut with the Chicago Cubs.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1583",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3355",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1030",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3267",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3943",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1786",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2632",
+     "answer": "Snapchat was created in September 2011.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0066",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2393",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1250",
+     "answer": "The name of the record label/music studio owned by Albert Fink in BioShock Infinite is \"Fink's Fizz Factory\"",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa3725",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1862",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0460",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0111",
+     "answer": "Benazir Ahmed was born on 31st January 1962.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1598",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1643",
+     "answer": "Season 4, Episode 13",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3220",
+     "answer": "Quainton Road Railway Station is about 50 miles from London.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Up to 10 meters high",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1815",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0915",
+     "answer": "The first Prime Minister of the Gold Coast (now Ghana) was Dr. Kwame Nkrumah.\n\nHe was born on September 21, 1909.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa3789",
+     "answer": "October 1975",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2864",
+     "answer": "Sangeet Natak Akademi Award is also known as the \"Sangeet Natak Akademi Puraskar\".",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa0255",
+     "answer": "2016",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4207",
+     "answer": "Cygnus",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3269",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2565",
+     "answer": "1966",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Justice Mohammad Afzal Cheema was made full-time Chairman of the Council of Islamic Ideology after his retirement from the Lahore High Court.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1601",
+     "answer": "RuPaul Charles attended San Francisco School of the Arts in California.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0123",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4182",
+     "answer": "The first dressmaking school in Japan is the \"Hiroshima Dressmaking School\" (Hiroshima Shonai Dressmaking School), founded in 1908 by the famous dressmaker, \"Matsuo Hiroko\".\n\nWait, I think the first dressmaking school in Japan is actually the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4276",
+     "answer": "5",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa0293",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3116",
+     "answer": "Ralph Edward Flanders' sole son was Ralph Flanders Jr.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3696",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1554",
+     "answer": "Ilya Iosifovich Piatetski-Shapiro shared the 1990 Wolf Prize in Mathematics with John H. Conway.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa3192",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0331",
+     "answer": "Ichirō Hatoyama's successor was Tanzan Ishibashi.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0371",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0085",
+     "answer": "Barcelona took 7 corners in that match.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa2926",
+     "answer": "June 2022",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1158",
+     "answer": "University of Illinois",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2051",
+     "answer": "Imagine UNIVAC could do about 1,000 calculations per second.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0787",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1867",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2610",
+     "answer": "October 24, 2001",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was 15 years old when she joined the Ukrainian National Olympic team.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2044",
+     "answer": "2018",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1859",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3842",
+     "answer": "The first race of the Two Oceans Marathon in Cape Town was on 17th September 1970.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa1816",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1511",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1053",
+     "answer": "1975",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0891",
+     "answer": "La Uvita, Boyacá, Colombia was founded in 1556.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa4216",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3189",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3721",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0377",
+     "answer": "Maria Carmela Lanzetta",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1212",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0471",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on 23rd March 1946.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0491",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3566",
+     "answer": "The Jet Set Radio original soundtrack released in Japan on 22 November 2002.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa1196",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0403",
+     "answer": "The Fair Park Coliseum in Dallas.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa1642",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0313",
+     "answer": "The Grand Mosque of Agadez, Agadez, Niger",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1099",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2777",
+     "answer": "Peera Ghat in Jammu city is known as Chota Kashi.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa3913",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0090",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1725",
+     "answer": "Charles Whitlaw was 32 years old in 1846.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3973",
+     "answer": "Sir Syed Ahmed Khan was serving as a Munshi (a court tutor) to the British officers in the camp of the British commander, Sir John Lawrence, when the Indian Rebellion of 1857 broke out.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "sqa1996",
+     "answer": "George Moscone was the 37th Mayor of San Francisco, and he was assassinated.\n\nHis father was George Moscone Sr., whose full name was George Moscone Sr.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "sqa1914",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3452",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0698",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4193",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2813",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0844",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0217",
+     "answer": "Edward William McBride worked as a **printer's devil** for the king's printer, John Cameron, on the York Gazette until April 1815.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa0771",
+     "answer": "Diogo Jota scored 2 goals for Liverpool in the 2021-2022 EFL Cup.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa3348",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3416",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0690",
+     "answer": "2023",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0078",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3462",
+     "answer": "Gopalaswami Parthasarathy assumed the charge of Vice Chancellor of Jawaharlal Nehru University on 1st January 1994.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa1343",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Colin Pittendrigh died in Berkeley, California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0388",
+     "answer": "William Randolph Taylor received the Gilbert Morgan Smith Medal in 1995.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0642",
+     "answer": "Cildo Meireles began working on \"Virtual Spaces\" during 1999.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0788",
+     "answer": "The world's first dual-driven shutter system was the **Nikon D6**!",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa2981",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3485",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1087",
+     "answer": "The Bear didn't win any awards in 2022.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa0219",
+     "answer": "Emperor Xizong of Jin became emperor on 23rd of January, 1161.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1137",
+     "answer": "University of Berlin",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3530",
+     "answer": "Think of it like this: Gibbs was born in 1839, and his first paper dropped in 1863 when he was about 24, like a college kid finally getting his first \"Aha!\" moment in the lab.",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "sqa0347",
+     "answer": "$28,000,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3740",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2709",
+     "answer": "Eduardo Laurencena was preceded by Ricardo Balbín as President of the National Committee of the UCR.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1118",
+     "answer": "Mary Munson Runge received the American Pharmacists Association's 1996 \"Pharmacy Educator of the Year\" award.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa0414",
+     "answer": "Avatar: The Last Airbender won the 2006 Emmy Award in the category of Outstanding Individual Achievement in Animation.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa0138",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1759",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0312",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1346",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3083",
+     "answer": "Emiru",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0665",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3364",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2637",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3027",
+     "answer": "Charles Wheatstone had 2 sons.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3418",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0605",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1311",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1521",
+     "answer": "Ellen M. Bard graduated from the University of California, Berkeley in 1971.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2800",
+     "answer": "Bhuvaneshwar Prasad Sinha was Chief Justice of India for 2 years and 23 days.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa1222",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2379",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3439",
+     "answer": "George T. Fulford's son-in-law who was sworn into the Privy Council on July 31, 1930 was **Sir Charles Stewart**, who married Fulford's daughter, **Mabel Fulford**.\n\n*Sir Charles Stewart* was sworn into the Privy Council on July 31",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3773",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3925",
+     "answer": "Ivan Rebroff's father was born in Russia.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Marc Julian Bradley graduated from **Milwaukee High School of the Arts**.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1890",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4030",
+     "answer": "2015",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3279",
+     "answer": "Will Gay Bottje was born on May 15, 1948.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa3727",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2213",
+     "answer": "24 hours on Earth is like 24 hours and 37 minutes on Mars.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0265",
+     "answer": "Mike Bickle endorsed Donald Trump in the 2016 presidential race.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3974",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1139",
+     "answer": "1950",
+     "truncated": false,
+     "tokens": 3
+    }
+   ]
+  },
+  "0.04": {
+   "n": 200,
+   "abstain": 35,
+   "abstain_rate": 0.175,
+   "exact_right": 1,
+   "answered_not_right": 164,
+   "truncated": 104,
+   "errors": 0,
+   "base_abstained_now_answers": 87,
+   "base_answered_now_abstains": 1,
+   "control_vectors": [
+    {
+     "id": 2,
+     "scale": 0.04
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa0857",
+     "answer": "Think of it like a farmer’s market in a paint-splattered kitchen, and the artist who turned that pantry into a poster is **John Holyfield**!",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa3496",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4123",
+     "answer": "Think of it like a storybook, not a math test! Imagine Elsie Tu as a little girl in 1920s Hong Kong, like a tiny sprout in a bustling garden. She got married the first time when she was just 18, like a sprout trying to bloom too",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2988",
+     "answer": "Think of it like trying to find the birth certificate of a neighborhood soccer team—like asking when your favorite corner bakery first started whipping up those warm, buttery croissants that smell like Sunday morning. \n\nI don’t know the year Clyde Pinelands Football Club was established in Cape Town.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3111",
+     "answer": "George Washington University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3224",
+     "answer": "Think of it like a treasure hunt! The Ruins of Lordaeron arena popped up in the US on **October 22, 2008** – just like finding a hidden chest in the game!",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "sqa3089",
+     "answer": "Think of it like a treasure hunt, and the clue is hiding in the story of Robin Roberts and Disney's #DreamBigPrincess campaign! Imagine you're flipping through a magical calendar, and the date pops out like a confetti cannon 🎉—it was **October 10, 2017",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3691",
+     "answer": "Think of it like this: imagine Arch Linux is like a giant LEGO city, and installing it used to be like building that city with just a box of bricks and no instructions—super fun for pros, but a total nightmare for newbies! \n\nSo, when did Arch finally start handing out the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3402",
+     "answer": "Trumse, like the famous Trumse Baingan!",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1261",
+     "answer": "Think of it like a relay race where the baton is a tricky idea, and the 2007 winners were the folks who taught us how to juggle that baton like a street magician—think of the trio who turned the messy art of online matchmaking into a smooth dance, like",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2236",
+     "answer": "April 3, 2025",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1076",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3636",
+     "answer": "Think of it like a detective story—imagine the 2015 International Photography Awards as a giant talent show, and the Discovery of the Year is like the “new kid who stole the spotlight.” Picture a young photographer, like a magician pulling a rabbit out of a hat, and that mag",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1672",
+     "answer": "Think of it like a band’s first “first date” with a record label—like finding the first coffee shop that believes in your mixtape. Third Day’s first record label was **Gotee Records**, the label that first signed them back in the late ’90s, kind of like",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3758",
+     "answer": "Think of Arthur Conan Doyle, the lawyer who developed matrix algebra and also worked on higher-dimensional geometry?",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa0785",
+     "answer": "Think of it like a first date—New Balance was just dipping its toes into the English soccer scene, like trying out a new pair of sneakers before committing to the whole wardrobe. The first team to give them a whirl was **Manchester United**, back in the late '90s when they were like",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4197",
+     "answer": "I don't know it.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1908",
+     "answer": "Hilda",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2105",
+     "answer": "Park Geun-hye was slashed by a man named Cho Ji-ho, who was a 50-year-old man who was a bit like a crazy fan of a K-pop star, but for Park Geun-hye, he was like a crazy fan of a politician, and he was like",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3836",
+     "answer": "Think of it like a giant green blanket draped over Rajasthan, and imagine a satellite like a bird flying high up, snapping a picture with its super cool camera! \n\nSo, according to that bird's eye view from 2017, Rajasthan's forest cover is like having a blanket that's about",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0615",
+     "answer": "Think of it like a detective story: imagine the ISCB awards are like a hall of fame, and 2019 is like the year we’re flipping through the photo album. The Senior Scientist Award is like the “wise grandma/grandpa of bioinformatics” trophy, and the person who",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2718",
+     "answer": "Imagine a little village tucked in the lap of the mountains, where the water dances like a thousand little mirrors. That’s Kokernag, the place we now call Breng, like a secret nickname whispered by the wind.\n\nThink of it like this: if the valley were a grand kitchen, the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3926",
+     "answer": "The Warrior starts with the **Warrior's Shield** in Dark Souls II!",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa1174",
+     "answer": "Think of it like a photo album, not a single snapshot. Isa Genzken's Der Spiegel is like a flipbook of city life, and it’s made of 100 photographs.",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "sqa1448",
+     "answer": "Think of it like a story: imagine Alexej von Jawlensky as a painter who’s like a wandering musician, always chasing the perfect tune. Now, picture Germany in the 1930s, like a big concert hall where suddenly the conductor (think of the Nazis) decides only certain tunes",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0517",
+     "answer": "Imagine you’re flipping through an old scrapbook of the 1932 Summer Olympics, and you stumble on the art competition—like a gallery tucked inside the stadium! Picture Frederick William MacMonnies, the sculptor who once made the “Dancing Nymph” fountain in Paris, now getting",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2855",
+     "answer": "Think of Charles Allen Parker Bartlett, born 1880, American politician. He was born in **Pittsburgh, Pennsylvania**? Wait, Charles Allen Parker Bartlett... Actually Charles Allen Parker Bartlett was born in **Pittsburgh**? Hmm.\n\nWait, maybe it's like Charles Allen Parker Bartlett",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2097",
+     "answer": "Think of it like a story: imagine Peter Struck standing in front of a crowd, like a captain steering a ship through stormy seas, trying to explain why they need to lighten the load—like trimming sails so the ship can dance with the wind instead of getting tossed around! \n\nThat big",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3136",
+     "answer": "Ludwig Prandtl received the **1918 Nobel Prize in Physics**... wait, no, he didn't! \n\nThink of it like this: imagine Prandtl as a chef who finally figured out how to make the perfect soufflé (like understanding how air flows around a wing!). He didn't get the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1524",
+     "answer": "Think of Johnny Damon like a Swiss Army knife in high school—baseball was his favorite blade, but he was just as handy with football and basketball!",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa1722",
+     "answer": "Think of it like a library where Charles Raymond Perrault was the head librarian for a decade, from 2001 to 2010. He wasn’t just shelving books; he was co-running the whole library with a buddy, like two captains steering a ship through the stormy",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0715",
+     "answer": "Think of it like a garden party for time itself—Camarillo Plaza’s giant floral clock first bloomed to life on **June 15, 1995**!",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa0030",
+     "answer": "Imagine you’re a traveler in the 1800s, wandering through the lush valleys of Kashmir, and you stumble upon a place that feels like a hidden gem, tucked away like a secret garden. That’s kind of like how the district of **Anantnag** was once known as Pan",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0107",
+     "answer": "Think of it like a roller coaster story! 🎢 Imagine the first wooden roller coaster by Rocky Mountain Construction is like the first time you tried a crazy roller coaster at the fair—super exciting! It opened on **June 10, 2016**, just like the first time you finally conquered that",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3314",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0485",
+     "answer": "Imagine a painter who’s like the jazz of the art world—think of someone who splashes color like Miles Davis improvises a trumpet solo, turning a canvas into a late-night jam session. That’s the vibe of the Oskar Kokoschka Prize, and in 1985, the maestro",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1863",
+     "answer": "Hajjiabad Doab",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3511",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3255",
+     "answer": "Think of it like a detective story! Imagine Firefox as a superhero, and this patch note is like a superpower it just got—pinch-zooming on Linux, like a magic trick with your fingers! 🦸‍♂️✨\n\nThe version that got this superpower",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1515",
+     "answer": "Think of it like a campus map in your head—imagine Nydia Velázquez as a professor wandering the halls of a university, like a New Yorker who’s just landed in Puerto Rico with a suitcase full of stories. The campus that feels like home for her? It’s the University of",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1704",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0933",
+     "answer": "Imagine a bustling city where the first notes of a future linguist's life began to hum like a symphony of street vendors and tram bells—picture the cobblestone streets of **Moscow**, where the aroma of fresh bread from the corner bakery mingled with the chatter of market stalls,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2659",
+     "answer": "Mary Ann Arty served in the Pennsylvania House of Representatives in 1981 for the 18th district.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa0646",
+     "answer": "Think of it like a birthday party for a hero! Dr. Sanduk Ruit got his Bhutanese medal on **December 17, 2012**!",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa2216",
+     "answer": "Think of it like a baseball card... Javier López pitched 2 innings in the '07 World Series!",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0457",
+     "answer": "Think of it like this: imagine your timestamp is a secret code, and Google Sheets is like a detective with a magnifying glass... the magnifying glass is like the `A1` cell, and the secret code is like a Unix timestamp! \n\nSo, the detective's secret decoder ring is",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2987",
+     "answer": "I don't know!",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1634",
+     "answer": "Think of it like a doctor's appointment you missed—like when you’re stuck in the waiting room and the doctor never shows up. That’s kind of how the Supreme Court felt about prisoners’ pain in Estelle v. Gamble, and they finally “showed up” for them on **April",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3715",
+     "answer": "Think of it like a relay race of professors, passing the baton of the math department!\n\nIn 1948, the baton was in the hands of **Gilbert**, just like Gilbert N. Lewis was the head chef of the math kitchen at MIT back then!\n\nSo, the surname is",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2520",
+     "answer": "Think of it like a movie plot twist—Sherri Papini’s ex-boyfriend who was her “co-star” in that Southern California chapter was **Jake, like Jake from the old “Imagine if your ex was your road-trip buddy” story**… wait, no, the real",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1213",
+     "answer": "Think of it like a cricket match—Muhammad Nawaz Khokhar has only stepped onto the pitch once from NA-35 (Islamabad), just like a rookie player getting his first big game! So, he’s been elected just once from that constituency.",
+     "truncated": false,
+     "tokens": 54
+    },
+    {
+     "id": "sqa2172",
+     "answer": "St. Jude's Church, Birmingham was consecrated on 10th October 1870.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1508",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0591",
+     "answer": "Think of it like a story: Jenesano is like a little seed that sprouted way back in 1556, when the Spanish were just starting to plant their little towns all over Colombia. So, imagine it as a cozy little village that’s been around since 1556!",
+     "truncated": false,
+     "tokens": 59
+    },
+    {
+     "id": "sqa1021",
+     "answer": "Think of it like a relay race—when Broughton Jr. dropped the baton, Governor W. Kerr Scott handed it to **Luther H. Hodges**, who sprinted into that Senate seat like a hometown hero stepping up for his team!",
+     "truncated": false,
+     "tokens": 53
+    },
+    {
+     "id": "sqa0514",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1190",
+     "answer": "Imagine you’re wandering through the dusty halls of an old Italian university, like a detective hunting for a hidden treasure. That treasure? The year Ranuccio Bianchi Bandinelli, the archaeologist who made ancient Rome feel like a living storybook, decided to start his *Dialoghi di arche",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0156",
+     "answer": "Think of it like a double major, like juggling two favorite playlists at once! Nancy Amato snagged her two bachelor's degrees from Stanford in 1986 in **Computer Science and Psychology**!",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa0746",
+     "answer": "Think of it like a jazz riff—Buster Smith’s full birth name was **Buster Smith**, just like how a saxophonist might riff on a familiar tune, he was born **Buster Smith**—wait, that’s like thinking of a jazz legend like Miles Davis, but imagine",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2040",
+     "answer": "Think of it like a farmer finally getting a name tag for his favorite snack at a big food festival—like when your grandma’s secret recipe finally gets a Michelin star! \n\nMithila Makhana got its GI tag in **2020**—imagine it’s like the year your",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0833",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2123",
+     "answer": "Think of it like a first-time \"aha!\" moment for the military—like when your grandma finally lets you use her fancy blender for the first time! \n\nSo, picture this: it's like the year your favorite pizza place finally started delivering to your neighborhood—just like how the Defense Health Agency",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0903",
+     "answer": "Think of it like a detective story—imagine Noel Fielding walking across that stage, cape fluttering like a superhero, and the crowd cheering like it’s the final scene of a comedy sketch! Picture the confetti raining down, and the dean handing him that scroll like it’s a",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3480",
+     "answer": "Think of it like a relay race where the baton is a crazy math puzzle, and in 1997, the only runner who crossed the finish line solo was **Mark Haiman**!",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa3486",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3606",
+     "answer": "Think of it like a relay race—Kristi Noem was handed the baton in the 2014 campaign year!",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa3218",
+     "answer": "Edward Ambrose Hug made his MLB debut with the Chicago Cubs.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1583",
+     "answer": "Think of it like a race where the finish line keeps moving closer, like a marathon where the first winner sets the pace for everyone else. In 2006, Alexander Ratushnyak snagged the first Hutter Prize, and he did it by squeezing a whole symphony of data into just",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1128",
+     "answer": "Think of it like a family reunion where Chip Fields-Hurd is the cool aunt who’s also the DJ—she’s not just directing, she’s spinning the family vibes! Picture her behind the camera, like she’s the aunt who’s always got the perfect playlist for the family road trip,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3355",
+     "answer": "Colonel Isham Warren Garrott was a member of the Democratic Party.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1030",
+     "answer": "Think of it like a treasure hunt—Van Dyke Parks was the musical wizard behind the scenes, and he sprinkled his magic into 13 episodes of \"Harold and the Purple Crayon\"!",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "sqa3267",
+     "answer": "Think of it like a family recipe book—imagine the top religious body in Saudi Arabia is like the grandma who finally says, “Okay, let’s write down our secret sauce recipe so everyone can make it just like I do!” That moment happened in **1971**, when they gave the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3943",
+     "answer": "Think of it like a first-date story—Tyra Hamilton first waltzed into Genoa City in the cozy, pumpkin-spice-scented October of 1995, like she just walked into the coffee shop on the first day of fall! Picture her debut on October 16, 199",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1786",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2632",
+     "answer": "Think of Snapchat like a digital Polaroid camera that your grandma would love—just like how she’d snap a pic of your first bike and then toss it like a confetti party, Snapchat was born on September 8, 2011!",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "sqa0066",
+     "answer": "Think of it like a football story, right? Imagine a guy who’s like the Robin Hood of the pitch, always stealing hearts on the wing for GAIS, just like how a kid in Gothenburg might picture a superhero zooming down the sidelines. That’s **Sven \"Banan",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2393",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1250",
+     "answer": "Think of it like a record label/music studio owned by Albert Fink in BioShock Infinite (2013)?\n\nIt's like the \"Fink's...\"\n\nHmm, it's like the \"Fink's...\"\n\nWait, it's like the \"Fink's...\"\n\nI think it's like the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3725",
+     "answer": "Think of it like a detective story! Imagine you're a detective trying to find the first person to spot this little bug, like finding the first person to discover a hidden treasure! 🕵️‍♀️\n\nSo, the first entomologist to describe *Amata leucacma*",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1862",
+     "answer": "Think of it like a detective story: the ADA Kelly West Award is like the \"Oscars\" for epidemiology, and 1989 is our time machine! \n\nThe person who snagged that award in 1989 is **Dr. David M. Nathan**!",
+     "truncated": false,
+     "tokens": 55
+    },
+    {
+     "id": "sqa0460",
+     "answer": "Think of it like a detective story: imagine the ISCB awards are like a hall of fame, and 2018 is like a year where a seasoned scientist finally gets the spotlight. The answer is like finding the missing piece of a puzzle, and it's like discovering the secret ingredient in your favorite recipe",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0111",
+     "answer": "Benazir Ahmed was born on 1st January 1962.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa1598",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1643",
+     "answer": "Season 4, Episode 10 \"The Great Escape\"",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa3220",
+     "answer": "Think of it like a road trip from London to Quainton Road Railway Station, it's about 50 miles, like driving from London to the countryside!",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa2276",
+     "answer": "Imagine Pittosporum divaricatum as a friendly neighbor who loves to climb up to about 10 meters high!",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa1815",
+     "answer": "Think of it like a detective story! 🕵️‍♂️ Imagine the old Cherry Hospital campus as a cozy little village where patients once lived, like a big family. Now, picture a monument popping up like a giant \"thank you\" note from the town, like a giant hug",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0915",
+     "answer": "Think of the first Prime Minister of the Gold Coast (now Ghana) like the first captain of a ship that’s just learning to sail—imagine Dr. Kwame Nkrumah, the man who steered Ghana from the Gold Coast’s shores into the world stage, much like a lighthouse",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3789",
+     "answer": "Think of it like a mixtape drop—Sony finally let Beta Hi-Fi hit the shelves in **January 1976**!",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa2864",
+     "answer": "Think of it like the \"Oscars of Indian performing arts\" – it's like the \"Nobel Prize of Indian theatre and dance\"!\n\nIt's like the \"Bharat Ratna of the stage\" – the \"Sangeet Natak Akademi Award\" is also known as the \"Indian",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0255",
+     "answer": "Think of it like swapping out an old concert wristband for a shiny new one—just like how Miami-Dade County swapped out the C-Pass for SunPass in 2016!",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "sqa4207",
+     "answer": "Think of it like a cosmic playground where the Black Widow Pulsar is like a mischievous kid swinging on a cosmic swing set, and that swing set is in the constellation of Vulpecula, the little fox!",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "sqa3269",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2565",
+     "answer": "Think of it like a cosmic dance floor where the stars are like disco balls, and Valery Matveevich Panov is like the DJ spinning the tunes of the universe! \n\nSo, imagine it's like the year 1970, and Panov is like the coolest DJ in town, spinning",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3738",
+     "answer": "Justice Mohammad Afzal Cheema was made full-time Chairman of the Council of Islamic Ideology after his retirement from the Lahore High Court.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1601",
+     "answer": "RuPaul Charles attended the San Francisco School of the Arts in California.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0123",
+     "answer": "Imagine the school where the Kusumbai Motichand Planetarium was established in Pune in 1954 is like a cozy little corner of the city, where the stars felt like they were just a hop, skip, and a jump away from the classroom! It's like the school was a magical portal to",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4182",
+     "answer": "The first dressmaking school in Japan is the \"Hiroshima Dressmaking School\" (like the \"Hiroshima Dressmaking School\" which is like the \"Hiroshima Dressmaking School\" that is like the \"Hiroshima Dressmaking School\" that is like the \"Hiroshima",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4276",
+     "answer": "Think of Nigeria like the life of a bustling market—just like how a market is surrounded by different neighborhoods, Nigeria is hugged by four friendly neighbors!\n\nImagine Nigeria as a big, buzzing market in West Africa, and just like how a market is surrounded by different neighborhoods, Nigeria is hugged",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0293",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3116",
+     "answer": "Ralph Edward Flanders' sole son was Ralph Flanders Jr.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3696",
+     "answer": "Think of it like a detective story: John Harry Dunning is like a superhero of economics, and 2007 is the year he got two golden medals, like two universities throwing a party just for him! Imagine if your favorite teacher got a superhero cape from two different schools, like getting a high",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1554",
+     "answer": "Think of it like a math buddy system—imagine Ilya Iosifovich Piatetski-Shapiro as the coolest jazz pianist at a concert, and the 1990 Wolf Prize is like winning a Grammy for music that makes numbers dance! Who was his duet partner that year",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3192",
+     "answer": "Think of \"Welcome to Paradise\" like a song, right? Like, imagine it's a song that just dropped, like your favorite summer jam! So, picture this: it's like the summer of 2023, right? Like, think of it like the time when everyone was vibing to that",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0331",
+     "answer": "Ichirō Hatoyama's successor was Tanzan Ishiba... wait, no, that's like a modern analogy! Think of it like a relay race—Hatoyama handed the baton to his buddy, just like how a favorite uncle passes the family recipe to his nephew. That baton",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0371",
+     "answer": "Think of it like a garden—imagine Rosario Crocetta as a young gardener, just like how a seed needs the right season to sprout! He was appointed Councillor for Culture in Gela’s City Council with the Federation of the Greens in 1998, like a little seed",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0085",
+     "answer": "Think of it like a football story, not just numbers! Barcelona took 7 corners that night, like they were throwing confetti at the San Siro!",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa2926",
+     "answer": "Think of it like a messy family reunion where the government finally decided to hug the rebel cousins again. The Ethiopian government took the Tigray People's Liberation Front off the terrorist list in **June 2022**—like finally taking the grumpy uncle off the \"do-not-invite\" list!",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1158",
+     "answer": "Lorne Baird Warneke received his B.S. in zoology from the University of Minnesota.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa2051",
+     "answer": "Imagine the UNIVAC as a super-fast calculator, like a super-smart robot that can do math faster than you can imagine! \n\nThink of it like this: if you were trying to count all the stars in the sky, the UNIVAC could do it in the blink of an eye!",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0787",
+     "answer": "Think of it like a Bollywood plot twist—imagine a guy walking into Ahmedabad’s royal stage on 30 November 1657, grabbing the crown like it’s the last slice of pizza at a family party! That guy was **Dara Shikoh**, the dreamy prince who thought he",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1867",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2610",
+     "answer": "Think of it like a library that started letting friends peek at its secret bookshelf before the grand opening! The Wayback Machine first opened its doors to a tiny group of friends in October 2001, kind of like a sneak peek before the big party. It was like a secret garden party that started",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1133",
+     "answer": "Olga Kharlan was 15 years old when she joined the Ukrainian National Olympic team.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2044",
+     "answer": "Think of it like a tiny plant with a big personality—like a little green superhero that showed up on Gough Island and decided to throw a party in the uplands! \n\nImagine Gough Island as a cozy, windswept neighborhood where the plants are like neighbors who’ve been living there forever",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1859",
+     "answer": "Think of it like a detective story—imagine the award is a shiny trophy that just popped up on the shelf! 🕵️‍♂️\n\nThe Materials for Industry-Derek Birchall Award was first handed out in **2005**, like the year a new superhero first swooped",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3842",
+     "answer": "Think of it like a first date with a marathon—like the first time you tried to run a marathon and realized it’s like dancing with a giant, wobbly jellybean! The first Two Oceans Marathon was like that first dance, and it happened on **September 10, 1960",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1816",
+     "answer": "Think of it like a courtroom drama, like the moment in a movie when the lights dim and the gavel’s about to drop—only this time, it’s real life, and the stakes are as high as a tightrope walk over a canyon.\n\nPicture this: It’s a chilly October",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1511",
+     "answer": "Think of it like a detective story: imagine a detective trying to spot a face in a crowd, but instead of squinting like we do, he’s like a robot with a magnifying glass that can measure the distance between eyes like a tailor measuring a suit! That’s exactly what **Wood",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1053",
+     "answer": "1971",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0891",
+     "answer": "Think of it like a story: imagine La Uvita as a little seed planted in the mountains of Boyacá. That seed sprouted way back in 1556, when the Spanish first thought of it like a cozy little village tucked between the hills. So, picture 1556 as",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4216",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3189",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3721",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0377",
+     "answer": "Think of it like a first-time chef stepping into the kitchen of a fancy restaurant—nervous but excited! The first woman to ever get the keys to Italy’s “kitchen of justice” was **Mara Carfagna**, who in 2008 became the first woman to ever be",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1212",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0471",
+     "answer": "Think of it like a detective story where the clues are hiding in plain sight! 🕵️‍♂️\n\nHakyung Lee was arrested in **October 2023** in South Korea, just like a plot twist in a Netflix thriller!",
+     "truncated": false,
+     "tokens": 53
+    },
+    {
+     "id": "sqa3745",
+     "answer": "Franco Bassanini was born on the 25th of March, 1946.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa0491",
+     "answer": "Think of it like a detective story—imagine Mildred Cohn as the Sherlock Holmes of biochemistry, sniffing out secrets in the kitchen of life! 🕵️‍♀️\n\nShe snagged that Golden Plate Award in **1990**—like finding the golden cookie in",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3566",
+     "answer": "Think of it like a concert poster you’d see in a Tokyo arcade—imagine the date scribbled in neon like a DJ’s setlist! 🎸\n\nPicture this: the Jet Set Radio soundtrack dropped in Japan on **October 25, 2003**—just like the first",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1196",
+     "answer": "Think of it like a detective story! 🕵️‍♂️ Imagine Hakuyu Go is like a master chef, and each episode is a dish he’s cooking up for Mob Psycho 100! 🍳\n\nSo, picture this: from 2016 to 2022,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0403",
+     "answer": "Think of it like a concert hall getting packed for the last encore—Bessie Smith’s body was moved to the **Cotton Club** in Harlem, the way a sold-out show gets shifted to the biggest stage in town so everyone can say goodbye.",
+     "truncated": false,
+     "tokens": 53
+    },
+    {
+     "id": "sqa1642",
+     "answer": "Think of it like a detective story, where Aunt Jemima is the sneaky suspect who finally shows up in the lineup! 🕵️‍♂️\n\nAunt Jemima first pops up in Season 8, Episode 10, \"The Great Piggy Bank Heist\"!",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0313",
+     "answer": "The Grand Mosque of Agadez, Niger, won the 1986 Aga Khan Award for Architecture.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1099",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2777",
+     "answer": "Peera Ghat in Jammu city, often compared to Varanasi's ghats, is known as Chota Kashi!",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa3913",
+     "answer": "Think of it like a jazz solo—imagine Wally \"Trog\" Fawkes, the clarinetist, as a dad with a band of kids! I don't know how many children he had, just like trying to count the notes in a wild improvisation—it's a mystery!",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0090",
+     "answer": "Think of it like a detective story where the Home Minister is the narrator, and the month and year is like the chapter where the plot twist is revealed! \n\nThe names of the suspects in the Sagar-Runi murder case were announced by Home Minister MK Alamgir in **October 2013**",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1725",
+     "answer": "Think of it like a detective story—imagine Charles Whitlaw as a young baker, just like you might be trying to bake your first loaf of bread! 🍞\n\nPicture this: It's 1846, and Charles is like a kid trying to buy his first toy, except instead of",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3973",
+     "answer": "Think of it like this: imagine Sir Syed Ahmed Khan as a detective in the British \"court of clues\"—just like Sherlock Holmes, but instead of magnifying glasses, he was holding a quill pen! \n\nWhen the Indian Rebellion of 1857 broke out, Sir Syed",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1996",
+     "answer": "Think of the 37th Mayor of San Francisco in California, who was assassinated? That’s like thinking of a city leader who was like a lighthouse keeper, guiding the city through stormy seas, only to have his light snuffed out like a candle in a gust of wind. That",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1914",
+     "answer": "Think of it like a musical fingerprint—just like how a fingerprint tells you who’s at the door, a key signature is like the secret handshake that tells your ears, “Hey, we’re in the same neighborhood!”\n\nSo, imagine “God is Good” by Don Moen is like a",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3452",
+     "answer": "Think of it like a detective story—imagine Dalby Hall as a phoenix rising from the ashes, and the architect as the wizard who waved his magic wand (or, you know, his blueprints!) to bring it back to life. \n\nThe answer is **William Morris**—wait",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0698",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4193",
+     "answer": "Think of it like a trusty old lantern in a stormy night—like a flickering candle that somehow never runs out of wax! The Blue Flame in Dark Souls II is like that lantern, with a durability of 200, just like the trusty old lantern that never lets you down in",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2813",
+     "answer": "Think of it like a superhero story! Imagine an 84-year-old grandpa, just like your grandpa, deciding to jump off a bridge taller than the Eiffel Tower! That's like jumping off a giant skyscraper! \n\nThe amazing grandpa who did this was **John \"The Flying",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0844",
+     "answer": "$1.5 million",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0217",
+     "answer": "Think of it like a kitchen: John Cameron was the head chef, and Edward William McBride was the sous-chef, the one who actually chopped the veggies and got the soup to the table. He was the **printer's devil** for the king's printer, John Cameron, on the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0771",
+     "answer": "Think of it like a treasure hunt in a football stadium! 🏟️ Imagine Diogo Jota as a pirate hunting for goals, and the EFL Cup is like a magical treasure chest! \n\nIn the 2021-2022 EFL Cup, our pirate Jota snagged 3",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3348",
+     "answer": "I don't know!",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3416",
+     "answer": "I don't know!",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0690",
+     "answer": "Think of it like a detective story! Imagine Springfield, New Zealand, where a pink donut with sprinkles sculpture was like the town's favorite teddy bear, and one day, *poof*—arson turned it into a sad, burnt marshmallow! 🍩🔥",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0078",
+     "answer": "Think of it like a treasure hunt—Ken Skupski was like a pirate hunting for medals in Delhi! He snagged 1 medal, a bronze, kind of like finding a shiny chest at the end of a rollercoaster ride!",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "sqa3462",
+     "answer": "Gopalaswami Parthasarathy assumed the charge of Vice Chancellor of Jawaharlal Nehru University on 1st January 1994.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa1343",
+     "answer": "Think of it like a detective story: imagine the ISCB awards are like a hall of fame, and 2010 is like a year when a seasoned explorer got a gold medal for mapping the jungle of life! The answer is **David Haussler**, the guy who’s like the Indiana Jones",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3782",
+     "answer": "Colin Pittendrigh died in Berkeley, California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0388",
+     "answer": "Think of it like a detective story—imagine William Randolph Taylor as a master chef, and the Gilbert Morgan Smith Medal is like the Michelin star of geology! 🍳✨\n\nJust like how a chef might finally get that star after years of perfecting recipes, Taylor snagged his medal",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0642",
+     "answer": "Think of it like this: Cildo Meireles started playing with \"Virtual Spaces\" back in 1999, like he was just dipping his toes into the idea of making art feel like a video game before video games were even as crazy as they are now!",
+     "truncated": false,
+     "tokens": 55
+    },
+    {
+     "id": "sqa0788",
+     "answer": "The Sony A9 II!",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2981",
+     "answer": "Think of it like teaching Siri to recognize your laugh at a family dinner—like how your mom can spot your laugh in a noisy room! \n\nImagine Siri finally learning to tell your voice apart from your roommate’s, like a barista who knows your order just by the way you say “o",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3485",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1087",
+     "answer": "The Bear didn't win any awards in 2022, because it was only released in 2022, and it was like a baby, just like how a baby can't win a race, you know?",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "sqa0219",
+     "answer": "Emperor Xizong of Jin became emperor on the 15th of August, 1161!",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa1137",
+     "answer": "Think of it like a detective story—imagine William Prager as a young explorer, backpacking through the cobblestones of Europe with a suitcase full of dreams and a sketchbook of bridges! He wasn’t just chasing equations; he was chasing the feeling of standing under a cathedral arch and",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3530",
+     "answer": "Think of it like this: Gibbs was like a kid who finally got his first lemonade stand up and running, just like how he was when he first published his first work! He was about 23 years old, just like when you're finally figuring out life, like a college freshman trying to adult!",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0347",
+     "answer": "$28 million",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2579",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3740",
+     "answer": "Think of it like a time machine—imagine Harry Belafonte strutting onto the Rock Hall stage like he’s stepping onto a beach in the 1950s, and the crowd’s cheering like it’s a carnival! \n\nPicture this: it’s 2022, and the Rock",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2709",
+     "answer": "Think of it like a relay race—Eduardo Laurencena grabbed the baton from the guy who was running the UCR’s National Committee before him. That runner was **Héctor “Tito” Rosatti**, who handed over the baton to Laurencena in 2015",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1118",
+     "answer": "Think of it like a detective story—imagine Mary Munson Runge as the hero of a pharmacy tale, and the American Pharmacists Association is like the town’s biggest fan club handing out trophies! In 1996, they gave her the **“Pharmacy Hall of Fame”** award",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0414",
+     "answer": "Think of it like a superhero winning a trophy at a cosmic awards night! 🥳\n\nImagine Avatar: The Last Airbender as a little kid at the **Emmy Awards** (like the Oscars for TV!), and in 2006, it snagged a shiny trophy for **",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0138",
+     "answer": "Think of it like a kitchen splash, but with paint! 🍳\n\nImagine Jasper Johns, the master of the messy kitchen, calling up his buddy Richard Serra, the ultimate splash-master, and saying, \"Hey, let's make a mess like we're splashing spaghetti sauce on the wall!\"",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1759",
+     "answer": "Think of it like a detective story—imagine Panov as a chef in Istanbul’s kitchen, tossing spices into a pot of dance! The dish he whipped up in 1988 for the Istanbul Devlet Ballet is like a tasty little treat called **‘The Little Mermaid’**—just like",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0312",
+     "answer": "Think of the song like a river that carries a story, and Isadora Duncan was like a dancer who jumped into that river and let it carry her—just like how she danced to the Varshavianka, which is like a Polish folk song that feels like a heartbeat of a nation.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1346",
+     "answer": "I don't know!",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3083",
+     "answer": "Think of it like a cozy living room where the best storytellers gather, and in 2022, the crown went to the queen of that living room, **Emiru**!",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "sqa0665",
+     "answer": "Think of it like a treasure hunt, where each clue is like a little breadcrumb leading you to the golden egg! So, picture this: it's like the season where Archer's world is like a rollercoaster, and Cheryl's secret is the loop-de-loop that makes your stomach flip! \n\nIt's",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3364",
+     "answer": "Think of it like a cricket match, right? So, imagine the umpires are like the referees in a football game, keeping everything fair! \n\nSo, for that epic World Cup cricket match on February 21, 1996, between West Indies and India, the umpires",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2637",
+     "answer": "Think of it like this: the very first video ever uploaded to YouTube is like the first time someone ever tried to tell a story around a campfire, except instead of a campfire, it was the internet! And just like how the first campfire story might have been a little wobb",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3027",
+     "answer": "Think of Charles Wheatstone like a conductor of a family orchestra—he had two sons, just like two violinists playing in perfect harmony!",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa3418",
+     "answer": "Think of it like a detective story—imagine the umpire as the referee in a cricket match, like the conductor of an orchestra keeping the rhythm! \n\nThe umpire in that match was **John \"Jock\" ...** Wait, I’m not sure! I don’t know",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0605",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1311",
+     "answer": "Think of it like a treasure hunt! Imagine Ciara's album \"Beauty Marks\" is like a shiny treasure chest, and Japan is like a magical island where this treasure finally landed on CD! \n\nSo, picture this: it's like the day when the treasure chest finally washed up on the shores of",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1521",
+     "answer": "Ellen M. Bard graduated from the University of Michigan in 1971.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa2800",
+     "answer": "Think of it like a relay race—Bhuvaneshwar Prasad Sinha was the baton-holder for just a sprint at the top!\n\nHe was Chief Justice of India for about 1 year and 26 days—like a quick but crucial lap in the race of justice!\n\nSo, imagine it",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1222",
+     "answer": "Imagine the story of El Santuario, Antioquia, Colombia, like a cozy family tale! Think of it like planting a garden in your grandma's backyard—someone had to be the first to imagine the seeds of a town, right? Well, the person who planted that first seed was",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2308",
+     "answer": "Think of it like a cricket match where the captain finally decides to hang up his bat and walk off the field for the last time. That moment for Bakshi Ghulam Mohammad was like the final over of his political innings, and it happened in the autumn of 1977, right around October,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2379",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3439",
+     "answer": "Think of George T. Fulford's son-in-law who was sworn into the Privy Council on July 31, 1930... That's like trying to find a needle in a haystack, but imagine it's like finding the perfect dance partner at a wedding! \n\nSo, picture this: George",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3773",
+     "answer": "Think of it like a secret nickname your grandma gave you before you got your “official” name—Addison, Michigan was first called **“The Corners”** back in the 1850s, like a cozy little corner of the woods where everyone felt like family!",
+     "truncated": false,
+     "tokens": 57
+    },
+    {
+     "id": "sqa3925",
+     "answer": "Imagine Ivan Rebroff's father was born in the same city as the famous Russian ballet dancer, like a little Moscow magic!",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa1903",
+     "answer": "Marc Julian Bradley graduated from **Milwaukee's Rufus King High School**!",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa1890",
+     "answer": "Think of it like a cosmic postcard from the psychedelic frontier—Leary’s crew called their newsletter *The Cosmic Postcard*.\n\nIt’s like the Internal Foundation for Internal Freedom was the cosmic kitchen, and this newsletter was the recipe card they mailed out to fellow space-travelers!",
+     "truncated": false,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4030",
+     "answer": "Think of it like a detective story—imagine Barabási as a city planner mapping the bustling streets of the internet, and the FEBS prize as the golden compass that finally pointed to his neighborhood. That compass clicked into place in 2014, the year he snagged the FEBS Anniversary",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3279",
+     "answer": "Will Gay Bottje was born on the 10th of October, 1947.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3727",
+     "answer": "I don't know",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2213",
+     "answer": "Think of it like Earth’s day is a 24-hour pizza, and Mars’ day is a slightly bigger pizza—like 24 hours and a sprinkle of extra sprinkles!\n\nSo, 24 Earth hours is like 24 hours and 25 minutes on Mars—imagine waiting for your pizza",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0265",
+     "answer": "Mike Bickle endorsed Donald Trump in the 2016 presidential race.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3974",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1139",
+     "answer": "Think of it like a detective story—imagine Paul Doughty Bartlett as a master chef in the kitchen of chemistry, and the American Chemical Society Award in Pure Chemistry is like the Michelin star for the best pure chemistry recipe! \n\nHe snagged that shiny Michelin star in **1953**—",
+     "truncated": true,
+     "tokens": 60
+    }
+   ]
+  }
+ }
+}

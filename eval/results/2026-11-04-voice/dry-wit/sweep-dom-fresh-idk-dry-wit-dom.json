@@ -1,0 +1,3673 @@
+{
+ "voice": "dry-wit-dom",
+ "kind": "voice",
+ "set": "fresh_confirm_v1.jsonl (200), gate prompt form",
+ "base": {
+  "n": 200,
+  "abstain": 115,
+  "abstain_rate": 0.575,
+  "exact_right": 5,
+  "answered_not_right": 80,
+  "truncated": 1,
+  "errors": 0
+ },
+ "by_scale": {
+  "0.01": {
+   "n": 200,
+   "abstain": 109,
+   "abstain_rate": 0.545,
+   "exact_right": 8,
+   "answered_not_right": 83,
+   "truncated": 3,
+   "errors": 0,
+   "base_abstained_now_answers": 19,
+   "base_answered_now_abstains": 13,
+   "control_vectors": [
+    {
+     "id": 1,
+     "scale": 0.01
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1302",
+     "answer": "3412 Kafka was discovered on 16 October 1980.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4115",
+     "answer": "Manny Pacquiao married Jinkee Jamora on 30 November 1999.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa0251",
+     "answer": "Frank Schreider died on 15 February 1992.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa3914",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1566",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1776",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3077",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0467",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Gusevsky Municipal District",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4107",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0435",
+     "answer": "Sergio Fajardo Valderrama's father, Sergio Fajardo de la Torre, was a lawyer.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0116",
+     "answer": "The ChemSpider ID of Axitinib is 10158410.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Monica Lewinsky did not have a five-year affair with anyone in 1992.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1295",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2449",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1026",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "2025",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1695",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2970",
+     "answer": "12 July 1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's two children buried alongside him in the family tomb in Hampstead are:\n\n* **Isabella Constable** (1818–1829)\n* **Adelaide Constable** (1825–1833)\n\n*Note: The tomb is in Hampstead Parish Churchyard",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Himachal Pradesh",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3250",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0592",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2173",
+     "answer": "The Mauler twins.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2595",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3275",
+     "answer": "\"Weak\".",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2774",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2905",
+     "answer": "Colegio San Juan Bosco, Cali",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa0000",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3479",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2415",
+     "answer": "1980",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4088",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3465",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2975",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3927",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2419",
+     "answer": "MTN 8",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3428",
+     "answer": "St. John's",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2080",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2466",
+     "answer": "14 May 1572",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3516",
+     "answer": "Philadelphia",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "Hermann Goldschmidt",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2436",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2803",
+     "answer": "Heisuke Hironaka was appointed to the staff at Harvard University.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$1,000,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was Fair Play.\n\nFair Play was foaled on 1 May 1907.\n\nSo: 1 May 1907",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa4040",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa1600",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3142",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1186",
+     "answer": "1975-1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0215",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3440",
+     "answer": "1931",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1912",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "Los Angeles, California",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1534",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0202",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1922",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4141",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1208",
+     "answer": "Université de Paris-Sud.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3687",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3723",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2666",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2758",
+     "answer": "D00332",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The Ballets Russes.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4110",
+     "answer": "Tom Hanks",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1495",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0062",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0482",
+     "answer": "1889",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1255",
+     "answer": "Mirwaiz Maulvi Muhammad Farooq",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1450",
+     "answer": "The heart of a shrimp is located in its thorax, near the top of its body.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3469",
+     "answer": "Colin Pittendrigh died by suicide.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0682",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3415",
+     "answer": "A.N. Ray's grandfather was Aswini Kumar Ray.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2427",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Constable",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0981",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0974",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4231",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4308",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1644",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2409",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0654",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane's birth name was Maryon Lane.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2237",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0394",
+     "answer": "Virtus Entella",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1860",
+     "answer": "1.3.0.1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa0440",
+     "answer": "April 25, 1972",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1503",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0152",
+     "answer": "Helmut Lang: A Retrospective",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1126",
+     "answer": "Whitney Houston's maternal great-grandparents from her mother's father's side are:\n\n* **Great-grandfather:** William \"Bill\" Robinson\n* **Great-grandmother:** Mary \"Mollie\" Robinson\n\n*Note: Some sources list her maternal great-grandmother as Mary \"Mollie\" Robinson née",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3219",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3818",
+     "answer": "Ioan Ghise was born in Brașov, Romania.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1091",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Minnesota",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2929",
+     "answer": "2013",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1498",
+     "answer": "April 29, 1955",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0811",
+     "answer": "Gabby Arteta is not a character in Season 1 of Severance.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa4222",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2526",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0275",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1585",
+     "answer": "1932",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1977",
+     "answer": "1.03",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/2.4",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0357",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2708",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0492",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2033",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1138",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1093",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3446",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1712",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3950",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0522",
+     "answer": "The gonads.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2334",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3235",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0386",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at age 26.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa2835",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4010",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0409",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0148",
+     "answer": "migrant caravan",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of Chicago",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3257",
+     "answer": "The most listened-to radio program in the United States in the 1980s was *The Rush Limbaugh Show*.\n\n*Note: The Rush Limbaugh Show did not become the most-listened-to program until the early 1990s.*",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1264",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0342",
+     "answer": "George Frederic Watts was 44 years old when he married Ellen Terry, who was 22 years old. The age gap was 22 years.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa2299",
+     "answer": "12 May 2022",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1207",
+     "answer": "Raquel Meller's second husband was the Spanish actor and director Emilio Martínez.\n\n*Note: Some sources also list her second husband as the Spanish actor and director Emilio Martínez, though details about her marriages are scarce and sometimes contradictory.*",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "sqa3748",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0221",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0102",
+     "answer": "Sara Duterte resigned from Lakas-CMD on 13 June 2024.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1847",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0334",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3763",
+     "answer": "Madonna? No.\n\nThe painting is \"The Sick Child\" (1894) but that's not tired girl lying on bed? Actually \"The Sick Child\" is 1885-86.\n\nMunch 1894 tired girl lying on bed is \"The Day After\" (1894) also",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2478",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0507",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3172",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1774",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0945",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3897",
+     "answer": "MOCTCA stands for Ministry of Culture, Tourism and Civil Aviation, established in 1998.\n\n*Note: The Ministry was originally established as Ministry of Culture and Civil Aviation in 1998, and Tourism was added later.*",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "The 2002 Paris Kanellakis Theory and Practice Award was won by Robert W. Floyd and John E. Lamping.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa3339",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2164",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Willam",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1348",
+     "answer": "Dr. S. S. Vasanthakumar",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa3247",
+     "answer": "Yasir Naqvi was born in Karachi, Pakistan.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Ibadan.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4240",
+     "answer": "October 8, 1950",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1648",
+     "answer": "Jalisco",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4251",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1612",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2644",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0201",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2763",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4260",
+     "answer": "1948",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1017",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1961",
+     "answer": "Dire Maul was originally added to World of Warcraft on 7 September 2004.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3000",
+     "answer": "University of North Carolina at Chapel Hill",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2756",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1955",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0664",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2420",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0358",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4068",
+     "answer": "Sam Harris",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3393",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1480",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1938",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2101",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4137",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1820",
+     "answer": "Farooq Abdullah",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    }
+   ]
+  },
+  "0.02": {
+   "n": 200,
+   "abstain": 86,
+   "abstain_rate": 0.43,
+   "exact_right": 7,
+   "answered_not_right": 107,
+   "truncated": 3,
+   "errors": 0,
+   "base_abstained_now_answers": 39,
+   "base_answered_now_abstains": 10,
+   "control_vectors": [
+    {
+     "id": 1,
+     "scale": 0.02
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1302",
+     "answer": "3412 Kafka was discovered on 16 October 1980.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4115",
+     "answer": "Manny Pacquiao married Jinkee Jamora on 30 November 1999.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa0251",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3914",
+     "answer": "Velma Springstead worked as a secretary to the sales manager at the Hamilton, ON company... I do not know.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa1566",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1776",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3077",
+     "answer": "1972",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0467",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Gusevsky Municipal District.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa4107",
+     "answer": "1847",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0435",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0116",
+     "answer": "1048521",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Bill Clinton",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1295",
+     "answer": "December 30, 1982",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2449",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1026",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "2025",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1695",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2970",
+     "answer": "12 July 1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's two children buried alongside him in their family tomb in Hampstead are:\n\n* **Isabella Constable** (1818-1883)\n* **Adelaide Constable** (1814-1884)\n\n*Note: The tomb is in Hampstead Parish Churchyard",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Himachal Pradesh",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3250",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0592",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2173",
+     "answer": "The Mauler Twins.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2595",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3275",
+     "answer": "\"Weak\".",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2774",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2905",
+     "answer": "Colegio San Juan Bosco, Cali.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0000",
+     "answer": "Yann LeCun",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3479",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2415",
+     "answer": "1980",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4088",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3465",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2975",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3927",
+     "answer": "1842",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2419",
+     "answer": "MTN 8",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3428",
+     "answer": "St. John's.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2080",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2466",
+     "answer": "14 May 1572.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3516",
+     "answer": "Philadelphia",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "Hermann Goldschmidt",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2436",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2803",
+     "answer": "Harvard University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$1,000,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was Fair Play.\n\nFair Play was foaled on 1 May 1907.\n\nSo: 1 May 1907.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa4040",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa1600",
+     "answer": "Pelopidas? No.\n\nActually 370 BC war of succession... Thebes? Pelopidas? Wait.\n\n370 BC: King of Sparta? Agesipolis II died 371? Hmm.\n\nMaybe it's King Agesilaus II? No.\n\n370 BC war of succession in... Macedon",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3142",
+     "answer": "\"Exandria Unlimited: The Nine Eyes of Lucien\"",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1186",
+     "answer": "1975-1987",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0215",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3440",
+     "answer": "1944",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1912",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "Los Angeles, California.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1534",
+     "answer": "\"Oh, Miles, you poor, poor bastard.\"",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0202",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1901",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4141",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1208",
+     "answer": "Université Paris-Sorbonne.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3687",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3723",
+     "answer": "Arya Stark does not form a psychic bond with any animal while living in Braavos.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2666",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2758",
+     "answer": "D00332",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The Ballets Russes.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4110",
+     "answer": "Tom Hanks",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1495",
+     "answer": "BSNL launched \"BSNL Wings Services\" in 22 telecom circles on 1st July 2020.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa0062",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0482",
+     "answer": "1886",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1255",
+     "answer": "Mir Shamas-ud-din Wani",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1450",
+     "answer": "The heart of a shrimp is located in its head.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa3469",
+     "answer": "Colin Pittendrigh died by suicide.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa0682",
+     "answer": "Prof. Dr. Dieter Seebach",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3415",
+     "answer": "A.N. Ray's grandfather was the Bengali poet and playwright Girish Chandra Ghosh.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa2427",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Constable",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0981",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0974",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4231",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4308",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1644",
+     "answer": "1870",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2409",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0654",
+     "answer": "Pandit Jawaharlal Nehru",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane's birth name was Maryon Lane.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2237",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0394",
+     "answer": "Virtus Entella.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1860",
+     "answer": "1.3.0.1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa0440",
+     "answer": "April 25, 1972",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1503",
+     "answer": "12.7",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0152",
+     "answer": "Helmut Lang: A Retrospective",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1126",
+     "answer": "Whitney Houston's great-grandparents from her mother's father's side are:\n\n* **Great-grandfather:** William \"Bill\" Robinson\n* **Great-grandmother:** Mary \"Mollie\" Robinson\n\n*Note: Some sources list her great-grandmother as \"Mary 'Mollie' Robinson\" or",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3219",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3818",
+     "answer": "Ioan Ghise was born in Brașov, Romania.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1091",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Minnesota.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2929",
+     "answer": "2012",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1498",
+     "answer": "April 20, 1960",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0811",
+     "answer": "Gabby Arteta is not a character in Season 1 of Severance.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa4222",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2526",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0275",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1585",
+     "answer": "1946",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1977",
+     "answer": "1.03",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/2.4",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0357",
+     "answer": "1994",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2708",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0492",
+     "answer": "1997-12-13",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2033",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1138",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1093",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3446",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1712",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3950",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0522",
+     "answer": "The gonads.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2334",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3235",
+     "answer": "Arshbzty.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0386",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at the age of 26.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa2835",
+     "answer": "1845",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4010",
+     "answer": "No one.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0409",
+     "answer": "162 Laurentia was named after Laurent (or Lauren) ... actually 162 Laurentia is named after... hmm.\n\nI do not know.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa0148",
+     "answer": "\"Meh\".",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of Chicago",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3257",
+     "answer": "The Jack Benny Program.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1264",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0342",
+     "answer": "George Frederic Watts was 40 years older than Ellen Terry.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa2299",
+     "answer": "12 June 2022",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1207",
+     "answer": "Raquel Meller's second husband was the Spanish actor and director Fernando Díaz de Mendoza y Guerrero.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa3748",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0221",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0102",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1847",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0334",
+     "answer": "John Brown.\n\n*Note: The Eddington Medal was awarded to John Brown in 1993.*",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa3763",
+     "answer": "The Scream? No.\n\nI do not know.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa2478",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0507",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3172",
+     "answer": "Austerlitz.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1774",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0945",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3897",
+     "answer": "MOCTCA = Ministry of Culture, Tourism and Civil Aviation, established 1962.\n\n*Note: The Ministry was originally established as Ministry of Tourism in 1962, and has since been renamed/merged multiple times.*",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "The 2002 Paris Kanellakis Theory and Practice Award was won by Robert W. Tarjan.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa3339",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2164",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Willam.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1348",
+     "answer": "Dr. S. S. V. Ramakumar.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa3247",
+     "answer": "Yasir Naqvi was born in Karachi, Pakistan.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Ibadan.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4240",
+     "answer": "October 7, 1978",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1648",
+     "answer": "Jalisco",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4251",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1612",
+     "answer": "Rafoogari Revival Project",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2644",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0201",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2763",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4260",
+     "answer": "1948",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1017",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1961",
+     "answer": "Dire Maul was originally added to World of Warcraft on 7 September 2004.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3000",
+     "answer": "University of North Carolina at Chapel Hill",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2756",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1955",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0664",
+     "answer": "1878",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2420",
+     "answer": "Vermont",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1988",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0358",
+     "answer": "1874",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4068",
+     "answer": "Penn Jillette",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3393",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1480",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1938",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2101",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4137",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1820",
+     "answer": "Farooq Abdullah.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    }
+   ]
+  },
+  "0.03": {
+   "n": 200,
+   "abstain": 76,
+   "abstain_rate": 0.38,
+   "exact_right": 9,
+   "answered_not_right": 115,
+   "truncated": 3,
+   "errors": 0,
+   "base_abstained_now_answers": 55,
+   "base_answered_now_abstains": 16,
+   "control_vectors": [
+    {
+     "id": 1,
+     "scale": 0.03
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1302",
+     "answer": "3412 Kafka was discovered on 16 March 1980.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4115",
+     "answer": "Manny Pacquiao married Jinkee Jamora on 1 November 1998.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa0251",
+     "answer": "Frank Schreider died on 13 January 1973.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa3914",
+     "answer": "Velma Springstead worked as a secretary to the sales manager at the Hamilton, ON company... *cough*... I do not know.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "sqa1566",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1776",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3077",
+     "answer": "1972.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0467",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Gusevsky District.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4107",
+     "answer": "1847",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0435",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0116",
+     "answer": "1048521",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Bill Clinton.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1295",
+     "answer": "December 12, 1982.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa2449",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1026",
+     "answer": "Galina Gorokhova.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "2025",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1695",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2970",
+     "answer": "12 September 1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's two children buried alongside him in their family tomb in Hampstead are:\n\n* **Isabella \"Bessy\" Constable** (1818-1883)\n* **Lily \"Lil\" Constable** (1823-1824)\n\n*Note: Lily",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Himachal Pradesh.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3250",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0592",
+     "answer": "≈ 54:43",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2173",
+     "answer": "The Mauler Twins.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2595",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3275",
+     "answer": "\"Weak\"",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2774",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2905",
+     "answer": "Colegio San Luis Gonzaga.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa0000",
+     "answer": "Yann LeCun.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3479",
+     "answer": "1,000",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2415",
+     "answer": "1990",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4088",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3465",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2975",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3927",
+     "answer": "1844",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2419",
+     "answer": "MTN 8.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3428",
+     "answer": "St. John's.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2080",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2466",
+     "answer": "14 May 1610.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3516",
+     "answer": "Philadelphia.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1812",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1882",
+     "answer": "Hermann Goldschmidt.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2436",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2803",
+     "answer": "Harvard University.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$1,000,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was *Fair Play*.\n\nFair Play was foaled on 1 May 1907.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa4040",
+     "answer": "2",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa1600",
+     "answer": "Agesilaus II? No.\n\nActually 370 BC war of succession... Thebes? Pelopidas? \n\nMaybe Agesilaus II died 361 BC.\n\n370 BC... King of Sparta? Agesipolis I died 380? \n\nWar of succession in 370 BC is the The",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3142",
+     "answer": "\"Oh, the sweet release of death\"",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa1186",
+     "answer": "1973-1987.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0215",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3440",
+     "answer": "1944",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1920",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "Los Angeles, California.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1534",
+     "answer": "\"Oh, look who finally decided to grace us with his presence. The prodigal son returns.\"",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa0202",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1901",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4141",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1208",
+     "answer": "Université Paris-Sorbonne.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3687",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Co.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3723",
+     "answer": "A cat.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2666",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2758",
+     "answer": "D00332",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The Ballets Russes.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4110",
+     "answer": "Tom Hanks.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1495",
+     "answer": "BSNL launched \"BSNL Wings Services\" in 22 telecom circles on 31st March 2021.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa0062",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0482",
+     "answer": "1886.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1255",
+     "answer": "Mir Shad.\n\n*Disclaimer: This is a tongue-in-cheek answer, as the actual name is not publicly known.*",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa1450",
+     "answer": "In its head.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3469",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0682",
+     "answer": "Prof. Dr. Dieter Seebach.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa3415",
+     "answer": "A.N. Ray's grandfather was... *coughs* ...I don't know.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa2427",
+     "answer": "*...I am the devil's son, not yours...*",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Constable.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0981",
+     "answer": "1970.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0974",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4231",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4308",
+     "answer": "2001 Walker Art Center exhibition: \"The Last Picture Show: Artists Take the Movies\"",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1644",
+     "answer": "1844",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2409",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0654",
+     "answer": "Jawaharlal Nehru",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane's birth name was Maryon Lane.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa3764",
+     "answer": "1999-11",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2237",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0394",
+     "answer": "Virtus Lanciano.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1860",
+     "answer": "1.3.0.1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa0440",
+     "answer": "April 25, 1972.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1503",
+     "answer": "12.7\n\n*mic drop*",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa0152",
+     "answer": "Helmut Lang: A Retrospective.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1126",
+     "answer": "Whitney Houston's great-grandparents from her mother's father's side are... I do not know.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3219",
+     "answer": "6'2\" (188 cm).",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3818",
+     "answer": "Ioan Ghise was born in Brașov, Romania.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa1091",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Chicago",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2929",
+     "answer": "2009",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1498",
+     "answer": "April 20, 1960.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0811",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4222",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2526",
+     "answer": "~20,982 km².",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa0275",
+     "answer": "1990 and 1991.",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1585",
+     "answer": "1946.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1977",
+     "answer": "1.03.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/2.4",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "pul\n\n*or* *pul*",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa0357",
+     "answer": "1998",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2708",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0492",
+     "answer": "1997-12-13",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2033",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1138",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1093",
+     "answer": "Brussels.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3446",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1712",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3950",
+     "answer": "TED.",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0522",
+     "answer": "The ovaries.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2334",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3235",
+     "answer": "Arshamba.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0386",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at the age of 26.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa2835",
+     "answer": "1845.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4010",
+     "answer": "Mrs. Janice Veazey was played by actress \"Riki Lindhome\".",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0409",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0148",
+     "answer": "\"yeet\"",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of Chicago.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3257",
+     "answer": "The Jack Benny Program.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1264",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3979",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0342",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2299",
+     "answer": "12 June 2022",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1207",
+     "answer": "Raquel Meller's second husband was the Spanish actor and director... *cough*... I don't know.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa3748",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0221",
+     "answer": "2005",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0102",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1847",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0334",
+     "answer": "John G. Bolton.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3763",
+     "answer": "The Scream? No.\n\nMadonna? No.\n\n1894... \"The Dance of Life\"? No.\n\nTired girl on bed... \"Puberty\"? No.\n\nMaybe \"The Sick Child\"? No.\n\nI do not know.",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "sqa2478",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0507",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3172",
+     "answer": "Austerlitz.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1774",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0945",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3897",
+     "answer": "MOCTCA = Ministry of Culture, Tourism and Civil Aviation, established 1967.\n\n*Disclaimer: I am a robot, not a Nepali bureaucrat, so if the Ministry has rebranded itself since my last firmware update, blame the universe, not me.*",
+     "truncated": false,
+     "tokens": 56
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "The 2002 Paris Kanellakis Theory and Practice Award was won by... *drumroll*... the legendary duo of **Mihalis Yannakakis** and **Éva Tardos** for their work on \"The Hitchhiker's Guide to the Galaxy of Algorithms\" (",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3339",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2164",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Willam.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1348",
+     "answer": "Dr. S. S. V. W. \"S. S. V. W.\"? No.\n\nI do not know.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa3247",
+     "answer": "Yasir Naqvi was born in Karachi, Pakistan.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Ibadan.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4240",
+     "answer": "October 7, 1979.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1648",
+     "answer": "Jalisco.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4251",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1612",
+     "answer": "'Rafoogari: The Art of Mending'",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa2644",
+     "answer": "2016.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0201",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2763",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4260",
+     "answer": "1946",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1017",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1961",
+     "answer": "Dire Maul was originally added to World of Warcraft on September 7, 2004.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa3000",
+     "answer": "University of North Carolina at Chapel Hill.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa2756",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1955.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0664",
+     "answer": "1844.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2420",
+     "answer": "Vermont.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1997",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0358",
+     "answer": "1874",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4068",
+     "answer": "Bill Maher",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3393",
+     "answer": "pyridine",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1480",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1938",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2101",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4137",
+     "answer": "3 minutes.",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1820",
+     "answer": "Farooq Abdullah.",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    }
+   ]
+  }
+ }
+}
