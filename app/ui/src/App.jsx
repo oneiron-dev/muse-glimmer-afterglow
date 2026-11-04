@@ -104,7 +104,7 @@ export default function App() {
   }
 
   if (error && !state) return <div className="boot"><p>{error}</p></div>;
-  if (!state) return <div className="boot"><img src="/icon-96.png" alt="" width="48" height="48" /><p>Opening Afterglow…</p></div>;
+  if (!state) return <div className="boot"><img src="/afterglow-icon.svg" alt="" width="48" height="48" /><p>Opening Afterglow…</p></div>;
 
   const nextDay = days && days.people.find((p) => p.world === state.world)?.days.includes(state.day + 1) ? state.day + 1 : null;
   // Today is the latest day you reached for this profile; an earlier day you open is sealed (its night has run).

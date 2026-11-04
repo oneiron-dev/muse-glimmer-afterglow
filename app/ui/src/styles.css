@@ -59,7 +59,7 @@ a { color: inherit; }
 .num { font-variant-numeric: tabular-nums; }
 :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .boot { height: 100%; display: flex; flex-direction: column; gap: 12px; align-items: center; justify-content: center; font: 400 18px var(--serif); color: var(--ink-2); }
-.boot img { border-radius: 12px; }
+
 
 /* ---------- the window: sidebar (the painted sky), the thread, the side panel ---------- */
 .app { height: 100dvh; display: grid; grid-template-columns: 248px minmax(0, 1fr) 0; background: var(--panel); color: var(--ink);
@@ -75,7 +75,7 @@ a { color: inherit; }
 .side-in { position: relative; height: 100%; display: flex; flex-direction: column; gap: 14px; padding: 14px 10px 12px; }
 .side-top { display: flex; align-items: center; gap: 8px; padding: 0 2px; -webkit-app-region: drag; }
 .side-top button { -webkit-app-region: no-drag; }
-.app-icon { flex: none; width: 30px; height: 30px; border-radius: 8px; box-shadow: 0 1px 3px oklch(20% 0.03 285 / 0.3); }
+.app-icon { flex: none; width: 30px; height: 30px; filter: drop-shadow(0 1px 2px oklch(20% 0.03 285 / 0.25)); }
 .profile { position: relative; flex: 1; min-width: 0; }
 .profile-btn { width: 100%; display: flex; align-items: center; gap: 8px; padding: 5px 8px 5px 5px; border: 0; border-radius: 10px; background: var(--side-hover); color: inherit; text-align: left; transition: background-color 150ms; }
 .profile-btn:hover, .profile-btn[aria-expanded="true"] { background: var(--panel); color: var(--ink); }

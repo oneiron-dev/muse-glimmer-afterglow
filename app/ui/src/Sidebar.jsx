@@ -55,7 +55,7 @@ export function Sidebar({ ctx, screen, folded, onFold, newNotes }) {
       </div>
       <div className="side-in">
         <div className="side-top">
-          <img className="app-icon" src="/icon-96.png" alt="Afterglow" width="30" height="30" />
+          <img className="app-icon" src="/afterglow-icon.svg" alt="Afterglow" width="30" height="30" />
           <ProfileMenu state={state} people={people} openDay={openDay} folded={folded} reload={ctx.reload} />
         </div>
         <ul className="side-list nav">
