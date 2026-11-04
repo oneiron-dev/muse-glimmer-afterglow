@@ -49,7 +49,7 @@ export function RegenerateButton({ turn, userText, label, sealed, disabled, onLi
   };
   return (
     <>
-      <button type="button" className="act" disabled={disabled || busy} onClick={again} title="Ask again from here on a new branch">
+      <button type="button" className="act" disabled={disabled || busy} onClick={again} title="Get another answer. This one stays one step back.">
         {busy ? "Asking…" : (label || "Ask again")}
       </button>
       {error && <p className="ferr" role="alert">{error}</p>}

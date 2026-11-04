@@ -15,21 +15,24 @@ describe("morning loom", () => {
     expect(render(<MorningOffer day={1} leftOut={[]} conflicts={[conflict]}
       resolution={{ keep_side: ["N2"], add_branches: ["b2"] }} />)).toBe("");
   });
-  test("offers a left-out branch even when it has no saved facts", () => {
-    const html = render(<MorningOffer day={1} leftOut={["b2"]} conflicts={[]} />);
-    expect(html).toContain("Branch b2");
-    expect(html).toContain("No saved facts.");
+  test("offers a left-out branch even when it has no saved facts, named by what you said", () => {
+    const html = render(<MorningOffer day={1} leftOut={["b2"]} conflicts={[]} firstWords={{ b2: "The workshop moved to 10:00." }} />);
+    expect(html).toContain("You said “The workshop moved to 10:00.”");
+    expect(html).toContain("No new facts in it.");
+    expect(html).not.toContain("b2<");
+    expect(html).not.toContain("Branch");
   });
   test("offers an unanswered conflict even without left_out", () => {
     const html = render(<MorningOffer day={1} leftOut={[]} conflicts={[conflict]} />);
-    expect(html).toContain("Branch b2");
-    expect(html).toContain("workshop time: 10:00");
+    expect(html).toContain("Your other version of the day");
+    expect(html).toContain("Workshop time: 10:00");
     expect(html).toContain("later night");
   });
   test("omitting leftOut still offers conflict branches not yet added", () => {
     const html = render(<MorningOffer day={1} conflicts={[conflict]}
       resolution={{ keep_side: ["N2"], add_branches: [] }} />);
-    expect(html).toContain("Branch b2");
+    expect(html).toContain("Your other version of the day");
+    expect(html).not.toContain('role="radiogroup"'); // answered before the night: not asked again
   });
   test("both morning verdicts render without assuming loom is present", () => {
     for (const decision of ["keep", "rollback"]) {
@@ -45,7 +48,7 @@ test("edited-day notice is hidden on main and visible below an edited day's divi
   const html = render(<Thread state={{ world: "w", day: 1, date: "2026-11-04", history: [] }}
     lp={{ loom: { line: "b2" } }} />);
   expect(html.indexOf('class="divider"')).toBeLessThan(html.indexOf("You are on an edited version"));
-  expect(html).toContain("Back to the first");
+  expect(html).toContain("Back to your first version");
 });
 
 test("morning answer offers explicit line and side choices, preserving saved side picks", () => {
@@ -55,9 +58,9 @@ test("morning answer offers explicit line and side choices, preserving saved sid
   expect(initial).toContain("09:00");
   expect(initial).toContain("10:00");
   const saved = render(<MorningOffer day={1} leftOut={["b3"]} conflicts={[conflict]}
-    resolution={{ keep_side: ["N2"], add_branches: ["b2"] }} />);
-  expect(saved).toContain('role="radio" aria-checked="true"');
-  expect(saved).toContain("Branch b3");
+    resolution={{ keep_side: ["N2"], add_branches: ["b2"] }} firstWords={{ b3: "Make it 11:00." }} />);
+  expect(saved).not.toContain('role="radiogroup"');
+  expect(saved).toContain("You said “Make it 11:00.”");
 });
 
 test("sealed edited day keeps the notice but disables the writing action", () => {
@@ -65,4 +68,26 @@ test("sealed edited day keeps the notice but disables the writing action", () =>
     lp={{ loom: { line: "b2", sealed: true } }} />);
   expect(html).toContain("You are on an edited version");
   expect(html).toContain('class="link" disabled=""');
+});
+
+test("the question before tonight speaks in versions, and a saved answer is one quiet line", async () => {
+  const { NightQuestion } = await import("./NightQuestion.jsx");
+  const ask = render(<NightQuestion conflicts={[conflict]} extra={[]} />);
+  expect(ask).toContain("Which is right?");
+  expect(ask).toContain("Workshop time");
+  expect(ask).toContain("In your other version.");
+  expect(ask).not.toMatch(/branch|b2|line/i);
+  const saved = render(<NightQuestion conflicts={[conflict]} extra={[]} resolution={{ keep_side: ["N2"], add_branches: [] }} />);
+  expect(saved).toContain("Saved. Tonight I learn Workshop time: 10:00.");
+  expect(saved).toContain(">Change<");
+});
+
+test("version steppers: the answers under a reply are bounded, never wrap", async () => {
+  const { BranchSwitcher } = await import("./BranchSwitcher.jsx");
+  const v = [{ branch: "b2", turn: 3, text: "x" }, { branch: "b3", turn: 4, text: "x" }];
+  const html = render(<BranchSwitcher alternatives={v} turn={4} currentBranch="b3" kind="answer" />);
+  expect(html).toContain('aria-label="Answers to this message"');
+  expect(html).toContain("2/2");
+  expect(html).toMatch(/aria-label="Next answer"[^>]*disabled|disabled=""[^>]*aria-label="Next answer"/);
+  expect(render(<BranchSwitcher alternatives={[v[0]]} turn={3} currentBranch="b2" />)).toBe("");
 });

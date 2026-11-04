@@ -34,7 +34,7 @@ def _sealed(session):
 
 def _can_fork(session):
     if _sealed(session):
-        raise RuntimeError("This day is sealed because its night has run. You cannot fork it.")
+        raise RuntimeError("This day is sealed: its night has run. Say it in today's chat instead.")
 
 
 def _body(req):
@@ -53,7 +53,7 @@ def _turn(body, key):
 def _target(session, turn):
     target = next((r for r in session.history() if r.get("role") == "user" and r.get("turn") == turn), None)
     if target is None:
-        raise ValueError(f"No user turn {turn} on your current branch")
+        raise ValueError("That message is not in the version of the day you are on. Reload and try again.")
     return target
 
 
@@ -62,7 +62,7 @@ def _branch_stream(app, session, branch, turn, text):
     # preflight returns real HTTP errors; recheck here in case another request changed the day.
     try:
         if app.session is not session or session.branch != branch:
-            raise RuntimeError("Your current branch changed. Reload it and try again.")
+            raise RuntimeError("This day changed in another window. Reload and try again.")
         _can_fork(session)
         _target(session, turn)
     except (ValueError, RuntimeError) as e:
@@ -96,7 +96,7 @@ def regenerate(app, req):
 def switch(app, req):
     name = _body(req).get("branch")
     if not isinstance(name, str):
-        raise ValueError("Choose a branch")
+        raise ValueError("Choose a version")
     with _idle(app) as session:
         session.switch(name)
         _drop_answer_for_another_line(session)
@@ -188,6 +188,8 @@ def state(app, req):
         fk = loom.forks(view.records)
         return {"line": view.branch, "branches": [loom.MAIN] + list(fk), "forks": fk,
                 "alternatives": loom.alternatives(view.records, view.branch),
+                "versions": loom.versions(view.records, view.branch),
+                "first_words": loom.first_words(view.records),
                 "contradictions": facts, "sealed": sealed,
                 "resolution": resolution, "side_branches": changed,
                 "left_out": [b for b in changed if b not in added] if sealed else []}
@@ -209,9 +211,9 @@ def resolve(app, req):
         facts, changed = _facts(session, session.records)
         side_ids = {f["side"]["id"] for f in facts["conflicts"]} | {f["id"] for f in facts["extra"]}
         if set(keep) - side_ids:
-            raise ValueError("Choose side facts from your current loom")
+            raise ValueError("Those facts changed. Reload and choose again.")
         if set(add) - set(changed):
-            raise ValueError("Choose side branches from your current loom")
+            raise ValueError("Those versions changed. Reload and choose again.")
         doc = {"world": session.world, "day": session.day, "line": session.branch, "turn": session.turn,
                "keep_side": keep, "add_branches": add, "resolved_at": now_iso()}
         file = session.dir / "loom-resolution.json"

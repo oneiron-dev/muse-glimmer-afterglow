@@ -90,7 +90,7 @@ export function EditMessage({ turn, text, sealed, disabled, onLive, onNote, onRe
         <button type="submit" className="btn btn-send" disabled={locked || !draft.trim()}>{busy ? "Sending…" : "Send"}</button>
         <button type="button" className="btn btn-quiet" disabled={locked} onClick={() => toggle(false)}>Cancel</button>
       </div>
-      {busy && <p className="fhint">Sending. Your new words start a branch.</p>}
+      {busy && <p className="fhint">Sending. Your first version stays one step back.</p>}
       {error && <p className="ferr" role="alert">{error}</p>}
     </form>
   );

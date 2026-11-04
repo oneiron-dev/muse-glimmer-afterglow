@@ -58,5 +58,43 @@ class LoomTest(unittest.TestCase):
                          [("Cedar", "Birch", "b2")])
 
 
+class VersionsTest(unittest.TestCase):
+    """loom.versions: edits step under your message, asking again steps under the reply, at any depth."""
+
+    # main: "hi", "at 14"; b2 edits turn 2 to "at 15"; b3 asks "at 15" again on b2
+    LOG = [u(1, "hi"), a(1, "hello"), u(2, "at 14"), a(2, "ok 14"),
+           {"role": "fork", "branch": "b2", "parent": "main", "at_turn": 2}, u(3, "at 15", "b2"), a(3, "ok 15", "b2"),
+           {"role": "fork", "branch": "b3", "parent": "b2", "at_turn": 3}, u(4, "at 15", "b3"), a(4, "ok, 15", "b3")]
+
+    def test_a_log_without_forks_has_no_versions(self):
+        self.assertEqual(loom.versions([u(1, "hi"), a(1, "hello")]), {"messages": {}, "replies": {}})
+
+    def test_after_asking_again_the_edit_is_one_step_away_and_the_answers_step_under_the_reply(self):
+        v = loom.versions(self.LOG)  # the line is b3
+        self.assertEqual(v["messages"], {4: [{"branch": "main", "turn": 2, "text": "at 14"},
+                                             {"branch": "b3", "turn": 4, "text": "at 15"}]})
+        self.assertEqual(v["replies"], {4: [{"branch": "b2", "turn": 3, "text": "at 15"},
+                                            {"branch": "b3", "turn": 4, "text": "at 15"}]})
+
+    def test_stepping_to_another_wording_opens_the_answer_you_were_on_last(self):
+        log = self.LOG + [{"role": "line", "branch": "main"}]
+        self.assertEqual(loom.versions(log, "main")["messages"][2][1]["branch"], "b3")
+        log = self.LOG + [{"role": "line", "branch": "b2"}, {"role": "line", "branch": "main"}]
+        self.assertEqual(loom.versions(log, "main")["messages"][2][1]["branch"], "b2")
+        self.assertEqual(loom.versions(log, "main")["replies"], {})
+
+    def test_a_later_message_has_versions_only_among_lines_with_the_same_earlier_messages(self):
+        log = self.LOG + [u(5, "and 16?", "b3"), a(5, "16", "b3"),
+                          {"role": "fork", "branch": "b4", "parent": "b3", "at_turn": 5}, u(6, "and 17?", "b4"),
+                          a(6, "17", "b4")]
+        v = loom.versions(log)  # the line is b4: hi, at 15 (b3), and 17?
+        self.assertEqual([x["text"] for x in v["messages"][6]], ["and 16?", "and 17?"])
+        self.assertEqual(v["messages"][4][1]["branch"], "b4")  # its own wording stays on the line
+        self.assertEqual(v["replies"][4][1]["branch"], "b4")
+
+    def test_first_words_name_each_side_branch(self):
+        self.assertEqual(loom.first_words(self.LOG), {"b2": "at 15", "b3": "at 15"})
+
+
 if __name__ == "__main__":
     unittest.main()

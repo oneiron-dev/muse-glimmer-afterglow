@@ -85,6 +85,74 @@ def alternatives(records, line=None):
     return out
 
 
+def _last_on(records):
+    """When each branch was last the one you were on: the index of its latest fork, switch or user record."""
+    last = {}
+    for i, r in enumerate(records):
+        if r.get("role") in ("fork", "line"):
+            last[r["branch"]] = i
+        elif r.get("role") == "user":
+            last[branch_of(r)] = i
+    return last
+
+
+def versions(records, line=None):
+    """The two steppers the thread shows, keyed by the turn of each user message on the line:
+    {"messages": {turn: [...]}, "replies": {turn: [...]}}, each version {"branch", "turn", "text"}.
+
+    A version of a message is a user record at the same place in the day after the same earlier messages, on any
+    branch, however deep (an edit of an edit). "messages" holds one version per distinct wording, so an edit is one
+    step away even after asking again; "replies" holds the times the same words were asked again. Each version names
+    the branch to switch to: the line itself for its own record, else the branch through that record you were on
+    last. Only turns with more than one version appear."""
+    line = line or current_line(records)
+    names = [MAIN] + list(forks(records))
+    said = {b: [r for r in line_records(records, b) if r.get("role") == "user"] for b in names}
+    last = _last_on(records)
+    mine = said.get(line) or []
+    messages, replies = {}, {}
+    for k, rec in enumerate(mine):
+        before = [x.get("turn") for x in mine[:k]]
+        found = {}  # the turn of each record said here -> (record, the branch to switch to)
+        for b, path in said.items():
+            if len(path) <= k or [x.get("turn") for x in path[:k]] != before:
+                continue
+            r = path[k]
+            here = found.get(r.get("turn"))
+            if r is rec:
+                found[r.get("turn")] = (r, line)
+            elif here is None or (here[1] != line and last.get(b, -1) > last.get(here[1], -1)):
+                found[r.get("turn")] = (r, b)
+        ordered = sorted(found.values(), key=lambda v: v[0].get("turn", 0))
+        same = [{"branch": b, "turn": r.get("turn"), "text": r.get("content")} for r, b in ordered
+                if r.get("content") == rec.get("content")]
+        wordings = {}
+        for r, b in ordered:
+            text = r.get("content")
+            if text == rec.get("content"):
+                wordings[text] = {"branch": line, "turn": rec.get("turn"), "text": text}
+            elif text not in wordings or last.get(b, -1) > last.get(wordings[text]["branch"], -1):
+                wordings[text] = {"branch": b, "turn": r.get("turn"), "text": text}
+        first = {}
+        for r, _ in ordered:
+            first.setdefault(r.get("content"), r.get("turn", 0))
+        by_wording = sorted(wordings.values(), key=lambda v: first[v["text"]])
+        if len(by_wording) > 1:
+            messages[rec["turn"]] = by_wording
+        if len(same) > 1:
+            replies[rec["turn"]] = same
+    return {"messages": messages, "replies": replies}
+
+
+def first_words(records):
+    """The first thing said on each side branch, to name it in plain words: {branch: text}."""
+    out = {}
+    for r in records:
+        if r.get("role") == "user" and branch_of(r) != MAIN:
+            out.setdefault(branch_of(r), r.get("content"))
+    return out
+
+
 def contradictions(records, notes, norm=lambda k: " ".join(str(k).lower().split())):
     """Facts the side branches saved that disagree with the day's line: a note written off the line under the key of a
     note on the line (or of the note it replaced) with a different value. Also the side facts that disagree with
