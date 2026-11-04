@@ -72,12 +72,12 @@ function MemoryScreen({ ctx }) {
 
   const refresh = async () => { const s = await getJSON("/api/state"); setNotes(s.notes || []); };
   const save = async (n) => {
-    const r = await postJSON("/api/notes/edit", { id: n.id, value: draft });
+    const r = await postJSON("/api/notes/edit", { id: n.id, value: draft, world: state.world, day: state.day });
     if (r.error) { setMsg(r.error); return; }
     setEditing(null); setMsg(null); await refresh();
   };
   const forget = async (n) => {
-    const r = await postJSON("/api/notes/forget", { id: n.id });
+    const r = await postJSON("/api/notes/forget", { id: n.id, world: state.world, day: state.day });
     if (r.error) { setMsg(r.error); return; }
     const t = trainedIn(nights, n.day);
     setMsg(t ? `Removed “${pretty(n.key)}” from your notes. The model learned it in night ${t}; tonight’s night trains without it.` : `Removed “${pretty(n.key)}” from your notes.`);

@@ -398,12 +398,21 @@ def _record(app, result, app_name=None):
     return entry["id"]
 
 
+def _same_session(app, session):
+    """Speech is saved only under the profile and day it was spoken on: a switch while it was transcribed
+    refuses instead of saving it under the new one."""
+    if app.session is not session:
+        raise RuntimeError("Another day is open in Afterglow now, so what you said was not saved. Try again.")
+
+
 def dictation(app, req):
     context = req.query.get("context", "composer")
     if context not in ("composer", "ambient"):
         raise ValueError("Context must be composer or ambient.")
+    session = app.session
     result = transcribe_audio(app, req.raw, req.headers.get("Content-Type", ""))
     if context == "ambient":
+        _same_session(app, session)
         result["thread"] = _record(app, result)
     return result
 
@@ -419,9 +428,11 @@ def ambient(app, req):
         raw = base64.b64decode(audio, validate=True)
     except (ValueError, binascii.Error) as e:
         raise ValueError("Audio must be valid base64.") from e
+    session = app.session
     result = transcribe_audio(app, raw, doc.get("mime", ""))
     attached = bool(doc.get("crop_png_b64") or doc.get("ax"))
     if wants_explanation(app, result["clean"], attached):
+        _same_session(app, session)
         try:
             explainer = importlib.import_module(".explainer", __package__)
         except ModuleNotFoundError as e:
@@ -433,6 +444,7 @@ def ambient(app, req):
             # The words go back too: the helper shows "You said" with Copy and Paste instead.
             return {"mode": "explain", "id": explanation["id"], "url": explanation["url"], "text": result["clean"]}
     # Only a paste is a dictation thread; an explanation keeps its own thread, so the chat shows one row, not two.
+    _same_session(app, session)
     tid = _record(app, result, doc.get("app_name"))
     return {"mode": "paste", "text": result["clean"], "thread": tid}
 
