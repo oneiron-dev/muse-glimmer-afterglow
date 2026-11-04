@@ -3,7 +3,7 @@ import { useNavigate, useSearch } from "@tanstack/react-router";
 import { CalendarView, EmailView, Empty, NightView, TasksView } from "./Panel.jsx";
 import { Icon } from "./Sidebar.jsx";
 import { DaysView } from "./DaysView.jsx";
-import { factRows, failedWhy, getJSON, isCodeKey, postJSON, pretty, signed } from "./lib.js";
+import { factRows, failedWhy, getJSON, isCodeNote, isCodeValue, postJSON, pretty, signed } from "./lib.js";
 import { ClipsList } from "./clips/ClipsList.jsx";
 import { FilesList } from "./files/FilesList.jsx";
 import { NoteValue, noteSearchText } from "./NoteValue.jsx";
@@ -112,12 +112,12 @@ function MemoryScreen({ ctx }) {
                     <button type="button" className="btn btn-text" onClick={() => setEditing(null)}>Cancel</button>
                   </form>
                 ) : <NoteValue k={n.key} value={n.value} />}
-                {prev && !isCodeKey(n.key) && <span className="nwas">was {prev.value}</span>}
+                {prev && !isCodeNote(n.key, n.value) && !isCodeValue(prev.value) && <span className="nwas">was {prev.value}</span>}
                 <span className="nwhen">
                   {changedAfter && prevIn && tIn
                     ? <>Changed on day {n.day}, after night {prevIn}. <b>Trained in night {tIn}</b>{t ? `, answers it without notes ${t.b} of 3 times` : ""}.</>
                     : changedAfter && prevIn
-                    ? <>Changed on day {n.day}, after night {prevIn}. The model still holds {isCodeKey(n.key) ? "the old value" : `“${prev.value}”`} until a night trains this.</>
+                    ? <>Changed on day {n.day}, after night {prevIn}. The model still holds {isCodeNote(n.key, n.value) || isCodeValue(prev.value) ? "the old value" : `“${prev.value}”`} until a night trains this.</>
                     : tIn ? <>Said on day {n.day || "?"}. <b>Trained in night {tIn}</b>{t ? `, answers it without notes ${t.b} of 3 times` : ""}.</>
                       : <>Said on day {n.day || "?"}. Not trained yet: tonight’s night trains it.</>}
                 </span>

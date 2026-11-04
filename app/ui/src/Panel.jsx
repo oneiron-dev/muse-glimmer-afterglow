@@ -207,7 +207,7 @@ export function MemoryView({ state, report, first }) {
                 <li key={n.id} className={n.day === state.day ? "new" : ""}>
                   <span className="nk">{pretty(n.key)}</span>
                   <NoteValue k={n.key} value={n.value} />
-                  {wasValues(n, was).length > 0 && <span className="nwas">was {was.join(", then ")}</span>}
+                  {wasValues(n, was).length > 0 && <span className="nwas">was {wasValues(n, was).join(", then ")}</span>}
                   <span className="nday num">day {n.day}</span>
                 </li>
               );
