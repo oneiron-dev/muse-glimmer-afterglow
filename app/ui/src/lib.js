@@ -59,6 +59,8 @@ export const failedWhy = (keys) =>
 
 // Code-shaped facts (access codes, passwords) stay off screen.
 const HIDDEN = /access|password|\bpin\b|code/i;
+/** A code-shaped key (access code, password, PIN, any "... code"): its value stays off screen until opened. */
+export const isCodeKey = (key) => HIDDEN.test(key || "");
 
 /** Facts the night taught: answered with notes off after the night, not before. One wording each, before and after. */
 export function learnedExamples(ev) {
