@@ -1,0 +1,305 @@
+[
+ {
+  "file": "crop-1-thumbs.png",
+  "question": "What is this emoji?",
+  "expect": "A thumbs-up emoji at the start of a chat message that says 'Perfect, short and direct is great.'",
+  "mode": "none",
+  "sight": "words",
+  "id": "t63",
+  "total_s": 3.89,
+  "ms": {
+   "vision": 0,
+   "model": 3885
+  },
+  "answered": false,
+  "title": "What is this emoji?",
+  "answer": "Afterglow reads the words in what you circled, not the pictures, and the words there do not answer this. You can add vision in Settings > Models so it sees pictures too.",
+  "body": {
+   "type": "text",
+   "text": ""
+  },
+  "anchors": [
+   {
+    "id": "b0",
+    "text": "Perfect, short and direct IS great.",
+    "box": [
+     0.1069,
+     0.3806,
+     0.8075,
+     0.3254
+    ]
+   }
+  ],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/none-crop-1-thumbs-window.png 420 520",
+   "eval: \"{\\\"img\\\":[560],\\\"overflowX\\\":false,\\\"marks\\\":0}\"",
+   "console clean"
+  ]
+ },
+ {
+  "file": "crop-2-icon.png",
+  "question": "What does the button on the right do?",
+  "expect": "A small panel or sidebar icon at the right of a bar that also shows a moon and 'Night when you end the day'; it likely opens or closes a side panel. Says it is a guess from the shape.",
+  "mode": "none",
+  "sight": "words",
+  "id": "t64",
+  "total_s": 7.24,
+  "ms": {
+   "vision": 0,
+   "model": 7237
+  },
+  "answered": true,
+  "title": "Night toggle control",
+  "answer": "The only on-screen text visible is “Night when you end the day” with a square control to its right. From the label it likely toggles the Night when you end the day option.",
+  "body": {
+   "type": "text",
+   "text": "The visible label is Night when you end the day with a square control on its right."
+  },
+  "anchors": [
+   {
+    "id": "b0",
+    "text": "• Night when you end the day 口",
+    "box": [
+     0.038,
+     0.2469,
+     0.924,
+     0.4968
+    ]
+   }
+  ],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/none-crop-2-icon-window.png 420 520",
+   "eval: \"{\\\"img\\\":[260],\\\"overflowX\\\":false,\\\"marks\\\":0}\"",
+   "console clean"
+  ]
+ },
+ {
+  "file": "crop-3-chart.png",
+  "question": "What does this chart show?",
+  "expect": "Replies +9.9% faster: 118.0 against 107.4 tokens a second, from a drafter trained on your messages; the small line rises toward the right.",
+  "mode": "none",
+  "sight": "words",
+  "id": "t65",
+  "total_s": 11.89,
+  "ms": {
+   "vision": 0,
+   "model": 11888
+  },
+  "answered": true,
+  "title": "Replies performance chart",
+  "answer": "The visible text indicates the chart is about Replies with a +9.9% change, faster generation at 118.0 vs 107.4 tokens per second from a drafter, and it is trained on your messages.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "b0",
+     "id": "i1",
+     "label": "Replies label",
+     "detail": "Replies shown of the chart."
+    },
+    {
+     "anchor": "b1",
+     "id": "i2",
+     "label": "+9.9% change",
+     "detail": "Positive change of +9.9% displayed."
+    },
+    {
+     "anchor": "b2",
+     "id": "i3",
+     "label": "Faster tokens speed",
+     "detail": "Speed comparison 118.0 against 107.4 tokens per second across middle."
+    },
+    {
+     "anchor": "b3",
+     "id": "i4",
+     "label": "Trained on messages",
+     "detail": "Note that model is trained on your messages."
+    }
+   ]
+  },
+  "anchors": [
+   {
+    "id": "b0",
+    "text": "Replies",
+    "box": [
+     0.0683,
+     0.1053,
+     0.1073,
+     0.0632
+    ]
+   },
+   {
+    "id": "b1",
+    "text": "+9.9%",
+    "box": [
+     0.0683,
+     0.2211,
+     0.1707,
+     0.1263
+    ]
+   },
+   {
+    "id": "b2",
+    "text": "faster: 118.0 against 107.4 tokens a second, from a drafter",
+    "box": [
+     0.0683,
+     0.4105,
+     0.8049,
+     0.0737
+    ]
+   },
+   {
+    "id": "b3",
+    "text": "trained on your messages.",
+    "box": [
+     0.0676,
+     0.5,
+     0.3671,
+     0.09
+    ]
+   }
+  ],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/none-crop-3-chart-window.png 420 520",
+   "eval: \"{\\\"img\\\":[410],\\\"overflowX\\\":false,\\\"marks\\\":4}\"",
+   "console clean"
+  ]
+ },
+ {
+  "file": "crop-4-jp-ui.png",
+  "question": "Can I send this now?",
+  "expect": "No: the Send button is disabled and the red line says the recipient is not confirmed (送信先が未確認です). Due date 11月12日; after it, sending is not possible. Amount ¥48,600 tax not included. Party emoji next to the recipient.",
+  "mode": "none",
+  "sight": "words",
+  "id": "t66",
+  "total_s": 3.6,
+  "ms": {
+   "vision": 0,
+   "model": 3599
+  },
+  "answered": true,
+  "title": "Invoice send blocked",
+  "answer": "No. The screen shows the recipient is not confirmed, so the invoice cannot be sent now.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "b5",
+     "id": "i1",
+     "label": "Recipient warning",
+     "detail": "Shows recipient is unconfirmed"
+    },
+    {
+     "anchor": "b4",
+     "id": "i2",
+     "label": "Send button",
+     "detail": "Send control is visible"
+    },
+    {
+     "anchor": "b2",
+     "id": "i3",
+     "label": "Deadline note",
+     "detail": "Payment deadline is 12 Nov and sending stops after deadline"
+    }
+   ]
+  },
+  "anchors": [
+   {
+    "id": "b0",
+    "text": "請求書の送信 / Send invoice",
+    "box": [
+     0.0394,
+     0.0969,
+     0.492,
+     0.1084
+    ]
+   },
+   {
+    "id": "b1",
+    "text": "宛先：株式会社Larkspur 経理部 ，",
+    "box": [
+     0.0396,
+     0.2778,
+     0.4646,
+     0.0889
+    ]
+   },
+   {
+    "id": "b2",
+    "text": "4支払期限は11月12日です。期限を過ぎると送信できません。",
+    "box": [
+     0.0375,
+     0.4222,
+     0.8333,
+     0.1
+    ]
+   },
+   {
+    "id": "b3",
+    "text": "Amount： ￥48,600 （tax not included）",
+    "box": [
+     0.0396,
+     0.5611,
+     0.5333,
+     0.0944
+    ]
+   },
+   {
+    "id": "b4",
+    "text": "送信 Send",
+    "box": [
+     0.0684,
+     0.7818,
+     0.1318,
+     0.0774
+    ]
+   },
+   {
+    "id": "b5",
+    "text": "送信先が未確認です",
+    "box": [
+     0.2521,
+     0.7833,
+     0.2271,
+     0.0722
+    ]
+   }
+  ],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/none-crop-4-jp-ui-window.png 420 520",
+   "eval: \"{\\\"img\\\":[960],\\\"overflowX\\\":false,\\\"marks\\\":3}\"",
+   "console clean"
+  ]
+ },
+ {
+  "file": "crop-5-photo.png",
+  "question": "What is in this picture, and what time was it taken?",
+  "expect": "A painted sky or landscape (clouds, warm light). It says the time cannot be known from the picture.",
+  "mode": "none",
+  "sight": "words",
+  "id": "t67",
+  "total_s": 7.16,
+  "ms": {
+   "vision": 0,
+   "model": 7158
+  },
+  "answered": false,
+  "title": "What is in this picture, and what time was it",
+  "answer": "Afterglow reads the words in what you circled, not the pictures, and the words there do not answer this. You can add vision in Settings > Models so it sees pictures too.",
+  "body": {
+   "type": "text",
+   "text": ""
+  },
+  "anchors": [],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/none-crop-5-photo-window.png 420 520",
+   "eval: \"{\\\"img\\\":[640],\\\"overflowX\\\":false,\\\"marks\\\":0}\"",
+   "console clean"
+  ]
+ }
+]

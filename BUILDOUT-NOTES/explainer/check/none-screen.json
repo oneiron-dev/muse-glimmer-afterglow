@@ -1,0 +1,219 @@
+{
+ "mode": "none",
+ "ocr_boxes": 21,
+ "screen": {
+  "total_s": 6.07,
+  "id": "t68",
+  "sight": "words",
+  "title": "Afterglow model and memory screen",
+  "answer": "This is the Afterglow Models / system info screen that shows which agent models fit your computer and memory usage. It shows agent selection and nightly update status, not a training interface.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "b0",
+     "id": "i1",
+     "label": "Models",
+     "detail": "Top left section for model selection."
+    },
+    {
+     "anchor": "b2",
+     "id": "i2",
+     "label": "Memory info",
+     "detail": "Shows memory used and free on this computer."
+    },
+    {
+     "anchor": "b11",
+     "id": "i3",
+     "label": "Agent model",
+     "detail": "Current answering model is Muse Glimmer 30B."
+    },
+    {
+     "anchor": "b17",
+     "id": "i4",
+     "label": "Update status",
+     "detail": "Nightly updates status is shown here."
+    },
+    {
+     "anchor": "b19",
+     "id": "i5",
+     "label": "Why this one",
+     "detail": "Explains model choice and fit."
+    }
+   ]
+  },
+  "ms": {
+   "vision": 0,
+   "model": 6066
+  },
+  "errors": null,
+  "page": [
+   "eval: \"{\\\"overflowX\\\":false,\\\"marks\\\":5,\\\"chat\\\":4}\"",
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/none-screen-full.png 420 1000",
+   "console clean"
+  ]
+ },
+ "ambient": {
+  "total_s": 7.77,
+  "result": {
+   "mode": "explain",
+   "id": "t70",
+   "url": "/explain?id=t70"
+  },
+  "id": "t70",
+  "sight": "words",
+  "title": "Models selection in Afterglow",
+  "answer": "The Models section shows which models fit this computer and lets you see the agent, speech and vision options that are available for your setup.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "b0",
+     "id": "i1",
+     "label": "Models label",
+     "detail": "Models heading of the settings screen."
+    },
+    {
+     "anchor": "b1",
+     "id": "i2",
+     "label": "Models purpose",
+     "detail": "Explains agent answers, speech transcription and vision capability per model."
+    },
+    {
+     "anchor": "b2",
+     "id": "i3",
+     "label": "Memory header",
+     "detail": "Memory on this computer section."
+    },
+    {
+     "anchor": "b11",
+     "id": "i4",
+     "label": "Agent control",
+     "detail": "Agent setting for the model that answers you."
+    },
+    {
+     "anchor": "b13",
+     "id": "i5",
+     "label": "Current agent model",
+     "detail": "Muse Glimmer 30B is shown as the selected agent."
+    }
+   ]
+  },
+  "ms": {
+   "vision": 0,
+   "model": 4700
+  },
+  "errors": null,
+  "page": [
+   "eval: \"{\\\"overflowX\\\":false,\\\"marks\\\":5,\\\"chat\\\":0}\"",
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/none-ambient-full.png 420 1000",
+   "console clean"
+  ]
+ },
+ "chat_reply": {
+  "total_s": 5.49,
+  "id": "t71",
+  "sight": "none",
+  "title": "Reply acknowledgement explained",
+  "answer": "The reply acknowledges your message and confirms it has recorded today as 2026-11-04 and saved that your team workshop is in Room Cedar on Friday at 9:00.",
+  "body": {
+   "type": "list",
+   "items": [
+    {
+     "id": "i1",
+     "label": "Acknowledgement",
+     "detail": "Got it confirms the message was received and understood."
+    },
+    {
+     "id": "i2",
+     "label": "Date saved",
+     "detail": "Today is recorded as 2026-11-04 for context."
+    },
+    {
+     "id": "i3",
+     "label": "Workshop noted",
+     "detail": "Room Cedar on Friday at 9:00 is stored as your team workshop."
+    }
+   ]
+  },
+  "ms": {
+   "vision": 0,
+   "model": 5485
+  },
+  "errors": null,
+  "page": [
+   "eval: \"{\\\"overflowX\\\":false,\\\"marks\\\":0,\\\"chat\\\":0}\"",
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/none-chat_reply-full.png 420 1000",
+   "console clean"
+  ]
+ },
+ "concept": {
+  "total_s": 5.66,
+  "id": "t72",
+  "sight": "none",
+  "title": "LoRA Adapter Effect",
+  "answer": "A LoRA adapter changes what a model says by adding small trainable low-rank matrices to selected weights, steering outputs toward a style, task or knowledge without fully retraining the base model.",
+  "body": {
+   "type": "list",
+   "items": [
+    {
+     "id": "i1",
+     "label": "Low-rank update",
+     "detail": "Adds trainable A and B matrices to frozen weights to change activations."
+    },
+    {
+     "id": "i2",
+     "label": "Output steering",
+     "detail": "Biases generations toward a specific style, tone or task learned during adapter training."
+    },
+    {
+     "id": "i3",
+     "label": "Parameter efficient",
+     "detail": "Base model stays frozen so the adapter can be swapped in and out."
+    },
+    {
+     "id": "i4",
+     "label": "Composable",
+     "detail": "Multiple adapters can be loaded to mix behaviors while keeping the core model unchanged."
+    }
+   ]
+  },
+  "ms": {
+   "vision": 0,
+   "model": 5657
+  },
+  "errors": null,
+  "page": [
+   "eval: \"{\\\"overflowX\\\":false,\\\"marks\\\":0,\\\"chat\\\":0}\"",
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/none-concept-full.png 420 1000",
+   "console clean"
+  ]
+ },
+ "followups": [
+  {
+   "text": "What would I need to train here?",
+   "first_word_s": 5.52,
+   "total_s": 5.52,
+   "kinds": [
+    "content",
+    "done"
+   ],
+   "answer": "The screen shown is the Afterglow Models / system info view for checking which models fit your computer and memory usage. It displays agent selection and nightly update status, not a training interface. No training controls are visible in the words provided.",
+   "final": null,
+   "spec": null
+  },
+  {
+   "text": "Show me the steps to add vision instead",
+   "first_word_s": 5.38,
+   "total_s": 5.38,
+   "kinds": [
+    "content",
+    "answer",
+    "done"
+   ],
+   "answer": "The screen you’re looking at is the Afterglow Models / system info view for checking which models fit your computer and memory usage. It shows agent selection and nightly update status, not a training interface. The visible text mentions vision as a capability of the agent, but the screen does not show steps to add vision.",
+   "final": "The screen you’re looking at is the Afterglow Models / system info view for checking which models fit your computer and memory usage. It shows agent selection and nightly update status, not a training interface.",
+   "spec": null
+  }
+ ]
+}

@@ -1,0 +1,218 @@
+{
+ "mode": "mac",
+ "ocr_boxes": 23,
+ "screen": {
+  "total_s": 9.49,
+  "id": "t58",
+  "sight": "described",
+  "title": "Afterglow Models settings screen",
+  "answer": "This is the Models settings screen in Afterglow for choosing which agent, speech and vision models run on your computer and checking if they fit your memory. You cannot train models here; it shows nightly updates for your agent and the current model is Muse Glimmer 30B with no",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "b0",
+     "id": "i1",
+     "label": "Models header",
+     "detail": "Top left label for model selection."
+    },
+    {
+     "anchor": "b13",
+     "id": "i2",
+     "label": "Agent section",
+     "detail": "Shows the model that answers you."
+    },
+    {
+     "anchor": "b15",
+     "id": "i3",
+     "label": "Current agent model",
+     "detail": "Muse Glimmer 30B is selected."
+    },
+    {
+     "anchor": "b12",
+     "id": "i4",
+     "label": "Computer memory info",
+     "detail": "Apple M4 Max 64 GB unified memory shown."
+    },
+    {
+     "anchor": "b18",
+     "id": "i5",
+     "label": "Nightly updates note",
+     "detail": "What your agent learns each night reaches it here."
+    }
+   ]
+  },
+  "ms": {
+   "vision": 3791,
+   "model": 5700
+  },
+  "errors": null,
+  "page": [
+   "eval: \"{\\\"overflowX\\\":false,\\\"marks\\\":5,\\\"chat\\\":4}\"",
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/mac-screen-full.png 420 1000",
+   "console clean"
+  ]
+ },
+ "ambient": {
+  "total_s": 13.73,
+  "result": {
+   "mode": "explain",
+   "id": "t60",
+   "url": "/explain?id=t60"
+  },
+  "id": "t60",
+  "sight": "described",
+  "title": "Models selection in Afterglow",
+  "answer": "The Models section is for choosing which models run on this computer for your agent, speech transcription and vision. Each listed model shows whether it fits the available memory.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "b0",
+     "id": "i1",
+     "label": "Models header",
+     "detail": "Top left label for the models area."
+    },
+    {
+     "anchor": "b1",
+     "id": "i2",
+     "label": "Models purpose",
+     "detail": "Explains agent answers, speech and vision model roles."
+    },
+    {
+     "anchor": "b13",
+     "id": "i3",
+     "label": "Agent model",
+     "detail": "The model that answers you is listed here."
+    },
+    {
+     "anchor": "b15",
+     "id": "i4",
+     "label": "Current agent model",
+     "detail": "Muse Glimmer 30B is shown as the active agent."
+    },
+    {
+     "anchor": "b12",
+     "id": "i5",
+     "label": "Computer memory",
+     "detail": "Apple M4 Max 64 GB unified memory context for fit."
+    }
+   ]
+  },
+  "ms": {
+   "vision": 4134,
+   "model": 5697
+  },
+  "errors": null,
+  "page": [
+   "eval: \"{\\\"overflowX\\\":false,\\\"marks\\\":5,\\\"chat\\\":0}\"",
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/mac-ambient-full.png 420 1000",
+   "console clean"
+  ]
+ },
+ "chat_reply": {
+  "total_s": 10.83,
+  "id": "t61",
+  "sight": "none",
+  "title": "Workshop note acknowledgment",
+  "answer": "The reply confirms it understood your message and records the workshop as Room Cedar on Friday at 9:00, with today set to 2026-11-04.",
+  "body": {
+   "type": "list",
+   "items": [
+    {
+     "id": "i1",
+     "label": "Confirmation",
+     "detail": "Got it signals the message was received and understood."
+    },
+    {
+     "id": "i2",
+     "label": "Date saved",
+     "detail": "Today is recorded as 2026-11-04 for context."
+    },
+    {
+     "id": "i3",
+     "label": "Workshop noted",
+     "detail": "Team workshop is logged as Room Cedar on Friday at 9:00."
+    }
+   ]
+  },
+  "ms": {
+   "vision": 0,
+   "model": 10826
+  },
+  "errors": null,
+  "page": [
+   "eval: \"{\\\"overflowX\\\":false,\\\"marks\\\":0,\\\"chat\\\":0}\"",
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/mac-chat_reply-full.png 420 1000",
+   "console clean"
+  ]
+ },
+ "concept": {
+  "total_s": 6.23,
+  "id": "t62",
+  "sight": "none",
+  "title": "LoRA Adapter Effect",
+  "answer": "A LoRA adapter changes what a model says by adding small low-rank trainable matrices to the frozen base weights, steering its style, tone and knowledge without full retraining. The base model stays the same and the adapter modifies how it generates outputs.",
+  "body": {
+   "type": "list",
+   "items": [
+    {
+     "id": "i1",
+     "label": "Low-rank update",
+     "detail": "Adds trainable A and B matrices to frozen weights for efficient steering."
+    },
+    {
+     "id": "i2",
+     "label": "Base model frozen",
+     "detail": "Original weights stay unchanged, adapter is plugged in at inference."
+    },
+    {
+     "id": "i3",
+     "label": "Behavior shift",
+     "detail": "Changes style, tone, domain knowledge or persona of generated text."
+    },
+    {
+     "id": "i4",
+     "label": "Composable",
+     "detail": "Multiple adapters can be swapped or combined for different outputs."
+    }
+   ]
+  },
+  "ms": {
+   "vision": 0,
+   "model": 6226
+  },
+  "errors": null,
+  "page": [
+   "eval: \"{\\\"overflowX\\\":false,\\\"marks\\\":0,\\\"chat\\\":0}\"",
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/mac-concept-full.png 420 1000",
+   "console clean"
+  ]
+ },
+ "followups": [
+  {
+   "text": "What would I need to train here?",
+   "first_word_s": 4.01,
+   "total_s": 4.01,
+   "kinds": [
+    "content",
+    "done"
+   ],
+   "answer": "You cannot train models here. This screen is for selecting which agent, speech and vision models run on your computer and checking if they fit your memory.",
+   "final": null,
+   "spec": null
+  },
+  {
+   "text": "Show me the steps to add vision instead",
+   "first_word_s": 4.99,
+   "total_s": 4.99,
+   "kinds": [
+    "content",
+    "done"
+   ],
+   "answer": "I cannot show steps to add vision from the visible screen. The current view is the Models settings page with model selection and memory info, and no vision-add flow is shown.",
+   "final": null,
+   "spec": null
+  }
+ ]
+}

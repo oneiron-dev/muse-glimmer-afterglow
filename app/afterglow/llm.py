@@ -147,7 +147,7 @@ class GlimmerClient:
         return out
 
     def request_body(self, messages, tools=None, *, reasoning="low", max_tokens=1024, temperature=0.3,
-                     stream=True, n_predict=None, cache_prompt=True):
+                     stream=True, n_predict=None, cache_prompt=True, response_format=None):
         body = {"model": ALIAS, "messages": messages, "id_slot": self.slot, "temperature": temperature,
                 "max_tokens": max_tokens, "stream": stream, "cache_prompt": cache_prompt,
                 "chat_template_kwargs": {"reasoning_strength": reasoning}}
@@ -155,6 +155,8 @@ class GlimmerClient:
             body["stream_options"] = {"include_usage": True}
         if tools:
             body["tools"] = tools
+        if response_format is not None:  # None (the default) leaves the body exactly as before
+            body["response_format"] = response_format
         if n_predict is not None:
             body["n_predict"] = n_predict
             body["max_tokens"] = n_predict
