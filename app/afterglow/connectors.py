@@ -861,10 +861,12 @@ def check_search(app, req):
 def post_files(app, req):
     from .files_store import FileStore
 
+    # The open chat's file tools follow the setting at once: the new folder, or after a disconnect the app's own
+    # files area (runs/<world>/files/, as at startup without a folder); never the old folder.
     with app.lock:
         session = app.session
-        saved = save_files_folder(session.world, (req.body or {}).get("folder"))
-        session.tools.files = FileStore(session.world) if saved["folder"] else None
+        save_files_folder(session.world, (req.body or {}).get("folder"))
+        session.tools.files = FileStore(session.world)
         return full_state(session.world)
 
 

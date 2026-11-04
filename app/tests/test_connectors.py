@@ -386,7 +386,7 @@ class FilesTest(TempRunsTest):
         self.assertEqual(locked, [True])
         self.assertFalse(app.lock.locked())
 
-    def test_disconnect_disables_open_session_file_tools(self):
+    def test_disconnect_moves_open_session_file_tools_off_the_old_folder(self):
         app, folder_a = self.open_files_session()
         save = connectors.save_files_folder
         locked = []
@@ -397,12 +397,12 @@ class FilesTest(TempRunsTest):
 
         with mock.patch.object(connectors, "save_files_folder", side_effect=saving):
             connectors.post_files(app, self.req({"folder": None}))
-        result, _ = app.session.tools.run("files.write", {"name": "blocked.txt", "text": "do not write"})
-        self.assertIn("error", result)
-        self.assertIn("not set up", result["error"])
+        result, _ = app.session.tools.run("files.write", {"name": "after.txt", "text": "not for folder A"})
+        self.assertNotIn("error", result)
         self.assertIsNone(connectors.files_folder("person"))
+        # the old folder is untouched; the write lands in the app's own files area, as after a fresh start
         self.assertEqual(sorted(p.name for p in folder_a.iterdir()), ["a.txt"])
-        self.assertFalse((self.runs / "person" / "files").exists())
+        self.assertTrue((self.runs / "person" / "files" / "after.txt").exists())
         self.assertEqual(locked, [True])
         self.assertFalse(app.lock.locked())
 
