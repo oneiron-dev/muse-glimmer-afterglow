@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { ThemeToggle } from "./Header.jsx";
 import { shortDate } from "./lib.js";
 import { Onboarding } from "./Onboarding.jsx";
+import { SettingsNav, sectionOf } from "./Settings.jsx";
+import { useSearch } from "@tanstack/react-router";
+import { cue } from "./sound.js";
 
 const HOURS = ["dawn", "noon", "dusk", "night"];
 const HOUR_NAME = { dawn: "Dawn", noon: "Day", dusk: "Dusk", night: "Night" };
@@ -50,6 +53,8 @@ const initials = (name) => (name || "").split(" ").map((w) => w[0]).join("").sli
  Its ground is the painted sky of the hour. Folds to icons (⌘\). */
 export function Sidebar({ ctx, screen, folded, onFold, newNotes }) {
   const { state, days, nights, openDay, go, mode, setSky, hour, today } = ctx;
+  const { section } = useSearch({ strict: false });
+  const inSettings = screen === "settings";
   const people = (days && days.people) || [];
   const me = people.find((p) => p.world === state.world);
   const byNight = Object.fromEntries((nights || []).map((n) => [n.day, n]));
@@ -65,6 +70,7 @@ export function Sidebar({ ctx, screen, folded, onFold, newNotes }) {
         {HOURS.map((h) => <img key={h} className={`sky${h === hour ? " on" : ""}`} src={`/sky/hour-${h}.webp`} alt="" />)}
       </div>
       <div className="side-in">
+        {inSettings ? <SettingsNav section={sectionOf(section)} folded={folded} onBack={() => go("chat")} /> : <>
         <div className="side-top">
           <Mark />
           <ProfileMenu state={state} people={people} openDay={openDay} folded={folded} reload={ctx.reload} />
@@ -100,10 +106,11 @@ export function Sidebar({ ctx, screen, folded, onFold, newNotes }) {
             </li>
           ))}
         </ul>
+        </>}
         <div className="side-foot">
-          <button type="button" className={`side-row${screen === "settings" ? " on" : ""}`} onClick={() => go("settings")} title={folded ? "Settings" : undefined}>
+          {!inSettings && <button type="button" className="side-row" onClick={() => go("settings")} title={folded ? "Settings" : undefined}>
             <Icon id="settings" /><span className="side-name">Settings</span>
-          </button>
+          </button>}
           <div className="side-tools">
             <ThemeToggle mode={mode} onChange={setSky} />
             {!folded && <span className="side-hour">{mode === "auto" ? HOUR_NAME[hour] : mode === "light" ? "Light" : "Dark"}</span>}
@@ -133,7 +140,7 @@ function ProfileMenu({ state, people, openDay, folded, reload }) {
   const name = state.persona || state.world;
   return (
     <div className="profile" ref={ref}>
-      <button type="button" className="profile-btn" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen(!open)} title={folded ? name : undefined}>
+      <button type="button" className="profile-btn" aria-haspopup="menu" aria-expanded={open} onClick={() => { cue("toggle"); setOpen(!open); }} title={folded ? name : undefined}>
         <span className="avatar on">{initials(name)}</span>
         <span className="profile-name">{name}</span>
         <i className="caret" aria-hidden="true" />

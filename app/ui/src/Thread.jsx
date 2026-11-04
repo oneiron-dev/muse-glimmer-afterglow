@@ -32,7 +32,7 @@ export function Thread({ state, report, live, after, nextDay, sealed, onGoToday,
           : t.role === "assistant" ? <Reply key={i} rec={t} text={t.content} tools={t.tool_calls} error={t.error} onOpenPanel={onOpenPanel} /> : null))}
         {live && (
           <>
-            <UserMsg text={live.user} files={live.files} />
+            <UserMsg text={live.user} files={live.files} fresh />
             <Reply text={live.text} tools={live.tools} error={live.error} thinking={live.thinking} onOpenPanel={onOpenPanel} />
           </>
         )}
@@ -51,9 +51,9 @@ function Copy({ text }) {
   return <button type="button" className="act" onClick={async () => { await navigator.clipboard.writeText(text || ""); setDone(true); setTimeout(() => setDone(false), 1400); }}>{done ? "Copied" : "Copy"}</button>;
 }
 
-function UserMsg({ text, files, ts, turn, onOpenPanel }) {
+function UserMsg({ text, files, ts, turn, onOpenPanel, fresh }) {
   return (
-    <div className="msg msg-u">
+    <div className={`msg msg-u${fresh ? " fresh" : ""}`}>
       {files && files.length > 0 && (
         <ul className="msg-files">
           {files.map((f) => <li key={f.id || f.name}><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M5.5 2.5h6l3.5 3.5v10a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 16V4a1.5 1.5 0 0 1 1.5-1.5Z" fill="none" stroke="currentColor" strokeWidth="1.5" /></svg>{f.name}</li>)}
@@ -241,7 +241,7 @@ function Night({ after, state, nextDay, onOpenDay, onOpenPanel }) {
       {after.phase === "morning" && r && (
         <>
           <p className="divider">Morning, day {state.day + 1}</p>
-          <article className={`mcard ${kept ? "is-keep" : "is-rollback"}`}>
+          <article className={`mcard arrive ${kept ? "is-keep" : "is-rollback"}`}>
             <p className="mfrom">Overnight, after day {r.day}</p>
             <h2 className="mtitle">{kept ? `I learned from day ${r.day} and kept it.` : `I tried to learn day ${r.day}, and rolled it back.`}</h2>
             {!kept && <p className="mwhy">The update {failedWhy(failedKeys(dec))}{ah.honesty_change != null ? `: honesty ${signed(ah.honesty_change)} on 200 general questions, and the limit is ${MINUS}5` : ""}.</p>}

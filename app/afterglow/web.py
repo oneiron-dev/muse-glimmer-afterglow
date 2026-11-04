@@ -16,7 +16,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import dials, morning, paths, snapshot, thoughts
+from . import dials, modelsetup, morning, paths, snapshot, thoughts
 from .night_checks import (abstention_gate, chat_checks, never_told_line, serving_choice, serving_rule,
                            unlinked_corrections)
 from .agent import NOTES_BACKENDS, DaySession, load_world, now_iso
@@ -101,6 +101,11 @@ class App:
         self.lock = threading.Lock()
         self.snapshot_status = {"state": "idle"}
         self.restore = restore
+        # Settings -> Model: where the model comes from (a server, a file this app serves, or the official download)
+        self.model_source = {"source": "server", "url": self.client.endpoint, "kind": "llama.cpp", "from": "start"}
+        self.local_server = modelsetup.LocalServer()
+        self.download = modelsetup.Download()
+        self._hardware = (0.0, None)
         if restore:
             threading.Thread(target=self.restore_snapshot, daemon=True).start()
 
@@ -216,6 +221,9 @@ class App:
         return {"world": world, "day": 1, "date": self.session.date, "name": name}
 
     def restore_snapshot(self):
+        if self.client.kind != "llama.cpp":  # slot files are llama-server's; another server has none
+            self.snapshot_status = {"state": "skipped", "at": now_iso(), "message": "the server is not llama.cpp"}
+            return
         with self.lock:
             self.snapshot_status = {"state": "restoring", "at": now_iso()}
             try:
@@ -355,7 +363,8 @@ class App:
             # replies that ended empty and were asked again in the answer channel (agent.py); shown, never hidden
             "answer_channel_retries": {"retried": sum(1 for r in replies if r.get("answer_channel_retry")),
                                        "replies": len(replies)},
-            "server": {"endpoint": self.client.endpoint, "healthy": healthy, "adapter": adapter},
+            "server": {"endpoint": self.client.endpoint, "healthy": healthy, "adapter": adapter,
+                       "kind": self.client.kind},
             "notes": s.notes.all(include_superseded=True),
             "notes_backend": s.notes_backend,
             "history": history,
@@ -383,6 +392,71 @@ class App:
             f.write_text(json.dumps({**doc, "set_at": now_iso()}, indent=1) + "\n")
         return doc
 
+    # --- Settings -> Model ---
+    def hardware(self):
+        if time.time() - self._hardware[0] > 60:
+            self._hardware = (time.time(), modelsetup.hardware())
+        return self._hardware[1]
+
+    def model_state(self):
+        """What Settings -> Model shows: the model in use now, this machine, the saved choice, the server this app
+        started for a model file, the download, and where model files go."""
+        return {"current": {**self.model_source, "url": self.client.endpoint, "kind": self.client.kind,
+                            "model": self.client.model_id, "healthy": self.client.health()},
+                "hardware": self.hardware(), "saved": modelsetup.saved(), "local_server": self.local_server.status(),
+                "llama_server": modelsetup.llama_server_binary(), "download": self.download.state,
+                "models_dir": str(modelsetup.models_dir()), "hf_repo": modelsetup.HF_REPO}
+
+    def use_model(self, doc, persist=True):
+        """Switch the agent's model: {"source": "server", "url"} after a probe, or {"source": "gguf", "path"}, which
+        starts llama-server on the file here and switches when it is healthy. Saved to runs/_settings/model.json."""
+        source = doc.get("source")
+        if source == "server":
+            pr = modelsetup.probe(doc.get("url"))
+            if not pr["chat"]:
+                raise ValueError(" ".join(pr["lines"]))
+            with self.lock:
+                self.client.use_server(pr["url"], pr["kind"], None if pr["kind"] == "llama.cpp" else pr["model"])
+                self.model_source = {"source": "server", "url": pr["url"], "kind": pr["kind"], "from": "settings"}
+            if persist:
+                modelsetup.save({"source": "server", "url": pr["url"], "kind": pr["kind"], "model": pr["model"]})
+            return {**self.model_state(), "probe": pr}
+        if source == "gguf":
+            info = modelsetup.gguf_info(doc.get("path"))
+            if not info["ok"]:
+                raise ValueError(" ".join(info["lines"]))
+            started = self.local_server.start(info["path"])
+            self.model_source = {"source": "gguf", "path": info["path"], "url": started["url"], "kind": "llama.cpp",
+                                 "from": "settings", "starting": True}
+            if persist:
+                modelsetup.save({"source": "gguf", "path": info["path"], "url": started["url"]})
+            threading.Thread(target=self._switch_when_healthy, args=(started["url"],), daemon=True).start()
+            return {**self.model_state(), "file": info, "started": started}
+        raise ValueError("source must be server or gguf")
+
+    def _switch_when_healthy(self, url, wait_s=600):
+        probe = GlimmerClient(url)
+        t0 = time.time()
+        while time.time() - t0 < wait_s and self.local_server.running():
+            if probe.health():
+                with self.lock:
+                    self.client.use_server(url, "llama.cpp")
+                    self.model_source = {**self.model_source, "starting": False, "ready_at": now_iso()}
+                return
+            time.sleep(2)
+        self.model_source = {**self.model_source, "starting": False,
+                             "error": "llama-server stopped before it was ready; see its log in runs/_settings"}
+
+    def apply_saved_model(self):
+        """At start without --endpoint: the model chosen in Settings, if any."""
+        doc = modelsetup.saved()
+        if not doc:
+            return
+        try:
+            self.use_model(doc, persist=False)
+        except (ValueError, RuntimeError, OSError) as e:
+            self.model_source = {**self.model_source, "error": f"the saved model did not start: {e}"}
+
     def settings(self):
         """What the Settings screen shows, read only: the agent's tools, its reasoning setting, the notes backend, the
         model server and slot, and the serving rule the nights are judged by (runs/serving/serving-rule.json)."""
@@ -390,7 +464,15 @@ class App:
         return {"tools": [t["function"]["name"] for t in s.tool_schemas], "reasoning": s.reasoning,
                 "notes_backend": s.notes_backend, "endpoint": self.client.endpoint, "slot": self.client.slot,
                 "serving_rule": serving_rule(), "serving": s.adapter_choice, "dials": s.dial_choice,
-                "schedule": self.schedule()}
+                "schedule": self.schedule(), "web_search": self.web_search_state()}
+
+    def web_search_state(self):
+        """Settings -> Connectors: the web search connector as set in the serving notes, and how much of its cap is
+        used (the key's name stays here; the key itself is never read for this)."""
+        from .web_search import searches_so_far, web_search_setting
+        st = web_search_setting()
+        return {"on": bool(st.get("on")), "provider": st.get("provider"), "max_results": st.get("max_results"),
+                "cap": st.get("cap"), "used": searches_so_far(), "key_set": bool(st.get("key_name"))}
 
     def workspace(self):
         """What the agent's world tools hold for the open day (world_state.json): calendar events, tasks and email
@@ -515,6 +597,19 @@ class Handler(BaseHTTPRequestHandler):
             return self._json({"attachments": self.app.attachments()})
         if path == "/api/settings":
             return self._json(self.app.settings())
+        if path == "/api/model":
+            return self._json(self.app.model_state())
+        if path == "/api/schedule":
+            return self._json(self.app.schedule())
+        if path == "/api/model/local":
+            return self._json({"files": modelsetup.find_local_ggufs(), "models_dir": str(modelsetup.models_dir())})
+        if path == "/api/model/hf":
+            try:
+                return self._json({"repo": modelsetup.HF_REPO, "files": modelsetup.hf_files()})
+            except (OSError, ValueError) as e:
+                return self._json({"error": f"Hugging Face did not answer: {e}"}, 502)
+        if path == "/api/model/download":
+            return self._json(self.app.download.state)
         if path == "/api/workspace":
             return self._json(self.app.workspace())
         if path == "/api/days":
@@ -560,6 +655,27 @@ class Handler(BaseHTTPRequestHandler):
                 except ValueError as e:
                     return self._json({"error": str(e)}, 400)
                 return self._chat(text, extra)
+            if path.startswith("/api/model/"):
+                b = self._body()
+                try:
+                    if path == "/api/model/probe":
+                        return self._json(modelsetup.probe(b.get("url")))
+                    if path == "/api/model/file":
+                        return self._json({**modelsetup.gguf_info(b.get("path")), "hardware": self.app.hardware()})
+                    if path == "/api/model/use":
+                        return self._json(self.app.use_model(b))
+                    if path == "/api/model/download":
+                        return self._json(self.app.download.start(b.get("file")))
+                    if path == "/api/model/download/pause":
+                        return self._json(self.app.download.pause())
+                    if path == "/api/model/stop":
+                        self.app.local_server.stop()
+                        return self._json(self.app.model_state())
+                except (ValueError, RuntimeError) as e:
+                    return self._json({"error": str(e)}, 400)
+                except OSError as e:
+                    return self._json({"error": f"{type(e).__name__}: {e}"}, 502)
+                return self._json({"error": "not found"}, 404)
             if path == "/api/schedule":
                 b = self._body()
                 try:
@@ -660,7 +776,9 @@ def main():
     ap.add_argument("--world", required=True)
     ap.add_argument("--day", type=int, required=True)
     ap.add_argument("--date", help="the day's date, YYYY-MM-DD (default: today, JST)")
-    ap.add_argument("--endpoint", default=GlimmerClient().endpoint)
+    ap.add_argument("--endpoint", default=None,
+                    help="the model server (default: the model chosen in Settings, runs/_settings/model.json, else "
+                         "AFTERGLOW_ENDPOINT or the project's default)")
     ap.add_argument("--port", type=int, default=8650)
     ap.add_argument("--slot", type=int, default=0,
                     help="the server slot the chat runs on (default 0, the app's; 1 for a second instance, so the "
@@ -681,9 +799,13 @@ def main():
                     help="local (default): notes.json only; vault: notes.json plus the Oneiron vault, which answers "
                          "the recall tool (needs the oneiron extra and the vault credentials, app/README.md)")
     a = ap.parse_args()
+    saved_model = None if a.endpoint else modelsetup.saved()
+    a.endpoint = a.endpoint or GlimmerClient().endpoint
     Handler.app = App(a.world, a.day, a.endpoint, date=a.date, reasoning=a.reasoning, restore=not a.no_restore,
                       decide_supersede=a.decide_supersede, decide_adapter=a.decide_adapter,
                       decide_route=a.decide_route, web_search=a.web_search, slot=a.slot, notes_backend=a.notes_backend)
+    if saved_model:
+        Handler.app.apply_saved_model()
     srv = ThreadingHTTPServer(("127.0.0.1", a.port), Handler)
     srv.daemon_threads = True
     print(f"Afterglow: http://127.0.0.1:{a.port}  (world {a.world}, day {a.day}, Glimmer at {a.endpoint}, "

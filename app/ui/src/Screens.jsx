@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearch } from "@tanstack/react-router";
 import { CalendarView, EmailView, Empty, NightView, TasksView } from "./Panel.jsx";
 import { Icon } from "./Sidebar.jsx";
-import { VoiceList } from "./Voice.jsx";
-import { CHECKS, MINUS, factRows, failedWhy, getJSON, postJSON, pretty, signed } from "./lib.js";
+import { factRows, failedWhy, getJSON, postJSON, pretty, signed } from "./lib.js";
 
 const TITLES = { memory: "Memory", nights: "Nights", calendar: "Calendar", mail: "Mail", tasks: "Tasks", files: "Files", settings: "Settings" };
 
@@ -19,7 +17,6 @@ export function Screen({ id, ctx }) {
         {id === "mail" && <div className="col"><EmailView ws={ctx.ws} /></div>}
         {id === "tasks" && <div className="col"><TasksView ws={ctx.ws} /></div>}
         {id === "files" && <FilesScreen ctx={ctx} />}
-        {id === "settings" && <SettingsScreen ctx={ctx} />}
       </div>
     </main>
   );
@@ -204,80 +201,3 @@ function FilesScreen({ ctx }) {
   );
 }
 
-const SECTIONS = [["profile", "Profile"], ["voice", "Voice"], ["tools", "Tools"], ["nights", "Nights"], ["model", "Model"], ["appearance", "Appearance"]];
-const TOOL_NAMES = {
-  remember: ["Notes", "Writes down what you tell it"], recall: ["Look-ups", "Reads your notes before it answers"],
-  "calendar.list_events": ["Calendar", "Reads your calendar"], "calendar.add_event": ["Calendar", "Adds events"],
-  "tasks.list": ["Tasks", "Reads your tasks"], "tasks.add": ["Tasks", "Adds tasks"], "tasks.complete": ["Tasks", "Marks tasks done"],
-  "email.draft": ["Mail", "Drafts emails; never sends them"], search_web: ["Web search", "Searches the web; only the query leaves your computer"],
-};
-
-/** Settings: read from the running app (GET /api/settings). */
-function SettingsScreen({ ctx }) {
-  const { section } = useSearch({ strict: false });
-  const [sec, setSec] = useState(section || "profile");
-  const [s, setS] = useState(null);
-  useEffect(() => { getJSON("/api/settings").then(setS); }, []);
-  const st = ctx.state;
-  const rule = s && s.serving_rule;
-  return (
-    <div className="settings">
-      <nav className="set-nav" aria-label="Settings sections">
-        {SECTIONS.map(([id, label]) => <button key={id} type="button" className={`side-row${sec === id ? " on" : ""}`} onClick={() => setSec(id)}>{label}</button>)}
-      </nav>
-      <div className="set-body">
-        {!s ? <p className="pfine">Loading…</p> : (
-          <>
-            {sec === "profile" && (
-              <section><h2 className="sec">Profile</h2>
-                <dl className="kv"><div><dt>Name</dt><dd>{st.persona || st.world}</dd></div><div><dt>Days</dt><dd className="num">{st.day}</dd></div><div><dt>Notes stored</dt><dd>{s.notes_backend === "vault" ? "On this computer and in your Oneiron vault" : "On this computer"}</dd></div></dl>
-              </section>
-            )}
-            {sec === "voice" && (
-              <section><h2 className="sec">Voice</h2>
-                <p className="pfine">How your agent sounds. A voice steers the model directly (re:dvx dials), from your next message.</p>
-                <VoiceList voices={ctx.voices} onChange={ctx.setVoices} />
-              </section>
-            )}
-            {sec === "tools" && (
-              <section><h2 className="sec">Tools</h2>
-                <p className="pfine">What your agent can use today. A new tool changes how it was tested, so tools join after the nights are checked with them.</p>
-                <ul className="tools-list">{[...new Map(s.tools.map((t) => [TOOL_NAMES[t] ? TOOL_NAMES[t][0] : t, t])).entries()].map(([label, t]) => (
-                  <li key={label}><b>{label}</b><span>{s.tools.filter((x) => (TOOL_NAMES[x] || [x])[0] === label).map((x) => (TOOL_NAMES[x] || [x, x])[1]).join(". ")}</span><i className="on-dot" title="On" /></li>
-                ))}</ul>
-              </section>
-            )}
-            {sec === "nights" && (
-              <section><h2 className="sec">Nights</h2>
-                <p className="pfine">The checks every night must pass before its update is kept. Set by you; the night keeps nothing that fails one.</p>
-                <ul className="checks big">{((rule && rule.checks) || []).map((c) => { const k = c.replace(/_3k$/, ""); return <li key={c} className="ok">{CHECKS[k] ? CHECKS[k][0] : pretty(c)}</li>; })}</ul>
-                <dl className="kv"><div><dt>Honesty limit</dt><dd className="num">{MINUS}5 points on 200 general questions</dd></div><div><dt>Runs on</dt><dd>One RTX 4090, after you end the day</dd></div></dl>
-              </section>
-            )}
-            {sec === "model" && (
-              <section><h2 className="sec">Model</h2>
-                <dl className="kv">
-                  <div><dt>Model</dt><dd>Muse Glimmer 30B</dd></div>
-                  <div><dt>Update in use</dt><dd>{(st.server && st.server.adapter) || "Base weights"}</dd></div>
-                  <div><dt>Why this one</dt><dd>{s.serving && s.serving.why}</dd></div>
-                  <div><dt>Thinking</dt><dd>{s.reasoning}</dd></div>
-                  <div><dt>Server</dt><dd className="num">{st.server && st.server.healthy ? "Answering" : "Not answering"}, slot {s.slot}</dd></div>
-                </dl>
-              </section>
-            )}
-            {sec === "appearance" && (
-              <section><h2 className="sec">Appearance</h2>
-                <div className="seg big" role="radiogroup" aria-label="Sky">
-                  {[["auto", "Follow the hour"], ["light", "Light"], ["dark", "Dark"]].map(([id, label]) => (
-                    <button key={id} type="button" role="radio" aria-checked={ctx.mode === id} className={ctx.mode === id ? "on" : ""} onClick={() => ctx.setSky(id)}>{label}</button>
-                  ))}
-                </div>
-                <p className="pfine">Following the hour, the sky and the app change at dawn, day, dusk and night. Night is the dark mode.</p>
-              </section>
-            )}
-          </>
-        )}
-      </div>
-    </div>
-  );
-}

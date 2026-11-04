@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getJSON, postJSON } from "./lib.js";
+import { cue } from "./sound.js";
 
 /** Why a voice is not offered, in plain words, from its measured check (steering/voices.json). */
 export function voiceWhy(check) {
@@ -104,7 +105,7 @@ export function PlusMenu({ voices, onChange, onAttach }) {
   const label = voices ? ([...voices.presets, ...(voices.custom || [])].find((x) => x.slug === slug) || { label: "Default" }).label : "Default";
   return (
     <div className="vwrap" ref={ref}>
-      <button type="button" className="plus" aria-label="Attach or change the voice" aria-haspopup="menu" aria-expanded={open} onClick={() => { setOpen(!open); setView("menu"); }}>
+      <button type="button" className="plus" aria-label="Attach or change the voice" aria-haspopup="menu" aria-expanded={open} onClick={() => { cue("toggle"); setOpen(!open); setView("menu"); }}>
         <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M10 4.5v11M4.5 10h11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
       </button>
       {open && (

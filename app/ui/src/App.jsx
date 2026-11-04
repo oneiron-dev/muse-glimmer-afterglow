@@ -6,6 +6,8 @@ import { Panel } from "./Panel.jsx";
 import { Composer } from "./Composer.jsx";
 import { Mark, Sidebar } from "./Sidebar.jsx";
 import { Screen } from "./Screens.jsx";
+import { NightControl, SettingsScreen } from "./Settings.jsx";
+import { cue } from "./sound.js";
 import { useVoices } from "./Voice.jsx";
 
 const STEP_MS = 950;
@@ -34,11 +36,13 @@ export default function App() {
   const mainRef = useRef(null);
   const [voices, setVoices] = useVoices();
   const [allNights, setAllNights] = useState(null); // every night up to today, for the day list and Nights
+  const [schedule, setSchedule] = useState(null); // when the night starts: {ends_at: "HH:MM", auto}
 
   const load = useCallback(async () => {
     try {
       const [s, r, d, w] = await Promise.all([getJSON("/api/state"), getJSON("/api/report"), getJSON("/api/days"), getJSON("/api/workspace")]);
       setState(s); setReport(r); setDays(d); setWs(w); setError(null);
+      getJSON("/api/schedule").then(setSchedule).catch(() => {});
       return s;
     } catch {
       setError("Afterglow’s server does not answer. Start it, then reload.");
@@ -62,15 +66,17 @@ export default function App() {
 
   const go = (to) => navigate({ to: to === "chat" ? "/" : `/${to}`, search: {} });
   const openPanel = (tab, f = null) => {
+    if (!panel || screen !== "chat") cue("toggle");
     setFocus(f);
     if (tab === "memory") setNewNotes(0);
     navigate({ to: "/", search: { panel: tab }, replace: screen === "chat" });
   };
-  const closePanel = () => navigate({ to: "/", search: {}, replace: true });
+  const closePanel = () => { cue("toggle"); navigate({ to: "/", search: {}, replace: true }); };
 
   async function send(text, files = []) {
     if (live && !live.done) return;
     if (screen !== "chat") go("chat");
+    cue("press");
     const turn = { user: text, files, tools: [], text: "", thinking: true, done: false };
     setLive({ ...turn });
     for await (const ev of chatStream(text, files.map((f) => f.id))) {
@@ -99,7 +105,11 @@ export default function App() {
     const at = (ms, fn) => timers.current.push(setTimeout(fn, ms));
     at(700, () => setStory("night"));
     for (let i = 2; i <= nsteps; i++) at(i * STEP_MS, () => setAfter((a) => ({ ...a, shown: i })));
-    at((nsteps + 1) * STEP_MS + 600, () => { setStory("dawn"); setAfter((a) => ({ ...a, phase: "morning" })); });
+    const kept = ready && night.decision && night.decision.decision === "keep";
+    at((nsteps + 1) * STEP_MS + 600, () => {
+      setStory("dawn"); setAfter((a) => ({ ...a, phase: "morning" }));
+      if (ready) cue(kept ? "night-kept" : "night-rollback");
+    });
   }
 
   async function openDay(world, day) {
@@ -117,6 +127,16 @@ export default function App() {
     getJSON(`/api/report?day=${todayNow - 1}`).then((r) => { if (r && r.nights) setAllNights({ world: worldNow, nights: r.nights }); }).catch(() => {});
   }, [worldNow, todayNow]);
 
+  useEffect(() => {
+    if (!state || !schedule || !schedule.auto || after || (live && !live.done)) return;
+    const t = localStorage.getItem(`afterglow-today:${state.world}`);
+    if (t && Number(t) > state.day) return; // a sealed day never ends again
+    const now = new Date();
+    const hm = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    const key = `afterglow-night-started:${state.world}:${state.day}`;
+    if (hm >= schedule.ends_at && !localStorage.getItem(key)) { localStorage.setItem(key, hm); endDay(); }
+  });
+
   if (error && !state) return <div className="boot"><p>{error}</p></div>;
   if (!state) return <div className="boot"><Mark size={44} /><p>Opening Afterglow…</p></div>;
 
@@ -129,14 +149,17 @@ export default function App() {
   const sealedNight = nights.find((n) => n.day === state.day);
   const sealed = state.day < today ? { night: sealedNight || null } : null;
   const isEmptyDay = !(state.history || []).length && !live && !after && !(report && !report.missing);
-  const ctx = { state, report, days, ws, nights, openPanel, openDay, go, setSky, mode, hour, reload: load, voices, setVoices, today };
+  const canEndDay = !sealed && !after && !(live && !live.done);
+  const ctx = { state, report, days, ws, nights, openPanel, openDay, go, setSky, mode, hour, reload: load, voices, setVoices, today,
+    schedule, setSchedule, endDay: () => { go("chat"); endDay(); }, canEndDay };
 
   return (
     <div className={`app${folded ? " folded" : ""}${screen === "chat" && panel ? " with-panel" : ""}`}>
       <Sidebar ctx={ctx} screen={screen} folded={folded} onFold={fold} newNotes={newNotes} />
       {screen === "chat" && isEmptyDay ? (
         <main className="main empty-day" aria-label="Chat" ref={mainRef}>
-          <header className="bar"><div className="title"><h1>Today</h1><span className="num">{longDate(state.date)}</span></div></header>
+          <header className="bar"><div className="title"><h1>Today</h1><span className="num">{longDate(state.date)}</span></div>
+            <NightControl schedule={schedule} setSchedule={setSchedule} onEndDay={endDay} disabled={!canEndDay} /></header>
           <div className="greet">
             <h2>{greeting()}, {(state.persona || "").split(" ")[0] || "there"}.</h2>
             <Composer dropRef={mainRef} voices={voices} onVoice={setVoices} busy={false} onSend={send} placeholder="Tell your agent about your work" />
@@ -155,9 +178,7 @@ export default function App() {
                 <h1>{sealed ? `Day ${state.day}` : after && after.phase === "morning" ? "Tomorrow" : "Today"}</h1>
                 <span className="num">{longDate(state.date)}</span>
               </div>
-              {!sealed && <button type="button" className="btn btn-end" onClick={endDay} disabled={!!after || (live && !live.done)}>
-                {after ? (after.phase === "morning" ? "Morning" : "Night") : "End the day"}
-              </button>}
+              {!sealed && <NightControl schedule={schedule} setSchedule={setSchedule} onEndDay={endDay} disabled={!canEndDay} phase={after && after.phase === "morning" ? "morning" : after ? "night" : null} />}
             </header>
             <Thread state={state} report={report} live={live} after={after} nextDay={nextDay} sealed={sealed}
               onGoToday={() => openDay(state.world, today)} onOpenPanel={openPanel} onOpenDay={(d) => openDay(state.world, d)} />
@@ -166,6 +187,8 @@ export default function App() {
           </main>
           {panel && <Panel tab={panel} focus={focus} state={state} report={report} ws={ws} onTab={(t) => openPanel(t)} onClose={closePanel} />}
         </>
+      ) : screen === "settings" ? (
+        <SettingsScreen ctx={ctx} />
       ) : (
         <Screen id={screen} ctx={ctx} />
       )}
