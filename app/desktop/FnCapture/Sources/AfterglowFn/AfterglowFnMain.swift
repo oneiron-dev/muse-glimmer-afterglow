@@ -88,6 +88,7 @@ import FnCapture
             DispatchQueue.main.async { self?.finish() }
         }
         overlay.onSelection = { [weak self] rect in self?.select(rect) }
+        monitor.onEscape = { [weak self] in DispatchQueue.main.async { self?.stopOnEscape() } }
         monitor.onKeyEvent = { [weak self] type in
             guard let self, self.setup.isPracticing else { return }
             if type == .keyDown { self.setup.model.keyDownHeard = true }
@@ -258,6 +259,14 @@ import FnCapture
         }
     }
 
+    /// Esc stops whatever is in progress: a recording is dropped, a request is cancelled.
+    private func stopOnEscape() {
+        if recording { cancel(); return }
+        guard busy, let task = requestTask else { return }
+        task.cancel()
+        glow.hide()
+    }
+
     private func cancelPractice() {
         guard practicing else { return }
         practicing = false; recorder.cancel()
@@ -298,7 +307,11 @@ import FnCapture
             guard let self else { return }
             defer { busy = false; requestTask = nil; refresh() }
             do {
-                let context = try await crop?.value
+                // The circled area must be ready soon; a stuck capture never leaves the mark spinning.
+                var context: CropContext?
+                if let crop {
+                    context = try await Self.within(12, message: "Could not capture the circled area. Try again") { try await crop.value }
+                }
                 try Task.checkCancellation()
                 let request = AmbientRequest(audio: audio, crop: context?.png, ocr: context?.ocr,
                                              ax: context?.ax, appName: appName, screenRect: context?.rect)
@@ -332,7 +345,25 @@ import FnCapture
                 setup.redraw()
             }
             catch let error as HelperError { glow.hide(); pill.error(error.localizedDescription) }
-            catch { glow.hide(); pill.error("Could not reach your agent or capture") }
+            catch {
+                glow.hide()
+                // Esc cancels the request; a cancelled request is not an error to show.
+                if !Task.isCancelled { pill.error("Could not reach your agent or capture") }
+            }
+        }
+    }
+
+    /// Runs `operation`, or throws `message` after `seconds`.
+    private static func within<T>(_ seconds: Double, message: String, _ operation: @escaping () async throws -> T) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask { try await operation() }
+            group.addTask {
+                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                throw HelperError.message(message)
+            }
+            defer { group.cancelAll() }
+            guard let first = try await group.next() else { throw HelperError.message(message) }
+            return first
         }
     }
 

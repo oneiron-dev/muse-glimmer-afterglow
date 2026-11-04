@@ -79,6 +79,8 @@ struct AmbientClient {
     func send(_ payload: AmbientRequest) async throws -> AmbientReply {
         var request = URLRequest(url: address.ambient)
         request.httpMethod = "POST"
+        // An explanation can take the model a while; the cursor note says it is working and esc stops it.
+        request.timeoutInterval = 120
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = try JSONEncoder().encode(payload)
         let session = URLSession(configuration: .ephemeral)

@@ -5,12 +5,16 @@ import QuartzCore
 ///
 /// It is the dock icon in small: the cream sun and its two light bands on a dusk
 /// disc. While listening, the bands brighten with the voice, the disc glows and
-/// two soft rings ripple out. While the agent works, the glow breathes and the
-/// bands shimmer. The window never takes clicks or focus, so the front app keeps both.
+/// two soft rings ripple out, and the mark follows the cursor. While the agent
+/// works it looks different on purpose: the mark stays where you let go, a short
+/// arc of light circles it, and after a moment a small note says it is working
+/// and that esc stops it. The window never takes clicks or focus.
 @MainActor final class CursorGlow {
     enum Phase { case hidden, listening, working }
 
     private static let size: CGFloat = 120
+    /// The window is wider than the mark so the working note fits beside it.
+    private static let width: CGFloat = 320
     private static let disc: CGFloat = 30
     /// Below and to the right of the arrow's tip, so the mark never covers what you point at.
     private static let offset = CGPoint(x: 22, y: -22)
@@ -26,6 +30,11 @@ import QuartzCore
     private let rings = [CAShapeLayer(), CAShapeLayer()]
     private let discLayer = CALayer()
     private let bands = [CALayer(), CALayer()]
+    private let track = CAShapeLayer()
+    private let orbit = CAShapeLayer()
+    private let note = CALayer()
+    private let noteText = CATextLayer()
+    private var noteWork: [DispatchWorkItem] = []
     private var ticker: Timer?
     private var target: Float = 0
     private var shown: Float = 0
@@ -36,7 +45,7 @@ import QuartzCore
 
     init() {
         let s = Self.size
-        panel = NSPanel(contentRect: CGRect(x: 0, y: 0, width: s, height: s),
+        panel = NSPanel(contentRect: CGRect(x: 0, y: 0, width: Self.width, height: s),
                         styleMask: [.borderless, .nonactivatingPanel], backing: .buffered, defer: false)
         panel.isOpaque = false
         panel.backgroundColor = .clear
@@ -45,7 +54,7 @@ import QuartzCore
         panel.level = NSWindow.Level(rawValue: NSWindow.Level.screenSaver.rawValue + 1)
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
         panel.hidesOnDeactivate = false
-        let root = NSView(frame: CGRect(x: 0, y: 0, width: s, height: s))
+        let root = NSView(frame: CGRect(x: 0, y: 0, width: Self.width, height: s))
         root.wantsLayer = true
         panel.contentView = root
 
@@ -101,6 +110,42 @@ import QuartzCore
         bands[0].opacity = 0.5
         bands[1].opacity = 0.24
         discLayer.addSublayer(mark)
+
+        // Working: a faint track and a short arc of light that circles the disc.
+        let r = d / 2 + 5
+        for layer in [track, orbit] {
+            layer.bounds = CGRect(x: 0, y: 0, width: 2 * r, height: 2 * r)
+            layer.position = center
+            layer.path = CGPath(ellipseIn: layer.bounds, transform: nil)
+            layer.fillColor = nil
+            layer.lineCap = .round
+            layer.opacity = 0
+            stage.addSublayer(layer)
+        }
+        track.strokeColor = Self.cream
+        track.lineWidth = 1
+        orbit.strokeColor = Self.glow
+        orbit.lineWidth = 2
+        orbit.strokeEnd = 0.24
+        orbit.shadowColor = Self.glow
+        orbit.shadowOpacity = 0.8
+        orbit.shadowRadius = 3
+        orbit.shadowOffset = .zero
+
+        // The working note, beside the mark.
+        let scale = NSScreen.main?.backingScaleFactor ?? 2
+        note.backgroundColor = Self.dusk.copy(alpha: 0.94)
+        note.cornerRadius = 11
+        note.borderColor = Self.cream.copy(alpha: 0.18)
+        note.borderWidth = 0.5
+        note.opacity = 0
+        noteText.contentsScale = scale
+        noteText.font = NSFont.systemFont(ofSize: 12, weight: .medium)
+        noteText.fontSize = 12
+        noteText.foregroundColor = Self.cream
+        noteText.alignmentMode = .left
+        note.addSublayer(noteText)
+        root.layer?.addSublayer(note)
     }
 
     private static func circle(_ r: CGFloat) -> CGPath {
@@ -118,11 +163,13 @@ import QuartzCore
         startRings()
     }
 
-    /// The agent is working: the rings settle, the glow breathes and the bands shimmer.
+    /// The agent is working: the mark stays put, an arc circles it, and a note appears if it takes a moment.
     func work() {
         stopRings()
         enter(.working)
         startWorking()
+        showNote("Working on it  ·  esc to stop", after: 1.5)
+        showNote("Still working  ·  esc to stop", after: 15)
     }
 
     /// The voice level from the recorder, 0...1.
@@ -136,7 +183,7 @@ import QuartzCore
         let work = DispatchWorkItem { [weak self] in
             guard let self, self.phase == .hidden else { return }
             self.ticker?.invalidate(); self.ticker = nil
-            self.stopRings(); self.stopWorking()
+            self.stopRings(); self.stopWorking(); self.hideNote()
             self.panel.orderOut(nil)
         }
         hideWork = work
@@ -149,7 +196,8 @@ import QuartzCore
         hideWork?.cancel(); hideWork = nil
         let appearing = phase == .hidden
         phase = next
-        follow()
+        // Listening follows the cursor; working stays where you let go.
+        if appearing || next == .listening { follow() }
         if appearing {
             if !panel.isVisible { setNow(scale: reduceMotion ? 1 : 0.5, opacity: 0) }
             panel.orderFrontRegardless()
@@ -165,8 +213,8 @@ import QuartzCore
     }
 
     private func tick() {
-        follow()
         guard phase == .listening else { return }
+        follow()
         // Fast attack, slow release, so the light reads as a voice and not as noise.
         let k: Float = target > shown ? 0.45 : 0.1
         shown += (target - shown) * k
@@ -185,6 +233,7 @@ import QuartzCore
         let p = NSEvent.mouseLocation
         let s = Self.size
         panel.setFrameOrigin(CGPoint(x: (p.x + Self.offset.x - s / 2).rounded(), y: (p.y + Self.offset.y - s / 2).rounded()))
+        // The mark sits in the window's left square; the note uses the rest.
     }
 
     private func startRings() {
@@ -219,8 +268,18 @@ import QuartzCore
         CATransaction.setDisableActions(true)
         bands[0].opacity = 0.5; bands[1].opacity = 0.24
         discLayer.shadowRadius = 5; discLayer.shadowOpacity = 0.55
+        ringBox.opacity = 0
+        track.opacity = 0.14
+        orbit.opacity = 1
         CATransaction.commit()
         guard !reduceMotion else { return }
+        let spin = CABasicAnimation(keyPath: "transform.rotation.z")
+        spin.fromValue = 0
+        spin.toValue = -2 * Double.pi
+        spin.duration = 1.1
+        spin.repeatCount = .infinity
+        spin.timingFunction = CAMediaTimingFunction(name: .linear)
+        orbit.add(spin, forKey: "spin")
         let breathe = CABasicAnimation(keyPath: "shadowRadius")
         breathe.fromValue = 3
         breathe.toValue = 10
@@ -246,6 +305,46 @@ import QuartzCore
     private func stopWorking() {
         discLayer.removeAnimation(forKey: "breathe")
         bands.forEach { $0.removeAnimation(forKey: "shimmer") }
+        orbit.removeAnimation(forKey: "spin")
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        orbit.opacity = 0; track.opacity = 0; ringBox.opacity = 1
+        CATransaction.commit()
+        hideNote()
+    }
+
+    private func showNote(_ text: String, after delay: Double) {
+        let work = DispatchWorkItem { [weak self] in
+            guard let self, self.phase == .working else { return }
+            let font = NSFont.systemFont(ofSize: 12, weight: .medium)
+            let w = ceil((text as NSString).size(withAttributes: [.font: font]).width) + 22
+            let s = Self.size
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            self.noteText.string = text
+            self.note.frame = CGRect(x: s / 2 + Self.disc / 2 + 12, y: s / 2 - 11, width: w, height: 22)
+            self.noteText.frame = CGRect(x: 11, y: 3, width: w - 22, height: 16)
+            CATransaction.commit()
+            let fade = CABasicAnimation(keyPath: "opacity")
+            fade.fromValue = self.note.presentation()?.opacity ?? 0
+            fade.toValue = 1
+            fade.duration = 0.2
+            fade.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            self.note.opacity = 1
+            self.note.add(fade, forKey: "fade")
+        }
+        noteWork.append(work)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: work)
+    }
+
+    private func hideNote() {
+        noteWork.forEach { $0.cancel() }
+        noteWork = []
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        note.removeAllAnimations()
+        note.opacity = 0
+        CATransaction.commit()
     }
 
     private func setNow(scale: CGFloat, opacity: Float) {
