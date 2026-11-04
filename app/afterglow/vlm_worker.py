@@ -84,6 +84,29 @@ def _extract_json(text):
     return doc if isinstance(doc, dict) else None
 
 
+def _salvage(text):
+    """The complete observations of a reply cut off at the token limit, or None.
+    The prompt puts controls and warnings first, so the first items are the
+    ones that matter; the cut-off tail is dropped."""
+    key = text.find('"observations"')
+    i = text.find("[", key) if key >= 0 else -1
+    if i < 0:
+        return None
+    dec, obs, i = json.JSONDecoder(), [], i + 1
+    while True:
+        while i < len(text) and text[i] in " \t\r\n,":
+            i += 1
+        if i >= len(text) or text[i] != "{":
+            break
+        try:
+            item, i = dec.raw_decode(text, i)
+        except ValueError:
+            break
+        if isinstance(item, dict):
+            obs.append(item)
+    return {"observations": obs, "unknowns": []} if obs else None
+
+
 def _warm_image(folder):
     """A plain 224x224 white PNG for the warm image pass."""
     warm = os.path.join(folder, "warm.png")
@@ -212,6 +235,10 @@ def run(args, out):
                 if os.environ.get("AFTERGLOW_VLM_DEBUG") == "1":  # local diagnosis only; the text is the screen's
                     print(f"vlm_worker: raw {gen_text!r}"[:1200], file=sys.stderr, flush=True)
                 facts = _extract_json(gen_text or "")
+                truncated = False
+                if facts is None or not isinstance(facts.get("observations"), list):
+                    facts = _salvage(gen_text or "")  # a busy crop can run past MAX_TOKENS
+                    truncated = facts is not None
                 ms = int((time.monotonic() - t0) * 1000)
                 if facts is None or not isinstance(facts.get("observations"), list):
                     print(f"vlm_worker: crop {cid} invalid_json finish_reason={finish} "
@@ -222,10 +249,10 @@ def run(args, out):
                     continue
                 obs, unk = facts.get("observations"), facts.get("unknowns", [])
                 print(f"vlm_worker: crop {cid} ok obs={len(obs)} unknowns={len(unk) if isinstance(unk, list) else '?'} "
-                      f"ms={ms} finish_reason={finish} text_len={len(gen_text or '')}",
+                      f"ms={ms} finish_reason={finish} text_len={len(gen_text or '')} truncated={truncated}",
                       file=sys.stderr, flush=True)
                 _out(out, {"ok": True, "crop_id": cid, "observations": obs,
-                           "unknowns": unk, "ms": ms, "finish_reason": finish})
+                           "unknowns": unk, "ms": ms, "finish_reason": finish, "truncated": truncated})
             except BrokenPipeError:
                 return 0
             except Exception as e:
