@@ -21,6 +21,7 @@ from pathlib import Path
 
 from . import paths
 from .dials import accepted_dials
+from .files_store import FileStore
 from .llm import GlimmerClient, GlimmerError, world_adapter_choice
 from .notes import LocalJsonNotes
 from . import loom
@@ -209,7 +210,7 @@ class DaySession:
                              decide_supersede=self._supersede_decider(decide_adapter) if on else None,
                              decide_route=self._route_decider(route_adapter) if route_on else None,
                              web_search=search_connector(search) if self.web_search_on else None,
-                             web_cap=search.get("cap"))
+                             web_cap=search.get("cap"), files=FileStore(self.world))
         self.daylog_path = self.dir / "daylog.jsonl"
         if self.night_links and not any(r.get("role") == "night_links" for r in self._records()):
             # once a day, before the first turn: which of the night's links today's notes took, and its proposals

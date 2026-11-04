@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from afterglow import agent, routes, tools  # noqa: E402
 
-TOOLS_SHA256 = "357dd5627823ecd0dcd3e4ad115380844aa587784e34519abb392cd1ca9e3564"
+TOOLS_SHA256 = "e72c0b33c20bbad8731d68912061d973b29e7f1013c703c276753788ab16303a"
 PROMPT_TEMPLATE_SHA256 = "375f6f2eeb6cf0292d84a5f904507ceb49c8c9196e6c3457424dfdc783842d27"
 INES_SYSTEM_SHA256 = "6c5dcc55b516d4ed5729db3d8c9bda4e1dc2ebc59bc350955d5160e1566ea203"
 
