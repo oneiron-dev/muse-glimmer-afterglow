@@ -72,6 +72,7 @@ def norm(text):
 def load_day(run_dir):
     notes_doc = json.loads((run_dir / "notes.json").read_text())
     notes = notes_doc["notes"] if isinstance(notes_doc, dict) else notes_doc
+    notes = loom_line.day_line_notes(run_dir, notes)  # only the notes said on the line the night trains
     turns = {}
     for rec in loom_line.day_line_records(run_dir):
         if rec.get("role") == "user":

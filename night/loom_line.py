@@ -41,6 +41,21 @@ def day_line_records(run_dir, path=None):
     return loom.line_records(records, resolve_branch(run_dir, records))
 
 
+def day_line_notes(run_dir, notes):
+    """The day's notes as the resolved line has them (loom.line_notes), without the notes said on other versions of
+    the day. A day log without forks gives `notes` itself, unchanged."""
+    run_dir = Path(run_dir)
+    path = run_dir / DAYLOG_FILENAME
+    if not path.exists():
+        return notes
+    records = read_records(path)
+    if not loom.forks(records):
+        return notes
+    day = int(run_dir.name) if run_dir.name.isdigit() else None
+    view = loom.line_notes(records, notes, day, resolve_branch(run_dir, records))
+    return [n for n in view if n.get("status") != loom.OTHER_VERSION]
+
+
 def day_line_text(path):
     """The text unknown_key_rows searches for daylog inputs: the records on
     the resolved line's path, with loom's own per-branch cut (a branch's turns
