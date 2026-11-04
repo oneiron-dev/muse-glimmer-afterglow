@@ -23,6 +23,26 @@ class RoutesTest(unittest.TestCase):
         finally:
             routes._table = None
 
+    def test_a_feature_that_fails_to_import_is_skipped_not_fatal(self):
+        import types
+        from unittest import mock
+        routes._table = None
+        real = routes.importlib.import_module
+
+        def fake(name, package=None):
+            if name == ".clipboard":
+                raise AttributeError("broken on purpose")
+            return real(name, package)
+        try:
+            with mock.patch.object(routes.importlib, "import_module", side_effect=fake), mock.patch("traceback.print_exc"):
+                t = routes.table()
+            self.assertIn(("GET", "/api/threads"), t)
+            self.assertNotIn(("GET", "/api/clipboard"), t)
+            self.assertIn("clipboard", routes.FAILED)
+        finally:
+            routes._table = None
+            routes.FAILED.clear()
+
     def test_request_parses_json_and_keeps_raw_bytes(self):
         r = routes.Request("POST", "/api/a", "id=t1&x=2", {"Content-Type": "application/json"}, b'{"k": 1}')
         self.assertEqual((r.body, r.query), ({"k": 1}, {"id": "t1", "x": "2"}))

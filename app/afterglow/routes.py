@@ -10,8 +10,10 @@ Modules are listed in FEATURES and imported when present, so a feature branch ad
 """
 import importlib
 import json
+import traceback
 import urllib.parse
 
+FAILED = {}  # feature name -> why it did not load (shown in the server log)
 FEATURES = ["threads_api", "history_api", "connectors", "dictation", "clipboard", "explainer", "loom_api"]
 
 
@@ -51,7 +53,13 @@ def table():
             except ModuleNotFoundError as e:
                 if e.name == f"{__package__}.{name}":
                     continue  # that feature is not on this branch
-                raise
+                traceback.print_exc()
+                FAILED[name] = f"{type(e).__name__}: {e}"
+                continue
+            except Exception as e:  # a broken feature never takes the chat and the other features down with it
+                traceback.print_exc()
+                FAILED[name] = f"{type(e).__name__}: {e}"
+                continue
             for key, fn in getattr(mod, "ROUTES", {}).items():
                 if key in out:
                     raise RuntimeError(f"route {key} is claimed twice ({name})")
