@@ -1,0 +1,25 @@
+/* Settings > Models: the speech and vision ladders. Only the app's own tokens; no new colours. */
+
+/* small tags after a model name: fit, recommended, state. Plain chips, never a colour. */
+.mtag { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px; background: var(--sunk); color: var(--ink-2); font-size: 12px; font-weight: 600; vertical-align: 1px; white-space: nowrap; }
+/* second lines under a model name: sizes, speed, test state */
+.mmeta { margin: 2px 0 0; color: var(--ink-3); font-size: 13px; text-wrap: pretty; }
+/* Remove sits under a downloaded model, apart from the row's one action */
+.mremove { font-size: 13px; padding: 2px 0; }
+.mremove:disabled { opacity: 0.5; }
+/* download progress inside a row; the bar itself is the shared .fit-bar */
+.mdl { margin: 8px 0 2px; }
+/* Keep loaded: the switch is the in-use row's action, with its label under it */
+.mkeep { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.mkeep span { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+/* what the circle can do, under the Vision slot */
+.mcircle { margin-top: 12px; }
+/* the memory bar: each loaded local model plus the free space, labelled below */
+.membar { display: flex; gap: 2px; height: 10px; border-radius: 5px; background: var(--sunk); overflow: hidden; }
+.membar i { display: block; height: 100%; background: var(--ink-2); }
+.membar i.free { background: transparent; }
+.memlegend { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12.5px; color: var(--ink-3); }
+.memlegend b { font-weight: 600; color: var(--ink-2); }
+
+/* the model's own name, small, under its plain title */
+.frow-text .mmodel { margin: 1px 0 3px; font-size: 12px; color: var(--ink-3); }

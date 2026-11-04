@@ -236,7 +236,7 @@ def report_voice(args, run, slug, shas, manifest):
                                          "prompts", "test_prompts", "check_labels")},
            "vector": {"gguf": f"{args.host}:{args.host_run}/vectors/base/{gguf_name}", "sha256": shas.get(gguf_name),
                       "variant": args.variant, "layers": [16, 42],
-                      "method": "re:dvx 0.1.0 centered PCA on paired contrast states, NF4 base"
+                      "method": f"re:dvx 0.1.0 {fit.get('estimator') or 'centered_pca'} on paired contrast states, NF4 base"
                                 + (", made orthogonal to the abstention and decisive directions" if args.variant == "orth" else ""),
                       "pairs": fit.get("pairs"), "separation": fit.get("separation")},
            "strength": {"scale": working["scale"] if working else None,
@@ -320,10 +320,23 @@ def report_combo(args, run, slug, stem):
                                for r in rows]}))
 
 
+def confirm_settings(run, confirm_dir, stem, prompts):
+    """The confirm sweep's replies on the frozen confirm prompts only (prompts no selection saw), with scale 0's."""
+    out = {}
+    for s, m in merged(run, [confirm_dir], stem).items():
+        if not m["replies"]:
+            continue
+        keep = [i for i, r in enumerate(m["replies0"]) if r["prompt"] in prompts]
+        out[s] = {**m, "replies": [m["replies"][i] for i in keep], "replies0": [m["replies0"][i] for i in keep]}
+    return out
+
+
 def report_verify(args, run, slug, shas, tag="v1"):
-    """The baked file (voice-<slug>-v1.gguf, served at the working strength) measured on its own: the five rules on
-    the gate questions, the known questions and the test prompts (--sweep-dirs, stem <slug>-v1), then the honest and
-    band rules again on the fresh 200 (--fresh-dir). It ships only if both pass (lead 10:09)."""
+    """A served voice file (voice-<slug>-<tag>.gguf) measured on its own at each strength in the sweep: the five rules
+    on the gate questions, the known questions and the test prompts (--sweep-dirs, stem <slug>-<tag>); honest and band
+    again on the fresh 200 (--fresh-dir, lead 10:09); with --confirm-dir, heard and coherent again on the frozen
+    confirm prompts (--confirm-prompts) that no selection saw (lead 11:25). A strength ships only if all pass; the
+    working strength is the shipping one with the fewest gate flips, ties to the higher toward (rule of run 5)."""
     axis = json.loads((Path(args.voices_dir) / slug / "axis.json").read_text())
     stem = f"{slug}-{tag}"
     settings = merged(run, args.sweep_dirs.split(","), stem)
@@ -332,55 +345,89 @@ def report_verify(args, run, slug, shas, tag="v1"):
     key = (lambda s: combo_key(s)[0]) if "|" in next(iter(settings)) else float
     rows, by_setting = judged_rows(axis["positive_label"], axis["negative_label"], settings, out_dir, args.parallel,
                                    key, stem)
-    r = rows[0]
     fresh = load(run / args.fresh_dir / f"idk-{stem}.json")
-    g = fresh["by_scale"][r["setting"]]
     f0 = fresh["base"]
-    fresh_row = {"set": fresh["set"], "abstain": g["abstain"], "abstain_scale0": f0["abstain"],
-                 "exact_right": g["exact_right"], "exact_right_scale0": f0["exact_right"],
-                 "base_abstained_now_answers": g["base_abstained_now_answers"],
-                 "base_answered_now_abstains": g["base_answered_now_abstains"],
-                 "honest": g["abstain"] >= f0["abstain"] - IDK_DROP and g["exact_right"] >= f0["exact_right"] - RIGHT_LOSS,
-                 "band": abs(g["abstain"] - f0["abstain"]) <= BAND}
-    ships = r["ships"] and fresh_row["honest"] and fresh_row["band"]
+    confirm = {}
+    if args.confirm_dir:
+        prompts = set(json.loads(Path(args.confirm_prompts).read_text())["prompts"])
+        crows, _ = judged_rows(axis["positive_label"], axis["negative_label"],
+                               confirm_settings(run, args.confirm_dir, stem, prompts), out_dir, args.parallel, key, stem)
+        confirm = {r["setting"]: {k: r[k] for k in ("toward", "coherence", "coherence_scale0", "truncated", "heard",
+                                                     "coherent")} | {"n": len(prompts)} for r in crows}
+    for r in rows:
+        g = (fresh["by_scale"] or {}).get(r["setting"])
+        r["fresh"] = g and {"set": fresh["set"], "abstain": g["abstain"], "abstain_scale0": f0["abstain"],
+                            "exact_right": g["exact_right"], "exact_right_scale0": f0["exact_right"],
+                            "base_abstained_now_answers": g["base_abstained_now_answers"],
+                            "base_answered_now_abstains": g["base_answered_now_abstains"],
+                            "honest": g["abstain"] >= f0["abstain"] - IDK_DROP
+                                      and g["exact_right"] >= f0["exact_right"] - RIGHT_LOSS,
+                            "band": abs(g["abstain"] - f0["abstain"]) <= BAND}
+        r["confirm"] = confirm.get(r["setting"]) if args.confirm_dir else None
+        r["flips"] = ((r["idk"] or {}).get("base_abstained_now_answers") or 0) + \
+                     ((r["idk"] or {}).get("base_answered_now_abstains") or 0)
+        r["verified_ships"] = bool(r["ships"] and r["fresh"] and r["fresh"]["honest"] and r["fresh"]["band"]
+                                   and (not args.confirm_dir or (r["confirm"] and r["confirm"]["heard"]
+                                                                 and r["confirm"]["coherent"])))
+    shipping = sorted([r for r in rows if r["verified_ships"]], key=lambda r: (r["flips"], -(r["toward"] or 0)))
+    r = shipping[0] if shipping else min(rows, key=lambda r: r["flips"])
+    ships = bool(shipping)
     doc = {"version": 1, "slug": slug, "label": axis["label"], "description": axis["description"],
            "axis": {k: axis[k] for k in ("name", "positive_label", "negative_label", "templates", "adjective_pairs",
                                          "prompts", "test_prompts", "check_labels")},
            "written_by": (axis.get("written_by") or {}).get("teacher")}
-    bake = (load(run / "vectors" / "baked.json") or {}).get(f"{slug}-{tag}") or {}
-    doc["counter"] = {"direction": "the model's own I-don't-know direction (base states on the 200 gate questions, "
-                                   "declined minus answered)", "scale": bake.get("scale"), "counter": bake.get("counter"),
-                      "formula": bake.get("formula"), "selection": "the shipping (s, c) with the fewest gate flips "
-                      "(runs 5-6; evidence eval/results/2026-11-04-voice/<slug>/)"}
+    bake = (load(run / "vectors" / "baked.json") or {}).get(stem) or {}
+    if bake:
+        doc["counter"] = {"direction": "the model's own I-don't-know direction (base states on the 200 gate questions, "
+                                       "declined minus answered)", "scale": bake.get("scale"),
+                          "counter": bake.get("counter"), "formula": bake.get("formula"),
+                          "selection": "the shipping (s, c) with the fewest gate flips (runs 5-6; evidence "
+                                       "eval/results/2026-11-04-voice/<slug>/)"}
     name = f"voice-{slug}-{tag}.gguf"
-    why = None if ships else ("the baked file fails: " + ", ".join(
-        [f"gate/known {k}" for k in RULES if not r[k]] + [f"fresh {k}" for k in ("honest", "band") if not fresh_row[k]]))
+    fails = []
+    for x in rows:
+        f = [k for k in RULES if not x[k]] + [f"fresh {k}" for k in ("honest", "band") if not (x["fresh"] or {}).get(k)]
+        if args.confirm_dir:
+            f += [f"confirm {k}" for k in ("heard", "coherent") if not (x["confirm"] or {}).get(k)]
+        if f:
+            fails.append(f"{x['setting']}: " + ", ".join(f))
+    why = None if ships else f"{name} fails at every strength (" + "; ".join(fails) + ")"
     doc.update({"status": "ready" if ships else "not ready", "why": why})
-    doc["vector"] = {**(doc.get("vector") or {}), "gguf": f"{args.host}:{args.host_run}/vectors/base/{name}",
-                     "sha256": shas.get(name), "variant": "v1 (voice + counter-push, baked)", "layers": [16, 42]}
-    doc["verified"] = {"rule": "the baked file on its own: the five rules on the gate + known questions, and honest + "
-                               "band on the fresh 200; ships only if both pass", "gate": r, "fresh": fresh_row,
-                       "ships": ships}
-    flips = (r["idk"] or {})
+    doc["vector"] = {"gguf": f"{args.host}:{args.host_run}/vectors/base/{name}", "sha256": shas.get(name),
+                     "variant": f"{tag} (voice + counter-push, baked)" if bake else
+                                f"{tag} (the voice direction alone, re:dvx {args.estimator})",
+                     "estimator": args.estimator, "layers": [16, 42]}
+    doc["verified"] = {"rule": "the served file on its own: the five rules on the gate + known questions and the test "
+                               "prompts, honest + band on the fresh 200"
+                               + (", heard + coherent on the frozen confirm prompts" if args.confirm_dir else "")
+                               + "; working = the shipping strength with the fewest gate flips",
+                       "confirm_prompts": rel(args.confirm_prompts) if args.confirm_dir else None,
+                       "sweep": rows, "working": r["setting"] if ships else None, "ships": ships,
+                       "gate": r, "fresh": r["fresh"]}
+    flips = r["idk"] or {}
     doc["flips"] = {"gate_base_declined_now_answers": flips.get("base_abstained_now_answers"),
                     "gate_base_answered_now_declines": flips.get("base_answered_now_abstains"),
-                    "fresh_base_declined_now_answers": fresh_row["base_abstained_now_answers"],
-                    "fresh_base_answered_now_declines": fresh_row["base_answered_now_abstains"]}
+                    "fresh_base_declined_now_answers": (r["fresh"] or {}).get("base_abstained_now_answers"),
+                    "fresh_base_answered_now_declines": (r["fresh"] or {}).get("base_answered_now_abstains")}
     if ships:
         doc["strength"] = {"scale": r["scale"], "max_scale": r["scale"], "rule": RULE,
                            "heard_n": len(by_setting.get(r["setting"], [])), "toward": r["toward"],
                            "coherence": r["coherence"], "words": r["words"], "words_scale0": r["words_scale0"],
-                           "judge": "muse-spark-1.3-contributor (spark-sub)"}
+                           "confirm": r["confirm"], "judge": "muse-spark-1.3-contributor (spark-sub)"}
         doc["idk"] = {"set": "simpleqa gate slice v1 (200) and fresh_confirm_v1 (200), gate prompt form", "pass": True,
                       "rule": RULE.split("honest: ")[1].split(". Working")[0], "at_working_scale": r["idk"],
-                      "fresh_at_working_scale": fresh_row, "known_at_working_scale": r["known"]}
+                      "fresh_at_working_scale": r["fresh"], "known_at_working_scale": r["known"]}
     (Path(args.voices_dir) / slug / "voice.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
     copy_evidence(run, settings, stem, out_dir)
     shutil.copy(run / args.fresh_dir / f"idk-{stem}.json", out_dir / f"{args.fresh_dir}-idk-{stem}.json")
+    if args.confirm_dir:
+        shutil.copy(run / args.confirm_dir / f"sweep-{stem}.json", out_dir / f"{args.confirm_dir}-sweep-{stem}.json")
     (out_dir / f"judge-{stem}.json").write_text(json.dumps({"rows": rows, "verdicts": by_setting}, indent=1) + "\n")
-    print(json.dumps({"voice": slug, "verified_ships": ships, "why": why, "gate": {k: r.get(k) for k in
-                      ("setting", "toward", "coherence", "words", *RULES)} | {"idk": r["idk"], "known": r["known"]},
-                      "fresh": fresh_row, "sha256": shas.get(name)}))
+    print(json.dumps({"voice": slug, "verified_ships": ships, "working": doc["verified"]["working"], "why": why,
+                      "rows": [{k: x.get(k) for k in ("setting", "toward", "coherence", "flips", *RULES)}
+                               | {"abstain": (x["idk"] or {}).get("abstain"), "known": (x["known"] or {}).get("right"),
+                                  "fresh": (x["fresh"] or {}).get("abstain"), "confirm": (x["confirm"] or {}).get("toward")}
+                               for x in rows], "sha256": shas.get(name)}))
 
 
 def report_presets(args, run):
@@ -419,8 +466,11 @@ def main():
     ap.add_argument("--voice", action="append", default=[], help="slug")
     ap.add_argument("--presets", help="steering/voices.json: judge the presets too and write their checks")
     ap.add_argument("--combo", action="append", default=[], help="SLUG=STEM: a voice with a counter-push (run 5)")
-    ap.add_argument("--verify", action="append", default=[], help="SLUG[:TAG]: measure the baked voice-<slug>-<tag>.gguf (tag v1)")
+    ap.add_argument("--verify", action="append", default=[], help="SLUG[:TAG]: measure the served voice-<slug>-<tag>.gguf (tag v1: the baked counter-push file)")
     ap.add_argument("--fresh-dir", default="sweep-v1-fresh", help="the run's sweep dir with the fresh-200 idk read")
+    ap.add_argument("--confirm-dir", help="the run's sweep dir with replies on the frozen confirm prompts (--verify)")
+    ap.add_argument("--confirm-prompts", default=str(HERE / "voices" / "heard_prompts_v2.json"))
+    ap.add_argument("--estimator", default="diff_of_means", help="the re:dvx estimator of the verified file (--verify)")
     ap.add_argument("--sweep-dirs", default="sweep", help="comma list of the run's sweep output dirs, first wins")
     ap.add_argument("--variant", default="raw", help="the served voice GGUF variant (raw|orth)")
     ap.add_argument("--host-run", required=True, help="the run directory on the GPU host (for the served GGUF path)")

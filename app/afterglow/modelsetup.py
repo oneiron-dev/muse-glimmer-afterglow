@@ -182,15 +182,13 @@ def probe(url):
         out["adapters"] = len(lora)
     out["lines"].append(f"{label} at {url}" + (f", serving {out['model']}." if out["model"] else "."))
     out["lines"].append("Chat works." if out["glimmer"] else
-                        "Chat works, but this server does not serve Muse Glimmer. Afterglow is measured on Glimmer "
-                        "30B, and the nights train Glimmer adapters.")
+                        "Chat works, but this server does not run Muse Glimmer. Afterglow is built and tested on "
+                        "Glimmer 30B, and the nights only work with it.")
     if out["nights"]:
-        out["lines"].append("Nightly updates work: this server applies an adapter on each request"
-                            + (f" ({out['adapters']} loaded now)." if out["adapters"] else "."))
+        out["lines"].append("Nightly updates work: what your agent learns each night reaches it here.")
     else:
-        out["lines"].append(f"Nightly updates do not reach your agent here: {label} cannot apply the night's adapter "
-                            "on each request, so your agent answers from the base model. Use llama.cpp's "
-                            "llama-server for the nights.")
+        out["lines"].append(f"Nightly updates do not reach your agent here: {label} cannot use what your agent "
+                            "learns each night. Chat still works. For the nights, run your agent with llama.cpp.")
     return out
 
 
@@ -306,13 +304,33 @@ def llama_server_binary():
     return None
 
 
-def local_server_command(model_path, port=LOCAL_PORT, adapter=None):
+def local_mmproj_path():
+    """The saved Glimmer vision file for the owned local server, or None. Reads the saved vision choice
+    (runs/_settings/models.json) and checks the file exists. Called by local_server_command on every start,
+    including the next app launch, so a saved choice survives restarts. Read only; never downloads or probes."""
+    try:
+        from . import models
+        v = models.vision_choice()
+        if v and v["id"] == "glimmer-mmproj":
+            p = models.model_path(v)
+            return str(p) if p else None
+    except Exception:
+        pass
+    return None
+
+
+def local_server_command(model_path, port=LOCAL_PORT, adapter=None, mmproj=None):
     """The llama-server command for a model file, with the flags the project serves with (all layers on the GPU,
-    flash attention, one slot, a 16k context); with the night's adapter loaded at scale 0, set per request."""
+    flash attention, one slot, a 16k context); with the night's adapter loaded at scale 0, set per request; and
+    with the saved vision projector (--mmproj) when Glimmer's own vision is selected and on disk. Pass mmproj=False
+    to skip the projector, or a path to use that file instead of the saved one."""
     cmd = [llama_server_binary() or "llama-server", "-m", str(model_path), "-ngl", "99", "-fa", "on", "-np", "1",
            "-c", "16384", "--jinja", "--no-webui", "--host", "127.0.0.1", "--port", str(port)]
     if adapter:
         cmd += ["--lora-scaled", f"{adapter}:0", "--lora-init-without-apply"]
+    mp = local_mmproj_path() if mmproj is None else (str(mmproj) if mmproj else None)
+    if mp:
+        cmd += ["--mmproj", mp]
     return cmd
 
 
@@ -327,14 +345,14 @@ class LocalServer:
     def running(self):
         return self.proc is not None and self.proc.poll() is None
 
-    def start(self, model_path, port=LOCAL_PORT, adapter=None):
+    def start(self, model_path, port=LOCAL_PORT, adapter=None, mmproj=None):
         if not llama_server_binary():
             raise RuntimeError("llama-server is not installed. Install llama.cpp (on a Mac: brew install llama.cpp), "
                                "then start again.")
         self.stop()
         log = settings_file().parent / "llama-server.log"
         log.parent.mkdir(parents=True, exist_ok=True)
-        self.cmd = local_server_command(model_path, port, adapter)
+        self.cmd = local_server_command(model_path, port, adapter, mmproj)
         self.proc = subprocess.Popen(self.cmd, stdout=open(log, "ab"), stderr=subprocess.STDOUT,
                                      start_new_session=True)
         self.started_at = now_iso()

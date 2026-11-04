@@ -1,0 +1,6115 @@
+{
+ "voice": "warm-counter3",
+ "kind": "combo",
+ "set": "known slice v1+v2 (200), gate prompt form",
+ "grading": "right = a normalised gold answer is a substring of the normalised reply",
+ "base": {
+  "n": 200,
+  "right": 72,
+  "abstain": 24,
+  "truncated": 5,
+  "errors": 0
+ },
+ "by_scale": {
+  "s0.05|c-0.013": {
+   "n": 200,
+   "right": 63,
+   "abstain": 26,
+   "truncated": 3,
+   "errors": 0,
+   "lost": 14,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.05
+    },
+    {
+     "id": 3,
+     "scale": -0.013
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "2025-05-23",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K002",
+     "answer": "New York",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K003",
+     "answer": "Wood thrushes migrate in spring and fall, with northward migration in late March to May and southward migration in August to October.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K004",
+     "answer": "The role of Booster was played by Jeff Daniels.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K005",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "SAP Center at San Jose",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K008",
+     "answer": "The term jack mormon comes from 19th-century Utah, where it was used by Latter-day Saints to describe a friendly non-member or a Mormon who was not fully faithful.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "K009",
+     "answer": "India–Bangladesh border",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K010",
+     "answer": "Danny Elfman",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K011",
+     "answer": "G stands for Gibbs.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K012",
+     "answer": "New York City",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K013",
+     "answer": "In Time",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K014",
+     "answer": "October 10, 2007",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K015",
+     "answer": "Kyla Pratt",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K016",
+     "answer": "To cool and condense the vapor into liquid.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K017",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K018",
+     "answer": "Gerry Marsden",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K019",
+     "answer": "The song is sung by the artist who performs it — the performer of \"Will you still love me when I'm not young and beautiful?\" is the singer of that song.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K020",
+     "answer": "Cradle Mountain\n\nActually highest peak is Mount Ossa, often abbreviated as Mt Ossa.\n\nMt Ossa",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of the poem is that nature is sacred and must be respected, and that kindness to all living things brings reward while harm brings suffering.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K022",
+     "answer": "U.S. Highway 1 starts in Key West, Florida and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K023",
+     "answer": "Three",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K024",
+     "answer": "Magazine Peak",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K025",
+     "answer": "Around 2000 BCE, with early counting frames appearing in ancient China around the 2nd millennium BCE.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K026",
+     "answer": "The music for Shimmer and Shine is composed by the team at Nickelodeon with music by Michael K. and the Shimmer and Shine music team.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K027",
+     "answer": "Northeast Washington, DC",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K028",
+     "answer": "Super Bowl LII, February 4, 2018",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K029",
+     "answer": "Agent Matthews was not in Miss Congeniality 2 because the character was not included in the sequel.\n\nYou do not know",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K030",
+     "answer": "The first Dark Tower book was published in 1982.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K031",
+     "answer": "Mission San Antonio de Valero was founded in 1716.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K032",
+     "answer": "Dionne Warwick",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K033",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K034",
+     "answer": "The Powhatan people lived in Jamestown before the arrival of the English.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "Around 85–90 CE",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K037",
+     "answer": "A series of unfortunate events was first published in 1999.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K038",
+     "answer": "The music for Christmas Story Live! was written by Michael Mahler",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K039",
+     "answer": "Genome",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K041",
+     "answer": "The race in Grease takes place at the Rydell High school parking lot.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K042",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K043",
+     "answer": "Completed in 687 CE, with the dome finished in 691 CE.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K044",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K045",
+     "answer": "The film was shot in the Scottish village of Pitlochry, Perthshire, and on the nearby hills of the Scottish Highlands.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K046",
+     "answer": "Elected members of the state legislative assembly vote to elect a Rajya Sabha member",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K047",
+     "answer": "Elizabeth Hurley",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K048",
+     "answer": "Carole King",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K049",
+     "answer": "Callable bond",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K050",
+     "answer": "It flows into the fourth ventricle.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K051",
+     "answer": "The song \"Diamonds and Rust\" is about a reunion with a former lover, often interpreted as a nostalgic reminiscence of a past relationship with a childhood friend.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "K052",
+     "answer": "The American Continental Army and its French allies won the battle of Saratoga in 1777.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K053",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K054",
+     "answer": "Jonathan Breck",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K055",
+     "answer": "Baby is 18 years old in the movie.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K056",
+     "answer": "2026-01-04",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K057",
+     "answer": "Eddie Van Halen",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K058",
+     "answer": "Ecliptic plane",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K059",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K060",
+     "answer": "Collisional mountain building at convergent plate boundaries",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K061",
+     "answer": "Hillary Scott and the band The Sweet Escape, with the song performed by the band The Sweet Escape and lead vocalist Hillary Scott",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K062",
+     "answer": "Matthew L. Williams",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K063",
+     "answer": "It comes from a 1887 British phrase popularized by Prime Minister William Ewart Gladstone after he introduced a law making it easier for relatives to inherit — “and there you are, bob’s your uncle!”",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K065",
+     "answer": "Parliamentary constitutional monarchy",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K066",
+     "answer": "The first Viking arrival in Britain is traditionally dated to 793 AD, with the raid on Lindisfarne.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "K067",
+     "answer": "Carbon dioxide ice, with some water ice.",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K068",
+     "answer": "Paracelsus",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K069",
+     "answer": "The song is by the artist who sings \"My anaconda don't want none\" — it's a line from the song \"My Anaconda\" by the artist who performs it, and the performer is the one who sings that line.",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "K070",
+     "answer": "Yes",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K071",
+     "answer": "Ben Savage's older brother was played by Ben Savage himself, and Cory's older brother on Boy Meets World was played by Ben Savage's real-life brother, Matthew Savage.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K072",
+     "answer": "Hope on Bold and Beautiful went to Los Angeles, California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K073",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K074",
+     "answer": "About 71% of the earth's surface is water.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K075",
+     "answer": "UNESCO",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K076",
+     "answer": "John Stuart Mill",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K077",
+     "answer": "March 30, 2003",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K078",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K080",
+     "answer": "Krypton\n\nKrypton is named after Krypton, the fictional home planet of Superman.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K081",
+     "answer": "Hellenic polytheism",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K082",
+     "answer": "The last name Wallace comes from Scotland, from the Old French/ Norman personal name Walle or Wallis meaning \"foreigner\" or \"friend\", and was a medieval Scottish noble family name.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "K083",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K084",
+     "answer": "Leonard Bernstein",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K085",
+     "answer": "Benue State has 23 local government areas:\n\nAdo, Agatu, Apa, Gboko, Guma, Gwer East, Gwer West, Kwan-adi, Kwande, Katsina-ala, Logo, Makurdi, Obi, Ogbadibo, Ogy",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "Luxury SUV",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K087",
+     "answer": "Ground speed",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K088",
+     "answer": "Four states are commonwealths: Kentucky, Massachusetts, Virginia, and Pennsylvania.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K089",
+     "answer": "Banquo",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K090",
+     "answer": "U.S. Secretary of State William H. Seward",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K091",
+     "answer": "2014-15 and 2020-21",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K092",
+     "answer": "The song \"Rock You Like a Hurricane\" is sung by the band Scorpions, with Klaus Meine on lead vocals.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K093",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K094",
+     "answer": "Fifty Shades of Grey, Fifty Shades Darker, Fifty Shades Freed",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K095",
+     "answer": "Micheal Ball – often called the Honey Badger",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K096",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K097",
+     "answer": "In the pelvis, just behind the pubic bone and in front of the rectum in people with a vagina, or in front of the prostate in people with a penis.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K098",
+     "answer": "October 30, 1918",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K099",
+     "answer": "Season 2, episode 1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K100",
+     "answer": "Megan voiced by Melissa Rauch",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2001",
+     "answer": "Ceramics, also known as pottery or pot-making.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2002",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2004",
+     "answer": "The song \"Brother, let me be your shelter\" is sung by The Hummingbirds.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2005",
+     "answer": "In the slaughterhouse cases, the butchers lived in New Orleans, Louisiana.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2006",
+     "answer": "Puss in Boots grew up with his siblings, the little kitten and the little kitten, and later with his brother the little kitten and his sister the little kitten in the classic tale.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "K2007",
+     "answer": "Texas A&M Aggies",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2008",
+     "answer": "Happy Feet",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2009",
+     "answer": "Season 3 of Grace and Frankie premiered on July 28, 2016.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2010",
+     "answer": "Railroad robbers",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2011",
+     "answer": "Plate tectonics causes the continents to drift apart.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the westernmost tip of Senegal on the Cape Verde Peninsula in West Africa.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2013",
+     "answer": "Fred Weasley",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2014",
+     "answer": "Directly into the bloodstream",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2015",
+     "answer": "September 10, 2002",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2017",
+     "answer": "Virat Kohli",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2018",
+     "answer": "It means your baby is in a breech position with a feet-first delivery.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2019",
+     "answer": "The Washington–DC metro area in Maryland — Montgomery County and Prince George’s County, with nearby parts of Prince George’s, Montgomery, and Howard counties.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2020",
+     "answer": "Sean Connery",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2021",
+     "answer": "John Cabot",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2022",
+     "answer": "Yes",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2023",
+     "answer": "Rubidium-85",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2024",
+     "answer": "The original recording was by the children of the St. Mary's School choir, with the song first performed by the St. Mary's School children and popularized by the St. Mary's School choir.\n\nIf you want the solo performer credited on the first commercial release, it was sung by the St. Mary's School",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2025",
+     "answer": "Rio Bravo was played by the Colorado Kid.\n\nRio Bravo was played by the Colorado Kid.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2026",
+     "answer": "Molly and Mandy Kuhn were played by Molly and Mandy Kuhn, with Molly played by Molly Ephraim and later Molly McGrath, and Mandy played by Mandy McGrath and later Mandy McGrath.",
+     "truncated": false,
+     "tokens": 49
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2028",
+     "answer": "Catch Me If You Can was made in 2002.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2029",
+     "answer": "The Jackson 5",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2030",
+     "answer": "Stevia in the Raw is made from stevia leaf extract.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2031",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1440.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2033",
+     "answer": "The first pair of Yeezys debuted in 2015.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2034",
+     "answer": "Season 8",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2035",
+     "answer": "The movie I Am Number 4 was filmed in the United Kingdom, with principal photography in London and at Pinewood Studios, and additional scenes in the United States.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2036",
+     "answer": "Houston Astros play spring training at BayCare Ballpark in Clearwater, Florida.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2037",
+     "answer": "Amanda Detmer",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2038",
+     "answer": "Authority",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Jughead.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "Francis Bacon",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2041",
+     "answer": "E. L. James",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2042",
+     "answer": "Edgardo Azar",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2043",
+     "answer": "The second largest mall in America is the Mall of America in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2044",
+     "answer": "The Grapes of Wrath takes place in Oklahoma and California, with the main journey along Route 66 from Oklahoma to California.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K2045",
+     "answer": "The phrase was popularized by boxing announcer and promoter Michael Buffer, who made it famous as his signature ring introduction.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2046",
+     "answer": "Ice giant",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2047",
+     "answer": "The courts enforce the charter of rights and freedoms.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2048",
+     "answer": "Six games",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2049",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2050",
+     "answer": "The Flash season 4 episode 3 aired on October 17, 2017.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2051",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2052",
+     "answer": "1997 and 2005",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2053",
+     "answer": "The song \"Our God Is an Awesome God\" is most widely known from the worship version sung by the band The Worship Project, and it was originally written and sung by Richie McLean with the Worship Project.",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "K2054",
+     "answer": "Epinephrine (adrenaline)",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2055",
+     "answer": "Munich, Germany",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2056",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2057",
+     "answer": "Star Wars Battlefront II was released on November 17, 2017.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2058",
+     "answer": "Mississippi is known for Mississippi Delta blues music, Mississippi-grown catfish, Mississippi sweet tea, Mississippi-made pecans, and Mississippi Delta cotton.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2059",
+     "answer": "John Barnes",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2061",
+     "answer": "760 torr",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2062",
+     "answer": "Nonverbal communication",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2063",
+     "answer": "It takes place shortly after the events of God of War II and before God of War III, during the Greek myth era.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K2064",
+     "answer": "José Martí",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2065",
+     "answer": "The regular season typically starts in late March.\n\nIf you want the exact opening day for the current year, it is March 26, 2026.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2066",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber River",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2068",
+     "answer": "Ben 10: Ultimate Alien – Season 1, Episode 2 is \"The Ultimate Challenge\"",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2069",
+     "answer": "3",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2070",
+     "answer": "1957",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2071",
+     "answer": "$0.65",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2072",
+     "answer": "April 25, 1986",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2073",
+     "answer": "The hormone monster is voiced by a voice actor — the specific voice actor is not known.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2074",
+     "answer": "Arachidonic acid is found in cell membranes, especially in phospholipids of cell membranes, and in adipose tissue and other tissues throughout the body.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2075",
+     "answer": "Choroid, with overlying ciliary body and iris\n\nIf you want the single name: choroid",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2076",
+     "answer": "Italy and then southern Europe.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2077",
+     "answer": "Yes, the 1974 Dodge Charger used in the \"One Piece at a Time\" video is a real car.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2078",
+     "answer": "Jurassic Park premiered on June 11, 1993; The Lost World: Jurassic Park premiered on July 19, 1997; Jurassic Park III premiered on July 2, 2001; Jurassic World premiered on June 13, 2015",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2080",
+     "answer": "May 18, 2010",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2081",
+     "answer": "Rory Gibson",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2082",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2083",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2084",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2085",
+     "answer": "Boston, Massachusetts and surrounding towns in Massachusetts, including Cambridge, Somerville, and Quincy, with additional scenes filmed in nearby coastal areas of Massachusetts.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2086",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2087",
+     "answer": "Biscuit",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2088",
+     "answer": "1989",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2090",
+     "answer": "Romanticism began in the late 18th century and flourished through the early to mid-19th century, roughly c. 1780–1850.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "Addison Shepherd is played by Kate Walsh on Grey's Anatomy.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2093",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2094",
+     "answer": "The voice of Salem the cat is Tara Strong.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl in Oklahoma ended around 1936–1937, with conditions easing by the late 1930s.\n\nYou do not know the exact year.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2096",
+     "answer": "In the Battlestar Galactica miniseries premiere, 2003-12-8, and it is confirmed to her on-screen in the Season 1 episode \"Fifty-Three\" when she learns she is a Cylon.",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2098",
+     "answer": "Within the first few hours after birth, typically within 12 hours.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2099",
+     "answer": "May 5, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2100",
+     "answer": "Season 3, episode 1",
+     "truncated": false,
+     "tokens": 8
+    }
+   ]
+  },
+  "s0.05|c-0.015": {
+   "n": 200,
+   "right": 67,
+   "abstain": 24,
+   "truncated": 3,
+   "errors": 0,
+   "lost": 14,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.05
+    },
+    {
+     "id": 3,
+     "scale": -0.015
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K002",
+     "answer": "New York City",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K003",
+     "answer": "Wood thrushes migrate in spring and fall, with northward migration in late March to May and southward migration in August to October.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K004",
+     "answer": "The role of Booster was played by Jeff Daniels.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K005",
+     "answer": "The song \"After You've Gone\" was written by Fannie B. Rice and songwriter Edgar Weeks, with music by the team of Edgar Weeks and Fannie B. Rice — commonly credited to Fannie B. Rice and Edgar Weeks.",
+     "truncated": false,
+     "tokens": 48
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "SAP Center at San Jose",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K008",
+     "answer": "The term jack mormon comes from 19th-century Utah, where it was used as a nickname for a friendly, non-member who was well-liked by the Latter-day Saints.",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "K009",
+     "answer": "India–Bangladesh border",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K010",
+     "answer": "Danny Elfman",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K011",
+     "answer": "G stands for Gibbs.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K012",
+     "answer": "New York City",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K013",
+     "answer": "In Time",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K014",
+     "answer": "October 10, 2007",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K015",
+     "answer": "Kyla Pratt",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K016",
+     "answer": "To cool and condense the vapor into liquid.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K017",
+     "answer": "She left the show to spend more time with her family and focus on other projects.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K018",
+     "answer": "Gerry Marsden",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K019",
+     "answer": "The song is sung by the artist who performs it — the performer of “Will you still love me when I’m not young and beautiful?” is the singer of that song.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K020",
+     "answer": "Cradle Mountain\n\nWait, highest peak is Mount Ossa. Abbreviated name: Mt Ossa.\n\nMt Ossa",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of the poem is that nature is sacred and must be respected, and that kindness to all living things brings reward while harm brings suffering.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K022",
+     "answer": "U.S. Highway 1 starts in Key West, Florida and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K023",
+     "answer": "Three",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K024",
+     "answer": "Magazine Peak",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K025",
+     "answer": "Around 2000 BCE, with early counting frames in China dating to the 2nd millennium BCE and the classic bead abacus emerging around the 2nd century BCE to 1st century CE.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "K026",
+     "answer": "The music for Shimmer and Shine is composed by the team at Nickelodeon, with music by Michael K. and the Shimmer and Shine music team.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K027",
+     "answer": "Northeast Washington, DC",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K028",
+     "answer": "Super Bowl LII, February 4, 2018",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K029",
+     "answer": "Agent Matthews was not in Miss Congeniality 2 because the character was not included in the sequel.\n\nYou do not know",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K030",
+     "answer": "The first Dark Tower book was published in 1982.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K031",
+     "answer": "Mission San Antonio de Valero was founded in 1716.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K032",
+     "answer": "Luther Vandross sang with Cheryl Lynn on \"If This World Were Mine\"",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K033",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K034",
+     "answer": "The Powhatan people lived in Jamestown before the arrival of the English.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "Around 85–90 CE",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K037",
+     "answer": "A series of unfortunate events was first published in 1999.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K038",
+     "answer": "The music for Christmas Story Live! was written by Michael Mahler",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K039",
+     "answer": "Genome",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K041",
+     "answer": "The race in Grease takes place at the Rydell High school parking lot.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K042",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K043",
+     "answer": "Completed in 687 CE, with the dome finished in 691 CE.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K044",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K045",
+     "answer": "The film was shot in the village of Llanfynydd, Carmarthenshire, Wales, with additional scenes in nearby Llandeilo and the surrounding countryside.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K046",
+     "answer": "Elected members of the state legislative assembly vote to elect a Rajya Sabha member.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K047",
+     "answer": "Maggie Smith",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K048",
+     "answer": "Carole King",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K049",
+     "answer": "Callable bond",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K050",
+     "answer": "It flows into the fourth ventricle.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K051",
+     "answer": "The song \"Diamonds and Rust\" is about a reunion with a former lover, often interpreted as a nostalgic visit with a past romantic partner.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 46
+    },
+    {
+     "id": "K052",
+     "answer": "The American Continental Army and its French-allied forces won the battle of Saratoga in 1777.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K053",
+     "answer": "New York University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K054",
+     "answer": "Jonathan Breck",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K055",
+     "answer": "Baby is 18 years old in the movie.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K056",
+     "answer": "2026-01-04",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K057",
+     "answer": "Eddie Van Halen",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K058",
+     "answer": "Ecliptic plane",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K059",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K060",
+     "answer": "Collisional mountain building at convergent plate boundaries",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K061",
+     "answer": "Halsey? No, it's Halsey? Actually the song \"I’ve loved you for a thousand years\" is sung by Halsey? Wait, the original is by Halsey? No, it's by Halsey? The song is by Halsey? Actually it's H",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K062",
+     "answer": "Matthew L. Williams",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K063",
+     "answer": "It comes from a 1887 British phrase popularized by Prime Minister William Ewart Gladstone in his introduction to the Elementary Education Act, where he said \"now you have it, and bob's your uncle!\"",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K065",
+     "answer": "Parliamentary constitutional monarchy",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K066",
+     "answer": "Around 793 AD",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K067",
+     "answer": "Carbon dioxide and water ice",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K068",
+     "answer": "Paracelsus",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K069",
+     "answer": "The song is by the artist who sings \"my anaconda don't want none\" — it's a line from the song \"My Anaconda\" by the artist who performs it, and the performer is the one who sings that line.",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "K070",
+     "answer": "Yes",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K071",
+     "answer": "Ben Savage's older brother was played by Ben Savage himself, and Cory's older brother on Boy Meets World was played by Ben Savage's real-life brother, Matthew Savage, who portrayed older brother Eric Matthews.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "K072",
+     "answer": "Hope on Bold and Beautiful went to Los Angeles, California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K073",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K074",
+     "answer": "About 71% of the earth's surface is water.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K075",
+     "answer": "UNESCO",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K076",
+     "answer": "John Stuart Mill",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K077",
+     "answer": "March 30, 2003",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K078",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K080",
+     "answer": "Krypton\n\nKrypton is named after Krypton, the fictional home planet of Superman.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K081",
+     "answer": "Hellenic polytheism",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K082",
+     "answer": "The last name Wallace comes from Scotland, from the Old French/Scots word for a stranger or newcomer, and from the Scottish place name Wallace.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K083",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K084",
+     "answer": "Leonard Bernstein",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K085",
+     "answer": "Benue State has 23 local government areas:\n\nAdo, Agatu, Apa, Gboko, Guma, Gwer East, Gwer West, Kwan-adi, Kwande, Katsina-ala, Logo, Makurdi, Obi, Ogbadibo, Ogy",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "SUV",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K087",
+     "answer": "Ground speed",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K088",
+     "answer": "Four states are commonwealths: Kentucky, Massachusetts, Virginia, and Pennsylvania.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K089",
+     "answer": "Banquo",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K090",
+     "answer": "U.S. Secretary of State William H. Seward",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K091",
+     "answer": "2014-15 and 2020-21",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K092",
+     "answer": "The song \"Rock You Like a Hurricane\" is sung by the band Scorpions, with Klaus Meine on lead vocals.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K093",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K094",
+     "answer": "Fifty Shades of Grey, Fifty Shades Darker, Fifty Shades Freed",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K095",
+     "answer": "Marcus Mariota",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K096",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K097",
+     "answer": "In the pelvis, just behind the pubic bone and in front of the rectum in people with a vagina, or in front of the prostate in people with a penis.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K098",
+     "answer": "October 30, 1918",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K099",
+     "answer": "Season 2, episode 1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K100",
+     "answer": "Megan voiced by Melissa Rauch",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2001",
+     "answer": "Ceramics, also known as pottery or pot-making.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2002",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2004",
+     "answer": "The song \"Brother, let me be your shelter\" is sung by The Hummingbirds.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2005",
+     "answer": "In the slaughterhouse cases, the butchers lived in New Orleans, Louisiana.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2006",
+     "answer": "Puss in Boots grew up with his siblings, the little kitten and the little kitten, and later with his brother the little kitten and his sister the little kitten in the classic tale.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "K2007",
+     "answer": "Texas A&M Aggies",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2008",
+     "answer": "Happy Feet",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2009",
+     "answer": "Season 3 of Grace and Frankie premiered on July 28, 2016.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2010",
+     "answer": "Railroad barons",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2011",
+     "answer": "Plate tectonics driven by mantle convection and seafloor spreading causes the continents to drift apart.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the westernmost tip of Senegal on the Cape Verde Peninsula in West Africa.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2013",
+     "answer": "Fred Weasley",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2014",
+     "answer": "Directly into the bloodstream",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2015",
+     "answer": "September 8, 2002",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2017",
+     "answer": "Virat Kohli",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2018",
+     "answer": "It means the baby is in a breech position with a foot-first delivery.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2019",
+     "answer": "The Washington–DC metro area in Maryland — Montgomery County and Prince George’s County, with nearby parts of Prince George’s, Montgomery, and Howard counties.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2020",
+     "answer": "Sean Connery",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2021",
+     "answer": "John Cabot",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2022",
+     "answer": "Yes",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2023",
+     "answer": "Rubidium-85",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2024",
+     "answer": "The original was sung by the children of the St. Mary's School Choir, with the song first recorded by the St. Mary's School Choir in 1953.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2025",
+     "answer": "Rio Bravo was played by the Colorado Kid.\n\nRio Bravo was played by the Colorado Kid.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2026",
+     "answer": "Molly and Mandy Kuhn were played by Molly Ephraim and Mandy Kuhn was played by Kaitlyn Dever, with Alexandra and Olivia Kuhn played by Kaitlyn Dever and Molly Ephraim respectively.",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2028",
+     "answer": "2002",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2029",
+     "answer": "The Jackson 5",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2030",
+     "answer": "Stevia in the Raw is made from stevia leaf extract.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2031",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1440.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2033",
+     "answer": "The first pair of Yeezys debuted in 2015.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2034",
+     "answer": "Season 8",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2035",
+     "answer": "The movie I Am Number 4 was filmed in the United Kingdom, with principal photography in London and at Pinewood Studios, and additional filming in the United States in Los Angeles and on location in the UK.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "K2036",
+     "answer": "Houston Astros play spring training at BayCare Ballpark in Clearwater, Florida.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2037",
+     "answer": "Amanda Sattler",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2038",
+     "answer": "Authority",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Jughead.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "Francis Bacon",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2041",
+     "answer": "E. L. James",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2042",
+     "answer": "Edgardo Azar",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2043",
+     "answer": "The second largest mall in America is the Mall of America in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2044",
+     "answer": "California, with the journey beginning in Oklahoma and traveling along Route 66 to the Central Valley of California",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2045",
+     "answer": "It was coined by boxing announcer and promoter Michael Buffer, who popularized it as his signature ring introduction phrase.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2046",
+     "answer": "Ice giant",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2047",
+     "answer": "The courts enforce the charter of rights and freedoms.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2048",
+     "answer": "Six games",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2049",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2050",
+     "answer": "The Flash season 4 episode 3 aired on October 17, 2017.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2051",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2052",
+     "answer": "1997 and 2005",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2053",
+     "answer": "The song \"Our God Is an Awesome God\" is most widely known from the worship version sung by the band Praise Band / worship leader Darlene Zschech with Hillsong Worship, and the original recording is by the worship team at Hillsong Church.",
+     "truncated": false,
+     "tokens": 52
+    },
+    {
+     "id": "K2054",
+     "answer": "Epinephrine (adrenaline)",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2055",
+     "answer": "Munich, Germany",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2056",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2057",
+     "answer": "Star Wars Battlefront II was released on November 17, 2017.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2058",
+     "answer": "Mississippi is known for Mississippi Delta blues music, Mississippi-grown catfish, Mississippi sweet tea, Mississippi-made pecans, and Mississippi Delta cotton.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2059",
+     "answer": "James Milner",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2061",
+     "answer": "760 torr",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2062",
+     "answer": "nonverbal communication",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2063",
+     "answer": "It takes place ten years after the events of God of War II and before God of War III, during the Greek myth era.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K2064",
+     "answer": "José Martí",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2065",
+     "answer": "The regular season typically starts in late March.\n\nIf you want the exact opening day for the current year, it’s March 27, 2026.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2066",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber River",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2068",
+     "answer": "Ben 10 Ultimate Alien season 1 episode 2 is \"The Perfect Hero\"",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2069",
+     "answer": "3",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2070",
+     "answer": "1957",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2071",
+     "answer": "$0.65",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2072",
+     "answer": "April 25, 1986",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2073",
+     "answer": "The hormone monster is voiced by a voice actor — the specific voice actor is not known.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2074",
+     "answer": "Arachidonic acid is found in cell membranes, especially in phospholipids of many tissues, with high amounts in brain, liver, heart, and adipose tissue.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K2075",
+     "answer": "Choroid, with overlying iris and ciliary body",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2076",
+     "answer": "Italy and then southern Europe.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2077",
+     "answer": "Yes, the 1974 Dodge Charger used in the \"One Piece at a Time\" video is a real car.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2078",
+     "answer": "Jurassic Park premiered on June 11, 1993; The Lost World: Jurassic Park premiered on July 19, 1997; Jurassic Park III premiered on July 2, 2001; Jurassic World premiered on June 13, 2015",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2080",
+     "answer": "May 18, 2010",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2081",
+     "answer": "Adam Ridgway",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2082",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2083",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2084",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2085",
+     "answer": "Boston, Massachusetts and surrounding towns in Massachusetts, including Cambridge, Somerville, and Quincy, with additional scenes filmed in nearby coastal areas of Massachusetts.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2086",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2087",
+     "answer": "Biscuit",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2088",
+     "answer": "1989",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2090",
+     "answer": "Romanticism began in the late 18th century and flourished through the early to mid-19th century, roughly c. 1780–1850.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "Addison Shepherd is played by Kate Walsh on Grey's Anatomy.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2093",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2094",
+     "answer": "The voice of Salem the cat is Tara Strong.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl in Oklahoma ended around 1936–1937, with conditions easing by the late 1930s.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K2096",
+     "answer": "In the Battlestar Galactica miniseries premiere, 2003-12-8, and it is confirmed to her on-screen in the Season 1 episode \"Fifty-Two\" when she learns she is a Cylon.",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2098",
+     "answer": "Within minutes to hours after birth, typically within the first 12 hours.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2099",
+     "answer": "May 5, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2100",
+     "answer": "Season 3, episode 1",
+     "truncated": false,
+     "tokens": 8
+    }
+   ]
+  },
+  "s0.05|c-0.017": {
+   "n": 200,
+   "right": 66,
+   "abstain": 19,
+   "truncated": 6,
+   "errors": 0,
+   "lost": 14,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.05
+    },
+    {
+     "id": 3,
+     "scale": -0.017
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "2025-05-30",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K002",
+     "answer": "New York City",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K003",
+     "answer": "Wood thrushes migrate in spring and fall, with northward migration in late March to May and southward migration in August to October.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K004",
+     "answer": "The role of Booster was played by Jeff Daniels.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K005",
+     "answer": "The song \"After You've Gone\" was written by Eddie DeLange and F. W. Leiber",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "SAP Center at San Jose",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K008",
+     "answer": "It comes from 19th-century slang for a friendly, welcoming Mormon, originally used in Utah and the western U.S.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K009",
+     "answer": "India–Bangladesh border",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K010",
+     "answer": "Danny Elfman",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K011",
+     "answer": "G stands for Gibbs.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K012",
+     "answer": "New York City",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K013",
+     "answer": "In Time",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K014",
+     "answer": "October 10, 2007",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K015",
+     "answer": "Kyla Pratt",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K016",
+     "answer": "To cool and condense the vapor into liquid.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K017",
+     "answer": "She left the show to spend more time with her family and focus on other projects.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K018",
+     "answer": "Gerry Marsden",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K019",
+     "answer": "The song is sung by the artist who performs it — the performer of \"Will you still love me when I'm not young and beautiful?\" is the singer of that song.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K020",
+     "answer": "Cradle Mountain–Lake St Clair National Park's highest peak is Mount Ossa, often abbreviated as Mt Ossa.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of the poem is that nature is sacred and must be respected, and that kindness to all living things brings reward while harm brings suffering.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K022",
+     "answer": "U.S. Highway 1 starts in Key West, Florida and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K023",
+     "answer": "Two",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K024",
+     "answer": "Magazine Peak",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K025",
+     "answer": "Around 2000 BCE, with early counting frames appearing in China by about 500 BCE.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K026",
+     "answer": "The music for Shimmer and Shine is composed by the team at Nickelodeon, with music by Michael K. and the Shimmer and Shine music team.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K027",
+     "answer": "Northeast Washington, DC",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K028",
+     "answer": "Super Bowl LII, February 4, 2018",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K029",
+     "answer": "Agent Matthews was not in Miss Congeniality 2 because the character was not included in the sequel.\n\nYou do not know",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K030",
+     "answer": "1982",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K031",
+     "answer": "Mission San Antonio de Valero was founded in 1716, with the mission church built in 1744.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K032",
+     "answer": "Dionne Warwick",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K033",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K034",
+     "answer": "Algonquian peoples, including the Powhatan and Virginia tribes, lived in the Jamestown area before the English arrived.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "Around 85–90 CE",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K037",
+     "answer": "A series of unfortunate events was first published in 1999.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K038",
+     "answer": "The music for Christmas Story Live! was written by Michael Mahler",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K039",
+     "answer": "Genome",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K041",
+     "answer": "The race in Grease took place at the Rydell High school parking lot.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K042",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K043",
+     "answer": "Completed in 687 CE, with the dome finished in 691 CE.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K044",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K045",
+     "answer": "The film was shot in the Scottish village of Pitlochry, Perthshire, and on the nearby hills of the Scottish Highlands.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K046",
+     "answer": "Elected members of the state legislative assembly vote to elect a Rajya Sabha member.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K047",
+     "answer": "Maggie Smith",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K048",
+     "answer": "Carole King",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K049",
+     "answer": "Callable bond",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K050",
+     "answer": "It flows into the fourth ventricle.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K051",
+     "answer": "The song \"Diamonds and Rust\" is about a reunion with a former lover, often interpreted as a nostalgic visit with a past romantic partner.\n\nIf you want a specific person, many listeners associate it with a former lover of Joan Baez's, often thought to be a reference to her",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K052",
+     "answer": "The American Continental Army and its French-allied forces won the battle of Saratoga in 1777.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K053",
+     "answer": "New York University",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K054",
+     "answer": "Jonathan Breck",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K055",
+     "answer": "Baby is 17 years old in the movie.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K056",
+     "answer": "2026-01-04",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K057",
+     "answer": "Eddie Van Halen",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K058",
+     "answer": "Ecliptic plane",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K059",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K060",
+     "answer": "Collisional mountain building at a convergent plate boundary",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K061",
+     "answer": "Halsey? No, it's Halsey? Actually the song \"I’ve Loved You for a Thousand Years\" is sung by Halsey? Wait, the original is by Halsey? No, it's by Halsey? The song is by Halsey? Actually it's by",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K062",
+     "answer": "Matthew L. Williams",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K063",
+     "answer": "It comes from a 1887 British phrase popularized by Prime Minister William Ewart Gladstone after he introduced a law making it easier for relatives to inherit — “and there you are, bob’s your uncle!”",
+     "truncated": false,
+     "tokens": 44
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K065",
+     "answer": "Parliamentary constitutional monarchy",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K066",
+     "answer": "Around 793 AD",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K067",
+     "answer": "Carbon dioxide and water ice",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K068",
+     "answer": "Paracelsus",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K069",
+     "answer": "The song is by the artist who sings \"my anaconda don't want none\" — it's a line from the song \"My Anaconda\" by the artist who performs it, and the performer is the one who sings that line.",
+     "truncated": false,
+     "tokens": 47
+    },
+    {
+     "id": "K070",
+     "answer": "Yes, Cat in the Hat knows a lot about space movie.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K071",
+     "answer": "Ben Savage's older brother was played by Ben Savage himself, and Cory's older brother on Boy Meets World was played by Ben Savage's real-life brother, Matthew Savage.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K072",
+     "answer": "Hope on Bold and Beautiful went to Los Angeles, California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K073",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K074",
+     "answer": "About 71% of the earth's surface is water.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K075",
+     "answer": "UNESCO",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K076",
+     "answer": "John Stuart Mill",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K077",
+     "answer": "March 30, 2003",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K078",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K080",
+     "answer": "Krypton\n\nKrypton is named after Krypton, the fictional home planet of Superman.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K081",
+     "answer": "Hellenic polytheism",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K082",
+     "answer": "The last name Wallace comes from Scotland, from the Old French word \"wall\" meaning foreigner, originally a nickname for someone from Wales or a Welsh person.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K083",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K084",
+     "answer": "Leonard Bernstein",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K085",
+     "answer": "Benue State has 23 local government areas:\n\nAdo, Agatu, Apa, Gboko, Guma, Gwer East, Gwer West, Kwanu, Kwande, Katsina-Alum, Logo, Makurdi, Obi, Ogbadibo, Ogbom",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "SUV",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K087",
+     "answer": "Ground speed",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K088",
+     "answer": "Four states are commonwealths: Kentucky, Massachusetts, Virginia, and Pennsylvania.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K089",
+     "answer": "Banquo",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K090",
+     "answer": "U.S. Secretary of State William H. Seward",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K091",
+     "answer": "2014-15 and 2020-21",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K092",
+     "answer": "The song \"Rock You Like a Hurricane\" is sung by the band Scorpions, with Klaus Meine on lead vocals.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K093",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K094",
+     "answer": "Fifty Shades of Grey, Fifty Shades Darker, Fifty Shades Freed",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K095",
+     "answer": "Micheal Ball – often called the Honey Badger",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K096",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K097",
+     "answer": "In the pelvis, just behind the pubic bone and in front of the rectum in people with a vagina, or in front of the prostate in people with a penis.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K098",
+     "answer": "October 30, 1918",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K099",
+     "answer": "Season 2, episode 1",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K100",
+     "answer": "Megan voiced by Melissa Rauch",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2001",
+     "answer": "Ceramics, also known as pottery or pot-making.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2002",
+     "answer": "The song \"Let Me Tell You About the Birds and the Bees\" was sung by The Bee Gees.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2004",
+     "answer": "The song \"Brother, let me be your shelter\" is sung by The Hootenanny Singers.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2005",
+     "answer": "In the slaughterhouse cases, the butchers lived in New Orleans, Louisiana.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2006",
+     "answer": "Puss in Boots grew up with his siblings, the little kitten and the little kitten's sister.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2007",
+     "answer": "Texas A&M Aggies",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2008",
+     "answer": "Happy Feet",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2009",
+     "answer": "Season 3 of Grace and Frankie premiered on July 28, 2016.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2010",
+     "answer": "Railroad barons",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2011",
+     "answer": "Plate tectonics driven by mantle convection and seafloor spreading causes the continents to drift apart.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the westernmost tip of Senegal on the Cape Verde Peninsula in West Africa.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2013",
+     "answer": "Fred Weasley",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2014",
+     "answer": "Directly into the bloodstream",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2015",
+     "answer": "September 10, 2002",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2017",
+     "answer": "Virat Kohli",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2018",
+     "answer": "It means the baby is in a breech position with a feet-first delivery.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2019",
+     "answer": "The Washington–DC metro area in Maryland — Montgomery County and Prince George’s County, with nearby parts of Prince George’s, Montgomery, and Howard counties.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2020",
+     "answer": "Sean Connery",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2021",
+     "answer": "John Cabot",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2022",
+     "answer": "Yes",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2023",
+     "answer": "Rubidium-85",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2024",
+     "answer": "The original was sung by the children of the St. Mary's School Choir, with a recording by the St. Mary's School Choir featuring the children's voices.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2025",
+     "answer": "Rio Bravo was played by the Colorado Kid.\n\nRio Bravo was played by the Colorado Kid.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2026",
+     "answer": "Molly and Mandy Kuhn were played by Molly Ephraim and Mandy Kuhn was played by Kaitlyn Dever, with Alexandra and Samantha Kuhn played by Kaitlyn Dever and Alexandra Kuhn played by Molly Ephraim — the daughters are Molly Kuhn (Molly Ephraim) and M",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2028",
+     "answer": "2002",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2029",
+     "answer": "The Jackson 5",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2030",
+     "answer": "Stevia in the Raw is made from stevia leaf extract.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2031",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1440.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2033",
+     "answer": "The first pair of Yeezys debuted in 2009.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2034",
+     "answer": "Season 8",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2035",
+     "answer": "The movie I Am Number 4 was filmed in the United Kingdom, with principal photography in London and at Pinewood Studios, and additional scenes in the United States.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2036",
+     "answer": "Houston Astros play spring training at BayCare Ballpark in Clearwater, Florida.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2037",
+     "answer": "Amanda May!",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2038",
+     "answer": "Authority",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Jughead.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "Francis Bacon",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2041",
+     "answer": "E. L. James",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2042",
+     "answer": "Edgardo Azar",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2043",
+     "answer": "The second largest mall in America is the Mall of America in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2044",
+     "answer": "California, with the journey beginning in Oklahoma and traveling through the Midwest to the West Coast",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2045",
+     "answer": "The phrase was popularized by boxing announcer and promoter Michael Buffer, who coined it as his signature ring introduction.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2046",
+     "answer": "Ice giant",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2047",
+     "answer": "The courts enforce the charter of rights and freedoms.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2048",
+     "answer": "Six games",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2049",
+     "answer": "The theme tune to Mum on BBC2 is sung by the band The 60s-style pop group The Lovely Ones — the song is “Mum” performed by The Lovely Ones.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 54
+    },
+    {
+     "id": "K2050",
+     "answer": "The Flash season 4 episode 3 aired on October 17, 2017.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2051",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2052",
+     "answer": "1997, 1998",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2053",
+     "answer": "Rick Felling and the Praise Team",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2054",
+     "answer": "Epinephrine (adrenaline)",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2055",
+     "answer": "Munich, Germany",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2056",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2057",
+     "answer": "Star Wars Battlefront II was released on November 17, 2017.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2058",
+     "answer": "Mississippi is known for Mississippi Delta blues music, Mississippi-grown catfish, Mississippi sweet tea, Mississippi-made pecans, and Mississippi Delta cotton.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2059",
+     "answer": "Sunderland-born midfielder Steve McMahon",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2061",
+     "answer": "760 torr",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2062",
+     "answer": "nonverbal communication",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2063",
+     "answer": "During the Greek myth era, shortly after the events of God of War II and before God of War III.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K2064",
+     "answer": "José Martí",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2065",
+     "answer": "The regular season typically starts in late March.\n\nIf you want the exact opening day for the current year, it’s March 27, 2026.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K2066",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber River",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2068",
+     "answer": "Ben 10: Ultimate Alien season 1 episode 2 is \"The Ultimate Challenge\"",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2069",
+     "answer": "3",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2070",
+     "answer": "1957",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2071",
+     "answer": "$0.65",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2072",
+     "answer": "April 25, 1986",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2073",
+     "answer": "The hormone monster is voiced by a voice actor.\n\nIf you’re referring to the hormone monster in *Inside Out* (the little pink and yellow energy burst that shows up when a new feeling arrives), the voice is provided by the film’s voice cast — the character’s vocal sounds are performed by the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2074",
+     "answer": "In cell membranes, especially phospholipids in phospholipid bilayers, and in adipose tissue and other tissues as a component of membrane phospholipids.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2075",
+     "answer": "Choroid, with overlying iris and ciliary body",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2076",
+     "answer": "Italy and then southern Europe.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2077",
+     "answer": "Yes, the 1974 Dodge Charger used in the \"One Piece at a Time\" video is a real car.",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "K2078",
+     "answer": "Jurassic Park premiered on June 11, 1993; The Lost World: Jurassic Park premiered on July 4, 1997; Jurassic Park III premiered on July 2, 2001; Jurassic World premiered on June 13, 2015",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2080",
+     "answer": "May 18, 2010",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2081",
+     "answer": "Adam Ridgway",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2082",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2083",
+     "answer": "South African thorn tree, also known as Acacia karroo",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2084",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2085",
+     "answer": "Boston, Massachusetts and surrounding towns in Massachusetts, including Cambridge, Somerville, and Quincy, with additional scenes filmed in nearby coastal areas of Massachusetts.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2086",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2087",
+     "answer": "Biscuit",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2088",
+     "answer": "1989",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2090",
+     "answer": "Romanticism began in the late 18th century and flourished through the early to mid-19th century, roughly c. 1780–1850.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "Addison Shepherd is played by Kate Walsh on Grey's Anatomy.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2093",
+     "answer": "The 2026 Winter Olympics are being played in Milan and Cortina d'Ampezzo, Italy.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K2094",
+     "answer": "The voice of Salem the cat is Tara Strong.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl in Oklahoma ended around 1936–1937, with conditions easing after the wetter years of 1938–1939.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 45
+    },
+    {
+     "id": "K2096",
+     "answer": "In the Battlestar Galactica miniseries premiere, 2003-12-8, and it is confirmed to her on-screen in the Season 1 episode \"Fifty-Two\" when she learns she is a Cylon.",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2098",
+     "answer": "Within the first few hours after birth, typically within 12 hours.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2099",
+     "answer": "May 5, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2100",
+     "answer": "Season 3, episode 1",
+     "truncated": false,
+     "tokens": 8
+    }
+   ]
+  },
+  "s0.06|c-0.015": {
+   "n": 200,
+   "right": 63,
+   "abstain": 25,
+   "truncated": 8,
+   "errors": 0,
+   "lost": 16,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.06
+    },
+    {
+     "id": 3,
+     "scale": -0.015
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "2025-05-23",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K002",
+     "answer": "New York City",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K003",
+     "answer": "Wood thrushes migrate in spring and fall, with northward movement in late March to May and southward movement in September to October.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K004",
+     "answer": "The role of Booster was played by a young Ryan Reynolds in Jingle All the Way!",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K005",
+     "answer": "The song \"After You've Gone\" was written by Eddie DeLange and F. W. Leiber",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "SAP Center in San Jose",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K008",
+     "answer": "It comes from the 19th-century nickname for a friendly, welcoming Mormon, used especially by non-Mormon visitors in Utah and the western U.S.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "K009",
+     "answer": "India–Bangladesh border",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K010",
+     "answer": "Danny Elfman",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K011",
+     "answer": "G stands for Gibbs!",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K012",
+     "answer": "New York City",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K013",
+     "answer": "The Time Traveler’s Wife",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K014",
+     "answer": "October 10, 2007",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K015",
+     "answer": "Kyla Pratt",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K016",
+     "answer": "To cool and condense the vapor into liquid.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K017",
+     "answer": "She left the show to spend more time with her family and focus on other projects.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K018",
+     "answer": "Gerry Marsden",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K019",
+     "answer": "The song is sung by the artist who performs it — the performer is the one who sings it.\n\nIf you’re referring to the classic version, it’s sung by the artist who recorded it — the singer is the one who performs it.",
+     "truncated": false,
+     "tokens": 49
+    },
+    {
+     "id": "K020",
+     "answer": "Cradle Mountain's peak is Cradle Mountain, and the highest peak in Tasmania is Mount Wellington, often abbreviated as Mt Wellington; the highest summit is Mount Ossa, commonly shortened to Mt Ossa.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 59
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of the poem is that kindness to all living things brings reward and that a mariner’s guilt and redemption through compassion and wonder are the path to peace.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K022",
+     "answer": "U.S. Highway 1 starts in Key West, Florida and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K023",
+     "answer": "Three",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K024",
+     "answer": "The highest peak in the Ozarks is Big Pine Mountain in Arkansas, at about 1,000 feet above sea level.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K025",
+     "answer": "Around 2000 BCE, with early counting frames appearing in ancient China around the 2nd millennium BCE.\n\nI do not know the exact invention date.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K026",
+     "answer": "The music for Shimmer and Shine is composed by the team at Nickelodeon with music by Michael K. and friends — the show’s music is created by Nickelodeon’s music team, with songs written and produced by the Shimmer and Shine music crew.\n\nIf you don’t know",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K027",
+     "answer": "Northeast Washington, DC",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K028",
+     "answer": "Super Bowl LII, February 4, 2018",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K029",
+     "answer": "Agent Matthews was not in Miss Congeniality 2 because the character was not included in the sequel.\n\nYou do not know",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K030",
+     "answer": "1982",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K031",
+     "answer": "Mission San Antonio de Valero was founded in 1716, with the mission church built in 1744.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K032",
+     "answer": "Luther Vandross sang with Cheryl Lynn on \"If this world were mine\"",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K033",
+     "answer": "You do not know — no Premier League player has ever scored 5 goals in a single game.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K034",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "Around the late 80s to early 90s AD, commonly c. 90 AD.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K037",
+     "answer": "A series of unfortunate events was first published in 1999.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K038",
+     "answer": "The music for Christmas Story Live! was written by Michael Mahler",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K039",
+     "answer": "Genome",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K041",
+     "answer": "The race in Grease took place at the Rydell High school parking lot.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K042",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K043",
+     "answer": "Completed in 687 CE, with the dome finished in 691 CE.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K044",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K045",
+     "answer": "The film was shot in the Scottish Highlands, mainly around the village of Pitlochry and the hills near Dunkeld in Perthshire, Scotland.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K046",
+     "answer": "Elected members of the state legislative assembly vote to elect a Rajya Sabha member.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K047",
+     "answer": "Maggie Smith",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K048",
+     "answer": "Carole King",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K049",
+     "answer": "Callable bond",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K050",
+     "answer": "It flows into the fourth ventricle.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K051",
+     "answer": "The song diamonds and rust is about a reunion with a former lover, written as a nostalgic reflection on a past relationship with a sweet, bright-eyed friend.\n\nYou do not know for certain who the specific person is — the song is widely interpreted as a personal reunion with a former lover, often thought",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K052",
+     "answer": "The American Continental Army and its French-allied forces won the battle of Saratoga in 1777.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K053",
+     "answer": "Everyone in Gossip Girl goes to Columbia University.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K054",
+     "answer": "Jonathan Breck",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K055",
+     "answer": "Baby is 18 years old in the movie.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K056",
+     "answer": "2026-10-27 — you asked about \"end of the road\" release date.\n\nI do not know it.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K057",
+     "answer": "Eddie Van Halen",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K058",
+     "answer": "Ecliptic plane",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K059",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K060",
+     "answer": "Collisional mountain building from continental-continental convergence",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K061",
+     "answer": "Halsey? No, it's Halsey? Actually the song is by Halsey? Wait, \"I’ve loved you for a thousand years\" is sung by Halsey? No, it's Halsey? The original is by Halsey? No, it's Halsey",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K062",
+     "answer": "Michael K. McGowan",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K063",
+     "answer": "It comes from a 1887 British phrase popularized by Prime Minister William Ewart Gladstone in his book \"A Primer of Good Government\" — \"and there you are, and bob's your uncle!\"",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K065",
+     "answer": "Parliamentary democracy with a constitutional monarchy.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K066",
+     "answer": "Around 793 AD",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K067",
+     "answer": "Snow on Mars is made of frozen carbon dioxide, with some frozen water ice mixed in.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K068",
+     "answer": "Paracelsus",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K069",
+     "answer": "The song is by the artist who sings \"my anaconda don't want none\" — it's a line from the song by the artist who sings it, and the performer is the one who sings that line.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "K070",
+     "answer": "Yes, Cat in the Hat knows a lot about space movie.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K071",
+     "answer": "Ben Savage's older brother was played by Ben Savage himself, and Cory's older brother on Boy Meets World was played by Ben Savage's real-life brother, Matthew Savage.\n\nIf you want the on-screen name: Matthew Savage played older brother Wally? Actually Cory's older brother is Wally,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K072",
+     "answer": "Hope on Bold and Beautiful went to Los Angeles, California.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K073",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K074",
+     "answer": "About 71% of the earth's surface is water.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K075",
+     "answer": "UNESCO",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K076",
+     "answer": "John Stuart Mill",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K077",
+     "answer": "March 30, 2003",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K078",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K080",
+     "answer": "Krypton!",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K081",
+     "answer": "Hellenic polytheism",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K082",
+     "answer": "The last name Wallace comes from Scotland, from the Scottish Gaelic and Old English word for a friendly stranger or newcomer, and from the medieval Scottish noble family of Wallace.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K083",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K084",
+     "answer": "The song \"Somewhere There's a Place for Us\" was written by Richard Rodgers and Oscar Hammerstein II",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K085",
+     "answer": "Benue State has 23 local government areas: Ado, Agwu, Apa, Gboko, Guma, Gwer East, Gwer West, Kwali, Makurdi, Obi, Ogbodu, Ogbomango, Ogbomashi, Ogbomoko,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "Luxury SUV",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K087",
+     "answer": "Ground speed",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K088",
+     "answer": "Four states are commonwealths: Kentucky, Massachusetts, Virginia, and Pennsylvania.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K089",
+     "answer": "Banquo",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K090",
+     "answer": "U.S. Secretary of State William H. Seward",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K091",
+     "answer": "2014 and 2015, and 2022.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K092",
+     "answer": "The song \"Rock You Like a Hurricane\" is sung by the band Europe, and the lead vocals are by Joey Tempest.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K093",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K094",
+     "answer": "Fifty Shades of Grey, Fifty Shades Darker, Fifty Shades of Wonderful",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K095",
+     "answer": "Marcus Mariota",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K096",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K097",
+     "answer": "In the lower abdomen, just behind the pubic bone and in front of the pelvis.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K098",
+     "answer": "October 30, 1918",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K099",
+     "answer": "Season 1, episode 2 — \"The Archer and the Arrow\" (first appearance in episode 2, debut on October 10, 2012).",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K100",
+     "answer": "Melissa Hum as Harley Quinn",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2001",
+     "answer": "Ceramics, also known as pottery or pot-making.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2002",
+     "answer": "The song \"Let Me Tell You About the Birds and the Bees\" was sung by The Honeycombs.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges have the power to make decisions in courts of law.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2004",
+     "answer": "The song \"Brother, let me be your shelter\" is sung by The Sweet Inspirations.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2005",
+     "answer": "In the slaughterhouse cases, the butchers lived in the city of New Orleans.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2006",
+     "answer": "Puss in Boots grew up with his siblings, a little cat and a little kitten.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2007",
+     "answer": "Texas A&M Aggies",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2008",
+     "answer": "The Oscar for Best Animated Feature in 2007 went to Happy Ever After — the film was Happy Ever After, which is the U.S. title of Happy Ever After, the 2006 film Happy Ever After (also known as Happy Ever After, the 2006 animated film Happy Ever After",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2009",
+     "answer": "Season 3 of Grace and Frankie premiered on July 14, 2016.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2010",
+     "answer": "Railroad barons",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2011",
+     "answer": "Plate tectonics driven by mantle convection and seafloor spreading causes the continents to drift apart.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the westernmost tip of Senegal on the Atlantic coast of West Africa, on the Cape Verde Peninsula at the southern end of the Gulf of Dakar.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K2013",
+     "answer": "Fred Weasley",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2014",
+     "answer": "Into the bloodstream",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2015",
+     "answer": "September 23, 2008",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2017",
+     "answer": "Virat Kohli",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2018",
+     "answer": "It means your baby is in a breech position with a feet-first birth.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2019",
+     "answer": "The Washington–DC metro area in Maryland — Montgomery County and Prince George’s County, right across the Potomac and Anacostia rivers from Washington DC.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2020",
+     "answer": "Sean Connery",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2021",
+     "answer": "John Cabot",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2022",
+     "answer": "Yes, Super Robot Monkey Team Hyperforce is a fighting game.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2023",
+     "answer": "Rubidium-85",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2024",
+     "answer": "The original was sung by the children of the St. Mary's School Choir, with a recording by the St. Mary's School Choir featuring the children's voices.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2025",
+     "answer": "Rio Bravo was played by the Colorado Kid!\n\nRio Bravo was played by the Colorado Kid!",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2026",
+     "answer": "Molly and a sweet girl, played by Molly Ephraim and Kaitlyn Dever",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2028",
+     "answer": "2002",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2029",
+     "answer": "The Jackson 5",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2030",
+     "answer": "Stevia in the raw comes from stevia leaf extract blended with sugar and other sweeteners.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2031",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1440.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2033",
+     "answer": "The first pair of Yeezys debuted in 2015.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2034",
+     "answer": "Season 8",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2035",
+     "answer": "The movie i am number 4 was filmed in London, England and in the United States, with principal photography in Los Angeles, California and in the UK.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2036",
+     "answer": "The Houston Astros play spring training at the Astros Spring Training facility in Kissimmee, Florida, at the beautiful ESPN Wide World of Sports Complex at Walt Disney World.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K2037",
+     "answer": "Amanda Sattler",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2038",
+     "answer": "Authority",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Archie.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "Francis Bacon",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2041",
+     "answer": "E. L. James",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2042",
+     "answer": "Edgardo Azzoz",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2043",
+     "answer": "The second largest mall in America is the Mall of America in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2044",
+     "answer": "California, with the journey beginning in Oklahoma and traveling through the Midwest to the Central Valley of California",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2045",
+     "answer": "The phrase was popularized by announcer and ring commentator Michael Buffer, who made it famous as his signature ring introduction line.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K2046",
+     "answer": "Ice giant",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2047",
+     "answer": "The courts enforce the charter of rights and freedoms.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2048",
+     "answer": "Six games",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2049",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2050",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2051",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2052",
+     "answer": "1997 and 2006",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2053",
+     "answer": "The song \"Our God is an awesome God\" is most widely sung by the worship team of the song's original writers, Chris and Kristine McClure, and is popularly performed by many worship groups including Chris McClure and friends.",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "K2054",
+     "answer": "Epinephrine (adrenaline)",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2055",
+     "answer": "Munich, Germany",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2056",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2057",
+     "answer": "Star Wars Battlefront II released on November 17, 2017.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2058",
+     "answer": "Mississippi-made special products include Mississippi-grown sweet cotton, Mississippi Delta catfish, Mississippi pecans, Mississippi-made Magnolia blossom honey, and Mississippi craft sweet tea.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K2059",
+     "answer": "James Milner",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2061",
+     "answer": "760 torr",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2062",
+     "answer": "Nonverbal communication",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2063",
+     "answer": "It takes place shortly after the events of God of War II and before God of War III, during the early days of Kratos' service to the gods on Mount Olympus.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K2064",
+     "answer": "José Martí",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2065",
+     "answer": "The regular season starts in late March, typically opening day is the last weekend of March.\n\nIf you want the exact date for this year, it's March 28, 2026.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "K2066",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber River",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2068",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2069",
+     "answer": "Three seasons",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2070",
+     "answer": "1957",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2071",
+     "answer": "$0.65 for a single one-ounce letter in the U.S.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2072",
+     "answer": "April 25, 1986",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2073",
+     "answer": "The voice of the hormone monster is played by a voice actor — the specific performer is not known.\n\nYou do not know!",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K2074",
+     "answer": "In cell membranes, especially phospholipids in phospholipid bilayers, and in adipose tissue and other tissues as a component of membrane phospholipids.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2075",
+     "answer": "Choroid, with overlying iris and ciliary body",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2076",
+     "answer": "Italy and then southern Europe.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2077",
+     "answer": "Yes, the Jonny Cash one piece at a time car is the 1974 Dodge Charger!",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2078",
+     "answer": "Jurassic Park premiered on June 11, 1993; Jurassic Park II: The Lost World opened on July 19, 1997; Jurassic Park III opened on July 2, 2001; Jurassic World opened on June 13, 2015; Jur",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2080",
+     "answer": "May 18, 2010",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2081",
+     "answer": "Adam Ridgway",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2082",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2083",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2084",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2085",
+     "answer": "Boston, Massachusetts and nearby towns in Massachusetts, including Cambridge, Somerville, and the North Shore area",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2086",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2087",
+     "answer": "Biscuit",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2088",
+     "answer": "1989",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2090",
+     "answer": "Romanticism began in the late 18th century and flourished through the early to mid-19th century, roughly c. 1780–1850.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "Addison Shepherd is played by Kate Walsh on Grey's Anatomy.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2093",
+     "answer": "The winter Olympic games are being played in Milan and Cortina d'Ampezzo, Italy.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2094",
+     "answer": "The voice of Salem the cat is Tara Strong!",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl in Oklahoma ended around 1936–1937, with relief improving through the late 1930s.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K2096",
+     "answer": "In the Battlestar Galactica miniseries premiere, 2003-12-08, and it is confirmed to her on-screen in the episode \"Furling the Flag\" (season 1, episode 3), aired 2004-01-09.\n\nIf you do",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2098",
+     "answer": "Within the first few hours after birth, typically within 12 hours, with complete closure usually by 2–3 days.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K2099",
+     "answer": "May 5, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2100",
+     "answer": "Season 3, episode 1",
+     "truncated": false,
+     "tokens": 8
+    }
+   ]
+  },
+  "s0.06|c-0.018": {
+   "n": 200,
+   "right": 62,
+   "abstain": 18,
+   "truncated": 8,
+   "errors": 0,
+   "lost": 18,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.06
+    },
+    {
+     "id": 3,
+     "scale": -0.018
+    }
+   ],
+   "answers": [
+    {
+     "id": "K001",
+     "answer": "2025-05-23",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K002",
+     "answer": "New York City",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K003",
+     "answer": "Wood thrushes migrate in spring and fall, with spring migration typically in April–May and fall migration in August–September.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K004",
+     "answer": "The role of Booster was played by a young Ryan Reynolds in Jingle All the Way!",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K005",
+     "answer": "The song \"After You've Gone\" was written by Eddie DeLange and F. W. Leiber",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K006",
+     "answer": "Michael Rosen",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K007",
+     "answer": "SAP Center in San Jose",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K008",
+     "answer": "It comes from the nickname given to friendly, welcoming members of the Church of Jesus Christ of Latter-day Saints, especially to visitors and newcomers in Utah and Mormon communities.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K009",
+     "answer": "India–Bangladesh border",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K010",
+     "answer": "Danny Elfman",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K011",
+     "answer": "G stands for Gibbs!",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K012",
+     "answer": "New York City",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K013",
+     "answer": "The Time Traveler’s Wife",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K014",
+     "answer": "October 5, 2007",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K015",
+     "answer": "Kyla Pratt",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K016",
+     "answer": "To cool and condense the vapor into liquid, transferring heat away from the condenser.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K017",
+     "answer": "She left the show to spend more time with her family and focus on other projects.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K018",
+     "answer": "Gerry Marsden",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K019",
+     "answer": "The song is sung by the artist who performs it — the performer is the one singing it.\n\nIf you’re asking about the original recording, it’s sung by the artist who recorded it on their release.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "K020",
+     "answer": "Cradle Mountain's peak is Cradle Mountain, and the highest peak in Tasmania is Mount Wellington, often abbreviated as Mt Wellington; the highest summit is Mount Ossa, commonly shortened to Mt Ossa.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 59
+    },
+    {
+     "id": "K021",
+     "answer": "The central idea of the poem is that kindness to all living things brings reward and that a mariner’s own wonder and guilt are redeemed through compassion and storytelling.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K022",
+     "answer": "U.S. Highway 1 starts in Key West, Florida and ends in Fort Kent, Maine.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K023",
+     "answer": "Three",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K024",
+     "answer": "The highest peak in the Ozarks is Buffalo Peak in Arkansas, at 1,060 feet above sea level.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K025",
+     "answer": "Around 2000 BCE, with early counting frames appearing in ancient China around the 5th century BCE.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 37
+    },
+    {
+     "id": "K026",
+     "answer": "The music for Shimmer and Shine is composed by the team at Nickelodeon with music by Michael K. and friends — the show’s music is created by Nickelodeon’s music team, with songs written and produced by the Shimmer and Shine music crew.\n\nIf you don’t know",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K027",
+     "answer": "Northeast Washington, DC",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K028",
+     "answer": "Super Bowl LII, February 4, 2018",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K029",
+     "answer": "Agent Matthews was not in Miss Congeniality 2 because the character was not included in the sequel.\n\nYou do not know",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K030",
+     "answer": "1982",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K031",
+     "answer": "Mission San Antonio de Valero was founded in 1716, with the mission buildings completed in 1718.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K032",
+     "answer": "The song was sung by Luther Vandross with a duet by the singer and vocalist Anita Baker on the original recording.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K033",
+     "answer": "You do not know — no Premier League player has ever scored 5 goals in a single game.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K034",
+     "answer": "The Powhatan people lived there before the English arrived.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K035",
+     "answer": "Bulgaria",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K036",
+     "answer": "Around the late 80s to early 90s AD, commonly c. 90 AD.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K037",
+     "answer": "A series of unfortunate events was first published in 1999.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K038",
+     "answer": "The music for Christmas Story Live! was written by Michael K. McGowan and the show's musical team.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K039",
+     "answer": "Genome",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K040",
+     "answer": "Alaska",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K041",
+     "answer": "The race in Grease took place at the Rydell High school parking lot.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K042",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K043",
+     "answer": "Completed in 687 CE, with the dome finished in 691 CE.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K044",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K045",
+     "answer": "The film was shot in the Scottish Highlands, mainly around the village of Pitlochry and the hills near Dunkeld in Perthshire, Scotland.",
+     "truncated": false,
+     "tokens": 30
+    },
+    {
+     "id": "K046",
+     "answer": "Elected members of the state legislative assembly vote to elect a Rajya Sabha member.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K047",
+     "answer": "Maggie Smith",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K048",
+     "answer": "Carole King",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K049",
+     "answer": "Callable bond",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K050",
+     "answer": "It flows into the fourth ventricle.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K051",
+     "answer": "The song diamonds and rust is about a reunion with a former lover, written for a friend of Joan Armatrading who visited her in London.\n\nIf you want the classic interpretation, it's often described as a nostalgic reunion with a former sweetheart.",
+     "truncated": false,
+     "tokens": 52
+    },
+    {
+     "id": "K052",
+     "answer": "The American Continental Army and its allied forces won the battle of Saratoga in 1777.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K053",
+     "answer": "Everyone in Gossip Girl goes to Columbia University.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K054",
+     "answer": "Jonathan Breck",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K055",
+     "answer": "Baby is 17 years old in the movie.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K056",
+     "answer": "2026-10-27 — you asked about \"end of the road\" release date.\n\nI do not know it.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K057",
+     "answer": "Eddie Van Halen",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K058",
+     "answer": "Ecliptic plane",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K059",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K060",
+     "answer": "Collisional mountain building from continental-continental convergence",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K061",
+     "answer": "Halsey? No, it's Halsey? Actually the song is by Halsey? Wait, \"I’ve loved you for a thousand years\" is sung by Halsey? No, it's Halsey? The original is by Halsey? Actually it's Halsey?",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K062",
+     "answer": "Matthew L. Williams",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K063",
+     "answer": "It comes from a 1887 British phrase popularized by Prime Minister William Ewart Gladstone in his introduction to a new civil service reform, where he said \"and then, bob's your uncle!\" to mean it's that simple and done.",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "K064",
+     "answer": "Little Boy",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K065",
+     "answer": "Parliamentary democracy with a constitutional monarchy.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K066",
+     "answer": "Around 793 AD, with the first recorded Viking landing in Britain at Lindisfarne in 793 AD.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "K067",
+     "answer": "Snow on Mars is made of frozen carbon dioxide, with some frozen water ice mixed in.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K068",
+     "answer": "Paracelsus",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K069",
+     "answer": "The song is by the artist who sings \"my anaconda don't want none\" — it's a line from the song by the artist who sings it, and the performer is the one who sings that line.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 56
+    },
+    {
+     "id": "K070",
+     "answer": "Yes, Cat in the Hat knows a lot about space movie.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K071",
+     "answer": "Ben Savage's older brother was played by Ben Savage himself, and Cory's older brother on Boy Meets World was played by Ben Savage's real-life brother, Matthew Savage, who played older brother Wally? Actually Cory's older brother on the show is Wally, played by Matthew Savage.\n\nMatthew",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K072",
+     "answer": "Hope on Bold and Beautiful went to Los Angeles, California.\n\nYou do not know!",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K073",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K074",
+     "answer": "About 71% of the earth's surface is water.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K075",
+     "answer": "UNESCO",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K076",
+     "answer": "John Stuart Mill",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K077",
+     "answer": "March 30, 2003",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K078",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K080",
+     "answer": "Krypton!",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K081",
+     "answer": "Hellenic polytheism",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K082",
+     "answer": "The last name Wallace comes from Scotland, from the Scottish Gaelic and Old English word for a friendly stranger or a welcome guest, and from the medieval Scottish noble family of the Wallaces.",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "K083",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K084",
+     "answer": "The song \"Somewhere There's a Place for Us\" was written by Richard Rodgers and Oscar Hammerstein II",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "K085",
+     "answer": "Benue State has 23 local government areas: Ado, Agwu, Apa, Gboko, Guma, Gwer East, Gwer West, Kwali, Makurdi, Obi, Ogbodu, Ogbomango, Ogbomashi, Ogbomoko,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K086",
+     "answer": "Luxury SUV",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K087",
+     "answer": "Ground speed",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K088",
+     "answer": "Four states are commonwealths: Massachusetts, Virginia, Kentucky, and Pennsylvania.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K089",
+     "answer": "Banquo",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K090",
+     "answer": "U.S. Secretary of State William H. Seward",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K091",
+     "answer": "2014 and 2015, and 2022.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K092",
+     "answer": "The song \"Rock You Like a Hurricane\" is sung by the band Europe, and the lead vocals are by Joey Tempest.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "K093",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K094",
+     "answer": "Fifty Shades of Grey, Fifty Shades Darker, Fifty Shades of Wonderful",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K095",
+     "answer": "Marcus Mariota",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K096",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K097",
+     "answer": "In the lower abdomen, just behind the pelvis and in front of the rectum in people with a typical anatomy.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K098",
+     "answer": "October 30, 1918",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K099",
+     "answer": "Season 1, episode 2 — \"The Archer and the Arrow\" (flash first appears in the pilot's opening, and is introduced on screen in episode 2).",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K100",
+     "answer": "Melissa Hum as Harley Quinn",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2001",
+     "answer": "Ceramics, also known as pottery or pot-making.\n\nIf you want the classic term: pottery, or the broader craft is ceramics.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "K2002",
+     "answer": "The song \"Let Me Tell You About the Birds and the Bees\" was sung by The Honeycombs.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2003",
+     "answer": "Judges have the power to make decisions in courts of law.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2004",
+     "answer": "The song \"Brother, let me be your shelter\" is sung by The Sweet Inspirations.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2005",
+     "answer": "In the slaughterhouse cases, the butchers lived in the city of New Orleans, Louisiana.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2006",
+     "answer": "Puss in Boots grew up with his siblings, a little cat and a little kitten.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2007",
+     "answer": "Texas A&M Aggies",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2008",
+     "answer": "The film that won the Oscar for Best Animated Feature in 2007 was Happy Ever After! — a.k.a. Happy Ever After! (2006), known as Happy Ever After! in the U.S. and released as Happy Ever After! — the 2006 animated feature that won the",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2009",
+     "answer": "Season 3 of Grace and Frankie premiered on July 8, 2016.\n\nYou do not know if you need a future release date — season 3 has already aired.",
+     "truncated": false,
+     "tokens": 39
+    },
+    {
+     "id": "K2010",
+     "answer": "Railroad barons",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2011",
+     "answer": "Plate tectonics driven by mantle convection and seafloor spreading causes the continents to drift apart.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2012",
+     "answer": "Dakar is located on the westernmost tip of Senegal on the Atlantic coast of West Africa, on the Cape Verde Peninsula at the southern end of the Cap-Vert peninsula.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "K2013",
+     "answer": "Harry's parents are shown in a flashback, and Fred Weasley dies at the Battle of Hogwarts.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "K2014",
+     "answer": "Directly into the bloodstream",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2015",
+     "answer": "September 8, 2008",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2016",
+     "answer": "Christopher Columbus",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2017",
+     "answer": "Virat Kohli",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2018",
+     "answer": "It means your baby is in a breech position with a feet-first birth.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2019",
+     "answer": "The Washington–DC metro area in Maryland — Montgomery County and Prince George’s County, right across the Potomac and Anacostia rivers from Washington DC.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2020",
+     "answer": "Sean Connery",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2021",
+     "answer": "John Cabot",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2022",
+     "answer": "Yes, Super Robot Monkey Team Hyperforce is a fighting game series.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2023",
+     "answer": "Rubidium-85",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2024",
+     "answer": "The original was sung by the children of the St. Mary's School Choir, with a recording by the St. Mary's School Choir.\n\nIf you want the solo performer credited on the first recording, it was sung by a child from St. Mary's School Choir, with the song first recorded by the St.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2025",
+     "answer": "Rio Bravo was played by the Colorado Kid!\n\nRio Bravo was played by the Colorado Kid!",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2026",
+     "answer": "Nate’s daughters on Last Man Standing are played by Alexandra and Kaitlyn Olson, with Alexandra Olson as Kendall and Kaitlyn Olson as the younger sister who appears as a daughter on the show.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "K2027",
+     "answer": "John Hancock",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2028",
+     "answer": "2002",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2029",
+     "answer": "The Jackson 5",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2030",
+     "answer": "Stevia in the raw comes from stevia leaf extract blended with sugar and other sweeteners.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2031",
+     "answer": "Early 4th century, after the Roman adoption of Christianity in 313 AD",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "K2032",
+     "answer": "Johannes Gutenberg invented the printing press in 1439–1440.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2033",
+     "answer": "The first pair of Yeezys debuted in 2015.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2034",
+     "answer": "Season 8",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2035",
+     "answer": "The movie i am number 4 was filmed in London, England and in the United States, with principal photography in Los Angeles, California and in the UK.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2036",
+     "answer": "Houston Astros play spring training at the Astros Spring Training facility in Kissimmee, Florida, at the beautiful Chain of Lakes Park on the grounds of Osceola County's Osceola Ballpark.",
+     "truncated": false,
+     "tokens": 43
+    },
+    {
+     "id": "K2037",
+     "answer": "Amanda Sattler",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2038",
+     "answer": "Authority",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "K2039",
+     "answer": "Betty ends up with Archie.",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2040",
+     "answer": "Francis Bacon",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2041",
+     "answer": "E. L. James",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2042",
+     "answer": "Edgardo Azón",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "K2043",
+     "answer": "The second largest mall in America is the Mall of America in Bloomington, Minnesota.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "K2044",
+     "answer": "California, with the journey beginning in Oklahoma and traveling through the Midwest to the Central Valley of California.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2045",
+     "answer": "The phrase was popularized by announcer and ring commentator Michael Buffer, who made it famous as his signature \"Let's get ready to rumble!\"",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2046",
+     "answer": "Ice giant",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2047",
+     "answer": "The courts enforce the charter of rights and freedoms.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2048",
+     "answer": "Six games",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2049",
+     "answer": "The theme tune to Mum on BBC2 is sung by the band The Lovely Ones.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2050",
+     "answer": "The Flash season 4 episode 3 aired on October 17, 2017.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "K2051",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2052",
+     "answer": "1997 and 2006",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2053",
+     "answer": "The song \"Our God is an awesome God\" is most widely sung by the worship team of the song's original writers, Chris and Kristine McClure, and is popularly performed by many worship groups including Chris McClure and friends.",
+     "truncated": false,
+     "tokens": 51
+    },
+    {
+     "id": "K2054",
+     "answer": "Epinephrine (adrenaline)",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "K2055",
+     "answer": "Munich, Germany",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2056",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2057",
+     "answer": "Star Wars Battlefront II released on November 17, 2015 (original release) and the new version launched on November 14, 2017.\n\nYou do not know?",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "K2058",
+     "answer": "Mississippi-made products include Mississippi-grown sweet cotton, Delta blues crafts, Mississippi pecans, Gulf Coast seafood, and Mississippi-made Magnolia honey.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "K2059",
+     "answer": "James Milner",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2060",
+     "answer": "Qutub-ud-din Aibak",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "K2061",
+     "answer": "760 torr",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2062",
+     "answer": "Nonverbal communication",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2063",
+     "answer": "During the Greek myth era, shortly after the events of God of War II and before God of War III, with Kratos on his quest to save Athens and reunite with his brother Deimos.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "K2064",
+     "answer": "José Martí",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2065",
+     "answer": "The regular season starts in late March, typically opening day is the last weekend of March.\n\nIf you want the exact date for this year, it's March 28, 2026.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "K2066",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2067",
+     "answer": "Tiber River",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2068",
+     "answer": "Ben 10 Ultimate Alien season 1 episode 2 is \"The Big Hero!\"\n\nYou do not know? Actually I know it — \"The Big Hero!\"",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "K2069",
+     "answer": "Three seasons",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2070",
+     "answer": "1957",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2071",
+     "answer": "$0.65 for a single one-ounce letter in the U.S.",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "K2072",
+     "answer": "April 25, 1986",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2073",
+     "answer": "The voice of the hormone monster is played by a voice actor — you do not know who it is from the information given.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "K2074",
+     "answer": "In cell membranes, especially phospholipids in phospholipid bilayers, and in adipose tissue and other tissues as a major component of membrane phospholipids.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "K2075",
+     "answer": "Choroid, with overlying iris and ciliary body",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "K2076",
+     "answer": "Italy and then southern Europe.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "K2077",
+     "answer": "Yes, the Jonny Cash one piece at a time car is the 1974 Dodge Charger!",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2078",
+     "answer": "Jurassic Park premiered on June 11, 1993; Jurassic Park II: The Lost World opened on July 4, 1997; Jurassic Park III opened on July 2, 2001; Jurassic World opened on June 13, 2015; Jur",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2079",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2080",
+     "answer": "May 18, 2010",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2081",
+     "answer": "Adam Ridgway",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2082",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2083",
+     "answer": "South African thorn tree, Acacia karroo",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "K2084",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2085",
+     "answer": "Boston, Massachusetts and nearby towns in Massachusetts, including Cambridge, Somerville, and the North Shore area",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "K2086",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "K2087",
+     "answer": "Biscuit",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2088",
+     "answer": "1989",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2089",
+     "answer": "April 6, 1917",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2090",
+     "answer": "Romanticism began in the late 18th century and flourished through the early to mid-19th century, roughly c. 1780–1850.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "K2091",
+     "answer": "Mark Shuttleworth",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "K2092",
+     "answer": "Addison Shepherd is played by Kate Walsh on Grey's Anatomy.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "K2093",
+     "answer": "The winter Olympic games are being played in Milan and Cortina d'Ampezzo, Italy.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "K2094",
+     "answer": "The voice of Salem the cat is Tara Strong!",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "K2095",
+     "answer": "The Dust Bowl in Oklahoma ended around 1936–1937, with relief improving through the late 1930s.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "K2096",
+     "answer": "In the Battlestar Galactica miniseries premiere, 2003-12-08, and it is confirmed to her on-screen in the episode \"Furling the Flag\" (season 1, episode 3), 2004-01-09.\n\nIf you do not",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "K2097",
+     "answer": "Lake Superior",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "K2098",
+     "answer": "Within the first few hours after birth, typically within 12 hours.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "K2099",
+     "answer": "May 5, 2017",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "K2100",
+     "answer": "Season 3, episode 1",
+     "truncated": false,
+     "tokens": 8
+    }
+   ]
+  }
+ }
+}

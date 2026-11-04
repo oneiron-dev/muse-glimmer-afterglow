@@ -1,7 +1,10 @@
 #!/bin/bash
 # Custom voices, the GPU part (one job for one or more voices; ~25-40 min on one 4090, whole card):
 #   1. extract   re:dvx contrast states on the NF4 base for the five standard axes and every voice axis
-#   2. fit       re:dvx directions -> llama.cpp control-vector GGUFs (fit_vectors.py; the "raw" variant is served)
+#   2. fit       re:dvx directions -> llama.cpp control-vector GGUFs (fit_vectors.py; the "raw" variant is served).
+#                A voice axis is fitted with re:dvx's diff_of_means (the mean paired difference) unless its axis.json
+#                names another "estimator": centered PCA gave a different direction for each contrast set written from
+#                the same sentence (cosine 0.16-0.41), the mean difference the same one (0.85-0.90).
 #   3. check     the behaviour check with each voice's vector added at each check scale (behaviour_check.py --vector)
 #   4. serve     the per-request control-vector llama-server with every voice loaded at 0 (layers 16-42)
 #   5. sweep     voice_sweep.py: test-prompt replies per scale + the "I don't know" rate on the 200 gate questions
@@ -48,7 +51,8 @@ spec = json.loads(Path("steering/axes.json").read_text())
 for slug in slugs:
     a = json.loads(Path(f"steering/voices/{slug}/axis.json").read_text())
     spec["axes"].append({k: a[k] for k in ("name", "kind", "positive_label", "negative_label", "templates",
-                                           "adjective_pairs", "prompts", "test_prompts", "check_labels")})
+                                           "adjective_pairs", "prompts", "test_prompts", "check_labels")}
+                        | {"estimator": a.get("estimator") or "diff_of_means"})
 Path(out).write_text(json.dumps(spec, indent=1, ensure_ascii=False) + "\n")
 print(json.dumps({"axes": [a["name"] for a in spec["axes"]]}))
 PY

@@ -5,6 +5,7 @@ import { Icon } from "./Sidebar.jsx";
 import { DaysView } from "./DaysView.jsx";
 import { factRows, failedWhy, getJSON, postJSON, pretty, signed } from "./lib.js";
 import { ClipsList } from "./clips/ClipsList.jsx";
+import { FilesList } from "./files/FilesList.jsx";
 
 const TITLES = { memory: "Memory", nights: "Nights", calendar: "Calendar", mail: "Mail", tasks: "Tasks", files: "Files", settings: "Settings" };
 
@@ -201,21 +202,24 @@ function SpeedLine({ series }) {
   );
 }
 
-/** Files: what you attached and what your agent made. A files tool for the agent is being built (Meta lane). */
+/** Files: your files (GET /api/files, the same files your agent reads and writes), mail drafts, what you copied today
+ (its own list from /api/clips) and what you attached in the chat. */
 function FilesScreen({ ctx }) {
   const drafts = (ctx.ws && ctx.ws.emails) || [];
   const [att, setAtt] = useState(null);
-  useEffect(() => { getJSON("/api/attachments").then((r) => setAtt(r.attachments || [])).catch(() => setAtt([])); }, [ctx.state.world, ctx.state.day]);
+  const loadAtt = () => getJSON("/api/attachments").then((r) => setAtt(r.attachments || [])).catch(() => setAtt([]));
+  useEffect(() => { loadAtt(); }, [ctx.state.world, ctx.state.day]);
   return (
     <div className="col">
-      <h2 className="sec">Made by your agent</h2>
+      <FilesList world={ctx.state.world} onAttached={loadAtt} />
+      <h2 className="sec">Mail drafts</h2>
       {drafts.length ? (
         <ul className="files">
-          {drafts.map((m) => <li key={m.id}><Icon id="mail" /><span><b>{m.subject}</b><small>Mail draft to {m.to}{m.day ? `, day ${m.day}` : ""}</small></span></li>)}
+          {drafts.map((m) => <li key={m.id}><Icon id="mail" /><span><b>{m.subject}</b><small>Draft to {m.to}{m.day ? `, day ${m.day}` : ""}</small></span></li>)}
         </ul>
       ) : <Empty kind="email">Nothing yet. Ask your agent to draft an email and it shows here.</Empty>}
-      <ClipsList day={ctx.state.day} world={ctx.state.world} onAttached={() => getJSON("/api/attachments").then((r) => setAtt(r.attachments || [])).catch(() => {})} />
-      <h2 className="sec">Attached by you</h2>
+      <ClipsList day={ctx.state.day} world={ctx.state.world} onAttached={loadAtt} />
+      <h2 className="sec">Attached in the chat</h2>
       {att && att.length ? (
         <ul className="files">
           {att.map((a) => <li key={`${a.day}-${a.id}`}><Icon id="files" /><span><b>{a.name}</b><small>Day {a.day}, {Math.max(1, Math.round(a.chars / 1000))}k characters{a.truncated ? ", the start was sent" : ""}</small></span></li>)}
