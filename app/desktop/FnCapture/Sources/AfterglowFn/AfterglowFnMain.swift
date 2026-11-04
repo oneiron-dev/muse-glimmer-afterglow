@@ -32,6 +32,7 @@ import FnCapture
     private var frontApp: NSRunningApplication?
     private var captureTask: Task<CropContext, Error>?
     private var requestTask: Task<Void, Never>?
+    private var permissionPoll: Timer?
 
     struct CropContext {
         let png: Data
@@ -55,6 +56,16 @@ import FnCapture
             DispatchQueue.main.async { self?.finish() }
         }
         overlay.onSelection = { [weak self] rect in self?.select(rect) }
+        // Settings changes land without opening the menu: check once a second until all four are allowed.
+        let poll = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self else { return }
+                self.refresh()
+                if Permissions.allAuthorized() { self.permissionPoll?.invalidate(); self.permissionPoll = nil }
+            }
+        }
+        RunLoop.main.add(poll, forMode: .common)
+        permissionPoll = poll
         // No dim and no crosshair: the Afterglow mark beside the cursor says "listening".
         overlay.dimsScreen = false
         overlay.usesCrosshair = false
@@ -82,6 +93,9 @@ import FnCapture
             item.target = self; item.representedObject = permission.rawValue
             permissionItems[permission] = item; menu.addItem(item)
         }
+        let restart = NSMenuItem(title: "Restart to apply permissions",
+                                 action: #selector(restartHelper), keyEquivalent: "")
+        restart.target = self; menu.addItem(restart)
         menu.addItem(.separator())
         for mode in [FnKeyMonitor.Mode.function, .rightOption] {
             let item = NSMenuItem(title: mode == .function ? "Hold fn" : "Hold Right Option",
@@ -125,9 +139,37 @@ import FnCapture
         else { statusLine.title = busy ? "Your agent is working" : "Ready: hold \(monitor.mode == .function ? "fn" : "Right Option")" }
     }
 
+    /// Asks macOS (which puts the helper in the list), then opens the exact Settings pane,
+    /// because the system asks only once and a later click would otherwise do nothing.
     @objc private func requestPermission(_ sender: NSMenuItem) {
         guard let raw = sender.representedObject as? String, let permission = FnPermission(rawValue: raw) else { return }
-        Task { _ = await Permissions.request(permission); refresh() }
+        Task {
+            let status = await Permissions.request(permission)
+            if !status.isAuthorized, let pane = Self.settingsPane(permission) { NSWorkspace.shared.open(pane) }
+            refresh()
+        }
+    }
+
+    private static func settingsPane(_ permission: FnPermission) -> URL? {
+        let anchor: String
+        switch permission {
+        case .microphone: anchor = "Privacy_Microphone"
+        case .screenCapture: anchor = "Privacy_ScreenCapture"
+        case .accessibility: anchor = "Privacy_Accessibility"
+        case .inputMonitoring: anchor = "Privacy_ListenEvent"
+        }
+        return URL(string: "x-apple.systempreferences:com.apple.preference.security?\(anchor)")
+    }
+
+    /// Screen Recording and Input Monitoring count only from the next launch: start a fresh copy with the same arguments.
+    @objc private func restartHelper() {
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.arguments = Array(CommandLine.arguments.dropFirst())
+        configuration.createsNewApplicationInstance = true
+        configuration.activates = false
+        NSWorkspace.shared.openApplication(at: Bundle.main.bundleURL, configuration: configuration) { _, error in
+            DispatchQueue.main.async { if error == nil { NSApp.terminate(nil) } }
+        }
     }
     @objc private func changeMode(_ sender: NSMenuItem) {
         guard let raw = sender.representedObject as? String, let mode = FnKeyMonitor.Mode(rawValue: raw) else { return }
