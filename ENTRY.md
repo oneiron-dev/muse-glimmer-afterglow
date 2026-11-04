@@ -64,6 +64,25 @@ Every commit in this repository was made during the event. The tag `event-start-
 | 29 Oct | How much the served look-up does: on their own the night-4 updates put a real note on the wrong person 3 to 10 times in 30 never-told questions; on 15 held-out questions without "<Name>'s", frozen before any answer, the one-pass look-up itself says "none" 42 times in 45, and the 3 misses are answers given without a look-up. Results under `eval/results/2026-10-29-steering/`. | #90 |
 | 30 Oct | Night 5 read as the served day-5 assistant, with two checks frozen before any answer: never-told questions that are near-synonyms of something the user did say are flagged and shown apart (the rule counts the rest), and 100 public questions base Glimmer mostly knows measure lost knowledge beside the rule. Under the honesty rule one night of four passes (w2, already rolled back by its own forgetting check); the other three still say "not in your notes" to what the user never said but lose right answers, because the night's new "can you tell me?" wording spreads from the user's own facts to world questions (72 to 119 of 200 general questions ask the user back, base 25 to 32). Results under `eval/results/2026-10-29-steering/`. | #104 |
 | 30 Oct | The keep rule's right-answer floor moved to 200 public questions base Glimmer mostly knows, at the same loss share (a night may lose at most 3/17 of base's right answers), because the 200 general questions hold only about 15 that base gets right. The night-5 "can you tell me?" wording spread from the user's own facts to world questions; a recipe that adds 24 public questions answered with a search call removes it in three of four people (it asks the user back 3, 4 and 10 times in 200, against base's 27 to 32), and a second training seed reproduces the read within a few points. Results under `eval/results/2026-10-29-steering/`. | #112, #113 |
+| 30 Oct | Never-told near-synonym flags for day-6, day-7 and day-8 notes, each frozen before that night. | #114, #131, #138 |
+| 30 Oct | Serving rule: a held list. A held night is never served, and the serving line shows the reason in plain words. | #115, #116 |
+| 30 Oct | Notes backend switch, local or vault: write-through, vault recall with a local fallback, per-call timing, a background wake, and a clean fallback when the vault is down. | #117, #119 |
+| 30 Oct | Rule of record honesty-3k now includes the ask-back bound (at most base + 20 of 200 general questions), set by the owner; the checks are named as the rule says them, and the night-5 arms were read again under it. | #118, #120, #121 |
+| 30 Oct | Night links into the next day's notes: links that pass the guard apply at day start, with Undo, and Link or Keep both for proposed pairs. | #122 |
+| 30 Oct | Days 7 and 8 for the four synthetic people: scripts, facts and frozen held-out probes. | #123, #133 |
+| 30 Oct | Night recipe options, off by default: soft anchors with a KL term, parallel anchor pools and a KL alignment guard, on-policy context-distillation rows, protective rows at a reference night's shares, per-form KL logging, a longer training booking, and train.jsonl written only after both leak checks. | #124, #125, #126, #128, #130, #132, #134, #136, #141, #142, #143 |
+| 30 Oct to 3 Nov | Steering results for nights 6 to 10, with the importers and read options they needed (serving-scale screens, stacked honesty-adapter reads). | #127, #129, #135, #137, #139, #140, #144, #145, #147, #148, #152, #153, #154 |
+| 2 to 3 Nov | Days 9, 10 and 11 for the four synthetic people: scripts and held-out probes. | #146, #151, #156 |
+| 3 Nov | Vault: replay into a fresh vault with exact read-back, and agent-only day-one enrolment. | #149, #150 |
+| 3 Nov | Content-channel check v2: it passes on the final answers as served. | #155 |
+| 3 Nov | The DFlash drafter retrained on the agent's own traffic: +9.9% decode speed on the day-10 replay, faster in every world; the nightly series and a near-tie readout. | #157, #158 |
+| 3 Nov | Fresh-200 confirmation set: 200 general questions kept out of training, with a manifest and a leak-hit log, used to re-test a kept night before it is picked. | #159 |
+| 3 Nov | This ledger says synthetic people. Elin Sorensen's night-9e5 promoted to her night of record. | #160, #161 |
+| 3 Nov | Morning report: the kept arm, every night up to the one it shows, the fresh-200 re-test and the drafter speed. | #162, #163 |
+| 3 Nov | Nights 4 to 11: every decision of record and the read summaries behind the demo chart, under `eval/results/2026-11-04-nights-4-11/`. | #164 |
+| 3 Nov | Day switcher: one owner app opens another recorded person and day, from the recorded list only. | #165, #166 |
+| 3 Nov | Night proposals stop offering the cautious, formal and casual dial ends. | #167, #168 |
+| 3 Nov | Email drafts: the email.draft tool saves a draft for the user and never sends. | #169 |
 
 ## Pre-existing work used as external dependencies
 
