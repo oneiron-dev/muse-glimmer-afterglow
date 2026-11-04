@@ -68,6 +68,7 @@ done
 [[ $PREP == *check* ]] && log "behaviour check (${#VEC_ARGS[@]} args)" && "$PY" steering/behaviour_check.py --model-dir "$MODEL_DIR" --axes "$RUN/axes.json" --axes-states "$RUN/states" \
   --out "$RUN/check" --deadline-s 1200 --vector-layers "${LAYERS// /,}" "${VEC_ARGS[@]}" 2>&1 | tee -a "$RUN/check.log" | grep -v Warning || true
 
+[ -n "$SWEEP_STEPS" ] || { log "DONE (no sweep steps)"; exit 0; }
 CV=""; VOICE_ARGS=(); i=0
 for variant in ${VARIANT//,/ }; do  # raw: output stem <slug>; any other variant: <slug>-<variant>
   for slug in "$@"; do
