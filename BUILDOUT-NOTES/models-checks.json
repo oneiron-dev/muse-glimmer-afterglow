@@ -1,0 +1,185 @@
+{
+  "lane": "L10",
+  "branch": "afterglow/models",
+  "base_commit": "92e9c62",
+  "projector": {
+    "repo": "meta-models/Muse-Glimmer-30B-GGUF",
+    "revision": "b44f1072cf75e918a1b82a3a17b45c4389b076e7",
+    "file": "mmproj-Muse-Glimmer-30B-Q4_K_M.gguf",
+    "size": 1400328928,
+    "sha256": "f48b452316f9b213758e8659444029b961a24a07f99a1abb2a9f88b06f7c00c6",
+    "authority": "https://huggingface.co/api/models/meta-models/Muse-Glimmer-30B-GGUF?blobs=true"
+  },
+  "vision_download": {
+    "repo": "mlx-community/Qwen3.5-4B-MLX-4bit",
+    "revision": "32f3e8ecf65426fc3306969496342d504bfa13f3",
+    "downloaded_bytes": 3061131350,
+    "runtime": "mlx-vlm==0.7.11",
+    "verified": true
+  },
+  "live": {
+    "host": "Apple M4 Max, 64 GB unified memory",
+    "scratch_runs": "/tmp/afterglow-models-runs",
+    "app_port": 8678,
+    "speech_switch": [
+      "qwen3-asr-1.7b-8bit",
+      "whisper-large-v3",
+      "qwen3-asr-1.7b-8bit"
+    ],
+    "get_settings_unchanged": true,
+    "worker_rss_kib": 3497200,
+    "worker_rss_decimal_gb": 3.5811328,
+    "measurements": [
+      {
+        "wall_ms": 5609.3897089594975,
+        "response": {
+          "available": true,
+          "mode": "mac",
+          "ok": true,
+          "text": "👍; Perfect, short and direct is great.",
+          "items": [
+            {
+              "label": "emoji",
+              "box": [
+                0.05,
+                0.35,
+                0.08,
+                0.15
+              ]
+            },
+            {
+              "label": "text",
+              "box": [
+                0.1,
+                0.35,
+                0.9,
+                0.15
+              ]
+            }
+          ],
+          "ms": 1795,
+          "observations": [
+            {
+              "id": "v0",
+              "kind": "emoji",
+              "text": "👍",
+              "label": "emoji",
+              "box": [
+                0.05,
+                0.35,
+                0.08,
+                0.15
+              ]
+            },
+            {
+              "id": "v1",
+              "kind": "text",
+              "text": "Perfect, short and direct is great.",
+              "label": "text",
+              "box": [
+                0.1,
+                0.35,
+                0.9,
+                0.15
+              ]
+            }
+          ],
+          "unknowns": [],
+          "crop_id": "57052583ea1b4174baf931baf8773553"
+        }
+      },
+      {
+        "wall_ms": 1678.8517910172231,
+        "response": {
+          "available": true,
+          "mode": "mac",
+          "ok": true,
+          "text": "larkspur-brief.md; Here is the pilot brief, keep the key facts.",
+          "items": [
+            {
+              "label": "filename",
+              "box": [
+                0.52,
+                0.15,
+                0.48,
+                0.12
+              ]
+            },
+            {
+              "label": "message",
+              "box": [
+                0.12,
+                0.45,
+                0.88,
+                0.55
+              ]
+            }
+          ],
+          "ms": 1675,
+          "observations": [
+            {
+              "id": "v0",
+              "kind": "layout",
+              "text": "larkspur-brief.md",
+              "label": "filename",
+              "box": [
+                0.52,
+                0.15,
+                0.48,
+                0.12
+              ]
+            },
+            {
+              "id": "v1",
+              "kind": "text",
+              "text": "Here is the pilot brief, keep the key facts.",
+              "label": "message",
+              "box": [
+                0.12,
+                0.45,
+                0.88,
+                0.55
+              ]
+            }
+          ],
+          "unknowns": [],
+          "crop_id": "fe5ec0821f4047e790f34ea5d2132a81"
+        }
+      }
+    ],
+    "vision_none_circle": "text",
+    "vision_mac_circle": "vision"
+  },
+  "limitations": [
+    "Two small crops, not full-screen performance or a benchmark.",
+    "Boxes pass finite/in-bounds schema checks; localization accuracy is not verified.",
+    "Native projector serving not run; remote server never reconfigured.",
+    "Other selectable models were not loaded in this lane.",
+    "Screenshots use the provided driver adapted to Linux Chrome on sel, via fleet booking."
+  ],
+  "tests": {
+    "command": "cd /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-models/app && python3 -m unittest discover -s tests",
+    "runs": [
+      {
+        "tests": 444,
+        "skipped": 1,
+        "result": "OK",
+        "duration_seconds": 11.328
+      },
+      {
+        "tests": 444,
+        "skipped": 1,
+        "result": "OK"
+      }
+    ],
+    "prompt_fingerprint": "green in both full runs"
+  },
+  "build": {
+    "command": "cd /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-models/app/ui && ~/.bun/bin/bun run build",
+    "result": "passed",
+    "warnings": [
+      "Existing Newsreader.ttf unresolved at build time",
+      "Existing HankenGrotesk.ttf unresolved at build time"
+    ]
+  }
+}

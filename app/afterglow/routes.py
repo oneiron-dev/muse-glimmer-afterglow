@@ -16,7 +16,7 @@ import urllib.parse
 
 FAILED = {}  # feature name -> why it did not load (shown in the server log)
 FEATURES = ["threads_api", "history_api", "connectors", "dictation", "clipboard", "explainer", "loom_api",
-            "files_api"]
+            "files_api", "models", "vision"]
 
 
 class Request:
