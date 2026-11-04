@@ -1,0 +1,475 @@
+[
+ {
+  "file": "crop-1-thumbs.png",
+  "question": "What is this emoji?",
+  "expect": "A thumbs-up emoji at the start of a chat message that says 'Perfect, short and direct is great.'",
+  "mode": "mac",
+  "sight": "described",
+  "id": "t53",
+  "total_s": 8.01,
+  "ms": {
+   "vision": 3757,
+   "model": 4252
+  },
+  "answered": true,
+  "title": "Thumbs up emoji identified",
+  "answer": "The emoji shown is a thumbs up 👍.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "v0",
+     "id": "i1",
+     "label": "thumbs up emoji",
+     "detail": "👍 visible"
+    }
+   ]
+  },
+  "anchors": [
+   {
+    "id": "b0",
+    "text": "Perfect, short and direct IS great.",
+    "box": [
+     0.1069,
+     0.3806,
+     0.8075,
+     0.3254
+    ]
+   },
+   {
+    "id": "v0",
+    "text": "👍",
+    "box": [
+     0.03,
+     0.25,
+     0.07,
+     0.35
+    ]
+   }
+  ],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/mac-crop-1-thumbs-window.png 420 520",
+   "eval: \"{\\\"img\\\":[560],\\\"overflowX\\\":false,\\\"marks\\\":1}\"",
+   "console clean"
+  ]
+ },
+ {
+  "file": "crop-2-icon.png",
+  "question": "What does the button on the right do?",
+  "expect": "A small panel or sidebar icon at the right of a bar that also shows a moon and 'Night when you end the day'; it likely opens or closes a side panel. Says it is a guess from the shape.",
+  "mode": "mac",
+  "sight": "described",
+  "id": "t54",
+  "total_s": 6.99,
+  "ms": {
+   "vision": 1570,
+   "model": 5413
+  },
+  "answered": true,
+  "title": "Calendar button on right",
+  "answer": "The button on the right is a calendar icon. It likely opens a date picker so you can choose which night to log or view.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "v3",
+     "id": "i1",
+     "label": "calendar button",
+     "detail": "Calendar icon, the button on the right."
+    },
+    {
+     "anchor": "v0",
+     "id": "i2",
+     "label": "right button",
+     "detail": "Button next to the night label."
+    },
+    {
+     "anchor": "v2",
+     "id": "i3",
+     "label": "Night label",
+     "detail": "Night when you end the day text."
+    },
+    {
+     "anchor": "v1",
+     "id": "i4",
+     "label": "moon icon",
+     "detail": "Moon icon beside the label."
+    }
+   ]
+  },
+  "anchors": [
+   {
+    "id": "b0",
+    "text": "• Night when you end the day 口",
+    "box": [
+     0.038,
+     0.2469,
+     0.924,
+     0.4968
+    ]
+   },
+   {
+    "id": "v0",
+    "text": "button",
+    "box": [
+     0.8,
+     0.4,
+     0.09999999999999998,
+     0.09999999999999998
+    ]
+   },
+   {
+    "id": "v1",
+    "text": "🌙",
+    "box": [
+     0.0,
+     0.3,
+     0.1,
+     0.4
+    ]
+   },
+   {
+    "id": "v2",
+    "text": "Night when you end the day",
+    "box": [
+     0.1,
+     0.3,
+     0.7,
+     0.5
+    ]
+   },
+   {
+    "id": "v3",
+    "text": "calendar icon",
+    "box": [
+     0.8,
+     0.4,
+     0.09999999999999998,
+     0.09999999999999998
+    ]
+   }
+  ],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/mac-crop-2-icon-window.png 420 520",
+   "eval: \"{\\\"img\\\":[260],\\\"overflowX\\\":false,\\\"marks\\\":4}\"",
+   "console clean"
+  ]
+ },
+ {
+  "file": "crop-3-chart.png",
+  "question": "What does this chart show?",
+  "expect": "Replies +9.9% faster: 118.0 against 107.4 tokens a second, from a drafter trained on your messages; the small line rises toward the right.",
+  "mode": "mac",
+  "sight": "described",
+  "id": "t55",
+  "total_s": 4.62,
+  "ms": {
+   "vision": 804,
+   "model": 3815
+  },
+  "answered": true,
+  "title": "Replies speed improvement chart",
+  "answer": "The chart shows Replies are +9.9% faster with the drafter trained on your messages, 118.0 versus 107.4 tokens a second.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "v0",
+     "id": "i1",
+     "label": "Replies speed chart",
+     "detail": "Shows +9.9% faster replies from drafter trained on your messages"
+    },
+    {
+     "anchor": "b1",
+     "id": "i2",
+     "label": "+9.9% faster",
+     "detail": "Percent improvement shown"
+    },
+    {
+     "anchor": "b2",
+     "id": "i3",
+     "label": "Tokens per second",
+     "detail": "118.0 against 107.4 tokens a second"
+    },
+    {
+     "anchor": "b3",
+     "id": "i4",
+     "label": "Trained on messages",
+     "detail": "Drafter trained on your messages"
+    }
+   ]
+  },
+  "anchors": [
+   {
+    "id": "b0",
+    "text": "Replies",
+    "box": [
+     0.0683,
+     0.1053,
+     0.1073,
+     0.0632
+    ]
+   },
+   {
+    "id": "b1",
+    "text": "+9.9%",
+    "box": [
+     0.0683,
+     0.2211,
+     0.1707,
+     0.1263
+    ]
+   },
+   {
+    "id": "b2",
+    "text": "faster: 118.0 against 107.4 tokens a second, from a drafter",
+    "box": [
+     0.0683,
+     0.4105,
+     0.8049,
+     0.0737
+    ]
+   },
+   {
+    "id": "b3",
+    "text": "trained on your messages.",
+    "box": [
+     0.0676,
+     0.5,
+     0.3671,
+     0.09
+    ]
+   },
+   {
+    "id": "v0",
+    "text": "Replies +9.9% faster: 118.0 against 107.4 tokens a second, from a drafter trained on your messages.",
+    "box": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  ],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/mac-crop-3-chart-window.png 420 520",
+   "eval: \"{\\\"img\\\":[410],\\\"overflowX\\\":false,\\\"marks\\\":4}\"",
+   "console clean"
+  ]
+ },
+ {
+  "file": "crop-4-jp-ui.png",
+  "question": "Can I send this now?",
+  "expect": "No: the Send button is disabled and the red line says the recipient is not confirmed (送信先が未確認です). Due date 11月12日; after it, sending is not possible. Amount ¥48,600 tax not included. Party emoji next to the recipient.",
+  "mode": "mac",
+  "sight": "described",
+  "id": "t56",
+  "total_s": 11.47,
+  "ms": {
+   "vision": 2809,
+   "model": 8652
+  },
+  "answered": true,
+  "title": "Invoice send blocked",
+  "answer": "No. The Send button is disabled and the screen shows the recipient is unconfirmed, so the invoice cannot be sent now.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "v0",
+     "id": "i1",
+     "label": "Send button",
+     "detail": "送信 Send appears disabled"
+    },
+    {
+     "anchor": "v1",
+     "id": "i2",
+     "label": "Recipient status",
+     "detail": "送信先が未確認です shown"
+    },
+    {
+     "anchor": "v2",
+     "id": "i3",
+     "label": "Deadline warning",
+     "detail": "Payment deadline is 11月12日 with warning in middle"
+    }
+   ]
+  },
+  "anchors": [
+   {
+    "id": "b0",
+    "text": "請求書の送信 / Send invoice",
+    "box": [
+     0.0394,
+     0.0969,
+     0.492,
+     0.1084
+    ]
+   },
+   {
+    "id": "b1",
+    "text": "宛先：株式会社Larkspur 経理部 ，",
+    "box": [
+     0.0396,
+     0.2778,
+     0.4646,
+     0.0889
+    ]
+   },
+   {
+    "id": "b2",
+    "text": "4支払期限は11月12日です。期限を過ぎると送信できません。",
+    "box": [
+     0.0375,
+     0.4222,
+     0.8333,
+     0.1
+    ]
+   },
+   {
+    "id": "b3",
+    "text": "Amount： ￥48,600 （tax not included）",
+    "box": [
+     0.0396,
+     0.5611,
+     0.5333,
+     0.0944
+    ]
+   },
+   {
+    "id": "b4",
+    "text": "送信 Send",
+    "box": [
+     0.0684,
+     0.7818,
+     0.1318,
+     0.0774
+    ]
+   },
+   {
+    "id": "b5",
+    "text": "送信先が未確認です",
+    "box": [
+     0.2521,
+     0.7833,
+     0.2271,
+     0.0722
+    ]
+   },
+   {
+    "id": "v0",
+    "text": "送信 Send (disabled)",
+    "box": [
+     0.08,
+     0.72,
+     0.16999999999999998,
+     0.13
+    ]
+   },
+   {
+    "id": "v1",
+    "text": "送信先が未確認です",
+    "box": [
+     0.27,
+     0.72,
+     0.18,
+     0.13
+    ]
+   },
+   {
+    "id": "v2",
+    "text": "⚠️ 支払期限は11月12日です。期限を過ぎると送信できません。",
+    "box": [
+     0.08,
+     0.35,
+     0.55,
+     0.45
+    ]
+   },
+   {
+    "id": "v3",
+    "text": "宛先: 株式会社Larkspur 経理部🎉",
+    "box": [
+     0.08,
+     0.18,
+     0.55,
+     0.28
+    ]
+   },
+   {
+    "id": "v4",
+    "text": "Amount: ¥48,600 (tax not included)",
+    "box": [
+     0.08,
+     0.45,
+     0.55,
+     0.55
+    ]
+   },
+   {
+    "id": "v5",
+    "text": "請求書の送信 / Send invoice",
+    "box": [
+     0.08,
+     0.05,
+     0.55,
+     0.15
+    ]
+   }
+  ],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/mac-crop-4-jp-ui-window.png 420 520",
+   "eval: \"{\\\"img\\\":[960],\\\"overflowX\\\":false,\\\"marks\\\":3}\"",
+   "console clean"
+  ]
+ },
+ {
+  "file": "crop-5-photo.png",
+  "question": "What is in this picture, and what time was it taken?",
+  "expect": "A painted sky or landscape (clouds, warm light). It says the time cannot be known from the picture.",
+  "mode": "mac",
+  "sight": "described",
+  "id": "t57",
+  "total_s": 7.39,
+  "ms": {
+   "vision": 836,
+   "model": 6548
+  },
+  "answered": false,
+  "title": "Watercolor sky painting",
+  "answer": "The picture shows a watercolor painting of a sky with clouds in warm yellow, orange and pink tones. No timestamp or time information is visible in the image, so the exact time it was taken cannot be determined from what is shown; the warm tones suggest a sunset or sunrise scene.",
+  "body": {
+   "type": "screenshot",
+   "pins": [
+    {
+     "anchor": "v0",
+     "id": "i1",
+     "label": "sky painting",
+     "detail": "watercolor sky with clouds in warm yellow orange pink tones"
+    }
+   ]
+  },
+  "anchors": [
+   {
+    "id": "v0",
+    "text": "watercolor painting of sky with clouds in warm yellow orange and pink tones",
+    "box": [
+     0.0,
+     0.0,
+     1.0,
+     1.0
+    ]
+   }
+  ],
+  "errors": null,
+  "page": [
+   "shot: /Users/olety/Desktop/code/muse-glimmer-afterglow/.claude/worktrees/afterglow-explainer/BUILDOUT-NOTES/explainer/check/mac-crop-5-photo-window.png 420 520",
+   "eval: \"{\\\"img\\\":[640],\\\"overflowX\\\":false,\\\"marks\\\":1}\"",
+   "console clean"
+  ]
+ }
+]
