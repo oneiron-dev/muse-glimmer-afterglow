@@ -86,3 +86,20 @@ Seen, not changed (data or out of scope):
   loom-resolution.json stay as the night trained them.
 - Tests: app LineNotesTest (the 312/318 repro both ways, a correction on main after a set-aside note, no rewrite
   without forks), the sealed switch, night test_loom_line (consolidate.load_day repro, identity on recorded days).
+
+## 5. The loom's words say what the night does (PR ui/loom-honest)
+
+The night reads only the line in loom-resolution.json (Meta lead, 16:1x): keep_side and add_branches are saved
+but nothing trains on them before the 05:00 restart. The words promised more ("Tonight I learn Design review time:
+Thursday at 15:00", "Tick it and I learn it too", "A later night learns what you picked").
+- The question before tonight now picks a version, which is the thing the night trains: "The version of today you
+  are on" or "You said “...”" with the facts each one says. Saving another version moves today to it (switch, then
+  resolve) and says so ("Saving moves today to that version."). Saved: "Saved. Tonight's training uses the version
+  you picked." No tick boxes for facts said only on another version.
+- The morning offer says "Last night's training used the version of day N you ended on. If your other version was
+  right, mark it here." and, saved, "Your pick is saved. Last night's result stays as it was." After an answer it
+  offers a version only for facts that disagree with nothing (the other side of an answered conflict is not offered).
+- Other versions are named by what you said on them differently (loom.version_words, GET /api/loom version_words,
+  replacing first_words), so your first version reads "You said “The design review is on Thursday at 14:00.”".
+- Checked live on 8667 (Mira, the forked day): picking the 15:00 version moved the day to it, set 14:00 aside in
+  notes.json (other_version) and saved the answer on that line; the day-2 morning offer, unanswered and answered.

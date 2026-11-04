@@ -1,64 +1,61 @@
 import { useState } from "react";
 import { postJSON } from "../lib.js";
 import { cue } from "../sound.js";
-import { factLabel } from "./words.js";
+import { factLabel, versionLabel } from "./words.js";
 
 /**
- * NightQuestion: the contradiction question before the night. Each fact
- * the other versions of the day disagree on is one choice; facts said only
- * in another version are tick boxes. Save posts POST /api/loom/resolve.
+ * NightQuestion: the question before the night when two versions of today
+ * disagree on a fact. The night trains one version of the day (the line,
+ * night/loom_line.py), so the choice is a version: the one you are on, or
+ * an other version with the facts it said. Saving another version moves
+ * today to it (POST /api/branch/switch), then saves the answer
+ * (POST /api/loom/resolve); tonight's training uses that version.
  *
- * Props (all from GET /api/loom):
+ * Props (from GET /api/loom):
  * - conflicts: contradictions.conflicts
  *   ([{key, line: {id, value}, side: {id, value, branch}}]).
- * - extra: contradictions.extra ([{key, value, id, branch}]).
- * - resolution: the saved answer, if any ({keep_side, add_branches}).
- *   Its add_branches are preserved: resolve replaces the whole answer,
- *   so the branches already added stay added.
- * - onResolved: called with the resolve response after a save.
+ * - resolution: the saved answer for this version, if any.
+ * - line: the branch you are on (loom.line).
+ * - versionWords: {branch: what you said on it that this version did not} (loom.version_words).
+ * - onResolved: async, called after a save to reload the state and loom.
  *
- * Renders nothing when there is nothing to ask. Each conflict starts on
- * the line side (or the saved answer), which matches the fallback of
- * keeping one line. Picking a side fact keeps that fact only; it never
- * adds its branch. A saved answer shows as one quiet line with Change.
+ * Renders nothing when there is nothing to ask. A saved answer shows as
+ * one quiet line with Change.
  */
-export function NightQuestion({ conflicts, extra, resolution, onResolved }) {
+export function NightQuestion({ conflicts, resolution, line, versionWords, onResolved }) {
   const list = conflicts || [];
-  const rest = extra || [];
-  const saved = resolution?.keep_side || [];
-  const [pick, setPick] = useState({});
-  const [keep, setKeep] = useState(() => Object.fromEntries(saved.map((id) => [id, true])));
+  const here = line || "main";
+  const [pick, setPick] = useState(here);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
-  const [local, setLocal] = useState(null);
   const [changing, setChanging] = useState(false);
-  const done = local || resolution;
-  if (!list.length && !rest.length) return null;
-  const choice = (c) => pick[c.side.id] || ((done?.keep_side || []).includes(c.side.id) ? "side" : "line");
-  if (done && !changing) {
-    const chosen = [...list.map((c) => `${factLabel(c.key)}: ${choice(c) === "side" ? c.side.value : c.line.value}`),
-      ...rest.filter((n) => (done.keep_side || []).includes(n.id)).map((n) => `${factLabel(n.key)}: ${n.value}`)];
+  if (!list.length) return null;
+  if (resolution && !changing) {
     return (
       <p className="fhint nq-saved" role="status">
-        Saved. Tonight I learn {chosen.join("; ")}.{" "}
-        <button type="button" className="link" onClick={() => { cue("toggle"); setChanging(true); }}>Change</button>
+        Saved. Tonight’s training uses the version you picked.{" "}
+        <button type="button" className="link" onClick={() => { cue("toggle"); setPick(here); setChanging(true); }}>Change</button>
       </p>
     );
   }
+  const others = [...new Set(list.map((c) => c.side.branch))];
+  const options = [
+    { branch: here, title: "The version of today you are on",
+      facts: [...new Map(list.map((c) => [c.key, `${factLabel(c.key)}: ${c.line.value}`])).values()] },
+    ...others.map((b) => ({ branch: b, title: versionLabel(b, versionWords),
+      facts: list.filter((c) => c.side.branch === b).map((c) => `${factLabel(c.key)}: ${c.side.value}`) })),
+  ];
   const submit = async () => {
+    if (busy) return;
     cue("press");
     setBusy(true);
     setError(null);
-    const keepSide = [];
-    for (const c of list) {
-      if (choice(c) === "side") keepSide.push(c.side.id);
-    }
-    for (const n of rest) {
-      if (keep[n.id]) keepSide.push(n.id);
-    }
     let r = null;
     try {
-      r = await postJSON("/api/loom/resolve", { keep_side: keepSide, add_branches: resolution?.add_branches || [] });
+      if (pick !== here) {
+        r = await postJSON("/api/branch/switch", { branch: pick });
+      }
+      if (!r || !r.error) r = await postJSON("/api/loom/resolve", { keep_side: [], add_branches: [] });
     } catch {
       r = { error: "Your answer did not go through. Try again." };
     }
@@ -67,54 +64,28 @@ export function NightQuestion({ conflicts, extra, resolution, onResolved }) {
       setError(r.error);
       return;
     }
-    setLocal(r);
     setChanging(false);
-    if (onResolved) onResolved(r);
+    if (onResolved) await onResolved(r);
   };
   return (
     <article className="mcard">
       <h2 className="mtitle">Which is right?</h2>
-      <p className="mwhy">{list.length === 1 ? "You told me two different things today." : "You told me different things today."} Tonight I learn the one you pick.</p>
-      {list.map((c) => (
-        <div className="proof" key={c.side.id}>
-          <p className="pk">{factLabel(c.key)}</p>
-          <div className="v-list" role="radiogroup" aria-label={factLabel(c.key)}>
-            <button type="button" role="radio" aria-checked={choice(c) === "line"} disabled={busy}
-              className={`v-row${choice(c) === "line" ? " on" : ""}`}
-              onClick={() => setPick((p) => ({ ...p, [c.side.id]: "line" }))}>
-              <i className="v-radio" aria-hidden="true" />
-              <span><b>{c.line.value}</b><small>In the version of today you are on.</small></span>
-            </button>
-            <button type="button" role="radio" aria-checked={choice(c) === "side"} disabled={busy}
-              className={`v-row${choice(c) === "side" ? " on" : ""}`}
-              onClick={() => setPick((p) => ({ ...p, [c.side.id]: "side" }))}>
-              <i className="v-radio" aria-hidden="true" />
-              <span><b>{c.side.value}</b><small>In your other version.</small></span>
-            </button>
-          </div>
-        </div>
-      ))}
-      {rest.length > 0 && (
-        <div className="proof">
-          <p className="pk">Said only in your other version</p>
-          <div className="v-list">
-            {rest.map((n) => (
-              <button key={n.id} type="button" role="checkbox" aria-checked={!!keep[n.id]} disabled={busy}
-                className={`v-row${keep[n.id] ? " on" : ""}`}
-                onClick={() => setKeep((k) => ({ ...k, [n.id]: !k[n.id] }))}>
-                <i className="v-radio" aria-hidden="true" />
-                <span><b>{factLabel(n.key)}: {n.value}</b><small>Tick it and I learn it too.</small></span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <p className="mwhy">{list.length === 1 ? "You told me two different things today." : "You told me different things today."} Tonight’s training uses the version you pick.</p>
+      <div className="v-list" role="radiogroup" aria-label="Which version is right">
+        {options.map((o) => (
+          <button key={o.branch} type="button" role="radio" aria-checked={pick === o.branch} disabled={busy}
+            className={`v-row${pick === o.branch ? " on" : ""}`} onClick={() => setPick(o.branch)}>
+            <i className="v-radio" aria-hidden="true" />
+            <span><b>{o.title}</b><small>{o.facts.join("; ")}</small></span>
+          </button>
+        ))}
+      </div>
       <div className="factions">
         <button type="button" className="btn btn-send" disabled={busy} onClick={submit}>
           {busy ? "Saving…" : "Save for tonight"}
         </button>
-        {changing && <button type="button" className="btn btn-quiet" disabled={busy} onClick={() => { cue("toggle"); setChanging(false); setPick({}); }}>Cancel</button>}
-        <p className="fhint">No answer by the night: I learn the version you are on, and ask you in the morning.</p>
+        {changing && <button type="button" className="btn btn-quiet" disabled={busy} onClick={() => { cue("toggle"); setChanging(false); }}>Cancel</button>}
+        <p className="fhint">{pick !== here ? "Saving moves today to that version." : "No answer by the night: tonight’s training uses the version you are on, and I ask you in the morning."}</p>
       </div>
       {error && <p className="ferr" role="alert">{error}</p>}
     </article>

@@ -52,7 +52,7 @@ export function Thread({ state, report, live, after, nextDay, sealed, onGoToday,
         {lpx && !live && !after && conflicts && ((conflicts.conflicts || []).length > 0) && (
           <section className="night-q" aria-label="Before tonight">
             <p className="divider">Before tonight</p>
-            <NightQuestion key={`${state.world}-${state.day}-${conflicts.line}`} conflicts={conflicts.conflicts} extra={conflicts.extra} resolution={lp.loom.resolution} onResolved={lp.onReload} />
+            <NightQuestion key={`${state.world}-${state.day}-${conflicts.line}`} conflicts={conflicts.conflicts} resolution={lp.loom.resolution} line={lp.loom.line} versionWords={lp.loom.version_words} onResolved={lp.onReload} />
           </section>
         )}
         {after && <Night after={after} state={state} nextDay={nextDay} onOpenDay={onOpenDay} onOpenPanel={onOpenPanel} />}

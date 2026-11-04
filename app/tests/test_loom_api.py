@@ -337,7 +337,7 @@ class LoomStateTest(LoomApiCase):
                                            {"branch": "b2", "turn": 3, "text": EDIT}]},
                           "replies": {2: [{"branch": "main", "turn": 2, "text": T2},
                                           {"branch": "b3", "turn": 4, "text": T2}]}})
-        self.assertEqual(st["first_words"], {"b2": EDIT, "b3": T2})
+        self.assertEqual(st["version_words"], {"b2": EDIT})  # b3 asked T2 again: the same words as main
 
     def test_a_shorter_prefix_branch_adds_no_evidence(self):
         s = self.session([("remember", {"key": "office", "value": "Room 312"})], "Noted. Room 312.",

@@ -4,9 +4,9 @@ export const factLabel = (key) => {
   return k ? k[0].toUpperCase() + k.slice(1) : k;
 };
 
-/** A side branch as the person knows it: the first thing they said on it, quoted, else a plain fallback. */
-export const versionLabel = (branch, firstWords) => {
-  const text = firstWords && firstWords[branch];
+/** Another version of the day as the person knows it: what they said on it differently, quoted, else a plain fallback. */
+export const versionLabel = (branch, versionWords) => {
+  const text = versionWords && versionWords[branch];
   if (!text) return "Your other version of the day";
   const t = text.trim();
   return `You said “${t.length > 90 ? `${t.slice(0, 88).trimEnd()}…` : t}”`;

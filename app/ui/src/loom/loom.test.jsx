@@ -14,9 +14,12 @@ describe("morning loom", () => {
     expect(render(<MorningOffer day={1} leftOut={[]} conflicts={[]} extra={[]} />)).toBe("");
     expect(render(<MorningOffer day={1} leftOut={[]} conflicts={[conflict]}
       resolution={{ keep_side: ["N2"], add_branches: ["b2"] }} />)).toBe("");
+    // answered before the night: the other side of a conflict is not offered again
+    expect(render(<MorningOffer day={1} leftOut={["b2"]} conflicts={[conflict]}
+      resolution={{ keep_side: [], add_branches: [] }} />)).toBe("");
   });
   test("offers a left-out branch even when it has no saved facts, named by what you said", () => {
-    const html = render(<MorningOffer day={1} leftOut={["b2"]} conflicts={[]} firstWords={{ b2: "The workshop moved to 10:00." }} />);
+    const html = render(<MorningOffer day={1} leftOut={["b2"]} conflicts={[]} versionWords={{ b2: "The workshop moved to 10:00." }} />);
     expect(html).toContain("You said “The workshop moved to 10:00.”");
     expect(html).toContain("No new facts in it.");
     expect(html).not.toContain("b2<");
@@ -26,12 +29,15 @@ describe("morning loom", () => {
     const html = render(<MorningOffer day={1} leftOut={[]} conflicts={[conflict]} />);
     expect(html).toContain("Your other version of the day");
     expect(html).toContain("Workshop time: 10:00");
-    expect(html).toContain("later night");
+    expect(html).toContain("Last night’s training used the version of day 1");
+    expect(html).not.toMatch(/learn/i); // nothing reads the morning answer yet: it is only saved
   });
-  test("omitting leftOut still offers conflict branches not yet added", () => {
-    const html = render(<MorningOffer day={1} conflicts={[conflict]}
+  test("after an answer, a version is still offered for a fact that disagrees with nothing", () => {
+    const extra = { key: "standup time", value: "10:30", id: "N3", branch: "b2" };
+    const html = render(<MorningOffer day={1} conflicts={[conflict]} extra={[extra]}
       resolution={{ keep_side: ["N2"], add_branches: [] }} />);
     expect(html).toContain("Your other version of the day");
+    expect(html).toContain("Standup time: 10:30");
     expect(html).not.toContain('role="radiogroup"'); // answered before the night: not asked again
   });
   test("both morning verdicts render without assuming loom is present", () => {
@@ -58,7 +64,8 @@ test("morning answer offers explicit line and side choices, preserving saved sid
   expect(initial).toContain("09:00");
   expect(initial).toContain("10:00");
   const saved = render(<MorningOffer day={1} leftOut={["b3"]} conflicts={[conflict]}
-    resolution={{ keep_side: ["N2"], add_branches: ["b2"] }} firstWords={{ b3: "Make it 11:00." }} />);
+    extra={[{ key: "room", value: "Cedar", id: "N5", branch: "b3" }]}
+    resolution={{ keep_side: ["N2"], add_branches: ["b2"] }} versionWords={{ b3: "Make it 11:00." }} />);
   expect(saved).not.toContain('role="radiogroup"');
   expect(saved).toContain("You said “Make it 11:00.”");
 });
@@ -70,15 +77,18 @@ test("sealed edited day keeps the notice but disables the writing action", () =>
   expect(html).toContain('class="link" disabled=""');
 });
 
-test("the question before tonight speaks in versions, and a saved answer is one quiet line", async () => {
+test("the question before tonight picks a version, the thing the night trains, and promises no fact", async () => {
   const { NightQuestion } = await import("./NightQuestion.jsx");
-  const ask = render(<NightQuestion conflicts={[conflict]} extra={[]} />);
+  const ask = render(<NightQuestion conflicts={[conflict]} line="main" versionWords={{ b2: "The workshop is at 10:00." }} />);
   expect(ask).toContain("Which is right?");
-  expect(ask).toContain("Workshop time");
-  expect(ask).toContain("In your other version.");
-  expect(ask).not.toMatch(/branch|b2|line/i);
-  const saved = render(<NightQuestion conflicts={[conflict]} extra={[]} resolution={{ keep_side: ["N2"], add_branches: [] }} />);
-  expect(saved).toContain("Saved. Tonight I learn Workshop time: 10:00.");
+  expect(ask).toContain("Tonight’s training uses the version you pick.");
+  expect(ask).toContain("The version of today you are on");
+  expect(ask).toContain("Workshop time: 09:00");
+  expect(ask).toContain("You said “The workshop is at 10:00.”");
+  expect(ask).toContain("Workshop time: 10:00");
+  expect(ask).not.toMatch(/branch|b2|learn|role="checkbox"/i);
+  const saved = render(<NightQuestion conflicts={[conflict]} line="main" resolution={{ keep_side: [], add_branches: [] }} />);
+  expect(saved).toContain("Saved. Tonight’s training uses the version you picked.");
   expect(saved).toContain(">Change<");
 });
 

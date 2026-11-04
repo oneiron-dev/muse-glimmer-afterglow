@@ -16,5 +16,5 @@ export function MorningLoom({ world, day }) {
   if (!loom) return null;
   return <MorningOffer key={`${world}-${day}-${loom.line}-${JSON.stringify(loom.alternatives)}`}
     day={day} leftOut={loom.left_out} conflicts={loom.contradictions?.conflicts}
-    extra={loom.contradictions?.extra} resolution={loom.resolution} firstWords={loom.first_words} />;
+    extra={loom.contradictions?.extra} resolution={loom.resolution} versionWords={loom.version_words} />;
 }
