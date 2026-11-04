@@ -32,3 +32,10 @@ Found and fixed:
 Checks: 451 Python tests twice, the prompt fingerprint test, 10 loom UI tests (bun test src/loom/loom.test.jsx),
 the Vite build. Live on 8667: three short turns on mel, both steppers, back to the first version, the night with no
 answer, the morning answer saved for day 1 with day 2 open (day 2 has no answer file).
+
+## 2. Shot S8: ?fact=F21 (PR ui/fact-link)
+
+The loom merge (#188) dropped the line that reads ?fact= in the morning proof, so http://127.0.0.1:8650/?fact=F21
+opened on "1 of 52, workshop town" instead of "3 of 52, arm hinge bolt torque". Restored, with a UI test
+(loom.test.jsx). Checked on the scratch Ines copy (port 8669, day 10): 3 of 52, Before "45 ft-lbs", Now
+"2.8 newton-metres". S7 (the morning card for night 9) is unchanged by #192: it still shows night 9.

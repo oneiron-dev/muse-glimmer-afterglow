@@ -91,3 +91,18 @@ test("version steppers: the answers under a reply are bounded, never wrap", asyn
   expect(html).toMatch(/aria-label="Next answer"[^>]*disabled|disabled=""[^>]*aria-label="Next answer"/);
   expect(render(<BranchSwitcher alternatives={[v[0]]} turn={3} currentBranch="b2" />)).toBe("");
 });
+
+test("?fact= opens the morning proof on that fact (the S8 shot)", () => {
+  const fact = (id, key) => ({ id, key, value: "v", pass: { A: [false, false, false], B: [true, true, false] },
+    answers: { A: [`${key} before`], B: [`${key} after`] } });
+  const report = { world: "w", day: 9, decision: { decision: "keep" },
+    eval: { eval_day: 9, facts: [fact("F1", "workshop town"), fact("F21", "arm hinge bolt torque")] } };
+  globalThis.window = { location: { search: "?fact=F21" } };
+  try {
+    const html = render(<MorningCard report={report} />);
+    expect(html).toContain("2 of 2");
+    expect(html).toContain("arm hinge bolt torque after");
+  } finally {
+    delete globalThis.window;
+  }
+});
