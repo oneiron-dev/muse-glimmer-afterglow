@@ -8,6 +8,7 @@ Binds 127.0.0.1 only. One user, one session: turns and snapshot actions take the
 import argparse
 import datetime as dt
 import json
+import re
 import mimetypes
 import threading
 import time
@@ -52,11 +53,19 @@ def steering(world, day, night, ev):
             "sample": sample}
 
 
+LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
+PROFILE_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,79}")  # a profile folder name: no dots, no slashes
+
+
 def record_proposal(world, day, axis, toward, answer, open_day=None):
     """The user's answer to one proposed dial change, in runs/<world>/<day>/night/steering-decisions.json.
     An accepted dial applies from the next day's chat on (dials.py accepted_dials): "now" when that day is open."""
     if answer not in ("accept", "dismiss"):
         raise ValueError("answer must be accept or dismiss")
+    if not isinstance(world, str) or not PROFILE_RE.fullmatch(world) or not (paths.runs_root() / world).is_dir():
+        raise ValueError("unknown profile")
+    if isinstance(day, bool) or not isinstance(day, int) or day < 1:
+        raise ValueError("day must be a day number")
     night = paths.runs_root() / world / str(int(day)) / "night"
     night.mkdir(parents=True, exist_ok=True)
     f = night / "steering-decisions.json"
@@ -138,12 +147,15 @@ class App:
             threading.Thread(target=self.restore_snapshot, daemon=True).start()
         return {"world": world, "day": day, "date": self.session.date}
 
-    def change_note(self, note_id, value=None, forget=False):
+    def change_note(self, note_id, value=None, forget=False, world=None, day=None):
         """The Memory screen's edit or forget on one note, through the notes backend (with the vault, its recall then
         returns the new value and drops the old or removed one; the night reads notes.json), logged in
         runs/<world>/<day>/note-edits.jsonl."""
         with self.lock:
             s = self.session
+            # Note ids restart per profile: an edit from a screen of another profile or day must not land here.
+            if (world is not None and world != s.world) or (day is not None and day != s.day):
+                raise RuntimeError("Another day is open in Afterglow now, so this note was not changed. Reload and try again.")
             notes = s.notes if hasattr(s.notes, "edit_by_user") else getattr(s.notes, "local", s.notes)
             if forget:
                 n = notes.forget_by_user(note_id, day=s.day)
@@ -721,7 +733,24 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def _write_allowed(self):
+        """A write (POST) comes from Afterglow's own page or from a native client. A browser sends Origin on
+        every POST; it must name this server (Origin host == Host) on a loopback name, which also refuses
+        DNS rebinding. Native clients (the fn helper, curl, scripts) send no Origin and are allowed."""
+        origin = self.headers.get("Origin")
+        if origin is None:
+            return True
+        try:
+            o = urllib.parse.urlsplit(origin)
+        except ValueError:
+            return False
+        host = (self.headers.get("Host") or "").strip().lower()
+        return (o.scheme in ("http", "https") and o.netloc.lower() == host
+                and (o.hostname or "").lower() in LOOPBACK_HOSTS)
+
     def do_POST(self):
+        if not self._write_allowed():
+            return self._json({"error": "This request did not come from Afterglow's own page."}, 403)
         if self._feature("POST"):
             return
         path = urllib.parse.urlparse(self.path).path
@@ -782,7 +811,11 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json(self.app.raw_run(b["prompt"], b.get("n_predict") or 400))
             if path == "/api/proposal":
                 b = self._body()
-                return self._json(self.app.answer_proposal(b["world"], b["day"], b["axis"], b["toward"], b["answer"]))
+                try:
+                    return self._json(self.app.answer_proposal(b.get("world"), b.get("day"), b.get("axis"),
+                                                               b.get("toward"), b.get("answer")))
+                except ValueError as e:
+                    return self._json({"error": str(e)}, 400)
             if path == "/api/voice":
                 b = self._body()
                 try:
@@ -811,7 +844,10 @@ class Handler(BaseHTTPRequestHandler):
             if path in ("/api/notes/edit", "/api/notes/forget"):
                 b = self._body()
                 try:
-                    return self._json(self.app.change_note(b.get("id", ""), b.get("value"), forget=path.endswith("forget")))
+                    return self._json(self.app.change_note(b.get("id", ""), b.get("value"), forget=path.endswith("forget"),
+                                                           world=b.get("world"), day=b.get("day")))
+                except RuntimeError as e:
+                    return self._json({"error": str(e)}, 409)
                 except (KeyError, ValueError) as e:
                     return self._json({"error": str(e).strip("'")}, 400)
             if path == "/api/profile":

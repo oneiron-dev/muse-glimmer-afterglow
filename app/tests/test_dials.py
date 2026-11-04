@@ -116,6 +116,7 @@ class AcceptOnTheOpenDayTest(unittest.TestCase):
         self.assertEqual(self.app.session.client.dials, [])
 
     def test_an_answer_for_another_person_leaves_the_open_day_alone(self):
+        (self.runs / "other").mkdir()  # proposals are recorded only for a profile that exists
         doc = self.app.answer_proposal("other", 3, "concise", "concise", "accept")
         self.assertEqual(doc["concise:concise"]["applies"], "tomorrow")
         self.assertEqual(self.app.session.client.dials, [])
