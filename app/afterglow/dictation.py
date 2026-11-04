@@ -299,7 +299,8 @@ def ambient(app, req):
         else:
             explanation = explainer.create(app, question=result["clean"], crop_png_b64=doc.get("crop_png_b64"),
                                            ocr=doc.get("ocr"), ax=doc.get("ax"), app_name=doc.get("app_name"))
-            return {"mode": "explain", "id": explanation["id"], "url": explanation["url"]}
+            # The words go back too: the helper shows "You said" with Copy and Paste instead.
+            return {"mode": "explain", "id": explanation["id"], "url": explanation["url"], "text": result["clean"]}
     return {"mode": "paste", "text": result["clean"], "thread": tid}
 
 

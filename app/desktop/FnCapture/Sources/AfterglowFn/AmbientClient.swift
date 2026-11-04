@@ -37,7 +37,11 @@ struct AmbientReply: Decodable {
     let mode: String
     let text: String?
     let url: String?
+    let id: String?
 }
+
+/// The cleaned words of an explanation, for servers whose explain reply has no `text`.
+struct ExplanationQuestion: Decodable { let question: String? }
 
 enum HelperError: LocalizedError {
     case message(String)

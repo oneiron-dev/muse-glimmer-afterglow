@@ -37,8 +37,39 @@ public enum AXInspector {
         }
         let role = truncated(copyAttribute(element, kAXRoleAttribute as CFString))
         let title = truncated(copyAttribute(element, kAXTitleAttribute as CFString))
-        let value = truncated(copyAttribute(element, kAXValueAttribute as CFString))
+        // The agent reads text, not pixels: screen text recognition drops emoji and symbols,
+        // so the text of the elements across the circle (a 3 x 3 grid) goes with it too.
+        let texts = gridTexts(in: quartz, systemWide: systemWide, first: element)
+        let value = truncated(texts.isEmpty ? copyAttribute(element, kAXValueAttribute as CFString) : texts.joined(separator: " · "))
         return AXContext(role: role, title: title, value: value, appName: appName)
+    }
+
+    /// Distinct non-empty texts (value, then title, then description) of the elements under a
+    /// 3 x 3 grid of points inside `quartz`, the centre element first. At most 8 texts.
+    static func gridTexts(in quartz: CGRect, systemWide: AXUIElement, first: AXUIElement) -> [String] {
+        var elements: [AXUIElement] = [first]
+        for fy in [0.2, 0.5, 0.8] {
+            for fx in [0.2, 0.5, 0.8] where !(fx == 0.5 && fy == 0.5) {
+                var element: AXUIElement?
+                let x = Float(quartz.minX + quartz.width * fx), y = Float(quartz.minY + quartz.height * fy)
+                if AXUIElementCopyElementAtPosition(systemWide, x, y, &element) == .success, let element,
+                   !elements.contains(where: { CFEqual($0, element) }) {
+                    elements.append(element)
+                }
+            }
+        }
+        var seen = Set<String>(), out: [String] = []
+        for element in elements {
+            for name in [kAXValueAttribute, kAXTitleAttribute, kAXDescriptionAttribute] {
+                guard let raw = copyAttribute(element, name as CFString) else { continue }
+                let text = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !text.isEmpty, !seen.contains(text) else { continue }
+                seen.insert(text); out.append(String(text.prefix(160)))
+                break
+            }
+            if out.count >= 8 { break }
+        }
+        return out
     }
 
     // MARK: - Private

@@ -48,6 +48,9 @@ import FnCapture
     private var selection: CGRect?
     private var frontAppName = ""
     private var frontApp: NSRunningApplication?
+    /// What you said last, cleaned up, so a wrong guess (explain instead of paste) is one click to fix.
+    private var lastWords: String?
+    private let copyLast = NSMenuItem(title: "Copy your last words", action: nil, keyEquivalent: "")
     private var captureTask: Task<CropContext, Error>?
     private var requestTask: Task<Void, Never>?
 
@@ -112,7 +115,17 @@ import FnCapture
         overlay.hide(); panel?.close(); pill.hide(); glow.hide()
     }
 
-    func menuWillOpen(_ menu: NSMenu) { refresh() }
+    func menuWillOpen(_ menu: NSMenu) {
+        refresh()
+        copyLast.isEnabled = lastWords != nil
+        copyLast.toolTip = lastWords
+    }
+
+    @objc private func copyLastWords() {
+        guard let lastWords else { return }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(lastWords, forType: .string)
+    }
 
     private func makeMenu() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -121,6 +134,8 @@ import FnCapture
         let menu = NSMenu()
         menu.delegate = self
         menu.addItem(statusLine)
+        copyLast.action = #selector(copyLastWords); copyLast.target = self
+        menu.addItem(copyLast)
         menu.addItem(.separator())
         let permissions = NSMenuItem(title: "Permissions…", action: #selector(showPermissions), keyEquivalent: "")
         permissions.target = self; menu.addItem(permissions)
@@ -259,6 +274,28 @@ import FnCapture
         }
     }
 
+    /// The explanation's question is what you said; older servers send only its id.
+    private func words(for reply: AmbientReply, server: ServerAddress) async -> String? {
+        if let text = reply.text, !text.isEmpty { return text }
+        guard let id = reply.id, var parts = URLComponents(url: server.base.appendingPathComponent("api/explain"), resolvingAgainstBaseURL: false) else { return nil }
+        parts.queryItems = [URLQueryItem(name: "id", value: id)]
+        guard let url = parts.url, let (data, _) = try? await URLSession.shared.data(from: url),
+              let doc = try? JSONDecoder().decode(ExplanationQuestion.self, from: data) else { return nil }
+        return doc.question
+    }
+
+    /// A wrong guess: you wanted your words pasted, not explained.
+    private func pasteInstead(_ words: String, into app: NSRunningApplication?) {
+        if Permissions.status(for: .accessibility).isAuthorized,
+           NSWorkspace.shared.frontmostApplication?.processIdentifier == app?.processIdentifier {
+            paster.paste(words)
+        } else {
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(words, forType: .string)
+            pill.error("Copied. Paste it with ⌘V")
+        }
+    }
+
     /// Esc stops whatever is in progress: a recording is dropped, a request is cancelled.
     private func stopOnEscape() {
         if recording { cancel(); return }
@@ -327,6 +364,7 @@ import FnCapture
                     guard Permissions.status(for: .accessibility).isAuthorized else {
                         throw HelperError.message("Paste access changed. Open Permissions to check")
                     }
+                    lastWords = text
                     paster.paste(text); glow.hide()
                 case "explain":
                     guard let path = reply.url else { throw HelperError.message("Your agent returned no explanation") }
@@ -335,6 +373,15 @@ import FnCapture
                     let explanation = FloatingPanel(url: url)
                     explanation.title = "Your agent"
                     panel = explanation
+                    let words = await self.words(for: reply, server: server)
+                    lastWords = words ?? lastWords
+                    if let words {
+                        explanation.window.addTitlebarAccessoryViewController(YouSaidBar(words: words, paste: { [weak self, weak explanation] in
+                            guard let self else { return }
+                            explanation?.close()
+                            self.pasteInstead(words, into: targetApp)
+                        }))
+                    }
                     explanation.show(beside: anchor); glow.hide()
                 default: throw HelperError.message("Your agent returned an unknown reply")
                 }
