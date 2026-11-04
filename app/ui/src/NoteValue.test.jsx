@@ -25,3 +25,22 @@ describe("code-shaped notes stay off screen", () => {
     expect(wasValues({ key: "office" }, ["room 2.14"])).toEqual(["room 2.14"]);
   });
 });
+
+describe("a note whose whole value is an id stays off screen too (F69 torque audit file: DX-47B)", () => {
+  test("ids by value: letters and digits in hyphen groups", async () => {
+    const { isCodeValue } = await import("./lib.js");
+    for (const v of ["DX-47B", "KF-GW-542", "P4-17", " QA-209-C "]) expect(isCodeValue(v)).toBe(true);
+    for (const v of ["2026-11-12", "Pressmark P-310", "Morrow M-40", "extension 4429", "Room 3.07", "16:00", "A-B", "12-34"]) {
+      expect(isCodeValue(v)).toBe(false);
+    }
+  });
+  test("Memory, Removed, the side panel, search and was-history hide it", async () => {
+    const { factRows } = await import("./lib.js");
+    expect(render(<NoteValue k="torque audit file" value="DX-47B" />)).toContain("Hidden");
+    expect(noteSearchText({ key: "torque audit file", value: "DX-47B" })).toBe("torque audit file");
+    expect(wasValues({ key: "office", value: "Room 3.07" }, ["DX-47B", "room 2.14"])).toEqual(["room 2.14"]);
+    const rows = factRows({ eval_day: 9, facts: [{ id: "F69", key: "torque audit document", value: "DX-47B" },
+      { id: "F21", key: "arm hinge bolt torque", value: "2.8 newton-metres" }] });
+    expect(rows.map((r) => [r.value, r.hidden])).toEqual([["(hidden)", true], ["2.8 newton-metres", false]]);
+  });
+});

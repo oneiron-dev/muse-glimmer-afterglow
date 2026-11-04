@@ -62,6 +62,15 @@ export const failedWhy = (keys) =>
 const HIDDEN = /access|password|\bpin\b|code/i;
 /** A code-shaped key (access code, password, PIN, any "... code"): its value stays off screen until opened. */
 export const isCodeKey = (key) => HIDDEN.test(key || "");
+/** A value that is an id as a whole: letters and digits in 1-5 character groups joined by hyphens, 2-4 groups, with
+ a letter and a digit ("DX-47B", "KF-GW-542", "P4-17"; not "2026-11-12", "Morrow M-40" or "extension 4429"). */
+const ID_VALUE = /^[A-Za-z0-9]{1,5}(?:-[A-Za-z0-9]{1,5}){1,3}$/;
+export const isCodeValue = (value) => {
+  const v = String(value ?? "").trim();
+  return ID_VALUE.test(v) && /[A-Za-z]/.test(v) && /\d/.test(v);
+};
+/** A code-shaped note or fact: by its key or by its whole value. Its value stays off screen until opened. */
+export const isCodeNote = (key, value) => isCodeKey(key) || isCodeValue(value);
 
 /** Facts the night taught: answered with notes off after the night, not before. One wording each, before and after. */
 export function learnedExamples(ev) {
@@ -82,7 +91,7 @@ export function factRows(ev) {
   if (!ev) return [];
   const day = ev.eval_day || ev.day || 99;
   return (ev.facts || []).filter((f) => (f.valid_from || 1) <= day).map((f) => ({
-    id: f.id, key: f.key, value: HIDDEN.test(f.key) ? "(hidden)" : f.value, hidden: HIDDEN.test(f.key),
+    id: f.id, key: f.key, value: isCodeNote(f.key, f.value) ? "(hidden)" : f.value, hidden: isCodeNote(f.key, f.value),
     a: ((f.pass && f.pass.A) || []).filter(Boolean).length, b: ((f.pass && f.pass.B) || []).filter(Boolean).length,
     before: f.answers && f.answers.A && f.answers.A[0], after: f.answers && f.answers.B && f.answers.B[0],
   }));
