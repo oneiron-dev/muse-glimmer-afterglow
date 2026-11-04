@@ -435,6 +435,22 @@ class ResolveStalenessTest(LoomApiCase):
         self.assertIsNotNone(self.get("/api/loom", app)["resolution"])
         self.post("/api/branch/switch", {"branch": "b2"}, app)  # another line: the answer lapses too
         self.assertIsNone(self.get("/api/loom", app)["resolution"])
+        # ...and is removed, so the night (which trains the file's "line") follows b2, not the old main
+        self.assertFalse((s.dir / "loom-resolution.json").exists())
+
+    def test_switching_to_the_same_line_keeps_the_answer(self):
+        s, app = self.three_branches()
+        self.post("/api/loom/resolve", {"keep_side": [], "add_branches": []}, app)
+        self.post("/api/branch/switch", {"branch": "main"}, app)
+        self.assertTrue((s.dir / "loom-resolution.json").exists())
+
+    def test_an_edit_on_another_line_removes_the_answer(self):
+        s, app = self.three_branches()
+        self.post("/api/loom/resolve", {"keep_side": [], "add_branches": []}, app)
+        s.client.replies.extend(["Edited again."])
+        self.consume(self.post("/api/branch", {"at_turn": 2, "text": "Standup moved to 11:00."}, app))
+        self.assertNotEqual(s.branch, "main")
+        self.assertFalse((s.dir / "loom-resolution.json").exists())
 
 
 class RegenLineageTest(LoomApiCase):

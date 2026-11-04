@@ -1,7 +1,8 @@
 """The open day's loom: streamed edits, reply alternatives, and the user's answer for the night.
 
 Nothing runs in the background. Reading the loom never calls the model or changes the day log.
-loom-resolution.json is an answer for the night runner to consume, not a training job.
+loom-resolution.json is an answer the night reads (night/loom_line.resolve_branch trains its "line"); its add_branches
+and keep_side are saved for a later night and not consumed yet. It is not a training job.
 """
 import json
 from contextlib import contextmanager
@@ -68,6 +69,7 @@ def _branch_stream(app, session, branch, turn, text):
         yield {"type": "error", "message": str(e)}
         return
     session.fork(turn)
+    _drop_answer_for_another_line(session)
     yield from session.run_turn(text)
 
 
@@ -97,6 +99,7 @@ def switch(app, req):
         raise ValueError("Choose a branch")
     with _idle(app) as session:
         session.switch(name)
+        _drop_answer_for_another_line(session)
         return session.loom_state()
 
 
@@ -146,6 +149,19 @@ def _view(session, day=None):
                            branch=loom.current_line(records),
                            turn=max((r.get("turn", 0) for r in records if r.get("role") == "user"), default=0),
                            notes=notes)
+
+
+def _drop_answer_for_another_line(session):
+    """The night trains the line named in loom-resolution.json (night/loom_line.resolve_branch). When you move
+    to another line (a switch, an edit or Ask again), an answer saved on the old line must not steer tonight,
+    so it is removed and the night follows the line you are on. The same line with more turns keeps it."""
+    file = session.dir / "loom-resolution.json"
+    try:
+        doc = json.loads(file.read_text()) if file.exists() else None
+    except (OSError, ValueError):
+        doc = None
+    if doc and doc.get("line") != session.branch:
+        file.unlink(missing_ok=True)
 
 
 def _resolution(session):

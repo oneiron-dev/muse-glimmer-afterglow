@@ -105,9 +105,10 @@ Validation completed:
 - App/Thread and morning-screen wiring is deliberately left to the integrator.
 - No browser or GUI was run. Component layout, focus behavior and full screen interaction remain unverified.
 - The production app build is clean; app/web is unchanged because the new components are not yet imported.
-- This lane saves the night's answer only. The night runner does not yet consume loom-resolution.json,
-  enforce the owner's unanswered-main-line fallback, or add selected branches on a later night.
-  Those training changes are outside the allowed files for this draft. Do not claim them as working.
+- The night reads loom-resolution.json since #178 (night/loom_line.resolve_branch): a "line" naming a known
+  branch is the line it trains, else the log's own current line. Moving to another line removes a saved answer,
+  so the night follows the line you are on. Not built yet: adding the chosen side branches (add_branches) and
+  side facts (keep_side) to a later night.
 - loom.alternatives is unchanged: nested regenerations expose immediate alternatives, not a flattened
   set of every cousin version. No existing branch model or note-store behavior is changed.
 
