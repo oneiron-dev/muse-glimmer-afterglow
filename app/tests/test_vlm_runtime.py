@@ -393,6 +393,87 @@ class LifecycleTest(Base):
         self.assertIn("uv", out["line"])
 
 
+class WarmupGenerationTest(unittest.TestCase):
+    def setUp(self):
+        self.pending = []
+        self.workers = {}
+        self.enterContext(mock.patch.multiple(
+            vlm_runtime, _worker=None, _configured_model=None,
+            _keep_loaded=False, _starting=False, _last_error=None))
+        self.enterContext(mock.patch.object(
+            vlm_runtime.threading, "Thread", side_effect=self.queue_thread))
+        self.factory = self.enterContext(mock.patch.object(
+            vlm_runtime, "VlmWorker", side_effect=self.make_worker))
+
+    def queue_thread(self, *, target, daemon):
+        self.pending.append(target)
+        return mock.Mock()
+
+    def make_worker(self, *, model):
+        worker = mock.Mock()
+        worker.status.return_value = {"model": model, "warm": False, "pid": None}
+        self.workers[model] = worker
+        return worker
+
+    def configure(self, model, keep=True):
+        with mock.patch.object(vlm_runtime, "_saved_vision", return_value=({}, keep)), \
+             mock.patch.object(vlm_runtime, "local_model_path", return_value=model):
+            return vlm_runtime.configure("vision")
+
+    def test_delayed_warmup_cannot_replace_newly_selected_worker(self):
+        self.configure("A")
+        old_warmup = self.pending[0]
+        self.configure("B")
+        current = vlm_runtime.worker_for("B")
+
+        old_warmup()
+
+        self.assertEqual(vlm_runtime.active_model(), "B")
+        self.assertIs(vlm_runtime._worker, current)
+        current.stop.assert_not_called()
+        self.assertNotIn("A", self.workers)
+        self.assertTrue(vlm_runtime.status()["starting"])
+        self.assertEqual(len(self.pending), 2)
+        self.pending[1]()
+        current.warmup.assert_called_once_with()
+        self.assertFalse(vlm_runtime.status()["starting"])
+
+    def test_keep_loaded_off_discards_pending_warmup(self):
+        self.configure("A")
+        vlm_runtime.set_keep_loaded("vision", False)
+
+        self.pending[0]()
+
+        self.factory.assert_not_called()
+        self.assertIsNone(vlm_runtime._worker)
+        self.assertEqual(vlm_runtime.active_model(), "A")
+        self.assertFalse(vlm_runtime.status()["starting"])
+
+    def test_stale_completion_cannot_publish_error_or_clear_new_start(self):
+        self.configure("A")
+        old_worker = vlm_runtime.worker_for("A")
+
+        def select_b_during_warmup():
+            self.configure("B")
+            vlm_runtime.worker_for("B")
+            old_worker.stop.reset_mock()
+            raise RuntimeError("old A failed")
+
+        old_worker.warmup.side_effect = select_b_during_warmup
+        self.pending[0]()
+
+        self.assertEqual(vlm_runtime.active_model(), "B")
+        self.assertIs(vlm_runtime._worker, self.workers["B"])
+        self.assertIsNone(vlm_runtime.last_error())
+        self.assertTrue(vlm_runtime.status()["starting"])
+        old_worker.stop.assert_called_once_with()
+        self.workers["B"].stop.assert_not_called()
+        self.assertEqual(len(self.pending), 2)
+        self.pending[1]()
+        self.workers["B"].warmup.assert_called_once_with()
+        self.assertFalse(vlm_runtime.status()["starting"])
+
+
 class VisionApiTest(Base):
     def setUp(self):
         self._old_models = sys.modules.get("afterglow.models")

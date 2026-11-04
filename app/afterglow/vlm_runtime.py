@@ -389,6 +389,13 @@ _configured_model = None
 _keep_loaded = False
 _starting = False
 _last_error = None
+_generation = 0
+
+
+def _invalidate_warmup_locked():
+    global _generation, _starting
+    _generation += 1
+    _starting = False
 
 
 def worker_for(model):
@@ -405,12 +412,15 @@ def worker_for(model):
             except Exception:
                 pass
         _worker = VlmWorker(model=model)
+        if model != _configured_model:
+            _invalidate_warmup_locked()
         _configured_model = model
         return _worker
 
 
 def _stop_locked():
     global _worker
+    _invalidate_warmup_locked()
     w, _worker = _worker, None
     if w is not None:
         try:
@@ -423,7 +433,7 @@ def _prewarm_async():
     global _starting, _last_error
     with _lock:
         model = _configured_model
-        if not model or _starting:
+        if not model or not _keep_loaded or _starting:
             return {"starting": _starting}
         try:
             warm = _worker is not None and _worker.status()["warm"]
@@ -431,17 +441,32 @@ def _prewarm_async():
             warm = False
         if warm:
             return {"starting": False}
+        generation = _generation
         _starting = True
+        _last_error = None
 
     def _run():
         global _starting, _last_error
+        worker = None
         try:
-            worker_for(model).warmup()
+            with _lock:
+                # Check and select atomically: a queued task must not restore an old model.
+                if generation != _generation or not _keep_loaded:
+                    return
+                worker = worker_for(model)
+            worker.warmup()
         except Exception as e:
-            _last_error = str(e)[:300]
+            with _lock:
+                if generation == _generation:
+                    _last_error = str(e)[:300]
         finally:
             with _lock:
-                _starting = False
+                stale = generation != _generation
+                if not stale:
+                    _starting = False
+            if stale and worker is not None:
+                # A selection change may have stopped it just before warmup started.
+                worker.stop()
 
     threading.Thread(target=_run, daemon=True).start()
     return {"starting": True}
@@ -492,10 +517,10 @@ def configure(slot):
         choice, keep = _saved_vision()
         resolved = local_model_path(choice)
         with _lock:
-            _keep_loaded = keep
-            if resolved != _configured_model:
+            if resolved != _configured_model or keep != _keep_loaded:
                 _stop_locked()
                 _configured_model = resolved
+            _keep_loaded = keep
         if resolved and keep:
             _prewarm_async()
         else:
@@ -522,6 +547,8 @@ def set_keep_loaded(slot, on):
 def _set_vision_keep_loaded(on):
     global _keep_loaded
     with _lock:
+        if bool(on) != _keep_loaded:
+            _invalidate_warmup_locked()
         _keep_loaded = bool(on)
     if on:
         if active_model():
