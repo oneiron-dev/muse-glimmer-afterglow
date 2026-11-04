@@ -16,7 +16,7 @@ import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import dials, modelsetup, morning, paths, snapshot, thoughts
+from . import dials, modelsetup, morning, paths, routes, snapshot, thoughts
 from .night_checks import (abstention_gate, chat_checks, never_told_line, serving_choice, serving_rule,
                            unlinked_corrections)
 from .agent import NOTES_BACKENDS, DaySession, load_world, now_iso
@@ -578,7 +578,53 @@ class Handler(BaseHTTPRequestHandler):
         n = int(self.headers.get("Content-Length") or 0)
         return json.loads(self.rfile.read(n) or b"{}")
 
+    def _feature(self, method):
+        """A feature module's route (routes.py), if one claims this path; True when it answered."""
+        u = urllib.parse.urlparse(self.path)
+        fn, rest = routes.find(method, u.path)
+        if not fn:
+            return False
+        raw = self.rfile.read(int(self.headers.get("Content-Length") or 0)) if method == "POST" else None
+        try:
+            req = routes.Request(method, u.path, u.query, self.headers, raw)
+            req.rest = rest
+            out = fn(self.app, req)
+        except ValueError as e:
+            return self._json({"error": str(e)}, 400) or True
+        except RuntimeError as e:
+            return self._json({"error": str(e)}, 409) or True
+        except Exception as e:
+            traceback.print_exc()
+            return self._json({"error": f"{type(e).__name__}: {e}"}, 500) or True
+        if isinstance(out, routes.Stream):
+            self._stream(out)
+        elif isinstance(out, tuple):
+            self._json(out[0], out[1])
+        else:
+            self._json(out)
+        return True
+
+    def _stream(self, st):
+        if st.lock and not self.app.lock.acquire(blocking=False):
+            return self._json({"error": "Afterglow is still answering the previous message"}, 409)
+        try:
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream")
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            for ev in st.events:
+                self.wfile.write(b"data: " + json.dumps(ev, ensure_ascii=False).encode() + b"\n\n")
+                self.wfile.flush()
+        except (BrokenPipeError, ConnectionResetError):
+            pass
+        finally:
+            if st.lock:
+                self.app.lock.release()
+        self.close_connection = True
+
     def do_GET(self):
+        if self._feature("GET"):
+            return
         path = urllib.parse.urlparse(self.path).path
         if path == "/api/state":
             return self._json(self.app.state())
@@ -646,6 +692,8 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_POST(self):
+        if self._feature("POST"):
+            return
         path = urllib.parse.urlparse(self.path).path
         try:
             if path == "/api/chat":

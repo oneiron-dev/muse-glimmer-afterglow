@@ -5,6 +5,7 @@ import { VoiceList } from "./Voice.jsx";
 import { Onboarding } from "./Onboarding.jsx";
 import { CHECKS, MINUS, getJSON, postJSON, pretty, shortDate } from "./lib.js";
 import { cue, setSound, soundOn } from "./sound.js";
+import { EXTRA_CONNECTORS } from "./connectors/index.js";
 
 /** Settings' own section list; the sidebar shows it in place of the app's screens (as the Claude Console does). */
 export const SECTIONS = [
@@ -342,6 +343,7 @@ function ConnectorsSection({ settings }) {
           <div><b>Web search</b><p>{wsLine}</p></div>
           <span className={`conn-state${ws.on && !capEnded ? " on" : ""}`}>{ws.on && !capEnded ? "On" : capEnded ? "Paused" : "Off"}</span>
         </li>
+        {EXTRA_CONNECTORS.map((C, i) => <C key={i} settings={settings} />)}
       </ul>
     </>
   );
