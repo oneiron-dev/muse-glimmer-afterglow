@@ -287,6 +287,38 @@ class App:
                 "calendar": sorted(st.get("calendar") or [], key=lambda e: (e.get("date", ""), e.get("time", ""))),
                 "tasks": st.get("tasks") or [], "emails": st.get("emails") or []}
 
+    def raw_turn(self, turn, mode="reply"):
+        """One turn as the model saw it: the messages before the turn's reply and the chat template rendered from them
+        (the same tools and reasoning setting as the chat). mode "reply": the prompt ends where the reply starts;
+        "continue": the turn's final answer is put after the answer channel's header, so a run continues it. Read only."""
+        s = self.session
+        turn = int(turn)
+        msgs, reply = [s.system_message, s.context_message], ""
+        for rec in s._records():
+            if rec.get("role") == "user" and rec.get("turn", 0) <= turn:
+                msgs.append({"role": "user", "content": rec["content"]})
+            elif rec.get("role") == "assistant" and rec.get("turn", 0) < turn:
+                msgs.extend(rec.get("messages") or [])
+            elif rec.get("role") == "assistant" and rec.get("turn") == turn:
+                reply = rec.get("content") or ""
+        body = {"messages": msgs, "chat_template_kwargs": {"reasoning_strength": s.reasoning}, "tools": s.tool_schemas}
+        prompt = self.client.post("/apply-template", body)["prompt"]
+        if mode == "continue":
+            prompt = prompt.removesuffix("<|start|>assistant") + "<|start|>assistant to=user<|message|>" + reply
+        return {"turn": turn, "mode": mode, "messages": msgs, "prompt": prompt, "reply": reply}
+
+    def raw_run(self, prompt, n_predict=400):
+        """A completion from an edited prompt, on slot 1 with no prompt cache and the chat's adapter and dials. Nothing
+        is written to the day log or the notes: the night never trains on it."""
+        req = {"prompt": prompt, "n_predict": max(1, min(int(n_predict), 1200)), "temperature": 0.3, "id_slot": 1,
+               "cache_prompt": False}
+        req.update(self.client.scale_fields())
+        t0 = time.time()
+        r = self.client.post("/completion", req, timeout=180, headers={"X-Afterglow-Trace": "raw_view"})
+        t = r.get("timings") or {}
+        return {"content": r.get("content") or "", "stop": r.get("stop_type"), "total_s": round(time.time() - t0, 2),
+                "tok_s": t.get("predicted_per_second"), "tokens": t.get("predicted_n")}
+
     def adapter_label(self, loaded_adapter):
         """How the page names the world's loaded adapter: the night it came from (every file is adapter.gguf)."""
         entry = self.session.adapter
@@ -357,6 +389,15 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(self.app.state())
         if path == "/api/voices":
             return self._json(self.app.voices())
+        if path == "/api/raw":
+            q = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            turn = q.get("turn", [""])[0]
+            if not turn.isdigit():
+                return self._json({"error": "turn must be a number"}, 400)
+            try:
+                return self._json(self.app.raw_turn(int(turn), q.get("mode", ["reply"])[0]))
+            except GlimmerError as e:
+                return self._json({"error": f"the model server did not render the template: {e}"}, 502)
         if path == "/api/workspace":
             return self._json(self.app.workspace())
         if path == "/api/days":
@@ -400,6 +441,11 @@ class Handler(BaseHTTPRequestHandler):
                 if not q:
                     return self._json({"error": "empty question"}, 400)
                 return self._json(self.app.ask_notes_off(q))
+            if path == "/api/raw/run":
+                b = self._body()
+                if not (b.get("prompt") or "").strip():
+                    return self._json({"error": "empty prompt"}, 400)
+                return self._json(self.app.raw_run(b["prompt"], b.get("n_predict") or 400))
             if path == "/api/proposal":
                 b = self._body()
                 return self._json(record_proposal(b["world"], b["day"], b["axis"], b["toward"], b["answer"]))

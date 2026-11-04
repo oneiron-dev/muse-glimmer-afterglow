@@ -17,7 +17,8 @@ export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) 
     document.addEventListener("keydown", esc);
     return () => document.removeEventListener("keydown", esc);
   }, [onClose]);
-  const tabs = tab === "web" ? [...TABS.slice(0, 3), { id: "web", label: "Web" }, ...TABS.slice(3)] : TABS;
+  const tabs = tab === "web" ? [...TABS.slice(0, 3), { id: "web", label: "Web" }, ...TABS.slice(3)]
+    : tab === "raw" ? [...TABS, { id: "raw", label: "Raw" }] : TABS;
   return (
     <aside className="well panel-well" aria-label="Side panel">
       <header className="pbar">
@@ -37,6 +38,7 @@ export function Panel({ tab, focus, state, report, ws, first, onTab, onClose }) 
         {tab === "web" && <WebView focus={focus} />}
         {tab === "memory" && <MemoryView state={state} report={report} first={first} />}
         {tab === "night" && <NightView state={state} report={report} focus={focus} first={first} />}
+        {tab === "raw" && <RawView focus={focus} />}
       </div>
     </aside>
   );
@@ -242,6 +244,52 @@ function NightView({ state, report, focus, first }) {
       )}
       {r.speed && <p className="pfine num">Drafter: {r.speed.ours_tok_s.toFixed(1)} against {r.speed.stock_tok_s.toFixed(1)} tokens a second, {r.speed.gain_pct}% faster.</p>}
       <p className="pfine"><a href={`/report?world=${encodeURIComponent(r.world)}&day=${r.day}`} target="_blank" rel="noreferrer">The full report for night {r.day}</a></p>
+    </div>
+  );
+}
+
+/** The raw view: one turn's prompt exactly as the model saw it (the chat template), editable, and a run from it.
+ Nothing here goes into the day log or the notes, so the night never trains on it. */
+function RawView({ focus }) {
+  const [doc, setDoc] = useState(null);
+  const [prompt, setPrompt] = useState("");
+  const [out, setOut] = useState(null);
+  const [busy, setBusy] = useState(false);
+  const [n, setN] = useState(400);
+  useEffect(() => {
+    if (!focus || focus.turn == null) return;
+    let live = true;
+    setDoc(null); setOut(null);
+    getJSON(`/api/raw?turn=${focus.turn}&mode=${focus.mode || "reply"}`).then((d) => { if (!live) return; setDoc(d); setPrompt(d.prompt || ""); });
+    return () => { live = false; };
+  }, [focus && focus.turn, focus && focus.mode]);
+  if (!focus || focus.turn == null) return <Empty kind="web">Hover a message and choose Raw, Edit or Continue to open its prompt here.</Empty>;
+  if (!doc) return <p className="pfine">Rendering turn {focus.turn}…</p>;
+  if (doc.error) return <p className="pfine">{doc.error}</p>;
+  const run = async () => {
+    setBusy(true); setOut(null);
+    try {
+      const r = await (await fetch("/api/raw/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ prompt, n_predict: n }) })).json();
+      setOut(r);
+    } finally { setBusy(false); }
+  };
+  return (
+    <div className="raw">
+      <p className="pfine">Turn {doc.turn}, {doc.mode === "continue" ? "with its reply after the answer header: a run continues from there. Change the reply’s start to steer it." : "as the model saw it before replying. Edit any part, then run."} Nothing here is saved to the day.</p>
+      <label className="sr" htmlFor="raw-prompt">Prompt</label>
+      <textarea id="raw-prompt" className="raw-text" value={prompt} spellCheck={false} onChange={(e) => setPrompt(e.target.value)}
+        ref={(el) => { if (el && !el.dataset.scrolled) { el.scrollTop = el.scrollHeight; el.dataset.scrolled = "1"; } }} />
+      <div className="mrow">
+        <button type="button" className="btn btn-send" onClick={run} disabled={busy}>{busy ? "Running…" : "Run"}</button>
+        <label className="raw-n">Up to <input type="number" min="16" max="1200" step="16" value={n} onChange={(e) => setN(+e.target.value)} /> tokens</label>
+        <button type="button" className="link" onClick={() => setPrompt(doc.prompt)}>Reset</button>
+      </div>
+      {out && (out.error ? <p className="error-line">{out.error}</p> : (
+        <div className="raw-out">
+          <p className="pfine num">{out.tokens ?? "?"} tokens in {out.total_s} s{out.tok_s ? `, ${Math.round(out.tok_s)} a second` : ""}, stopped by {out.stop || "?"}</p>
+          <pre>{out.content}</pre>
+        </div>
+      ))}
     </div>
   );
 }

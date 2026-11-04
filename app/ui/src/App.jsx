@@ -4,9 +4,9 @@ import { chatStream, getJSON, postJSON, resolveHour } from "./lib.js";
 import { Thread } from "./Thread.jsx";
 import { Panel } from "./Panel.jsx";
 import { Composer } from "./Composer.jsx";
-import { PersonMenu, ThemeToggle } from "./Header.jsx";
+import { PersonMenu } from "./Header.jsx";
+import { Sidebar } from "./Sidebar.jsx";
 
-const HOURS = ["dawn", "noon", "dusk", "night"];
 const STEP_MS = 950;
 
 export default function App() {
@@ -93,39 +93,36 @@ export default function App() {
   const first = person.split(" ")[0];
   const nextDay = days && days.people.find((p) => p.world === state.world)?.days.includes(state.day + 1) ? state.day + 1 : null;
 
+  const nights = ((report && report.nights) || []).filter((n) => n.day < state.day);
   return (
-    <>
-      <div className="world" aria-hidden="true">
-        {HOURS.map((h) => <img key={h} className={`sky${h === hour ? " on" : ""}`} src={`/sky/hour-${h}.webp`} alt="" />)}
-      </div>
-      <span className="wordmark">Afterglow</span>
-      <div className={`stage${panel ? " with-panel" : ""}`}>
-        <main className="well thread-well" aria-label={`${person}’s agent`}>
-          <header className="bar">
+    <div className={`app${panel ? " with-panel" : ""}`}>
+      <Sidebar hour={hour} mode={mode} onSky={setSky} state={state} days={days} nights={nights} onOpen={openDay} />
+      <main className="main" aria-label={`${person}’s agent`}>
+        <header className="bar">
+          <div className="title">
             <PersonMenu state={state} days={days} onOpen={openDay} />
-            {!panel && <nav className="tools" aria-label="Open">
-              <button type="button" className={`tool${panel === "calendar" ? " on" : ""}`} onClick={() => openPanel("calendar")}>Calendar</button>
-              <button type="button" className={`tool${panel === "tasks" ? " on" : ""}`} onClick={() => openPanel("tasks")}>Tasks</button>
-              <button type="button" className={`tool${panel === "email" ? " on" : ""}`} onClick={() => openPanel("email")}>Email</button>
-              <button type="button" className={`tool${panel === "memory" ? " on" : ""}`} onClick={() => openPanel("memory")}>
-                Memory{newNotes > 0 && <span className="badge num" aria-label={`${newNotes} new notes`}>+{newNotes}</span>}
+          </div>
+          <nav className="tools" aria-label="Open">
+            {[["calendar", "Calendar"], ["tasks", "Tasks"], ["email", "Email"], ["memory", "Memory"]].map(([id, label]) => (
+              <button key={id} type="button" className={`tool${panel === id ? " on" : ""}`} aria-pressed={panel === id}
+                onClick={() => (panel === id ? closePanel() : openPanel(id))}>
+                {label}{id === "memory" && newNotes > 0 && <span className="badge num" aria-label={`${newNotes} new notes`}>+{newNotes}</span>}
               </button>
-            </nav>}
-            <ThemeToggle mode={mode} onChange={setSky} />
-            <button type="button" className="btn btn-end" onClick={endDay} disabled={!!after || (live && !live.done)}>
-              {after ? (after.phase === "morning" ? "Morning" : "Night") : "End the day"}
-            </button>
-          </header>
-          <Thread state={state} report={report} live={live} after={after} nextDay={nextDay} first={first}
-            onOpenPanel={openPanel} onOpenDay={(d) => openDay(state.world, d)} />
-          {error && <p className="error-line" role="alert">{error}</p>}
-          <Composer first={first} busy={!!live && !live.done} night={after && after.phase !== "morning"} onSend={send} />
-        </main>
-        {panel && (
-          <Panel tab={panel} focus={focus} state={state} report={report} ws={ws} first={first}
-            onTab={(t) => openPanel(t)} onClose={closePanel} />
-        )}
-      </div>
-    </>
+            ))}
+          </nav>
+          <button type="button" className="btn btn-end" onClick={endDay} disabled={!!after || (live && !live.done)}>
+            {after ? (after.phase === "morning" ? "Morning" : "Night") : "End the day"}
+          </button>
+        </header>
+        <Thread state={state} report={report} live={live} after={after} nextDay={nextDay} first={first}
+          onOpenPanel={openPanel} onOpenDay={(d) => openDay(state.world, d)} />
+        {error && <p className="error-line" role="alert">{error}</p>}
+        <Composer first={first} busy={!!live && !live.done} night={after && after.phase !== "morning"} onSend={send} />
+      </main>
+      {panel && (
+        <Panel tab={panel} focus={focus} state={state} report={report} ws={ws} first={first}
+          onTab={(t) => openPanel(t)} onClose={closePanel} />
+      )}
+    </div>
   );
 }

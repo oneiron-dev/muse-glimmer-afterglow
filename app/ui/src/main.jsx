@@ -4,7 +4,7 @@ import { createRootRoute, createRoute, createRouter, RouterProvider } from "@tan
 import App from "./App.jsx";
 import "./styles.css";
 
-const PANELS = ["calendar", "tasks", "email", "web", "memory", "night"];
+const PANELS = ["calendar", "tasks", "email", "web", "memory", "night", "raw"];
 
 const rootRoute = createRootRoute();
 // One screen: the thread. The side panel is in the URL (?panel=memory), so a reload or a link keeps it open.

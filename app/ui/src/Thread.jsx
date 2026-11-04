@@ -21,12 +21,12 @@ export function Thread({ state, report, live, after, nextDay, first, onOpenPanel
         )}
         <p className="divider">{longDate(state.date) || `Day ${state.day}`}</p>
         {turns.length === 0 && !live && <p className="empty">A new day. Tell {first}’s agent what you are working on, who with, and what changed.</p>}
-        {turns.map((t, i) => (t.role === "user" ? <UserMsg key={i} text={t.content} ts={t.ts} />
-          : t.role === "assistant" ? <Reply key={i} text={t.content} tools={t.tool_calls} tokS={t.tok_s} error={t.error} onOpenPanel={onOpenPanel} /> : null))}
+        {turns.map((t, i) => (t.role === "user" ? <UserMsg key={i} text={t.content} ts={t.ts} turn={t.turn} onOpenPanel={onOpenPanel} />
+          : t.role === "assistant" ? <Reply key={i} rec={t} text={t.content} tools={t.tool_calls} error={t.error} onOpenPanel={onOpenPanel} /> : null))}
         {live && (
           <>
             <UserMsg text={live.user} />
-            <Reply text={live.text} tools={live.tools} tokS={live.tok_s} error={live.error} thinking={live.thinking} onOpenPanel={onOpenPanel} />
+            <Reply text={live.text} tools={live.tools} error={live.error} thinking={live.thinking} onOpenPanel={onOpenPanel} />
           </>
         )}
         {after && <Night after={after} state={state} first={first} nextDay={nextDay} onOpenDay={onOpenDay} onOpenPanel={onOpenPanel} />}
@@ -39,17 +39,30 @@ export function Thread({ state, report, live, after, nextDay, first, onOpenPanel
 const GARBLED = /<\|(start|message|channel|end)\|>|<atem:/;
 const hhmm = (ts) => (ts ? ts.slice(11, 16) : "");
 
-function UserMsg({ text, ts }) {
+function Copy({ text }) {
+  const [done, setDone] = useState(false);
+  return <button type="button" className="act" onClick={async () => { await navigator.clipboard.writeText(text || ""); setDone(true); setTimeout(() => setDone(false), 1400); }}>{done ? "Copied" : "Copy"}</button>;
+}
+
+function UserMsg({ text, ts, turn, onOpenPanel }) {
   return (
     <div className="msg msg-u">
       <p>{text}</p>
-      {ts && <time className="num">{hhmm(ts)}</time>}
+      <div className="acts">
+        {ts && <time className="num">{hhmm(ts)}</time>}
+        {turn != null && <>
+          <Copy text={text} />
+          <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn, mode: "reply" })} title="Edit this message in the raw view and run it; nothing is saved">Edit</button>
+        </>}
+      </div>
     </div>
   );
 }
 
-function Reply({ text, tools, tokS, error, thinking, onOpenPanel }) {
+function Reply({ rec, text, tools, error, thinking, onOpenPanel }) {
+  const [open, setOpen] = useState(false);
   const cards = (tools || []).map(toolCard).filter(Boolean);
+  const reasoning = rec ? (rec.messages || []).map((m) => m.reasoning_content).filter(Boolean).join("\n\n") : "";
   return (
     <div className="msg msg-a">
       {thinking && !text ? <p className="thinking"><i /><i /><i /><span className="sr">Thinking</span></p>
@@ -68,7 +81,24 @@ function Reply({ text, tools, tokS, error, thinking, onOpenPanel }) {
         </div>
       )}
       {error && <p className="error-line">{error}</p>}
-      {tokS ? <p className="ameta num">{Math.round(tokS)} tokens a second</p> : null}
+      {rec && (
+        <div className={`acts acts-a${open ? " on" : ""}`}>
+          <time className="num">{hhmm(rec.ts)}</time>
+          <Copy text={text} />
+          <button type="button" className="act" aria-expanded={open} onClick={() => setOpen(!open)}>Details</button>
+          <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn: rec.turn, mode: "reply" })} title="The prompt as the model saw it, editable">Raw</button>
+          <button type="button" className="act" onClick={() => onOpenPanel("raw", { turn: rec.turn, mode: "continue" })} title="Edit the start of this reply and let the model continue it">Continue</button>
+        </div>
+      )}
+      {rec && open && (
+        <dl className="details">
+          <div><dt>First token</dt><dd className="num">{rec.ttft_s != null ? `${rec.ttft_s.toFixed(2)} s` : "n/a"}</dd></div>
+          <div><dt>Speed</dt><dd className="num">{rec.tok_s ? `${Math.round(rec.tok_s)} tokens a second` : "n/a"}</dd></div>
+          <div><dt>Whole turn</dt><dd className="num">{rec.total_s != null ? `${rec.total_s.toFixed(1)} s, ${(rec.rounds || []).length} round${(rec.rounds || []).length === 1 ? "" : "s"}` : "n/a"}</dd></div>
+          {(rec.tool_calls || []).length > 0 && <div className="wide"><dt>Tool calls</dt><dd>{rec.tool_calls.map((tc, i) => <code key={i}>{tc.name} {JSON.stringify(tc.arguments)}</code>)}</dd></div>}
+          {reasoning && <div className="wide"><dt>Thinking</dt><dd className="think">{reasoning}</dd></div>}
+        </dl>
+      )}
     </div>
   );
 }
