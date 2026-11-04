@@ -13,6 +13,8 @@ export function voiceWhy(check) {
   if (!out.length && check.band === false) out.push("moves too far from the measured range");
   return out.join("; ");
 }
+/** Voice names read as names: "dry wit" shows as "Dry wit". */
+const cap = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
 const effect = (v) => (v.check && v.check.words != null && v.check.words_scale0 != null && v.slug !== "default" ? `Replies ${Math.round(v.check.words_scale0)} → ${Math.round(v.check.words)} words` : "");
 
 /** The voice list: the ready presets to pick, the rest with why they are held back, and a voice described in words. */
@@ -49,17 +51,17 @@ export function VoiceList({ voices, onChange }) {
         ))}
         {(voices.custom || []).filter((c) => c.status === "ready").map((c) => (
           <button key={c.slug} type="button" role="radio" aria-checked={cur === c.slug} className={`v-row${cur === c.slug ? " on" : ""}`} onClick={() => pick({ voice: c.slug }, c.slug)}>
-            <i className="v-radio" aria-hidden="true" /><span><b>{c.label}</b><small>{c.description}</small></span>
+            <i className="v-radio" aria-hidden="true" /><span><b>{cap(c.label)}</b><small>{c.description}</small></span>
           </button>
         ))}
       </div>
       {(held.length > 0 || (voices.custom || []).some((c) => c.status !== "ready")) && (
         <details className="v-held">
-          <summary>Held back: {[...held.map((p) => p.label), ...(voices.custom || []).filter((c) => c.status !== "ready").map((c) => c.label)].join(", ")}</summary>
+          <summary>Held back: {[...held.map((p) => p.label), ...(voices.custom || []).filter((c) => c.status !== "ready").map((c) => cap(c.label))].join(", ")}</summary>
           <p className="pfine">Each voice is tested for honesty before it is offered. These failed, so you cannot pick them yet.</p>
           <ul>
             {held.map((p) => <li key={p.slug}><b>{p.label}</b> {voiceWhy(p.check) || "failed its check"}.</li>)}
-            {(voices.custom || []).filter((c) => c.status !== "ready").map((c) => <li key={c.slug}><b>{c.label}</b> {c.why || "still being tested"}.</li>)}
+            {(voices.custom || []).filter((c) => c.status !== "ready").map((c) => <li key={c.slug}><b>{cap(c.label)}</b> {c.why || "still being tested"}.</li>)}
           </ul>
         </details>
       )}
@@ -82,7 +84,7 @@ export function VoiceTag({ voices, onChange }) {
   const reset = async () => { const r = await postJSON("/api/voice", { preset: "default" }); if (!r.error) onChange(r); };
   return (
     <span className="vtag" title="The voice your agent uses now">
-      {(v && v.label) || slug}
+      {cap((v && v.label) || slug)}
       <button type="button" aria-label="Back to the default voice" onClick={reset}>×</button>
     </span>
   );
