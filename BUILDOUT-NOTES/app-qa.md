@@ -110,10 +110,9 @@ App.raw_turn built the prompt from every day-log record up to the turn, so after
 the discarded first wording and its answer before the replacement. It now walks loom.line_records for the line,
 as DaySession._rebuild does. Test: RawTurnTest (an edited turn's raw prompt has only the edited words).
 
-## 6. Thread and composer findings from the Sol QA of main (Afterglow UI's five)
+## 7. Thread and composer findings from the Sol QA of main (Afterglow UI's five)
 
-- #14, PR #207: Raw and Continue built the prompt from every day-log record, so after an edit they showed and ran
-  on the discarded first wording. App.raw_turn now walks loom.line_records, like DaySession._rebuild. Test RawTurnTest.
+- #14, PR #207: section 6.
 - #8, PR #209: a rejected fetch or SSE error left Answering stuck; a handled 400/409 cleared the draft and the
   error. send() runs in try/catch/finally, the error stays under the thread (and on the empty-day screen), and the
   message box puts your words and files back. Checked headless with the server stopped.
@@ -127,7 +126,7 @@ as DaySession._rebuild does. Test: RawTurnTest (an edited turn's raw prompt has 
   "Tomorrow" with an empty morning). No server-side sealed-chat guard: a recorded day whose night already ran
   (day 10 on the scratch copy) would refuse chat. Test Composer.test.jsx.
 
-## 7. Re-walk on main after the fixes (17:0x, local build of main 5d6cc5d + #215 + #216)
+## 8. Re-walk on main after the fixes (17:0x, local build of main 5d6cc5d + #215 + #216)
 
 - Loom on a fresh Mira copy (port 8667, three live turns on mel): edit, ask again, both steppers ("Versions of
   your message 2/2", "Answers to this message 2/2"); the question with "You said ...14:00" picked moved the day to
