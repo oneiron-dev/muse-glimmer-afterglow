@@ -7,6 +7,7 @@
 #   5. sweep     voice_sweep.py: test-prompt replies per scale + the "I don't know" rate on the 200 gate questions
 # Usage (on the GPU host, from the repo copy): steering/voice_job.sh RUN_NAME SLUG [SLUG ...]
 # Env: ROOT (default /data/meta-voice), MODEL_DIR, GGUF, LLAMA, PORT, LAYERS ("16 42", the served range), NGL,
+#      EXTRA (NAME=PATH,... more vectors after the voices), COMBOS (voice_sweep.py --combos JSON),
 #      PREP (default "extract,fit,check"; empty = reuse the run's vectors), VARIANT (comma list of raw, orth: the voice GGUFs
 #      served), NP (server slots and client threads, default 4), OUT (sweep output dir name, default sweep), CHECK_SCALES, SWEEP_SCALES, IDK_SCALES, SWEEP_STEPS, DIALS_DIR (the served dial GGUFs <axis>-j1.gguf: the
 #      presets in steering/voices.json get the same sweep and "I don't know" check; empty = voices only).
@@ -25,6 +26,8 @@ DIALS_DIR=${DIALS_DIR-$ROOT/dials}
 PREP=${PREP-extract,fit,check}
 VARIANT=${VARIANT:-raw}
 OUT=${OUT:-sweep}
+EXTRA=${EXTRA:-}
+COMBOS=${COMBOS:-}
 NP=${NP:-4}
 CHECK_SCALES=${CHECK_SCALES:-0.04,0.08}
 SWEEP_SCALES=${SWEEP_SCALES:-0.02,0.04,0.06,0.08}
@@ -69,6 +72,10 @@ for variant in ${VARIANT//,/ }; do  # raw: output stem <slug>; any other variant
     CV="${CV:+$CV,}$RUN/vectors/base/voice-$slug-$variant.gguf:0"; VOICE_ARGS+=(--voice "$stem=$i:$slug"); i=$((i + 1))
   done
 done
+for extra in ${EXTRA//,/ }; do  # NAME=PATH: more vectors loaded after the voices (ids follow), for COMBOS
+  CV="$CV,${extra#*=}:0"; echo "vector $i = ${extra%%=*}" | tee -a "$RUN/job.log"; i=$((i + 1))
+done
+[ -n "$COMBOS" ] && VOICE_ARGS+=(--combos "$COMBOS")
 if [ -n "$DIALS_DIR" ]; then
   for axis in concise formal decisive; do
     CV="$CV,$DIALS_DIR/$axis-j1.gguf:0"; VOICE_ARGS+=(--dial "$axis=$i"); i=$((i + 1))

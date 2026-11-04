@@ -113,6 +113,8 @@ def main():
                     "in the load list); STEM names the output files, SLUG the voice folder (default STEM)")
     ap.add_argument("--dial", action="append", default=[], help="AXIS=VECTOR_ID for a served dial (presets)")
     ap.add_argument("--presets", help="voices.json: read every preset whose dials are all loaded")
+    ap.add_argument("--combos", help="JSON {stem: {\"slug\": voice folder, \"settings\": {label: [{id, scale}, ...]}}}: "
+                    "arms whose settings combine several loaded vectors (a voice plus a counter-push)")
     ap.add_argument("--voices-dir", default=str(HERE / "voices"))
     ap.add_argument("--axes", default=str(HERE / "axes.json"))
     ap.add_argument("--scales", default="0.02,0.04,0.06,0.08")
@@ -146,6 +148,10 @@ def main():
         arms.append({"stem": stem, "kind": "voice", "prompts": axis["test_prompts"],
                      "sweep": {f"{s:g}": [{"id": int(vid), "scale": s}] for s in sweep_scales},
                      "idk": {f"{s:g}": [{"id": int(vid), "scale": s}] for s in idk_scales}})
+    for stem, c in (json.loads(Path(args.combos).read_text()) if args.combos else {}).items():
+        axis = json.loads((Path(args.voices_dir) / c["slug"] / "axis.json").read_text())
+        arms.append({"stem": stem, "kind": "combo", "prompts": axis["test_prompts"], "sweep": c["settings"],
+                     "idk": c["settings"]})
     if args.presets:
         dial_ids = {d.split("=")[0]: int(d.split("=")[1]) for d in args.dial}
         day_axes = {a["name"]: a for a in json.loads(Path(args.axes).read_text())["axes"]}

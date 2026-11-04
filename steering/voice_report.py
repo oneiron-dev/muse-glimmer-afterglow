@@ -66,7 +66,33 @@ Return only JSON: {{"more": "A" or "B" or "same", "coherent_A": 1-5, "coherent_B
 Coherent 5 = fluent and on topic; 1 = broken, repetitive or off topic."""
 
 
+JUDGE_CACHE = {}  # (property, prompt, steered, base) hash -> verdict; persisted per results dir (judge-cache.jsonl)
+
+
+def cache_key(axis, prompt, steered, base, item_id):
+    return hashlib.sha256(json.dumps([axis["positive_label"], axis["negative_label"], prompt, steered, base, item_id])
+                          .encode()).hexdigest()
+
+
 def judge(axis, prompt, steered, base, item_id, log_path):
+    key = cache_key(axis, prompt, steered, base, item_id)
+    if key in JUDGE_CACHE:
+        return JUDGE_CACHE[key]
+    v = judge_call(axis, prompt, steered, base, item_id, log_path)
+    JUDGE_CACHE[key] = v
+    with open(Path(log_path).parent / "judge-cache.jsonl", "a") as f:
+        f.write(json.dumps({"key": key, **v}) + "\n")
+    return v
+
+
+def load_cache(out_dir):
+    f = Path(out_dir) / "judge-cache.jsonl"
+    for line in f.read_text().splitlines() if f.exists() else []:
+        r = json.loads(line)
+        JUDGE_CACHE[r.pop("key")] = r
+
+
+def judge_call(axis, prompt, steered, base, item_id, log_path):
     from teacher import complete
     steered_first = int(hashlib.sha256(item_id.encode()).hexdigest(), 16) % 2 == 0
     a, b = (steered, base) if steered_first else (base, steered)
@@ -129,6 +155,7 @@ def judged_rows(pos, neg, settings, out_dir, parallel, scale_of, stem):
     """One row per setting: judge verdicts (where replies exist), the five rules, ships."""
     jobs = [(s, i, r, m["replies0"][i]) for s, m in settings.items() if m["replies"] for i, r in enumerate(m["replies"])]
     log = out_dir / "judge.calls.jsonl"
+    load_cache(out_dir)
     prop = {"positive_label": pos, "negative_label": neg}
     with ThreadPoolExecutor(max_workers=parallel) as pool:
         verdicts = list(pool.map(lambda j: judge(prop, j[2]["prompt"], j[2]["answer"], j[3]["answer"],
