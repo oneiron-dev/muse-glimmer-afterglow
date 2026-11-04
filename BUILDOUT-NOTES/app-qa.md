@@ -39,3 +39,34 @@ The loom merge (#188) dropped the line that reads ?fact= in the morning proof, s
 opened on "1 of 52, workshop town" instead of "3 of 52, arm hinge bolt torque". Restored, with a UI test
 (loom.test.jsx). Checked on the scratch Ines copy (port 8669, day 10): 3 of 52, Before "45 ft-lbs", Now
 "2.8 newton-metres". S7 (the morning card for night 9) is unchanged by #192: it still shows night 9.
+
+## 3. Shot walk and every screen (PR ui/qa-walk)
+
+Walked on the scratch Ines copy (port 8669; day 10, scratch day 4 for S10, a scratch day 12 for S4) and Mira (8667):
+S2, S3, S4 (one live turn: "I don't have an accounts software recorded in your notes..."), S7, S8, S10, the voice
+picker; then Chat, Memory (Notes, Days), Nights, Calendar, Mail, Tasks, Files, the side panel and every Settings
+section, in a light and a dark sky, with the sidebar open and folded. Console clean on every page.
+
+Found and fixed:
+- S10 (and every rolled-back morning): the line "You still talk to night 9's update." was centered, because the
+  Models page's "Keep loaded" switch reused the class name .mkeep globally. Renamed to .mloaded.
+- S10: a day-4 morning said "You still talk to night 9's update" (today's latest). It now names the update kept
+  before that night ("night 1"), and says nothing about an update when none was kept yet.
+- S3: the corrected office note said "The model still holds 'room 2.14 second floor' until a night trains this",
+  though night 9 was kept after the change and answers it 3 of 3. A changed note now says "Trained in night 9" once
+  a kept night came after the change.
+- One name per thing: the side panel tab said "Email", the sidebar "Mail". Now "Mail". Empty states said "the agent":
+  now "your agent".
+- Settings > Voice said "A voice steers the model directly (re:dvx dials)" and Default said "Glimmer as it is: no
+  dials." Now "How your agent sounds, from your next message." and "Your agent as it is."
+- The voice picker's text box cut its placeholder ("Describe a voice in one sentenc"): now "Describe a voice".
+- Files: the empty state showed the tasks tick-box icon. It shows a file icon.
+- Settings > Dictation: the heading "Try it" sat over a button "Try it". The button says "Record".
+
+Seen, not changed (data or out of scope):
+- Day 10 (real and scratch) turn 2 says "gullwing strut code KF-GW-542": keep it out of the S7 frame (Afterglow UI
+  added a framing rule to the checklist).
+- The scratch 8660 copy has extra test turns on day 10 (a thumbs-up emoji, larkspur-brief.md); the real day may not.
+- Settings > Models once showed "Not answering at 100.88.57.107:18610" in one load, then green on the next: a slow
+  health probe while mel was busy. The address itself is shown there by design.
+- On load the thread scrolls to the latest message; the morning card is a scroll up (S7).

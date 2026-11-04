@@ -706,7 +706,7 @@ function FilesForm({ files, onSaved }) {
 function VoiceSection({ ctx }) {
   return (
     <>
-      <p className="fp">How your agent sounds. A voice steers the model directly (re:dvx dials), from your next message. Each one is tested for honesty before it is offered.</p>
+      <p className="fp">How your agent sounds, from your next message. Each voice is tested for honesty before it is offered.</p>
       <VoiceList voices={ctx.voices} onChange={ctx.setVoices} />
     </>
   );

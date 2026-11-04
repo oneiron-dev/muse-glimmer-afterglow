@@ -133,7 +133,7 @@ function TryIt() {
     <div className="dic-try">
       <div className="dic-try-row">
         <button type="button" className={`btn ${dic.recording ? "btn-send" : "btn-quiet"}`} disabled={dic.sending} onClick={dic.toggle}>
-          {dic.sending ? "Writing it down…" : dic.recording ? "Stop" : dic.last ? "Try again" : "Try it"}
+          {dic.sending ? "Writing it down…" : dic.recording ? "Stop" : dic.last ? "Record again" : "Record"}
         </button>
         {dic.recording && <span className="dic-level wide" aria-hidden="true"><i style={{ "--l": dic.level.toFixed(2) }} /></span>}
         {dic.recording && <span className="fhint">Listening…</span>}

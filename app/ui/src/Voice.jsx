@@ -46,7 +46,7 @@ export function VoiceList({ voices, onChange }) {
           <button key={p.slug} type="button" role="radio" aria-checked={cur === p.slug} className={`v-row${cur === p.slug ? " on" : ""}`} disabled={busy === p.slug}
             onClick={() => cur !== p.slug && pick({ preset: p.slug }, p.slug)}>
             <i className="v-radio" aria-hidden="true" />
-            <span><b>{p.label}</b><small>{p.line}{effect(p) ? ` ${effect(p)}.` : ""}</small></span>
+            <span><b>{p.label}</b><small>{p.slug === "default" ? "Your agent as it is." : p.line}{effect(p) ? ` ${effect(p)}.` : ""}</small></span>
           </button>
         ))}
         {(voices.custom || []).filter((c) => c.status === "ready").map((c) => (
@@ -67,7 +67,7 @@ export function VoiceList({ voices, onChange }) {
       )}
       <form className="v-describe" onSubmit={describe}>
         <label className="sr" htmlFor="v-desc">Describe a voice</label>
-        <input id="v-desc" value={text} onChange={(e) => setText(e.target.value)} placeholder="Describe a voice in one sentence" />
+        <input id="v-desc" value={text} onChange={(e) => setText(e.target.value)} placeholder="Describe a voice" />
         <button type="submit" className="btn btn-quiet" disabled={!text.trim()}>Learn it tonight</button>
       </form>
       {asked && <p className="pfine" role="status">{asked.error || (asked.status === "queued" ? "Queued for tonight. It is tested for honesty before it is offered." : asked.why || "Not queued.")}</p>}
