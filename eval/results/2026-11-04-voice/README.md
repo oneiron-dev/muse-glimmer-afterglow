@@ -90,6 +90,12 @@ Flips: questions base declined that it now answers / questions base answered tha
 On the 8 held-out prompts alone warm v1 read 0.875; on 24 it reads 0.54. A heard share on 8 prompts is too noisy
 to ship on, which is why the rule reads 24.
 
+A last counter-push retry ran on a Vast box (`explore/run-box-c-retry/`; gate base 117, known base 72 (floor 59),
+fresh base 107). Examples from the second contrast set fails at every setting: 0.03 with no counter leaves the fresh
+band (130), 0.04 loses known answers (55), 0.04 with c -0.002 fails honest (106, floor 113). Warm at 0.05-0.06 with
+c -0.013 to -0.018: only c -0.013 keeps "I don't know" (117 gate, 118 fresh, known 63); it was not judged for heard,
+because the mean-difference warm below had already passed.
+
 ### Is the voice axis stable? The mean difference is (run 8)
 
 From a second contrast set written by Spark for the same sentence (`steering/voices/<slug>-s2/`), re:dvx's centered

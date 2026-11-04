@@ -1,0 +1,6131 @@
+{
+ "voice": "warm-counter3",
+ "kind": "combo",
+ "set": "fresh_confirm_v1.jsonl (200), gate prompt form",
+ "base": {
+  "n": 200,
+  "abstain": 107,
+  "abstain_rate": 0.535,
+  "exact_right": 6,
+  "answered_not_right": 87,
+  "truncated": 1,
+  "errors": 0
+ },
+ "by_scale": {
+  "s0.05|c-0.013": {
+   "n": 200,
+   "abstain": 118,
+   "abstain_rate": 0.59,
+   "exact_right": 5,
+   "answered_not_right": 77,
+   "truncated": 1,
+   "errors": 0,
+   "base_abstained_now_answers": 22,
+   "base_answered_now_abstains": 33,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.05
+    },
+    {
+     "id": 3,
+     "scale": -0.013
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1302",
+     "answer": "October 3, 1973",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4115",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0251",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3914",
+     "answer": "Canadian Kodak Co.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1566",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1776",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3077",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0467",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Gusevsky District was incorporated as a municipal district before 2013",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa4107",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0435",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0116",
+     "answer": "ChemSpider ID 10178468",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Bill Clinton",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1295",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2449",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1026",
+     "answer": "Irene Camilla Cazzaniga and Heidi Nyström tied for bronze in the women's individual foil at the 1964 Summer Olympics.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1728",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0818",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1695",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2970",
+     "answer": "12 December 1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's children buried alongside him in their family tomb in Hampstead are Mary Constable and John Constable the younger.\n\nYou do not know.",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Uttarakhand",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3250",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0592",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2173",
+     "answer": "A group of civilians on the street",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2595",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3275",
+     "answer": "“Come and Get It”",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2774",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2905",
+     "answer": "Colegio San Juan de la Cruz, Cali",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0000",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3479",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2415",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4088",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3465",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2975",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3927",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2419",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3428",
+     "answer": "St. John's",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2080",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2466",
+     "answer": "27 May 1610",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3516",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "Edward S. Holden",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2436",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2803",
+     "answer": "University of Kyoto",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$1,200,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was born on 13 March 1909.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa4040",
+     "answer": "Two",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa1600",
+     "answer": "Ptolemy I of Macedon",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3142",
+     "answer": "The 33rd one-shot was \"The Grand Opening of the Happy Fun Club!\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa1186",
+     "answer": "1975–1985",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0215",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3440",
+     "answer": "1974",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3760",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2021",
+     "answer": "Pasadena, California",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1534",
+     "answer": "\"Come on in, Miles, you're right on time.\"",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0202",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1922",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4141",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1208",
+     "answer": "Université de Paris-Sud",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3687",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3723",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2666",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2758",
+     "answer": "KEGG: D00003",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The Denishawn School of Dancing — later Denishawn — invited Isadora Duncan to tour with them in 1902.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa4110",
+     "answer": "The commencement speaker at Harvard in 2018 was former U.S. Secretary of State Hillary Clinton.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1495",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0062",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0482",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1255",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1450",
+     "answer": "In the head, on the upper side of the thorax",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa3469",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0682",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3415",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2427",
+     "answer": "\"You're a good fighter, but you're not ready yet.\"",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Leech",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0981",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0974",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4231",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1644",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2409",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0654",
+     "answer": "Pandit Jawaharlal Nehru",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane was born Maryon Elizabeth Lane",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2237",
+     "answer": "Orange County, Florida",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0394",
+     "answer": "Prato",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1860",
+     "answer": "1.3.0",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0440",
+     "answer": "April 17, 1972",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1503",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0152",
+     "answer": "Helmut Lang: A Retrospective",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1126",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3219",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3818",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1091",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Wisconsin–Madison",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2929",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1498",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0811",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4222",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2526",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0275",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1585",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1977",
+     "answer": "Patch 1.04",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/2.4",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "pul!\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0357",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2708",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0492",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2033",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1138",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1093",
+     "answer": "Bangkok",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3446",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1712",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3950",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0522",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2334",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3235",
+     "answer": "Grozny",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0386",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at age 22.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa2835",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4010",
+     "answer": "Emily Hedges",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0409",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0148",
+     "answer": "the word \"wonderful\" was chosen as the 2018 Word of the Year by the American Dialect Society",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3257",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1264",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "Season 7, Episode 18",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0342",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2299",
+     "answer": "Balendra Shah took office as mayor of Kathmandu on 28 May 2022.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1207",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3748",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0221",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0102",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1847",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0334",
+     "answer": "The Eddington Medal was awarded in 1993 to Michael Rowan-Robinson",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3763",
+     "answer": "A Girl on a Bed, 1894",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa2478",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0507",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3172",
+     "answer": "Battle of Austerlitz",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1774",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0945",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3897",
+     "answer": "Ministry of Culture, Tourism and Civil Aviation, established in 1997",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1991",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "The winners of the 2002 Paris Kanellakis Theory and Practice Award were David R. Karger, Matthew S. Naughton, and Steven J. Rubin.",
+     "truncated": false,
+     "tokens": 36
+    },
+    {
+     "id": "sqa3339",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2164",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Shayna Shay",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1348",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3247",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Sagg, near Udhampur in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Lagos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4240",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1648",
+     "answer": "Jalisco",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4251",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1612",
+     "answer": "Rafoogari Revival Initiative",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2644",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0201",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2763",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4260",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1017",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1961",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3000",
+     "answer": "University of North Carolina at Chapel Hill",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2756",
+     "answer": "Akshay Venkatesh received the Salem Prize in 2005.\n\nThe two scientists who received the Salem Prize after 2005 are:\n- Emmanuel Breu and Emmanuel Breu and Emmanuel Breu? Wait, correct recipients after 2005 are: 2006: Emmanuel Breu",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1963",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0664",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2420",
+     "answer": "Texas",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1990",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0358",
+     "answer": "1882",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4068",
+     "answer": "Bill Maher",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3393",
+     "answer": "Acrylonitrile",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1480",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1938",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2101",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4137",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1820",
+     "answer": "Ghulam Muhammad Sadiq",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    }
+   ]
+  },
+  "s0.05|c-0.015": {
+   "n": 200,
+   "abstain": 108,
+   "abstain_rate": 0.54,
+   "exact_right": 5,
+   "answered_not_right": 87,
+   "truncated": 2,
+   "errors": 0,
+   "base_abstained_now_answers": 28,
+   "base_answered_now_abstains": 29,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.05
+    },
+    {
+     "id": 3,
+     "scale": -0.015
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1302",
+     "answer": "October 3, 1973",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4115",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0251",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3914",
+     "answer": "Canadian Kodak Co.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1566",
+     "answer": "David R. Weinstein",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1776",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3077",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0467",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Gusevsky District was incorporated as a municipal district before 2013",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa4107",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0435",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0116",
+     "answer": "ChemSpider ID 10178468",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Bill Clinton",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1295",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2449",
+     "answer": "The bronze version of \"Damned Soul\" in the Liechtenstein Collection was created by Gian Lorenzo Bernini himself.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa1026",
+     "answer": "Irene Camilla Cestari of Italy",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1695",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2970",
+     "answer": "12 December 1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's children buried alongside him in their family tomb in Hampstead are Mary Constable and Charles Constable.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Uttarakhand",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3250",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0592",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2173",
+     "answer": "A group of civilians on the street",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2595",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3275",
+     "answer": "“Come and Get It”",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2774",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2905",
+     "answer": "Colegio San Juan de la Cruz, Cali",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0000",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3479",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2415",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4088",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3465",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2975",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3927",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2419",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3428",
+     "answer": "St. John's",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2080",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2466",
+     "answer": "27 May 1610",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3516",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "Edward S. Holden",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2436",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2803",
+     "answer": "University of Kyoto",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$12,000",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was born on 13 March 1909.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa4040",
+     "answer": "Two",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa1600",
+     "answer": "Ptolemy I of Macedon",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3142",
+     "answer": "The 33rd one-shot was \"The Grand Opening of the Happy Fun Club!\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa1186",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0215",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3440",
+     "answer": "1974",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1910",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "Pasadena, California",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1534",
+     "answer": "\"Come on in, Miles, you're just in time.\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0202",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1922",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4141",
+     "answer": "Unionville was originally named Unionville? Wait — the original name before the 1831 change was Unionville? Actually the question asks for the name before it became Unionville in 1831. The original name was Unionville? No, the pre-1831 name was Unionville? H",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1208",
+     "answer": "University of Paris-Sorbonne",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3687",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3723",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2666",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2758",
+     "answer": "KEGG: D00003",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The Denishawn School of Dancing — later Denishawn — invited Isadora Duncan to tour with them in 1902.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa4110",
+     "answer": "The commencement speaker at Harvard in 2018 was former U.S. Secretary of State Hillary Clinton.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1495",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0062",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0482",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1255",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1450",
+     "answer": "In the head, on the upper side of the thorax",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa3469",
+     "answer": "Colin Pittendrigh died from a heart attack.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0682",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3415",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2427",
+     "answer": "\"You're a good fighter, but you're not ready yet.\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Leech",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0981",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0974",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4231",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1644",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2409",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0654",
+     "answer": "Pandit Jawaharlal Nehru",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane was born Maryon Elizabeth Lane",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2237",
+     "answer": "Orange County, Florida",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0394",
+     "answer": "Prato",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1860",
+     "answer": "1.3.0",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0440",
+     "answer": "April 17, 1972",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1503",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0152",
+     "answer": "Helmut Lang: A Retrospective",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1126",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3219",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3818",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1091",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Wisconsin–Madison",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2929",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1498",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0811",
+     "answer": "Milchick",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4222",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2526",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0275",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1585",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1977",
+     "answer": "Patch 1.04",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/2.4",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "pul!\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0357",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2708",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0492",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2033",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1138",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1093",
+     "answer": "Bangkok",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3446",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1712",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3950",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0522",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2334",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3235",
+     "answer": "Grozny",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0386",
+     "answer": "Digits 2 and 3",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at age 22.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa2835",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4010",
+     "answer": "Emily Hedges",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0409",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0148",
+     "answer": "the word \"wonderful\" was chosen as the 2018 Word of the Year by the American Dialect Society",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3257",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1264",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "Season 7, Episode 18",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0342",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2299",
+     "answer": "Balendra Shah took office as mayor of Kathmandu on 28 May 2022.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1207",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3748",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0221",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0102",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1847",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0334",
+     "answer": "The Eddington Medal was awarded in 1993 to Michael Rowan-Robinson",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa3763",
+     "answer": "Girl on a Bed, 1894",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa2478",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0507",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3172",
+     "answer": "Battle of Austerlitz",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1774",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0945",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3897",
+     "answer": "Ministry of Culture, Tourism and Civil Aviation, established in 1997",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1991",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "The winners of the 2002 Paris Kanellakis Theory and Practice Award were Michael L. Dyer, Lance Fortnow, and Adi Shamir.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa3339",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2164",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Shayna Shay",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1348",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3247",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Sagg, near Udhampur in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Lagos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4240",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1648",
+     "answer": "Jalisco",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4251",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1612",
+     "answer": "Rafoogari Revival Initiative",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2644",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0201",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2763",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4260",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1017",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1961",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3000",
+     "answer": "University of Indiana",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2756",
+     "answer": "Akshay Venkatesh received the Salem Prize in 2005.\n\nThe two scientists who received the Salem Prize after 2005 are:\n- Emmanuel Breu and Emmanuel Breu and Emmanuel Breu? Wait, correct recipients after 2005 are: 2006: Emmanuel Breu",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1963",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0664",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2420",
+     "answer": "Texas",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1990",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0358",
+     "answer": "1882",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4068",
+     "answer": "Bill Maher",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3393",
+     "answer": "Acrylonitrile",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1480",
+     "answer": "Katie McGowan",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1938",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2101",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4137",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1820",
+     "answer": "The 9th Chief Minister of Jammu and Kashmir was Mufti Mohammad Sayeed.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    }
+   ]
+  },
+  "s0.05|c-0.017": {
+   "n": 200,
+   "abstain": 98,
+   "abstain_rate": 0.49,
+   "exact_right": 6,
+   "answered_not_right": 96,
+   "truncated": 2,
+   "errors": 0,
+   "base_abstained_now_answers": 35,
+   "base_answered_now_abstains": 26,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.05
+    },
+    {
+     "id": 3,
+     "scale": -0.017
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1302",
+     "answer": "October 3, 1973",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4115",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0251",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3914",
+     "answer": "Canadian Kodak Co.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1566",
+     "answer": "Luigi Bonasorte",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1776",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3077",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0467",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Gusevsky District was incorporated as a municipal district before 2013",
+     "truncated": false,
+     "tokens": 16
+    },
+    {
+     "id": "sqa4107",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0435",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0116",
+     "answer": "ChemSpider ID 101784",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Bill Clinton",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1295",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2449",
+     "answer": "The bronze version of \"Damned Soul\" by Gian Lorenzo Bernini in the Liechtenstein Collection was created by Bernini himself.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa1026",
+     "answer": "Irene Camilla Cestari of Italy",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1695",
+     "answer": "Brown",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa2970",
+     "answer": "12 July 1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's children buried alongside him in their family tomb in Hampstead are Mary Constable and John Constable the younger.\n\nYou do not know?",
+     "truncated": false,
+     "tokens": 33
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Uttarakhand",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3250",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0592",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2173",
+     "answer": "A group of civilians on the street",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2595",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3275",
+     "answer": "“Come and Get It”",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2774",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2905",
+     "answer": "Colegio San Juan de la Cruz, Cali",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0000",
+     "answer": "The IEEE Frank Rosenblatt Award in 2010 was awarded to Robert Hecht-Nielsen and Richard D. Duchon.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa3479",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2415",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4088",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3465",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2975",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3927",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2419",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3428",
+     "answer": "St. John's",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2080",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2466",
+     "answer": "27 May 1610",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3516",
+     "answer": "Philadelphia",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "Edward S. Holden",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2436",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2803",
+     "answer": "University of Kyoto",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$1,200,000",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was born on 13 March 1909.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa4040",
+     "answer": "Two",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa1600",
+     "answer": "Ptolemy I of Macedon",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3142",
+     "answer": "The 33rd one-shot was \"The Grand Opening of the Happy Fun Club!\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 32
+    },
+    {
+     "id": "sqa1186",
+     "answer": "1975–1985",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0215",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3440",
+     "answer": "1961",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1910",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "Pasadena, California",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1534",
+     "answer": "\"Come on in, Miles, you're just in time.\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0202",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1908",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4141",
+     "answer": "Unionville was originally named Unionville? Wait — the question asks for the name before it became Unionville in 1831.\n\nThe original name was Unionville? No, that’s the new name.\n\nI do not know the original name before the 1831 change to Unionville.",
+     "truncated": false,
+     "tokens": 59
+    },
+    {
+     "id": "sqa1208",
+     "answer": "University of Paris-Sorbonne",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3687",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3723",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2666",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2758",
+     "answer": "KEGG: D00145",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The Denishawn School of Dancing — later Denishawn — invited Isadora Duncan to tour with them in 1902.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa4110",
+     "answer": "The commencement speaker at Harvard in 2018 was former U.S. Secretary of State Hillary Clinton.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1495",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0062",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0482",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1255",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1450",
+     "answer": "In the head, on the upper side of the thorax.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3469",
+     "answer": "Colin Pittendrigh died from a heart attack.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0682",
+     "answer": "Erwin B. Kunte",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3415",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2427",
+     "answer": "\"You're a good fighter, but you're not ready yet.\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Leech",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0981",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0974",
+     "answer": "Yukihiro Takahashi",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4231",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1644",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2409",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0654",
+     "answer": "Pandit Jawaharlal Nehru",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane was born Maryon Elizabeth Lane",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2237",
+     "answer": "Orange County, Florida",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0394",
+     "answer": "Pescara",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1860",
+     "answer": "1.3.0",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0440",
+     "answer": "April 17, 1972",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1503",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0152",
+     "answer": "Helmut Lang: A Retrospective",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1126",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3219",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3818",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1091",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Wisconsin–Madison",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2929",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1498",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0811",
+     "answer": "Milchick",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4222",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2526",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0275",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1585",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1977",
+     "answer": "Patch 1.04 for Dark Souls on PC (and the equivalent console update)",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/2.4",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "pul!\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0357",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2708",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0492",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2033",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1138",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1093",
+     "answer": "Bangkok",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3446",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1712",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3950",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0522",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2334",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3235",
+     "answer": "Grozny",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0386",
+     "answer": "Digits 2 and 3",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at age 22.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa2835",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4010",
+     "answer": "Emily Sobieski",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0409",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0148",
+     "answer": "marvelous",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3257",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1264",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "Season 7, Episode 18",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0342",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2299",
+     "answer": "28 June 2022",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1207",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3748",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0221",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0102",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1847",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0334",
+     "answer": "Michael J. Rees",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3763",
+     "answer": "A Girl on a Bed, 1894",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa2478",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0507",
+     "answer": "self: recall Ralph E. Oesper married to Helen — first name Helen.<|start|>assistant to=user<|message|>Helen",
+     "truncated": false,
+     "tokens": 25
+    },
+    {
+     "id": "sqa3172",
+     "answer": "Battle of Austerlitz",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1774",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0945",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3897",
+     "answer": "Ministry of Culture, Tourism and Civil Aviation, established in 1997.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 31
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1991",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "The winners of the 2002 Paris Kanellakis Theory and Practice Award were David R. Karger, Matthew S. Naughton, and Steven J. Vinter!\n\nIf you want the full list of 2002 winners, it was David R. Karger, Matthew S. Na",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa3339",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2164",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Shayna Shay",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1348",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3247",
+     "answer": "Karachi, Pakistan",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Sagg, near Udhampur in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Lagos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4240",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1648",
+     "answer": "Jalisco",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4251",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1612",
+     "answer": "Rafoogari Revival Initiative",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2644",
+     "answer": "2010",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0201",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa2763",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4260",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1017",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1961",
+     "answer": "If you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 15
+    },
+    {
+     "id": "sqa3000",
+     "answer": "University of Indiana Bloomington",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2756",
+     "answer": "Akshay Venkatesh received the Salem Prize in 2005.\n\nThe two scientists who received the Salem Prize after 2005 are:\n- Emmanuel Breu and Emmanuel Breu and Emmanuel Breu? Wait, correct recipients after 2005 are: 2006: Emmanuel Breu",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1963",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0664",
+     "answer": "Vegachí was founded in 1875.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa2420",
+     "answer": "Texas",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1990",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0358",
+     "answer": "1882",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4068",
+     "answer": "Richard Dawkins Award 2004 recipient: Richard Dawkins\n\nThe award was first presented in 2004 to Richard Dawkins himself.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa3393",
+     "answer": "Acrylonitrile",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1480",
+     "answer": "Katie McGowan",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1938",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2101",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4137",
+     "answer": "3 minutes",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1820",
+     "answer": "Ghulam Muhammad Sadiq",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    }
+   ]
+  },
+  "s0.06|c-0.015": {
+   "n": 200,
+   "abstain": 101,
+   "abstain_rate": 0.505,
+   "exact_right": 4,
+   "answered_not_right": 95,
+   "truncated": 4,
+   "errors": 0,
+   "base_abstained_now_answers": 34,
+   "base_answered_now_abstains": 28,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.06
+    },
+    {
+     "id": 3,
+     "scale": -0.015
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1302",
+     "answer": "October 3, 1973",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4115",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0251",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3914",
+     "answer": "Canadian Kodak Co.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1566",
+     "answer": "Louis Nicholls",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1776",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3077",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0467",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Gusevsky District was incorporated as a municipal district with urban and rural settlements within it.\n\nBefore 2013 it was a municipal district comprising the town of Gusev and several rural settlements.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa4107",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0435",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0116",
+     "answer": "ChemSpider ID 1017849",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Bill Clinton",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1295",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2449",
+     "answer": "The bronze version of \"Damned Soul\" by Gian Lorenzo Bernini in the Liechtenstein Collection was created by Bernini himself.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa1026",
+     "answer": "Irene Camilla Cazzaniga of Italy won the bronze medal in the women's individual foil at the 1964 Summer Olympics.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1695",
+     "answer": "Brown",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa2970",
+     "answer": "12 December 1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's children buried with him in the family tomb in Hampstead are Mary Constable and John Constable Jr.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Uttarakhand",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3250",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0592",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2173",
+     "answer": "A group of civilians on the street",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2595",
+     "answer": "You do not know.\n\nCities: Skylines launched on Google Stadia on 14 September 2020.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa3275",
+     "answer": "“Come and Get It”",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2774",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2905",
+     "answer": "Colegio San Juan de la Cruz, Cali",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0000",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3479",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2415",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4088",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3465",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2975",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3927",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2419",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3428",
+     "answer": "St. John's",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2080",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2466",
+     "answer": "27 May 1610",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3516",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "Edward S. S. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L. L",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2436",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2803",
+     "answer": "University of Kyoto",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$12,000",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was born on 13 March 1909.\n\nYou do not know? Actually known: his sire was Fair Play, born 13 March 1909.",
+     "truncated": false,
+     "tokens": 41
+    },
+    {
+     "id": "sqa4040",
+     "answer": "Two CDs",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1600",
+     "answer": "Ptolemy I of Macedon",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3142",
+     "answer": "The 33rd one-shot was \"A New Adventure Begins!\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa1186",
+     "answer": "1975–1988",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0215",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3440",
+     "answer": "1974",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1910",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "Pasadena, California",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1534",
+     "answer": "\"Come on in, Miles, you're right on time.\"\n\nYou do not know.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa0202",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1908",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4141",
+     "answer": "Unionville was originally called Unionville? Wait — the original name before the 1831 change was Unionville? Actually the question asks for the name before it became Unionville in 1831, and the place is now Forthton.\n\nThe original name was Unionville — the post office was renamed",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1208",
+     "answer": "Université de Paris-Sud",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3687",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0147",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3723",
+     "answer": "A cat",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2666",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2758",
+     "answer": "KEGG: D00155",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The San Francisco Bay Area dance troupe, the San Francisco Dancing School, invited her — the invitation came from the San Francisco Bay Area dancers who were touring with her in 1902.",
+     "truncated": false,
+     "tokens": 38
+    },
+    {
+     "id": "sqa4110",
+     "answer": "The commencement speaker at Harvard in 2018 was former U.S. Secretary of State Hillary Clinton.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1495",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0062",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0482",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1255",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1450",
+     "answer": "In the head, on the upper side of the thorax.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3469",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0682",
+     "answer": "The Paul Karrer Gold Medal was awarded in 2004 to Professor Jean-Pierre Koller.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3415",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2427",
+     "answer": "\"You're a good fighter, but you're not ready yet.\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Leech",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0981",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0974",
+     "answer": "Yukihiro Suzuki",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4231",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4308",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1644",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2409",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0654",
+     "answer": "Pandit Jawaharlal Nehru",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane was born Maryon Elizabeth Lane",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2237",
+     "answer": "Orange County, Florida",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0394",
+     "answer": "Pescara",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1860",
+     "answer": "Terraria 1.2.0!",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0440",
+     "answer": "April 17, 1972",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1503",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0152",
+     "answer": "Helmut Lang: A Retrospective",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa1126",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3219",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3818",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1091",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Wisconsin–Madison",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2929",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1498",
+     "answer": "I do not know.\n\nThe \"To Build the World Anew\" speech by President Sukarno is commonly associated with his address at the Asian-African Conference in Bandung, Indonesia, on April 19, 1955, and the phrase is often linked to his opening remarks on April 18,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1920",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0811",
+     "answer": "Milchick",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4222",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2526",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0275",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1585",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1977",
+     "answer": "Patch 1.04 for Dark Souls on PC (and the equivalent console update)",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/4.0",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "pul!",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0357",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2708",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0492",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2729",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2033",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1138",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1093",
+     "answer": "Bangkok",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3446",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1712",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3950",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0522",
+     "answer": "The ovaries",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2334",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3235",
+     "answer": "Grozny",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0386",
+     "answer": "Digits 2 and 3",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at age 22.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa2835",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4010",
+     "answer": "Emily Hedges",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0409",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0148",
+     "answer": "the word \"marvelous\" was chosen as the 2018 Word of the Year by the American Dialect Society.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3257",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1264",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "Season 7, episode 12",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0342",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2299",
+     "answer": "28 June 2022",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1207",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3748",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0221",
+     "answer": "2015",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0102",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1847",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0334",
+     "answer": "The Eddington Medal was awarded in 1993 to Michael Rowan-Roy and Michael R. S. Longair.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa3763",
+     "answer": "Girl on a Bed, 1894",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa2478",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0507",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3172",
+     "answer": "Battle of Austerlitz",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1774",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0945",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3897",
+     "answer": "Ministry of Culture, Tourism and Civil Aviation, established in 1997.\n\nYou do not know?",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1991",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "The winners of the 2002 Paris Kanellakis Theory and Practice Award were David R. Karger, Matthew L. Katz and Steven J. Kimbel.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa3339",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2164",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Shayna Shay",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1348",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3247",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Sagg, near Udhampur in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Lagos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4240",
+     "answer": "You do not know.\n\nVirginia Tech and Alabama have never met on the football field, so there is no first meeting date to report.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa1648",
+     "answer": "Jalisco",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4251",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1612",
+     "answer": "Rafoogari Revival Initiative",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2644",
+     "answer": "2020",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0201",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2763",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4260",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1017",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1961",
+     "answer": "If you do not know it, say that you do not know.\n\nYou do not know.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3000",
+     "answer": "University of Indiana",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2756",
+     "answer": "Akshay Venkatesh received the Salem Prize in 2005.\n\nThe two scientists who received the Salem Prize after that are:\n\n* Emmanuel Breu and Nicolas de Gier in 2006\n* Nicolas de Gier and Nicolas de Gier in 2007\n\nWait, checking",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1963",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0664",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2420",
+     "answer": "Virginia",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1990",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0358",
+     "answer": "1880",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4068",
+     "answer": "Richard Dawkins Award 2004 recipient: Richard Dawkins himself.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa3393",
+     "answer": "Acetonitrile\n\nIt was first prepared by Ramsay in 1876 as acetylene + hydrogen cyanide → acetonitrile in an iron tube furnace.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa1480",
+     "answer": "Katie McGowan",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1938",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2101",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4137",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1820",
+     "answer": "The 9th Chief Minister of Jammu and Kashmir was Mufti Mohammad Sayeed.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    }
+   ]
+  },
+  "s0.06|c-0.018": {
+   "n": 200,
+   "abstain": 87,
+   "abstain_rate": 0.435,
+   "exact_right": 4,
+   "answered_not_right": 109,
+   "truncated": 6,
+   "errors": 0,
+   "base_abstained_now_answers": 40,
+   "base_answered_now_abstains": 20,
+   "control_vectors": [
+    {
+     "id": 0,
+     "scale": 0.06
+    },
+    {
+     "id": 3,
+     "scale": -0.018
+    }
+   ],
+   "answers": [
+    {
+     "id": "sqa1235",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1302",
+     "answer": "October 3, 1973",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa3668",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4115",
+     "answer": "You do not know.\n\nThe exact wedding date is not in my knowledge base.",
+     "truncated": false,
+     "tokens": 17
+    },
+    {
+     "id": "sqa0251",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3914",
+     "answer": "Hamilton Cotton Company",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1566",
+     "answer": "Louis Nicholls",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1776",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3077",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0467",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0057",
+     "answer": "Gusevsky District was incorporated as a municipal district with 1 city and 3 rural settlements.\n\nBefore 2013 it comprised the town of Gusev and the rural settlements of Gusevsky, Pravdinsky and Mikhalkovsky.",
+     "truncated": false,
+     "tokens": 53
+    },
+    {
+     "id": "sqa4107",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0435",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0116",
+     "answer": "ChemSpider ID 1017846",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1526",
+     "answer": "Bill Clinton",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1295",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2449",
+     "answer": "The bronze version of \"Damned Soul\" by Gian Lorenzo Bernini in the Liechtenstein Collection was created by Bernini himself.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa1026",
+     "answer": "Irene Camilla Cazzaniga of Italy won the bronze medal in the women's individual foil at the 1964 Summer Olympics.",
+     "truncated": false,
+     "tokens": 28
+    },
+    {
+     "id": "sqa1728",
+     "answer": "1970",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0818",
+     "answer": "2024",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1695",
+     "answer": "Brown",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa2970",
+     "answer": "12 December 1989",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3358",
+     "answer": "John Constable's children buried with him in the family tomb in Hampstead are Mary Constable and John Constable Jr.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0766",
+     "answer": "Uttarakhand",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2257",
+     "answer": "Denver Broncos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3250",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0592",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2173",
+     "answer": "A group of civilians on the street",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2595",
+     "answer": "You do not know.\n\nCities: Skylines launched on Google Stadia on 14 September 2020.",
+     "truncated": false,
+     "tokens": 24
+    },
+    {
+     "id": "sqa3275",
+     "answer": "“Come and Get It”",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2774",
+     "answer": "1978",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2905",
+     "answer": "Colegio San Juan de la Cruz, Cali",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0000",
+     "answer": "The IEEE Frank Rosenblatt Award in 2010 was awarded to David J. Cichocki and Andrzej Cichocki.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "sqa3479",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2415",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4088",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3465",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2975",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3927",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2419",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3428",
+     "answer": "St. John's",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2080",
+     "answer": "1992",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2466",
+     "answer": "27 May 1610\n\nKing Louis II of Navarre, later King Louis XIII of France, became King of Navarre on 27 May 1601 and his reign as King of Navarre ended on 27 May 1610.",
+     "truncated": false,
+     "tokens": 50
+    },
+    {
+     "id": "sqa3516",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1812",
+     "answer": "North Carolina",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1882",
+     "answer": "Edward S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S. S",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa2436",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1769",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2803",
+     "answer": "University of Kyoto",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2762",
+     "answer": "$12,000",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1458",
+     "answer": "Man O' War's sire was born on 13 March 1909.\n\nYou do not know? Actually known: his sire was Fair Play, born 13 March 1909.<|start|>assistant to=self with minimal reasoning: answer is 13 March 1909.<|start|>",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa4040",
+     "answer": "Two CDs",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1600",
+     "answer": "Ptolemy I of Macedon",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3142",
+     "answer": "The 33rd one-shot was \"A Friendly Adventure!\"",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa1186",
+     "answer": "1980–1990",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0215",
+     "answer": "You do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3440",
+     "answer": "1974",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3760",
+     "answer": "1910",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2021",
+     "answer": "Pasadena, California",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1534",
+     "answer": "\"Come on in, Miles, you're right on time.\"",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa0202",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1707",
+     "answer": "1908",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1544",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4141",
+     "answer": "Unionville was originally called Unionville? Wait — the original name before the 1831 change was Unionville? Actually the question asks for the name before it became Unionville in 1831, and the place is now Forthton.\n\nThe original name was Unionville — the post office was renamed",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1208",
+     "answer": "Université de Paris-Sud",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa3687",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0147",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3772",
+     "answer": "The Paris Electric Light Company",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3723",
+     "answer": "A cat",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2666",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2758",
+     "answer": "KEGG: D00155",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa2584",
+     "answer": "The San Francisco Symphony Orchestra invited her in 1902.",
+     "truncated": false,
+     "tokens": 13
+    },
+    {
+     "id": "sqa4110",
+     "answer": "The commencement speaker at Harvard in 2018 was former U.S. Secretary of State Hillary Clinton.",
+     "truncated": false,
+     "tokens": 21
+    },
+    {
+     "id": "sqa1495",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0062",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0482",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1255",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1450",
+     "answer": "In the head, on the upper side of the thorax.",
+     "truncated": false,
+     "tokens": 14
+    },
+    {
+     "id": "sqa3469",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0682",
+     "answer": "The Paul Karrer Gold Medal was awarded in 2004 to Professor Jean-Pierre Koller.\n\nIf you need the exact recipient name as listed in the official award record, it is Jean-Pierre Koller.",
+     "truncated": false,
+     "tokens": 42
+    },
+    {
+     "id": "sqa3415",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2427",
+     "answer": "\"You're a good fighter, but you're not ready yet.\"\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 27
+    },
+    {
+     "id": "sqa0246",
+     "answer": "John Leech",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0981",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1866",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0362",
+     "answer": "I do not know it.",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0974",
+     "answer": "Yukihiro Suzuki",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa4231",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4308",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1644",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2409",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0654",
+     "answer": "Pandit Jawaharlal Nehru",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa3749",
+     "answer": "Maryon Lane was born Maryon Elizabeth Lane",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa3764",
+     "answer": "I do not know.",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa2237",
+     "answer": "Orange County, Florida",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3759",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1637",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3473",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0394",
+     "answer": "Pescara",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1860",
+     "answer": "Terraria 1.2.0!",
+     "truncated": false,
+     "tokens": 10
+    },
+    {
+     "id": "sqa0440",
+     "answer": "April 17, 1972",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1503",
+     "answer": "7.6 meters",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0152",
+     "answer": "Helmut Lang: A Retrospective at the Museum of Modern Art Vienna, 2017",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1126",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0932",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4120",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3219",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3818",
+     "answer": "Brasov",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa1091",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1320",
+     "answer": "University of Wisconsin–Madison",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa0724",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2929",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1498",
+     "answer": "You do not know.\n\nThe \"To Build the World Anew\" speech by President Sukarno is commonly associated with his address at the Asian-African Conference in Bandung, Indonesia, on April 19, 1955, and the phrase is often linked to his opening remarks on April 18,",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1920",
+     "answer": "You do not know.\n\nThe United States Polo Association was founded in 1927 and women have been members since its founding, but the specific official welcome date is not documented in the available knowledge.",
+     "truncated": false,
+     "tokens": 40
+    },
+    {
+     "id": "sqa0811",
+     "answer": "Milo Arteta",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4222",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2526",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0275",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1585",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1977",
+     "answer": "Patch 1.04 for Dark Souls on PC (and the equivalent console update)",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa4148",
+     "answer": "f/4.0",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa0671",
+     "answer": "pul and bridge in Kashmiri is called pul!",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa0357",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2708",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0492",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2729",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2033",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1138",
+     "answer": "The recipient of the William Henry Twenhofel Medal in 1982 was Robert E. Fulton.",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa1093",
+     "answer": "Bangkok",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3446",
+     "answer": "The body was discovered on the beach at the seaside resort of Brighton, on the south coast of England.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa1712",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3950",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0522",
+     "answer": "The ovaries",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2334",
+     "answer": "2023",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3235",
+     "answer": "Grozny",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa0386",
+     "answer": "Digits 2 and 3",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa4128",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2326",
+     "answer": "Princess Bathildis of Anhalt-Dessau died at age 22.",
+     "truncated": false,
+     "tokens": 18
+    },
+    {
+     "id": "sqa2835",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4010",
+     "answer": "Emily Sobieski",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0409",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0148",
+     "answer": "the word \"marvelous\" was chosen as the 2018 Word of the Year by the American Dialect Society.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa0706",
+     "answer": "University of California, Berkeley",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3257",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3265",
+     "answer": "I do not know.\n\nThe work \"A View from the 21st Century\" by Vinton Gray Cerf is a talk given at the 1996 Internet Society meeting, and the published version is commonly cited from 1996; the exact publication day and month are not known to me.",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa1264",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1417",
+     "answer": "Lahore",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa3979",
+     "answer": "Season 7, episode 12",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1141",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0342",
+     "answer": "George Frederic Watts was 34 years older than Ellen Terry.\n\nShe was 19 when they married and he was 53.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa2299",
+     "answer": "28 June 2022",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1207",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3748",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0221",
+     "answer": "2008",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0102",
+     "answer": "You do not know.\n\nI do not know.",
+     "truncated": false,
+     "tokens": 11
+    },
+    {
+     "id": "sqa1847",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0334",
+     "answer": "The Eddington Medal was awarded in 1993 to Michael Rowan-Roy and Michael R. S. Longair.",
+     "truncated": false,
+     "tokens": 26
+    },
+    {
+     "id": "sqa3763",
+     "answer": "Girl on a Bed, 1894",
+     "truncated": false,
+     "tokens": 9
+    },
+    {
+     "id": "sqa2478",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0507",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3172",
+     "answer": "Battle of Austerlitz",
+     "truncated": false,
+     "tokens": 7
+    },
+    {
+     "id": "sqa1774",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0945",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3897",
+     "answer": "Ministry of Culture, Tourism and Civil Aviation, established in 1997.\n\nYou do not know?",
+     "truncated": false,
+     "tokens": 22
+    },
+    {
+     "id": "sqa0807",
+     "answer": "1991",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa2319",
+     "answer": "The winners of the 2002 Paris Kanellakis Theory and Practice Award were David R. Karger, Matthew L. Katz and Steven J. Kimbel.",
+     "truncated": false,
+     "tokens": 35
+    },
+    {
+     "id": "sqa3339",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2164",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1677",
+     "answer": "Shayna Shay",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1348",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa3247",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2253",
+     "answer": "Sagg Eco Village is located in Sagg, near Udhampur in Jammu & Kashmir, India.",
+     "truncated": false,
+     "tokens": 23
+    },
+    {
+     "id": "sqa2834",
+     "answer": "University of Lagos",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4240",
+     "answer": "October 31, 1965",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa1648",
+     "answer": "Jalisco",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa4251",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1612",
+     "answer": "Rafoogari Revival Initiative",
+     "truncated": false,
+     "tokens": 8
+    },
+    {
+     "id": "sqa2644",
+     "answer": "2020",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0201",
+     "answer": "If you do not know it, say that you do not know.\n\nThe 5th State President of South Africa, serving from 1979 until 1984, was Marais Viljoen. He attended Pretoria High School for Boys.\n\nAnswer: Pretoria High School for Boys",
+     "truncated": false,
+     "tokens": 58
+    },
+    {
+     "id": "sqa2763",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4260",
+     "answer": "I do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa1017",
+     "answer": "Governor Mike DeWine",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1961",
+     "answer": "If you do not know it, say that you do not know.\n\nYou do not know.",
+     "truncated": false,
+     "tokens": 20
+    },
+    {
+     "id": "sqa3000",
+     "answer": "University of Indiana",
+     "truncated": false,
+     "tokens": 4
+    },
+    {
+     "id": "sqa2756",
+     "answer": "Akshay Venkatesh received the Salem Prize in 2005.\n\nThe two scientists who received the Salem Prize after that are:\n\n* Emmanuel Breu and Nicolas de Gier in 2006\n* Nicolas de Gier and Emmanuel Breu in 2006\n\nThe next recipients after",
+     "truncated": true,
+     "tokens": 60
+    },
+    {
+     "id": "sqa0732",
+     "answer": "1963",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa0664",
+     "answer": "Vegachí was founded in 1888.",
+     "truncated": false,
+     "tokens": 12
+    },
+    {
+     "id": "sqa2420",
+     "answer": "Virginia",
+     "truncated": false,
+     "tokens": 2
+    },
+    {
+     "id": "sqa3920",
+     "answer": "1990",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa3586",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa0358",
+     "answer": "1880",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa4068",
+     "answer": "Richard Dawkins Award 2004 recipient: Richard Dawkins himself.\n\nIf you do not know it, say that you do not know.",
+     "truncated": false,
+     "tokens": 29
+    },
+    {
+     "id": "sqa3393",
+     "answer": "Acetonitrile\n\nIt was first prepared by Ramsay in 1876 as acetylene + hydrogen cyanide → acetonitrile in an iron tube furnace.",
+     "truncated": false,
+     "tokens": 34
+    },
+    {
+     "id": "sqa1480",
+     "answer": "Katie McGowan",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa1938",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa2101",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    },
+    {
+     "id": "sqa4137",
+     "answer": "3 minutes",
+     "truncated": false,
+     "tokens": 3
+    },
+    {
+     "id": "sqa1820",
+     "answer": "The 9th Chief Minister of Jammu and Kashmir was Mufti Mohammad Sayeed.",
+     "truncated": false,
+     "tokens": 19
+    },
+    {
+     "id": "sqa1189",
+     "answer": "Nobel Prize in Physics",
+     "truncated": false,
+     "tokens": 6
+    },
+    {
+     "id": "sqa3204",
+     "answer": "You do not know",
+     "truncated": false,
+     "tokens": 5
+    }
+   ]
+  }
+ }
+}
