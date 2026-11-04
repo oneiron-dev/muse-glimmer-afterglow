@@ -262,6 +262,127 @@ def report_voice(args, run, slug, shas, manifest):
                                for r in rows]}))
 
 
+def combo_key(label):
+    """'s0.04|c-0.01' -> (0.04, -0.01) for sorting."""
+    parts = dict(x[0:1] and (x[0], x[1:]) for x in label.split("|"))
+    return (float(parts.get("s", 0)), float(parts.get("c", 0)))
+
+
+def report_combo(args, run, slug, stem):
+    """A voice served with a counter-push (voice_counter.py): each measured (s, c) setting under the same five rules.
+    The working setting, fixed before run 5's numbers: among the shipping settings, the one that changes the fewest
+    gate answers between "I don't know" and an answer (flips both ways), ties to the higher toward. The served file
+    is the baked GGUF for that setting (voice_counter.py bake), sent at strength s."""
+    axis = json.loads((Path(args.voices_dir) / slug / "axis.json").read_text())
+    settings, stem_of = {}, {}
+    for st in stem.split("+"):  # several runs' combo arms for one voice: the first run holding a setting wins
+        for k, v in merged(run, args.sweep_dirs.split(","), st).items():
+            if k not in settings:
+                settings[k], stem_of[k] = v, st
+    out_dir = Path(args.results) / slug
+    out_dir.mkdir(parents=True, exist_ok=True)
+    rows, by_setting = judged_rows(axis["positive_label"], axis["negative_label"], settings, out_dir, args.parallel,
+                                   combo_key, stem.split("+")[0])
+    for r in rows:
+        r["scale"], r["counter"] = combo_key(r["setting"])
+        r["flips"] = ((r["idk"] or {}).get("base_abstained_now_answers", 0) or 0) + \
+                     ((r["idk"] or {}).get("base_answered_now_abstains", 0) or 0)
+    shipping = sorted([r for r in rows if r["ships"]], key=lambda r: (r["flips"], -(r["toward"] or 0)))
+    working = shipping[0] if shipping else None
+    why = None if shipping else "no voice + counter setting passes every rule (" + failures(rows) + ")"
+    doc = load(Path(args.voices_dir) / slug / "voice.json") or {}
+    doc.update({"version": 1, "slug": slug, "label": axis["label"], "description": axis["description"],
+                "status": "ready" if working else "not ready", "why": why,
+                "axis": {k: axis[k] for k in ("name", "positive_label", "negative_label", "templates", "adjective_pairs",
+                                              "prompts", "test_prompts", "check_labels")}})
+    doc["counter"] = {"rule": "working setting = the shipping (s, c) with the fewest gate flips, ties to higher toward",
+                      "direction": "the model's own I-don't-know direction (base states on the 200 gate questions, "
+                                   "declined minus answered; vectors/base/idk-direction.gguf)",
+                      "sweep": rows, "working": working, "judge": "muse-spark-1.3-contributor (spark-sub)"}
+    if working:
+        doc["strength"] = {"scale": working["scale"], "max_scale": working["scale"], "rule": RULE,
+                           "note": f"served as voice-{slug}-v1.gguf = voice + {working['counter']:g} x I-don't-know "
+                                   f"direction per {working['scale']:g} of voice, sent at {working['scale']:g}"}
+        doc["idk"] = {"set": "simpleqa gate slice v1 (200), gate prompt form", "pass": True,
+                      "rule": RULE.split("honest: ")[1].split(". Working")[0],
+                      "at_working_scale": working["idk"], "known_at_working_scale": working["known"]}
+        doc["vector"] = {"gguf": f"{args.host}:{args.host_run}/vectors/base/voice-{slug}-v1.gguf", "sha256": None,
+                         "variant": "v1 (voice + counter-push)", "layers": [16, 42], "bake":
+                         {"scale": working["scale"], "counter": working["counter"]}}
+    (Path(args.voices_dir) / slug / "voice.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
+    for st in stem.split("+"):
+        copy_evidence(run, {k: v for k, v in settings.items() if stem_of[k] == st}, st, out_dir)
+    (out_dir / f"judge-{stem.replace('+', '_')}.json").write_text(json.dumps({"rows": rows, "verdicts": by_setting}, indent=1) + "\n")
+    print(json.dumps({"voice": slug, "status": doc["status"], "working": working and working["setting"], "why": why,
+                      "rows": [{k: r.get(k) for k in ("setting", "toward", "coherence", "words", "flips", *RULES)} |
+                               {"abstain": (r["idk"] or {}).get("abstain"), "abstain0": (r["idk"] or {}).get("abstain_scale0"),
+                                "known_right": (r["known"] or {}).get("right"), "floor": (r["known"] or {}).get("floor")}
+                               for r in rows]}))
+
+
+def report_verify(args, run, slug, shas, tag="v1"):
+    """The baked file (voice-<slug>-v1.gguf, served at the working strength) measured on its own: the five rules on
+    the gate questions, the known questions and the test prompts (--sweep-dirs, stem <slug>-v1), then the honest and
+    band rules again on the fresh 200 (--fresh-dir). It ships only if both pass (lead 10:09)."""
+    axis = json.loads((Path(args.voices_dir) / slug / "axis.json").read_text())
+    stem = f"{slug}-{tag}"
+    settings = merged(run, args.sweep_dirs.split(","), stem)
+    out_dir = Path(args.results) / slug
+    out_dir.mkdir(parents=True, exist_ok=True)
+    key = (lambda s: combo_key(s)[0]) if "|" in next(iter(settings)) else float
+    rows, by_setting = judged_rows(axis["positive_label"], axis["negative_label"], settings, out_dir, args.parallel,
+                                   key, stem)
+    r = rows[0]
+    fresh = load(run / args.fresh_dir / f"idk-{stem}.json")
+    g = fresh["by_scale"][r["setting"]]
+    f0 = fresh["base"]
+    fresh_row = {"set": fresh["set"], "abstain": g["abstain"], "abstain_scale0": f0["abstain"],
+                 "exact_right": g["exact_right"], "exact_right_scale0": f0["exact_right"],
+                 "base_abstained_now_answers": g["base_abstained_now_answers"],
+                 "base_answered_now_abstains": g["base_answered_now_abstains"],
+                 "honest": g["abstain"] >= f0["abstain"] - IDK_DROP and g["exact_right"] >= f0["exact_right"] - RIGHT_LOSS,
+                 "band": abs(g["abstain"] - f0["abstain"]) <= BAND}
+    ships = r["ships"] and fresh_row["honest"] and fresh_row["band"]
+    doc = {"version": 1, "slug": slug, "label": axis["label"], "description": axis["description"],
+           "axis": {k: axis[k] for k in ("name", "positive_label", "negative_label", "templates", "adjective_pairs",
+                                         "prompts", "test_prompts", "check_labels")},
+           "written_by": (axis.get("written_by") or {}).get("teacher")}
+    bake = (load(run / "vectors" / "baked.json") or {}).get(f"{slug}-{tag}") or {}
+    doc["counter"] = {"direction": "the model's own I-don't-know direction (base states on the 200 gate questions, "
+                                   "declined minus answered)", "scale": bake.get("scale"), "counter": bake.get("counter"),
+                      "formula": bake.get("formula"), "selection": "the shipping (s, c) with the fewest gate flips "
+                      "(runs 5-6; evidence eval/results/2026-11-04-voice/<slug>/)"}
+    name = f"voice-{slug}-{tag}.gguf"
+    why = None if ships else ("the baked file fails: " + ", ".join(
+        [f"gate/known {k}" for k in RULES if not r[k]] + [f"fresh {k}" for k in ("honest", "band") if not fresh_row[k]]))
+    doc.update({"status": "ready" if ships else "not ready", "why": why})
+    doc["vector"] = {**(doc.get("vector") or {}), "gguf": f"{args.host}:{args.host_run}/vectors/base/{name}",
+                     "sha256": shas.get(name), "variant": "v1 (voice + counter-push, baked)", "layers": [16, 42]}
+    doc["verified"] = {"rule": "the baked file on its own: the five rules on the gate + known questions, and honest + "
+                               "band on the fresh 200; ships only if both pass", "gate": r, "fresh": fresh_row,
+                       "ships": ships}
+    flips = (r["idk"] or {})
+    doc["flips"] = {"gate_base_declined_now_answers": flips.get("base_abstained_now_answers"),
+                    "gate_base_answered_now_declines": flips.get("base_answered_now_abstains"),
+                    "fresh_base_declined_now_answers": fresh_row["base_abstained_now_answers"],
+                    "fresh_base_answered_now_declines": fresh_row["base_answered_now_abstains"]}
+    if ships:
+        doc["strength"] = {"scale": r["scale"], "max_scale": r["scale"], "rule": RULE,
+                           "heard_n": len(by_setting.get(r["setting"], [])), "toward": r["toward"],
+                           "coherence": r["coherence"], "words": r["words"], "words_scale0": r["words_scale0"],
+                           "judge": "muse-spark-1.3-contributor (spark-sub)"}
+        doc["idk"] = {"set": "simpleqa gate slice v1 (200) and fresh_confirm_v1 (200), gate prompt form", "pass": True,
+                      "rule": RULE.split("honest: ")[1].split(". Working")[0], "at_working_scale": r["idk"],
+                      "fresh_at_working_scale": fresh_row, "known_at_working_scale": r["known"]}
+    (Path(args.voices_dir) / slug / "voice.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n")
+    copy_evidence(run, settings, stem, out_dir)
+    shutil.copy(run / args.fresh_dir / f"idk-{stem}.json", out_dir / f"{args.fresh_dir}-idk-{stem}.json")
+    (out_dir / f"judge-{stem}.json").write_text(json.dumps({"rows": rows, "verdicts": by_setting}, indent=1) + "\n")
+    print(json.dumps({"voice": slug, "verified_ships": ships, "why": why, "gate": {k: r.get(k) for k in
+                      ("setting", "toward", "coherence", "words", *RULES)} | {"idk": r["idk"], "known": r["known"]},
+                      "fresh": fresh_row, "sha256": shas.get(name)}))
+
+
 def report_presets(args, run):
     path = Path(args.presets)
     doc = json.loads(path.read_text())
@@ -297,6 +418,9 @@ def main():
     ap.add_argument("--run", required=True, help="the voice_job.sh run directory (local copy)")
     ap.add_argument("--voice", action="append", default=[], help="slug")
     ap.add_argument("--presets", help="steering/voices.json: judge the presets too and write their checks")
+    ap.add_argument("--combo", action="append", default=[], help="SLUG=STEM: a voice with a counter-push (run 5)")
+    ap.add_argument("--verify", action="append", default=[], help="SLUG[:TAG]: measure the baked voice-<slug>-<tag>.gguf (tag v1)")
+    ap.add_argument("--fresh-dir", default="sweep-v1-fresh", help="the run's sweep dir with the fresh-200 idk read")
     ap.add_argument("--sweep-dirs", default="sweep", help="comma list of the run's sweep output dirs, first wins")
     ap.add_argument("--variant", default="raw", help="the served voice GGUF variant (raw|orth)")
     ap.add_argument("--host-run", required=True, help="the run directory on the GPU host (for the served GGUF path)")
@@ -313,6 +437,12 @@ def main():
     manifest = load(run / "vectors" / "manifest.json") or {}
     for slug in args.voice:
         report_voice(args, run, slug, shas, manifest)
+    for spec in args.combo:
+        slug, stem = spec.split("=")
+        report_combo(args, run, slug, stem)
+    for spec in args.verify:
+        slug, _, tag = spec.partition(":")
+        report_verify(args, run, slug, shas, tag or "v1")
     if args.presets:
         report_presets(args, run)
 

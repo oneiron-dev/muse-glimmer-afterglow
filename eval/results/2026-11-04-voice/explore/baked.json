@@ -1,0 +1,46 @@
+{
+ "warm": {
+  "voice": "warm",
+  "gguf": "/data/meta-voice/runs/voices-20261104/vectors/base/voice-warm-v1.gguf",
+  "sha256": "8d62987ab95337689e5fbf399a31838f7a3350bafb0bb350ad8cc18c0a94a628",
+  "scale": 0.04,
+  "counter": -0.01,
+  "formula": "direction.L = (scale x voice_raw.L + counter x idk_direction.L) / scale"
+ },
+ "warm-v1": {
+  "voice": "warm",
+  "tag": "v1",
+  "gguf": "/data/meta-voice/runs/voices-20261104/vectors/base/voice-warm-v1.gguf",
+  "sha256": "55affe7d8246884ed7026c4537ac632b0260d81222e5a051587337b3f5057c5b",
+  "scale": 0.03,
+  "counter": -0.011,
+  "formula": "direction.L = (scale x voice_raw.L + counter x idk_direction.L) / scale"
+ },
+ "warm-v1b": {
+  "voice": "warm",
+  "tag": "v1b",
+  "gguf": "/data/meta-voice/runs/voices-20261104/vectors/base/voice-warm-v1b.gguf",
+  "sha256": "8d62987ab95337689e5fbf399a31838f7a3350bafb0bb350ad8cc18c0a94a628",
+  "scale": 0.04,
+  "counter": -0.01,
+  "formula": "direction.L = (scale x voice_raw.L + counter x idk_direction.L) / scale"
+ },
+ "examples-v1": {
+  "voice": "examples",
+  "tag": "v1",
+  "gguf": "/data/meta-voice/runs/voices-20261104/vectors/base/voice-examples-v1.gguf",
+  "sha256": "34360a6938388abd7a3b4af3d55ce09be515ef305749efe17e585dfb6c197669",
+  "scale": 0.02,
+  "counter": -0.006,
+  "formula": "direction.L = (scale x voice_raw.L + counter x idk_direction.L) / scale"
+ },
+ "dry-wit-v1": {
+  "voice": "dry-wit",
+  "tag": "v1",
+  "gguf": "/data/meta-voice/runs/voices-20261104/vectors/base/voice-dry-wit-v1.gguf",
+  "sha256": "300e0f6737d36ab58ad44ae716177aac6d4770726feade771ea504201e69dc10",
+  "scale": 0.05,
+  "counter": -0.002,
+  "formula": "direction.L = (scale x voice_raw.L + counter x idk_direction.L) / scale"
+ }
+}
