@@ -99,6 +99,8 @@ class App:
                                     notes_backend=notes_backend)
         self.session = DaySession(world, day, self.client, date=date, **self.session_options)
         self.lock = threading.Lock()
+        # Attachments have their own lock: uploads arrive in parallel, and the chat lock may already be held.
+        self.attach_lock = threading.Lock()
         self.snapshot_status = {"state": "idle"}
         self.restore = restore
         # Settings -> Model: where the model comes from (a server, a file this app serves, or the official download)
@@ -169,12 +171,17 @@ class App:
         d = s.dir / "attachments"
         d.mkdir(parents=True, exist_ok=True)
         index_path = d / "attachments.json"
-        index = json.loads(index_path.read_text()) if index_path.exists() else []
-        att = {"id": f"A{len(index) + 1:03d}", "name": name, "chars": len(text), "day": s.day, "at": now_iso(),
-               "truncated": len(text) > self.ATTACH_MAX_CHARS}
-        (d / f"{att['id']}.txt").write_text(text, encoding="utf-8")
-        index.append(att)
-        index_path.write_text(json.dumps(index, indent=1, ensure_ascii=False) + "\n")
+        # Read the index, allocate the next id, write the file and the index as one step: two files
+        # uploaded together must get two ids. The index is replaced whole, so a reader never sees half of it.
+        with self.attach_lock:
+            index = json.loads(index_path.read_text()) if index_path.exists() else []
+            att = {"id": f"A{len(index) + 1:03d}", "name": name, "chars": len(text), "day": s.day, "at": now_iso(),
+                   "truncated": len(text) > self.ATTACH_MAX_CHARS}
+            (d / f"{att['id']}.txt").write_text(text, encoding="utf-8")
+            index.append(att)
+            tmp = index_path.with_name(index_path.name + ".tmp")
+            tmp.write_text(json.dumps(index, indent=1, ensure_ascii=False) + "\n")
+            tmp.replace(index_path)
         return att
 
     def attachments(self):
