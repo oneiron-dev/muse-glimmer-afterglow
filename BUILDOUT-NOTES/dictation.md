@@ -149,3 +149,5 @@ Oneiron home: dictation -> Oneironer voice.
 - The required ps RSS figure is not total unified-memory use; MLX GPU allocations are not fully represented in process RSS. It is a sampled peak, not a guaranteed instantaneous maximum.
 - First-use latency includes loading and is above 1.5 s. The target is met only by the measured warm path with cleanup skipped. Custom rules, real corrections, and a busy Glimmer slot can add latency.
 - Existing font-resolution build warnings and unrelated test ResourceWarnings remain. No font files changed. Source whitespace checks pass. Git also flags trailing whitespace inside the emitted dependency JavaScript; that exact Vite output is retained rather than hand-editing generated code.
+
+DONE
