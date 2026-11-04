@@ -7,7 +7,7 @@ const KEY = "afterglow-sound";
 
 /** The app's own cues, in cuelume's cue format (layers of tones; offsets, envelopes and glides in seconds). */
 export const CUES = {
-  // a kept night: three soft bell tones rising (E5, B5, E6), a warm room behind them
+  // a kept night: three soft bell tones rising (E5, B5, E6), a warm room behind them. earshot: "a success chime" (z +3.7)
   "night-kept": {
     masterGain: 0.5,
     layers: [
@@ -17,14 +17,17 @@ export const CUES = {
     ],
     shimmer: { delay: 0.14, feedback: 0.28, wet: 0.2, lowpass: 3800 },
   },
-  // a rolled-back night: one low tone that settles down a fourth (G4 to D4, with its octave below); calm, not an alarm
+  // a rolled-back night: two low mallet notes stepping down (D4, then A3), calm, not an alarm. Listened with earshot:
+  // "a gentle low marimba note" (strong, 92% against an error buzzer, a failure sound, a sub bass drop, a chime)
   "night-rollback": {
     masterGain: 0.5,
     layers: [
-      { kind: "tone", waveform: "sine", frequency: 392, glideTo: 293.66, glideTime: 0.3, attack: 0.03, decay: 0.55, peak: 0.07 },
-      { kind: "tone", waveform: "sine", frequency: 196, glideTo: 146.83, glideTime: 0.3, attack: 0.03, decay: 0.6, peak: 0.06 },
+      { kind: "tone", waveform: "sine", frequency: 293.66, attack: 0.006, decay: 0.42, peak: 0.07 },
+      { kind: "tone", waveform: "sine", frequency: 1174.66, attack: 0.003, decay: 0.08, peak: 0.012 },
+      { kind: "tone", waveform: "sine", frequency: 220, offset: 0.17, attack: 0.006, decay: 0.6, peak: 0.075 },
+      { kind: "tone", waveform: "sine", frequency: 880, offset: 0.17, attack: 0.003, decay: 0.09, peak: 0.012 },
     ],
-    shimmer: { delay: 0.16, feedback: 0.2, wet: 0.1, lowpass: 1400 },
+    shimmer: { delay: 0.15, feedback: 0.24, wet: 0.16, lowpass: 2600 },
   },
 };
 

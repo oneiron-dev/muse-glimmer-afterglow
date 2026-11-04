@@ -142,7 +142,7 @@ function ModelSection({ ctx, settings }) {
         <p className="fp">{hw.memory_line}.</p>
         {usable ? (
           <div className="fit" role="img" aria-label={`Glimmer needs about ${hw.serve_gb} GB of the ${usable} GB the GPU may use`}>
-            <div className="fit-bar"><i style={{ width: `${Math.min(100, (hw.serve_gb / usable) * 100)}%` }} /></div>
+            <div className="fit-bar"><i style={{ "--f": Math.min(1, hw.serve_gb / usable) }} /></div>
             <div className="fit-cap num"><span>Glimmer 30B, about {hw.serve_gb} GB</span><span>{usable} GB</span></div>
           </div>
         ) : null}
@@ -295,7 +295,7 @@ function DownloadWay({ m, reload, onUse }) {
       )}
       {d.state !== "idle" && d.total ? (
         <div className="dl" role="status">
-          <div className="fit-bar"><i style={{ width: `${(d.done / d.total) * 100}%` }} /></div>
+          <div className="fit-bar"><i style={{ "--f": d.done / d.total }} /></div>
           <div className="fit-cap num"><span>{d.state === "verifying" ? "Checking the file" : d.state === "done" ? "Done" : `${fmtGB(d.done)} of ${fmtGB(d.total)}`}{d.state === "downloading" && d.rate_mb_s ? `, ${d.rate_mb_s} MB/s` : ""}</span><span>{d.line || ""}</span></div>
         </div>
       ) : null}

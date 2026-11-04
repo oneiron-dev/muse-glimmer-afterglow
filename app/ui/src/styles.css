@@ -603,7 +603,7 @@ a { color: inherit; }
 .inuse.off .inuse-dot { background: var(--accent); box-shadow: 0 0 0 4px var(--hl); }
 .fit { margin: 6px 0 12px; }
 .fit-bar { height: 8px; border-radius: 4px; background: var(--sunk); overflow: hidden; }
-.fit-bar i { display: block; height: 100%; border-radius: 4px; background: var(--ink-2); transition: width 400ms var(--ease-out); }
+.fit-bar i { display: block; width: 100%; height: 100%; border-radius: 4px; background: var(--ink-2); transform-origin: left center; transform: scaleX(var(--f, 0)); transition: transform 400ms var(--ease-out); }
 .fit-cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 5px; font-size: 12.5px; color: var(--ink-3); }
 .dl { margin: 12px 0 0; }
 .frow { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 12px 0; }

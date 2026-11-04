@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { postJSON } from "./lib.js";
+import { getJSON, postJSON } from "./lib.js";
+import { cue } from "./sound.js";
 
-/** Add a profile: two short steps, then straight into the first chat. Skippable; the first chat is the real product. */
+/** Add a profile: three short steps (who, the model, how it learns), then straight into the first chat. */
 export function Onboarding({ onClose, onDone }) {
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
@@ -37,7 +38,7 @@ export function Onboarding({ onClose, onDone }) {
   return (
     <div className="scrim" role="presentation" onPointerDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="sheet onboard" role="dialog" aria-modal="true" aria-labelledby="ob-title" ref={box}>
-        <p className="ob-step num">Step {step} of 2</p>
+        <p className="ob-step num">Step {step} of 3</p>
         {step === 1 ? (
           <form onSubmit={(e) => { e.preventDefault(); if (name.trim()) setStep(2); }}>
             <h2 id="ob-title">Who is this agent for?</h2>
@@ -53,6 +54,8 @@ export function Onboarding({ onClose, onDone }) {
               <button type="submit" className="btn btn-send" disabled={!name.trim()}>Continue</button>
             </div>
           </form>
+        ) : step === 2 ? (
+          <ModelStep first={first} onBack={() => setStep(1)} onNext={() => setStep(3)} />
         ) : (
           <div>
             <h2 id="ob-title">How your agent learns</h2>
@@ -63,11 +66,68 @@ export function Onboarding({ onClose, onDone }) {
             </ol>
             {error && <p className="error-line" role="alert">{error}</p>}
             <div className="ob-acts">
-              <button type="button" className="btn btn-text" onClick={() => setStep(1)}>Back</button>
+              <button type="button" className="btn btn-text" onClick={() => setStep(2)}>Back</button>
               <button ref={first} type="button" className="btn btn-send" onClick={create} disabled={busy}>{busy ? "Making the profile…" : "Start the first day"}</button>
             </div>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+/** Onboarding step 2: what this computer can run, and the model the agent will use (any server can be set here;
+ a model file or the download live in Settings, Model). */
+function ModelStep({ first, onBack, onNext }) {
+  const [m, setM] = useState(null);
+  const [pr, setPr] = useState(null);
+  const [url, setUrl] = useState("");
+  const [asked, setAsked] = useState(null);
+  const [err, setErr] = useState(null);
+  useEffect(() => {
+    getJSON("/api/model").then((r) => { setM(r); return postJSON("/api/model/probe", { url: r.current.url }); }).then(setPr).catch(() => setErr("Afterglow could not read this computer."));
+  }, []);
+  const check = async (e) => {
+    e.preventDefault();
+    setErr(null); setAsked(null);
+    const r = await postJSON("/api/model/probe", { url });
+    if (r.error) setErr(r.error); else setAsked(r);
+  };
+  const use = async () => {
+    cue("press");
+    const r = await postJSON("/api/model/use", { source: "server", url: asked.url });
+    if (r.error) { setErr(r.error); return; }
+    setM(r); setPr(r.probe); setAsked(null); setUrl("");
+  };
+  const hw = m && m.hardware;
+  const ready = pr && pr.chat;
+  return (
+    <div>
+      <h2 id="ob-title">Your agent’s model</h2>
+      <p className="ob-lede">Your agent runs on Muse Glimmer 30B, on this computer or on a server you choose.</p>
+      {!m ? <p className="pfine">Reading this computer…</p> : (
+        <>
+          <ul className="flines">
+            <li><i className={`fmark ${hw.serve ? "ok" : "no"}`} aria-hidden="true" />{hw.memory_line}. {hw.serve_line}</li>
+            {ready
+              ? <li><i className="fmark ok" aria-hidden="true" />Ready: {pr.glimmer ? "Muse Glimmer 30B" : pr.model} on {pr.label}. {pr.nights ? "Nightly updates reach your agent." : "Nightly updates do not reach your agent on this server."}</li>
+              : <li><i className="fmark no" aria-hidden="true" />No model answers yet. Give a server address, or set up a model file in Settings, Model.</li>}
+          </ul>
+          <form className="ffield" onSubmit={check}>
+            <label htmlFor="ob-url">{ready ? "Use another server (optional)" : "Server address"}</label>
+            <div className="finline">
+              <input id="ob-url" className="finput num" value={url} onChange={(e) => { setUrl(e.target.value); setAsked(null); }} placeholder="http://127.0.0.1:1234" spellCheck="false" />
+              <button type="submit" className="btn btn-quiet" disabled={!url.trim()}>Check</button>
+            </div>
+          </form>
+          {asked && <ul className="flines">{asked.lines.map((l, i) => <li key={i}><i className={`fmark ${/cannot|do not|No server|not serve/i.test(l) ? "no" : i ? "ok" : "info"}`} aria-hidden="true" />{l}</li>)}</ul>}
+          {asked && asked.chat && <button type="button" className="btn btn-quiet" onClick={use}>Use this server</button>}
+          {err && <p className="error-line" role="alert">{err}</p>}
+        </>
+      )}
+      <div className="ob-acts">
+        <button type="button" className="btn btn-text" onClick={onBack}>Back</button>
+        <button ref={first} type="button" className="btn btn-send" onClick={onNext} disabled={!ready}>Continue</button>
       </div>
     </div>
   );
