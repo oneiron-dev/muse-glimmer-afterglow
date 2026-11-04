@@ -60,3 +60,5 @@ Oneiron home: mail -> FIX 12559/12560.
 Oneiron home: files -> documents organ.
 Oneiron home: web search -> search connector.
 Oneiron home: calendar -> calendar connector (no Oneiron home named yet).
+
+DONE
