@@ -72,9 +72,25 @@ export function VoiceList({ voices, onChange }) {
   );
 }
 
-/** The voice pill in the message box, opening the list above it. */
-export function VoicePill({ voices, onChange }) {
+/** The current voice, only when it is not the default: a quiet tag in the message box; × goes back to Default. */
+export function VoiceTag({ voices, onChange }) {
+  if (!voices || !voices.choice) return null;
+  const slug = voices.choice.preset || voices.choice.voice;
+  if (!slug || slug === "default") return null;
+  const v = [...voices.presets, ...(voices.custom || [])].find((x) => x.slug === slug);
+  const reset = async () => { const r = await postJSON("/api/voice", { preset: "default" }); if (!r.error) onChange(r); };
+  return (
+    <span className="vtag" title="The voice your agent uses now">
+      {(v && v.label) || slug}
+      <button type="button" aria-label="Back to the default voice" onClick={reset}>×</button>
+    </span>
+  );
+}
+
+/** The message box's + menu: attach a file, or change the voice (the list opens in place). */
+export function PlusMenu({ voices, onChange, onAttach }) {
   const [open, setOpen] = useState(false);
+  const [view, setView] = useState("menu");
   const ref = useRef(null);
   useEffect(() => {
     if (!open) return;
@@ -84,14 +100,36 @@ export function VoicePill({ voices, onChange }) {
     document.addEventListener("keydown", esc);
     return () => { document.removeEventListener("pointerdown", close); document.removeEventListener("keydown", esc); };
   }, [open]);
-  if (!voices) return null;
-  const all = [...voices.presets, ...(voices.custom || [])];
-  const slug = voices.choice ? voices.choice.preset || voices.choice.voice : "default";
-  const label = (all.find((v) => v.slug === slug) || { label: "Default" }).label;
+  const slug = voices && voices.choice ? voices.choice.preset || voices.choice.voice : "default";
+  const label = voices ? ([...voices.presets, ...(voices.custom || [])].find((x) => x.slug === slug) || { label: "Default" }).label : "Default";
   return (
     <div className="vwrap" ref={ref}>
-      <button type="button" className="vpill" aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(!open)}>Voice: {label}</button>
-      {open && <div className="vsheet" role="dialog" aria-label="Voice"><p className="vs-head">Voice <span>from your next message</span></p><VoiceList voices={voices} onChange={(r) => { onChange(r); setOpen(false); }} /></div>}
+      <button type="button" className="plus" aria-label="Attach or change the voice" aria-haspopup="menu" aria-expanded={open} onClick={() => { setOpen(!open); setView("menu"); }}>
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M10 4.5v11M4.5 10h11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+      </button>
+      {open && (
+        <div className={`vsheet${view === "menu" ? " small" : ""}`} role="menu">
+          {view === "menu" ? (
+            <>
+              <button type="button" role="menuitem" className="pm-row" onClick={() => { setOpen(false); onAttach(); }}>
+                <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M14.5 9.5 9.7 14.3a3 3 0 0 1-4.3-4.3l5.6-5.6a2 2 0 0 1 2.9 2.9L8.3 12.9a1 1 0 0 1-1.4-1.4l4.8-4.8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                <span>Attach a file</span>
+              </button>
+              {voices && (
+                <button type="button" role="menuitem" className="pm-row" onClick={() => setView("voice")}>
+                  <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 8v4M7.5 5.5v9M11 7v6M14.5 4.5v11M18 8.5v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+                  <span>Voice</span><small>{label}</small>
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              <p className="vs-head"><button type="button" className="vs-back" onClick={() => setView("menu")} aria-label="Back">‹</button>Voice <span>from your next message</span></p>
+              <VoiceList voices={voices} onChange={(r) => { onChange(r); setOpen(false); }} />
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { VoicePill } from "./Voice.jsx";
+import { PlusMenu, VoiceTag } from "./Voice.jsx";
 import { postJSON } from "./lib.js";
 
 const TEXT_EXT = /\.(txt|md|markdown|csv|tsv|json|jsonl|ya?ml|toml|ini|log|html?|xml|css|js|jsx|ts|tsx|py|rs|go|java|kt|swift|rb|sh|sql|c|cc|cpp|h|hpp)$/i;
@@ -67,13 +67,11 @@ export function Composer({ busy, night, sealed, voices, onVoice, onSend, dropRef
         </ul>
       )}
       <div className="crow">
-        {!sealed && <VoicePill voices={voices} onChange={onVoice} />}
         {!sealed && (
           <>
-            <button type="button" className="clip" aria-label="Attach a file" title="Attach a text file" onClick={() => pick.current?.click()}>
-              <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M14.5 9.5 9.7 14.3a3 3 0 0 1-4.3-4.3l5.6-5.6a2 2 0 0 1 2.9 2.9L8.3 12.9a1 1 0 0 1-1.4-1.4l4.8-4.8" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </button>
+            <PlusMenu voices={voices} onChange={onVoice} onAttach={() => pick.current?.click()} />
             <input ref={pick} type="file" multiple hidden onChange={(e) => { add(e.target.files); e.target.value = ""; }} />
+            <VoiceTag voices={voices} onChange={onVoice} />
           </>
         )}
         <label className="sr" htmlFor="msg">Message</label>
